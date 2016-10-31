@@ -9,8 +9,9 @@
     
     <meta name="author" content="Caohaozhi">
     
-    <meta name="description" content="一、前言1、开发者只需要定义想要执行的任务并追加到适当的Dispatch Queue中，GCD就能生成必要的线程并计划执行任务。由于线程管理是作为系统的一部分来实现的，因此可以统一管理，也可执行任务
-2、多线程问题：多个线程更新相同的资源会导致数据的不一致（数据竞争）、停止等待事件的线程会导致多个线">
+    <meta name="description" content="一、前言
+开发者只需要定义想要执行的任务并追加到适当的Dispatch Queue中，GCD就能生成必要的线程并计划执行任务。由于线程管理是作为系统的一部分来实现的，因此可以统一管理，也可执行任务
+多线程问题：多个线程更新相同的资源会导致数据的不一致（数据竞争）、停止等待事件的线程会导致多个线程相互">
     
     
     
@@ -100,24 +101,32 @@ var _hmt = _hmt || [];
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title"></strong>
-		<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、前言"><span class="toc-number">1.</span> <span class="toc-text">一、前言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、GCD中的四个关键概念："><span class="toc-number">2.</span> <span class="toc-text">二、GCD中的四个关键概念：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、添加任务到队列（同步、异步）："><span class="toc-number">3.</span> <span class="toc-text">三、添加任务到队列（同步、异步）：</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、前言"><span class="toc-number">1.</span> <span class="toc-text">一、前言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、GCD中的四个关键概念："><span class="toc-number">2.</span> <span class="toc-text">二、GCD中的四个关键概念：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、添加任务到队列（同步、异步）："><span class="toc-number">3.</span> <span class="toc-text">三、添加任务到队列（同步、异步）：</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1、dispatch-sync"><span class="toc-number">3.0.1.</span> <span class="toc-text">1、dispatch_sync:</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2、dispatch-async："><span class="toc-number">3.0.2.</span> <span class="toc-text">2、dispatch_async：</span></a></li></ol></li></ol></li></ol>
 		</div>
 		
-		<h3 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h3><p>1、开发者只需要定义想要执行的任务并追加到适当的Dispatch Queue中，GCD就能生成必要的线程并计划执行任务。由于线程管理是作为系统的一部分来实现的，因此可以统一管理，也可执行任务</p>
-<p>2、多线程问题：多个线程更新相同的资源会导致数据的不一致（数据竞争）、停止等待事件的线程会导致多个线程相互持续等待（死锁）、使用太多线程会消耗大量的内存</p>
-<p>3、应用程序在启动时，最先执行主线程，如果在主线程中进行长时间的处理，会妨碍主线程中被称为RunLoop的主循环的执行，从而导致不能更新用户界面、应用程序的画面长时间停滞等问题</p>
+		<h3 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h3><ol>
+<li>开发者只需要定义想要执行的任务并追加到适当的Dispatch Queue中，GCD就能生成必要的线程并计划执行任务。由于线程管理是作为系统的一部分来实现的，因此可以统一管理，也可执行任务</li>
+<li><p>多线程问题：多个线程更新相同的资源会导致数据的不一致（数据竞争）、停止等待事件的线程会导致多个线程相互持续等待（死锁）、使用太多线程会消耗大量的内存</p>
+</li>
+<li><p>应用程序在启动时，最先执行主线程，如果在主线程中进行长时间的处理，会妨碍主线程中被称为RunLoop的主循环的执行，从而导致不能更新用户界面、应用程序的画面长时间停滞等问题</p>
+</li>
+</ol>
 <h3 id="二、GCD中的四个关键概念："><a href="#二、GCD中的四个关键概念：" class="headerlink" title="二、GCD中的四个关键概念："></a>二、GCD中的四个关键概念：</h3><ol>
 <li>同步：添加任务到队列中后等待任务执行完毕后才回调；</li>
 <li>异步：添加任务到队列中后立即回调，任务在后台执行；</li>
 <li>串行：按顺序执行，任务1执行完后，任务2才开始执行；</li>
 <li>并行：任务1未结束，任务2也可以开始执行；</li>
 </ol>
-<h3 id="三、添加任务到队列（同步、异步）："><a href="#三、添加任务到队列（同步、异步）：" class="headerlink" title="三、添加任务到队列（同步、异步）："></a>三、添加任务到队列（同步、异步）：</h3><p>1、dispatch_sync:同步添加，将指定的任务block同步追加到queue中，在追加的block结束之前，dispatch_sync会一直等待；</p>
+<h3 id="三、添加任务到队列（同步、异步）："><a href="#三、添加任务到队列（同步、异步）：" class="headerlink" title="三、添加任务到队列（同步、异步）："></a>三、添加任务到队列（同步、异步）：</h3><h5 id="1、dispatch-sync"><a href="#1、dispatch-sync" class="headerlink" title="1、dispatch_sync:"></a>1、dispatch_sync:</h5><p>同步添加，将指定的任务block同步追加到queue中，在追加的block结束之前，dispatch_sync会一直等待；</p>
 <p>如果在主线程上执行同步任务（任务也在主线程执行），会造成死锁：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">//会造成死锁</div><div class="line">dispatch_sync(dispatch_get_main_queue(), ^&#123;</div><div class="line">	//</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
 <p>但是在异步任务里可以用来切换到主线程</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">dispatch_async(dispatch_get_global_queue(0,0), ^&#123;</div><div class="line">	//耗时操作；</div><div class="line">	dispatch_sync(dispatch_get_main_queue(), ^&#123;</div><div class="line">		//回到主线程；</div><div class="line">	&#125;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<p>1、操作队列<br>dispatch_async异步：将指定的Block”非同步”地追加到指定的Queue中，dispatch_async不做任何等待<br>dispatch_sync同步：将指定的block同步追加到queue中，在追加的block结束之前，dispatch_sync会一直等待，在执行Main Dispatch Queue时，使用另外的global进行处理，处理结束时立即使用结果，这种情况下使用，在block任务结束以前，会等待达到wait效果。</p>
+<p>可以用来阻塞线程：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">dispatch_sync(dispatch_get_global_queue(0,0), ^&#123;</div><div class="line">  sleep(2);</div><div class="line">  NSLog(@&quot;2秒后执行，但是会阻塞线程&quot;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^&#123;</div><div class="line">   NSLog(@&quot;2秒后执行，但是不阻塞线程&quot;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<h5 id="2、dispatch-async："><a href="#2、dispatch-async：" class="headerlink" title="2、dispatch_async："></a>2、dispatch_async：</h5><p>异步添加，将指定的Block”非同步”地追加到指定的Queue中，该线程不做等待，继续往下执行；</p>
+<p>dispatch_sync同步：将指定的block同步追加到queue中，在追加的block结束之前，dispatch_sync会一直等待，在执行Main Dispatch Queue时，使用另外的global进行处理，处理结束时立即使用结果，这种情况下使用，在block任务结束以前，会等待达到wait效果。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">dispatch_sync(dispatch_get_global_queue(0,0), ^&#123;</div><div class="line">sleep(2);</div><div class="line">&#125;);</div><div class="line"></div><div class="line">dispatch_after:</div><div class="line">dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3*NSEC_PER_SEC)),dispatch_get_main_queue(), ^&#123;</div><div class="line">&#125;);</div><div class="line"></div><div class="line">dispatch_after(dispatch_time(DISPATCH_TIME_NOW,150ull *NSEC_PER_MSEC),dispatch_get_main_queue(), ^&#123;</div><div class="line">    //毫秒</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
 <p>要注意，并不是在3秒后执行，而是在3秒后将任务添加到Dispatch Queue中,这个代码与3秒后用dispatch_async将任务加到Main Dispatch Queue中一样的。如果Main Dispatch Queue中有大量的添加任务或者主线程本身有执行延迟，时间会有一定的延迟误差。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">dispatch_group</div><div class="line">dispatch_group_t group =dispatch_group_create();</div><div class="line">dispatch_queue_t queue =dispatch_get_global_queue(0,0);</div><div class="line"></div><div class="line">//并发各种任务</div><div class="line">dispatch_group_async(group, queue, ^&#123;NSLog(@&quot;block_1&quot;);&#125;);</div><div class="line">dispatch_group_async(group, queue, ^&#123;NSLog(@&quot;block_2&quot;);&#125;);</div><div class="line"></div><div class="line">//上面任务结束后执行</div><div class="line">dispatch_group_notify(group,dispatch_get_main_queue(), ^&#123;NSLog(@&quot;done&quot;);&#125;);</div><div class="line">无论是上面Dispatch Queue，都能检测，只要队列中的所有任务都执行完毕了，就会开始执行结束任务。</div></pre></td></tr></table></figure>
