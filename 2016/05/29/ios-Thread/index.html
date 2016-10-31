@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>iOS多线程 | Helloted</title>
+    <title>iOS多线程 | 大写的程序员</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="Caohaozhi">
@@ -16,7 +16,7 @@
     
     
     
-    <link rel="alternative" href="/Tinnypp/atom.xml" title="Helloted" type="application/atom+xml">
+    <link rel="alternative" href="/Tinnypp/atom.xml" title="大写的程序员" type="application/atom+xml">
     
     
     <link rel="icon" href="/img/favicon.ico">
@@ -57,8 +57,8 @@ var _hmt = _hmt || [];
       <div>
 		
 			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="Helloted">Helloted</a></h1>
-				<h2 class="blog-motto">雪忆, 如雪般单纯, 冷静思考.</h2>
+				<h1 class="site-name"><a href="/" title="大写的程序员">大写的程序员</a></h1>
+				<h2 class="blog-motto">程序员晋级ing,产品设计学习ing.</h2>
 			</div>
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
 			</a></div>
@@ -101,7 +101,7 @@ var _hmt = _hmt || [];
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title"></strong>
-		<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、前言"><span class="toc-number">1.</span> <span class="toc-text">一、前言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、GCD中的四个关键概念："><span class="toc-number">2.</span> <span class="toc-text">二、GCD中的四个关键概念：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、添加任务到队列（同步、异步）："><span class="toc-number">3.</span> <span class="toc-text">三、添加任务到队列（同步、异步）：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#dispatch-sync"><span class="toc-number">3.1.</span> <span class="toc-text">dispatch_sync:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#dispatch-async："><span class="toc-number">3.2.</span> <span class="toc-text">dispatch_async：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#五、延迟添加执行dispatch-after"><span class="toc-number">4.</span> <span class="toc-text">五、延迟添加执行dispatch_after</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#六、NSOperation"><span class="toc-number">5.</span> <span class="toc-text">六、NSOperation</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、前言"><span class="toc-number">1.</span> <span class="toc-text">一、前言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、GCD中的四个关键概念："><span class="toc-number">2.</span> <span class="toc-text">二、GCD中的四个关键概念：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、添加任务到队列（同步、异步）："><span class="toc-number">3.</span> <span class="toc-text">三、添加任务到队列（同步、异步）：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#dispatch-sync"><span class="toc-number">3.1.</span> <span class="toc-text">dispatch_sync:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#dispatch-async："><span class="toc-number">3.2.</span> <span class="toc-text">dispatch_async：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#dispatch-barrier-sync"><span class="toc-number">3.3.</span> <span class="toc-text">dispatch_barrier_sync:</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#四、队列"><span class="toc-number">4.</span> <span class="toc-text">四、队列</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#五、延迟添加执行dispatch-after"><span class="toc-number">5.</span> <span class="toc-text">五、延迟添加执行dispatch_after</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#六、NSOperation"><span class="toc-number">6.</span> <span class="toc-text">六、NSOperation</span></a></li></ol>
 		</div>
 		
 		<h3 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h3><ol>
@@ -126,12 +126,8 @@ var _hmt = _hmt || [];
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">dispatch_sync(dispatch_get_global_queue(0,0), ^&#123;</div><div class="line">  sleep(2);</div><div class="line">  NSLog(@&quot;2秒后执行，但是会阻塞线程&quot;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^&#123;</div><div class="line">   NSLog(@&quot;2秒后执行，但是不阻塞线程&quot;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
 <h4 id="dispatch-async："><a href="#dispatch-async：" class="headerlink" title="dispatch_async："></a>dispatch_async：</h4><p>异步添加，将指定的Block”非同步”地追加到指定的Queue中，该线程不做等待，继续往下执行；</p>
-<p>dispatch_sync同步：将指定的block同步追加到queue中，在追加的block结束之前，dispatch_sync会一直等待，在执行Main Dispatch Queue时，使用另外的global进行处理，处理结束时立即使用结果，这种情况下使用，在block任务结束以前，会等待达到wait效果。</p>
-<p>要注意，并不是在3秒后执行，而是在3秒后将任务添加到Dispatch Queue中,这个代码与3秒后用dispatch_async将任务加到Main Dispatch Queue中一样的。如果Main Dispatch Queue中有大量的添加任务或者主线程本身有执行延迟，时间会有一定的延迟误差。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">dispatch_group</div><div class="line">dispatch_group_t group =dispatch_group_create();</div><div class="line">dispatch_queue_t queue =dispatch_get_global_queue(0,0);</div><div class="line"></div><div class="line">//并发各种任务</div><div class="line">dispatch_group_async(group, queue, ^&#123;NSLog(@&quot;block_1&quot;);&#125;);</div><div class="line">dispatch_group_async(group, queue, ^&#123;NSLog(@&quot;block_2&quot;);&#125;);</div><div class="line"></div><div class="line">//上面任务结束后执行</div><div class="line">dispatch_group_notify(group,dispatch_get_main_queue(), ^&#123;NSLog(@&quot;done&quot;);&#125;);</div><div class="line">无论是上面Dispatch Queue，都能检测，只要队列中的所有任务都执行完毕了，就会开始执行结束任务。</div></pre></td></tr></table></figure>
-<p>dispatch_barrier_sync:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">用于数据库和文件访问解决资源竞争问题</div><div class="line">dispatch_async(queue, ^&#123;NSLog(@&quot;read&quot;);&#125;);</div><div class="line">dispatch_async(queue, ^&#123;NSLog(@&quot;read&quot;);&#125;);</div><div class="line">dispatch_async(queue, ^&#123;NSLog(@&quot;read&quot;);&#125;);</div><div class="line">dispatch_barrier_sync(queue, ^&#123;NSLog(@&quot;writing&quot;);&#125;);</div><div class="line">dispatch_async(queue, ^&#123;NSLog(@&quot;read&quot;);&#125;);</div></pre></td></tr></table></figure>
-<p>队列<br>Dispatch Queue：执行处理任务的队列，通过dispatch_async等函数API，在Block语法中记述想要执行的处理任务并将其追加到Dispatch Queue中，Dispatch Queue按照追加的顺序（先进先出FIFO）执行处理。</p>
+<h4 id="dispatch-barrier-sync"><a href="#dispatch-barrier-sync" class="headerlink" title="dispatch_barrier_sync:"></a>dispatch_barrier_sync:</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">用于数据库和文件访问解决资源竞争问题</div><div class="line">dispatch_async(queue, ^&#123;NSLog(@&quot;read&quot;);&#125;);</div><div class="line">dispatch_async(queue, ^&#123;NSLog(@&quot;read&quot;);&#125;);</div><div class="line">dispatch_async(queue, ^&#123;NSLog(@&quot;read&quot;);&#125;);</div><div class="line">dispatch_barrier_sync(queue, ^&#123;NSLog(@&quot;writing&quot;);&#125;);</div><div class="line">dispatch_async(queue, ^&#123;NSLog(@&quot;read&quot;);&#125;);</div></pre></td></tr></table></figure>
+<h3 id="四、队列"><a href="#四、队列" class="headerlink" title="四、队列"></a>四、队列</h3><p>Dispatch Queue：执行处理任务的队列，通过dispatch_async等函数API，在Block语法中记述想要执行的处理任务并将其追加到Dispatch Queue中，Dispatch Queue按照追加的顺序（先进先出FIFO）执行处理。</p>
 <p>Serial Dispatch Queue（串行队列）：等待现在执行中处理结束，一旦生成Serial Dispatch Queue并追加处理。系统对于一个Serial Dispatch Queue就只生成并使用一个线程，但是如果生成过多的线程，会导致消耗大量的内存，引起大量的上下文切换，大幅度降低系统的响应性能，因此只在为了避免多个线程更新相同的资源导致数据竞争时使用。</p>
 <p>Concurrent Dispatch Queue（并行队列）：不等待现在执行中处理结束，可以并行执行多个处理，并行处理的处理数量取决于当前系统状态，生成所需的线程执行处理，当处理结束，应当执行的处理数减少时，XNU内核会结束不再需要的线程，因此当想并行执行不发生数据竞争等问题处理时使用并行队列，有效管理线程，不会出现太多线程。</p>
 <p>系统默认有一个串行队列：主队列（main_queue）和并行队列：全局队列（global_queue），不需要自己手动释放，或者自己创建用户队列（需要手动释放）。</p>
@@ -165,7 +161,7 @@ var _hmt = _hmt || [];
 
 <div class="article-share" id="share">
 
-  <div data-url="http://www.helloted.com/2016/05/29/ios-Thread/" data-title="iOS多线程 | Helloted" data-tsina="null" class="share clearfix">
+  <div data-url="http://www.helloted.com/2016/05/29/ios-Thread/" data-title="iOS多线程 | 大写的程序员" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
