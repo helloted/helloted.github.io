@@ -106,7 +106,6 @@ var _hmt = _hmt || [];
 		<h3 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h3><p>Runloop的本质是一直运行着的循环，线程中的循环.它用来接受循环事件和安排线程的工作,并且在线程中没有工作时,让线程进入睡眠状态.程序启动时，Runloop随着主线程的启动而启动，每个线程都有一个runloop,但是只有主线程的会自动启动；</p>
 <p>RunLoop 是线程中的一个循环,并且对接受到的事件进行处理.我们的代码可以通过提供 while 或者 for 循环来驱动 RunLoop.在循环中,Run Loop 对象来负责事件处理的代码(接受事件,并调用相应的事件处理方法).</p>
 <h3 id="二、事件来源"><a href="#二、事件来源" class="headerlink" title="二、事件来源"></a>二、事件来源</h3><p>RunLoop 接受的事件源有两种大类: 异步的input sources, 同步的 Timer sources. </p>
-<p> <img src="/Users/Devond/Desktop/1.png" alt="1"></p>
 <p>InputSources : 用来投递异步消息,通常消息来自另外的线程或者程序.在接受到消息并调用指定的方法时,线程对应的 NSRunLoop 对象会通过执行 runUntilDate:方法来退出.Input source有两个不同的种类:Port-Based Sources和Custom Input Sources;Run Loop本身并不关心Input source是哪一种类型。系统会实现两种不同的Input source供我们使用。这两种不同类型的Input source的区别在于：Port-Based Sources由内核自动发送，Custom Input Sources需要从其他线程手动发送。</p>
 <ul>
 <li>Port-Based Sources通过内置的端口相关的对象和函数，配置基于端口的Input source。 (比如在主线程创建子线程时传入一个NSPort对象,主线程和子线程就可以进行通讯。NSPort对象会负责自己创建和配置Input source。)</li>
