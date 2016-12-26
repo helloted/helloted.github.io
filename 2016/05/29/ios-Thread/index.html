@@ -10,8 +10,13 @@
     <meta name="author" content="Caohaozhi">
     
     <meta name="description" content="一、前言
-开发者只需要定义想要执行的任务并追加到适当的Dispatch Queue中，GCD就能生成必要的线程并计划执行任务。由于线程管理是作为系统的一部分来实现的，因此可以统一管理，也可执行任务
-多线程问题：多个线程更新相同的资源会导致数据的不一致（数据竞争）、停止等待事件的线程会导致多个线程相互">
+Pthreads
+NSThread
+GCD
+NSOperation &amp;amp; NSOperationQueue
+
+
+开发者只需要定义想要执行的任务并追加到适当的Dispatch Queue中，GCD就能生成必要的线程并计划执行任务。由于线程管理是作为系统的一部分来实现的，因此可以统一管理">
     
     
     
@@ -101,23 +106,26 @@ var _hmt = _hmt || [];
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title"></strong>
-		<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、前言"><span class="toc-number">1.</span> <span class="toc-text">一、前言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、GCD中的四个关键概念："><span class="toc-number">2.</span> <span class="toc-text">二、GCD中的四个关键概念：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、添加任务到队列（同步、异步）："><span class="toc-number">3.</span> <span class="toc-text">三、添加任务到队列（同步、异步）：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#dispatch-sync"><span class="toc-number">3.1.</span> <span class="toc-text">dispatch_sync:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#dispatch-async："><span class="toc-number">3.2.</span> <span class="toc-text">dispatch_async：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#dispatch-barrier-sync"><span class="toc-number">3.3.</span> <span class="toc-text">dispatch_barrier_sync:</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#四、队列"><span class="toc-number">4.</span> <span class="toc-text">四、队列</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Serial-Dispatch-Queue（串行队列）："><span class="toc-number">4.1.</span> <span class="toc-text">Serial Dispatch Queue（串行队列）：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Concurrent-Dispatch-Queue（并行队列）："><span class="toc-number">4.2.</span> <span class="toc-text">Concurrent Dispatch Queue（并行队列）：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#主队列（main）"><span class="toc-number">4.3.</span> <span class="toc-text">主队列（main）:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#全局队列（global-queue）："><span class="toc-number">4.4.</span> <span class="toc-text">全局队列（global_queue）：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建队列：（create-queue）"><span class="toc-number">4.5.</span> <span class="toc-text">创建队列：（create_queue）:</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#五、延迟添加执行dispatch-after"><span class="toc-number">5.</span> <span class="toc-text">五、延迟添加执行dispatch_after</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#六、NSOperation"><span class="toc-number">6.</span> <span class="toc-text">六、NSOperation</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、前言"><span class="toc-number">1.</span> <span class="toc-text">一、前言</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#二、Pthreads"><span class="toc-number">1.1.</span> <span class="toc-text">二、Pthreads</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、NSThread"><span class="toc-number">2.</span> <span class="toc-text">三、NSThread</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#四、添加任务到队列（同步、异步）："><span class="toc-number">3.</span> <span class="toc-text">四、添加任务到队列（同步、异步）：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#dispatch-sync"><span class="toc-number">3.1.</span> <span class="toc-text">dispatch_sync:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#dispatch-async："><span class="toc-number">3.2.</span> <span class="toc-text">dispatch_async：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#dispatch-barrier-sync"><span class="toc-number">3.3.</span> <span class="toc-text">dispatch_barrier_sync:</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#五、队列"><span class="toc-number">4.</span> <span class="toc-text">五、队列</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Serial-Dispatch-Queue（串行队列）："><span class="toc-number">4.1.</span> <span class="toc-text">Serial Dispatch Queue（串行队列）：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Concurrent-Dispatch-Queue（并行队列）："><span class="toc-number">4.2.</span> <span class="toc-text">Concurrent Dispatch Queue（并行队列）：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#主队列（main）"><span class="toc-number">4.3.</span> <span class="toc-text">主队列（main）:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#全局队列（global-queue）："><span class="toc-number">4.4.</span> <span class="toc-text">全局队列（global_queue）：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建队列：（create-queue）"><span class="toc-number">4.5.</span> <span class="toc-text">创建队列：（create_queue）:</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#六、延迟添加执行dispatch-after"><span class="toc-number">5.</span> <span class="toc-text">六、延迟添加执行dispatch_after</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#七、NSOperation"><span class="toc-number">6.</span> <span class="toc-text">七、NSOperation</span></a></li></ol>
 		</div>
 		
-		<h3 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h3><ol>
+		<h3 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h3><ul>
+<li>Pthreads</li>
+<li>NSThread</li>
+<li>GCD</li>
+<li>NSOperation &amp; NSOperationQueue</li>
+</ul>
+<ol>
 <li>开发者只需要定义想要执行的任务并追加到适当的Dispatch Queue中，GCD就能生成必要的线程并计划执行任务。由于线程管理是作为系统的一部分来实现的，因此可以统一管理，也可执行任务</li>
 <li><p>多线程问题：多个线程更新相同的资源会导致数据的不一致（数据竞争）、停止等待事件的线程会导致多个线程相互持续等待（死锁）、使用太多线程会消耗大量的内存</p>
 </li>
 <li><p>应用程序在启动时，最先执行主线程，如果在主线程中进行长时间的处理，会妨碍主线程中被称为RunLoop的主循环的执行，从而导致不能更新用户界面、应用程序的画面长时间停滞等问题</p>
 </li>
 </ol>
-<h3 id="二、GCD中的四个关键概念："><a href="#二、GCD中的四个关键概念：" class="headerlink" title="二、GCD中的四个关键概念："></a>二、GCD中的四个关键概念：</h3><ol>
-<li>同步：添加任务到队列中后等待任务执行完毕后才回调；</li>
-<li>异步：添加任务到队列中后立即回调，任务在后台执行；</li>
-<li>串行：按顺序执行，任务1执行完后，任务2才开始执行；</li>
-<li>并行：任务1未结束，任务2也可以开始执行；</li>
-</ol>
-<h3 id="三、添加任务到队列（同步、异步）："><a href="#三、添加任务到队列（同步、异步）：" class="headerlink" title="三、添加任务到队列（同步、异步）："></a>三、添加任务到队列（同步、异步）：</h3><h4 id="dispatch-sync"><a href="#dispatch-sync" class="headerlink" title="dispatch_sync:"></a>dispatch_sync:</h4><p>同步添加，将指定的任务block同步追加到queue中，在追加的block结束之前，dispatch_sync会一直等待；</p>
+<h4 id="二、Pthreads"><a href="#二、Pthreads" class="headerlink" title="二、Pthreads"></a>二、Pthreads</h4><p>POSIX线程（POSIX threads），简称Pthreads，是线程的POSIX标准。该标准定义了创建和操纵线程的一整套API。在类Unix操作系统（Unix、Linux、Mac OS X等）中，都使用Pthreads作为操作系统的线程,这是一套在很多操作系统上都通用的多线程API，所以移植性很强（然并卵），当然在 iOS 中也是可以的。不过这是基于 c语言的框架；</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event &#123;</div><div class="line">    pthread_t thread;</div><div class="line">    //创建一个线程并自动执行</div><div class="line">    pthread_create(&amp;thread, NULL, start, NULL);</div><div class="line">&#125;</div><div class="line"></div><div class="line">void *start(void *data) &#123;</div><div class="line">    NSLog(@&quot;%@&quot;, [NSThread currentThread]);</div><div class="line">    return NULL;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="三、NSThread"><a href="#三、NSThread" class="headerlink" title="三、NSThread"></a>三、NSThread</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">//取消线程</div><div class="line"></div><div class="line">- (void)cancel;</div><div class="line"></div><div class="line">//启动线程</div><div class="line"></div><div class="line">- (void)start;</div><div class="line"></div><div class="line">//判断某个线程的状态的属性</div><div class="line"></div><div class="line">@property (readonly, getter=isExecuting) BOOL executing;</div><div class="line"></div><div class="line">@property (readonly, getter=isFinished) BOOL finished;</div><div class="line"></div><div class="line">@property (readonly, getter=isCancelled) BOOL cancelled;</div><div class="line"></div><div class="line">//设置和获取线程名字</div><div class="line"></div><div class="line">-(void)setName:(NSString *)n;</div><div class="line"></div><div class="line">-(NSString *)name;</div><div class="line"></div><div class="line">//获取当前线程信息</div><div class="line"></div><div class="line">+ (NSThread *)currentThread;</div><div class="line"></div><div class="line">//获取主线程信息</div><div class="line"></div><div class="line">+ (NSThread *)mainThread;</div><div class="line"></div><div class="line">//使当前线程暂停一段时间，或者暂停到某个时刻</div><div class="line"></div><div class="line">+ (void)sleepForTimeInterval:(NSTimeInterval)time;</div><div class="line"></div><div class="line">+ (void)sleepUntilDate:(NSDate *)date;</div></pre></td></tr></table></figure>
+<h3 id="四、添加任务到队列（同步、异步）："><a href="#四、添加任务到队列（同步、异步）：" class="headerlink" title="四、添加任务到队列（同步、异步）："></a>四、添加任务到队列（同步、异步）：</h3><h4 id="dispatch-sync"><a href="#dispatch-sync" class="headerlink" title="dispatch_sync:"></a>dispatch_sync:</h4><p>同步添加，将指定的任务block同步追加到queue中，在追加的block结束之前，dispatch_sync会一直等待；</p>
 <p>如果在主线程上执行同步任务（任务也在主线程执行），会造成死锁：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">//会造成死锁</div><div class="line">dispatch_sync(dispatch_get_main_queue(), ^&#123;</div><div class="line">	//</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
 <p>但是在异步任务里可以用来切换到主线程</p>
@@ -127,7 +135,7 @@ var _hmt = _hmt || [];
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^&#123;</div><div class="line">   NSLog(@&quot;2秒后执行，但是不阻塞线程&quot;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
 <h4 id="dispatch-async："><a href="#dispatch-async：" class="headerlink" title="dispatch_async："></a>dispatch_async：</h4><p>异步添加，将指定的Block”非同步”地追加到指定的Queue中，该线程不做等待，继续往下执行；</p>
 <h4 id="dispatch-barrier-sync"><a href="#dispatch-barrier-sync" class="headerlink" title="dispatch_barrier_sync:"></a>dispatch_barrier_sync:</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">用于数据库和文件访问解决资源竞争问题</div><div class="line">dispatch_async(queue, ^&#123;NSLog(@&quot;read&quot;);&#125;);</div><div class="line">dispatch_async(queue, ^&#123;NSLog(@&quot;read&quot;);&#125;);</div><div class="line">dispatch_async(queue, ^&#123;NSLog(@&quot;read&quot;);&#125;);</div><div class="line">dispatch_barrier_sync(queue, ^&#123;NSLog(@&quot;writing&quot;);&#125;);</div><div class="line">dispatch_async(queue, ^&#123;NSLog(@&quot;read&quot;);&#125;);</div></pre></td></tr></table></figure>
-<h3 id="四、队列"><a href="#四、队列" class="headerlink" title="四、队列"></a>四、队列</h3><p>Dispatch Queue：执行处理任务的队列，通过dispatch_async等函数API，在Block语法中记述想要执行的处理任务并将其追加到Dispatch Queue中，Dispatch Queue按照追加的顺序（先进先出FIFO）执行处理。</p>
+<h3 id="五、队列"><a href="#五、队列" class="headerlink" title="五、队列"></a>五、队列</h3><p>Dispatch Queue：执行处理任务的队列，通过dispatch_async等函数API，在Block语法中记述想要执行的处理任务并将其追加到Dispatch Queue中，Dispatch Queue按照追加的顺序（先进先出FIFO）执行处理。</p>
 <h4 id="Serial-Dispatch-Queue（串行队列）："><a href="#Serial-Dispatch-Queue（串行队列）：" class="headerlink" title="Serial Dispatch Queue（串行队列）："></a>Serial Dispatch Queue（串行队列）：</h4><p>等待现在执行中处理结束，一旦生成Serial Dispatch Queue并追加处理。系统对于一个Serial Dispatch Queue就只生成并使用一个线程，但是如果生成过多的线程，会导致消耗大量的内存，引起大量的上下文切换，大幅度降低系统的响应性能，因此只在为了避免多个线程更新相同的资源导致数据竞争时使用。</p>
 <h4 id="Concurrent-Dispatch-Queue（并行队列）："><a href="#Concurrent-Dispatch-Queue（并行队列）：" class="headerlink" title="Concurrent Dispatch Queue（并行队列）："></a>Concurrent Dispatch Queue（并行队列）：</h4><p> 不等待现在执行中处理结束，可以并行执行多个处理，并行处理的处理数量取决于当前系统状态，生成所需的线程执行处理，当处理结束，应当执行的处理数减少时，XNU内核会结束不再需要的线程，因此当想并行执行不发生数据竞争等问题处理时使用并行队列，有效管理线程，不会出现太多线程。</p>
 <p>系统默认有一个串行队列：主队列（main_queue）和并行队列：全局队列（global_queue），不需要自己手动释放，或者自己创建用户队列（需要手动释放）。</p>
@@ -136,18 +144,32 @@ var _hmt = _hmt || [];
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">dispatch_queue_t globalQ = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)</div><div class="line"></div><div class="line">DISPATCH_QUEUE_PRIORITY_HIGH:             //优先级最高，在default,和low之前执行</div><div class="line">DISPATCH_QUEUE_PRIORITY_DEFAULT           //默认优先级，在low之前，在high之后</div><div class="line">DISPATCH_QUEUE_PRIORITY_LOW               //在high和default后执行</div><div class="line">DISPATCH_QUEUE_PRIORITY_BACKGROUND        //提交到这个队列的任务会在high优先级的任务和已经提交到background队列的执行完后执行。</div></pre></td></tr></table></figure>
 <h4 id="创建队列：（create-queue）"><a href="#创建队列：（create-queue）" class="headerlink" title="创建队列：（create_queue）:"></a>创建队列：（create_queue）:</h4><p>尽管是ARC，使用结束后也要dispatch_release释放</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">dispatch_queue_t  concurrentQ = dispatch_queue_create(&quot;createName&quot;,DISPATCH_QUEUE_CONCURRENT)</div><div class="line">dispatch_queue_t  serialQ = dispatch_queue_create(&quot;createName&quot;, DISPATCH_QUEUE_SERIAL)</div><div class="line">改变队列优先级</div><div class="line">dispatch_set_target_queue(restQueue, targetQueue);</div></pre></td></tr></table></figure>
-<h3 id="五、延迟添加执行dispatch-after"><a href="#五、延迟添加执行dispatch-after" class="headerlink" title="五、延迟添加执行dispatch_after"></a>五、延迟添加执行dispatch_after</h3><p>并不是在多少秒后执行，而是在3秒后将任务添加到Dispatch Queue中</p>
+<h3 id="六、延迟添加执行dispatch-after"><a href="#六、延迟添加执行dispatch-after" class="headerlink" title="六、延迟添加执行dispatch_after"></a>六、延迟添加执行dispatch_after</h3><p>并不是在多少秒后执行，而是在3秒后将任务添加到Dispatch Queue中</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3*NSEC_PER_SEC)),dispatch_get_main_queue(), ^&#123;</div><div class="line">	//秒</div><div class="line">&#125;);</div><div class="line"></div><div class="line">dispatch_after(dispatch_time(DISPATCH_TIME_NOW,150ull *NSEC_PER_MSEC),dispatch_get_main_queue(), ^&#123;</div><div class="line">    //毫秒</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<h3 id="六、NSOperation"><a href="#六、NSOperation" class="headerlink" title="六、NSOperation"></a>六、NSOperation</h3><p>NSOperation:分为NSOpeartion（NSInvocationOperation和NSBlockOperation）,或者自己继承NSoperation创建</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(run) object:nil];</div><div class="line"></div><div class="line">[operation start];// 开始执行任务(同步执行)</div><div class="line">NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^()&#123;</div><div class="line">    NSLog(@&quot;执行了一个新的操作，线程：%@&quot;, [NSThread currentThread]);</div><div class="line">&#125;];</div><div class="line"></div><div class="line">[operation start];// 开始执行任务(这里还是同步执行)</div><div class="line">[operation addExecutionBlock:^() &#123;</div><div class="line">    NSLog(@&quot;又执行了1个新的操作，线程：%@&quot;, [NSThread currentThread]);</div><div class="line">&#125;];//并发</div></pre></td></tr></table></figure>
-<p>operation有三种状态isExecuted、isFinished和isCancelled以方便我们通过 KVC 对它的状态进行监听。</p>
-<p>operation可以取消[operation cancel];</p>
-<p>start是一个同步方法。如果要异步执行的话，就需要自定义NSOperation的子类。或者使用NSOperationQueue。我们自己生成的NSOperationQueue对象都是非主队列，主队列可以用NSOperationQueue.mainQueue取得。NSOperationQueue有一个属性叫maxConcurrentOperationCount，它表示最多支持多少个NSOperation并发执行。如果maxConcurrentOperationCount被设为 1，就以为这个队列是串行队列。使用NSOperationQueue来执行任务与之前的区别在于，首先创建一个非主队列。然后用addOperation方法替换之前的start方法。刚刚已经说过，NSOperationQueue会为每一个NSOperation建立线程并调用他们的start方法。</p>
-<p>NSOperation设置依赖比较方便 operation2.addDependency(operation1)，保证发出第二次请求的时候第一个请求已经执行完</p>
-<p>暂停与恢复：queue.suspended =true//暂停queue中所有</p>
-<p>operationqueue.suspended =false//恢复queue中所有operation</p>
-<p>GCD以 block 为单位，代码简洁。同时 GCD 中的队列、组、信号量、source、barriers 都是组成并行编程的基本原语。对于一次性的计算，或是仅仅为了加快现有方法的运行速度，选择轻量化的 GCD 就更加方便。</p>
-<p>而NSOperation可以用来规划一组任务之间的依赖关系，设置它们的优先级，任务能被取消。队列可以暂停、恢复。NSOperation还可以被子类化。这些都是 GCD 所不具备的。</p>
+<h3 id="七、NSOperation"><a href="#七、NSOperation" class="headerlink" title="七、NSOperation"></a>七、NSOperation</h3><p>1、NSoperation是基于GCD封装的</p>
+<p>dispatch_async(_Queue, ^{    //请求数据  NSData *data = [NSData dataWithContentURL:[NSURL URLWithString:@”<a href="http://domain.com/a.png" target="_blank" rel="external">http://domain.com/a.png</a>“]];    dispatch_async(dispatch_get_main_queue(), ^{         [self refreshViews:data];    });});</p>
+<p>没错，它是可以正常的工作，但是有个致命的问题：这个任务是无法取消的 dataWithContentURL:是同步的拉取数据，它会一直阻塞线程直到完成请求，如果是遇到了超时的情况，它在这个时间内会一直占有这个线程；在这个期间并发队列就需要为其他任务新建线程，这样可能导致性能下降等问题。</p>
+<p>2、NSOperationQueue相对于GCD来说有以下优点：</p>
+<ul>
+<li>提供了在 GCD 中不那么容易复制的有用特性。</li>
+<li>可以很方便的取消一个NSOperation的执行</li>
+<li>可以更容易的添加任务的依赖关系</li>
+<li>提供了任务的状态：isExecuteing, isFinished.</li>
+</ul>
+<p>NSOperationQueue 有两种不同类型的队列：主队列和自定义队列。主队列运行在主线程之上，而自定义队列在后台执行。在两种类型中，这些队列所处理的任务都使用 NSOperation 的子类来表述。</p>
+<p>我们可以通过设置 maxConcurrentOperationCount 属性来控制并发任务的数量，当设置为 1 时， 那么它就是一个串行队列。主对列默认是串行队列，这一点和 dispatch_queue_t 是相似的。</p>
+<p>3、NSOperation</p>
+<p>你可以使用系统提供的一些现成的 NSOperation 的子类， 如 NSBlockOperation、 NSInvocationOperation 等（如上例子）。你也可以实现自己的子类， 通过重写 main 或者 start 方法 来定义自己的 operations 。</p>
+<p>A:使用 main 方法非常简单，开发者不需要管理一些状态属性（例如 isExecuting 和 isFinished），当 main 方法返回的时候，这个 operation 就结束了。这种方式使用起来非常简单，但是灵活性相对重写 start 来说要少一些， 因为main方法执行完就认为operation结束了，所以一般可以用来执行同步任务。</p>
+<p>B:如果你希望拥有更多的控制权，或者想在一个操作中可以执行异步任务，那么就重写 start 方法, 但是注意：这种情况下，你必须手动管理操作的状态， 只有当发送 isFinished 的 KVO 消息时，才认为是 operation 结束</p>
+<p>当实现了start方法时，默认会执行start方法，而不执行main方法</p>
+<p>为了让操作队列能够捕获到操作的改变，需要将状态的属性以配合 KVO 的方式进行实现。如果你不使用它们默认的 setter 来进行设置的话，你就需要在合适的时候发送合适的 KVO 消息。</p>
+<p>需要手动管理的状态有：</p>
+<ul>
+<li>isExecuting 代表任务正在执行中</li>
+<li>isFinished 代表任务已经执行完成</li>
+<li>isCancelled 代表任务已经取消执行</li>
+</ul>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -172,10 +194,10 @@ var _hmt = _hmt || [];
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2016/06/21/net/" title="网络基础">
+ <a href="/2016/12/26/new-POST/" title="new POST">
   <strong>New:</strong><br/>
   <span>
-  网络基础</span>
+  new POST</span>
 </a>
 </div>
 
@@ -331,7 +353,7 @@ $(document).ready(function(){
 
 
 <script type="text/javascript">
-  var duoshuoQuery = {short_name:"tinnypp"};
+  var duoshuoQuery = {short_name:"helloted"};
   (function() {
     var ds = document.createElement('script');
     ds.type = 'text/javascript';ds.async = true;
