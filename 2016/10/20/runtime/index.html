@@ -138,7 +138,7 @@ struct objc_protocol_list *protocols;  //类需要遵守的协议
 <p>每一个类本质上都是一个对象，类其实是元类（meteClass）的实例。元类定义了类方法的列表。类通过类的isa指针指向元类。</p>
 <p>所有的元类最终继承一个根元类，根元类isa指针指向本身，形成一个封闭的内循环</p>
 <p>superclass指向该类的父类, 如果该类已经是最顶层的根类(如 NSObject 或 NSProxy),那么 super_class 就为 NULL.</p>
-<p><img src="img/Runtime_00.png" alt="img"></p>
+<p><img src="http://ojx0q9o9x.bkt.clouddn.com/Runtime_00.png" alt="img"></p>
 <p>上图实线是 super_class 指针，虚线是isa指针。 有趣的是根元类的超类是NSObject，而isa指向了自己，而NSObject的超类为nil，也就是它没有超类。</p>
 <p>需要深刻理解 [self class] 与 object_getClass(self) 甚至 object_getClass([self class]) 的关系，其实并不难，重点在于 self 的类型：</p>
 <p>当 self 为实例对象时，[self class] 与 object_getClass(self) 等价，因为前者会调用后者。object_getClass([self class]) 得到元类。</p>
