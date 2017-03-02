@@ -9,12 +9,12 @@
     
     <meta name="author" content="Caohaozhi">
     
-    <meta name="description" content="一、TCP/IP定义TCP/IP是互联网相关的各类协议族的名称
+    <meta name="description" content="TCP/IP定义TCP/IP是互联网相关的各类协议族的名称
 
-二、TCP/IP四层模型OSI七层模型太过繁琐，所以就对应有了TCP/IP四层模型，对应的将OSI中的应用层、表示层、会话层统一归为应用层。
+TCP/IP四层模型OSI七层模型太过繁琐，所以就对应有了TCP/IP四层模型，对应的将OSI中的应用层、表示层、会话层统一归为应用层。
 
 应用层：决定了向用户提供应用服务时通信的活动。HTTP协议。
-传输层：提供处于网络连接中的">
+传输层：提供处于网络连接中的两台计算">
     
     
     
@@ -63,7 +63,7 @@ var _hmt = _hmt || [];
 				<h1 class="site-name"><a href="/" title="大写的程序员">大写的程序员</a></h1>
 				<h2 class="blog-motto">程序员晋级ing,产品设计学习ing.</h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -81,7 +81,7 @@ var _hmt = _hmt || [];
 						</form>
 					
 					</li>
-                <!--<li><div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div></li>-->
+                <!--<li><div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div></li>-->
 
 				</ul>
 			</nav>	
@@ -104,18 +104,34 @@ var _hmt = _hmt || [];
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title"></strong>
-		<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、TCP-IP定义"><span class="toc-number">1.</span> <span class="toc-text">一、TCP/IP定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、TCP-IP四层模型"><span class="toc-number">2.</span> <span class="toc-text">二、TCP/IP四层模型</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP-IP定义"><span class="toc-number">1.</span> <span class="toc-text">TCP/IP定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP-IP四层模型"><span class="toc-number">2.</span> <span class="toc-text">TCP/IP四层模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP报文"><span class="toc-number">3.</span> <span class="toc-text">HTTP报文</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#请求报文"><span class="toc-number">3.1.</span> <span class="toc-text">请求报文</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#请求行"><span class="toc-number">3.2.</span> <span class="toc-text">请求行</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#请求方法"><span class="toc-number">3.3.</span> <span class="toc-text">请求方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#返回报文"><span class="toc-number">3.4.</span> <span class="toc-text">返回报文</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#状态码"><span class="toc-number">3.5.</span> <span class="toc-text">状态码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#长连接"><span class="toc-number">3.6.</span> <span class="toc-text">长连接</span></a></li></ol></li></ol>
 		</div>
 		
-		<h3 id="一、TCP-IP定义"><a href="#一、TCP-IP定义" class="headerlink" title="一、TCP/IP定义"></a>一、TCP/IP定义</h3><p>TCP/IP是互联网相关的各类协议族的名称</p>
+		<h3 id="TCP-IP定义"><a href="#TCP-IP定义" class="headerlink" title="TCP/IP定义"></a>TCP/IP定义</h3><p>TCP/IP是互联网相关的各类协议族的名称</p>
 <p><img src="/2016/05/02/Http/tcp.png" alt=""></p>
-<h3 id="二、TCP-IP四层模型"><a href="#二、TCP-IP四层模型" class="headerlink" title="二、TCP/IP四层模型"></a>二、TCP/IP四层模型</h3><p>OSI七层模型太过繁琐，所以就对应有了TCP/IP四层模型，对应的将OSI中的应用层、表示层、会话层统一归为应用层。</p>
+<h3 id="TCP-IP四层模型"><a href="#TCP-IP四层模型" class="headerlink" title="TCP/IP四层模型"></a>TCP/IP四层模型</h3><p>OSI七层模型太过繁琐，所以就对应有了TCP/IP四层模型，对应的将OSI中的应用层、表示层、会话层统一归为应用层。</p>
 <p><img src="/2016/05/02/Http/OSI.png" alt=""></p>
 <p>应用层：决定了向用户提供应用服务时通信的活动。HTTP协议。</p>
 <p>传输层：提供处于网络连接中的两台计算机之间的数据传输，TCP和UDP协议就在这一层</p>
 <p>网络层：用来处理在网络上流动的数据包，数据包是网络传输的最小数据单位。该层规定了通过怎样的路径到达对方计算机，并把数据包传送给对方。IP协议</p>
 <p>链路层：用来处理连接网络的硬件部分。</p>
 <p><img src="/2016/05/02/Http/model.png" alt=""></p>
+<h3 id="HTTP报文"><a href="#HTTP报文" class="headerlink" title="HTTP报文"></a>HTTP报文</h3><h4 id="请求报文"><a href="#请求报文" class="headerlink" title="请求报文"></a>请求报文</h4><p>一个HTTP请求报文由请求行（request line）、请求头部（header）、空行、请求数据4个部分组成</p>
+<p><img src="/2016/05/02/Http/request.png" alt=""></p>
+<h4 id="请求行"><a href="#请求行" class="headerlink" title="请求行"></a>请求行</h4><p>由方法、服务器内部URL(使用GET方法时，请求参数和对应的值附加在URL后面，利用一个问号（“?”）代表URL的结尾与请求参数的开始)、协议版本组成</p>
+<h4 id="请求方法"><a href="#请求方法" class="headerlink" title="请求方法"></a>请求方法</h4><p>GET：请求获取Request-URI所标识的资源。</p>
+<p>POST：在Request-URI所标识的资源后附加新的数据。</p>
+<p>HEAD：请求获取由Request-URI所标识的资源的响应消息报头。</p>
+<p>PUT：请求服务器存储一个资源，并用Request-URI作为其标识。</p>
+<p>Delete：请求服务器删除Request-URI所标识的资源。</p>
+<p>TRACE：请求服务器回送收到的请求信息，主要用于测试或诊断。</p>
+<p>CONNECT：保留将来使用。</p>
+<p>OPTIONS：请求查询服务器的性能，或者查询与资源相关的选项和需求。</p>
+<h4 id="返回报文"><a href="#返回报文" class="headerlink" title="返回报文"></a>返回报文</h4><p><img src="/2016/05/02/Http/response.png" alt=""></p>
+<h4 id="状态码"><a href="#状态码" class="headerlink" title="状态码"></a>状态码</h4><p><img src="/2016/05/02/Http/statusCode.png" alt=""></p>
+<h4 id="长连接"><a href="#长连接" class="headerlink" title="长连接"></a>长连接</h4><p>在报文中有一个字段：connnection:keep-alive;是长连接的意思，从Http1.1开始就是默认TCP保持长连接，只要任意一端没有提出断开连接，则会一直保持连接状态，一次长连接可以进行多次请求和响应，好处是可以减少建立连接和断开连接的开销，减少服务器的负载，另外也可以加快Http请求和响应；</p>
+<p><img src="/2016/05/02/Http/connection.png" alt=""></p>
+<p>### </p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -141,7 +157,7 @@ var _hmt = _hmt || [];
  
  <div class="prev" >
  <a href="/2016/05/29/ios-Thread/" title="iOS多线程">
-  <strong>New:</strong><br/>
+  <strong>新一篇:</strong><br/>
   <span>
   iOS多线程</span>
 </a>
@@ -150,7 +166,7 @@ var _hmt = _hmt || [];
 
 <div class="next">
 <a href="/2016/04/26/network/"  title="网络">
- <strong>Old:</strong><br/> 
+ <strong>旧一篇:</strong><br/> 
  <span>网络
 </span>
 </a>
