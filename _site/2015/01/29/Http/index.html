@@ -11,9 +11,9 @@
     <meta name="keyword"  content="">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>大写的程序员|Helloted Blog</title>
+    <title>HTTP与TCP/IP - 大写的程序员|Helloted Blog</title>
 
-    <link rel="canonical" href="http://localhost:4000/">
+    <link rel="canonical" href="http://localhost:4000/2015/01/29/Http/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -124,256 +124,277 @@
 </script>
 
 
-    <!-- Page Header -->
-<header class="intro-header" style="background-image: url('/img/home-bg.jpg')">
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/post-bg-2015.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        background-image: url('/img/post-bg-2015.jpg')
+    }
+</style>
+<header class="intro-header" >
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
-                <div class="site-heading">
-                    <h1>Helloted Blog</h1>
-                    <!--<hr class="small">-->
-                    <span class="subheading">Boilerplate of Hux Blog</span>
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#网络" title="网络">网络</a>
+                        
+                    </div>
+                    <h1>HTTP与TCP/IP</h1>
+                    
+                    
+                    <h2 class="subheading"> "Hello World, Hello Blog"</h2>
+                    
+                    <span class="meta">Posted by Ted on January 29, 2015</span>
                 </div>
             </div>
         </div>
     </div>
 </header>
 
-<!-- Main Content -->
-<div class="container">
-	<div class="row">
-        
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
 
-<!-- USE SIDEBAR -->
     <!-- Post Container -->
-    		<div class="
-                col-lg-8 col-lg-offset-1
-                col-md-8 col-md-offset-1
-                col-sm-12
-                col-xs-12
-                post-container
-            ">
-    			
-<div class="post-preview">
-    <a href="/2015/05/11/NetWork/">
-        <h2 class="post-title">
-            网络模型
-        </h2>
-        
-        <h3 class="post-subtitle">
-             "Hello World, Hello Blog"
-        </h3>
-        
-        <div class="post-content-preview">
-            网络
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
 
-OSI七层模型
+				<h3 id="tcpip定义">TCP/IP定义</h3>
 
-OSI（Open System Interconnection），由底层到高层分别为，物理层、数据链路层，网络层，传输层、会话层，表示层、应用层
+<p>TCP/IP是互联网相关的各类协议族的名称</p>
 
-物理层：负责将比特流与电子信号转换
+<p><img src="/img/Http/tcp.png" alt="图片" /></p>
 
-数据链路层：定义了通过通信介质相互连接的设备之间，数据传输的规范。有两个重要的概念：MAC 地址和分组交换，数据链路层的意义在于，如果没有数据链路层，数据只能以流的形式存在与通信介质...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Ted on May 11, 2015
-    </p>
-</div>
-<hr>
+<h3 id="tcpip四层模型">TCP/IP四层模型</h3>
 
-<div class="post-preview">
-    <a href="/2015/04/30/ios-Thread/">
-        <h2 class="post-title">
-            iOS多线程
-        </h2>
-        
-        <h3 class="post-subtitle">
-             "Hello World, Hello Blog"
-        </h3>
-        
-        <div class="post-content-preview">
-            一、前言
+<p>OSI七层模型太过繁琐，所以就对应有了TCP/IP四层模型，对应的将OSI中的应用层、表示层、会话层统一归为应用层。</p>
 
+<p><img src="/img/Http/OSI.png" alt="" /></p>
 
-  Pthreads
-  NSThread
-  GCD
-  NSOperation &amp; NSOperationQueue
+<ul>
+  <li>
+    <p>应用层：决定了向用户提供应用服务时通信的活动。HTTP协议。</p>
+  </li>
+  <li>
+    <p>传输层：提供处于网络连接中的两台计算机之间的数据传输，TCP和UDP协议就在这一层</p>
+  </li>
+  <li>
+    <p>网络层：用来处理在网络上流动的数据包，数据包是网络传输的最小数据单位。该层规定了通过怎样的路径到达对方计算机，并把数据包传送给对方。IP协议</p>
+  </li>
+  <li>
+    <p>链路层：用来处理连接网络的硬件部分。</p>
+  </li>
+</ul>
 
+<p><img src="/img/Http/model.png" alt="" /></p>
 
+<h3 id="http报文">HTTP报文</h3>
 
-  开发者只需要定义想要执行的任务并追加到适当的Dispatch Queue中，GCD就能生成必要的线程并计划执行任务。由于线程管理是作为系统的一部分来实现的，因此可以统一管理，也可执行任务
-  
-    多线程问题：多个线程更新相同的资源会导...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Ted on April 30, 2015
-    </p>
-</div>
-<hr>
+<h4 id="请求报文">请求报文</h4>
 
-<div class="post-preview">
-    <a href="/2015/01/29/Runloop/">
-        <h2 class="post-title">
-            RunLoop
-        </h2>
-        
-        <h3 class="post-subtitle">
-             "Hello World, Hello Blog"
-        </h3>
-        
-        <div class="post-content-preview">
-            一、简介
+<p>一个HTTP请求报文由请求行（request line）、请求头部（header）、空行、请求数据4个部分组成</p>
 
-Runloop的本质是一直运行着的循环，线程中的循环.它用来接受循环事件和安排线程的工作,并且在线程中没有工作时,让线程进入睡眠状态.程序启动时，Runloop随着主线程的启动而启动，每个线程都有一个runloop,但是只有主线程的会自动启动；
+<p><img src="/img/Http/request.png" alt="" /></p>
 
-RunLoop 是线程中的一个循环,并且对接受到的事件进行处理.我们的代码可以通过提供 while 或者 for 循环来驱动 RunL...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Ted on January 29, 2015
-    </p>
-</div>
-<hr>
+<h4 id="请求行">请求行</h4>
 
-<div class="post-preview">
-    <a href="/2015/01/29/Http/">
-        <h2 class="post-title">
-            HTTP与TCP/IP
-        </h2>
-        
-        <h3 class="post-subtitle">
-             "Hello World, Hello Blog"
-        </h3>
-        
-        <div class="post-content-preview">
-            TCP/IP定义
+<p>由方法、服务器内部URL(使用GET方法时，请求参数和对应的值附加在URL后面，利用一个问号（“?”）代表URL的结尾与请求参数的开始)、协议版本组成</p>
 
-TCP/IP是互联网相关的各类协议族的名称
+<h4 id="请求方法">请求方法</h4>
 
+<ul>
+  <li>
+    <p>GET：请求获取Request-URI所标识的资源。</p>
+  </li>
+  <li>
+    <p>POST：在Request-URI所标识的资源后附加新的数据。</p>
+  </li>
+  <li>
+    <p>HEAD：请求获取由Request-URI所标识的资源的响应消息报头。</p>
+  </li>
+  <li>
+    <p>PUT：请求服务器存储一个资源，并用Request-URI作为其标识。</p>
+  </li>
+  <li>
+    <p>Delete：请求服务器删除Request-URI所标识的资源。</p>
+  </li>
+  <li>
+    <p>TRACE：请求服务器回送收到的请求信息，主要用于测试或诊断。</p>
+  </li>
+  <li>
+    <p>CONNECT：保留将来使用。</p>
+  </li>
+  <li>
+    <p>OPTIONS：请求查询服务器的性能，或者查询与资源相关的选项和需求。</p>
+  </li>
+</ul>
 
+<h4 id="返回报文">返回报文</h4>
 
-TCP/IP四层模型
+<p><img src="/img/Http/response.png" alt="" /></p>
 
-OSI七层模型太过繁琐，所以就对应有了TCP/IP四层模型，对应的将OSI中的应用层、表示层、会话层统一归为应用层。
+<h4 id="状态码">状态码</h4>
 
+<p><img src="/img/Http/statusCode.png" alt="" /></p>
 
+<h4 id="长连接">长连接</h4>
 
+<p>在报文中有一个字段：connnection:keep-alive;是长连接的意思，从Http1.1开始就是默认TCP保持长连接，只要任意一端没有提出断开连接，则会一直保持连接状态，一次长连接可以进行多次请求和响应，好处是可以减少建立连接和断开连接的开销，减少服务器的负载，另外也可以加快Http请求和响应；</p>
 
-  
-    应用层：决定了向用户提供应用服务时通信的活动。HTTP协议。
-  
-  
-    传输层：提供处于网络连接中的两台计算机之间的数据传输，TCP和UDP协议就在这...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Ted on January 29, 2015
-    </p>
-</div>
-<hr>
+<p><img src="/img/Http/connection.png" alt="" /></p>
 
-<div class="post-preview">
-    <a href="/2014/09/24/man-must-explore/">
-        <h2 class="post-title">
-            Man must explore, and this is exploration at its greatest
-        </h2>
-        
-        <h3 class="post-subtitle">
-            Problems look mighty small from 150 miles up
-        </h3>
-        
-        <div class="post-content-preview">
-            Never in all their history have men been able truly to conceive of the world as one: a single sphere, a globe, having the qualities of a globe, a round earth in which all the directions eventually ...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Start Bootstrap on September 24, 2014
-    </p>
-</div>
-<hr>
+<h4 id="cookies">Cookies</h4>
+
+<p>Http是无状态协议，但有的时候客户端与服务器又要保持某些状态，于是引入了Cookie技术。Cookie技术通过在请求和响应报文中写入Cookie信息来控制客户端的状态</p>
+
+<p>Cookie会根据从服务器端发送的响应报文中的一个Set-Cookie的头部信息，通知客户端来保持Cookie。当下次客户端再往服务器发送请求时，客户端会自动在请求报文中加入Cookie后发送出去。</p>
+
+<p>服务器端发现客户端发送过来的Cookie后，会去检查究竟从哪一个客户端发来的连接请求，然后对比服务器上的记录，最后得到之前的状态信息。</p>
+
+<h3 id="https">HTTPS</h3>
+
+<h4 id="http有以下不足">Http有以下不足</h4>
+
+<ul>
+  <li>通信使用明文，内容可能被窃听</li>
+  <li>不验证通信双方的身份，因此有可能遭遇伪装</li>
+  <li>无法证明报文的完整性，所以有可能遭到篡改</li>
+</ul>
+
+<h4 id="ssltsl">SSL/TSL</h4>
+
+<p>是个加密套件，负责对HTTP的数据进行加密。TLS是SSL的升级版， HTTPS就是在http和TCP之间加了一层TSL/SSL协议。先通过公开加密生成对称密钥，之后用对称密钥进行对话。</p>
+
+<h4 id="https抓包原理">HTTPS抓包原理</h4>
+
+<ol>
+  <li>Https抓包的原理就是抓包程序将服务器返回的证书截获</li>
+  <li>然后给客户端返回一个抓包程序的证书，</li>
+  <li>客户端发送的数据用抓包程序给的证书生成的密钥加密</li>
+  <li>抓包程序得到客户端发送的数据抓包程序用自己的证书解密出来，再用服务器证书加密</li>
+  <li>抓包程序再把数据发给服务器</li>
+</ol>
 
 
-<!-- Pager -->
+
+                <hr>
+
+                
 
 
-    		</div>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2014/09/24/man-must-explore/" data-toggle="tooltip" data-placement="top" title="Man must explore, and this is exploration at its greatest">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2015/01/29/Runloop/" data-toggle="tooltip" data-placement="top" title="RunLoop">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+
+                
+                <!-- 多说评论框 start -->
+                <div class="comment">
+                    <div class="ds-thread"
+                        data-thread-key="/2015/01/29/Http"
+                        data-title="HTTP与TCP/IP"
+                        data-url="http://localhost:4000/2015/01/29/Http/" >
+                    </div>
+                </div>
+                <!-- 多说评论框 end -->
+                
+
+                
+
+            </div>
+
     <!-- Sidebar Container -->
             <div class="
-                col-lg-3 col-lg-offset-0
-                col-md-3 col-md-offset-0
-                col-sm-12
-                col-xs-12
-                sidebar-container
-            ">
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
                 <!-- Featured Tags -->
                 
 
-                <!-- Short About -->
-                <section class="visible-md visible-lg">
-                    <hr><h5><a href="/about/">ABOUT ME</a></h5>
-                    <div class="short-about">
-                        
-                            <img src="/img/avatar-hux.jpg" />
-                        
-                        
-                            <p>程序员进阶ing,产品学习ing。</p>
-                        
-                        <!-- SNS Link -->
-                        <ul class="list-inline">
-                            
-                            
-                            
-                            <li>
-                                <a target="_blank" href="https://www.zhihu.com/people/huxpro">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa  fa-stack-1x fa-inverse">知</i>
-                                    </span>
-                                </a>
-                            </li>
-                            
-                            
-                            <li>
-                                <a target="_blank" href="http://weibo.com/huxpro">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
-                                    </span>
-                                </a>
-                            </li>
-                            
-                            
-                            <li>
-                                <a target="_blank" href="https://www.facebook.com/huxpro">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
-                                    </span>
-                                </a>
-                            </li>
-                            
-                            
-                            <li>
-                                <a target="_blank" href="https://github.com/huxpro">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-                                    </span>
-                                </a>
-                            </li>
-                            
-                        </ul>
-                    </div>
-                </section>
                 <!-- Friends Blog -->
                 
-    		</div>
-        
-	</div>
-</div>
+            </div>
+        </div>
+    </div>
+</article>
+
+
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    // dynamic User by Hux
+    var _user = 'huxblog';
+
+    // duoshuo comment query.
+    var duoshuoQuery = {short_name: _user };
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0]
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+</script>
+<!-- 多说公共JS代码 end -->
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("http://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
 
 
     <!-- Footer -->

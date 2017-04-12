@@ -1,14 +1,760 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-04-12T16:16:44+08:00</updated><id>http://localhost:4000/</id><title type="html">Your awesome title</title><subtitle>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
-</subtitle><entry><title type="html">Welcome to Jekyll!</title><link href="http://localhost:4000/jekyll/update/2017/04/12/welcome-to-jekyll.html" rel="alternate" type="text/html" title="Welcome to Jekyll!" /><published>2017-04-12T16:16:19+08:00</published><updated>2017-04-12T16:16:19+08:00</updated><id>http://localhost:4000/jekyll/update/2017/04/12/welcome-to-jekyll</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2017/04/12/welcome-to-jekyll.html">&lt;p&gt;You’ll find this post in your &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run &lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll serve&lt;/code&gt;, which launches a web server and auto-regenerates your site when a file is updated.&lt;/p&gt;
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Helloted Blog</title>
+    <description>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
+</description>
+    <link>http://localhost:4000/</link>
+    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Wed, 12 Apr 2017 16:38:08 +0800</pubDate>
+    <lastBuildDate>Wed, 12 Apr 2017 16:38:08 +0800</lastBuildDate>
+    <generator>Jekyll v3.4.3</generator>
+    
+      <item>
+        <title>网络模型</title>
+        <description>&lt;h3 id=&quot;网络&quot;&gt;网络&lt;/h3&gt;
 
-&lt;p&gt;To add new posts, simply add a file in the &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory that follows the convention &lt;code class=&quot;highlighter-rouge&quot;&gt;YYYY-MM-DD-name-of-post.ext&lt;/code&gt; and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.&lt;/p&gt;
+&lt;h4 id=&quot;osi七层模型&quot;&gt;OSI七层模型&lt;/h4&gt;
 
-&lt;p&gt;Jekyll also offers powerful support for code snippets:&lt;/p&gt;
+&lt;p&gt;OSI（Open System Interconnection），由底层到高层分别为，物理层、数据链路层，网络层，传输层、会话层，表示层、应用层&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Hi, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'Tom'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;#=&amp;gt; prints 'Hi, Tom' to STDOUT.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;物理层：负责将比特流与电子信号转换&lt;/p&gt;
 
-&lt;p&gt;Check out the &lt;a href=&quot;https://jekyllrb.com/docs/home&quot;&gt;Jekyll docs&lt;/a&gt; for more info on how to get the most out of Jekyll. File all bugs/feature requests at &lt;a href=&quot;https://github.com/jekyll/jekyll&quot;&gt;Jekyll’s GitHub repo&lt;/a&gt;. If you have questions, you can ask them on &lt;a href=&quot;https://talk.jekyllrb.com/&quot;&gt;Jekyll Talk&lt;/a&gt;.&lt;/p&gt;</content><author><name></name></author><summary type="html">You’ll find this post in your _posts directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run jekyll serve, which launches a web server and auto-regenerates your site when a file is updated.</summary></entry></feed>
+&lt;p&gt;数据链路层：定义了通过通信介质相互连接的设备之间，数据传输的规范。有两个重要的概念：MAC 地址和分组交换，数据链路层的意义在于，如果没有数据链路层，数据只能以流的形式存在与通信介质中，不知道该发送往哪里，过长的数据流可能无法在通信介质中传输。&lt;/p&gt;
+
+&lt;p&gt;网络层：主要作用是实现终端节点间的通信。IP协议是网络层的一个重要协议，网络层中还有ARP(获取MAC地址)和ICMP协议(数据发送异常通知)，数据链路层的作用在于实现同一种数据链路下的包传递，而网络层则可以实现跨越不同数据链路的包传递。比如主机A通过Wi-Fi连接到路由器B，路由器B通过以太网连接到路由器C，而路由器C又通过Wi-Fi与主机D保持连接。这时主机A向D发送的数据包就依赖于网络层进行传输。&lt;/p&gt;
+
+&lt;p&gt;传输层：传输层的主要作用是实现应用程序之间的通信。网络层主要是保证不同数据链路下数据的可达性，至于如何传输数据则是由传输层负责，TCP 协议和 UDP 协议。&lt;/p&gt;
+
+&lt;p&gt;会话层：会话的建立和结束&lt;/p&gt;
+
+&lt;p&gt;表示层：数据表示、压缩和加密presentation，表示层相当于一个东西的表示，表示的一些协议，比如图片、声音和视频MPEG。&lt;/p&gt;
+
+&lt;p&gt;应用层：直接为用户的应用程序提供服务,应用接口，TELNET、FTP、HTTP&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h4 id=&quot;tcpudp&quot;&gt;TCP/UDP&lt;/h4&gt;
+
+&lt;p&gt;&lt;strong&gt;两个协议是进程间通信，也就是说应用间的通信，&lt;/strong&gt;在传输层，使用端口号来识别同一台计算机中进行通信的不同应用程序，TCP/IP或UDP/IP通信中通常使用5个信息来识别一个通信：&lt;strong&gt;“源IP地址”、“目标IP地址”、“源端口号”、“目标端口号”以及“协议号”&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;TCP协议：面向连接，可靠的流协议。**连接是指两个应用程序为了传递信息而专有的虚拟的通信线路，也称为虚拟电路。TCP充分实现了数据传输时各种控制功能，可以进行丢包的重发控制，还可以对次序乱掉的分包进行顺序控制。而这些在UDP中都没有。此外，TCP作为一种面向有连接的协议，只有在确认通信对端存在时才会发送数据，从而可以控制通信流量的浪费。&lt;/p&gt;
+
+&lt;p&gt;TCP通过检验和、序列号、确认应答、重发控制、连接管理以及窗口控制等机制实现可靠性传输。&lt;/p&gt;
+
+&lt;p&gt;效率要求相对低，但对准确性要求相对高的场景。因为传输中需要对数据确认、重发、排序等操作，相比之下效率没有UDP高。举几个例子：文件传输（准确高要求高、但是速度可以相对慢）、接受邮件、远程登录。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;UDP协议：面向无连接，不具有可靠性的数据报协议。&lt;/strong&gt;只确保发送消息，其他处理都由上层应用来完成。&lt;/p&gt;
+
+&lt;p&gt;即使是出现网络拥堵的情况下，UDP也无法进行流量控制等避免网络拥塞的行为。此外，传输途中如果出现了丢包，UDP也不负责重发。甚至当出现包的到达顺序乱掉时也没有纠正的功能。如果需要这些细节控制，那么不得不交给由采用UDP的应用程序去处理。换句话说，UDP将部分控制转移到应用程序去处理，自己却只提供作为传输层协议的最基本功能。UDP有点类似于用户说什么听什么的机制，但是需要用户充分考虑好上层协议类型并制作相应的应用程序。&lt;/p&gt;
+
+&lt;p&gt;效率要求相对高，对准确性要求相对低的场景。举几个例子：QQ聊天、在线视频、网络语音电话（即时通讯，速度要求高，但是出现偶尔断续不是太大问题，并且此处完全不可以使用重发机制）、广播通信（广播、多播）。&lt;/p&gt;
+
+&lt;p&gt;TCP与UDP区别总结：&lt;/p&gt;
+
+&lt;p&gt;1、TCP面向连接（如打电话要先拨号建立连接）;UDP是无连接的，即发送数据之前不需要建立连接&lt;/p&gt;
+
+&lt;p&gt;2、TCP提供可靠的服务。也就是说，通过TCP连接传送的数据，无差错，不丢失，不重复，且按序到达;UDP尽最大努力交付，即不保证可靠交付&lt;/p&gt;
+
+&lt;p&gt;3、TCP面向字节流，实际上是TCP把数据看成一连串无结构的字节流;UDP是面向报文的，没有拥塞控制，因此网络出现拥塞不会使源主机的发送速率降低（对实时应用很有用，如IP电话，实时视频会议等）&lt;/p&gt;
+
+&lt;p&gt;4、每一条TCP连接只能是点到点的;UDP支持一对一，一对多，多对一和多对多的交互通信&lt;/p&gt;
+
+&lt;p&gt;5、TCP首部开销20字节;UDP的首部开销小，只有8个字节&lt;/p&gt;
+
+&lt;p&gt;6、TCP的逻辑通信信道是全双工的可靠信道，UDP则是不可靠信道&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;UDP（User Datagram Protocol）用户数据报协议&lt;/p&gt;
+
+&lt;p&gt;UDP不提供复杂的控制机制，利用IP提供面向无连接的通信服务。并且它是将应用程序发来的数据在收到的那一刻，立即按照原样发送到网络上的一种机制。&lt;/p&gt;
+
+&lt;p&gt;无需建立连接（减少延迟）&lt;/p&gt;
+
+&lt;p&gt;实现简单：无需维护连接状态&lt;/p&gt;
+
+&lt;p&gt;头部开销小&lt;/p&gt;
+
+&lt;p&gt;没有拥塞控制：应用可以更好的控制发送时间和发送速率&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h4 id=&quot;tcptransmission-control-protocol传输控制协议&quot;&gt;TCP（Transmission Control Protocol）传输控制协议&lt;/h4&gt;
+
+&lt;p&gt;TCP通过校验和、序列号、确认应答、重发控制、连接管理以及窗口控制等机制实现可靠性传输。数据通信之前必须先做好连接工作，在TCP中连接的建立需要三次握手，同时在通信结束时会进行断开连接的处理（四次挥手）。一个连接的建立与断开，正常过程至少需要来回送7个包才能完成。&lt;/p&gt;
+
+&lt;p&gt;TCP的三次握手：是指建立一个TCP连接时，需要客户端和服务器总共发送3个包。&lt;/p&gt;
+
+&lt;p&gt;1、客户端向服务器发送一个SYN（synchronous）,客户端进入SYN_SEND状态&lt;/p&gt;
+
+&lt;p&gt;2、服务器收到SYN包后，服务器进入SYN_RECV状态，发出SYN+ACK（Acknowledgement）&lt;/p&gt;
+
+&lt;p&gt;3、客户端收到SYN+ACK后发出ACK确认给服务器,客户端进入ESTABLISH状态。&lt;/p&gt;
+
+&lt;p&gt;4、服务器收到ACK后，服务器进入ESTABLISH状态。&lt;/p&gt;
+
+&lt;p&gt;连接建立，开始传输数据。&lt;/p&gt;
+
+&lt;p&gt;TCP的四次挥手：TCP的连接的拆除需要发送四个包&lt;/p&gt;
+
+&lt;p&gt;TCP连接是全双工的，所以它允许两个方向的数据传输被独立关闭，通信的一端可以发送结束报文段给对方，告诉它本端已经完成了数据的发送，但允许继续接收来自对方的数据，直到对方也发送结束报文段以关闭连接。&lt;/p&gt;
+
+&lt;p&gt;1、客户端发送发送一个FIN，等待服务器返回ACK和FIN，客户端进入FIN_WAIT_1状态；&lt;/p&gt;
+
+&lt;p&gt;2、服务器接收FIN，发出一个收到FIN的ACK确认，服务器进入Close Wait状态；&lt;/p&gt;
+
+&lt;p&gt;3、客户端收到ACK，继续等待服务器的FIN，客户端进入FIN_WAIT_2状态；&lt;/p&gt;
+
+&lt;p&gt;4、服务器发送FIN，服务器等待客户端收到FIN的ACK，服务器进入LAST_ACK状态；&lt;/p&gt;
+
+&lt;p&gt;5、客户端收到FIN，发出ACK，客户端进入TIME_WAIT状态（2MSL等待状态）；等到2MSL后，客户端进入CLOSE状态&lt;/p&gt;
+
+&lt;p&gt;6、服务器接收ACK,服务器进入CLOSE状态；&lt;/p&gt;
+
+&lt;p&gt;连接关闭。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;TCP窗口：TCP中，发送端的数据包到达接收端时，接收端会返回一个带序号的ACK确认，当数据包丢失或者ACK丢失或者延误时，发送端就会重新发送数据包。当ACK延误时，会出现重复发送的状况。引入序号机制则可以避免重复发送实现可靠传输。如果每次发送都要等确认的话，这样包的往返时间，网络吞吐量就会差。所以引入窗口机制。窗口控制，允许收到ACK之前，多次发送数据组。&lt;/p&gt;
+
+&lt;p&gt;TCP流量控制：就是让发送方的发送速率不要太快，要让接收方来得及接收。原理这就是运用TCP报文段中的窗口大小字段来控制，发送方的发送窗口不可以大于接收方发回的窗口大小。&lt;/p&gt;
+
+&lt;p&gt;TCP拥塞控制：拥塞窗口cwnd&lt;strong&gt;慢开始&lt;/strong&gt;，收到ACK时，拥塞窗口由1开始指数级增长，增长到慢开始门限值ssthresh时,执行&lt;strong&gt;拥塞避免算法&lt;/strong&gt;，拥塞窗口按线性规律增长。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h4 id=&quot;tcpip&quot;&gt;TCP/IP&lt;/h4&gt;
+
+&lt;p&gt;TCP/IP协议族分为四层：应用层，传输层，网络层，数据链路层。这样分层可以将功能分割开来，如果需要改动，只需要改动对应层级的协议而不需要替换整体，定义好对应的接口后，每个层次内部就可以自由设计了。&lt;/p&gt;
+
+&lt;p&gt;应用层：应用层决定了向用户提供应用服务时的通信活动，FTP,DNS,HTTP协议就是在这一层&lt;/p&gt;
+
+&lt;p&gt;传输层：提供处于网络中的两台计算机之间的通信，TCP和UDP&lt;/p&gt;
+
+&lt;p&gt;网络层：网络层用来处理网络上的数据包，数据包是网络传输的最小单位，网络层规定了通过怎么样的路径到达对方计算机，并把数据包传给对方。网络层的作用就是在众多选项中选择一个传输路线。IP协议。IP协议的作用就是把数据包传递给对方，而要准确地把数据包发送给对方，要满足条件，最重要的条件就是IP地址和MAC地址，IP地址指明了节点被分配到的位置，可换，MAC地址指网卡所属的地址，固定。&lt;/p&gt;
+
+&lt;p&gt;数据链路层：用来处理连接网络的硬件部分，包括控制操作系统，硬件的设备驱动，NIC(网卡)，光钎等硬件可见部分。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h4 id=&quot;socket&quot;&gt;Socket&lt;/h4&gt;
+
+&lt;p&gt;Socket是对TCP/IP协议的封装，Socket本身并不是协议，而是一个调用接口（API），通过Socket，我们才能使用TCP/IP协议。&lt;/p&gt;
+
+&lt;p&gt;在socket编程中，客户端执行connect()时,将触发三次握手。在socket编程中，任何一方执行close()操作即可产生挥手操作。&lt;/p&gt;
+
+&lt;p&gt;Socket连接与HTTP连接的不同&lt;/p&gt;
+
+&lt;p&gt;通常情况下Socket连接就是TCP连接，因此Socket连接一旦建立，通信双方即可开始相互发送数据内容，直到双方连接断开。但在实际应用中，客户端到服务器之间的通信防火墙默认会关闭长时间处于非活跃状态的连接而导致 Socket 连接断连，因此需要通过轮询告诉网络，该连接处于活跃状态。&lt;/p&gt;
+
+&lt;p&gt;而HTTP连接使用的是“请求—响应”的方式，不仅在请求时需要先建立连接，而且需要客户端向服务器发出请求后，服务器端才能回复数据。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h4 id=&quot;长连接和短连接&quot;&gt;长连接和短连接&lt;/h4&gt;
+
+&lt;p&gt;&lt;strong&gt;长连接：&lt;/strong&gt;在TCP连接保持期间，如果没有数据包发送，需要双方发检测包以维持此连接，一般需要自己做在线维持。连接→数据传输→保持连接(心跳)→数据传输→保持连接(心跳)→……→关闭连接；&lt;/p&gt;
+
+&lt;p&gt;长连接多用于操作频繁，点对点的通讯，而且连接数不能太多情况。&lt;/p&gt;
+
+&lt;p&gt;每个TCP连接都需要三步握手，这需要时间，如果每个操作都是先连接，再操作的话那么处理速度会降低很多，&lt;/p&gt;
+
+&lt;p&gt;所以每个操作完后都不断开，下次次处理时直接发送数据包就OK了，不用建立TCP连接。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;短连接:&lt;/strong&gt; 指通信双方有数据交互时，就建立一个TCP连接，数据发送完成后，则断开此TCP连接;连接→数据传输→关闭连接；&lt;/p&gt;
+
+</description>
+        <pubDate>Mon, 11 May 2015 20:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2015/05/11/NetWork/</link>
+        <guid isPermaLink="true">http://localhost:4000/2015/05/11/NetWork/</guid>
+        
+        <category>网络</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>iOS多线程</title>
+        <description>&lt;h3 id=&quot;一前言&quot;&gt;一、前言&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Pthreads&lt;/li&gt;
+  &lt;li&gt;NSThread&lt;/li&gt;
+  &lt;li&gt;GCD&lt;/li&gt;
+  &lt;li&gt;NSOperation &amp;amp; NSOperationQueue&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;开发者只需要定义想要执行的任务并追加到适当的Dispatch Queue中，GCD就能生成必要的线程并计划执行任务。由于线程管理是作为系统的一部分来实现的，因此可以统一管理，也可执行任务&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;多线程问题：多个线程更新相同的资源会导致数据的不一致（数据竞争）、停止等待事件的线程会导致多个线程相互持续等待（死锁）、使用太多线程会消耗大量的内存&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;应用程序在启动时，最先执行主线程，如果在主线程中进行长时间的处理，会妨碍主线程中被称为RunLoop的主循环的执行，从而导致不能更新用户界面、应用程序的画面长时间停滞等问题&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4 id=&quot;二pthreads&quot;&gt;二、Pthreads&lt;/h4&gt;
+
+&lt;p&gt;POSIX线程（POSIX threads），简称Pthreads，是线程的POSIX标准。该标准定义了创建和操纵线程的一整套API。在类Unix操作系统（Unix、Linux、Mac OS X等）中，都使用Pthreads作为操作系统的线程,这是一套在很多操作系统上都通用的多线程API，所以移植性很强（然并卵），当然在 iOS 中也是可以的。不过这是基于 c语言的框架；&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    pthread_t thread;
+    //创建一个线程并自动执行
+    pthread_create(&amp;amp;thread, NULL, start, NULL);
+}
+
+void *start(void *data) {
+    NSLog(@&quot;%@&quot;, [NSThread currentThread]);
+    return NULL;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;三nsthread&quot;&gt;三、NSThread&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;//取消线程
+&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cancel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//启动线程
+&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//判断某个线程的状态的属性
+&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;@property&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;readonly&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;getter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;isExecuting&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BOOL&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;executing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;@property&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;readonly&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;getter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;isFinished&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BOOL&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;finished&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;@property&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;readonly&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;getter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;isCancelled&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BOOL&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cancelled&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//设置和获取线程名字
+&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;setName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//获取当前线程信息
+&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSThread&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;currentThread&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//获取主线程信息
+&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSThread&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mainThread&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//使当前线程暂停一段时间，或者暂停到某个时刻
+&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;sleepForTimeInterval&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSTimeInterval&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;sleepUntilDate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSDate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;date&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;四添加任务到队列同步异步&quot;&gt;四、添加任务到队列（同步、异步）：&lt;/h3&gt;
+
+&lt;h4 id=&quot;dispatch_sync&quot;&gt;dispatch_sync:&lt;/h4&gt;
+
+&lt;p&gt;同步添加，将指定的任务block同步追加到queue中，在追加的block结束之前，dispatch_sync会一直等待；&lt;/p&gt;
+
+&lt;p&gt;如果在主线程上执行同步任务（任务也在主线程执行），会造成死锁：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;//会造成死锁
+dispatch_sync(dispatch_get_main_queue(), ^{
+	//
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;但是在异步任务里可以用来切换到主线程&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;dispatch_async(dispatch_get_global_queue(0,0), ^{
+	//耗时操作；
+	dispatch_sync(dispatch_get_main_queue(), ^{
+		//回到主线程；
+	});
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;可以用来阻塞线程：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;dispatch_sync(dispatch_get_global_queue(0,0), ^{
+  sleep(2);
+  NSLog(@&quot;2秒后执行，但是会阻塞线程&quot;);
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+   NSLog(@&quot;2秒后执行，但是不阻塞线程&quot;);
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&quot;dispatch_async&quot;&gt;dispatch_async：&lt;/h4&gt;
+
+&lt;p&gt;异步添加，将指定的Block”非同步”地追加到指定的Queue中，该线程不做等待，继续往下执行；&lt;/p&gt;
+
+&lt;h4 id=&quot;dispatch_barrier_sync&quot;&gt;dispatch_barrier_sync:&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;用于数据库和文件访问解决资源竞争问题
+dispatch_async(queue, ^{NSLog(@&quot;read&quot;);});
+dispatch_async(queue, ^{NSLog(@&quot;read&quot;);});
+dispatch_async(queue, ^{NSLog(@&quot;read&quot;);});
+dispatch_barrier_sync(queue, ^{NSLog(@&quot;writing&quot;);});
+dispatch_async(queue, ^{NSLog(@&quot;read&quot;);});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;五队列&quot;&gt;五、队列&lt;/h3&gt;
+
+&lt;p&gt;Dispatch Queue：执行处理任务的队列，通过dispatch_async等函数API，在Block语法中记述想要执行的处理任务并将其追加到Dispatch Queue中，Dispatch Queue按照追加的顺序（先进先出FIFO）执行处理。&lt;/p&gt;
+
+&lt;h4 id=&quot;serial-dispatch-queue串行队列&quot;&gt;Serial Dispatch Queue（串行队列）：&lt;/h4&gt;
+
+&lt;p&gt;等待现在执行中处理结束，一旦生成Serial Dispatch Queue并追加处理。系统对于一个Serial Dispatch Queue就只生成并使用一个线程，但是如果生成过多的线程，会导致消耗大量的内存，引起大量的上下文切换，大幅度降低系统的响应性能，因此只在为了避免多个线程更新相同的资源导致数据竞争时使用。&lt;/p&gt;
+
+&lt;h4 id=&quot;concurrent-dispatch-queue并行队列&quot;&gt;Concurrent Dispatch Queue（并行队列）：&lt;/h4&gt;
+
+&lt;p&gt;不等待现在执行中处理结束，可以并行执行多个处理，并行处理的处理数量取决于当前系统状态，生成所需的线程执行处理，当处理结束，应当执行的处理数减少时，XNU内核会结束不再需要的线程，因此当想并行执行不发生数据竞争等问题处理时使用并行队列，有效管理线程，不会出现太多线程。&lt;/p&gt;
+
+&lt;p&gt;系统默认有一个串行队列：主队列（main_queue）和并行队列：全局队列（global_queue），不需要自己手动释放，或者自己创建用户队列（需要手动释放）。&lt;/p&gt;
+
+&lt;h4 id=&quot;主队列main&quot;&gt;主队列（main）:&lt;/h4&gt;
+
+&lt;p&gt;dispatch_queue_t mainQ = dispatch_get_main_queue()
+注意：不能sync向主队列提交任务，因为会造成死锁，只能async提交任务&lt;/p&gt;
+
+&lt;h4 id=&quot;全局队列global_queue&quot;&gt;全局队列（global_queue）：&lt;/h4&gt;
+
+&lt;p&gt;有执行优先级&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;dispatch_queue_t globalQ = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+
+DISPATCH_QUEUE_PRIORITY_HIGH:             //优先级最高，在default,和low之前执行
+DISPATCH_QUEUE_PRIORITY_DEFAULT           //默认优先级，在low之前，在high之后
+DISPATCH_QUEUE_PRIORITY_LOW               //在high和default后执行
+DISPATCH_QUEUE_PRIORITY_BACKGROUND        //提交到这个队列的任务会在high优先级的任务和已经提交到background队列的执行完后执行。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&quot;创建队列create_queue&quot;&gt;创建队列：（create_queue）:&lt;/h4&gt;
+
+&lt;p&gt;尽管是ARC，使用结束后也要dispatch_release释放&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;dispatch_queue_t  concurrentQ = dispatch_queue_create(&quot;createName&quot;,DISPATCH_QUEUE_CONCURRENT)
+dispatch_queue_t  serialQ = dispatch_queue_create(&quot;createName&quot;, DISPATCH_QUEUE_SERIAL)
+改变队列优先级
+dispatch_set_target_queue(restQueue, targetQueue);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&quot;六延迟添加执行dispatch_after&quot;&gt;六、延迟添加执行dispatch_after&lt;/h3&gt;
+
+&lt;p&gt;并不是在多少秒后执行，而是在3秒后将任务添加到Dispatch Queue中&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3*NSEC_PER_SEC)),dispatch_get_main_queue(), ^{
+	//秒
+});
+
+dispatch_after(dispatch_time(DISPATCH_TIME_NOW,150ull *NSEC_PER_MSEC),dispatch_get_main_queue(), ^{
+    //毫秒
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;七nsoperation&quot;&gt;七、NSOperation&lt;/h3&gt;
+
+&lt;p&gt;1、NSoperation是基于GCD封装的&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;dispatch_async(_Queue, ^{    //请求数据  NSData *data = [NSData dataWithContentURL:[NSURL URLWithString:@&quot;http://domain.com/a.png&quot;]];    dispatch_async(dispatch_get_main_queue(), ^{         [self refreshViews:data];    });});
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;有个致命的问题：这个任务是无法取消的 dataWithContentURL:是同步的拉取数据，它会一直阻塞线程直到完成请求，如果是遇到了超时的情况，它在这个时间内会一直占有这个线程；在这个期间并发队列就需要为其他任务新建线程，这样可能导致性能下降等问题。&lt;/p&gt;
+
+&lt;p&gt;2、NSOperationQueue相对于GCD来说有以下优点：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;提供了在 GCD 中不那么容易复制的有用特性。&lt;/li&gt;
+  &lt;li&gt;可以很方便的取消一个NSOperation的执行&lt;/li&gt;
+  &lt;li&gt;可以更容易的添加任务的依赖关系&lt;/li&gt;
+  &lt;li&gt;提供了任务的状态：isExecuteing, isFinished.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;NSOperationQueue 有两种不同类型的队列：主队列和自定义队列。主队列运行在主线程之上，而自定义队列在后台执行。在两种类型中，这些队列所处理的任务都使用 NSOperation 的子类来表述。&lt;/p&gt;
+
+&lt;p&gt;我们可以通过设置 maxConcurrentOperationCount 属性来控制并发任务的数量，当设置为 1 时， 那么它就是一个串行队列。主对列默认是串行队列，这一点和 dispatch_queue_t 是相似的。&lt;/p&gt;
+
+&lt;p&gt;3、NSOperation&lt;/p&gt;
+
+&lt;p&gt;你可以使用系统提供的一些现成的 NSOperation 的子类， 如 NSBlockOperation、 NSInvocationOperation 等（如上例子）。你也可以实现自己的子类， 通过重写 main 或者 start 方法 来定义自己的 operations 。&lt;/p&gt;
+
+&lt;p&gt;A:使用 main 方法非常简单，开发者不需要管理一些状态属性（例如 isExecuting 和 isFinished），当 main 方法返回的时候，这个 operation 就结束了。这种方式使用起来非常简单，但是灵活性相对重写 start 来说要少一些， 因为main方法执行完就认为operation结束了，所以一般可以用来执行同步任务。&lt;/p&gt;
+
+&lt;p&gt;B:如果你希望拥有更多的控制权，或者想在一个操作中可以执行异步任务，那么就重写 start 方法, 但是注意：这种情况下，你必须手动管理操作的状态， 只有当发送 isFinished 的 KVO 消息时，才认为是 operation 结束&lt;/p&gt;
+
+&lt;p&gt;当实现了start方法时，默认会执行start方法，而不执行main方法&lt;/p&gt;
+
+&lt;p&gt;为了让操作队列能够捕获到操作的改变，需要将状态的属性以配合 KVO 的方式进行实现。如果你不使用它们默认的 setter 来进行设置的话，你就需要在合适的时候发送合适的 KVO 消息。&lt;/p&gt;
+
+&lt;p&gt;需要手动管理的状态有：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;isExecuting 代表任务正在执行中&lt;/li&gt;
+  &lt;li&gt;isFinished 代表任务已经执行完成&lt;/li&gt;
+  &lt;li&gt;isCancelled 代表任务已经取消执行&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Thu, 30 Apr 2015 20:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2015/04/30/ios-Thread/</link>
+        <guid isPermaLink="true">http://localhost:4000/2015/04/30/ios-Thread/</guid>
+        
+        <category>网络</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>RunLoop</title>
+        <description>&lt;h3 id=&quot;一简介&quot;&gt;一、简介&lt;/h3&gt;
+
+&lt;p&gt;Runloop的本质是一直运行着的循环，线程中的循环.它用来接受循环事件和安排线程的工作,并且在线程中没有工作时,让线程进入睡眠状态.程序启动时，Runloop随着主线程的启动而启动，每个线程都有一个runloop,但是只有主线程的会自动启动；&lt;/p&gt;
+
+&lt;p&gt;RunLoop 是线程中的一个循环,并且对接受到的事件进行处理.我们的代码可以通过提供 while 或者 for 循环来驱动 RunLoop.在循环中,Run Loop 对象来负责事件处理的代码(接受事件,并调用相应的事件处理方法).&lt;/p&gt;
+
+&lt;h3 id=&quot;二事件来源&quot;&gt;二、事件来源&lt;/h3&gt;
+
+&lt;p&gt;RunLoop 接受的事件源有两种大类: 异步的input sources, 同步的 Timer sources.&lt;/p&gt;
+
+&lt;p&gt;InputSources : 用来投递异步消息,通常消息来自另外的线程或者程序.在接受到消息并调用指定的方法时,线程对应的 NSRunLoop 对象会通过执行 runUntilDate:方法来退出.Input source有两个不同的种类:Port-Based Sources和Custom Input Sources;Run Loop本身并不关心Input source是哪一种类型。系统会实现两种不同的Input source供我们使用。这两种不同类型的Input source的区别在于：Port-Based Sources由内核自动发送，Custom Input Sources需要从其他线程手动发送。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Port-Based Sources通过内置的端口相关的对象和函数，配置基于端口的Input source。 (比如在主线程创建子线程时传入一个NSPort对象,主线程和子线程就可以进行通讯。NSPort对象会负责自己创建和配置Input source。)&lt;/li&gt;
+  &lt;li&gt;Custom Input Sources我们可以使用Core Foundation里面的CFRunLoopSourceRef类型相关的函数来创建custom input source,系统也有提供一些方法。&lt;/li&gt;
+  &lt;li&gt;Cocoa框架为我们定义了一些Custom Input Sources，允许我们在线程中执行一系列selector方法，这些在NSThread类里面。和Port-Based Sources一样，这些selector的请求会在目标线程中序列化，以减缓线程中多个方法执行带来的同步问题。和Port-Based Sources不一样的是，一个selector方法执行完之后会自动从当前Run Loop中移除。。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://note.youdao.com/src/544EDBA83E9A445AB1F703125F269883&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Timer Source: 用来投递 timer 事件(Schedule 或者 Repeat)中的同步消息.在消息处理时,并不会退出 RunLoop.Timer在选择使用一次后，在执行完成时，会从Run Loop中移除。选择循环时，会一直保存在当前Run Loop中，直到调用invalidated方法。Foundation中 NSTimer Class提供了相关方法来设置Timer source。需要注意的是除了scheduledTimerWithTimeInterval开头的方法创建的Timer都需要手动添加到当前Run Loop中。（scheduledTimerWithTimeInterval 创建的timer会自动以Default Mode加载到当前Run Loop中。）Timer在选择使用一次后，在执行完成时，会从Run Loop中移除。选择循环时，会一直保存在当前Run Loop中，直到调用invalidated方法。&lt;/p&gt;
+
+&lt;p&gt;Run Loop还有一个观察者Observer的概念，可以往Run Loop中加入自己的观察者以便监控Run Loop的运行过程，Run Loop Observer则在Run Loop本身进入某个状态时得到通知:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;kCFRunLoopEntry – 进入runloop循环&lt;/li&gt;
+  &lt;li&gt;kCFRunLoopBeforeTimers – 处理定时调用前回调&lt;/li&gt;
+  &lt;li&gt;kCFRunLoopBeforeSources – 处理input sources的事件&lt;/li&gt;
+  &lt;li&gt;kCFRunLoopBeforeWaiting – runloop睡眠前调用&lt;/li&gt;
+  &lt;li&gt;kCFRunLoopAfterWaiting – runloop唤醒后调用&lt;/li&gt;
+  &lt;li&gt;kCFRunLoopExit – 退出runloop&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://note.youdao.com/src/D2B5DAC520D64E19BDB290AAD10EBB8F&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Observer需要使用Core Foundataion框架。和Timer一样，Run Loop Observers也可以使用一次或者选择repeat。如果只使用一次，Observer会在它被执行后自己从Run Loop中移除。而循环的Observer会一直保存在Run Loop中。&lt;/p&gt;
+
+&lt;h3 id=&quot;三runloop-mode&quot;&gt;三、Runloop Mode,&lt;/h3&gt;
+
+&lt;p&gt;更改mode只能重新开启runloop，在设置Run Loop Mode后，你的Run Loop会自动过滤和其他Mode相关的事件源，而只监视和当前设置Mode相关的源(通知相关的观察者)。大多数时候，Run Loop都是运行在系统定义的默认模式上。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;NSDefaultRunLoopMode: 大多数工作中默认的运行方式。&lt;/li&gt;
+  &lt;li&gt;NSConnectionReplyMode: 使用这个Mode去监听NSConnection对象的状态，我们很少需要自己使用这个Mode。&lt;/li&gt;
+  &lt;li&gt;NSModalPanelRunLoopMode: 使用这个Mode在Model Panel情况下去区分事件(OS X开发中会遇到)。&lt;/li&gt;
+  &lt;li&gt;UITrackingRunLoopMode: 使用这个Mode去跟踪来自用户交互的事件（比如UITableView上下滑动）。&lt;/li&gt;
+  &lt;li&gt;GSEventReceiveRunLoopMode: 用来接受系统事件，内部的Run Loop Mode。&lt;/li&gt;
+  &lt;li&gt;NSRunLoopCommonModes:这是一个伪模式，其为一组run loop mode的集合。如果将Input source加入此模式，意味着关联Input source到Common Modes中包含的所有模式下。在iOS系统中NSRunLoopCommonMode包含NSDefaultRunLoopMode、NSTaskDeathCheckMode、UITrackingRunLoopMode.可使用CFRunLoopAddCommonMode方法向Common Modes中添加自定义mode。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Run Loop运行时只能以一种固定的Mode运行，只会监控这个Mode下添加的Timer source和Input source。如果这个Mode下没有添加事件源，Run Loop会立刻返回。&lt;/p&gt;
+
+&lt;p&gt;Run Loop不能在运行在NSRunLoopCommonModes，因为NSRunLoopCommonModes是个Mode集合，而不是一个具体的Mode。我们可以在添加事件源的时候使用NSRunLoopCommonModes，只要Run Loop运行在NSRunLoopCommonModes中任何一个Mode，这个事件源都可以被触发。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://note.youdao.com/src/D4BFB26B008442E0BFE927E4BF00D5A6&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://note.youdao.com/src/4A85D27DEF5B4680B0330979059764E0&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;四何时使用-run-loop&quot;&gt;四、何时使用 Run Loop&lt;/h3&gt;
+
+&lt;p&gt;我们应该只在创建辅助线程的时候，才显示的运行一个Run Loop。对于辅助线程，我们仍然需要判断是否需要启动Run Loop。比如我们使用一个线程去处理一个预先定义的长时间的任务，我们应当避免启动Run Loop。下面是官方Document提供的使用Run Loop的几个场景:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;需要使用Port-Based Input Source或者Custom Input Source和其他线程通讯时&lt;/li&gt;
+  &lt;li&gt;需要在线程中使用Timer&lt;/li&gt;
+  &lt;li&gt;需要在线程中使用上文中提到的selector相关方法&lt;/li&gt;
+  &lt;li&gt;需要让线程执行周期性的工作&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;五、Run Loop实际应用场景&lt;/p&gt;
+
+&lt;p&gt;1、AutoreleasePool&lt;/p&gt;
+
+&lt;p&gt;App启动后，苹果在主线程 RunLoop 里注册了两个 Observer，其回调都是 _wrapRunLoopWithAutoreleasePoolHandler()。&lt;/p&gt;
+
+&lt;p&gt;第一个 Observer 监视的事件是 Entry(即将进入Loop)，其回调内会调用 _objc_autoreleasePoolPush() 创建自动释放池。其 order 是-2147483647，优先级最高，保证创建释放池发生在其他所有回调之前。&lt;/p&gt;
+
+&lt;p&gt;第二个 Observer 监视了两个事件： BeforeWaiting(准备进入休眠) 时调用_objc_autoreleasePoolPop() 和 _objc_autoreleasePoolPush() 释放旧的池并创建新池；Exit(即将退出Loop) 时调用 _objc_autoreleasePoolPop() 来释放自动释放池。这个 Observer 的 order 是 2147483647，优先级最低，保证其释放池子发生在其他所有回调之后。&lt;/p&gt;
+
+&lt;p&gt;在主线程执行的代码，通常是写在诸如事件回调、Timer回调内的。这些回调会被 RunLoop 创建好的 AutoreleasePool 环绕着，所以不会出现内存泄漏，开发者也不必显示创建 Pool 了。&lt;/p&gt;
+
+&lt;p&gt;2、定时器&lt;/p&gt;
+
+&lt;p&gt;NSTimer 其实就是 CFRunLoopTimerRef，他们之间是 toll-free bridged 的。一个 NSTimer 注册到 RunLoop 后，RunLoop 会为其重复的时间点注册好事件。例如 10:00, 10:10, 10:20 这几个时间点。RunLoop为了节省资源，并不会在非常准确的时间点回调这个Timer。Timer 有个属性叫做 Tolerance (宽容度)，标示了当时间点到后，容许有多少最大误差。&lt;/p&gt;
+
+&lt;p&gt;如果某个时间点被错过了，例如执行了一个很长的任务，则那个时间点的回调也会跳过去，不会延后执行。就比如等公交，如果 10:10 时我忙着玩手机错过了那个点的公交，那我只能等 10:20 这一趟了。&lt;/p&gt;
+
+&lt;p&gt;CADisplayLink 是一个和屏幕刷新率一致的定时器（但实际实现原理更复杂，和 NSTimer 并不一样，其内部实际是操作了一个 Source）。如果在两次屏幕刷新之间执行了一个长任务，那其中就会有一帧被跳过去（和 NSTimer 相似），造成界面卡顿的感觉。在快速滑动TableView时，即使一帧的卡顿也会让用户有所察觉。Facebook 开源的 AsyncDisplayLink 就是为了解决界面卡顿的问题，其内部也用到了 RunLoop，这个稍后我会再单独写一页博客来分析。&lt;/p&gt;
+
+&lt;p&gt;3、PerformSelecter&lt;/p&gt;
+
+&lt;p&gt;当调用 NSObject 的 performSelecter:afterDelay: 后，实际上其内部会创建一个 Timer 并添加到当前线程的 RunLoop 中。所以如果当前线程没有 RunLoop，则这个方法会失效。&lt;/p&gt;
+
+&lt;p&gt;当调用 performSelector:onThread: 时，实际上其会创建一个 Timer 加到对应的线程去，同样的，如果对应线程没有 RunLoop 该方法也会失效。&lt;/p&gt;
+
+&lt;p&gt;4、事件响应&lt;/p&gt;
+
+&lt;p&gt;苹果注册了一个 Source1 (基于 mach port 的) 用来接收系统事件，其回调函数为 __IOHIDEventSystemClientQueueCallback()。&lt;/p&gt;
+
+&lt;p&gt;当一个硬件事件(触摸/锁屏/摇晃等)发生后，首先由 IOKit.framework 生成一个 IOHIDEvent 事件并由 SpringBoard 接收。SpringBoard 只接收按键(锁屏/静音等)，触摸，加速，接近传感器等几种 Event，随后用 mach port 转发给需要的App进程。随后苹果注册的那个 Source1 就会触发回调，并调用 _UIApplicationHandleEventQueue() 进行应用内部的分发。&lt;/p&gt;
+
+&lt;p&gt;_UIApplicationHandleEventQueue() 会把 IOHIDEvent 处理并包装成 UIEvent 进行处理或分发，其中包括识别 UIGesture/处理屏幕旋转/发送给 UIWindow 等。通常事件比如 UIButton 点击、touchesBegin/Move/End/Cancel 事件都是在这个回调中完成的。&lt;/p&gt;
+
+&lt;p&gt;5、手势识别&lt;/p&gt;
+
+&lt;p&gt;当上面的 _UIApplicationHandleEventQueue() 识别了一个手势时，其首先会调用 Cancel 将当前的 touchesBegin/Move/End 系列回调打断。随后系统将对应的 UIGestureRecognizer 标记为待处理。&lt;/p&gt;
+
+&lt;p&gt;苹果注册了一个 Observer 监测 BeforeWaiting (Loop即将进入休眠) 事件，这个Observer的回调函数是 _UIGestureRecognizerUpdateObserver()，其内部会获取所有刚被标记为待处理的 GestureRecognizer，并执行GestureRecognizer的回调。&lt;/p&gt;
+
+&lt;p&gt;当有 UIGestureRecognizer 的变化(创建/销毁/状态改变)时，这个回调都会进行相应处理。&lt;/p&gt;
+
+&lt;p&gt;6、界面更新&lt;/p&gt;
+
+&lt;p&gt;当在操作 UI 时，比如改变了 Frame、更新了 UIView/CALayer 的层次时，或者手动调用了 UIView/CALayer 的 setNeedsLayout/setNeedsDisplay方法后，这个 UIView/CALayer 就被标记为待处理，并被提交到一个全局的容器去。&lt;/p&gt;
+
+&lt;p&gt;苹果注册了一个 Observer 监听 BeforeWaiting(即将进入休眠) 和 Exit (即将退出Loop) 事件，回调去执行一个很长的函数：&lt;/p&gt;
+
+&lt;p&gt;_ZN2CA11Transaction17observer_callbackEP19__CFRunLoopObservermPv()。这个函数里会遍历所有待处理的 UIView/CAlayer 以执行实际的绘制和调整，并更新 UI 界面。&lt;/p&gt;
+
+&lt;p&gt;_ZN2CA11Transaction17observer_callbackEP19__CFRunLoopObservermPv()&lt;/p&gt;
+
+&lt;p&gt;​    QuartzCore:CA::Transaction::observer_callback:&lt;/p&gt;
+
+&lt;p&gt;​        CA::Transaction::commit();&lt;/p&gt;
+
+&lt;p&gt;​            CA::Context::commit_transaction();&lt;/p&gt;
+
+&lt;p&gt;​                CA::Layer::layout_and_display_if_needed();&lt;/p&gt;
+
+&lt;p&gt;​                    CA::Layer::layout_if_needed();&lt;/p&gt;
+
+&lt;p&gt;​                        [CALayer layoutSublayers];&lt;/p&gt;
+
+&lt;p&gt;​                            [UIView layoutSubviews];&lt;/p&gt;
+
+&lt;p&gt;​                    CA::Layer::display_if_needed();&lt;/p&gt;
+
+&lt;p&gt;​                        [CALayer display];&lt;/p&gt;
+
+&lt;p&gt;​                            [UIView drawRect];&lt;/p&gt;
+
+&lt;p&gt;7、关于GCD&lt;/p&gt;
+
+&lt;p&gt;实际上 RunLoop 底层也会用到 GCD 的东西。但同时 GCD 提供的某些接口也用到了 RunLoop， 例如 dispatch_async()&lt;/p&gt;
+
+&lt;p&gt;当调用 dispatch_async(dispatch_get_main_queue(), block) 时，libDispatch 会向主线程的 RunLoop 发送消息，RunLoop会被唤醒，并从消息中取得这个 block，并在回调 &lt;strong&gt;CFRUNLOOP_IS_SERVICING_THE_MAIN_DISPATCH_QUEUE&lt;/strong&gt;() 里执行这个 block。但这个逻辑仅限于 dispatch 到主线程，dispatch 到其他线程仍然是由 libDispatch 处理的。&lt;/p&gt;
+
+&lt;p&gt;8、关于网络请求&lt;/p&gt;
+
+&lt;p&gt;iOS 中，关于网络请求的接口自下至上有如下几层:&lt;/p&gt;
+
+&lt;p&gt;• CFSocket 是最底层的接口，只负责 socket 通信。&lt;/p&gt;
+
+&lt;p&gt;• CFNetwork 是基于 CFSocket 等接口的上层封装，ASIHttpRequest 工作于这一层。&lt;/p&gt;
+
+&lt;p&gt;• NSURLConnection 是基于 CFNetwork 的更高层的封装，提供面向对象的接口，AFNetworking 工作于这一层。&lt;/p&gt;
+
+&lt;p&gt;• NSURLSession 是 iOS7 中新增的接口，表面上是和 NSURLConnection 并列的，但底层仍然用到了 NSURLConnection 的部分功能 (比如com.apple.NSURLConnectionLoader 线程)，AFNetworking2 和 Alamofire 工作于这一层。&lt;/p&gt;
+
+&lt;p&gt;下面主要介绍下 NSURLConnection 的工作过程。&lt;/p&gt;
+
+&lt;p&gt;通常使用 NSURLConnection 时，你会传入一个 Delegate，当调用了 [connection start] 后，这个 Delegate 就会不停收到事件回调。实际上，start 这个函数的内部会会获取 CurrentRunLoop，然后在其中的 DefaultMode 添加了4个 Source0 (即需要手动触发的Source)。CFMultiplexerSource 是负责各种 Delegate 回调的，CFHTTPCookieStorage 是处理各种 Cookie 的。&lt;/p&gt;
+
+&lt;p&gt;当开始网络传输时，我们可以看到 NSURLConnection 创建了两个新线程：com.apple.NSURLConnectionLoader 和 com.apple.CFSocket.private。其中 CFSocket 线程是处理底层 socket 连接的。NSURLConnectionLoader 这个线程内部会使用 RunLoop 来接收底层 socket 的事件，并通过之前添加的 Source0 通知到上层的 Delegate。&lt;/p&gt;
+
+&lt;p&gt;NSURLConnectionLoader 中的 RunLoop 通过一些基于 mach port 的 Source 接收来自底层 CFSocket 的通知。当收到通知后，其会在合适的时机向 CFMultiplexerSource 等 Source0 发送通知，同时唤醒 Delegate 线程的 RunLoop 来让其处理这些通知。CFMultiplexerSource 会在 Delegate 线程的 RunLoop 对 Delegate 执行实际的回调。&lt;/p&gt;
+
+</description>
+        <pubDate>Thu, 29 Jan 2015 20:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2015/01/29/Runloop/</link>
+        <guid isPermaLink="true">http://localhost:4000/2015/01/29/Runloop/</guid>
+        
+        <category>iOS</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>HTTP与TCP/IP</title>
+        <description>&lt;h3 id=&quot;tcpip定义&quot;&gt;TCP/IP定义&lt;/h3&gt;
+
+&lt;p&gt;TCP/IP是互联网相关的各类协议族的名称&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Http/tcp.png&quot; alt=&quot;图片&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;tcpip四层模型&quot;&gt;TCP/IP四层模型&lt;/h3&gt;
+
+&lt;p&gt;OSI七层模型太过繁琐，所以就对应有了TCP/IP四层模型，对应的将OSI中的应用层、表示层、会话层统一归为应用层。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Http/OSI.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;应用层：决定了向用户提供应用服务时通信的活动。HTTP协议。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;传输层：提供处于网络连接中的两台计算机之间的数据传输，TCP和UDP协议就在这一层&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;网络层：用来处理在网络上流动的数据包，数据包是网络传输的最小数据单位。该层规定了通过怎样的路径到达对方计算机，并把数据包传送给对方。IP协议&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;链路层：用来处理连接网络的硬件部分。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Http/model.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;http报文&quot;&gt;HTTP报文&lt;/h3&gt;
+
+&lt;h4 id=&quot;请求报文&quot;&gt;请求报文&lt;/h4&gt;
+
+&lt;p&gt;一个HTTP请求报文由请求行（request line）、请求头部（header）、空行、请求数据4个部分组成&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Http/request.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;请求行&quot;&gt;请求行&lt;/h4&gt;
+
+&lt;p&gt;由方法、服务器内部URL(使用GET方法时，请求参数和对应的值附加在URL后面，利用一个问号（“?”）代表URL的结尾与请求参数的开始)、协议版本组成&lt;/p&gt;
+
+&lt;h4 id=&quot;请求方法&quot;&gt;请求方法&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;GET：请求获取Request-URI所标识的资源。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;POST：在Request-URI所标识的资源后附加新的数据。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;HEAD：请求获取由Request-URI所标识的资源的响应消息报头。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;PUT：请求服务器存储一个资源，并用Request-URI作为其标识。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Delete：请求服务器删除Request-URI所标识的资源。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;TRACE：请求服务器回送收到的请求信息，主要用于测试或诊断。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;CONNECT：保留将来使用。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;OPTIONS：请求查询服务器的性能，或者查询与资源相关的选项和需求。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;返回报文&quot;&gt;返回报文&lt;/h4&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Http/response.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;状态码&quot;&gt;状态码&lt;/h4&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Http/statusCode.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;长连接&quot;&gt;长连接&lt;/h4&gt;
+
+&lt;p&gt;在报文中有一个字段：connnection:keep-alive;是长连接的意思，从Http1.1开始就是默认TCP保持长连接，只要任意一端没有提出断开连接，则会一直保持连接状态，一次长连接可以进行多次请求和响应，好处是可以减少建立连接和断开连接的开销，减少服务器的负载，另外也可以加快Http请求和响应；&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Http/connection.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;cookies&quot;&gt;Cookies&lt;/h4&gt;
+
+&lt;p&gt;Http是无状态协议，但有的时候客户端与服务器又要保持某些状态，于是引入了Cookie技术。Cookie技术通过在请求和响应报文中写入Cookie信息来控制客户端的状态&lt;/p&gt;
+
+&lt;p&gt;Cookie会根据从服务器端发送的响应报文中的一个Set-Cookie的头部信息，通知客户端来保持Cookie。当下次客户端再往服务器发送请求时，客户端会自动在请求报文中加入Cookie后发送出去。&lt;/p&gt;
+
+&lt;p&gt;服务器端发现客户端发送过来的Cookie后，会去检查究竟从哪一个客户端发来的连接请求，然后对比服务器上的记录，最后得到之前的状态信息。&lt;/p&gt;
+
+&lt;h3 id=&quot;https&quot;&gt;HTTPS&lt;/h3&gt;
+
+&lt;h4 id=&quot;http有以下不足&quot;&gt;Http有以下不足&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;通信使用明文，内容可能被窃听&lt;/li&gt;
+  &lt;li&gt;不验证通信双方的身份，因此有可能遭遇伪装&lt;/li&gt;
+  &lt;li&gt;无法证明报文的完整性，所以有可能遭到篡改&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;ssltsl&quot;&gt;SSL/TSL&lt;/h4&gt;
+
+&lt;p&gt;是个加密套件，负责对HTTP的数据进行加密。TLS是SSL的升级版， HTTPS就是在http和TCP之间加了一层TSL/SSL协议。先通过公开加密生成对称密钥，之后用对称密钥进行对话。&lt;/p&gt;
+
+&lt;h4 id=&quot;https抓包原理&quot;&gt;HTTPS抓包原理&lt;/h4&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Https抓包的原理就是抓包程序将服务器返回的证书截获&lt;/li&gt;
+  &lt;li&gt;然后给客户端返回一个抓包程序的证书，&lt;/li&gt;
+  &lt;li&gt;客户端发送的数据用抓包程序给的证书生成的密钥加密&lt;/li&gt;
+  &lt;li&gt;抓包程序得到客户端发送的数据抓包程序用自己的证书解密出来，再用服务器证书加密&lt;/li&gt;
+  &lt;li&gt;抓包程序再把数据发给服务器&lt;/li&gt;
+&lt;/ol&gt;
+
+</description>
+        <pubDate>Thu, 29 Jan 2015 20:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2015/01/29/Http/</link>
+        <guid isPermaLink="true">http://localhost:4000/2015/01/29/Http/</guid>
+        
+        <category>网络</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Man must explore, and this is exploration at its greatest</title>
+        <description>&lt;p&gt;Never in all their history have men been able truly to conceive of the world as one: a single sphere, a globe, having the qualities of a globe, a round earth in which all the directions eventually meet, in which there is no center because every point, or none, is center — an equal earth which all men occupy as equals. The airman's earth, if free men make it, will be truly round: a globe in practice, not in theory.&lt;/p&gt;
+
+&lt;p&gt;Science cuts two ways, of course; its products can be used for both good and evil. But there's no turning back from science. The early warnings about technological dangers also come from science.&lt;/p&gt;
+
+&lt;p&gt;What was most significant about the lunar voyage was not that man set foot on the Moon but that they set eye on the earth.&lt;/p&gt;
+
+&lt;p&gt;A Chinese tale tells of some men sent to harm a young girl who, upon seeing her beauty, become her protectors rather than her violators. That's how I felt seeing the Earth for the first time. I could not help but love and cherish her.&lt;/p&gt;
+
+&lt;p&gt;For those who have seen the Earth from space, and for the hundreds and perhaps thousands more who will, the experience most certainly changes your perspective. The things that we share in our world are far more valuable than those which divide us.&lt;/p&gt;
+
+&lt;h2 class=&quot;section-heading&quot;&gt;The Final Frontier&lt;/h2&gt;
+
+&lt;p&gt;There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.&lt;/p&gt;
+
+&lt;p&gt;There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.&lt;/p&gt;
+
+&lt;blockquote&gt;The dreams of yesterday are the hopes of today and the reality of tomorrow. Science has not yet mastered prophecy. We predict too much for the next year and yet far too little for the next ten.&lt;/blockquote&gt;
+
+&lt;p&gt;Spaceflights cannot be stopped. This is not the work of any one man or even a group of men. It is a historical process which mankind is carrying out in accordance with the natural laws of human development.&lt;/p&gt;
+
+&lt;h2 class=&quot;section-heading&quot;&gt;Reaching for the Stars&lt;/h2&gt;
+
+&lt;p&gt;As we got further and further away, it [the Earth] diminished in size. Finally it shrank to the size of a marble, the most beautiful you can imagine. That beautiful, warm, living object looked so fragile, so delicate, that if you touched it with a finger it would crumble and fall apart. Seeing this has to change a man.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;#&quot;&gt;
+    &lt;img src=&quot;/img/post-sample-image.jpg&quot; alt=&quot;Post Sample Image&quot; /&gt;
+&lt;/a&gt;
+&lt;span class=&quot;caption text-muted&quot;&gt;To go places and do things that have never been done before – that’s what living is all about.&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;Space, the final frontier. These are the voyages of the Starship Enterprise. Its five-year mission: to explore strange new worlds, to seek out new life and new civilizations, to boldly go where no man has gone before.&lt;/p&gt;
+
+&lt;p&gt;As I stand out here in the wonders of the unknown at Hadley, I sort of realize there’s a fundamental truth to our nature, Man must explore, and this is exploration at its greatest.&lt;/p&gt;
+
+&lt;p&gt;Placeholder text by &lt;a href=&quot;http://spaceipsum.com/&quot;&gt;Space Ipsum&lt;/a&gt;. Photographs by &lt;a href=&quot;https://www.flickr.com/photos/nasacommons/&quot;&gt;NASA on The Commons&lt;/a&gt;.&lt;/p&gt;
+</description>
+        <pubDate>Wed, 24 Sep 2014 20:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2014/09/24/man-must-explore/</link>
+        <guid isPermaLink="true">http://localhost:4000/2014/09/24/man-must-explore/</guid>
+        
+        
+      </item>
+    
+  </channel>
+</rss>
