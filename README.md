@@ -1,4 +1,7 @@
-# HuxBlog Boilerplate
+#Helloted Blog - Jekyll Version
 
-##### This is the boilerplate of [Helloted Blog](www.helloted.com)!
+###[View Live Demo →](http://helloted.com)
 
+## Support
+
+Visit Clean Blog's template overview page on Start Bootstrap at http://startbootstrap.com/template-overviews/clean-blog/ and leave a comment, email feedback@startbootstrap.com, or open an issue here on GitHub for support.
