@@ -1,0 +1,116 @@
+<h3 id="tcpip定义">TCP/IP定义</h3>
+
+<p>TCP/IP是互联网相关的各类协议族的名称</p>
+
+<p><img src="/img/Http/tcp.png" alt="" /></p>
+
+<h3 id="tcpip四层模型">TCP/IP四层模型</h3>
+
+<p>OSI七层模型太过繁琐，所以就对应有了TCP/IP四层模型，对应的将OSI中的应用层、表示层、会话层统一归为应用层。</p>
+
+<p><img src="/img/Http/OSI.png" alt="" /></p>
+
+<ul>
+  <li>
+    <p>应用层：决定了向用户提供应用服务时通信的活动。HTTP协议。</p>
+  </li>
+  <li>
+    <p>传输层：提供处于网络连接中的两台计算机之间的数据传输，TCP和UDP协议就在这一层</p>
+  </li>
+  <li>
+    <p>网络层：用来处理在网络上流动的数据包，数据包是网络传输的最小数据单位。该层规定了通过怎样的路径到达对方计算机，并把数据包传送给对方。IP协议</p>
+  </li>
+  <li>
+    <p>链路层：用来处理连接网络的硬件部分。</p>
+  </li>
+</ul>
+
+<p><img src="/img/Http/model.png" alt="" /></p>
+
+<h3 id="http报文">HTTP报文</h3>
+
+<h4 id="请求报文">请求报文</h4>
+
+<p>一个HTTP请求报文由请求行（request line）、请求头部（header）、空行、请求数据4个部分组成</p>
+
+<p><img src="/img/Http/request.png" alt="" /></p>
+
+<h4 id="请求行">请求行</h4>
+
+<p>由方法、服务器内部URL(使用GET方法时，请求参数和对应的值附加在URL后面，利用一个问号（“?”）代表URL的结尾与请求参数的开始)、协议版本组成</p>
+
+<h4 id="请求方法">请求方法</h4>
+
+<ul>
+  <li>
+    <p>GET：请求获取Request-URI所标识的资源。</p>
+  </li>
+  <li>
+    <p>POST：在Request-URI所标识的资源后附加新的数据。</p>
+  </li>
+  <li>
+    <p>HEAD：请求获取由Request-URI所标识的资源的响应消息报头。</p>
+  </li>
+  <li>
+    <p>PUT：请求服务器存储一个资源，并用Request-URI作为其标识。</p>
+  </li>
+  <li>
+    <p>Delete：请求服务器删除Request-URI所标识的资源。</p>
+  </li>
+  <li>
+    <p>TRACE：请求服务器回送收到的请求信息，主要用于测试或诊断。</p>
+  </li>
+  <li>
+    <p>CONNECT：保留将来使用。</p>
+  </li>
+  <li>
+    <p>OPTIONS：请求查询服务器的性能，或者查询与资源相关的选项和需求。</p>
+  </li>
+</ul>
+
+<h4 id="返回报文">返回报文</h4>
+
+<p><img src="/img/Http/response.png" alt="" /></p>
+
+<h4 id="状态码">状态码</h4>
+
+<p><img src="/img/Http/statusCode.png" alt="" /></p>
+
+<h4 id="长连接">长连接</h4>
+
+<p>在报文中有一个字段：connnection:keep-alive;是长连接的意思，从Http1.1开始就是默认TCP保持长连接，只要任意一端没有提出断开连接，则会一直保持连接状态，一次长连接可以进行多次请求和响应，好处是可以减少建立连接和断开连接的开销，减少服务器的负载，另外也可以加快Http请求和响应；</p>
+
+<p><img src="/img/Http/connection.png" alt="" /></p>
+
+<h4 id="cookies">Cookies</h4>
+
+<p>Http是无状态协议，但有的时候客户端与服务器又要保持某些状态，于是引入了Cookie技术。Cookie技术通过在请求和响应报文中写入Cookie信息来控制客户端的状态</p>
+
+<p>Cookie会根据从服务器端发送的响应报文中的一个Set-Cookie的头部信息，通知客户端来保持Cookie。当下次客户端再往服务器发送请求时，客户端会自动在请求报文中加入Cookie后发送出去。</p>
+
+<p>服务器端发现客户端发送过来的Cookie后，会去检查究竟从哪一个客户端发来的连接请求，然后对比服务器上的记录，最后得到之前的状态信息。</p>
+
+<h3 id="https">HTTPS</h3>
+
+<h4 id="http有以下不足">Http有以下不足</h4>
+
+<ul>
+  <li>通信使用明文，内容可能被窃听</li>
+  <li>不验证通信双方的身份，因此有可能遭遇伪装</li>
+  <li>无法证明报文的完整性，所以有可能遭到篡改</li>
+</ul>
+
+<h4 id="ssltsl">SSL/TSL</h4>
+
+<p>是个加密套件，负责对HTTP的数据进行加密。TLS是SSL的升级版， HTTPS就是在http和TCP之间加了一层TSL/SSL协议。先通过公开加密生成对称密钥，之后用对称密钥进行对话。</p>
+
+<h4 id="https抓包原理">HTTPS抓包原理</h4>
+
+<ol>
+  <li>Https抓包的原理就是抓包程序将服务器返回的证书截获</li>
+  <li>然后给客户端返回一个抓包程序的证书，</li>
+  <li>客户端发送的数据用抓包程序给的证书生成的密钥加密</li>
+  <li>抓包程序得到客户端发送的数据抓包程序用自己的证书解密出来，再用服务器证书加密</li>
+  <li>抓包程序再把数据发给服务器</li>
+</ol>
+
