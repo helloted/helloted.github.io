@@ -1,7 +1,10 @@
 ---
-title: iOS多线程
-date: 2016-05-29 10:04:46
-tags: iOS
+layout:     post
+title:      "iOS之多线程"
+subtitle:   "三种多线程NSThread、GCD、NSOperation"
+date:       2016-05-22 12:00:00
+author:     "Ted"
+header-img: "img/default.jpg"
 ---
 
 ### 一、前言
@@ -20,13 +23,12 @@ tags: iOS
 
 POSIX线程（POSIX threads），简称Pthreads，是线程的POSIX标准。该标准定义了创建和操纵线程的一整套API。在类Unix操作系统（Unix、Linux、Mac OS X等）中，都使用Pthreads作为操作系统的线程,这是一套在很多操作系统上都通用的多线程API，所以移植性很强（然并卵），当然在 iOS 中也是可以的。不过这是基于 c语言的框架；
 
-```
+```objective-c
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     pthread_t thread;
     //创建一个线程并自动执行
     pthread_create(&thread, NULL, start, NULL);
 }
-
 void *start(void *data) {
     NSLog(@"%@", [NSThread currentThread]);
     return NULL;
@@ -37,39 +39,28 @@ void *start(void *data) {
 
 ```
 //取消线程
-
 - (void)cancel;
 
 //启动线程
-
 - (void)start;
 
 //判断某个线程的状态的属性
-
 @property (readonly, getter=isExecuting) BOOL executing;
-
 @property (readonly, getter=isFinished) BOOL finished;
-
 @property (readonly, getter=isCancelled) BOOL cancelled;
 
 //设置和获取线程名字
-
 -(void)setName:(NSString *)n;
-
 -(NSString *)name;
 
 //获取当前线程信息
-
 + (NSThread *)currentThread;
 
 //获取主线程信息
-
 + (NSThread *)mainThread;
 
 //使当前线程暂停一段时间，或者暂停到某个时刻
-
 + (void)sleepForTimeInterval:(NSTimeInterval)time;
-
 + (void)sleepUntilDate:(NSDate *)date;
 ```
 
