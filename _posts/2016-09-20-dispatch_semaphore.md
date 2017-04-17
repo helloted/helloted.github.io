@@ -2,21 +2,28 @@
 layout:     post
 title:      "GCD之dispatch_semaphore"
 subtitle:   "dispatch_semaphore信号控制可以达到线程锁的目的"
-date:       2016-09-13 12:00:00
+date:       2016-09-20 12:00:00
 author:     "Ted"
 header-img: "img/Http/bg.jpg"
 ---
 
 ### 几个函数的意义
 
-````objective-c
-//信号创建，其中value是初始信号值
-dispatch_semaphore_create(long value)  
-  
- //信号等待函数，dsema是信号，timeout是等待时间点，在等待时间点内，只有信号dsema的信号值大于等于1才放行，继续往下执行；放行之后信号值减1；
-dispatch_semaphore_wait(dispatch_semaphore_t dsema, dispatch_time_t timeout); 
+信号创建，其中value是初始信号值
 
-//增加信号值，每使用一次对应的dsema的信号值就加一
+````
+dispatch_semaphore_create(long value) 
+````
+
+ 信号等待函数，dsema是信号，timeout是等待时间点，在等待时间点内，只有信号dsema的信号值大于等于1才放行，继续往下执行；放行之后信号值减1；
+
+````
+dispatch_semaphore_wait(dispatch_semaphore_t dsema, dispatch_time_t timeout); 
+````
+
+增加信号值，每使用一次对应的dsema的信号值就加1
+
+````objective-c
 dispatch_semaphore_signal(dispatch_semaphore_t dsema);
 ````
 
@@ -65,3 +72,9 @@ dispatch_semaphore_signal(dispatch_semaphore_t dsema);
 ````
 
 ![](/img/semaphore/semaphore_01.png)
+
+### demo位置
+
+以上代码都放在[dispatch_semaphore demo](https://github.com/helloted/dispatch_semaphore) 
+
+
