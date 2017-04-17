@@ -4,7 +4,7 @@ title:      "GCD之dispatch_semaphore"
 subtitle:   "dispatch_semaphore信号控制可以达到线程锁、控制线程并发数"
 date:       2016-09-20 12:00:00
 author:     "Ted"
-header-img: "img/default.jpg"
+header-img: "img/bg_01.jpg"
 ---
 
 ### 几个函数的意义
@@ -90,6 +90,8 @@ dispatch_semaphore_signal(dispatch_semaphore_t dsema);
 ````
 
 ![](/img/semaphore/semaphore_03.png)
+
+可以看出，每次并发量被控制在2个
 
 ### demo位置
 
