@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      "GCD之dispatch_semaphore"
-subtitle:   "dispatch_semaphore信号控制可以达到线程锁的目的"
+subtitle:   "dispatch_semaphore信号控制可以达到线程锁、控制线程并发数"
 date:       2016-09-20 12:00:00
 author:     "Ted"
 header-img: "img/default.jpg"
@@ -71,7 +71,25 @@ dispatch_semaphore_signal(dispatch_semaphore_t dsema);
 }
 ````
 
-![](/img/semaphore/semaphore_01.png)
+![](/img/semaphore/semaphore_02.png)
+
+3、控制并发数
+
+````
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(2);
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    for (int i = 0; i < 10; i++)
+    {
+        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+        dispatch_async(queue, ^{
+            NSLog(@"%i",i);
+            sleep(2);
+            dispatch_semaphore_signal(semaphore);
+        });
+    }
+````
+
+![](/img/semaphore/semaphore_03.png)
 
 ### demo位置
 

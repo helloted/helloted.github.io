@@ -10,7 +10,7 @@
 
     <title>GCD之dispatch_semaphore - Helloted Blog</title>
 
-    <link rel="canonical" href="http://www.helloted.com/2016/09/20/dispatch_semaphore/">
+    <link rel="canonical" href="http://localhost:4000/2016/09/20/dispatch_semaphore/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -33,7 +33,7 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <link type="application/atom+xml" rel="alternate" href="http://www.helloted.com/feed.xml" title="Helloted Blog" />
+    <link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Helloted Blog" />
 
 </head>
 
@@ -89,7 +89,7 @@
                 <div class="post-heading">
                     <h1>GCD之dispatch_semaphore</h1>
                     
-                    <h2 class="subheading">dispatch_semaphore信号控制可以达到线程锁的目的</h2>
+                    <h2 class="subheading">dispatch_semaphore信号控制可以达到线程锁、控制线程并发数</h2>
                     
                     <span class="meta">Posted by Ted on September 20, 2016</span>
                 </div>
@@ -167,7 +167,25 @@
 </code></pre>
 </div>
 
-<p><img src="/img/semaphore/semaphore_01.png" alt="" /></p>
+<p><img src="/img/semaphore/semaphore_02.png" alt="" /></p>
+
+<p>3、控制并发数</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>    dispatch_semaphore_t semaphore = dispatch_semaphore_create(2);
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    for (int i = 0; i &lt; 10; i++)
+    {
+        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+        dispatch_async(queue, ^{
+            NSLog(@"%i",i);
+            sleep(2);
+            dispatch_semaphore_signal(semaphore);
+        });
+    }
+</code></pre>
+</div>
+
+<p><img src="/img/semaphore/semaphore_03.png" alt="" /></p>
 
 <h3 id="demo位置">demo位置</h3>
 
