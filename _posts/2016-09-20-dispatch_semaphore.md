@@ -4,7 +4,7 @@ title:      "GCD之dispatch_semaphore"
 subtitle:   "dispatch_semaphore信号控制可以达到线程锁的目的"
 date:       2016-09-20 12:00:00
 author:     "Ted"
-header-img: "img/Http/bg.jpg"
+header-img: "img/default.jpg"
 ---
 
 ### 几个函数的意义
