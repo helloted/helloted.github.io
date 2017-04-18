@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>监测APP卡顿 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://localhost:4000/2016/10/06/smoothMonitor/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/clean-blog.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Helloted Blog" />
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/bg_01.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>监测APP卡顿</h1>
+                    
+                    <h2 class="subheading">利用Runloop来监测APP卡顿</h2>
+                    
+                    <span class="meta">Posted by Ted on October 6, 2016</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h3 id="一简介">一、简介</h3>
+
+<p>我们说的卡顿，一般指操作某个功能时，UI界面无及时反应，这种卡顿日常测试一般难以追踪以及重现，所以除了工程师开发测试的时候发现卡顿，还有一个重要的渠道就是从用户实际体验来监测卡顿，但是我们又不能拿到用户的手机或者让用户来回馈问题，所以一个完整的监测体系就很有必要了。</p>
+
+<ul>
+  <li>
+    <p>监测卡顿：开一个子线程，利用Runloop来监测卡顿；</p>
+  </li>
+  <li>
+    <p>收集堆栈：将卡顿时的堆栈收集起来；</p>
+  </li>
+  <li>
+    <p>上传记录：将卡顿上传到后台或自定义；</p>
+
+    <p>这里我引用一张微信开发团队的监测流程图：</p>
+
+    <p><img src="/img/Smooth/smooth_01.png" alt="img" /></p>
+  </li>
+</ul>
+
+<h3 id="二监测卡顿">二、监测卡顿</h3>
+
+<p>首先我们来看一个Runloop的运行方式，如下</p>
+
+<pre><code class="language-objective-c">int32_t __CFRunLoopRun()
+{
+    // 通知即将进入runloop
+  	//创建AutoreleasePool: _objc_autoreleasePoolPush();
+    __CFRunLoopDoObservers(KCFRunLoopEntry);
+    
+    do
+    {
+        // 通知将要处理timer和source
+        __CFRunLoopDoObservers(kCFRunLoopBeforeTimers);
+        __CFRunLoopDoObservers(kCFRunLoopBeforeSources);
+        
+        // 处理非延迟的主线程调用
+        __CFRunLoopDoBlocks();
+        // 处理UIEvent事件
+        __CFRunLoopDoSource0();
+        
+        // GCD dispatch main queue
+        CheckIfExistMessagesInMainDispatchQueue();
+        
+        // 即将进入休眠
+      	//释放并新建AutoreleasePool: _objc_autoreleasePoolPop(); _objc_autoreleasePoolPush();
+        __CFRunLoopDoObservers(kCFRunLoopBeforeWaiting);
+        
+        // 等待内核mach_msg事件
+        mach_port_t wakeUpPort = SleepAndWaitForWakingUpPorts();
+        
+        // Zzz...
+        
+        // 从等待中醒来
+        __CFRunLoopDoObservers(kCFRunLoopAfterWaiting);
+                
+        if (wakeUpPort == timerPort){// 处理因timer的唤醒
+          __CFRunLoopDoTimers();
+        }else if (wakeUpPort == mainDispatchQueuePort){// 处理异步方法唤醒,如dispatch_async
+          __CFRUNLOOP_IS_SERVICING_THE_MAIN_DISPATCH_QUEUE__()
+        } else{// UI刷新,动画显示
+          __CFRunLoopDoSource1();
+        }   
+        // 再次确保是否有同步的方法需要调用
+        __CFRunLoopDoBlocks();
+        
+    } while (!stop &amp;&amp; !timeout);
+    
+    // 通知即将退出runloop
+  	//释放AutoreleasePool: _objc_autoreleasePoolPop();
+    __CFRunLoopDoObservers(CFRunLoopExit);
+}
+</code></pre>
+
+<p>UI更新一般<font color="gray">kCFRunLoopBeforeSources</font>和<font color="gray">kCFRunLoopBeforeWaiting</font>之间，所以我们监测他们之间的时间段就能知道UI是否卡顿了</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>- (void)startMoniter{
+	//添加监听
+    CFRunLoopObserverContext context = {0,(__bridge void*)self,NULL,NULL};
+    _observer = CFRunLoopObserverCreate(kCFAllocatorDefault,
+                                        kCFRunLoopAllActivities,
+                                        YES,
+                                        0,
+                                        &amp;runLoopObserverCallBack,
+                                        &amp;context);
+    CFRunLoopAddObserver(CFRunLoopGetMain(), _observer, kCFRunLoopCommonModes);
+    
+    // 创建信号
+    _semaphore = dispatch_semaphore_create(0);
+    
+    // 在子线程监控时长
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        while (YES)
+        {
+            NSLog(@"smooth--monitering");
+            //100ms则将堆栈记录下来
+            long st = dispatch_semaphore_wait(_semaphore, dispatch_time(DISPATCH_TIME_NOW, 100*NSEC_PER_MSEC));
+            if (st != 0)
+            {
+                if (_activity==kCFRunLoopBeforeSources || _activity==kCFRunLoopAfterWaiting)
+                {
+                    [self logStack];
+                }
+            }
+        }
+    });
+}
+
+static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActivity activity, void *info)
+{
+    SmoothMoniter *instrance = [SmoothMoniter sharedInstance];
+    instrance.activity = activity;
+    dispatch_semaphore_t semaphore = instrance.semaphore;
+    dispatch_semaphore_signal(semaphore);
+}
+</code></pre>
+</div>
+
+<h3 id="三收集堆栈">三、收集堆栈</h3>
+
+<p>收集堆栈信息以用来分析卡顿引起的代码</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>#import &lt;libkern/OSAtomic.h&gt;
+#import &lt;execinfo.h&gt;
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>- (void)logStack{
+    void* callstack[128];
+    int frames = backtrace(callstack, 128);
+    char **strs = backtrace_symbols(callstack, frames);
+    int i;
+    NSMutableArray *backtrace = [NSMutableArray arrayWithCapacity:frames];
+    for ( i = 0 ; i &lt; frames ; i++ ){
+        [backtrace addObject:[NSString stringWithUTF8String:strs[i]]];
+    }
+    free(strs);
+}
+</code></pre>
+</div>
+
+<p>可以得到类似于下方的堆栈记录</p>
+
+<p><img src="/img/Smooth/smooth_02.png" alt="img" /></p>
+
+<h3 id="四上传记录">四、上传记录</h3>
+
+<p>1、频率以及流量：是否所有的用户都要做统计？上传的频率？文件压缩以减少流量？这些问题都要根据实际情况作好准备。</p>
+
+<p>2、上传位置，一种是自己建立后台来统计这些卡顿，嫌麻烦的话是利用第三方平台、如友盟（统计崩溃比较多）、听云、OneApm、博睿，都大同小异。</p>
+
+<h3 id="五代码">五、代码</h3>
+
+<p>上面的代码可以在<a href="https://github.com/helloted/smoothMonitor">smoothMonitor</a> 下载</p>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2016/09/20/dispatch_semaphore/" data-toggle="tooltip" data-placement="top" title="GCD之dispatch_semaphore">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2017</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+
+    
+
+
+</body>
+
+</html>
