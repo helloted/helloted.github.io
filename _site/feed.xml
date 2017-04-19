@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-04-18T18:26:08+08:00</updated><id>http://localhost:4000/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">监测APP卡顿</title><link href="http://localhost:4000/2016/10/06/smoothMonitor/" rel="alternate" type="text/html" title="监测APP卡顿" /><published>2016-10-06T20:00:00+08:00</published><updated>2016-10-06T20:00:00+08:00</updated><id>http://localhost:4000/2016/10/06/smoothMonitor</id><content type="html" xml:base="http://localhost:4000/2016/10/06/smoothMonitor/">&lt;h3 id=&quot;一简介&quot;&gt;一、简介&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-04-19T14:43:56+08:00</updated><id>http://localhost:4000/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">监测APP卡顿</title><link href="http://localhost:4000/2016/10/06/smoothMonitor/" rel="alternate" type="text/html" title="监测APP卡顿" /><published>2016-10-06T20:00:00+08:00</published><updated>2016-10-06T20:00:00+08:00</updated><id>http://localhost:4000/2016/10/06/smoothMonitor</id><content type="html" xml:base="http://localhost:4000/2016/10/06/smoothMonitor/">&lt;h3 id=&quot;一简介&quot;&gt;一、简介&lt;/h3&gt;
 
 &lt;p&gt;我们说的卡顿，一般指操作某个功能时，UI界面无及时反应，这种卡顿日常测试一般难以追踪以及重现，所以除了工程师开发测试的时候发现卡顿，还有一个重要的渠道就是从用户实际体验来监测卡顿，但是我们又不能拿到用户的手机或者让用户来回馈问题，所以一个完整的监测体系就很有必要了。&lt;/p&gt;
 
@@ -354,7 +354,25 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
   &lt;li&gt;抓包程序再把数据发给服务器&lt;/li&gt;
 &lt;/ol&gt;</content><author><name>Ted</name></author><summary type="html">TCP/IP定义</summary></entry><entry><title type="html">iOS之Runloop</title><link href="http://localhost:4000/2016/07/04/Runloop/" rel="alternate" type="text/html" title="iOS之Runloop" /><published>2016-07-04T20:00:00+08:00</published><updated>2016-07-04T20:00:00+08:00</updated><id>http://localhost:4000/2016/07/04/Runloop</id><content type="html" xml:base="http://localhost:4000/2016/07/04/Runloop/">&lt;h3 id=&quot;一简介&quot;&gt;一、简介&lt;/h3&gt;
 
-&lt;p&gt;Runloop的本质是一直运行着的循环，线程中的循环.它用来接受循环事件和安排线程的工作,并且在线程中没有工作时,让线程进入睡眠状态.程序启动时，Runloop随着主线程的启动而启动，每个线程都有一个runloop,但是只有主线程的会自动启动；&lt;/p&gt;
+&lt;p&gt;先看苹果官方文档：&lt;a href=&quot;https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html#//apple_ref/doc/uid/10000057i-CH16-SW1&quot;&gt;Run loopss&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Run loops are part of the fundamental infrastructure associated with threads. A runloop is an event processing loop that you use to schedule work and coordinate the receipt of incoming events. The purpose of a run loop is to keep your thread busy when there is work to do and put your thread to sleep when there is none.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Runloop是与线程相关联的基础架构的一部分，它用来接受循环事件和安排线程的工作，在有工作时让线程处于繁忙状态，没有事件需要处理时让线程休眠；&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Run loop management is not entirely automatic. You must still design your thread’s code to start the run loop at appropriate times and respond to incoming events.The app frameworks automatically set up and run the run loop on the main thread as part of the application startup process&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Runloop的管理并不是全自动的，你依然要操作线程代码在合适的时候开启Runloop然后回应传入的事件。但是主线程的例外，程序启动时，主线程的Runloop会自动开启。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;A run loop is very much like its name sounds. It is a loop your thread enters and uses to run event handlers in response to incoming events.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Runloop的名字运行循环，顾名思义，是一个线程进入之后用来运行事件处理程序来响应传入的事件的循环。&lt;/p&gt;
 
 &lt;p&gt;RunLoop 是线程中的一个循环,并且对接受到的事件进行处理.我们的代码可以通过提供 while 或者 for 循环来驱动 RunLoop.在循环中,Run Loop 对象来负责事件处理的代码(接受事件,并调用相应的事件处理方法).&lt;/p&gt;
 
@@ -374,6 +392,8 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
 
 &lt;p&gt;Timer Source: 用来投递 timer 事件(Schedule 或者 Repeat)中的同步消息.在消息处理时,并不会退出 RunLoop.Timer在选择使用一次后，在执行完成时，会从Run Loop中移除。选择循环时，会一直保存在当前Run Loop中，直到调用invalidated方法。Foundation中 NSTimer Class提供了相关方法来设置Timer source。需要注意的是除了scheduledTimerWithTimeInterval开头的方法创建的Timer都需要手动添加到当前Run Loop中。（scheduledTimerWithTimeInterval 创建的timer会自动以Default Mode加载到当前Run Loop中。）Timer在选择使用一次后，在执行完成时，会从Run Loop中移除。选择循环时，会一直保存在当前Run Loop中，直到调用invalidated方法。&lt;/p&gt;
 
+&lt;h3 id=&quot;三runloop的observer&quot;&gt;三、Runloop的Observer&lt;/h3&gt;
+
 &lt;p&gt;Run Loop还有一个观察者Observer的概念，可以往Run Loop中加入自己的观察者以便监控Run Loop的运行过程，Run Loop Observer则在Run Loop本身进入某个状态时得到通知:&lt;/p&gt;
 
 &lt;ul&gt;
@@ -385,11 +405,63 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
   &lt;li&gt;kCFRunLoopExit – 退出runloop&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/Runloop/runloop_02.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
 &lt;p&gt;Observer需要使用Core Foundataion框架。和Timer一样，Run Loop Observers也可以使用一次或者选择repeat。如果只使用一次，Observer会在它被执行后自己从Run Loop中移除。而循环的Observer会一直保存在Run Loop中。&lt;/p&gt;
 
-&lt;h3 id=&quot;三runloop-mode&quot;&gt;三、Runloop Mode,&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&quot;/img/Runloop/runloop_03.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;int32_t __CFRunLoopRun()
+{
+    // 通知即将进入runloop
+  	//创建AutoreleasePool: _objc_autoreleasePoolPush();
+    __CFRunLoopDoObservers(KCFRunLoopEntry);
+    
+    do
+    {
+        // 通知将要处理timer和source
+        __CFRunLoopDoObservers(kCFRunLoopBeforeTimers);
+        __CFRunLoopDoObservers(kCFRunLoopBeforeSources);
+        
+        // 处理非延迟的主线程调用
+        __CFRunLoopDoBlocks();
+        // 处理UIEvent事件
+        __CFRunLoopDoSource0();
+        
+        // GCD dispatch main queue
+        CheckIfExistMessagesInMainDispatchQueue();
+        
+        // 即将进入休眠
+      	//释放并新建AutoreleasePool: _objc_autoreleasePoolPop(); _objc_autoreleasePoolPush();
+        __CFRunLoopDoObservers(kCFRunLoopBeforeWaiting);
+        
+        // 等待内核mach_msg事件
+        mach_port_t wakeUpPort = SleepAndWaitForWakingUpPorts();
+        
+        // Zzz...
+        
+        // 从等待中醒来
+        __CFRunLoopDoObservers(kCFRunLoopAfterWaiting);
+                
+        if (wakeUpPort == timerPort){// 处理因timer的唤醒
+          __CFRunLoopDoTimers();
+        }else if (wakeUpPort == mainDispatchQueuePort){// 处理异步方法唤醒,如dispatch_async
+          __CFRUNLOOP_IS_SERVICING_THE_MAIN_DISPATCH_QUEUE__()
+        } else{// UI刷新,动画显示
+          __CFRunLoopDoSource1();
+        }   
+        // 再次确保是否有同步的方法需要调用
+        __CFRunLoopDoBlocks();
+        
+    } while (!stop &amp;amp;&amp;amp; !timeout);
+    
+    // 通知即将退出runloop
+  	//释放AutoreleasePool: _objc_autoreleasePoolPop();
+    __CFRunLoopDoObservers(CFRunLoopExit);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Runloop/runloop_04.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;四runloop-mode&quot;&gt;四、Runloop Mode&lt;/h3&gt;
 
 &lt;p&gt;更改mode只能重新开启runloop，在设置Run Loop Mode后，你的Run Loop会自动过滤和其他Mode相关的事件源，而只监视和当前设置Mode相关的源(通知相关的观察者)。大多数时候，Run Loop都是运行在系统定义的默认模式上。&lt;/p&gt;
 
@@ -406,11 +478,7 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
 
 &lt;p&gt;Run Loop不能在运行在NSRunLoopCommonModes，因为NSRunLoopCommonModes是个Mode集合，而不是一个具体的Mode。我们可以在添加事件源的时候使用NSRunLoopCommonModes，只要Run Loop运行在NSRunLoopCommonModes中任何一个Mode，这个事件源都可以被触发。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/Runloop/runloop_03.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Runloop/runloop_04.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;四何时使用-run-loop&quot;&gt;四、何时使用 Run Loop&lt;/h3&gt;
+&lt;h3 id=&quot;五何时使用-run-loop&quot;&gt;五、何时使用 Run Loop&lt;/h3&gt;
 
 &lt;p&gt;我们应该只在创建辅助线程的时候，才显示的运行一个Run Loop。对于辅助线程，我们仍然需要判断是否需要启动Run Loop。比如我们使用一个线程去处理一个预先定义的长时间的任务，我们应当避免启动Run Loop。下面是官方Document提供的使用Run Loop的几个场景:&lt;/p&gt;
 
