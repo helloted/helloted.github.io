@@ -1,4 +1,492 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-04-19T17:15:45+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">监测APP卡顿</title><link href="http://www.helloted.com/2016/10/06/smoothMonitor/" rel="alternate" type="text/html" title="监测APP卡顿" /><published>2016-10-06T20:00:00+08:00</published><updated>2016-10-06T20:00:00+08:00</updated><id>http://www.helloted.com/2016/10/06/smoothMonitor</id><content type="html" xml:base="http://www.helloted.com/2016/10/06/smoothMonitor/">&lt;h3 id=&quot;一简介&quot;&gt;一、简介&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-04-20T17:48:55+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS之Runloop(2):应用</title><link href="http://www.helloted.com/2017/04/16/Runloop_2/" rel="alternate" type="text/html" title="iOS之Runloop(2):应用" /><published>2017-04-16T20:00:00+08:00</published><updated>2017-04-16T20:00:00+08:00</updated><id>http://www.helloted.com/2017/04/16/Runloop_2</id><content type="html" xml:base="http://www.helloted.com/2017/04/16/Runloop_2/">&lt;p&gt;1、AutoreleasePool&lt;/p&gt;
+
+&lt;p&gt;App启动后，苹果在主线程 RunLoop 里注册了两个 Observer，其回调都是 _wrapRunLoopWithAutoreleasePoolHandler()。&lt;/p&gt;
+
+&lt;p&gt;第一个 Observer 监视的事件是 Entry(即将进入Loop)，其回调内会调用 _objc_autoreleasePoolPush() 创建自动释放池。其 order 是-2147483647，优先级最高，保证创建释放池发生在其他所有回调之前。&lt;/p&gt;
+
+&lt;p&gt;第二个 Observer 监视了两个事件： BeforeWaiting(准备进入休眠) 时调用_objc_autoreleasePoolPop() 和 _objc_autoreleasePoolPush() 释放旧的池并创建新池；Exit(即将退出Loop) 时调用 _objc_autoreleasePoolPop() 来释放自动释放池。这个 Observer 的 order 是 2147483647，优先级最低，保证其释放池子发生在其他所有回调之后。&lt;/p&gt;
+
+&lt;p&gt;在主线程执行的代码，通常是写在诸如事件回调、Timer回调内的。这些回调会被 RunLoop 创建好的 AutoreleasePool 环绕着，所以不会出现内存泄漏，开发者也不必显示创建 Pool 了。&lt;/p&gt;
+
+&lt;p&gt;2、定时器&lt;/p&gt;
+
+&lt;p&gt;NSTimer 其实就是 CFRunLoopTimerRef，他们之间是 toll-free bridged 的。一个 NSTimer 注册到 RunLoop 后，RunLoop 会为其重复的时间点注册好事件。例如 10:00, 10:10, 10:20 这几个时间点。RunLoop为了节省资源，并不会在非常准确的时间点回调这个Timer。Timer 有个属性叫做 Tolerance (宽容度)，标示了当时间点到后，容许有多少最大误差。&lt;/p&gt;
+
+&lt;p&gt;如果某个时间点被错过了，例如执行了一个很长的任务，则那个时间点的回调也会跳过去，不会延后执行。就比如等公交，如果 10:10 时我忙着玩手机错过了那个点的公交，那我只能等 10:20 这一趟了。&lt;/p&gt;
+
+&lt;p&gt;CADisplayLink 是一个和屏幕刷新率一致的定时器（但实际实现原理更复杂，和 NSTimer 并不一样，其内部实际是操作了一个 Source）。如果在两次屏幕刷新之间执行了一个长任务，那其中就会有一帧被跳过去（和 NSTimer 相似），造成界面卡顿的感觉。在快速滑动TableView时，即使一帧的卡顿也会让用户有所察觉。Facebook 开源的 AsyncDisplayLink 就是为了解决界面卡顿的问题，其内部也用到了 RunLoop，这个稍后我会再单独写一页博客来分析。&lt;/p&gt;
+
+&lt;p&gt;3、PerformSelecter&lt;/p&gt;
+
+&lt;p&gt;当调用 NSObject 的 performSelecter:afterDelay: 后，实际上其内部会创建一个 Timer 并添加到当前线程的 RunLoop 中。所以如果当前线程没有 RunLoop，则这个方法会失效。&lt;/p&gt;
+
+&lt;p&gt;当调用 performSelector:onThread: 时，实际上其会创建一个 Timer 加到对应的线程去，同样的，如果对应线程没有 RunLoop 该方法也会失效。&lt;/p&gt;
+
+&lt;p&gt;4、事件响应&lt;/p&gt;
+
+&lt;p&gt;苹果注册了一个 Source1 (基于 mach port 的) 用来接收系统事件，其回调函数为 __IOHIDEventSystemClientQueueCallback()。&lt;/p&gt;
+
+&lt;p&gt;当一个硬件事件(触摸/锁屏/摇晃等)发生后，首先由 IOKit.framework 生成一个 IOHIDEvent 事件并由 SpringBoard 接收。SpringBoard 只接收按键(锁屏/静音等)，触摸，加速，接近传感器等几种 Event，随后用 mach port 转发给需要的App进程。随后苹果注册的那个 Source1 就会触发回调，并调用 _UIApplicationHandleEventQueue() 进行应用内部的分发。&lt;/p&gt;
+
+&lt;p&gt;_UIApplicationHandleEventQueue() 会把 IOHIDEvent 处理并包装成 UIEvent 进行处理或分发，其中包括识别 UIGesture/处理屏幕旋转/发送给 UIWindow 等。通常事件比如 UIButton 点击、touchesBegin/Move/End/Cancel 事件都是在这个回调中完成的。&lt;/p&gt;
+
+&lt;p&gt;5、手势识别&lt;/p&gt;
+
+&lt;p&gt;当上面的 _UIApplicationHandleEventQueue() 识别了一个手势时，其首先会调用 Cancel 将当前的 touchesBegin/Move/End 系列回调打断。随后系统将对应的 UIGestureRecognizer 标记为待处理。&lt;/p&gt;
+
+&lt;p&gt;苹果注册了一个 Observer 监测 BeforeWaiting (Loop即将进入休眠) 事件，这个Observer的回调函数是 _UIGestureRecognizerUpdateObserver()，其内部会获取所有刚被标记为待处理的 GestureRecognizer，并执行GestureRecognizer的回调。&lt;/p&gt;
+
+&lt;p&gt;当有 UIGestureRecognizer 的变化(创建/销毁/状态改变)时，这个回调都会进行相应处理。&lt;/p&gt;
+
+&lt;p&gt;6、界面更新&lt;/p&gt;
+
+&lt;p&gt;当在操作 UI 时，比如改变了 Frame、更新了 UIView/CALayer 的层次时，或者手动调用了 UIView/CALayer 的 setNeedsLayout/setNeedsDisplay方法后，这个 UIView/CALayer 就被标记为待处理，并被提交到一个全局的容器去。&lt;/p&gt;
+
+&lt;p&gt;苹果注册了一个 Observer 监听 BeforeWaiting(即将进入休眠) 和 Exit (即将退出Loop) 事件，回调去执行一个很长的函数：&lt;/p&gt;
+
+&lt;p&gt;_ZN2CA11Transaction17observer_callbackEP19__CFRunLoopObservermPv()。这个函数里会遍历所有待处理的 UIView/CAlayer 以执行实际的绘制和调整，并更新 UI 界面。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;_ZN2CA11Transaction17observer_callbackEP19__CFRunLoopObservermPv()
+    QuartzCore:CA::Transaction::observer_callback:
+        CA::Transaction::commit();
+            CA::Context::commit_transaction();
+                CA::Layer::layout_and_display_if_needed();
+                    CA::Layer::layout_if_needed();
+                        [CALayer layoutSublayers];
+                            [UIView layoutSubviews];
+                    CA::Layer::display_if_needed();
+                        [CALayer display];
+                            [UIView drawRect];
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;7、关于GCD&lt;/p&gt;
+
+&lt;p&gt;实际上 RunLoop 底层也会用到 GCD 的东西。但同时 GCD 提供的某些接口也用到了 RunLoop， 例如 dispatch_async()&lt;/p&gt;
+
+&lt;p&gt;当调用 dispatch_async(dispatch_get_main_queue(), block) 时，libDispatch 会向主线程的 RunLoop 发送消息，RunLoop会被唤醒，并从消息中取得这个 block，并在回调 &lt;strong&gt;CFRUNLOOP_IS_SERVICING_THE_MAIN_DISPATCH_QUEUE&lt;/strong&gt;() 里执行这个 block。但这个逻辑仅限于 dispatch 到主线程，dispatch 到其他线程仍然是由 libDispatch 处理的。&lt;/p&gt;
+
+&lt;p&gt;8、关于网络请求&lt;/p&gt;
+
+&lt;p&gt;iOS 中，关于网络请求的接口自下至上有如下几层:&lt;/p&gt;
+
+&lt;p&gt;• CFSocket 是最底层的接口，只负责 socket 通信。&lt;/p&gt;
+
+&lt;p&gt;• CFNetwork 是基于 CFSocket 等接口的上层封装，ASIHttpRequest 工作于这一层。&lt;/p&gt;
+
+&lt;p&gt;• NSURLConnection 是基于 CFNetwork 的更高层的封装，提供面向对象的接口，AFNetworking 工作于这一层。&lt;/p&gt;
+
+&lt;p&gt;• NSURLSession 是 iOS7 中新增的接口，表面上是和 NSURLConnection 并列的，但底层仍然用到了 NSURLConnection 的部分功能 (比如com.apple.NSURLConnectionLoader 线程)，AFNetworking2 和 Alamofire 工作于这一层。&lt;/p&gt;
+
+&lt;p&gt;下面主要介绍下 NSURLConnection 的工作过程。&lt;/p&gt;
+
+&lt;p&gt;通常使用 NSURLConnection 时，你会传入一个 Delegate，当调用了 [connection start] 后，这个 Delegate 就会不停收到事件回调。实际上，start 这个函数的内部会会获取 CurrentRunLoop，然后在其中的 DefaultMode 添加了4个 Source0 (即需要手动触发的Source)。CFMultiplexerSource 是负责各种 Delegate 回调的，CFHTTPCookieStorage 是处理各种 Cookie 的。&lt;/p&gt;
+
+&lt;p&gt;当开始网络传输时，我们可以看到 NSURLConnection 创建了两个新线程：com.apple.NSURLConnectionLoader 和 com.apple.CFSocket.private。其中 CFSocket 线程是处理底层 socket 连接的。NSURLConnectionLoader 这个线程内部会使用 RunLoop 来接收底层 socket 的事件，并通过之前添加的 Source0 通知到上层的 Delegate。&lt;/p&gt;
+
+&lt;p&gt;NSURLConnectionLoader 中的 RunLoop 通过一些基于 mach port 的 Source 接收来自底层 CFSocket 的通知。当收到通知后，其会在合适的时机向 CFMultiplexerSource 等 Source0 发送通知，同时唤醒 Delegate 线程的 RunLoop 来让其处理这些通知。CFMultiplexerSource 会在 Delegate 线程的 RunLoop 对 Delegate 执行实际的回调。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">1、AutoreleasePool</summary></entry><entry><title type="html">iOS之Runloop(1):本质</title><link href="http://www.helloted.com/2017/04/16/Runloop_1/" rel="alternate" type="text/html" title="iOS之Runloop(1):本质" /><published>2017-04-16T20:00:00+08:00</published><updated>2017-04-16T20:00:00+08:00</updated><id>http://www.helloted.com/2017/04/16/Runloop_1</id><content type="html" xml:base="http://www.helloted.com/2017/04/16/Runloop_1/">&lt;h3 id=&quot;一简介&quot;&gt;一、简介&lt;/h3&gt;
+
+&lt;p&gt;先看苹果官方文档：&lt;a href=&quot;https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html#//apple_ref/doc/uid/10000057i-CH16-SW1&quot;&gt;Run loops&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Run loops are part of the fundamental infrastructure associated with threads. A runloop is an event processing loop that you use to schedule work and coordinate the receipt of incoming events. The purpose of a run loop is to keep your thread busy when there is work to do and put your thread to sleep when there is none.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Runloop是与线程相关联的基础架构的一部分，它用来接受循环事件和安排线程的工作，在有工作时让线程处于繁忙状态，没有事件需要处理时让线程休眠；&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Run loop management is not entirely automatic. You must still design your thread’s code to start the run loop at appropriate times and respond to incoming events.The app frameworks automatically set up and run the run loop on the main thread as part of the application startup process&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Runloop的管理并不是全自动的，你依然要操作线程代码在合适的时候开启Runloop然后回应传入的事件。但是主线程的例外，程序启动时，主线程的Runloop会自动开启。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;A run loop is very much like its name sounds. It is a loop your thread enters and uses to run event handlers in response to incoming events.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Runloop的名字运行循环，顾名思义，是一个线程进入之后用来运行事件处理程序来响应传入的事件的循环。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Your code provides the control statements used to implement the actual loop portion of the run loop—in other words, your code provides the while or for loop that drives the run loop. Within your loop, you use a run loop object to “run” the event-processing code that receives events and calls the installed handlers.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;代码提供用于实现运行循环的实际循环部分的控制语句 - 换句话说，代码提供while或for循环用于驱动运行循环。 在循环中，使用运行循环对象来“运行”事件处理代码(接收事件并调用相应的事件处理方法)。&lt;/p&gt;
+
+&lt;h3 id=&quot;二sources&quot;&gt;二、Sources&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;A run loop receives events from two different types of sources. &lt;em&gt;Input sources&lt;/em&gt; deliver asynchronous events, usually messages from another thread or from a different application. &lt;em&gt;Timer sources&lt;/em&gt; deliver synchronous events, occurring at a scheduled time or repeating interval. Both types of source use an application-specific handler routine to process the event when it arrives.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;RunLoop 接受的事件源有两种大类: &lt;em&gt;Input sources&lt;/em&gt;, &lt;em&gt;Timer sources&lt;/em&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;InputSources&lt;/strong&gt; : 传递递异步事件,通常消息来自另外的线程或者程序;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Timer sources&lt;/strong&gt;：传递同步事件，发生在预定时间或者是重复间隔；&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;在事件传递到时，两种事件源都是用程序特定的例行程序来处理事件&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;从下图可以看到，&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Runloop/runloop_00.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;The input sources deliver asynchronous events to the corresponding handlers and cause the &lt;em&gt;runUntilDate:&lt;/em&gt;  method (called on the thread’s associated &lt;em&gt;NSRunLoop&lt;/em&gt; object) to exit. Timer sources deliver events to their handler routines but do not cause the run loop to exit.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;em&gt;Input sources&lt;/em&gt; 传递异步事件给相应的方法处理，并且通过&lt;em&gt;runUntilDate:&lt;/em&gt;（由线程对应的&lt;em&gt;NSRunLoop&lt;/em&gt; 对象执行）来退出；&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Timer sources&lt;/em&gt; 传递同步事件给它们对应的例行程序来执行但是不会导致run loop退出。&lt;/p&gt;
+
+&lt;h3 id=&quot;三input-sources&quot;&gt;三、Input Sources&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Input sources deliver events asynchronously to your threads. The source of the event depends on the type of the input source, which is generally one of two categories. Port-based input sources monitor your application’s Mach ports. Custom input sources monitor custom sources of events. As far as your run loop is concerned, it should not matter whether an input source is port-based or custom. The system typically implements input sources of both types that you can use as is. The only difference between the two sources is how they are signaled. Port-based sources are signaled automatically by the kernel, and custom sources must be signaled manually from another thread.&lt;/p&gt;
+
+  &lt;p&gt;When you create an input source, you assign it to one or more modes of your run loop. Modes affect which input sources are monitored at any given moment. Most of the time, you run the run loop in the default mode, but you can specify custom modes too. If an input source is not in the currently monitored mode, any events it generates are held until the run loop runs in the correct mode&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;em&gt;Input sources&lt;/em&gt; 异步地传递事件到线程，而事件的源来至于其中一种：&lt;em&gt;Port-based input sources&lt;/em&gt;、&lt;em&gt;Custom input sources&lt;/em&gt; 这两种souces的实现处理方式都一样，区别&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Port-based input sources&lt;/em&gt; :监听程序的Mach ports，kernel自动发信号&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Custom input sources&lt;/em&gt; ：监听自定义的活动，在其他线程手动的发信号&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;em&gt;Cocoa Perform Selector Sources&lt;/em&gt; : &lt;em&gt;Cocoa&lt;/em&gt; 框架定义的&lt;em&gt;Custom input sources&lt;/em&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h4 id=&quot;配置input-sources&quot;&gt;配置Input Sources&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Port-Based Sources通过内置的端口相关的对象和函数，配置基于端口的Input source。 (比如在主线程创建子线程时传入一个NSPort对象,主线程和子线程就可以进行通讯。NSPort对象会负责自己创建和配置Input source。)&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Custom Input Sources我们可以使用Core Foundation里面的CFRunLoopSourceRef类型相关的函数来创建custom input source,系统也有提供一些方法。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Cocoa框架为我们定义了一些Custom Input Sources，允许我们在线程中执行一系列selector方法，这些在NSThread类里面。和Port-Based Sources一样，这些selector的请求会在目标线程中序列化，以减缓线程中多个方法执行带来的同步问题。和Port-Based Sources不一样的是，一个selector方法执行完之后会自动从当前Run Loop中移除。&lt;/p&gt;
+
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;performSelectorOnMainThread:withObject:waitUntilDone:
+performSelectorOnMainThread:withObject:waitUntilDone:modes:
+
+performSelector:onThread:withObject:waitUntilDone:
+performSelector:onThread:withObject:waitUntilDone:modes:
+
+performSelector:withObject:afterDelay:
+performSelector:withObject:afterDelay:inModes:
+
+cancelPreviousPerformRequestsWithTarget:
+cancelPreviousPerformRequestsWithTarget:selector:object:
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;四timer-sources&quot;&gt;四、Timer Sources&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Timer sources deliver events synchronously to your threads at a preset time in the future. Timers are a way for a thread to notify itself to do something.&lt;/p&gt;
+
+  &lt;p&gt;Although it generates time-based notifications, a timer is not a real-time mechanism. Like input sources, timers are associated with specific modes of your run loop. If a timer is not in the mode currently being monitored by the run loop, it does not fire until you run the run loop in one of the timer’s supported modes. Similarly, if a timer fires when the run loop is in the middle of executing a handler routine, the timer waits until the next time through the run loop to invoke its handler routine. If the run loop is not running at all, the timer never fires.&lt;/p&gt;
+
+  &lt;p&gt;You can configure timers to generate events only once or repeatedly. A repeating timer reschedules itself automatically based on the scheduled firing time, not the actual firing time. For example, if a timer is scheduled to fire at a particular time and every 5 seconds after that, the scheduled firing time will always fall on the original 5 second time intervals, even if the actual firing time gets delayed. If the firing time is delayed so much that it misses one or more of the scheduled firing times, the timer is fired only once for the missed time period. After firing for the missed period, the timer is rescheduled for the next scheduled firing time.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Timer sources 在未来的特定时间同步地传递事件给线程，Timer是一种提醒线程做事的方式。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;尽管Timer是一种基于时间的通知，但是并不是实时机制，如果不是对应的Mode,timer并不会被fire除非切换到对应的Mode.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;如果timer的fire时间，runloop正在处理其他事件，等待超过tolerance，那么这一次fire就会错过，等待下一次来执行，如果runloop退出，那么timer就再也不会fire了。&lt;/li&gt;
+  &lt;li&gt;间隔时间是跟上一次之后的间隔，是timer自己调度的，所以可能并不是跟实际时间完全吻合(因为存在等待，这些需要叠加)。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;timer应用&quot;&gt;Timer应用&lt;/h4&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;除了scheduledTimerWithTimeInterval开头的方法创建的Timer都需要手动添加到当前Run Loop中。（scheduledTimerWithTimeInterval 创建的timer会自动以Default Mode加载到当前Run Loop中。）&lt;/li&gt;
+  &lt;li&gt;Timer在选择使用一次后，在执行完成时，会从Run Loop中移除。选择循环时，会一直保存在当前Run Loop中，直到调用invalidated方法。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;五runloop-mode&quot;&gt;五、Runloop Mode&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;A &lt;em&gt;run loop mode&lt;/em&gt; is a collection of input sources and timers to be monitored and a collection of run loop observers to be notified&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;一个&lt;em&gt;run loop mode&lt;/em&gt;是一个集合（&lt;em&gt;input sources&lt;/em&gt; 和 &lt;em&gt;timers&lt;/em&gt;被监测，&lt;em&gt;observers&lt;/em&gt;接受通知）&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Each time you run your run loop, you specify (either explicitly or implicitly) a particular “mode” in which to run. During that pass of the run loop, only sources associated with that mode are monitored and allowed to deliver their events. (Similarly, only observers associated with that mode are notified of the run loop’s progress.) Sources associated with other modes hold on to any new events until subsequent passes through the loop in the appropriate mode.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;每次开启runloop都要指定一个mode来运行，在运行期间，只有该mode下对应的事件源才会被监测以及允许传递事件（同样的，该mode对应的observers才能接受runloop进程的通知）,其他mode下的事件源的事件将会等待直到切换到对应的mode.更改mode只能重新开启runloop，&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;You use modes to filter out events from unwanted sources during a particular pass through your run loop. Most of the time, you will want to run your run loop in the system-defined “default” mode. A modal panel, however, might run in the “modal” mode. While in this mode, only sources relevant to the modal panel would deliver events to the thread.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;在设置Run Loop Mode后，你的Run Loop会自动过滤和其他Mode相关的事件源，而只监视和当前设置Mode相关的源(通知相关的观察者)。大多数时候，Run Loop都是运行在系统定义的默认模式上。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;em&gt;NSDefaultRunLoopMode&lt;/em&gt;: 大多数工作中默认的运行方式。&lt;/li&gt;
+  &lt;li&gt;&lt;em&gt;NSConnectionReplyMode&lt;/em&gt;: 使用这个Mode去监听NSConnection对象的状态，我们很少需要自己使用这个Mode。&lt;/li&gt;
+  &lt;li&gt;&lt;em&gt;NSModalPanelRunLoopMode&lt;/em&gt;: 使用这个Mode在Model Panel情况下去区分事件(OS X开发中会遇到)。&lt;/li&gt;
+  &lt;li&gt;&lt;em&gt;UITrackingRunLoopMode&lt;/em&gt;: 使用这个Mode去跟踪来自用户交互的事件（比如UITableView上下滑动）。&lt;/li&gt;
+  &lt;li&gt;&lt;em&gt;GSEventReceiveRunLoopMode&lt;/em&gt;: 用来接受系统事件，内部的Run Loop Mode。&lt;/li&gt;
+  &lt;li&gt;&lt;em&gt;NSRunLoopCommonModes&lt;/em&gt;:这是一个伪模式，其为一组run loop mode的集合。如果将Input source加入此模式，意味着关联Input source到Common Modes中包含的所有模式下。在iOS系统中NSRunLoopCommonMode包含NSDefaultRunLoopMode、NSTaskDeathCheckMode、UITrackingRunLoopMode.可使用CFRunLoopAddCommonMode方法向Common Modes中添加自定义mode。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Run Loop运行时只能以一种固定的Mode运行，只会监控这个Mode下添加的Timer source和Input source。如果这个Mode下没有添加事件源，Run Loop会立刻返回。&lt;/p&gt;
+
+&lt;p&gt;Run Loop并不是在运行在NSRunLoopCommonModes，因为NSRunLoopCommonModes是个Mode集合，而不是一个具体的Mode。我们可以在添加事件源的时候使用NSRunLoopCommonModes，只要Run Loop运行在NSRunLoopCommonModes中任何一个Mode，这个事件源都可以被触发。类似地也可以自定义Mode集合&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;You can define custom modes by simply specifying a custom string for the mode name. Although the names you assign to custom modes are arbitrary, the contents of those modes are not. You must be sure to add one or more input sources, timers, or run-loop observers to any modes you create for them to be useful.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;自定义Mode的时候，一定要确保该Mode下有sources以及Obsevers&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Runloop/runloop_00.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Timer Source: 用来投递 timer 事件(Schedule 或者 Repeat)中的同步消息.在消息处理时,并不会退出 RunLoop.Timer在选择使用一次后，在执行完成时，会从Run Loop中移除。选择循环时，会一直保存在当前Run Loop中，直到调用invalidated方法。Foundation中 NSTimer Class提供了相关方法来设置Timer source。需要注意的是除了scheduledTimerWithTimeInterval开头的方法创建的Timer都需要手动添加到当前Run Loop中。（scheduledTimerWithTimeInterval 创建的timer会自动以Default Mode加载到当前Run Loop中。）Timer在选择使用一次后，在执行完成时，会从Run Loop中移除。选择循环时，会一直保存在当前Run Loop中，直到调用invalidated方法。&lt;/p&gt;
+
+&lt;h3 id=&quot;六runloop的observer&quot;&gt;六、Runloop的Observer&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;In addition to handling sources of input, run loops also generate notifications about the run loop’s behavior.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;在处理事件源时，runloop会产生关于这些行为的通知，可以往Run Loop中加入自己的观察者以便监控Run Loop的运行过程。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;In contrast to sources, which fire when an appropriate asynchronous or synchronous event occurs, run loop observers fire at special locations during the execution of the run loop itself. You might use run loop observers to prepare your thread to process a given event or to prepare the thread before it goes to sleep. You can associate run loop observers with the following events in your run loop:&lt;/p&gt;
+
+  &lt;ul&gt;
+    &lt;li&gt;The entrance to the run loop.&lt;/li&gt;
+    &lt;li&gt;When the run loop is about to process a timer.&lt;/li&gt;
+    &lt;li&gt;When the run loop is about to process an input source.&lt;/li&gt;
+    &lt;li&gt;When the run loop is about to go to sleep.&lt;/li&gt;
+    &lt;li&gt;When the run loop has woken up, but before it has processed the event that woke it up.&lt;/li&gt;
+    &lt;li&gt;The exit from the run loop.&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;一个合适的同步或者异步事件引发soureces启动，跟soureces相反，Runloop Observers在本身循环执行期间的某个特殊位置启动，也许你需要用runloop obsevers去准备你的线程去处理某个事件或者在线程休眠之前准备好线程。&lt;/p&gt;
+
+&lt;p&gt;Run Loop Observer会与以下事件相关联：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;kCFRunLoopEntry – 进入runloop循环&lt;/li&gt;
+  &lt;li&gt;kCFRunLoopBeforeTimers — runloop即将处理一个timer&lt;/li&gt;
+  &lt;li&gt;kCFRunLoopBeforeSources – runloop即将处理input sources的事件&lt;/li&gt;
+  &lt;li&gt;kCFRunLoopBeforeWaiting – runloop即将休眠&lt;/li&gt;
+  &lt;li&gt;kCFRunLoopAfterWaiting – runloop已经唤醒，但是唤醒runloop的是事件还没有处理。&lt;/li&gt;
+  &lt;li&gt;kCFRunLoopExit – 退出runloop&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Similar to timers, run-loop observers can be used once or repeatedly. A one-shot observer removes itself from the run loop after it fires, while a repeating observer remains attached. You specify whether an observer runs once or repeatedly when you create it.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;和Timer一样，Run Loop Observers也可以使用一次或者选择repeat。如果只使用一次，Observer会在它被执行后自己从Run Loop中移除。而循环的Observer会一直保存在Run Loop中。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Each time you run it, your thread’s run loop processes pending events and generates notifications for any attached observers. The order in which it does this is very specific and is as follows:&lt;/p&gt;
+
+  &lt;ol&gt;
+    &lt;li&gt;Notify observers that the run loop has been entered.&lt;/li&gt;
+    &lt;li&gt;Notify observers that any ready timers are about to fire.&lt;/li&gt;
+    &lt;li&gt;Notify observers that any input sources that are not port based are about to fire.&lt;/li&gt;
+    &lt;li&gt;Fire any non-port-based input sources that are ready to fire.&lt;/li&gt;
+    &lt;li&gt;If a port-based input source is ready and waiting to fire, process the event immediately. Go to step 9.&lt;/li&gt;
+    &lt;li&gt;Notify observers that the thread is about to sleep.&lt;/li&gt;
+    &lt;li&gt;Put the thread to sleep until one of the following events occurs:
+      &lt;ul&gt;
+        &lt;li&gt;An event arrives for a port-based input source.&lt;/li&gt;
+        &lt;li&gt;A timer fires.&lt;/li&gt;
+        &lt;li&gt;The timeout value set for the run loop expires.&lt;/li&gt;
+        &lt;li&gt;The run loop is explicitly woken up.&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/li&gt;
+    &lt;li&gt;Notify observers that the thread just woke up.&lt;/li&gt;
+    &lt;li&gt;Process the pending event.
+      &lt;ul&gt;
+        &lt;li&gt;If a user-defined timer fired, process the timer event and restart the loop. Go to step 2.&lt;/li&gt;
+        &lt;li&gt;If an input source fired, deliver the event.&lt;/li&gt;
+        &lt;li&gt;If the run loop was explicitly woken up but has not yet timed out, restart the loop. Go to step 2.&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/li&gt;
+    &lt;li&gt;Notify observers that the run loop has exited.&lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;一旦runloop跑起来，线程的runloop就会处理等待的事件并且给observer发送通知&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Runloop/runloop_03.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;int32_t __CFRunLoopRun()
+{
+    // 通知即将进入runloop
+  	//创建AutoreleasePool: _objc_autoreleasePoolPush();
+    __CFRunLoopDoObservers(KCFRunLoopEntry);
+    
+    do
+    {
+        // 通知将要处理timer和source
+        __CFRunLoopDoObservers(kCFRunLoopBeforeTimers);
+        __CFRunLoopDoObservers(kCFRunLoopBeforeSources);
+        
+        // 处理非延迟的主线程调用
+        __CFRunLoopDoBlocks();
+        // 处理UIEvent事件
+        __CFRunLoopDoSource0();
+        
+        // GCD dispatch main queue
+        CheckIfExistMessagesInMainDispatchQueue();
+        
+        // 即将进入休眠
+      	//释放并新建AutoreleasePool: _objc_autoreleasePoolPop(); _objc_autoreleasePoolPush();
+        __CFRunLoopDoObservers(kCFRunLoopBeforeWaiting);
+        
+        // 等待内核mach_msg事件
+        mach_port_t wakeUpPort = SleepAndWaitForWakingUpPorts();
+        
+        // Zzz...
+        
+        // 从等待中醒来
+        __CFRunLoopDoObservers(kCFRunLoopAfterWaiting);
+                
+        if (wakeUpPort == timerPort){// 处理因timer的唤醒
+          __CFRunLoopDoTimers();
+        }else if (wakeUpPort == mainDispatchQueuePort){// 处理异步方法唤醒,如dispatch_async
+          __CFRUNLOOP_IS_SERVICING_THE_MAIN_DISPATCH_QUEUE__()
+        } else{// UI刷新,动画显示
+          __CFRunLoopDoSource1();
+        }   
+        // 再次确保是否有同步的方法需要调用
+        __CFRunLoopDoBlocks();
+        
+    } while (!stop &amp;amp;&amp;amp; !timeout);
+    
+    // 通知即将退出runloop
+  	//释放AutoreleasePool: _objc_autoreleasePoolPop();
+    __CFRunLoopDoObservers(CFRunLoopExit);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Runloop/runloop_04.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Because observer notifications for timer and input sources are delivered before those events actually occur, there may be a gap between the time of the notifications and the time of the actual events. If the timing between these events is critical, you can use the sleep and awake-from-sleep notifications to help you correlate the timing between the actual events.&lt;/p&gt;
+
+  &lt;p&gt;Because timers and other periodic events are delivered when you run the run loop, circumventing that loop disrupts the delivery of those events. The typical example of this behavior occurs whenever you implement a mouse-tracking routine by entering a loop and repeatedly requesting events from the application. Because your code is grabbing events directly, rather than letting the application dispatch those events normally, active timers would be unable to fire until after your mouse-tracking routine exited and returned control to the application.&lt;/p&gt;
+
+  &lt;p&gt;A run loop can be explicitly woken up using the run loop object. Other events may also cause the run loop to be woken up. For example, adding another non-port-based input source wakes up the run loop so that the input source can be processed immediately, rather than waiting until some other event occurs.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;timer和input source的通知会在这些事件处理之前就传递(通知时间和发生时间会有小差距)，如果事件处理之间的时间很重要，你可以利用休眠和唤醒的通知来关联这些时间处理的时间&lt;/p&gt;
+
+&lt;p&gt;因为timer和其他周期性事件在运行运行循环时传递，如果规避了循环(不再循环)，会打断这些事件的传递。举个例子，如果你实现了鼠标追踪：在进入了runloop之后就不断地从应用抓取轨迹（循环停止了），这个时候timer就会失效直到你的鼠标追踪结束，将控制圈交还应用，继续循环。&lt;/p&gt;
+
+&lt;p&gt;runloop对象可以唤醒runloop.其他的事件也可以唤醒，比如，添加了一个其他的non-port-based input source就能唤醒runloop从而可以让这个input source可以马上被处理，而不是等着直到其他活动发生。&lt;/p&gt;
+
+&lt;h3 id=&quot;七什么时候才需要使用runloop&quot;&gt;七、什么时候才需要使用runloop&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;The only time you need to run a run loop explicitly is when you create secondary threads for your application. The run loop for your application’s main thread is a crucial piece of infrastructure. As a result, the app frameworks provide the code for running the main application loop and start that loop automatically. The run method of UIApplication in iOS (or NSApplication in OS X) starts an application’s main loop as part of the normal startup sequence. If you use the Xcode template projects to create your application, you should never have to call these routines explicitly.&lt;/p&gt;
+
+  &lt;p&gt;For secondary threads, you need to decide whether a run loop is necessary, and if it is, configure and start it yourself. You do not need to start a thread’s run loop in all cases. For example, if you use a thread to perform some long-running and predetermined task, you can probably avoid starting the run loop. Run loops are intended for situations where you want more interactivity with the thread. For example, you need to start a run loop if you plan to do any of the following:&lt;/p&gt;
+
+  &lt;ul&gt;
+    &lt;li&gt;Use ports or custom input sources to communicate with other threads.&lt;/li&gt;
+    &lt;li&gt;Use timers on the thread.&lt;/li&gt;
+    &lt;li&gt;Use any of the performSelector … methods in a Cocoa application.&lt;/li&gt;
+    &lt;li&gt;Keep the thread around to perform periodic tasks.&lt;/li&gt;
+  &lt;/ul&gt;
+
+  &lt;p&gt;If you do choose to use a run loop, the configuration and setup is straightforward. As with all threaded programming though, you should have a plan for exiting your secondary threads in appropriate situations. It is always better to end a thread cleanly by letting it exit than to force it to terminate. Information on how to configure and exit a run loop is described in &lt;a href=&quot;https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html#//apple_ref/doc/uid/10000057i-CH16-SW5&quot;&gt;Using Run Loop Objects&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;只有在你开启了子线程的情况下才需要运行runloop，主线程的runloop是框架基础，框架提供了代码来运行runloop并且自动开启。应用启动时主线程的runloop就会跟随运行。&lt;/p&gt;
+
+&lt;p&gt;对于子线程，是否需要运行runloop取决于实际需要，并不是所有的子线程都需要运行runloop。如果子线程要跑一个确定的而且长的任务，就没必要开启runloop。runloop更适合当你需要与线程更多交互的情景。以下情景需要开启runloop:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;使用ports或者自定义input sources与其他线程联通&lt;/li&gt;
+  &lt;li&gt;在线程上使用Timer&lt;/li&gt;
+  &lt;li&gt;使用&lt;em&gt;performSelector&lt;/em&gt;这类方法&lt;/li&gt;
+  &lt;li&gt;保持线程执行定期周期任务&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;如果你在子线程运行了runloop，你要准备好在合适的时候退出该子线程，因为相比于强制让runloop终止，通过让线程终止来让runloop退出更好。&lt;/p&gt;
+
+&lt;h3 id=&quot;八使用runloop&quot;&gt;八、使用Runloop&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;To get the run loop for the current thread, you use one of the following:&lt;/p&gt;
+
+  &lt;ul&gt;
+    &lt;li&gt;In a Cocoa application, use the &lt;em&gt;currentRunLoop&lt;/em&gt;  class method of NSRunLoop to retrieve an NSRunLoop object.&lt;/li&gt;
+    &lt;li&gt;Use the &lt;em&gt;CFRunLoopGetCurrent&lt;/em&gt; function.&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;要获得runloop，你可以使用&lt;em&gt;currentRunLoop&lt;/em&gt;或者&lt;em&gt;CFRunLoopGetCurrent&lt;/em&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Before you run a run loop on a secondary thread, you must add at least one input source or timer to it. If a run loop does not have any sources to monitor, it exits immediately when you try to run it&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;在子线程运行runloop之前，你必须添加至少一个input source或者timer。如果runloop没有一个source来监测，会马上退出。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;- (void)threadMain
+{
+    // The application uses garbage collection, so no autorelease pool is needed.
+    NSRunLoop* myRunLoop = [NSRunLoop currentRunLoop];
+ 
+    // Create a run loop observer and attach it to the run loop.
+    CFRunLoopObserverContext  context = {0, self, NULL, NULL, NULL};
+    CFRunLoopObserverRef    observer = CFRunLoopObserverCreate(kCFAllocatorDefault,
+            kCFRunLoopAllActivities, YES, 0, &amp;amp;myRunLoopObserver, &amp;amp;context);
+ 
+    if (observer)
+    {
+        CFRunLoopRef    cfLoop = [myRunLoop getCFRunLoop];
+        CFRunLoopAddObserver(cfLoop, observer, kCFRunLoopDefaultMode);
+    }
+ 
+    // Create and schedule the timer.
+    [NSTimer scheduledTimerWithTimeInterval:0.1 target:self
+                selector:@selector(doFireTimer:) userInfo:nil repeats:YES];
+ 
+    NSInteger    loopCount = 10;
+    do
+    {
+        // Run the run loop 10 times to let the timer fire.
+        [myRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1]];
+        loopCount--;
+    }
+    while (loopCount);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;When configuring the run loop for a long-lived thread, it is better to add at least one input source to receive messages. Although you can enter the run loop with only a timer attached, once the timer fires, it is typically invalidated, which would then cause the run loop to exit. Attaching a repeating timer could keep the run loop running over a longer period of time, but would involve firing the timer periodically to wake your thread, which is effectively another form of polling. By contrast, an input source waits for an event to happen, keeping your thread asleep until it does.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;当配置一个长活线程的runloop，最好添加至少一个input source来接受信息，尽管重复的timer也可以让runloop长时间跑着，但是这涉及到不断定时启动timer来唤醒线程，这实际上是另外一种轮询。相对的，一个input source可以让runloop先睡着等着事件发生再唤醒。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、简介</summary></entry><entry><title type="html">监测APP卡顿</title><link href="http://www.helloted.com/2016/10/06/smoothMonitor/" rel="alternate" type="text/html" title="监测APP卡顿" /><published>2016-10-06T20:00:00+08:00</published><updated>2016-10-06T20:00:00+08:00</updated><id>http://www.helloted.com/2016/10/06/smoothMonitor</id><content type="html" xml:base="http://www.helloted.com/2016/10/06/smoothMonitor/">&lt;h3 id=&quot;一简介&quot;&gt;一、简介&lt;/h3&gt;
 
 &lt;p&gt;我们说的卡顿，一般指操作某个功能时，UI界面无及时反应，这种卡顿日常测试一般难以追踪以及重现，所以除了工程师开发测试的时候发现卡顿，还有一个重要的渠道就是从用户实际体验来监测卡顿，但是我们又不能拿到用户的手机或者让用户来回馈问题，所以一个完整的监测体系就很有必要了。&lt;/p&gt;
 
@@ -352,342 +840,7 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
   &lt;li&gt;客户端发送的数据用抓包程序给的证书生成的密钥加密&lt;/li&gt;
   &lt;li&gt;抓包程序得到客户端发送的数据抓包程序用自己的证书解密出来，再用服务器证书加密&lt;/li&gt;
   &lt;li&gt;抓包程序再把数据发给服务器&lt;/li&gt;
-&lt;/ol&gt;</content><author><name>Ted</name></author><summary type="html">TCP/IP定义</summary></entry><entry><title type="html">iOS之Runloop(2):应用</title><link href="http://www.helloted.com/2016/07/04/Runloop_2/" rel="alternate" type="text/html" title="iOS之Runloop(2):应用" /><published>2016-07-04T20:00:00+08:00</published><updated>2016-07-04T20:00:00+08:00</updated><id>http://www.helloted.com/2016/07/04/Runloop_2</id><content type="html" xml:base="http://www.helloted.com/2016/07/04/Runloop_2/">&lt;p&gt;1、AutoreleasePool&lt;/p&gt;
-
-&lt;p&gt;App启动后，苹果在主线程 RunLoop 里注册了两个 Observer，其回调都是 _wrapRunLoopWithAutoreleasePoolHandler()。&lt;/p&gt;
-
-&lt;p&gt;第一个 Observer 监视的事件是 Entry(即将进入Loop)，其回调内会调用 _objc_autoreleasePoolPush() 创建自动释放池。其 order 是-2147483647，优先级最高，保证创建释放池发生在其他所有回调之前。&lt;/p&gt;
-
-&lt;p&gt;第二个 Observer 监视了两个事件： BeforeWaiting(准备进入休眠) 时调用_objc_autoreleasePoolPop() 和 _objc_autoreleasePoolPush() 释放旧的池并创建新池；Exit(即将退出Loop) 时调用 _objc_autoreleasePoolPop() 来释放自动释放池。这个 Observer 的 order 是 2147483647，优先级最低，保证其释放池子发生在其他所有回调之后。&lt;/p&gt;
-
-&lt;p&gt;在主线程执行的代码，通常是写在诸如事件回调、Timer回调内的。这些回调会被 RunLoop 创建好的 AutoreleasePool 环绕着，所以不会出现内存泄漏，开发者也不必显示创建 Pool 了。&lt;/p&gt;
-
-&lt;p&gt;2、定时器&lt;/p&gt;
-
-&lt;p&gt;NSTimer 其实就是 CFRunLoopTimerRef，他们之间是 toll-free bridged 的。一个 NSTimer 注册到 RunLoop 后，RunLoop 会为其重复的时间点注册好事件。例如 10:00, 10:10, 10:20 这几个时间点。RunLoop为了节省资源，并不会在非常准确的时间点回调这个Timer。Timer 有个属性叫做 Tolerance (宽容度)，标示了当时间点到后，容许有多少最大误差。&lt;/p&gt;
-
-&lt;p&gt;如果某个时间点被错过了，例如执行了一个很长的任务，则那个时间点的回调也会跳过去，不会延后执行。就比如等公交，如果 10:10 时我忙着玩手机错过了那个点的公交，那我只能等 10:20 这一趟了。&lt;/p&gt;
-
-&lt;p&gt;CADisplayLink 是一个和屏幕刷新率一致的定时器（但实际实现原理更复杂，和 NSTimer 并不一样，其内部实际是操作了一个 Source）。如果在两次屏幕刷新之间执行了一个长任务，那其中就会有一帧被跳过去（和 NSTimer 相似），造成界面卡顿的感觉。在快速滑动TableView时，即使一帧的卡顿也会让用户有所察觉。Facebook 开源的 AsyncDisplayLink 就是为了解决界面卡顿的问题，其内部也用到了 RunLoop，这个稍后我会再单独写一页博客来分析。&lt;/p&gt;
-
-&lt;p&gt;3、PerformSelecter&lt;/p&gt;
-
-&lt;p&gt;当调用 NSObject 的 performSelecter:afterDelay: 后，实际上其内部会创建一个 Timer 并添加到当前线程的 RunLoop 中。所以如果当前线程没有 RunLoop，则这个方法会失效。&lt;/p&gt;
-
-&lt;p&gt;当调用 performSelector:onThread: 时，实际上其会创建一个 Timer 加到对应的线程去，同样的，如果对应线程没有 RunLoop 该方法也会失效。&lt;/p&gt;
-
-&lt;p&gt;4、事件响应&lt;/p&gt;
-
-&lt;p&gt;苹果注册了一个 Source1 (基于 mach port 的) 用来接收系统事件，其回调函数为 __IOHIDEventSystemClientQueueCallback()。&lt;/p&gt;
-
-&lt;p&gt;当一个硬件事件(触摸/锁屏/摇晃等)发生后，首先由 IOKit.framework 生成一个 IOHIDEvent 事件并由 SpringBoard 接收。SpringBoard 只接收按键(锁屏/静音等)，触摸，加速，接近传感器等几种 Event，随后用 mach port 转发给需要的App进程。随后苹果注册的那个 Source1 就会触发回调，并调用 _UIApplicationHandleEventQueue() 进行应用内部的分发。&lt;/p&gt;
-
-&lt;p&gt;_UIApplicationHandleEventQueue() 会把 IOHIDEvent 处理并包装成 UIEvent 进行处理或分发，其中包括识别 UIGesture/处理屏幕旋转/发送给 UIWindow 等。通常事件比如 UIButton 点击、touchesBegin/Move/End/Cancel 事件都是在这个回调中完成的。&lt;/p&gt;
-
-&lt;p&gt;5、手势识别&lt;/p&gt;
-
-&lt;p&gt;当上面的 _UIApplicationHandleEventQueue() 识别了一个手势时，其首先会调用 Cancel 将当前的 touchesBegin/Move/End 系列回调打断。随后系统将对应的 UIGestureRecognizer 标记为待处理。&lt;/p&gt;
-
-&lt;p&gt;苹果注册了一个 Observer 监测 BeforeWaiting (Loop即将进入休眠) 事件，这个Observer的回调函数是 _UIGestureRecognizerUpdateObserver()，其内部会获取所有刚被标记为待处理的 GestureRecognizer，并执行GestureRecognizer的回调。&lt;/p&gt;
-
-&lt;p&gt;当有 UIGestureRecognizer 的变化(创建/销毁/状态改变)时，这个回调都会进行相应处理。&lt;/p&gt;
-
-&lt;p&gt;6、界面更新&lt;/p&gt;
-
-&lt;p&gt;当在操作 UI 时，比如改变了 Frame、更新了 UIView/CALayer 的层次时，或者手动调用了 UIView/CALayer 的 setNeedsLayout/setNeedsDisplay方法后，这个 UIView/CALayer 就被标记为待处理，并被提交到一个全局的容器去。&lt;/p&gt;
-
-&lt;p&gt;苹果注册了一个 Observer 监听 BeforeWaiting(即将进入休眠) 和 Exit (即将退出Loop) 事件，回调去执行一个很长的函数：&lt;/p&gt;
-
-&lt;p&gt;_ZN2CA11Transaction17observer_callbackEP19__CFRunLoopObservermPv()。这个函数里会遍历所有待处理的 UIView/CAlayer 以执行实际的绘制和调整，并更新 UI 界面。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;_ZN2CA11Transaction17observer_callbackEP19__CFRunLoopObservermPv()
-    QuartzCore:CA::Transaction::observer_callback:
-        CA::Transaction::commit();
-            CA::Context::commit_transaction();
-                CA::Layer::layout_and_display_if_needed();
-                    CA::Layer::layout_if_needed();
-                        [CALayer layoutSublayers];
-                            [UIView layoutSubviews];
-                    CA::Layer::display_if_needed();
-                        [CALayer display];
-                            [UIView drawRect];
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;7、关于GCD&lt;/p&gt;
-
-&lt;p&gt;实际上 RunLoop 底层也会用到 GCD 的东西。但同时 GCD 提供的某些接口也用到了 RunLoop， 例如 dispatch_async()&lt;/p&gt;
-
-&lt;p&gt;当调用 dispatch_async(dispatch_get_main_queue(), block) 时，libDispatch 会向主线程的 RunLoop 发送消息，RunLoop会被唤醒，并从消息中取得这个 block，并在回调 &lt;strong&gt;CFRUNLOOP_IS_SERVICING_THE_MAIN_DISPATCH_QUEUE&lt;/strong&gt;() 里执行这个 block。但这个逻辑仅限于 dispatch 到主线程，dispatch 到其他线程仍然是由 libDispatch 处理的。&lt;/p&gt;
-
-&lt;p&gt;8、关于网络请求&lt;/p&gt;
-
-&lt;p&gt;iOS 中，关于网络请求的接口自下至上有如下几层:&lt;/p&gt;
-
-&lt;p&gt;• CFSocket 是最底层的接口，只负责 socket 通信。&lt;/p&gt;
-
-&lt;p&gt;• CFNetwork 是基于 CFSocket 等接口的上层封装，ASIHttpRequest 工作于这一层。&lt;/p&gt;
-
-&lt;p&gt;• NSURLConnection 是基于 CFNetwork 的更高层的封装，提供面向对象的接口，AFNetworking 工作于这一层。&lt;/p&gt;
-
-&lt;p&gt;• NSURLSession 是 iOS7 中新增的接口，表面上是和 NSURLConnection 并列的，但底层仍然用到了 NSURLConnection 的部分功能 (比如com.apple.NSURLConnectionLoader 线程)，AFNetworking2 和 Alamofire 工作于这一层。&lt;/p&gt;
-
-&lt;p&gt;下面主要介绍下 NSURLConnection 的工作过程。&lt;/p&gt;
-
-&lt;p&gt;通常使用 NSURLConnection 时，你会传入一个 Delegate，当调用了 [connection start] 后，这个 Delegate 就会不停收到事件回调。实际上，start 这个函数的内部会会获取 CurrentRunLoop，然后在其中的 DefaultMode 添加了4个 Source0 (即需要手动触发的Source)。CFMultiplexerSource 是负责各种 Delegate 回调的，CFHTTPCookieStorage 是处理各种 Cookie 的。&lt;/p&gt;
-
-&lt;p&gt;当开始网络传输时，我们可以看到 NSURLConnection 创建了两个新线程：com.apple.NSURLConnectionLoader 和 com.apple.CFSocket.private。其中 CFSocket 线程是处理底层 socket 连接的。NSURLConnectionLoader 这个线程内部会使用 RunLoop 来接收底层 socket 的事件，并通过之前添加的 Source0 通知到上层的 Delegate。&lt;/p&gt;
-
-&lt;p&gt;NSURLConnectionLoader 中的 RunLoop 通过一些基于 mach port 的 Source 接收来自底层 CFSocket 的通知。当收到通知后，其会在合适的时机向 CFMultiplexerSource 等 Source0 发送通知，同时唤醒 Delegate 线程的 RunLoop 来让其处理这些通知。CFMultiplexerSource 会在 Delegate 线程的 RunLoop 对 Delegate 执行实际的回调。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">1、AutoreleasePool</summary></entry><entry><title type="html">iOS之Runloop(1):本质</title><link href="http://www.helloted.com/2016/07/04/Runloop_1/" rel="alternate" type="text/html" title="iOS之Runloop(1):本质" /><published>2016-07-04T20:00:00+08:00</published><updated>2016-07-04T20:00:00+08:00</updated><id>http://www.helloted.com/2016/07/04/Runloop_1</id><content type="html" xml:base="http://www.helloted.com/2016/07/04/Runloop_1/">&lt;h3 id=&quot;一简介&quot;&gt;一、简介&lt;/h3&gt;
-
-&lt;p&gt;先看苹果官方文档：&lt;a href=&quot;https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html#//apple_ref/doc/uid/10000057i-CH16-SW1&quot;&gt;Run loops&lt;/a&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Run loops are part of the fundamental infrastructure associated with threads. A runloop is an event processing loop that you use to schedule work and coordinate the receipt of incoming events. The purpose of a run loop is to keep your thread busy when there is work to do and put your thread to sleep when there is none.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Runloop是与线程相关联的基础架构的一部分，它用来接受循环事件和安排线程的工作，在有工作时让线程处于繁忙状态，没有事件需要处理时让线程休眠；&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Run loop management is not entirely automatic. You must still design your thread’s code to start the run loop at appropriate times and respond to incoming events.The app frameworks automatically set up and run the run loop on the main thread as part of the application startup process&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Runloop的管理并不是全自动的，你依然要操作线程代码在合适的时候开启Runloop然后回应传入的事件。但是主线程的例外，程序启动时，主线程的Runloop会自动开启。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;A run loop is very much like its name sounds. It is a loop your thread enters and uses to run event handlers in response to incoming events.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Runloop的名字运行循环，顾名思义，是一个线程进入之后用来运行事件处理程序来响应传入的事件的循环。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Your code provides the control statements used to implement the actual loop portion of the run loop—in other words, your code provides the while or for loop that drives the run loop. Within your loop, you use a run loop object to “run” the event-processing code that receives events and calls the installed handlers.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;代码提供用于实现运行循环的实际循环部分的控制语句 - 换句话说，代码提供while或for循环用于驱动运行循环。 在循环中，使用运行循环对象来“运行”事件处理代码(接收事件并调用相应的事件处理方法)。&lt;/p&gt;
-
-&lt;h3 id=&quot;二sources&quot;&gt;二、Sources&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;A run loop receives events from two different types of sources. &lt;em&gt;Input sources&lt;/em&gt; deliver asynchronous events, usually messages from another thread or from a different application. &lt;em&gt;Timer sources&lt;/em&gt; deliver synchronous events, occurring at a scheduled time or repeating interval. Both types of source use an application-specific handler routine to process the event when it arrives.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;RunLoop 接受的事件源有两种大类: &lt;em&gt;Input sources&lt;/em&gt;, &lt;em&gt;Timer sources&lt;/em&gt;:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;strong&gt;InputSources&lt;/strong&gt; : 传递递异步事件,通常消息来自另外的线程或者程序;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;strong&gt;Timer sources&lt;/strong&gt;：传递同步事件，发生在预定时间或者是重复间隔；&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;在事件传递到时，两种事件源都是用程序特定的例行程序来处理事件&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;从下图可以看到，&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Runloop/runloop_00.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;The input sources deliver asynchronous events to the corresponding handlers and cause the &lt;em&gt;runUntilDate:&lt;/em&gt;  method (called on the thread’s associated &lt;em&gt;NSRunLoop&lt;/em&gt; object) to exit. Timer sources deliver events to their handler routines but do not cause the run loop to exit.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;&lt;em&gt;Input sources&lt;/em&gt; 传递异步事件给相应的方法处理，并且通过&lt;em&gt;runUntilDate:&lt;/em&gt;（由线程对应的&lt;em&gt;NSRunLoop&lt;/em&gt; 对象执行）来退出；&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Timer sources&lt;/em&gt; 传递同步事件给它们对应的例行程序来执行但是不会导致run loop退出。&lt;/p&gt;
-
-&lt;h3 id=&quot;三input-sources&quot;&gt;三、Input Sources&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Input sources deliver events asynchronously to your threads. The source of the event depends on the type of the input source, which is generally one of two categories. Port-based input sources monitor your application’s Mach ports. Custom input sources monitor custom sources of events. As far as your run loop is concerned, it should not matter whether an input source is port-based or custom. The system typically implements input sources of both types that you can use as is. The only difference between the two sources is how they are signaled. Port-based sources are signaled automatically by the kernel, and custom sources must be signaled manually from another thread.&lt;/p&gt;
-
-  &lt;p&gt;When you create an input source, you assign it to one or more modes of your run loop. Modes affect which input sources are monitored at any given moment. Most of the time, you run the run loop in the default mode, but you can specify custom modes too. If an input source is not in the currently monitored mode, any events it generates are held until the run loop runs in the correct mode&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;&lt;em&gt;Input sources&lt;/em&gt; 异步地传递事件到线程，而事件的源来至于其中一种：&lt;em&gt;Port-based input sources&lt;/em&gt;、&lt;em&gt;Custom input sources&lt;/em&gt; 这两种souces的实现处理方式都一样，区别&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Port-based input sources&lt;/em&gt; :监听程序的Mach ports，kernel自动发信号&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Custom input sources&lt;/em&gt; ：监听自定义的活动，在其他线程手动的发信号&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;&lt;em&gt;Cocoa Perform Selector Sources&lt;/em&gt; : &lt;em&gt;Cocoa&lt;/em&gt; 框架定义的&lt;em&gt;Custom input sources&lt;/em&gt;&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h4 id=&quot;配置input-sources&quot;&gt;配置Input Sources&lt;/h4&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;Port-Based Sources通过内置的端口相关的对象和函数，配置基于端口的Input source。 (比如在主线程创建子线程时传入一个NSPort对象,主线程和子线程就可以进行通讯。NSPort对象会负责自己创建和配置Input source。)&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Custom Input Sources我们可以使用Core Foundation里面的CFRunLoopSourceRef类型相关的函数来创建custom input source,系统也有提供一些方法。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Cocoa框架为我们定义了一些Custom Input Sources，允许我们在线程中执行一系列selector方法，这些在NSThread类里面。和Port-Based Sources一样，这些selector的请求会在目标线程中序列化，以减缓线程中多个方法执行带来的同步问题。和Port-Based Sources不一样的是，一个selector方法执行完之后会自动从当前Run Loop中移除。&lt;/p&gt;
-
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;performSelectorOnMainThread:withObject:waitUntilDone:
-performSelectorOnMainThread:withObject:waitUntilDone:modes:
-
-performSelector:onThread:withObject:waitUntilDone:
-performSelector:onThread:withObject:waitUntilDone:modes:
-
-performSelector:withObject:afterDelay:
-performSelector:withObject:afterDelay:inModes:
-
-cancelPreviousPerformRequestsWithTarget:
-cancelPreviousPerformRequestsWithTarget:selector:object:
-&lt;/code&gt;&lt;/pre&gt;
-    &lt;/div&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;四timer-sources&quot;&gt;四、Timer Sources&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Timer sources deliver events synchronously to your threads at a preset time in the future. Timers are a way for a thread to notify itself to do something.&lt;/p&gt;
-
-  &lt;p&gt;Although it generates time-based notifications, a timer is not a real-time mechanism. Like input sources, timers are associated with specific modes of your run loop. If a timer is not in the mode currently being monitored by the run loop, it does not fire until you run the run loop in one of the timer’s supported modes. Similarly, if a timer fires when the run loop is in the middle of executing a handler routine, the timer waits until the next time through the run loop to invoke its handler routine. If the run loop is not running at all, the timer never fires.&lt;/p&gt;
-
-  &lt;p&gt;You can configure timers to generate events only once or repeatedly. A repeating timer reschedules itself automatically based on the scheduled firing time, not the actual firing time. For example, if a timer is scheduled to fire at a particular time and every 5 seconds after that, the scheduled firing time will always fall on the original 5 second time intervals, even if the actual firing time gets delayed. If the firing time is delayed so much that it misses one or more of the scheduled firing times, the timer is fired only once for the missed time period. After firing for the missed period, the timer is rescheduled for the next scheduled firing time.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Timer sources 在未来的特定时间同步地传递事件给线程，Timer是一种提醒线程做事的方式。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;尽管Timer是一种基于时间的通知，但是并不是实时机制，如果不是对应的Mode,timer并不会被fire除非切换到对应的Mode.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;如果timer的fire时间，runloop正在处理其他事件，等待超过tolerance，那么这一次fire就会错过，等待下一次来执行，如果runloop退出，那么timer就再也不会fire了。&lt;/li&gt;
-  &lt;li&gt;间隔时间是跟上一次之后的间隔，是timer自己调度的，所以可能并不是跟实际时间完全吻合(因为存在等待，这些需要叠加)。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;timer应用&quot;&gt;Timer应用&lt;/h4&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;除了scheduledTimerWithTimeInterval开头的方法创建的Timer都需要手动添加到当前Run Loop中。（scheduledTimerWithTimeInterval 创建的timer会自动以Default Mode加载到当前Run Loop中。）&lt;/li&gt;
-  &lt;li&gt;Timer在选择使用一次后，在执行完成时，会从Run Loop中移除。选择循环时，会一直保存在当前Run Loop中，直到调用invalidated方法。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&quot;五runloop-mode&quot;&gt;五、Runloop Mode&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;A &lt;em&gt;run loop mode&lt;/em&gt; is a collection of input sources and timers to be monitored and a collection of run loop observers to be notified&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;一个&lt;em&gt;run loop mode&lt;/em&gt;是一个集合（&lt;em&gt;input sources&lt;/em&gt; 和 &lt;em&gt;timers&lt;/em&gt;被监测，&lt;em&gt;observers&lt;/em&gt;接受通知）&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Each time you run your run loop, you specify (either explicitly or implicitly) a particular “mode” in which to run. During that pass of the run loop, only sources associated with that mode are monitored and allowed to deliver their events. (Similarly, only observers associated with that mode are notified of the run loop’s progress.) Sources associated with other modes hold on to any new events until subsequent passes through the loop in the appropriate mode.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;每次开启runloop都要指定一个mode来运行，在运行期间，只有该mode下对应的事件源才会被监测以及允许传递事件（同样的，该mode对应的observers才能接受runloop进程的通知）,其他mode下的事件源的事件将会等待直到切换到对应的mode.更改mode只能重新开启runloop，&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;You use modes to filter out events from unwanted sources during a particular pass through your run loop. Most of the time, you will want to run your run loop in the system-defined “default” mode. A modal panel, however, might run in the “modal” mode. While in this mode, only sources relevant to the modal panel would deliver events to the thread.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;在设置Run Loop Mode后，你的Run Loop会自动过滤和其他Mode相关的事件源，而只监视和当前设置Mode相关的源(通知相关的观察者)。大多数时候，Run Loop都是运行在系统定义的默认模式上。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;em&gt;NSDefaultRunLoopMode&lt;/em&gt;: 大多数工作中默认的运行方式。&lt;/li&gt;
-  &lt;li&gt;&lt;em&gt;NSConnectionReplyMode&lt;/em&gt;: 使用这个Mode去监听NSConnection对象的状态，我们很少需要自己使用这个Mode。&lt;/li&gt;
-  &lt;li&gt;&lt;em&gt;NSModalPanelRunLoopMode&lt;/em&gt;: 使用这个Mode在Model Panel情况下去区分事件(OS X开发中会遇到)。&lt;/li&gt;
-  &lt;li&gt;&lt;em&gt;UITrackingRunLoopMode&lt;/em&gt;: 使用这个Mode去跟踪来自用户交互的事件（比如UITableView上下滑动）。&lt;/li&gt;
-  &lt;li&gt;&lt;em&gt;GSEventReceiveRunLoopMode&lt;/em&gt;: 用来接受系统事件，内部的Run Loop Mode。&lt;/li&gt;
-  &lt;li&gt;&lt;em&gt;NSRunLoopCommonModes&lt;/em&gt;:这是一个伪模式，其为一组run loop mode的集合。如果将Input source加入此模式，意味着关联Input source到Common Modes中包含的所有模式下。在iOS系统中NSRunLoopCommonMode包含NSDefaultRunLoopMode、NSTaskDeathCheckMode、UITrackingRunLoopMode.可使用CFRunLoopAddCommonMode方法向Common Modes中添加自定义mode。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Run Loop运行时只能以一种固定的Mode运行，只会监控这个Mode下添加的Timer source和Input source。如果这个Mode下没有添加事件源，Run Loop会立刻返回。&lt;/p&gt;
-
-&lt;p&gt;Run Loop并不是在运行在NSRunLoopCommonModes，因为NSRunLoopCommonModes是个Mode集合，而不是一个具体的Mode。我们可以在添加事件源的时候使用NSRunLoopCommonModes，只要Run Loop运行在NSRunLoopCommonModes中任何一个Mode，这个事件源都可以被触发。类似地也可以自定义Mode集合&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;You can define custom modes by simply specifying a custom string for the mode name. Although the names you assign to custom modes are arbitrary, the contents of those modes are not. You must be sure to add one or more input sources, timers, or run-loop observers to any modes you create for them to be useful.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;自定义Mode的时候，一定要确保该Mode下有sources以及Obsevers&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Runloop/runloop_00.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Timer Source: 用来投递 timer 事件(Schedule 或者 Repeat)中的同步消息.在消息处理时,并不会退出 RunLoop.Timer在选择使用一次后，在执行完成时，会从Run Loop中移除。选择循环时，会一直保存在当前Run Loop中，直到调用invalidated方法。Foundation中 NSTimer Class提供了相关方法来设置Timer source。需要注意的是除了scheduledTimerWithTimeInterval开头的方法创建的Timer都需要手动添加到当前Run Loop中。（scheduledTimerWithTimeInterval 创建的timer会自动以Default Mode加载到当前Run Loop中。）Timer在选择使用一次后，在执行完成时，会从Run Loop中移除。选择循环时，会一直保存在当前Run Loop中，直到调用invalidated方法。&lt;/p&gt;
-
-&lt;h3 id=&quot;六runloop的observer&quot;&gt;六、Runloop的Observer&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;In addition to handling sources of input, run loops also generate notifications about the run loop’s behavior.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;在处理事件源时，runloop会产生关于这些行为的通知，可以往Run Loop中加入自己的观察者以便监控Run Loop的运行过程，Run Loop Observer则在Run Loop本身进入某个状态时得到通知:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;kCFRunLoopEntry – 进入runloop循环&lt;/li&gt;
-  &lt;li&gt;kCFRunLoopBeforeTimers – 处理定时调用前回调&lt;/li&gt;
-  &lt;li&gt;kCFRunLoopBeforeSources – 处理input sources的事件&lt;/li&gt;
-  &lt;li&gt;kCFRunLoopBeforeWaiting – runloop睡眠前调用&lt;/li&gt;
-  &lt;li&gt;kCFRunLoopAfterWaiting – runloop唤醒后调用&lt;/li&gt;
-  &lt;li&gt;kCFRunLoopExit – 退出runloop&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Observer需要使用Core Foundataion框架。和Timer一样，Run Loop Observers也可以使用一次或者选择repeat。如果只使用一次，Observer会在它被执行后自己从Run Loop中移除。而循环的Observer会一直保存在Run Loop中。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Runloop/runloop_03.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;int32_t __CFRunLoopRun()
-{
-    // 通知即将进入runloop
-  	//创建AutoreleasePool: _objc_autoreleasePoolPush();
-    __CFRunLoopDoObservers(KCFRunLoopEntry);
-    
-    do
-    {
-        // 通知将要处理timer和source
-        __CFRunLoopDoObservers(kCFRunLoopBeforeTimers);
-        __CFRunLoopDoObservers(kCFRunLoopBeforeSources);
-        
-        // 处理非延迟的主线程调用
-        __CFRunLoopDoBlocks();
-        // 处理UIEvent事件
-        __CFRunLoopDoSource0();
-        
-        // GCD dispatch main queue
-        CheckIfExistMessagesInMainDispatchQueue();
-        
-        // 即将进入休眠
-      	//释放并新建AutoreleasePool: _objc_autoreleasePoolPop(); _objc_autoreleasePoolPush();
-        __CFRunLoopDoObservers(kCFRunLoopBeforeWaiting);
-        
-        // 等待内核mach_msg事件
-        mach_port_t wakeUpPort = SleepAndWaitForWakingUpPorts();
-        
-        // Zzz...
-        
-        // 从等待中醒来
-        __CFRunLoopDoObservers(kCFRunLoopAfterWaiting);
-                
-        if (wakeUpPort == timerPort){// 处理因timer的唤醒
-          __CFRunLoopDoTimers();
-        }else if (wakeUpPort == mainDispatchQueuePort){// 处理异步方法唤醒,如dispatch_async
-          __CFRUNLOOP_IS_SERVICING_THE_MAIN_DISPATCH_QUEUE__()
-        } else{// UI刷新,动画显示
-          __CFRunLoopDoSource1();
-        }   
-        // 再次确保是否有同步的方法需要调用
-        __CFRunLoopDoBlocks();
-        
-    } while (!stop &amp;amp;&amp;amp; !timeout);
-    
-    // 通知即将退出runloop
-  	//释放AutoreleasePool: _objc_autoreleasePoolPop();
-    __CFRunLoopDoObservers(CFRunLoopExit);
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Runloop/runloop_04.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、简介</summary></entry><entry><title type="html">iOS之多线程</title><link href="http://www.helloted.com/2016/05/22/ios-Thread/" rel="alternate" type="text/html" title="iOS之多线程" /><published>2016-05-22T20:00:00+08:00</published><updated>2016-05-22T20:00:00+08:00</updated><id>http://www.helloted.com/2016/05/22/ios-Thread</id><content type="html" xml:base="http://www.helloted.com/2016/05/22/ios-Thread/">&lt;h3 id=&quot;一前言&quot;&gt;一、前言&lt;/h3&gt;
+&lt;/ol&gt;</content><author><name>Ted</name></author><summary type="html">TCP/IP定义</summary></entry><entry><title type="html">iOS之多线程</title><link href="http://www.helloted.com/2016/05/22/ios-Thread/" rel="alternate" type="text/html" title="iOS之多线程" /><published>2016-05-22T20:00:00+08:00</published><updated>2016-05-22T20:00:00+08:00</updated><id>http://www.helloted.com/2016/05/22/ios-Thread</id><content type="html" xml:base="http://www.helloted.com/2016/05/22/ios-Thread/">&lt;h3 id=&quot;一前言&quot;&gt;一、前言&lt;/h3&gt;
 
 &lt;ul&gt;
   &lt;li&gt;Pthreads&lt;/li&gt;
