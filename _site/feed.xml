@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-04-20T17:48:55+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS之Runloop(2):应用</title><link href="http://www.helloted.com/2017/04/16/Runloop_2/" rel="alternate" type="text/html" title="iOS之Runloop(2):应用" /><published>2017-04-16T20:00:00+08:00</published><updated>2017-04-16T20:00:00+08:00</updated><id>http://www.helloted.com/2017/04/16/Runloop_2</id><content type="html" xml:base="http://www.helloted.com/2017/04/16/Runloop_2/">&lt;p&gt;1、AutoreleasePool&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-04-21T16:20:10+08:00</updated><id>http://localhost:4000/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS之Runloop(2):应用</title><link href="http://localhost:4000/2017/04/16/Runloop_2/" rel="alternate" type="text/html" title="iOS之Runloop(2):应用" /><published>2017-04-16T20:00:00+08:00</published><updated>2017-04-16T20:00:00+08:00</updated><id>http://localhost:4000/2017/04/16/Runloop_2</id><content type="html" xml:base="http://localhost:4000/2017/04/16/Runloop_2/">&lt;p&gt;1、AutoreleasePool&lt;/p&gt;
 
 &lt;p&gt;App启动后，苹果在主线程 RunLoop 里注册了两个 Observer，其回调都是 _wrapRunLoopWithAutoreleasePoolHandler()。&lt;/p&gt;
 
@@ -83,7 +83,7 @@
 
 &lt;p&gt;当开始网络传输时，我们可以看到 NSURLConnection 创建了两个新线程：com.apple.NSURLConnectionLoader 和 com.apple.CFSocket.private。其中 CFSocket 线程是处理底层 socket 连接的。NSURLConnectionLoader 这个线程内部会使用 RunLoop 来接收底层 socket 的事件，并通过之前添加的 Source0 通知到上层的 Delegate。&lt;/p&gt;
 
-&lt;p&gt;NSURLConnectionLoader 中的 RunLoop 通过一些基于 mach port 的 Source 接收来自底层 CFSocket 的通知。当收到通知后，其会在合适的时机向 CFMultiplexerSource 等 Source0 发送通知，同时唤醒 Delegate 线程的 RunLoop 来让其处理这些通知。CFMultiplexerSource 会在 Delegate 线程的 RunLoop 对 Delegate 执行实际的回调。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">1、AutoreleasePool</summary></entry><entry><title type="html">iOS之Runloop(1):本质</title><link href="http://www.helloted.com/2017/04/16/Runloop_1/" rel="alternate" type="text/html" title="iOS之Runloop(1):本质" /><published>2017-04-16T20:00:00+08:00</published><updated>2017-04-16T20:00:00+08:00</updated><id>http://www.helloted.com/2017/04/16/Runloop_1</id><content type="html" xml:base="http://www.helloted.com/2017/04/16/Runloop_1/">&lt;h3 id=&quot;一简介&quot;&gt;一、简介&lt;/h3&gt;
+&lt;p&gt;NSURLConnectionLoader 中的 RunLoop 通过一些基于 mach port 的 Source 接收来自底层 CFSocket 的通知。当收到通知后，其会在合适的时机向 CFMultiplexerSource 等 Source0 发送通知，同时唤醒 Delegate 线程的 RunLoop 来让其处理这些通知。CFMultiplexerSource 会在 Delegate 线程的 RunLoop 对 Delegate 执行实际的回调。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">1、AutoreleasePool</summary></entry><entry><title type="html">iOS之Runloop(1):本质</title><link href="http://localhost:4000/2017/04/16/Runloop_1/" rel="alternate" type="text/html" title="iOS之Runloop(1):本质" /><published>2017-04-16T20:00:00+08:00</published><updated>2017-04-16T20:00:00+08:00</updated><id>http://localhost:4000/2017/04/16/Runloop_1</id><content type="html" xml:base="http://localhost:4000/2017/04/16/Runloop_1/">&lt;h3 id=&quot;一简介&quot;&gt;一、简介&lt;/h3&gt;
 
 &lt;p&gt;先看苹果官方文档：&lt;a href=&quot;https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html#//apple_ref/doc/uid/10000057i-CH16-SW1&quot;&gt;Run loops&lt;/a&gt;&lt;/p&gt;
 
@@ -434,6 +434,8 @@ cancelPreviousPerformRequestsWithTarget:selector:object:
 
 &lt;h3 id=&quot;八使用runloop&quot;&gt;八、使用Runloop&lt;/h3&gt;
 
+&lt;h4 id=&quot;获得runloop&quot;&gt;获得runloop&lt;/h4&gt;
+
 &lt;blockquote&gt;
   &lt;p&gt;To get the run loop for the current thread, you use one of the following:&lt;/p&gt;
 
@@ -486,7 +488,114 @@ cancelPreviousPerformRequestsWithTarget:selector:object:
   &lt;p&gt;When configuring the run loop for a long-lived thread, it is better to add at least one input source to receive messages. Although you can enter the run loop with only a timer attached, once the timer fires, it is typically invalidated, which would then cause the run loop to exit. Attaching a repeating timer could keep the run loop running over a longer period of time, but would involve firing the timer periodically to wake your thread, which is effectively another form of polling. By contrast, an input source waits for an event to happen, keeping your thread asleep until it does.&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;p&gt;当配置一个长活线程的runloop，最好添加至少一个input source来接受信息，尽管重复的timer也可以让runloop长时间跑着，但是这涉及到不断定时启动timer来唤醒线程，这实际上是另外一种轮询。相对的，一个input source可以让runloop先睡着等着事件发生再唤醒。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、简介</summary></entry><entry><title type="html">监测APP卡顿</title><link href="http://www.helloted.com/2016/10/06/smoothMonitor/" rel="alternate" type="text/html" title="监测APP卡顿" /><published>2016-10-06T20:00:00+08:00</published><updated>2016-10-06T20:00:00+08:00</updated><id>http://www.helloted.com/2016/10/06/smoothMonitor</id><content type="html" xml:base="http://www.helloted.com/2016/10/06/smoothMonitor/">&lt;h3 id=&quot;一简介&quot;&gt;一、简介&lt;/h3&gt;
+&lt;p&gt;当配置一个长活线程的runloop，最好添加至少一个input source来接受信息，尽管重复的timer也可以让runloop长时间跑着，但是这涉及到不断定时启动timer来唤醒线程，这实际上是另外一种轮询。相对的，一个input source可以让runloop先休眠等着事件发生再唤醒。&lt;/p&gt;
+
+&lt;h4 id=&quot;开启runloop&quot;&gt;开启Runloop&lt;/h4&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Starting the run loop is necessary only for the secondary threads in your application. A run loop must have at least one input source or timer to monitor. If one is not attached, the run loop exits immediately.&lt;/p&gt;
+
+  &lt;p&gt;There are several ways to start the run loop, including the following:&lt;/p&gt;
+
+  &lt;ul&gt;
+    &lt;li&gt;Unconditionally&lt;/li&gt;
+    &lt;li&gt;With a set time limit&lt;/li&gt;
+    &lt;li&gt;In a particular mode&lt;/li&gt;
+  &lt;/ul&gt;
+
+  &lt;p&gt;Entering your run loop unconditionally is the simplest option, but it is also the least desirable. Running your run loop unconditionally puts the thread into a permanent loop, which gives you very little control over the run loop itself. You can add and remove input sources and timers, but the only way to stop the run loop is to kill it. There is also no way to run the run loop in a custom mode.&lt;/p&gt;
+
+  &lt;p&gt;Instead of running a run loop unconditionally, it is better to run the run loop with a timeout value. When you use a timeout value, the run loop runs until an event arrives or the allotted time expires. If an event arrives, that event is dispatched to a handler for processing and then the run loop exits. Your code can then restart the run loop to handle the next event. If the allotted time expires instead, you can simply restart the run loop or use the time to do any needed housekeeping.&lt;/p&gt;
+
+  &lt;p&gt;In addition to a timeout value, you can also run your run loop using a specific mode. Modes and timeout values are not mutually exclusive and can both be used when starting a run loop. Modes limit the types of sources that deliver events to the run loop and are described in more detail in &lt;a href=&quot;https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html#//apple_ref/doc/uid/10000057i-CH16-SW12&quot;&gt;Run Loop Modes&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;子线程的runloop是要手动开启的，一个runloop必须有至少一个input source或者timer去监听，否则会立即退出。&lt;/p&gt;
+
+&lt;p&gt;有以下几个方式来进入runloop:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;无条件进入：无条件进入runloop是一个简单的选项，但同时也是一个不太可取的选项，意味着使线程进入了一个固定的循环，相比于runloop本身，你只有很少的控制权，你可以添加和移除input source和timers，但是唯一路径来停止runloop就是杀死它，也没有办法来让runloop在自定义Mode运行。&lt;/li&gt;
+  &lt;li&gt;设定时限：如果设置了一个时间，runloop运行直到事件到达或者时间到期，如果事件到达，那事件就被分配去处理然后runloop退出。你的代码可以重启runloop来处理下一个事件。如果分配的时间到期，你可以简单地重启runloop或者用这个时间来做其他需要处理的。&lt;/li&gt;
+  &lt;li&gt;特定Mode：特定也可以运行runloop，Modes和时限并不是互斥可以同时运行一个runloop。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;runloop框架&quot;&gt;Runloop框架&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (void)skeletonThreadMain
+{
+    // Set up an autorelease pool here if not using garbage collection.
+    BOOL done = NO;
+ 
+    // Add your sources or timers to the run loop and do any other setup.
+ 
+    do
+    {
+        // Start the run loop but return after each source is handled.
+        SInt32    result = CFRunLoopRunInMode(kCFRunLoopDefaultMode, 10, YES);
+ 
+        // If a source explicitly stopped the run loop, or if there are no
+        // sources or timers, go ahead and exit.
+        if ((result == kCFRunLoopRunStopped) || (result == kCFRunLoopRunFinished))
+            done = YES;
+ 
+        // Check for any other exit conditions here and set the
+        // done variable as needed.
+    }
+    while (!done);
+ 
+    // Clean up code here. Be sure to release any allocated autorelease pools.
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;The key portion of this example shows the basic structure of a run loop. In essence, you add your input sources and timers to the run loop and then repeatedly call one of the routines to start the run loop. Each time the run loop routine returns, you check to see if any conditions have arisen that might warrant exiting the thread.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;以上示例展示了runloop的最基本结构，实质上，你把input sources和modes添加进了runloop之后，就不断地调一个例程就开启runloop，每次runloop例程返回时，都会检查一下是否有需要退出线程的条件，&lt;/p&gt;
+
+&lt;h4 id=&quot;退出runloop&quot;&gt;退出runloop&lt;/h4&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;There are two ways to make a run loop exit before it has processed an event:&lt;/p&gt;
+
+  &lt;ul&gt;
+    &lt;li&gt;Configure the run loop to run with a timeout value.&lt;/li&gt;
+    &lt;li&gt;Tell the run loop to stop.&lt;/li&gt;
+  &lt;/ul&gt;
+
+  &lt;p&gt;Using a timeout value is certainly preferred, if you can manage it. Specifying a timeout value lets the run loop finish all of its normal processing, including delivering notifications to run loop observers, before exiting.&lt;/p&gt;
+
+  &lt;p&gt;Stopping the run loop explicitly with the &lt;em&gt;CFRunLoopStop&lt;/em&gt; function produces a result similar to a timeout. The run loop sends out any remaining run-loop notifications and then exits. The difference is that you can use this technique on run loops you started unconditionally.&lt;/p&gt;
+
+  &lt;p&gt;Although removing a run loop’s input sources and timers may also cause the run loop to exit, this is not a reliable way to stop a run loop. Some system routines add input sources to a run loop to handle needed events. Because your code might not be aware of these input sources, it would be unable to remove them, which would prevent the run loop from exiting.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;退出runloop有两种方式：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;给runloop设置一个超时时间&lt;/li&gt;
+  &lt;li&gt;告诉runloop停止&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;如果可以的话，设置超时时间是首选，指定超时时间可以让runloop在退出之前，完成所有正常处理包含，传递runloop的通知；&lt;/p&gt;
+
+&lt;p&gt;用&lt;em&gt;CFRunLoopStop&lt;/em&gt;来停止runloop和超时效果差不多，runloop会发送完剩余的通知然后退出，不同的是你可以在无条件开启runloop时用这种方式来退出；&lt;/p&gt;
+
+&lt;p&gt;尽管移除runloop的input source和timers也可以让runloop退出，但这并不是一种可靠的方式。因为你的代码有时候并不能移除某些系统的input source。这样就不能够退出了。&lt;/p&gt;
+
+&lt;h4 id=&quot;线程安全&quot;&gt;线程安全&lt;/h4&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Thread safety varies depending on which API you are using to manipulate your run loop. The functions in Core Foundation are generally thread-safe and can be called from any thread. If you are performing operations that alter the configuration of the run loop, however, it is still good practice to do so from the thread that owns the run loop whenever possible.&lt;/p&gt;
+
+  &lt;p&gt;The Cocoa NSRunLoop class is not as inherently thread safe as its Core Foundation counterpart. If you are using the NSRunLoop class to modify your run loop, you should do so only from the same thread that owns that run loop. Adding an input source or timer to a run loop belonging to a different thread could cause your code to crash or behave in an unexpected way&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;线程安全性取决于使用runloop的API。 Core Foundation中的功能通常是线程安全的，可以从任何线程调用。 但是，如果您想更改runloop的配置，那么尽可能从拥有运行循环的线程执行此操作。&lt;/p&gt;
+
+&lt;p&gt;Cocoa NSRunLoop类并不像Core Foundation对象那样固有线程安全。 如果您正在使用NSRunLoop类来修改runloop，那你最好在同一线程执行这个操作。 将input sources或timers添加到属于不同线程的runloop可能会导致崩溃或者其他意外结果。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、简介</summary></entry><entry><title type="html">监测APP卡顿</title><link href="http://localhost:4000/2016/10/06/smoothMonitor/" rel="alternate" type="text/html" title="监测APP卡顿" /><published>2016-10-06T20:00:00+08:00</published><updated>2016-10-06T20:00:00+08:00</updated><id>http://localhost:4000/2016/10/06/smoothMonitor</id><content type="html" xml:base="http://localhost:4000/2016/10/06/smoothMonitor/">&lt;h3 id=&quot;一简介&quot;&gt;一、简介&lt;/h3&gt;
 
 &lt;p&gt;我们说的卡顿，一般指操作某个功能时，UI界面无及时反应，这种卡顿日常测试一般难以追踪以及重现，所以除了工程师开发测试的时候发现卡顿，还有一个重要的渠道就是从用户实际体验来监测卡顿，但是我们又不能拿到用户的手机或者让用户来回馈问题，所以一个完整的监测体系就很有必要了。&lt;/p&gt;
 
@@ -639,7 +748,7 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
 
 &lt;h3 id=&quot;五代码&quot;&gt;五、代码&lt;/h3&gt;
 
-&lt;p&gt;上面的代码可以在&lt;a href=&quot;https://github.com/helloted/smoothMonitor&quot;&gt;smoothMonitor&lt;/a&gt; 下载&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、简介</summary></entry><entry><title type="html">GCD之dispatch_semaphore</title><link href="http://www.helloted.com/2016/09/20/dispatch_semaphore/" rel="alternate" type="text/html" title="GCD之dispatch_semaphore" /><published>2016-09-20T20:00:00+08:00</published><updated>2016-09-20T20:00:00+08:00</updated><id>http://www.helloted.com/2016/09/20/dispatch_semaphore</id><content type="html" xml:base="http://www.helloted.com/2016/09/20/dispatch_semaphore/">&lt;h3 id=&quot;几个函数的意义&quot;&gt;几个函数的意义&lt;/h3&gt;
+&lt;p&gt;上面的代码可以在&lt;a href=&quot;https://github.com/helloted/smoothMonitor&quot;&gt;smoothMonitor&lt;/a&gt; 下载&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、简介</summary></entry><entry><title type="html">GCD之dispatch_semaphore</title><link href="http://localhost:4000/2016/09/20/dispatch_semaphore/" rel="alternate" type="text/html" title="GCD之dispatch_semaphore" /><published>2016-09-20T20:00:00+08:00</published><updated>2016-09-20T20:00:00+08:00</updated><id>http://localhost:4000/2016/09/20/dispatch_semaphore</id><content type="html" xml:base="http://localhost:4000/2016/09/20/dispatch_semaphore/">&lt;h3 id=&quot;几个函数的意义&quot;&gt;几个函数的意义&lt;/h3&gt;
 
 &lt;p&gt;信号创建，其中value是初始信号值&lt;/p&gt;
 
@@ -726,7 +835,7 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
 
 &lt;h3 id=&quot;demo位置&quot;&gt;demo位置&lt;/h3&gt;
 
-&lt;p&gt;以上代码都放在&lt;a href=&quot;https://github.com/helloted/dispatch_semaphore&quot;&gt;dispatch_semaphore demo&lt;/a&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">几个函数的意义</summary></entry><entry><title type="html">Http与Https</title><link href="http://www.helloted.com/2016/09/13/Http/" rel="alternate" type="text/html" title="Http与Https" /><published>2016-09-13T20:00:00+08:00</published><updated>2016-09-13T20:00:00+08:00</updated><id>http://www.helloted.com/2016/09/13/Http</id><content type="html" xml:base="http://www.helloted.com/2016/09/13/Http/">&lt;h3 id=&quot;tcpip定义&quot;&gt;TCP/IP定义&lt;/h3&gt;
+&lt;p&gt;以上代码都放在&lt;a href=&quot;https://github.com/helloted/dispatch_semaphore&quot;&gt;dispatch_semaphore demo&lt;/a&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">几个函数的意义</summary></entry><entry><title type="html">Http与Https</title><link href="http://localhost:4000/2016/09/13/Http/" rel="alternate" type="text/html" title="Http与Https" /><published>2016-09-13T20:00:00+08:00</published><updated>2016-09-13T20:00:00+08:00</updated><id>http://localhost:4000/2016/09/13/Http</id><content type="html" xml:base="http://localhost:4000/2016/09/13/Http/">&lt;h3 id=&quot;tcpip定义&quot;&gt;TCP/IP定义&lt;/h3&gt;
 
 &lt;p&gt;TCP/IP是互联网相关的各类协议族的名称&lt;/p&gt;
 
@@ -840,7 +949,7 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
   &lt;li&gt;客户端发送的数据用抓包程序给的证书生成的密钥加密&lt;/li&gt;
   &lt;li&gt;抓包程序得到客户端发送的数据抓包程序用自己的证书解密出来，再用服务器证书加密&lt;/li&gt;
   &lt;li&gt;抓包程序再把数据发给服务器&lt;/li&gt;
-&lt;/ol&gt;</content><author><name>Ted</name></author><summary type="html">TCP/IP定义</summary></entry><entry><title type="html">iOS之多线程</title><link href="http://www.helloted.com/2016/05/22/ios-Thread/" rel="alternate" type="text/html" title="iOS之多线程" /><published>2016-05-22T20:00:00+08:00</published><updated>2016-05-22T20:00:00+08:00</updated><id>http://www.helloted.com/2016/05/22/ios-Thread</id><content type="html" xml:base="http://www.helloted.com/2016/05/22/ios-Thread/">&lt;h3 id=&quot;一前言&quot;&gt;一、前言&lt;/h3&gt;
+&lt;/ol&gt;</content><author><name>Ted</name></author><summary type="html">TCP/IP定义</summary></entry><entry><title type="html">iOS之多线程</title><link href="http://localhost:4000/2016/05/22/ios-Thread/" rel="alternate" type="text/html" title="iOS之多线程" /><published>2016-05-22T20:00:00+08:00</published><updated>2016-05-22T20:00:00+08:00</updated><id>http://localhost:4000/2016/05/22/ios-Thread</id><content type="html" xml:base="http://localhost:4000/2016/05/22/ios-Thread/">&lt;h3 id=&quot;一前言&quot;&gt;一、前言&lt;/h3&gt;
 
 &lt;ul&gt;
   &lt;li&gt;Pthreads&lt;/li&gt;
@@ -1045,7 +1154,7 @@ dispatch_after(dispatch_time(DISPATCH_TIME_NOW,150ull *NSEC_PER_MSEC),dispatch_g
   &lt;li&gt;isExecuting 代表任务正在执行中&lt;/li&gt;
   &lt;li&gt;isFinished 代表任务已经执行完成&lt;/li&gt;
   &lt;li&gt;isCancelled 代表任务已经取消执行&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Ted</name></author><summary type="html">一、前言</summary></entry><entry><title type="html">神奇的Runtime</title><link href="http://www.helloted.com/2016/03/05/runtime/" rel="alternate" type="text/html" title="神奇的Runtime" /><published>2016-03-05T20:00:00+08:00</published><updated>2016-03-05T20:00:00+08:00</updated><id>http://www.helloted.com/2016/03/05/runtime</id><content type="html" xml:base="http://www.helloted.com/2016/03/05/runtime/">&lt;h3 id=&quot;一本质&quot;&gt;一、本质&lt;/h3&gt;
+&lt;/ul&gt;</content><author><name>Ted</name></author><summary type="html">一、前言</summary></entry><entry><title type="html">神奇的Runtime</title><link href="http://localhost:4000/2016/03/05/runtime/" rel="alternate" type="text/html" title="神奇的Runtime" /><published>2016-03-05T20:00:00+08:00</published><updated>2016-03-05T20:00:00+08:00</updated><id>http://localhost:4000/2016/03/05/runtime</id><content type="html" xml:base="http://localhost:4000/2016/03/05/runtime/">&lt;h3 id=&quot;一本质&quot;&gt;一、本质&lt;/h3&gt;
 
 &lt;p&gt;[receiver message]不是一个简单地方法调用，而是在编译阶段被编译器转化为&lt;/p&gt;
 
@@ -1273,7 +1382,7 @@ dispatch_after(dispatch_time(DISPATCH_TIME_NOW,150ull *NSEC_PER_MSEC),dispatch_g
 
 &lt;p&gt;method_getName：获取方法名&lt;/p&gt;
 
-&lt;p&gt;method_getImplementation：返回方法的实现&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、本质</summary></entry><entry><title type="html">网络</title><link href="http://www.helloted.com/2015/10/10/network/" rel="alternate" type="text/html" title="网络" /><published>2015-10-10T20:00:00+08:00</published><updated>2015-10-10T20:00:00+08:00</updated><id>http://www.helloted.com/2015/10/10/network</id><content type="html" xml:base="http://www.helloted.com/2015/10/10/network/">&lt;h3 id=&quot;网络&quot;&gt;网络&lt;/h3&gt;
+&lt;p&gt;method_getImplementation：返回方法的实现&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、本质</summary></entry><entry><title type="html">网络</title><link href="http://localhost:4000/2015/10/10/network/" rel="alternate" type="text/html" title="网络" /><published>2015-10-10T20:00:00+08:00</published><updated>2015-10-10T20:00:00+08:00</updated><id>http://localhost:4000/2015/10/10/network</id><content type="html" xml:base="http://localhost:4000/2015/10/10/network/">&lt;h3 id=&quot;网络&quot;&gt;网络&lt;/h3&gt;
 
 &lt;h4 id=&quot;osi七层模型&quot;&gt;OSI七层模型&lt;/h4&gt;
 

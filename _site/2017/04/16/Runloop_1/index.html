@@ -10,7 +10,7 @@
 
     <title>iOS之Runloop(1):本质 - Helloted Blog</title>
 
-    <link rel="canonical" href="http://www.helloted.com/2017/04/16/Runloop_1/">
+    <link rel="canonical" href="http://localhost:4000/2017/04/16/Runloop_1/">
 
     <link rel="shortcut icon" href="/img/favicon.ico">
    
@@ -35,7 +35,7 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <link type="application/atom+xml" rel="alternate" href="http://www.helloted.com/feed.xml" title="Helloted Blog" />
+    <link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Helloted Blog" />
 
 </head>
 
@@ -457,6 +457,8 @@ cancelPreviousPerformRequestsWithTarget:selector:object:
 
 <h3 id="八使用runloop">八、使用Runloop</h3>
 
+<h4 id="获得runloop">获得runloop</h4>
+
 <blockquote>
   <p>To get the run loop for the current thread, you use one of the following:</p>
 
@@ -509,7 +511,115 @@ cancelPreviousPerformRequestsWithTarget:selector:object:
   <p>When configuring the run loop for a long-lived thread, it is better to add at least one input source to receive messages. Although you can enter the run loop with only a timer attached, once the timer fires, it is typically invalidated, which would then cause the run loop to exit. Attaching a repeating timer could keep the run loop running over a longer period of time, but would involve firing the timer periodically to wake your thread, which is effectively another form of polling. By contrast, an input source waits for an event to happen, keeping your thread asleep until it does.</p>
 </blockquote>
 
-<p>当配置一个长活线程的runloop，最好添加至少一个input source来接受信息，尽管重复的timer也可以让runloop长时间跑着，但是这涉及到不断定时启动timer来唤醒线程，这实际上是另外一种轮询。相对的，一个input source可以让runloop先睡着等着事件发生再唤醒。</p>
+<p>当配置一个长活线程的runloop，最好添加至少一个input source来接受信息，尽管重复的timer也可以让runloop长时间跑着，但是这涉及到不断定时启动timer来唤醒线程，这实际上是另外一种轮询。相对的，一个input source可以让runloop先休眠等着事件发生再唤醒。</p>
+
+<h4 id="开启runloop">开启Runloop</h4>
+
+<blockquote>
+  <p>Starting the run loop is necessary only for the secondary threads in your application. A run loop must have at least one input source or timer to monitor. If one is not attached, the run loop exits immediately.</p>
+
+  <p>There are several ways to start the run loop, including the following:</p>
+
+  <ul>
+    <li>Unconditionally</li>
+    <li>With a set time limit</li>
+    <li>In a particular mode</li>
+  </ul>
+
+  <p>Entering your run loop unconditionally is the simplest option, but it is also the least desirable. Running your run loop unconditionally puts the thread into a permanent loop, which gives you very little control over the run loop itself. You can add and remove input sources and timers, but the only way to stop the run loop is to kill it. There is also no way to run the run loop in a custom mode.</p>
+
+  <p>Instead of running a run loop unconditionally, it is better to run the run loop with a timeout value. When you use a timeout value, the run loop runs until an event arrives or the allotted time expires. If an event arrives, that event is dispatched to a handler for processing and then the run loop exits. Your code can then restart the run loop to handle the next event. If the allotted time expires instead, you can simply restart the run loop or use the time to do any needed housekeeping.</p>
+
+  <p>In addition to a timeout value, you can also run your run loop using a specific mode. Modes and timeout values are not mutually exclusive and can both be used when starting a run loop. Modes limit the types of sources that deliver events to the run loop and are described in more detail in <a href="https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html#//apple_ref/doc/uid/10000057i-CH16-SW12">Run Loop Modes</a>.</p>
+</blockquote>
+
+<p>子线程的runloop是要手动开启的，一个runloop必须有至少一个input source或者timer去监听，否则会立即退出。</p>
+
+<p>有以下几个方式来进入runloop:</p>
+
+<ul>
+  <li>无条件进入：无条件进入runloop是一个简单的选项，但同时也是一个不太可取的选项，意味着使线程进入了一个固定的循环，相比于runloop本身，你只有很少的控制权，你可以添加和移除input source和timers，但是唯一路径来停止runloop就是杀死它，也没有办法来让runloop在自定义Mode运行。</li>
+  <li>设定时限：如果设置了一个时间，runloop运行直到事件到达或者时间到期，如果事件到达，那事件就被分配去处理然后runloop退出。你的代码可以重启runloop来处理下一个事件。如果分配的时间到期，你可以简单地重启runloop或者用这个时间来做其他需要处理的。</li>
+  <li>特定Mode：特定也可以运行runloop，Modes和时限并不是互斥可以同时运行一个runloop。</li>
+</ul>
+
+<h4 id="runloop框架">Runloop框架</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>- (void)skeletonThreadMain
+{
+    // Set up an autorelease pool here if not using garbage collection.
+    BOOL done = NO;
+ 
+    // Add your sources or timers to the run loop and do any other setup.
+ 
+    do
+    {
+        // Start the run loop but return after each source is handled.
+        SInt32    result = CFRunLoopRunInMode(kCFRunLoopDefaultMode, 10, YES);
+ 
+        // If a source explicitly stopped the run loop, or if there are no
+        // sources or timers, go ahead and exit.
+        if ((result == kCFRunLoopRunStopped) || (result == kCFRunLoopRunFinished))
+            done = YES;
+ 
+        // Check for any other exit conditions here and set the
+        // done variable as needed.
+    }
+    while (!done);
+ 
+    // Clean up code here. Be sure to release any allocated autorelease pools.
+}
+</code></pre>
+</div>
+
+<blockquote>
+  <p>The key portion of this example shows the basic structure of a run loop. In essence, you add your input sources and timers to the run loop and then repeatedly call one of the routines to start the run loop. Each time the run loop routine returns, you check to see if any conditions have arisen that might warrant exiting the thread.</p>
+</blockquote>
+
+<p>以上示例展示了runloop的最基本结构，实质上，你把input sources和modes添加进了runloop之后，就不断地调一个例程就开启runloop，每次runloop例程返回时，都会检查一下是否有需要退出线程的条件，</p>
+
+<h4 id="退出runloop">退出runloop</h4>
+
+<blockquote>
+  <p>There are two ways to make a run loop exit before it has processed an event:</p>
+
+  <ul>
+    <li>Configure the run loop to run with a timeout value.</li>
+    <li>Tell the run loop to stop.</li>
+  </ul>
+
+  <p>Using a timeout value is certainly preferred, if you can manage it. Specifying a timeout value lets the run loop finish all of its normal processing, including delivering notifications to run loop observers, before exiting.</p>
+
+  <p>Stopping the run loop explicitly with the <em>CFRunLoopStop</em> function produces a result similar to a timeout. The run loop sends out any remaining run-loop notifications and then exits. The difference is that you can use this technique on run loops you started unconditionally.</p>
+
+  <p>Although removing a run loop’s input sources and timers may also cause the run loop to exit, this is not a reliable way to stop a run loop. Some system routines add input sources to a run loop to handle needed events. Because your code might not be aware of these input sources, it would be unable to remove them, which would prevent the run loop from exiting.</p>
+</blockquote>
+
+<p>退出runloop有两种方式：</p>
+
+<ul>
+  <li>给runloop设置一个超时时间</li>
+  <li>告诉runloop停止</li>
+</ul>
+
+<p>如果可以的话，设置超时时间是首选，指定超时时间可以让runloop在退出之前，完成所有正常处理包含，传递runloop的通知；</p>
+
+<p>用<em>CFRunLoopStop</em>来停止runloop和超时效果差不多，runloop会发送完剩余的通知然后退出，不同的是你可以在无条件开启runloop时用这种方式来退出；</p>
+
+<p>尽管移除runloop的input source和timers也可以让runloop退出，但这并不是一种可靠的方式。因为你的代码有时候并不能移除某些系统的input source。这样就不能够退出了。</p>
+
+<h4 id="线程安全">线程安全</h4>
+
+<blockquote>
+  <p>Thread safety varies depending on which API you are using to manipulate your run loop. The functions in Core Foundation are generally thread-safe and can be called from any thread. If you are performing operations that alter the configuration of the run loop, however, it is still good practice to do so from the thread that owns the run loop whenever possible.</p>
+
+  <p>The Cocoa NSRunLoop class is not as inherently thread safe as its Core Foundation counterpart. If you are using the NSRunLoop class to modify your run loop, you should do so only from the same thread that owns that run loop. Adding an input source or timer to a run loop belonging to a different thread could cause your code to crash or behave in an unexpected way</p>
+</blockquote>
+
+<p>线程安全性取决于使用runloop的API。 Core Foundation中的功能通常是线程安全的，可以从任何线程调用。 但是，如果您想更改runloop的配置，那么尽可能从拥有运行循环的线程执行此操作。</p>
+
+<p>Cocoa NSRunLoop类并不像Core Foundation对象那样固有线程安全。 如果您正在使用NSRunLoop类来修改runloop，那你最好在同一线程执行这个操作。 将input sources或timers添加到属于不同线程的runloop可能会导致崩溃或者其他意外结果。</p>
+
 
 
                 <hr>
