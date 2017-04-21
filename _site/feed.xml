@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-04-21T16:20:10+08:00</updated><id>http://localhost:4000/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS之Runloop(2):应用</title><link href="http://localhost:4000/2017/04/16/Runloop_2/" rel="alternate" type="text/html" title="iOS之Runloop(2):应用" /><published>2017-04-16T20:00:00+08:00</published><updated>2017-04-16T20:00:00+08:00</updated><id>http://localhost:4000/2017/04/16/Runloop_2</id><content type="html" xml:base="http://localhost:4000/2017/04/16/Runloop_2/">&lt;p&gt;1、AutoreleasePool&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-04-21T17:54:10+08:00</updated><id>http://localhost:4000/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS之Runloop(3):应用</title><link href="http://localhost:4000/2017/04/16/Runloop_3/" rel="alternate" type="text/html" title="iOS之Runloop(3):应用" /><published>2017-04-16T20:00:00+08:00</published><updated>2017-04-16T20:00:00+08:00</updated><id>http://localhost:4000/2017/04/16/Runloop_3</id><content type="html" xml:base="http://localhost:4000/2017/04/16/Runloop_3/">&lt;p&gt;1、AutoreleasePool&lt;/p&gt;
 
 &lt;p&gt;App启动后，苹果在主线程 RunLoop 里注册了两个 Observer，其回调都是 _wrapRunLoopWithAutoreleasePoolHandler()。&lt;/p&gt;
 
@@ -83,7 +83,31 @@
 
 &lt;p&gt;当开始网络传输时，我们可以看到 NSURLConnection 创建了两个新线程：com.apple.NSURLConnectionLoader 和 com.apple.CFSocket.private。其中 CFSocket 线程是处理底层 socket 连接的。NSURLConnectionLoader 这个线程内部会使用 RunLoop 来接收底层 socket 的事件，并通过之前添加的 Source0 通知到上层的 Delegate。&lt;/p&gt;
 
-&lt;p&gt;NSURLConnectionLoader 中的 RunLoop 通过一些基于 mach port 的 Source 接收来自底层 CFSocket 的通知。当收到通知后，其会在合适的时机向 CFMultiplexerSource 等 Source0 发送通知，同时唤醒 Delegate 线程的 RunLoop 来让其处理这些通知。CFMultiplexerSource 会在 Delegate 线程的 RunLoop 对 Delegate 执行实际的回调。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">1、AutoreleasePool</summary></entry><entry><title type="html">iOS之Runloop(1):本质</title><link href="http://localhost:4000/2017/04/16/Runloop_1/" rel="alternate" type="text/html" title="iOS之Runloop(1):本质" /><published>2017-04-16T20:00:00+08:00</published><updated>2017-04-16T20:00:00+08:00</updated><id>http://localhost:4000/2017/04/16/Runloop_1</id><content type="html" xml:base="http://localhost:4000/2017/04/16/Runloop_1/">&lt;h3 id=&quot;一简介&quot;&gt;一、简介&lt;/h3&gt;
+&lt;p&gt;NSURLConnectionLoader 中的 RunLoop 通过一些基于 mach port 的 Source 接收来自底层 CFSocket 的通知。当收到通知后，其会在合适的时机向 CFMultiplexerSource 等 Source0 发送通知，同时唤醒 Delegate 线程的 RunLoop 来让其处理这些通知。CFMultiplexerSource 会在 Delegate 线程的 RunLoop 对 Delegate 执行实际的回调。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">1、AutoreleasePool</summary></entry><entry><title type="html">iOS之Runloop(2):事件源</title><link href="http://localhost:4000/2017/04/16/Runloop_2/" rel="alternate" type="text/html" title="iOS之Runloop(2):事件源" /><published>2017-04-16T20:00:00+08:00</published><updated>2017-04-16T20:00:00+08:00</updated><id>http://localhost:4000/2017/04/16/Runloop_2</id><content type="html" xml:base="http://localhost:4000/2017/04/16/Runloop_2/">&lt;h3 id=&quot;定义一个custom-input-source&quot;&gt;定义一个Custom Input Source&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Creating a custom input source involves defining the following:&lt;/p&gt;
+
+  &lt;ul&gt;
+    &lt;li&gt;The information you want your input source to process.&lt;/li&gt;
+    &lt;li&gt;A scheduler routine to let interested clients know how to contact your input source.&lt;/li&gt;
+    &lt;li&gt;A handler routine to perform requests sent by any clients.&lt;/li&gt;
+    &lt;li&gt;A cancellation routine to invalidate your input source.&lt;/li&gt;
+  &lt;/ul&gt;
+
+  &lt;p&gt;Because you create a custom input source to process custom information, the actual configuration is designed to be flexible. The scheduler, handler, and cancellation routines are the key routines you almost always need for your custom input source. Most of the rest of the input source behavior, however, happens outside of those handler routines. For example, it is up to you to define the mechanism for passing data to your input source and for communicating the presence of your input source to other threads.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;创建一个自定义的input source需要涉及以下几点：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;需要input source处理的信息&lt;/li&gt;
+  &lt;li&gt;调度程序让需要的端口知道怎么连接你的input source&lt;/li&gt;
+  &lt;li&gt;可用的程序来处理任意端口发出的请求&lt;/li&gt;
+  &lt;li&gt;有程序来取消input source&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;因为创建一个自定义的input source来处理自定义信息，可配置的还是很灵活的，调度程序、处理程序和取消是关键。其他的input source就是在这些程序之外，&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">定义一个Custom Input Source</summary></entry><entry><title type="html">iOS之Runloop(1):基础</title><link href="http://localhost:4000/2017/04/10/Runloop_1/" rel="alternate" type="text/html" title="iOS之Runloop(1):基础" /><published>2017-04-10T20:00:00+08:00</published><updated>2017-04-10T20:00:00+08:00</updated><id>http://localhost:4000/2017/04/10/Runloop_1</id><content type="html" xml:base="http://localhost:4000/2017/04/10/Runloop_1/">&lt;h3 id=&quot;一简介&quot;&gt;一、简介&lt;/h3&gt;
 
 &lt;p&gt;先看苹果官方文档：&lt;a href=&quot;https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html#//apple_ref/doc/uid/10000057i-CH16-SW1&quot;&gt;Run loops&lt;/a&gt;&lt;/p&gt;
 
