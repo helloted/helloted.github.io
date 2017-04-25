@@ -10,7 +10,7 @@
 
     <title>iOS之Runloop(2):事件源 - Helloted Blog</title>
 
-    <link rel="canonical" href="http://localhost:4000/2017/04/16/Runloop_2/">
+    <link rel="canonical" href="http://www.helloted.com/2017/04/16/Runloop_2/">
 
     <link rel="shortcut icon" href="/img/favicon.ico">
    
@@ -35,7 +35,7 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Helloted Blog" />
+    <link type="application/atom+xml" rel="alternate" href="http://www.helloted.com/feed.xml" title="Helloted Blog" />
 
 </head>
 
@@ -108,7 +108,7 @@
 
 				<p>苹果官方文档：<a href="https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html#//apple_ref/doc/uid/10000057i-CH16-SW7">Run loops</a></p>
 
-<h3 id="定义一个custom-input-source">定义一个Custom Input Source</h3>
+<h3 id="一定义一个custom-input-source">一、定义一个Custom Input Source</h3>
 
 <blockquote>
   <p>Creating a custom input source involves defining the following:</p>
@@ -286,6 +286,135 @@
 <p>为了使input source变得有用，需要操纵input source并从其他线程发出信号。输入源的全部要点是将线程休眠直到有事情做，这样的话就需要线程知道Input souce并与之沟通.</p>
 
 <p>告诉客户端关于input source的一种方法就是当input source第一次installed在runloop时放一个注册需求。你可以注册随意多的客户端，或者简单地注册到一个中央机构可以将input source转交给客户端。</p>
+
+<p>下面的代码显示了当调用RunloopSource对象的调度程序函数时，由程序delegate定义并调用的注册方法。这个方法接受RunLoopSource对象提供的RunLoopContext对象并将其添加到源列表里。代码还显示了当从runloop里移除input source时将其注销</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>- (void)registerSource:(RunLoopContext*)sourceInfo;
+{
+    [sourcesToPing addObject:sourceInfo];
+}
+ 
+- (void)removeSource:(RunLoopContext*)sourceInfo
+{
+    id    objToRemove = nil;
+ 
+    for (RunLoopContext* context in sourcesToPing)
+    {
+        if ([context isEqual:sourceInfo])
+        {
+            objToRemove = context;
+            break;
+        }
+    }
+ 
+    if (objToRemove)
+        [sourcesToPing removeObject:objToRemove];
+}
+</code></pre>
+</div>
+
+<h4 id="给input-source发出信号">给input source发出信号</h4>
+
+<blockquote>
+  <p>After it hands off its data to the input source, a client must signal the source and wake up its run loop. Signaling the source lets the run loop know that the source is ready to be processed. And because the thread might be asleep when the signal occurs, you should always wake up the run loop explicitly. Failing to do so might result in a delay in processing the input source.</p>
+
+  <p>Listing 3-9 shows the <code class="highlighter-rouge">fireCommandsOnRunLoop</code> method of the <code class="highlighter-rouge">RunLoopSource</code> object. Clients invoke this method when they are ready for the source to process the commands they added to the buffer</p>
+</blockquote>
+
+<p>在将数据交给input soure之后，客户端必须向souce发出信号并将runloop唤醒。向source发出信号让runloop知道source已可以被处理，并且因为线程有可能已经休眠，所以当信号发出的时候，你必须明确地唤醒runloop，否则会导致处理input source的延迟</p>
+
+<p>下面的代码显示了RunLoopSource对象的fireCommandsOnRunLoop方法，这个方法会在当客户端准备好source来处理添加到缓存区的命令时调用。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>- (void)fireCommandsOnRunLoop:(CFRunLoopRef)runloop
+{
+    CFRunLoopSourceSignal(runLoopSource);
+    CFRunLoopWakeUp(runloop);
+}
+</code></pre>
+</div>
+
+<h3 id="二配置timer-sources">二、配置Timer Sources</h3>
+
+<blockquote>
+  <p>To create a timer source, all you have to do is create a timer object and schedule it on your run loop. In Cocoa, you use the <code class="highlighter-rouge">NSTimer</code> class to create new timer objects, and in Core Foundation you use the <code class="highlighter-rouge">CFRunLoopTimerRef</code> opaque type. Internally, the <code class="highlighter-rouge">NSTimer</code> class is simply an extension of Core Foundation that provides some convenience features, like the ability to create and schedule a timer using the same method.</p>
+</blockquote>
+
+<p>创建一个timer source，你需要做的就是创建一个timer对象然后将其放入runloop，用NSTimer或者CFRunLoopTimerRef都可以。可以用下面的方法</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>scheduledTimerWithTimeInterval:target:selector:userInfo:repeats:
+scheduledTimerWithTimeInterval:invocation:repeats:
+</code></pre>
+</div>
+
+<blockquote>
+  <p>These methods create the timer and add it to the current thread’s run loop in the default mode (<code class="highlighter-rouge">NSDefaultRunLoopMode</code>). You can also schedule a timer manually if you want by creating your <code class="highlighter-rouge">NSTimer</code> object and then adding it to the run loop using the <code class="highlighter-rouge">addTimer:forMode:</code> method of <code class="highlighter-rouge">NSRunLoop</code>. Both techniques do basically the same thing but give you different levels of control over the timer’s configuration. For example, if you create the timer and add it to the run loop manually, you can do so using a mode other than the default mode. Listing 3-10 shows how to create timers using both techniques. The first timer has an initial delay of 1 second but then fires regularly every 0.1 seconds after that. The second timer begins firing after an initial 0.2 second delay and then fires every 0.2 seconds after that.</p>
+</blockquote>
+
+<p>上面的两个方法创建一个timer并且将它以默认模式NSDefaultRunLoopMode添加到当前线程的runloop。当然你也可以手动创建一个并用addTimer:forMode:添加进runloop.两种方法都是一样的，其中一个可以配置更多。下面的方法显示了两种方法的详细</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>NSRunLoop* myRunLoop = [NSRunLoop currentRunLoop];
+ 
+// Create and schedule the first timer.
+NSDate* futureDate = [NSDate dateWithTimeIntervalSinceNow:1.0];
+NSTimer* myTimer = [[NSTimer alloc] initWithFireDate:futureDate
+                        interval:0.1
+                        target:self
+                        selector:@selector(myDoFireTimer1:)
+                        userInfo:nil
+                        repeats:YES];
+[myRunLoop addTimer:myTimer forMode:NSDefaultRunLoopMode];
+ 
+// Create and schedule the second timer.
+[NSTimer scheduledTimerWithTimeInterval:0.2
+                        target:self
+                        selector:@selector(myDoFireTimer2:)
+                        userInfo:nil
+                        repeats:YES];
+</code></pre>
+</div>
+
+<p>下面这个是用Core Foundation来添加一个timer</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>CFRunLoopRef runLoop = CFRunLoopGetCurrent();
+CFRunLoopTimerContext context = {0, NULL, NULL, NULL, NULL};
+CFRunLoopTimerRef timer = CFRunLoopTimerCreate(kCFAllocatorDefault, 0.1, 0.3, 0, 0,
+                                        &amp;myCFTimerCallback, &amp;context);
+ 
+CFRunLoopAddTimer(runLoop, timer, kCFRunLoopCommonModes);
+</code></pre>
+</div>
+
+<h3 id="三配置一个port-based-input-source">三、配置一个Port-Based Input Source</h3>
+
+<h4 id="配置一个nsmachport对象">配置一个NSMachPort对象</h4>
+
+<blockquote>
+  <p>To establish a local connection with an <code class="highlighter-rouge">NSMachPort</code> object, you create the port object and add it to your primary thread’s run loop. When launching your secondary thread, you pass the same object to your thread’s entry-point function. The secondary thread can use the same object to send messages back to your primary thread.</p>
+</blockquote>
+
+<p>要建立一个与NSMachPort对象的本地连接，你需要创建一个port对象然后将它添加到你的主要线程的runloop.当启动辅助线程时，将相同的对象传递给线程的entry-point函数。辅助线程可以使用相同的对象将消息返回主要线程</p>
+
+<p>下面代码显示了一个主要线程来启动一个辅助线程</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>- (void)launchThread
+{
+    NSPort* myPort = [NSMachPort port];
+    if (myPort)
+    {
+        // This class handles incoming port messages.
+        [myPort setDelegate:self];
+ 
+        // Install the port as an input source on the current run loop.
+        [[NSRunLoop currentRunLoop] addPort:myPort forMode:NSDefaultRunLoopMode];
+ 
+        // Detach the thread. Let the worker release the port.
+        [NSThread detachNewThreadSelector:@selector(LaunchThreadWithPort:)
+               toTarget:[MyWorkerClass class] withObject:myPort];
+    }
+}
+</code></pre>
+</div>
+
 
 
                 <hr>
