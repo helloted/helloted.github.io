@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-04-26T14:54:42+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS之Runloop(3):应用</title><link href="http://www.helloted.com/2017/04/16/Runloop_3/" rel="alternate" type="text/html" title="iOS之Runloop(3):应用" /><published>2017-04-16T20:00:00+08:00</published><updated>2017-04-16T20:00:00+08:00</updated><id>http://www.helloted.com/2017/04/16/Runloop_3</id><content type="html" xml:base="http://www.helloted.com/2017/04/16/Runloop_3/">&lt;p&gt;1、AutoreleasePool&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-04-26T17:44:56+08:00</updated><id>http://localhost:4000/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS之Runloop(3):应用</title><link href="http://localhost:4000/2017/04/16/Runloop_3/" rel="alternate" type="text/html" title="iOS之Runloop(3):应用" /><published>2017-04-16T20:00:00+08:00</published><updated>2017-04-16T20:00:00+08:00</updated><id>http://localhost:4000/2017/04/16/Runloop_3</id><content type="html" xml:base="http://localhost:4000/2017/04/16/Runloop_3/">&lt;p&gt;1、AutoreleasePool&lt;/p&gt;
 
 &lt;p&gt;App启动后，苹果在主线程 RunLoop 里注册了两个 Observer，其回调都是 _wrapRunLoopWithAutoreleasePoolHandler()。&lt;/p&gt;
 
@@ -83,7 +83,7 @@
 
 &lt;p&gt;当开始网络传输时，我们可以看到 NSURLConnection 创建了两个新线程：com.apple.NSURLConnectionLoader 和 com.apple.CFSocket.private。其中 CFSocket 线程是处理底层 socket 连接的。NSURLConnectionLoader 这个线程内部会使用 RunLoop 来接收底层 socket 的事件，并通过之前添加的 Source0 通知到上层的 Delegate。&lt;/p&gt;
 
-&lt;p&gt;NSURLConnectionLoader 中的 RunLoop 通过一些基于 mach port 的 Source 接收来自底层 CFSocket 的通知。当收到通知后，其会在合适的时机向 CFMultiplexerSource 等 Source0 发送通知，同时唤醒 Delegate 线程的 RunLoop 来让其处理这些通知。CFMultiplexerSource 会在 Delegate 线程的 RunLoop 对 Delegate 执行实际的回调。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">1、AutoreleasePool</summary></entry><entry><title type="html">iOS之Runloop(2):事件源</title><link href="http://www.helloted.com/2017/04/16/Runloop_2/" rel="alternate" type="text/html" title="iOS之Runloop(2):事件源" /><published>2017-04-16T20:00:00+08:00</published><updated>2017-04-16T20:00:00+08:00</updated><id>http://www.helloted.com/2017/04/16/Runloop_2</id><content type="html" xml:base="http://www.helloted.com/2017/04/16/Runloop_2/">&lt;p&gt;苹果官方文档：&lt;a href=&quot;https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html#//apple_ref/doc/uid/10000057i-CH16-SW7&quot;&gt;Run loops&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;NSURLConnectionLoader 中的 RunLoop 通过一些基于 mach port 的 Source 接收来自底层 CFSocket 的通知。当收到通知后，其会在合适的时机向 CFMultiplexerSource 等 Source0 发送通知，同时唤醒 Delegate 线程的 RunLoop 来让其处理这些通知。CFMultiplexerSource 会在 Delegate 线程的 RunLoop 对 Delegate 执行实际的回调。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">1、AutoreleasePool</summary></entry><entry><title type="html">iOS之Runloop(2):事件源</title><link href="http://localhost:4000/2017/04/16/Runloop_2/" rel="alternate" type="text/html" title="iOS之Runloop(2):事件源" /><published>2017-04-16T20:00:00+08:00</published><updated>2017-04-16T20:00:00+08:00</updated><id>http://localhost:4000/2017/04/16/Runloop_2</id><content type="html" xml:base="http://localhost:4000/2017/04/16/Runloop_2/">&lt;p&gt;苹果官方文档：&lt;a href=&quot;https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html#//apple_ref/doc/uid/10000057i-CH16-SW7&quot;&gt;Run loops&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;一定义一个custom-input-source&quot;&gt;一、定义一个Custom Input Source&lt;/h3&gt;
 
@@ -390,7 +390,7 @@ CFRunLoopAddTimer(runLoop, timer, kCFRunLoopCommonModes);
     }
 }
 &lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;</content><author><name>Ted</name></author><summary type="html">苹果官方文档：Run loops</summary></entry><entry><title type="html">iOS之Runloop(1):基础</title><link href="http://www.helloted.com/2017/04/10/Runloop_1/" rel="alternate" type="text/html" title="iOS之Runloop(1):基础" /><published>2017-04-10T20:00:00+08:00</published><updated>2017-04-10T20:00:00+08:00</updated><id>http://www.helloted.com/2017/04/10/Runloop_1</id><content type="html" xml:base="http://www.helloted.com/2017/04/10/Runloop_1/">&lt;h3 id=&quot;一简介&quot;&gt;一、简介&lt;/h3&gt;
+&lt;/div&gt;</content><author><name>Ted</name></author><summary type="html">苹果官方文档：Run loops</summary></entry><entry><title type="html">iOS之Runloop(1):基础</title><link href="http://localhost:4000/2017/04/10/Runloop_1/" rel="alternate" type="text/html" title="iOS之Runloop(1):基础" /><published>2017-04-10T20:00:00+08:00</published><updated>2017-04-10T20:00:00+08:00</updated><id>http://localhost:4000/2017/04/10/Runloop_1</id><content type="html" xml:base="http://localhost:4000/2017/04/10/Runloop_1/">&lt;h3 id=&quot;一简介&quot;&gt;一、简介&lt;/h3&gt;
 
 &lt;p&gt;先看苹果官方文档：&lt;a href=&quot;https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html#//apple_ref/doc/uid/10000057i-CH16-SW1&quot;&gt;Run loops&lt;/a&gt;&lt;/p&gt;
 
@@ -701,7 +701,7 @@ cancelPreviousPerformRequestsWithTarget:selector:object:
 
 &lt;p&gt;timer和input source的通知会在这些事件处理之前就传递(通知时间和发生时间会有小差距)，如果事件处理之间的时间很重要，你可以利用休眠和唤醒的通知来关联这些时间处理的时间&lt;/p&gt;
 
-&lt;p&gt;因为timer和其他周期性事件在运行运行循环时传递，如果规避了循环(不再循环)，会打断这些事件的传递。举个例子，如果你实现了鼠标追踪：在进入了runloop之后就不断地从应用抓取轨迹（循环停止了），这个时候timer就会失效直到你的鼠标追踪结束，将控制圈交还应用，继续循环。&lt;/p&gt;
+&lt;p&gt;因为timer和其他周期性事件在运行runloop时传递，如果规避了循环(不再循环)，会打断这些事件的传递。举个例子，如果你实现了鼠标追踪：在进入了runloop之后就不断地从应用抓取轨迹（循环停止了），这个时候timer就会失效直到你的鼠标追踪结束，将控制圈交还应用，继续循环。&lt;/p&gt;
 
 &lt;p&gt;runloop对象可以唤醒runloop.其他的事件也可以唤醒，比如，添加了一个其他的non-port-based input source就能唤醒runloop从而可以让这个input source可以马上被处理，而不是等着直到其他活动发生。&lt;/p&gt;
 
@@ -896,9 +896,67 @@ cancelPreviousPerformRequestsWithTarget:selector:object:
   &lt;p&gt;The Cocoa NSRunLoop class is not as inherently thread safe as its Core Foundation counterpart. If you are using the NSRunLoop class to modify your run loop, you should do so only from the same thread that owns that run loop. Adding an input source or timer to a run loop belonging to a different thread could cause your code to crash or behave in an unexpected way&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;p&gt;线程安全性取决于使用runloop的API。 Core Foundation中的功能通常是线程安全的，可以从任何线程调用。 但是，如果您想更改runloop的配置，那么尽可能从拥有运行循环的线程执行此操作。&lt;/p&gt;
+&lt;p&gt;线程安全性取决于使用runloop的API。 Core Foundation中的功能通常是线程安全的，可以从任何线程调用。 但是，如果您想更改runloop的配置，那么尽可能从拥有runloop的线程执行此操作。&lt;/p&gt;
 
-&lt;p&gt;Cocoa NSRunLoop类并不像Core Foundation对象那样固有线程安全。 如果您正在使用NSRunLoop类来修改runloop，那你最好在同一线程执行这个操作。 将input sources或timers添加到属于不同线程的runloop可能会导致崩溃或者其他意外结果。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、简介</summary></entry><entry><title type="html">监测APP卡顿</title><link href="http://www.helloted.com/2016/10/06/smoothMonitor/" rel="alternate" type="text/html" title="监测APP卡顿" /><published>2016-10-06T20:00:00+08:00</published><updated>2016-10-06T20:00:00+08:00</updated><id>http://www.helloted.com/2016/10/06/smoothMonitor</id><content type="html" xml:base="http://www.helloted.com/2016/10/06/smoothMonitor/">&lt;h3 id=&quot;一简介&quot;&gt;一、简介&lt;/h3&gt;
+&lt;p&gt;Cocoa NSRunLoop类并不像Core Foundation对象那样固有线程安全。 如果您正在使用NSRunLoop类来修改runloop，那你最好在同一线程执行这个操作。 将input sources或timers添加到属于不同线程的runloop可能会导致崩溃或者其他意外结果。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、简介</summary></entry><entry><title type="html">漫谈iOS安全</title><link href="http://localhost:4000/2016/10/06/safety/" rel="alternate" type="text/html" title="漫谈iOS安全" /><published>2016-10-06T20:00:00+08:00</published><updated>2016-10-06T20:00:00+08:00</updated><id>http://localhost:4000/2016/10/06/safety</id><content type="html" xml:base="http://localhost:4000/2016/10/06/safety/">&lt;h3 id=&quot;一前言&quot;&gt;一、前言&lt;/h3&gt;
+
+&lt;p&gt;经常都能听到大家说，iOS很安全，iPhone比安卓手机安全。那么为什么iOS会安全，难道仅仅是因为iOS是闭源然后安卓是开源的，开源的就一定比闭源安全？前段时间著名的&lt;em&gt;Xcode Ghost&lt;/em&gt; 事件也让人觉得iOS好像并不是那么地安全，今天就随便说说iOS的安全。&lt;/p&gt;
+
+&lt;h3 id=&quot;二沙盒机制&quot;&gt;二、沙盒机制&lt;/h3&gt;
+
+&lt;h4 id=&quot;沙盒简介&quot;&gt;沙盒简介&lt;/h4&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Complex systems will always have vulnerabilities, and software complexity only increases over time. No matter how carefully you adopt secure coding practices and guard against bugs, attackers only need to get through your defenses once to succeed. While App Sandbox doesn’t prevent attacks against your app, it does minimize the harm a successful one can cause.&lt;/p&gt;
+
+  &lt;p&gt;A non-sandboxed app has the full rights of the user who is running that app, and can access any resources that the user can access. If that app or any framework it is linked against contain security holes, an attacker can potentially exploit those holes to take control of that app, and in doing so, the attacker gains the ability to do anything that the user can do.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;复杂系统始终都会存在漏洞，软件复杂性只会随着时间的推移而增加。 无论你采取安全的编码方式多么谨慎来避免错误，攻击者只需要击穿一次防御就能成功。 虽然应用程序沙盒不能防止对您的应用程序的攻击，但它确实最大限度地减少了可能导致的危害。&lt;/p&gt;
+
+&lt;p&gt;非沙盒应用程序具有正在运行该应用程序的用户的完全权限，并且可以访问用户可以访问的任何资源。 如果该应用程序或任何框架被链接到一些安全漏洞，攻击者可能潜在地利用这些漏洞来控制该应用程序，并且在这样做时，攻击者可以执行任何用户可以执行的操作。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Designed to mitigate this problem, the App Sandbox strategy is twofold:&lt;/p&gt;
+
+  &lt;ol&gt;
+    &lt;li&gt;App Sandbox enables you to describe how your app interacts with the system. The system then grants your app the access it needs to get its job done, and no more.&lt;/li&gt;
+    &lt;li&gt;App Sandbox allows the user to transparently grant your app additional access by way of Open and Save dialogs, drag and drop, and other familiar user interactions.&lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;为了解决上面的问题，沙盒策略有两个方面：&lt;/p&gt;
+
+&lt;p&gt;应用程序沙盒允许您描述应用程序如何与系统进行交互。 系统然后授予您的应用程序所需的访问权限，以完成其工作，不会赋予更多的权限。
+应用程序沙盒允许用户通过打开和保存对话框，拖放和其他熟悉的用户交互方式透明地授予您的应用程序附加访问权限。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/safety/safety_01.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;ios的沙盒&quot;&gt;iOS的沙盒&lt;/h4&gt;
+
+&lt;p&gt;来看看iOS的沙盒结构图&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/safety/safety_00.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;iOS应用程序只能在为该改程序创建的文件系统中读取文件，不可以去其它地方访问，此区域被成为沙盒，所以所有的非代码文件都要保存在此，例如图像，图标，声音，映像，属性列表，文本文件等。&lt;/p&gt;
+
+  &lt;ol&gt;
+    &lt;li&gt;每个应用程序都有自己的存储空间&lt;/li&gt;
+    &lt;li&gt;应用程序不能翻过自己的围墙去访问别的存储空间的内容&lt;/li&gt;
+    &lt;li&gt;应用程序请求的数据都要通过权限检测，假如不符合条件的话，不会被放行。&lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/safety/safety_02.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;三https&quot;&gt;三、HTTPS&lt;/h3&gt;
+
+&lt;p&gt;其实HTTPS从最终的数据解析的角度，与HTTP没有任何的区别，HTTPS就是将HTTP协议数据包放到SSL/TSL层加密后，在TCP/IP层组成IP数据报去传输，以此保证传输数据的安全；而对于接收端，在SSL/TSL将接收的数据包解密之后，将数据传给HTTP协议层，就是普通的HTTP数据。HTTP和SSL/TSL都处于OSI模型的应用层。从HTTP切换到HTTPS是一个非常简单的过程&lt;/p&gt;
+
+&lt;p&gt;可参考这篇博文&lt;a href=&quot;http://www.helloted.com/2016/09/13/Http/&quot;&gt;Http与Https&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;四app加固&quot;&gt;四、APP加固&lt;/h3&gt;</content><author><name>Ted</name></author><summary type="html">一、前言</summary></entry><entry><title type="html">监测APP卡顿</title><link href="http://localhost:4000/2016/10/06/smoothMonitor/" rel="alternate" type="text/html" title="监测APP卡顿" /><published>2016-10-06T20:00:00+08:00</published><updated>2016-10-06T20:00:00+08:00</updated><id>http://localhost:4000/2016/10/06/smoothMonitor</id><content type="html" xml:base="http://localhost:4000/2016/10/06/smoothMonitor/">&lt;h3 id=&quot;一简介&quot;&gt;一、简介&lt;/h3&gt;
 
 &lt;p&gt;我们说的卡顿，一般指操作某个功能时，UI界面无及时反应，这种卡顿日常测试一般难以追踪以及重现，所以除了工程师开发测试的时候发现卡顿，还有一个重要的渠道就是从用户实际体验来监测卡顿，但是我们又不能拿到用户的手机或者让用户来回馈问题，所以一个完整的监测体系就很有必要了。&lt;/p&gt;
 
@@ -1051,7 +1109,7 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
 
 &lt;h3 id=&quot;五代码&quot;&gt;五、代码&lt;/h3&gt;
 
-&lt;p&gt;上面的代码可以在&lt;a href=&quot;https://github.com/helloted/smoothMonitor&quot;&gt;smoothMonitor&lt;/a&gt; 下载&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、简介</summary></entry><entry><title type="html">GCD之dispatch_semaphore</title><link href="http://www.helloted.com/2016/09/20/dispatch_semaphore/" rel="alternate" type="text/html" title="GCD之dispatch_semaphore" /><published>2016-09-20T20:00:00+08:00</published><updated>2016-09-20T20:00:00+08:00</updated><id>http://www.helloted.com/2016/09/20/dispatch_semaphore</id><content type="html" xml:base="http://www.helloted.com/2016/09/20/dispatch_semaphore/">&lt;h3 id=&quot;几个函数的意义&quot;&gt;几个函数的意义&lt;/h3&gt;
+&lt;p&gt;上面的代码可以在&lt;a href=&quot;https://github.com/helloted/smoothMonitor&quot;&gt;smoothMonitor&lt;/a&gt; 下载&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、简介</summary></entry><entry><title type="html">GCD之dispatch_semaphore</title><link href="http://localhost:4000/2016/09/20/dispatch_semaphore/" rel="alternate" type="text/html" title="GCD之dispatch_semaphore" /><published>2016-09-20T20:00:00+08:00</published><updated>2016-09-20T20:00:00+08:00</updated><id>http://localhost:4000/2016/09/20/dispatch_semaphore</id><content type="html" xml:base="http://localhost:4000/2016/09/20/dispatch_semaphore/">&lt;h3 id=&quot;几个函数的意义&quot;&gt;几个函数的意义&lt;/h3&gt;
 
 &lt;p&gt;信号创建，其中value是初始信号值&lt;/p&gt;
 
@@ -1138,7 +1196,7 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
 
 &lt;h3 id=&quot;demo位置&quot;&gt;demo位置&lt;/h3&gt;
 
-&lt;p&gt;以上代码都放在&lt;a href=&quot;https://github.com/helloted/dispatch_semaphore&quot;&gt;dispatch_semaphore demo&lt;/a&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">几个函数的意义</summary></entry><entry><title type="html">Http与Https</title><link href="http://www.helloted.com/2016/09/13/Http/" rel="alternate" type="text/html" title="Http与Https" /><published>2016-09-13T20:00:00+08:00</published><updated>2016-09-13T20:00:00+08:00</updated><id>http://www.helloted.com/2016/09/13/Http</id><content type="html" xml:base="http://www.helloted.com/2016/09/13/Http/">&lt;h3 id=&quot;tcpip定义&quot;&gt;TCP/IP定义&lt;/h3&gt;
+&lt;p&gt;以上代码都放在&lt;a href=&quot;https://github.com/helloted/dispatch_semaphore&quot;&gt;dispatch_semaphore demo&lt;/a&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">几个函数的意义</summary></entry><entry><title type="html">Http与Https</title><link href="http://localhost:4000/2016/09/13/Http/" rel="alternate" type="text/html" title="Http与Https" /><published>2016-09-13T20:00:00+08:00</published><updated>2016-09-13T20:00:00+08:00</updated><id>http://localhost:4000/2016/09/13/Http</id><content type="html" xml:base="http://localhost:4000/2016/09/13/Http/">&lt;h3 id=&quot;tcpip定义&quot;&gt;TCP/IP定义&lt;/h3&gt;
 
 &lt;p&gt;TCP/IP是互联网相关的各类协议族的名称&lt;/p&gt;
 
@@ -1232,6 +1290,8 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
 
 &lt;h3 id=&quot;https&quot;&gt;HTTPS&lt;/h3&gt;
 
+&lt;p&gt;其实HTTPS从最终的数据解析的角度，与HTTP没有任何的区别，HTTPS就是将HTTP协议数据包放到SSL/TSL层加密后，在TCP/IP层组成IP数据报去传输，以此保证传输数据的安全；而对于接收端，在SSL/TSL将接收的数据包解密之后，将数据传给HTTP协议层，就是普通的HTTP数据。HTTP和SSL/TSL都处于OSI模型的应用层。从HTTP切换到HTTPS是一个非常简单的过程&lt;/p&gt;
+
 &lt;h4 id=&quot;http有以下不足&quot;&gt;Http有以下不足&lt;/h4&gt;
 
 &lt;ul&gt;
@@ -1252,7 +1312,7 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
   &lt;li&gt;客户端发送的数据用抓包程序给的证书生成的密钥加密&lt;/li&gt;
   &lt;li&gt;抓包程序得到客户端发送的数据抓包程序用自己的证书解密出来，再用服务器证书加密&lt;/li&gt;
   &lt;li&gt;抓包程序再把数据发给服务器&lt;/li&gt;
-&lt;/ol&gt;</content><author><name>Ted</name></author><summary type="html">TCP/IP定义</summary></entry><entry><title type="html">iOS之多线程</title><link href="http://www.helloted.com/2016/05/22/ios-Thread/" rel="alternate" type="text/html" title="iOS之多线程" /><published>2016-05-22T20:00:00+08:00</published><updated>2016-05-22T20:00:00+08:00</updated><id>http://www.helloted.com/2016/05/22/ios-Thread</id><content type="html" xml:base="http://www.helloted.com/2016/05/22/ios-Thread/">&lt;h3 id=&quot;一前言&quot;&gt;一、前言&lt;/h3&gt;
+&lt;/ol&gt;</content><author><name>Ted</name></author><summary type="html">TCP/IP定义</summary></entry><entry><title type="html">iOS之多线程</title><link href="http://localhost:4000/2016/05/22/ios-Thread/" rel="alternate" type="text/html" title="iOS之多线程" /><published>2016-05-22T20:00:00+08:00</published><updated>2016-05-22T20:00:00+08:00</updated><id>http://localhost:4000/2016/05/22/ios-Thread</id><content type="html" xml:base="http://localhost:4000/2016/05/22/ios-Thread/">&lt;h3 id=&quot;一前言&quot;&gt;一、前言&lt;/h3&gt;
 
 &lt;ul&gt;
   &lt;li&gt;Pthreads&lt;/li&gt;
@@ -1457,7 +1517,7 @@ dispatch_after(dispatch_time(DISPATCH_TIME_NOW,150ull *NSEC_PER_MSEC),dispatch_g
   &lt;li&gt;isExecuting 代表任务正在执行中&lt;/li&gt;
   &lt;li&gt;isFinished 代表任务已经执行完成&lt;/li&gt;
   &lt;li&gt;isCancelled 代表任务已经取消执行&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Ted</name></author><summary type="html">一、前言</summary></entry><entry><title type="html">神奇的Runtime</title><link href="http://www.helloted.com/2016/03/05/runtime/" rel="alternate" type="text/html" title="神奇的Runtime" /><published>2016-03-05T20:00:00+08:00</published><updated>2016-03-05T20:00:00+08:00</updated><id>http://www.helloted.com/2016/03/05/runtime</id><content type="html" xml:base="http://www.helloted.com/2016/03/05/runtime/">&lt;h3 id=&quot;一本质&quot;&gt;一、本质&lt;/h3&gt;
+&lt;/ul&gt;</content><author><name>Ted</name></author><summary type="html">一、前言</summary></entry><entry><title type="html">神奇的Runtime</title><link href="http://localhost:4000/2016/03/05/runtime/" rel="alternate" type="text/html" title="神奇的Runtime" /><published>2016-03-05T20:00:00+08:00</published><updated>2016-03-05T20:00:00+08:00</updated><id>http://localhost:4000/2016/03/05/runtime</id><content type="html" xml:base="http://localhost:4000/2016/03/05/runtime/">&lt;h3 id=&quot;一本质&quot;&gt;一、本质&lt;/h3&gt;
 
 &lt;p&gt;[receiver message]不是一个简单地方法调用，而是在编译阶段被编译器转化为&lt;/p&gt;
 
@@ -1685,7 +1745,7 @@ dispatch_after(dispatch_time(DISPATCH_TIME_NOW,150ull *NSEC_PER_MSEC),dispatch_g
 
 &lt;p&gt;method_getName：获取方法名&lt;/p&gt;
 
-&lt;p&gt;method_getImplementation：返回方法的实现&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、本质</summary></entry><entry><title type="html">网络</title><link href="http://www.helloted.com/2015/10/10/network/" rel="alternate" type="text/html" title="网络" /><published>2015-10-10T20:00:00+08:00</published><updated>2015-10-10T20:00:00+08:00</updated><id>http://www.helloted.com/2015/10/10/network</id><content type="html" xml:base="http://www.helloted.com/2015/10/10/network/">&lt;h3 id=&quot;网络&quot;&gt;网络&lt;/h3&gt;
+&lt;p&gt;method_getImplementation：返回方法的实现&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、本质</summary></entry><entry><title type="html">网络</title><link href="http://localhost:4000/2015/10/10/network/" rel="alternate" type="text/html" title="网络" /><published>2015-10-10T20:00:00+08:00</published><updated>2015-10-10T20:00:00+08:00</updated><id>http://localhost:4000/2015/10/10/network</id><content type="html" xml:base="http://localhost:4000/2015/10/10/network/">&lt;h3 id=&quot;网络&quot;&gt;网络&lt;/h3&gt;
 
 &lt;h4 id=&quot;osi七层模型&quot;&gt;OSI七层模型&lt;/h4&gt;
 

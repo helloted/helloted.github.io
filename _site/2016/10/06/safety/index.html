@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
 
-    <title>GCD之dispatch_semaphore - Helloted Blog</title>
+    <title>漫谈iOS安全 - Helloted Blog</title>
 
-    <link rel="canonical" href="http://localhost:4000/2016/09/20/dispatch_semaphore/">
+    <link rel="canonical" href="http://localhost:4000/2016/10/06/safety/">
 
     <link rel="shortcut icon" href="/img/favicon.ico">
    
@@ -84,16 +84,16 @@
 
 
     <!-- Post Header -->
-<header class="intro-header" style="background-image: url('/img/bg_01.jpg')">
+<header class="intro-header" style="background-image: url('/img/bg_02.jpg')">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <div class="post-heading">
-                    <h1>GCD之dispatch_semaphore</h1>
+                    <h1>漫谈iOS安全</h1>
                     
-                    <h2 class="subheading">dispatch_semaphore信号控制可以达到线程锁、控制线程并发数</h2>
+                    <h2 class="subheading">讲一讲iOS的安全机制，如何保证APP安全</h2>
                     
-                    <span class="meta">Posted by Ted on September 20, 2016</span>
+                    <span class="meta">Posted by Ted on October 6, 2016</span>
                 </div>
             </div>
         </div>
@@ -106,94 +106,65 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
 
-				<h3 id="几个函数的意义">几个函数的意义</h3>
+				<h3 id="一前言">一、前言</h3>
 
-<p>信号创建，其中value是初始信号值</p>
+<p>经常都能听到大家说，iOS很安全，iPhone比安卓手机安全。那么为什么iOS会安全，难道仅仅是因为iOS是闭源然后安卓是开源的，开源的就一定比闭源安全？前段时间著名的<em>Xcode Ghost</em> 事件也让人觉得iOS好像并不是那么地安全，今天就随便说说iOS的安全。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>dispatch_semaphore_create(long value) 
-</code></pre>
-</div>
+<h3 id="二沙盒机制">二、沙盒机制</h3>
 
-<p>信号等待函数，dsema是信号，timeout是等待时间点，在等待时间点内，只有信号dsema的信号值大于等于1才放行，继续往下执行；放行之后信号值减1；</p>
+<h4 id="沙盒简介">沙盒简介</h4>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>dispatch_semaphore_wait(dispatch_semaphore_t dsema, dispatch_time_t timeout); 
-</code></pre>
-</div>
+<blockquote>
+  <p>Complex systems will always have vulnerabilities, and software complexity only increases over time. No matter how carefully you adopt secure coding practices and guard against bugs, attackers only need to get through your defenses once to succeed. While App Sandbox doesn’t prevent attacks against your app, it does minimize the harm a successful one can cause.</p>
 
-<p>增加信号值，每使用一次对应的dsema的信号值就加1</p>
+  <p>A non-sandboxed app has the full rights of the user who is running that app, and can access any resources that the user can access. If that app or any framework it is linked against contain security holes, an attacker can potentially exploit those holes to take control of that app, and in doing so, the attacker gains the ability to do anything that the user can do.</p>
+</blockquote>
 
-<pre><code class="language-objective-c">dispatch_semaphore_signal(dispatch_semaphore_t dsema);
-</code></pre>
+<p>复杂系统始终都会存在漏洞，软件复杂性只会随着时间的推移而增加。 无论你采取安全的编码方式多么谨慎来避免错误，攻击者只需要击穿一次防御就能成功。 虽然应用程序沙盒不能防止对您的应用程序的攻击，但它确实最大限度地减少了可能导致的危害。</p>
 
-<h3 id="实际例子">实际例子</h3>
+<p>非沙盒应用程序具有正在运行该应用程序的用户的完全权限，并且可以访问用户可以访问的任何资源。 如果该应用程序或任何框架被链接到一些安全漏洞，攻击者可能潜在地利用这些漏洞来控制该应用程序，并且在这样做时，攻击者可以执行任何用户可以执行的操作。</p>
 
-<p>1、普通，可以看出异步执行</p>
+<blockquote>
+  <p>Designed to mitigate this problem, the App Sandbox strategy is twofold:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (void)normalTest{
-    dispatch_queue_t queue = dispatch_get_global_queue(0, 0); 
-    NSMutableArray *array = [NSMutableArray array];  
-    for (int index = 0; index &lt; 5; index++) {      
-        dispatch_async(queue, ^(){     
-            [array addObject:[NSNumber numberWithInt:index]];          
-            int value = arc4random() % 100;           
-            float sleep = value / 100.00;           
-            [NSThread sleepForTimeInterval:sleep];            
-            NSLog(@"add index :%d",index);
-        });        
-    }
-}
-</code></pre>
-</div>
+  <ol>
+    <li>App Sandbox enables you to describe how your app interacts with the system. The system then grants your app the access it needs to get its job done, and no more.</li>
+    <li>App Sandbox allows the user to transparently grant your app additional access by way of Open and Save dialogs, drag and drop, and other familiar user interactions.</li>
+  </ol>
+</blockquote>
 
-<p><img src="/img/semaphore/semaphore_01.png" alt="" /></p>
+<p>为了解决上面的问题，沙盒策略有两个方面：</p>
 
-<p>2、加了semaphore之后，变成同步执行</p>
+<p>应用程序沙盒允许您描述应用程序如何与系统进行交互。 系统然后授予您的应用程序所需的访问权限，以完成其工作，不会赋予更多的权限。
+应用程序沙盒允许用户通过打开和保存对话框，拖放和其他熟悉的用户交互方式透明地授予您的应用程序附加访问权限。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (void)semaphoreTest{
-    dispatch_queue_t queue = dispatch_get_global_queue(0, 0);   
-    dispatch_semaphore_t semaphore = dispatch_semaphore_create(1);
-    NSMutableArray *array = [NSMutableArray array];
-    for (int index = 0; index &lt; 5; index++) {       
-        dispatch_async(queue, ^(){
-            dispatch_time_t waitTime = dispatch_time(DISPATCH_TIME_NOW,5 * NSEC_PER_SEC);//有效时间
-            dispatch_semaphore_wait(semaphore, waitTime);//这个函数本身就是一个判断函数，只有这个函数通过(有信号)，才会继续往下执行       
-            [array addObject:[NSNumber numberWithInt:index]];
-            int value = arc4random() % 100;
-            float sleep = value / 100.00;
-            [NSThread sleepForTimeInterval:sleep];
-            NSLog(@"add index :%d",index);           
-            dispatch_semaphore_signal(semaphore);
-        });        
-    }
-}
-</code></pre>
-</div>
+<p><img src="/img/safety/safety_01.png" alt="img" /></p>
 
-<p><img src="/img/semaphore/semaphore_02.png" alt="" /></p>
+<h4 id="ios的沙盒">iOS的沙盒</h4>
 
-<p>3、控制并发数</p>
+<p>来看看iOS的沙盒结构图</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>    dispatch_semaphore_t semaphore = dispatch_semaphore_create(2);
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    for (int i = 0; i &lt; 10; i++)
-    {
-        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-        dispatch_async(queue, ^{
-            NSLog(@"%i",i);
-            sleep(2);
-            dispatch_semaphore_signal(semaphore);
-        });
-    }
-</code></pre>
-</div>
+<p><img src="/img/safety/safety_00.png" alt="img" /></p>
 
-<p><img src="/img/semaphore/semaphore_03.png" alt="" /></p>
+<blockquote>
+  <p>iOS应用程序只能在为该改程序创建的文件系统中读取文件，不可以去其它地方访问，此区域被成为沙盒，所以所有的非代码文件都要保存在此，例如图像，图标，声音，映像，属性列表，文本文件等。</p>
 
-<p>可以看出，每次并发量被控制在2个</p>
+  <ol>
+    <li>每个应用程序都有自己的存储空间</li>
+    <li>应用程序不能翻过自己的围墙去访问别的存储空间的内容</li>
+    <li>应用程序请求的数据都要通过权限检测，假如不符合条件的话，不会被放行。</li>
+  </ol>
+</blockquote>
 
-<h3 id="demo位置">demo位置</h3>
+<p><img src="/img/safety/safety_02.png" alt="img" /></p>
 
-<p>以上代码都放在<a href="https://github.com/helloted/dispatch_semaphore">dispatch_semaphore demo</a></p>
+<h3 id="三https">三、HTTPS</h3>
+
+<p>其实HTTPS从最终的数据解析的角度，与HTTP没有任何的区别，HTTPS就是将HTTP协议数据包放到SSL/TSL层加密后，在TCP/IP层组成IP数据报去传输，以此保证传输数据的安全；而对于接收端，在SSL/TSL将接收的数据包解密之后，将数据传给HTTP协议层，就是普通的HTTP数据。HTTP和SSL/TSL都处于OSI模型的应用层。从HTTP切换到HTTPS是一个非常简单的过程</p>
+
+<p>可参考这篇博文<a href="http://www.helloted.com/2016/09/13/Http/">Http与Https</a></p>
+
+<h3 id="四app加固">四、APP加固</h3>
 
 
 
@@ -202,12 +173,12 @@
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/2016/09/13/Http/" data-toggle="tooltip" data-placement="top" title="Http与Https">&larr; 上一篇</a>
+                        <a href="/2016/10/06/smoothMonitor/" data-toggle="tooltip" data-placement="top" title="监测APP卡顿">&larr; 上一篇</a>
                     </li>
                     
                     
                     <li class="next">
-                        <a href="/2016/10/06/smoothMonitor/" data-toggle="tooltip" data-placement="top" title="监测APP卡顿">下一篇 &rarr;</a>
+                        <a href="/2017/04/10/Runloop_1/" data-toggle="tooltip" data-placement="top" title="iOS之Runloop(1):基础">下一篇 &rarr;</a>
                     </li>
                     
                 </ul>

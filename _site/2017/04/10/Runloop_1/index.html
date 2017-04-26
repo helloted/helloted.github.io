@@ -10,7 +10,7 @@
 
     <title>iOS之Runloop(1):基础 - Helloted Blog</title>
 
-    <link rel="canonical" href="http://www.helloted.com/2017/04/10/Runloop_1/">
+    <link rel="canonical" href="http://localhost:4000/2017/04/10/Runloop_1/">
 
     <link rel="shortcut icon" href="/img/favicon.ico">
    
@@ -35,7 +35,7 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <link type="application/atom+xml" rel="alternate" href="http://www.helloted.com/feed.xml" title="Helloted Blog" />
+    <link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Helloted Blog" />
 
 </head>
 
@@ -417,7 +417,7 @@ cancelPreviousPerformRequestsWithTarget:selector:object:
 
 <p>timer和input source的通知会在这些事件处理之前就传递(通知时间和发生时间会有小差距)，如果事件处理之间的时间很重要，你可以利用休眠和唤醒的通知来关联这些时间处理的时间</p>
 
-<p>因为timer和其他周期性事件在运行运行循环时传递，如果规避了循环(不再循环)，会打断这些事件的传递。举个例子，如果你实现了鼠标追踪：在进入了runloop之后就不断地从应用抓取轨迹（循环停止了），这个时候timer就会失效直到你的鼠标追踪结束，将控制圈交还应用，继续循环。</p>
+<p>因为timer和其他周期性事件在运行runloop时传递，如果规避了循环(不再循环)，会打断这些事件的传递。举个例子，如果你实现了鼠标追踪：在进入了runloop之后就不断地从应用抓取轨迹（循环停止了），这个时候timer就会失效直到你的鼠标追踪结束，将控制圈交还应用，继续循环。</p>
 
 <p>runloop对象可以唤醒runloop.其他的事件也可以唤醒，比如，添加了一个其他的non-port-based input source就能唤醒runloop从而可以让这个input source可以马上被处理，而不是等着直到其他活动发生。</p>
 
@@ -612,7 +612,7 @@ cancelPreviousPerformRequestsWithTarget:selector:object:
   <p>The Cocoa NSRunLoop class is not as inherently thread safe as its Core Foundation counterpart. If you are using the NSRunLoop class to modify your run loop, you should do so only from the same thread that owns that run loop. Adding an input source or timer to a run loop belonging to a different thread could cause your code to crash or behave in an unexpected way</p>
 </blockquote>
 
-<p>线程安全性取决于使用runloop的API。 Core Foundation中的功能通常是线程安全的，可以从任何线程调用。 但是，如果您想更改runloop的配置，那么尽可能从拥有运行循环的线程执行此操作。</p>
+<p>线程安全性取决于使用runloop的API。 Core Foundation中的功能通常是线程安全的，可以从任何线程调用。 但是，如果您想更改runloop的配置，那么尽可能从拥有runloop的线程执行此操作。</p>
 
 <p>Cocoa NSRunLoop类并不像Core Foundation对象那样固有线程安全。 如果您正在使用NSRunLoop类来修改runloop，那你最好在同一线程执行这个操作。 将input sources或timers添加到属于不同线程的runloop可能会导致崩溃或者其他意外结果。</p>
 
@@ -623,7 +623,7 @@ cancelPreviousPerformRequestsWithTarget:selector:object:
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/2016/10/06/smoothMonitor/" data-toggle="tooltip" data-placement="top" title="监测APP卡顿">&larr; 上一篇</a>
+                        <a href="/2016/10/06/safety/" data-toggle="tooltip" data-placement="top" title="漫谈iOS安全">&larr; 上一篇</a>
                     </li>
                     
                     
