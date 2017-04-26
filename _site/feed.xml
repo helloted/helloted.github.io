@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-04-25T14:32:42+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS之Runloop(3):应用</title><link href="http://www.helloted.com/2017/04/16/Runloop_3/" rel="alternate" type="text/html" title="iOS之Runloop(3):应用" /><published>2017-04-16T20:00:00+08:00</published><updated>2017-04-16T20:00:00+08:00</updated><id>http://www.helloted.com/2017/04/16/Runloop_3</id><content type="html" xml:base="http://www.helloted.com/2017/04/16/Runloop_3/">&lt;p&gt;1、AutoreleasePool&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-04-26T14:54:42+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS之Runloop(3):应用</title><link href="http://www.helloted.com/2017/04/16/Runloop_3/" rel="alternate" type="text/html" title="iOS之Runloop(3):应用" /><published>2017-04-16T20:00:00+08:00</published><updated>2017-04-16T20:00:00+08:00</updated><id>http://www.helloted.com/2017/04/16/Runloop_3</id><content type="html" xml:base="http://www.helloted.com/2017/04/16/Runloop_3/">&lt;p&gt;1、AutoreleasePool&lt;/p&gt;
 
 &lt;p&gt;App启动后，苹果在主线程 RunLoop 里注册了两个 Observer，其回调都是 _wrapRunLoopWithAutoreleasePoolHandler()。&lt;/p&gt;
 
@@ -416,7 +416,7 @@ CFRunLoopAddTimer(runLoop, timer, kCFRunLoopCommonModes);
   &lt;p&gt;Your code provides the control statements used to implement the actual loop portion of the run loop—in other words, your code provides the while or for loop that drives the run loop. Within your loop, you use a run loop object to “run” the event-processing code that receives events and calls the installed handlers.&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;p&gt;代码提供用于实现运行循环的实际循环部分的控制语句 - 换句话说，代码提供while或for循环用于驱动运行循环。 在循环中，使用运行循环对象来“运行”事件处理代码(接收事件并调用相应的事件处理方法)。&lt;/p&gt;
+&lt;p&gt;你的代码提供用于实现runloop的实际循环部分的控制语句 - 换句话说，你的代码提供while或for循环用于驱动Runloop。 在循环中，使用runloop对象来“运行”事件处理代码(接收事件并调用相应的事件处理方法)。&lt;/p&gt;
 
 &lt;h3 id=&quot;二sources&quot;&gt;二、Sources&lt;/h3&gt;
 
@@ -564,10 +564,6 @@ cancelPreviousPerformRequestsWithTarget:selector:object:
 &lt;/blockquote&gt;
 
 &lt;p&gt;自定义Mode的时候，一定要确保该Mode下有sources以及Obsevers&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Runloop/runloop_00.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Timer Source: 用来投递 timer 事件(Schedule 或者 Repeat)中的同步消息.在消息处理时,并不会退出 RunLoop.Timer在选择使用一次后，在执行完成时，会从Run Loop中移除。选择循环时，会一直保存在当前Run Loop中，直到调用invalidated方法。Foundation中 NSTimer Class提供了相关方法来设置Timer source。需要注意的是除了scheduledTimerWithTimeInterval开头的方法创建的Timer都需要手动添加到当前Run Loop中。（scheduledTimerWithTimeInterval 创建的timer会自动以Default Mode加载到当前Run Loop中。）Timer在选择使用一次后，在执行完成时，会从Run Loop中移除。选择循环时，会一直保存在当前Run Loop中，直到调用invalidated方法。&lt;/p&gt;
 
 &lt;h3 id=&quot;六runloop的observer&quot;&gt;六、Runloop的Observer&lt;/h3&gt;
 

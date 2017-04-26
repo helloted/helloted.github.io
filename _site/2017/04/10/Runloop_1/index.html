@@ -132,7 +132,7 @@
   <p>Your code provides the control statements used to implement the actual loop portion of the run loop—in other words, your code provides the while or for loop that drives the run loop. Within your loop, you use a run loop object to “run” the event-processing code that receives events and calls the installed handlers.</p>
 </blockquote>
 
-<p>代码提供用于实现运行循环的实际循环部分的控制语句 - 换句话说，代码提供while或for循环用于驱动运行循环。 在循环中，使用运行循环对象来“运行”事件处理代码(接收事件并调用相应的事件处理方法)。</p>
+<p>你的代码提供用于实现runloop的实际循环部分的控制语句 - 换句话说，你的代码提供while或for循环用于驱动Runloop。 在循环中，使用runloop对象来“运行”事件处理代码(接收事件并调用相应的事件处理方法)。</p>
 
 <h3 id="二sources">二、Sources</h3>
 
@@ -280,10 +280,6 @@ cancelPreviousPerformRequestsWithTarget:selector:object:
 </blockquote>
 
 <p>自定义Mode的时候，一定要确保该Mode下有sources以及Obsevers</p>
-
-<p><img src="/img/Runloop/runloop_00.jpg" alt="img" /></p>
-
-<p>Timer Source: 用来投递 timer 事件(Schedule 或者 Repeat)中的同步消息.在消息处理时,并不会退出 RunLoop.Timer在选择使用一次后，在执行完成时，会从Run Loop中移除。选择循环时，会一直保存在当前Run Loop中，直到调用invalidated方法。Foundation中 NSTimer Class提供了相关方法来设置Timer source。需要注意的是除了scheduledTimerWithTimeInterval开头的方法创建的Timer都需要手动添加到当前Run Loop中。（scheduledTimerWithTimeInterval 创建的timer会自动以Default Mode加载到当前Run Loop中。）Timer在选择使用一次后，在执行完成时，会从Run Loop中移除。选择循环时，会一直保存在当前Run Loop中，直到调用invalidated方法。</p>
 
 <h3 id="六runloop的observer">六、Runloop的Observer</h3>
 
