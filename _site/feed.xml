@@ -1,4 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-04-26T17:44:56+08:00</updated><id>http://localhost:4000/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS之Runloop(3):应用</title><link href="http://localhost:4000/2017/04/16/Runloop_3/" rel="alternate" type="text/html" title="iOS之Runloop(3):应用" /><published>2017-04-16T20:00:00+08:00</published><updated>2017-04-16T20:00:00+08:00</updated><id>http://localhost:4000/2017/04/16/Runloop_3</id><content type="html" xml:base="http://localhost:4000/2017/04/16/Runloop_3/">&lt;p&gt;1、AutoreleasePool&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-04-27T16:57:38+08:00</updated><id>http://localhost:4000/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS之Runloop(3):应用</title><link href="http://localhost:4000/2017/04/16/Runloop_3/" rel="alternate" type="text/html" title="iOS之Runloop(3):应用" /><published>2017-04-16T20:00:00+08:00</published><updated>2017-04-16T20:00:00+08:00</updated><id>http://localhost:4000/2017/04/16/Runloop_3</id><content type="html" xml:base="http://localhost:4000/2017/04/16/Runloop_3/">&lt;p&gt;其他两篇关于Runloop:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.helloted.com/2017/04/10/Runloop_1/&quot;&gt;iOS之Runloop(1):基础&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.helloted.com/2017/04/16/Runloop_2/&quot;&gt;iOS之Runloop(2):事件源&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;1、AutoreleasePool&lt;/p&gt;
 
 &lt;p&gt;App启动后，苹果在主线程 RunLoop 里注册了两个 Observer，其回调都是 _wrapRunLoopWithAutoreleasePoolHandler()。&lt;/p&gt;
 
@@ -83,7 +89,13 @@
 
 &lt;p&gt;当开始网络传输时，我们可以看到 NSURLConnection 创建了两个新线程：com.apple.NSURLConnectionLoader 和 com.apple.CFSocket.private。其中 CFSocket 线程是处理底层 socket 连接的。NSURLConnectionLoader 这个线程内部会使用 RunLoop 来接收底层 socket 的事件，并通过之前添加的 Source0 通知到上层的 Delegate。&lt;/p&gt;
 
-&lt;p&gt;NSURLConnectionLoader 中的 RunLoop 通过一些基于 mach port 的 Source 接收来自底层 CFSocket 的通知。当收到通知后，其会在合适的时机向 CFMultiplexerSource 等 Source0 发送通知，同时唤醒 Delegate 线程的 RunLoop 来让其处理这些通知。CFMultiplexerSource 会在 Delegate 线程的 RunLoop 对 Delegate 执行实际的回调。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">1、AutoreleasePool</summary></entry><entry><title type="html">iOS之Runloop(2):事件源</title><link href="http://localhost:4000/2017/04/16/Runloop_2/" rel="alternate" type="text/html" title="iOS之Runloop(2):事件源" /><published>2017-04-16T20:00:00+08:00</published><updated>2017-04-16T20:00:00+08:00</updated><id>http://localhost:4000/2017/04/16/Runloop_2</id><content type="html" xml:base="http://localhost:4000/2017/04/16/Runloop_2/">&lt;p&gt;苹果官方文档：&lt;a href=&quot;https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html#//apple_ref/doc/uid/10000057i-CH16-SW7&quot;&gt;Run loops&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;NSURLConnectionLoader 中的 RunLoop 通过一些基于 mach port 的 Source 接收来自底层 CFSocket 的通知。当收到通知后，其会在合适的时机向 CFMultiplexerSource 等 Source0 发送通知，同时唤醒 Delegate 线程的 RunLoop 来让其处理这些通知。CFMultiplexerSource 会在 Delegate 线程的 RunLoop 对 Delegate 执行实际的回调。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">其他两篇关于Runloop:</summary></entry><entry><title type="html">iOS之Runloop(2):事件源</title><link href="http://localhost:4000/2017/04/16/Runloop_2/" rel="alternate" type="text/html" title="iOS之Runloop(2):事件源" /><published>2017-04-16T20:00:00+08:00</published><updated>2017-04-16T20:00:00+08:00</updated><id>http://localhost:4000/2017/04/16/Runloop_2</id><content type="html" xml:base="http://localhost:4000/2017/04/16/Runloop_2/">&lt;p&gt;其他两篇关于Runloop:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.helloted.com/2017/04/10/Runloop_1/&quot;&gt;iOS之Runloop(2):基础&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.helloted.com/2017/04/16/Runloop_3/&quot;&gt;iOS之Runloop(3):应用&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;苹果官方文档：&lt;a href=&quot;https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html#//apple_ref/doc/uid/10000057i-CH16-SW7&quot;&gt;Run loops&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;一定义一个custom-input-source&quot;&gt;一、定义一个Custom Input Source&lt;/h3&gt;
 
@@ -390,7 +402,13 @@ CFRunLoopAddTimer(runLoop, timer, kCFRunLoopCommonModes);
     }
 }
 &lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;</content><author><name>Ted</name></author><summary type="html">苹果官方文档：Run loops</summary></entry><entry><title type="html">iOS之Runloop(1):基础</title><link href="http://localhost:4000/2017/04/10/Runloop_1/" rel="alternate" type="text/html" title="iOS之Runloop(1):基础" /><published>2017-04-10T20:00:00+08:00</published><updated>2017-04-10T20:00:00+08:00</updated><id>http://localhost:4000/2017/04/10/Runloop_1</id><content type="html" xml:base="http://localhost:4000/2017/04/10/Runloop_1/">&lt;h3 id=&quot;一简介&quot;&gt;一、简介&lt;/h3&gt;
+&lt;/div&gt;</content><author><name>Ted</name></author><summary type="html">其他两篇关于Runloop:</summary></entry><entry><title type="html">iOS之Runloop(1):基础</title><link href="http://localhost:4000/2017/04/10/Runloop_1/" rel="alternate" type="text/html" title="iOS之Runloop(1):基础" /><published>2017-04-10T20:00:00+08:00</published><updated>2017-04-10T20:00:00+08:00</updated><id>http://localhost:4000/2017/04/10/Runloop_1</id><content type="html" xml:base="http://localhost:4000/2017/04/10/Runloop_1/">&lt;p&gt;其他两篇：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.helloted.com/2017/04/16/Runloop_2/&quot;&gt;iOS之Runloop(2):事件源&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.helloted.com/2017/04/16/Runloop_3/&quot;&gt;iOS之Runloop(3):应用&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;一简介&quot;&gt;一、简介&lt;/h3&gt;
 
 &lt;p&gt;先看苹果官方文档：&lt;a href=&quot;https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html#//apple_ref/doc/uid/10000057i-CH16-SW1&quot;&gt;Run loops&lt;/a&gt;&lt;/p&gt;
 
@@ -898,7 +916,7 @@ cancelPreviousPerformRequestsWithTarget:selector:object:
 
 &lt;p&gt;线程安全性取决于使用runloop的API。 Core Foundation中的功能通常是线程安全的，可以从任何线程调用。 但是，如果您想更改runloop的配置，那么尽可能从拥有runloop的线程执行此操作。&lt;/p&gt;
 
-&lt;p&gt;Cocoa NSRunLoop类并不像Core Foundation对象那样固有线程安全。 如果您正在使用NSRunLoop类来修改runloop，那你最好在同一线程执行这个操作。 将input sources或timers添加到属于不同线程的runloop可能会导致崩溃或者其他意外结果。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、简介</summary></entry><entry><title type="html">漫谈iOS安全</title><link href="http://localhost:4000/2016/10/06/safety/" rel="alternate" type="text/html" title="漫谈iOS安全" /><published>2016-10-06T20:00:00+08:00</published><updated>2016-10-06T20:00:00+08:00</updated><id>http://localhost:4000/2016/10/06/safety</id><content type="html" xml:base="http://localhost:4000/2016/10/06/safety/">&lt;h3 id=&quot;一前言&quot;&gt;一、前言&lt;/h3&gt;
+&lt;p&gt;Cocoa NSRunLoop类并不像Core Foundation对象那样固有线程安全。 如果您正在使用NSRunLoop类来修改runloop，那你最好在同一线程执行这个操作。 将input sources或timers添加到属于不同线程的runloop可能会导致崩溃或者其他意外结果。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">其他两篇：</summary></entry><entry><title type="html">漫谈iOS安全</title><link href="http://localhost:4000/2016/10/11/safety/" rel="alternate" type="text/html" title="漫谈iOS安全" /><published>2016-10-11T20:00:00+08:00</published><updated>2016-10-11T20:00:00+08:00</updated><id>http://localhost:4000/2016/10/11/safety</id><content type="html" xml:base="http://localhost:4000/2016/10/11/safety/">&lt;h3 id=&quot;一前言&quot;&gt;一、前言&lt;/h3&gt;
 
 &lt;p&gt;经常都能听到大家说，iOS很安全，iPhone比安卓手机安全。那么为什么iOS会安全，难道仅仅是因为iOS是闭源然后安卓是开源的，开源的就一定比闭源安全？前段时间著名的&lt;em&gt;Xcode Ghost&lt;/em&gt; 事件也让人觉得iOS好像并不是那么地安全，今天就随便说说iOS的安全。&lt;/p&gt;
 
@@ -952,11 +970,69 @@ cancelPreviousPerformRequestsWithTarget:selector:object:
 
 &lt;h3 id=&quot;三https&quot;&gt;三、HTTPS&lt;/h3&gt;
 
-&lt;p&gt;其实HTTPS从最终的数据解析的角度，与HTTP没有任何的区别，HTTPS就是将HTTP协议数据包放到SSL/TSL层加密后，在TCP/IP层组成IP数据报去传输，以此保证传输数据的安全；而对于接收端，在SSL/TSL将接收的数据包解密之后，将数据传给HTTP协议层，就是普通的HTTP数据。HTTP和SSL/TSL都处于OSI模型的应用层。从HTTP切换到HTTPS是一个非常简单的过程&lt;/p&gt;
+&lt;p&gt;这是对网络数据传输过程中的加密。&lt;/p&gt;
+
+&lt;p&gt;其实HTTPS从最终的数据解析的角度，与HTTP没有任何的区别，HTTPS就是将HTTP协议数据包放到SSL/TSL层加密后，在TCP/IP层组成IP数据报去传输，以此保证传输数据的安全；而对于接收端，在SSL/TSL将接收的数据包解密之后，将数据传给HTTP协议层，就是普通的HTTP数据。HTTP和SSL/TSL都处于OSI模型的应用层。从HTTP切换到HTTPS是一个非常简单的过程。&lt;/p&gt;
 
 &lt;p&gt;可参考这篇博文&lt;a href=&quot;http://www.helloted.com/2016/09/13/Http/&quot;&gt;Http与Https&lt;/a&gt;&lt;/p&gt;
 
-&lt;h3 id=&quot;四app加固&quot;&gt;四、APP加固&lt;/h3&gt;</content><author><name>Ted</name></author><summary type="html">一、前言</summary></entry><entry><title type="html">监测APP卡顿</title><link href="http://localhost:4000/2016/10/06/smoothMonitor/" rel="alternate" type="text/html" title="监测APP卡顿" /><published>2016-10-06T20:00:00+08:00</published><updated>2016-10-06T20:00:00+08:00</updated><id>http://localhost:4000/2016/10/06/smoothMonitor</id><content type="html" xml:base="http://localhost:4000/2016/10/06/smoothMonitor/">&lt;h3 id=&quot;一简介&quot;&gt;一、简介&lt;/h3&gt;
+&lt;h3 id=&quot;四app加固&quot;&gt;四、APP加固&lt;/h3&gt;
+
+&lt;h4 id=&quot;1字符串混淆&quot;&gt;1、字符串混淆&lt;/h4&gt;
+
+&lt;p&gt;我们在代码中有时候会用到一些静态字符串，比如像一些SDK的key、网络加密使用的“盐”等字符串，不能使用明文保存，需要对这些静态字符串进行加密，以防止在APP被反编译后泄露。然后在需要使用字符串的地方进行解密。通常我们使用异或加密来加密字符串.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;异或的运算方法是一个二进制运算：
+1^1=0
+0^0=0
+1^0=1
+0^1=1&lt;/p&gt;
+
+  &lt;p&gt;&lt;strong&gt;两者相等为0,不等为1.&lt;/strong&gt;&lt;/p&gt;
+
+  &lt;p&gt;对于一个字符来说,都可以用二进制码来表示.如A:01000001，字符的异或就是对每一位进行二进制运算.
+用于加密算法时,假设你要加密的内容为A,密钥为B,则可以用&lt;/p&gt;
+
+  &lt;p&gt;异或加密:C=A^B
+在数据中保存加密后的C就行了.
+用的时候:A=B^C
+即可取得原加密A的内容,所以只要知道密钥,就可以完成加密和解密.&lt;/p&gt;
+
+  &lt;p&gt;异或加密和解密的方法一致，运算一次就是加密，再运算一次就是解密。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (NSString *)xorStr:(NSString *)xorStr withKey:(NSString *)key{
+    NSData  *strData = [xorStr dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *keyData = [key dataUsingEncoding:NSUTF8StringEncoding];
+    Byte *keyBytes = (Byte *)[keyData bytes];   //取关键字的Byte数组, keyBytes一直指向头部
+    Byte *sourceDataPoint = (Byte *)[strData bytes];  //取需要异或的数据的Byte数组
+    for (long i = 0; i &amp;lt; [strData length]; i++) {
+        sourceDataPoint[i] = sourceDataPoint[i] ^ keyBytes[(i % [keyData length])]; //然后按位进行异或运算
+    }
+    NSString *outStr = [[NSString alloc]initWithData:strData encoding:NSUTF8StringEncoding];
+    return outStr;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;类名、方法名混淆&lt;/strong&gt;&lt;/p&gt;
+
+    &lt;p&gt;对应用程序的方法名和方法体进行混淆，保证源码被逆向后很难明白它的真正功能。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;程序结构混淆加密&lt;/strong&gt;&lt;/p&gt;
+
+    &lt;p&gt;对应用程序逻辑结构进行打乱混排，保证源码可读性降到最低。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;反调试、反注入等一些主动保护策略&lt;/strong&gt;&lt;/p&gt;
+
+    &lt;p&gt;这是一些主动保护策略，增大破解者调试、分析APP的门槛。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;</content><author><name>Ted</name></author><summary type="html">一、前言</summary></entry><entry><title type="html">监测APP卡顿</title><link href="http://localhost:4000/2016/10/06/smoothMonitor/" rel="alternate" type="text/html" title="监测APP卡顿" /><published>2016-10-06T20:00:00+08:00</published><updated>2016-10-06T20:00:00+08:00</updated><id>http://localhost:4000/2016/10/06/smoothMonitor</id><content type="html" xml:base="http://localhost:4000/2016/10/06/smoothMonitor/">&lt;h3 id=&quot;一简介&quot;&gt;一、简介&lt;/h3&gt;
 
 &lt;p&gt;我们说的卡顿，一般指操作某个功能时，UI界面无及时反应，这种卡顿日常测试一般难以追踪以及重现，所以除了工程师开发测试的时候发现卡顿，还有一个重要的渠道就是从用户实际体验来监测卡顿，但是我们又不能拿到用户的手机或者让用户来回馈问题，所以一个完整的监测体系就很有必要了。&lt;/p&gt;
 
@@ -1312,7 +1388,130 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
   &lt;li&gt;客户端发送的数据用抓包程序给的证书生成的密钥加密&lt;/li&gt;
   &lt;li&gt;抓包程序得到客户端发送的数据抓包程序用自己的证书解密出来，再用服务器证书加密&lt;/li&gt;
   &lt;li&gt;抓包程序再把数据发给服务器&lt;/li&gt;
-&lt;/ol&gt;</content><author><name>Ted</name></author><summary type="html">TCP/IP定义</summary></entry><entry><title type="html">iOS之多线程</title><link href="http://localhost:4000/2016/05/22/ios-Thread/" rel="alternate" type="text/html" title="iOS之多线程" /><published>2016-05-22T20:00:00+08:00</published><updated>2016-05-22T20:00:00+08:00</updated><id>http://localhost:4000/2016/05/22/ios-Thread</id><content type="html" xml:base="http://localhost:4000/2016/05/22/ios-Thread/">&lt;h3 id=&quot;一前言&quot;&gt;一、前言&lt;/h3&gt;
+&lt;/ol&gt;</content><author><name>Ted</name></author><summary type="html">TCP/IP定义</summary></entry><entry><title type="html">Objective-C混淆代码</title><link href="http://localhost:4000/2016/08/12/confuseCode/" rel="alternate" type="text/html" title="Objective-C混淆代码" /><published>2016-08-12T20:00:00+08:00</published><updated>2016-08-12T20:00:00+08:00</updated><id>http://localhost:4000/2016/08/12/confuseCode</id><content type="html" xml:base="http://localhost:4000/2016/08/12/confuseCode/">&lt;h3 id=&quot;一利用class-dump来查看源文件&quot;&gt;一、利用class-dump来查看源文件&lt;/h3&gt;
+
+&lt;p&gt;class-dump是一个逆向工具，可以用来查看未加固的APP的方法名和属性名&lt;/p&gt;
+
+&lt;h4 id=&quot;安装class-dump&quot;&gt;安装class-dump&lt;/h4&gt;
+
+&lt;p&gt;从&lt;a href=&quot;http://stevenygard.com/projects/class-dump&quot;&gt;class-dump下载地址&lt;/a&gt;将dmg文件下载下来，将class-dump复制到/usr/bin目录，并在终端执行下面命令赋予权限&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sudo chmod 777 /usr/bin/class-dump
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;如果没有办法复制到根目录，则先要开启系统权限&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;重启 Mac，按住 Command+R 键直到 Apple logo 出现，进入 Recovery Mode
+点击 Utilities &amp;gt; Terminal
+在 Terminal 中输入 csrutil disable，之后回车
+重启 Mac&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;在终端中输入class-dump看到如下就说明安装成功了&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/ConfuseCode/confuse_00.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;查看头文件&quot;&gt;查看头文件&lt;/h4&gt;
+
+&lt;p&gt;将ipa改名为zip并解压能看到一个.app结尾的文件,执行&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class-dump -H /Users/imac/Desktop/Payload/test.app -o /Users/imac/Desktop/heads
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;其中&lt;font color=&quot;gray&quot;&gt;/Users/imac/Desktop/Payload/test.app&lt;/font&gt;是源文件路径,&lt;font color=&quot;gray&quot;&gt; /Users/imac/Desktop/heads&lt;/font&gt;是要导出的头文件的路径&lt;/p&gt;
+
+&lt;p&gt;可以在head文件夹里看到包含第三方库的头文件，里面可以看到属性名和方法名&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/ConfuseCode/confuse_01.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;二混淆代码&quot;&gt;二、混淆代码&lt;/h3&gt;
+
+&lt;p&gt;在项目里添加两个文件confuse.sh、func.list&lt;/p&gt;
+
+&lt;p&gt;在funlist里写上你要混淆的字符串；&lt;/p&gt;
+
+&lt;p&gt;在confuse.sh添加以下代码&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/usr/bin/env bash&lt;/span&gt;
+
+&lt;span class=&quot;nv&quot;&gt;TABLENAME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;symbols
+&lt;span class=&quot;nv&quot;&gt;SYMBOL_DB_FILE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;symbols&quot;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;STRING_SYMBOL_FILE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;func.list&quot;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;HEAD_FILE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$PROJECT_DIR&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$PROJECT_NAME&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/codeObfuscation.h&quot;&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;LC_CTYPE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;C
+
+&lt;span class=&quot;c&quot;&gt;#维护数据库方便日后作排重&lt;/span&gt;
+createTable&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;create table &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$TABLENAME&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;(src text, des text);&quot;&lt;/span&gt; | sqlite3 &lt;span class=&quot;nv&quot;&gt;$SYMBOL_DB_FILE&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+insertValue&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;insert into &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$TABLENAME&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; values('&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;' ,'&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$2&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;');&quot;&lt;/span&gt; | sqlite3 &lt;span class=&quot;nv&quot;&gt;$SYMBOL_DB_FILE&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+query&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;select * from &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$TABLENAME&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; where src='&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;';&quot;&lt;/span&gt; | sqlite3 &lt;span class=&quot;nv&quot;&gt;$SYMBOL_DB_FILE&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+ramdomString&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    openssl rand -base64 64 | tr -cd &lt;span class=&quot;s1&quot;&gt;'a-zA-Z'&lt;/span&gt; |head -c 16
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+rm -f &lt;span class=&quot;nv&quot;&gt;$SYMBOL_DB_FILE&lt;/span&gt;
+rm -f &lt;span class=&quot;nv&quot;&gt;$HEAD_FILE&lt;/span&gt;
+createTable
+
+touch &lt;span class=&quot;nv&quot;&gt;$HEAD_FILE&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'#ifndef Demo_codeObfuscation_h
+#define Demo_codeObfuscation_h'&lt;/span&gt; &amp;gt;&amp;gt; &lt;span class=&quot;nv&quot;&gt;$HEAD_FILE&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;//confuse string at &lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;date&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &amp;gt;&amp;gt; &lt;span class=&quot;nv&quot;&gt;$HEAD_FILE&lt;/span&gt;
+cat &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$STRING_SYMBOL_FILE&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; | &lt;span class=&quot;k&quot;&gt;while &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;read&lt;/span&gt; -ra line; &lt;span class=&quot;k&quot;&gt;do
+    if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt; ! -z &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$line&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt;; &lt;span class=&quot;k&quot;&gt;then
+        &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ramdom&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;ramdomString&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
+        &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$line&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ramdom&lt;/span&gt;
+        insertValue &lt;span class=&quot;nv&quot;&gt;$line&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ramdom&lt;/span&gt;
+        &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;#define &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$line&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$ramdom&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &amp;gt;&amp;gt; &lt;span class=&quot;nv&quot;&gt;$HEAD_FILE&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;fi
+done
+&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;#endif&quot;&lt;/span&gt; &amp;gt;&amp;gt; &lt;span class=&quot;nv&quot;&gt;$HEAD_FILE&lt;/span&gt;
+
+sqlite3 &lt;span class=&quot;nv&quot;&gt;$SYMBOL_DB_FILE&lt;/span&gt; .dump
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;用终端给confuse.sh添加权限&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;chmod 755 confuse.sh
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;并且在Build Phase里添加运行脚本&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/ConfuseCode/confuse_03.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;并且在pch文件中加入&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#ifdef __OBJC__  
+    #import &amp;lt;UIKit/UIKit.h&amp;gt;  
+    #import &amp;lt;Foundation/Foundation.h&amp;gt;  
+    //添加混淆作用的头文件（这个文件名是脚本confuse.sh中定义的）  
+    #import &quot;codeObfuscation.h&quot;  
+#endif  
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;再次打包用class-dump测试一下，会发现代码乱了&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/ConfuseCode/confuse_04.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/ConfuseCode/confuse_02.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、利用class-dump来查看源文件</summary></entry><entry><title type="html">iOS之多线程</title><link href="http://localhost:4000/2016/05/22/ios-Thread/" rel="alternate" type="text/html" title="iOS之多线程" /><published>2016-05-22T20:00:00+08:00</published><updated>2016-05-22T20:00:00+08:00</updated><id>http://localhost:4000/2016/05/22/ios-Thread</id><content type="html" xml:base="http://localhost:4000/2016/05/22/ios-Thread/">&lt;h3 id=&quot;一前言&quot;&gt;一、前言&lt;/h3&gt;
 
 &lt;ul&gt;
   &lt;li&gt;Pthreads&lt;/li&gt;
@@ -1745,154 +1944,4 @@ dispatch_after(dispatch_time(DISPATCH_TIME_NOW,150ull *NSEC_PER_MSEC),dispatch_g
 
 &lt;p&gt;method_getName：获取方法名&lt;/p&gt;
 
-&lt;p&gt;method_getImplementation：返回方法的实现&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、本质</summary></entry><entry><title type="html">网络</title><link href="http://localhost:4000/2015/10/10/network/" rel="alternate" type="text/html" title="网络" /><published>2015-10-10T20:00:00+08:00</published><updated>2015-10-10T20:00:00+08:00</updated><id>http://localhost:4000/2015/10/10/network</id><content type="html" xml:base="http://localhost:4000/2015/10/10/network/">&lt;h3 id=&quot;网络&quot;&gt;网络&lt;/h3&gt;
-
-&lt;h4 id=&quot;osi七层模型&quot;&gt;OSI七层模型&lt;/h4&gt;
-
-&lt;p&gt;OSI（Open System Interconnection），由底层到高层分别为，物理层、数据链路层，网络层，传输层、会话层，表示层、应用层&lt;/p&gt;
-
-&lt;p&gt;物理层：负责将比特流与电子信号转换&lt;/p&gt;
-
-&lt;p&gt;数据链路层：定义了通过通信介质相互连接的设备之间，数据传输的规范。有两个重要的概念：MAC 地址和分组交换，数据链路层的意义在于，如果没有数据链路层，数据只能以流的形式存在与通信介质中，不知道该发送往哪里，过长的数据流可能无法在通信介质中传输。&lt;/p&gt;
-
-&lt;p&gt;网络层：主要作用是实现终端节点间的通信。IP协议是网络层的一个重要协议，网络层中还有ARP(获取MAC地址)和ICMP协议(数据发送异常通知)，数据链路层的作用在于实现同一种数据链路下的包传递，而网络层则可以实现跨越不同数据链路的包传递。比如主机A通过Wi-Fi连接到路由器B，路由器B通过以太网连接到路由器C，而路由器C又通过Wi-Fi与主机D保持连接。这时主机A向D发送的数据包就依赖于网络层进行传输。&lt;/p&gt;
-
-&lt;p&gt;传输层：传输层的主要作用是实现应用程序之间的通信。网络层主要是保证不同数据链路下数据的可达性，至于如何传输数据则是由传输层负责，TCP 协议和 UDP 协议。&lt;/p&gt;
-
-&lt;p&gt;会话层：会话的建立和结束&lt;/p&gt;
-
-&lt;p&gt;表示层：数据表示、压缩和加密presentation，表示层相当于一个东西的表示，表示的一些协议，比如图片、声音和视频MPEG。&lt;/p&gt;
-
-&lt;p&gt;应用层：直接为用户的应用程序提供服务,应用接口，TELNET、FTP、HTTP&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h4 id=&quot;tcpudp&quot;&gt;TCP/UDP&lt;/h4&gt;
-
-&lt;p&gt;&lt;strong&gt;两个协议是进程间通信，也就是说应用间的通信，&lt;/strong&gt;在传输层，使用端口号来识别同一台计算机中进行通信的不同应用程序，TCP/IP或UDP/IP通信中通常使用5个信息来识别一个通信：&lt;strong&gt;“源IP地址”、“目标IP地址”、“源端口号”、“目标端口号”以及“协议号”&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;TCP协议：面向连接，可靠的流协议。**连接是指两个应用程序为了传递信息而专有的虚拟的通信线路，也称为虚拟电路。TCP充分实现了数据传输时各种控制功能，可以进行丢包的重发控制，还可以对次序乱掉的分包进行顺序控制。而这些在UDP中都没有。此外，TCP作为一种面向有连接的协议，只有在确认通信对端存在时才会发送数据，从而可以控制通信流量的浪费。&lt;/p&gt;
-
-&lt;p&gt;TCP通过检验和、序列号、确认应答、重发控制、连接管理以及窗口控制等机制实现可靠性传输。&lt;/p&gt;
-
-&lt;p&gt;效率要求相对低，但对准确性要求相对高的场景。因为传输中需要对数据确认、重发、排序等操作，相比之下效率没有UDP高。举几个例子：文件传输（准确高要求高、但是速度可以相对慢）、接受邮件、远程登录。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;UDP协议：面向无连接，不具有可靠性的数据报协议。&lt;/strong&gt;只确保发送消息，其他处理都由上层应用来完成。&lt;/p&gt;
-
-&lt;p&gt;即使是出现网络拥堵的情况下，UDP也无法进行流量控制等避免网络拥塞的行为。此外，传输途中如果出现了丢包，UDP也不负责重发。甚至当出现包的到达顺序乱掉时也没有纠正的功能。如果需要这些细节控制，那么不得不交给由采用UDP的应用程序去处理。换句话说，UDP将部分控制转移到应用程序去处理，自己却只提供作为传输层协议的最基本功能。UDP有点类似于用户说什么听什么的机制，但是需要用户充分考虑好上层协议类型并制作相应的应用程序。&lt;/p&gt;
-
-&lt;p&gt;效率要求相对高，对准确性要求相对低的场景。举几个例子：QQ聊天、在线视频、网络语音电话（即时通讯，速度要求高，但是出现偶尔断续不是太大问题，并且此处完全不可以使用重发机制）、广播通信（广播、多播）。&lt;/p&gt;
-
-&lt;p&gt;TCP与UDP区别总结：&lt;/p&gt;
-
-&lt;p&gt;1、TCP面向连接（如打电话要先拨号建立连接）;UDP是无连接的，即发送数据之前不需要建立连接&lt;/p&gt;
-
-&lt;p&gt;2、TCP提供可靠的服务。也就是说，通过TCP连接传送的数据，无差错，不丢失，不重复，且按序到达;UDP尽最大努力交付，即不保证可靠交付&lt;/p&gt;
-
-&lt;p&gt;3、TCP面向字节流，实际上是TCP把数据看成一连串无结构的字节流;UDP是面向报文的，没有拥塞控制，因此网络出现拥塞不会使源主机的发送速率降低（对实时应用很有用，如IP电话，实时视频会议等）&lt;/p&gt;
-
-&lt;p&gt;4、每一条TCP连接只能是点到点的;UDP支持一对一，一对多，多对一和多对多的交互通信&lt;/p&gt;
-
-&lt;p&gt;5、TCP首部开销20字节;UDP的首部开销小，只有8个字节&lt;/p&gt;
-
-&lt;p&gt;6、TCP的逻辑通信信道是全双工的可靠信道，UDP则是不可靠信道&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;UDP（User Datagram Protocol）用户数据报协议&lt;/p&gt;
-
-&lt;p&gt;UDP不提供复杂的控制机制，利用IP提供面向无连接的通信服务。并且它是将应用程序发来的数据在收到的那一刻，立即按照原样发送到网络上的一种机制。&lt;/p&gt;
-
-&lt;p&gt;无需建立连接（减少延迟）&lt;/p&gt;
-
-&lt;p&gt;实现简单：无需维护连接状态&lt;/p&gt;
-
-&lt;p&gt;头部开销小&lt;/p&gt;
-
-&lt;p&gt;没有拥塞控制：应用可以更好的控制发送时间和发送速率&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h4 id=&quot;tcptransmission-control-protocol传输控制协议&quot;&gt;TCP（Transmission Control Protocol）传输控制协议&lt;/h4&gt;
-
-&lt;p&gt;TCP通过校验和、序列号、确认应答、重发控制、连接管理以及窗口控制等机制实现可靠性传输。数据通信之前必须先做好连接工作，在TCP中连接的建立需要三次握手，同时在通信结束时会进行断开连接的处理（四次挥手）。一个连接的建立与断开，正常过程至少需要来回送7个包才能完成。&lt;/p&gt;
-
-&lt;p&gt;TCP的三次握手：是指建立一个TCP连接时，需要客户端和服务器总共发送3个包。&lt;/p&gt;
-
-&lt;p&gt;1、客户端向服务器发送一个SYN（synchronous）,客户端进入SYN_SEND状态&lt;/p&gt;
-
-&lt;p&gt;2、服务器收到SYN包后，服务器进入SYN_RECV状态，发出SYN+ACK（Acknowledgement）&lt;/p&gt;
-
-&lt;p&gt;3、客户端收到SYN+ACK后发出ACK确认给服务器,客户端进入ESTABLISH状态。&lt;/p&gt;
-
-&lt;p&gt;4、服务器收到ACK后，服务器进入ESTABLISH状态。&lt;/p&gt;
-
-&lt;p&gt;连接建立，开始传输数据。&lt;/p&gt;
-
-&lt;p&gt;TCP的四次挥手：TCP的连接的拆除需要发送四个包&lt;/p&gt;
-
-&lt;p&gt;TCP连接是全双工的，所以它允许两个方向的数据传输被独立关闭，通信的一端可以发送结束报文段给对方，告诉它本端已经完成了数据的发送，但允许继续接收来自对方的数据，直到对方也发送结束报文段以关闭连接。&lt;/p&gt;
-
-&lt;p&gt;1、客户端发送发送一个FIN，等待服务器返回ACK和FIN，客户端进入FIN_WAIT_1状态；&lt;/p&gt;
-
-&lt;p&gt;2、服务器接收FIN，发出一个收到FIN的ACK确认，服务器进入Close Wait状态；&lt;/p&gt;
-
-&lt;p&gt;3、客户端收到ACK，继续等待服务器的FIN，客户端进入FIN_WAIT_2状态；&lt;/p&gt;
-
-&lt;p&gt;4、服务器发送FIN，服务器等待客户端收到FIN的ACK，服务器进入LAST_ACK状态；&lt;/p&gt;
-
-&lt;p&gt;5、客户端收到FIN，发出ACK，客户端进入TIME_WAIT状态（2MSL等待状态）；等到2MSL后，客户端进入CLOSE状态&lt;/p&gt;
-
-&lt;p&gt;6、服务器接收ACK,服务器进入CLOSE状态；&lt;/p&gt;
-
-&lt;p&gt;连接关闭。&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;TCP窗口：TCP中，发送端的数据包到达接收端时，接收端会返回一个带序号的ACK确认，当数据包丢失或者ACK丢失或者延误时，发送端就会重新发送数据包。当ACK延误时，会出现重复发送的状况。引入序号机制则可以避免重复发送实现可靠传输。如果每次发送都要等确认的话，这样包的往返时间，网络吞吐量就会差。所以引入窗口机制。窗口控制，允许收到ACK之前，多次发送数据组。&lt;/p&gt;
-
-&lt;p&gt;TCP流量控制：就是让发送方的发送速率不要太快，要让接收方来得及接收。原理这就是运用TCP报文段中的窗口大小字段来控制，发送方的发送窗口不可以大于接收方发回的窗口大小。&lt;/p&gt;
-
-&lt;p&gt;TCP拥塞控制：拥塞窗口cwnd&lt;strong&gt;慢开始&lt;/strong&gt;，收到ACK时，拥塞窗口由1开始指数级增长，增长到慢开始门限值ssthresh时,执行&lt;strong&gt;拥塞避免算法&lt;/strong&gt;，拥塞窗口按线性规律增长。&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h4 id=&quot;tcpip&quot;&gt;TCP/IP&lt;/h4&gt;
-
-&lt;p&gt;TCP/IP协议族分为四层：应用层，传输层，网络层，数据链路层。这样分层可以将功能分割开来，如果需要改动，只需要改动对应层级的协议而不需要替换整体，定义好对应的接口后，每个层次内部就可以自由设计了。&lt;/p&gt;
-
-&lt;p&gt;应用层：应用层决定了向用户提供应用服务时的通信活动，FTP,DNS,HTTP协议就是在这一层&lt;/p&gt;
-
-&lt;p&gt;传输层：提供处于网络中的两台计算机之间的通信，TCP和UDP&lt;/p&gt;
-
-&lt;p&gt;网络层：网络层用来处理网络上的数据包，数据包是网络传输的最小单位，网络层规定了通过怎么样的路径到达对方计算机，并把数据包传给对方。网络层的作用就是在众多选项中选择一个传输路线。IP协议。IP协议的作用就是把数据包传递给对方，而要准确地把数据包发送给对方，要满足条件，最重要的条件就是IP地址和MAC地址，IP地址指明了节点被分配到的位置，可换，MAC地址指网卡所属的地址，固定。&lt;/p&gt;
-
-&lt;p&gt;数据链路层：用来处理连接网络的硬件部分，包括控制操作系统，硬件的设备驱动，NIC(网卡)，光钎等硬件可见部分。&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h4 id=&quot;socket&quot;&gt;Socket&lt;/h4&gt;
-
-&lt;p&gt;Socket是对TCP/IP协议的封装，Socket本身并不是协议，而是一个调用接口（API），通过Socket，我们才能使用TCP/IP协议。&lt;/p&gt;
-
-&lt;p&gt;在socket编程中，客户端执行connect()时,将触发三次握手。在socket编程中，任何一方执行close()操作即可产生挥手操作。&lt;/p&gt;
-
-&lt;p&gt;Socket连接与HTTP连接的不同&lt;/p&gt;
-
-&lt;p&gt;通常情况下Socket连接就是TCP连接，因此Socket连接一旦建立，通信双方即可开始相互发送数据内容，直到双方连接断开。但在实际应用中，客户端到服务器之间的通信防火墙默认会关闭长时间处于非活跃状态的连接而导致 Socket 连接断连，因此需要通过轮询告诉网络，该连接处于活跃状态。&lt;/p&gt;
-
-&lt;p&gt;而HTTP连接使用的是“请求—响应”的方式，不仅在请求时需要先建立连接，而且需要客户端向服务器发出请求后，服务器端才能回复数据。&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h4 id=&quot;长连接和短连接&quot;&gt;长连接和短连接&lt;/h4&gt;
-
-&lt;p&gt;&lt;strong&gt;长连接：&lt;/strong&gt;在TCP连接保持期间，如果没有数据包发送，需要双方发检测包以维持此连接，一般需要自己做在线维持。连接→数据传输→保持连接(心跳)→数据传输→保持连接(心跳)→……→关闭连接；&lt;/p&gt;
-
-&lt;p&gt;长连接多用于操作频繁，点对点的通讯，而且连接数不能太多情况。&lt;/p&gt;
-
-&lt;p&gt;每个TCP连接都需要三步握手，这需要时间，如果每个操作都是先连接，再操作的话那么处理速度会降低很多，&lt;/p&gt;
-
-&lt;p&gt;所以每个操作完后都不断开，下次次处理时直接发送数据包就OK了，不用建立TCP连接。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;短连接:&lt;/strong&gt; 指通信双方有数据交互时，就建立一个TCP连接，数据发送完成后，则断开此TCP连接;连接→数据传输→关闭连接；&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">网络</summary></entry></feed>
+&lt;p&gt;method_getImplementation：返回方法的实现&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、本质</summary></entry></feed>

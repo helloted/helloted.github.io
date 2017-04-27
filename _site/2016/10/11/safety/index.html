@@ -10,7 +10,7 @@
 
     <title>漫谈iOS安全 - Helloted Blog</title>
 
-    <link rel="canonical" href="http://localhost:4000/2016/10/06/safety/">
+    <link rel="canonical" href="http://localhost:4000/2016/10/11/safety/">
 
     <link rel="shortcut icon" href="/img/favicon.ico">
    
@@ -93,7 +93,7 @@
                     
                     <h2 class="subheading">讲一讲iOS的安全机制，如何保证APP安全</h2>
                     
-                    <span class="meta">Posted by Ted on October 6, 2016</span>
+                    <span class="meta">Posted by Ted on October 11, 2016</span>
                 </div>
             </div>
         </div>
@@ -160,12 +160,69 @@
 
 <h3 id="三https">三、HTTPS</h3>
 
-<p>其实HTTPS从最终的数据解析的角度，与HTTP没有任何的区别，HTTPS就是将HTTP协议数据包放到SSL/TSL层加密后，在TCP/IP层组成IP数据报去传输，以此保证传输数据的安全；而对于接收端，在SSL/TSL将接收的数据包解密之后，将数据传给HTTP协议层，就是普通的HTTP数据。HTTP和SSL/TSL都处于OSI模型的应用层。从HTTP切换到HTTPS是一个非常简单的过程</p>
+<p>这是对网络数据传输过程中的加密。</p>
+
+<p>其实HTTPS从最终的数据解析的角度，与HTTP没有任何的区别，HTTPS就是将HTTP协议数据包放到SSL/TSL层加密后，在TCP/IP层组成IP数据报去传输，以此保证传输数据的安全；而对于接收端，在SSL/TSL将接收的数据包解密之后，将数据传给HTTP协议层，就是普通的HTTP数据。HTTP和SSL/TSL都处于OSI模型的应用层。从HTTP切换到HTTPS是一个非常简单的过程。</p>
 
 <p>可参考这篇博文<a href="http://www.helloted.com/2016/09/13/Http/">Http与Https</a></p>
 
 <h3 id="四app加固">四、APP加固</h3>
 
+<h4 id="1字符串混淆">1、字符串混淆</h4>
+
+<p>我们在代码中有时候会用到一些静态字符串，比如像一些SDK的key、网络加密使用的“盐”等字符串，不能使用明文保存，需要对这些静态字符串进行加密，以防止在APP被反编译后泄露。然后在需要使用字符串的地方进行解密。通常我们使用异或加密来加密字符串.</p>
+
+<blockquote>
+  <p>异或的运算方法是一个二进制运算：
+1^1=0
+0^0=0
+1^0=1
+0^1=1</p>
+
+  <p><strong>两者相等为0,不等为1.</strong></p>
+
+  <p>对于一个字符来说,都可以用二进制码来表示.如A:01000001，字符的异或就是对每一位进行二进制运算.
+用于加密算法时,假设你要加密的内容为A,密钥为B,则可以用</p>
+
+  <p>异或加密:C=A^B
+在数据中保存加密后的C就行了.
+用的时候:A=B^C
+即可取得原加密A的内容,所以只要知道密钥,就可以完成加密和解密.</p>
+
+  <p>异或加密和解密的方法一致，运算一次就是加密，再运算一次就是解密。</p>
+</blockquote>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>- (NSString *)xorStr:(NSString *)xorStr withKey:(NSString *)key{
+    NSData  *strData = [xorStr dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *keyData = [key dataUsingEncoding:NSUTF8StringEncoding];
+    Byte *keyBytes = (Byte *)[keyData bytes];   //取关键字的Byte数组, keyBytes一直指向头部
+    Byte *sourceDataPoint = (Byte *)[strData bytes];  //取需要异或的数据的Byte数组
+    for (long i = 0; i &lt; [strData length]; i++) {
+        sourceDataPoint[i] = sourceDataPoint[i] ^ keyBytes[(i % [keyData length])]; //然后按位进行异或运算
+    }
+    NSString *outStr = [[NSString alloc]initWithData:strData encoding:NSUTF8StringEncoding];
+    return outStr;
+}
+</code></pre>
+</div>
+
+<ol>
+  <li>
+    <p><strong>类名、方法名混淆</strong></p>
+
+    <p>对应用程序的方法名和方法体进行混淆，保证源码被逆向后很难明白它的真正功能。</p>
+  </li>
+  <li>
+    <p><strong>程序结构混淆加密</strong></p>
+
+    <p>对应用程序逻辑结构进行打乱混排，保证源码可读性降到最低。</p>
+  </li>
+  <li>
+    <p><strong>反调试、反注入等一些主动保护策略</strong></p>
+
+    <p>这是一些主动保护策略，增大破解者调试、分析APP的门槛。</p>
+  </li>
+</ol>
 
 
                 <hr>
