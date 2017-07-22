@@ -134,7 +134,7 @@
 
 <p>HitTest的顺序</p>
 
-<pre><code class="language-objective-c">UIApplication -&gt; UIWindow -&gt; Root View -&gt; ··· -&gt; subview
+<pre><code class="language-objective-c">UIApplication -&gt; UIWindow -&gt; Root View -&gt; subview -&gt; ··· -&gt; initalView
 </code></pre>
 
 <ol>
@@ -170,22 +170,25 @@
 
 <h3 id="三响应者链条">三、响应者链条</h3>
 
-<p>当找到最合适的响应者之后, 便会调用控件相应的touches方法来作具体处理. 并将该事件随着响应者链条往回传递, 交给上一个响应者来处理. (即调用super的touches方法)</p>
+<p>当找到最合适的响应者之后, 便会调用控件相应的touches方法来作具体处理. 并将该事件随着响应者链条往回传递, 交给上一个响应者来处理. (即调用super的touches方法)，从之前往下走的路线往上回传，在其中加入了Viewtroller来处理</p>
 
 <p>作用：这样设计是为了让一个事件能够被多个对象处理</p>
 
 <ol>
   <li>
-    <p>如果view的控制器存在，就传递给控制器；如果控制器不存在，则将其传递给它的父视图</p>
+    <p>如果view的控制器存在，就传递给控制器；如果控制器不存在，则将其传递给它的父View</p>
   </li>
   <li>
-    <p>在视图层次结构的最顶级视图，如果也不能处理收到的事件或消息，则其将事件传递给window对象进行处理</p>
+    <p>在视图层次结构的最顶级视图，传递给ViewController</p>
   </li>
   <li>
-    <p>如果window对象也不处理，则其将事件或消息传递给UIApplication对象</p>
+    <p>ViewController将事件传递给window对象进行处理</p>
   </li>
   <li>
-    <p>如果UIApplication也不能处理该事件或消息，则将其丢弃</p>
+    <p>window对象继续将事件或消息传递给UIApplication对象</p>
+  </li>
+  <li>
+    <p>如果UIApplication也不能处理该事件或消息，响应者链条从头到尾，都未处理，则将其丢弃</p>
 
     <p><img src="/img/Simple_1/02.png" alt="" /></p>
   </li>
