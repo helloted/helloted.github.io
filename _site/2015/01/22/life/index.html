@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
 
-    <title>UIView的生命周期 - Helloted Blog</title>
+    <title>生命周期 - Helloted Blog</title>
 
-    <link rel="canonical" href="http://www.helloted.com/2015/01/22/View_life/">
+    <link rel="canonical" href="http://www.helloted.com/2015/01/22/life/">
 
     <link rel="shortcut icon" href="/img/favicon.ico">
    
@@ -87,9 +87,9 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <div class="post-heading">
-                    <h1>UIView的生命周期</h1>
+                    <h1>生命周期</h1>
                     
-                    <h2 class="subheading">UIView从头到尾的生命周期</h2>
+                    <h2 class="subheading">UIView生命周期、程序的生命周期</h2>
                     
                     <span class="meta">Posted by Ted on January 22, 2015</span>
                 </div>
@@ -182,7 +182,7 @@
 
 <p>当内存过低，释放一些不需要的视图时调用。</p>
 
-<h3 id="三其他">三、其他</h3>
+<h3 id="三uiview生命周期其他点">三、UIView生命周期其他点</h3>
 
 <h4 id="layoutsubviews的被调用的时机">layoutSubviews的被调用的时机：</h4>
 
@@ -199,6 +199,47 @@
 
 <p><code class="highlighter-rouge">viewWillDisappear</code>-&gt;viewWillAppear-&gt;<code class="highlighter-rouge">viewDidDisappear</code>-&gt;viewDidAppear</p>
 
+<h3 id="四程序的生命周期">四、程序的生命周期</h3>
+
+<h4 id="应用程序的状态">应用程序的状态：</h4>
+
+<ul>
+  <li><code class="highlighter-rouge">Not running</code>未运行：程序没启动。</li>
+  <li><code class="highlighter-rouge">Inactive</code>未激活：程序在前台运行，不过没有接收到事件。在没有事件处理情况下程序通常停留在这个状态。</li>
+  <li><code class="highlighter-rouge">Active</code>激活：程序在前台运行而且接收到了事件。这也是前台的一个正常的模式。</li>
+  <li><code class="highlighter-rouge">Backgroud</code>后台：程序在后台而且能执行代码，大多数程序进入这个状态后会在在这个状态上停留一会。时间到之后会进入挂起状态(Suspended)。有的程序经过特殊的请求后可以长期处于Backgroud状态。</li>
+  <li><code class="highlighter-rouge">Suspended</code>挂起：程序在后台不能执行代码。系统会自动把程序变成这个状态而且不会发出通知。当挂起时，程序还是停留在内存中的，当系统内存低时，系统就把挂起的程序清除掉，为前台程序提供更多的内存。</li>
+</ul>
+
+<h4 id="生命周期">生命周期：</h4>
+
+<ul>
+  <li><code class="highlighter-rouge">application didFinishLaunchingWithOptions</code>：当应用程序启动时执行，应用程序启动入口，只在应用程序启动时执行一次。若用户直接启动，lauchOptions内无数据,若通过其他方式启动应用，lauchOptions包含对应方式的内容。</li>
+  <li><code class="highlighter-rouge">applicationWillResignActive</code>：在应用程序将要由活动状态切换到非活动状态时候，要执行的委托调用，如 按下 home 按钮，返回主屏幕，或全屏之间切换应用程序等。</li>
+  <li><code class="highlighter-rouge">applicationDidEnterBackground</code>：在应用程序已进入后台程序时，要执行的委托调用。</li>
+  <li><code class="highlighter-rouge">applicationWillEnterForeground</code>：在应用程序将要进入前台时(被激活)，要执行的委托调用，刚好与<code class="highlighter-rouge">applicationWillResignActive</code> 方法相对应。</li>
+  <li><code class="highlighter-rouge">applicationDidBecomeActive</code>：在应用程序已被激活后，要执行的委托调用，刚好与<code class="highlighter-rouge">applicationDidEnterBackground</code> 方法相对应。</li>
+  <li><code class="highlighter-rouge">applicationWillTerminate</code>：在应用程序要完全推出的时候，要执行的委托调用，这个需要要设置UIApplicationExitsOnSuspend的键值。</li>
+</ul>
+
+<h4 id="初次启动">初次启动：</h4>
+
+<p><code class="highlighter-rouge">iOS_didFinishLaunchingWithOptions</code></p>
+
+<p><code class="highlighter-rouge">iOS_applicationDidBecomeActive</code></p>
+
+<h4 id="按下home键">按下home键：</h4>
+
+<p><code class="highlighter-rouge">iOS_applicationWillResignActive</code></p>
+
+<p><code class="highlighter-rouge">iOS_applicationDidEnterBackground</code></p>
+
+<h4 id="点击程序图标进入">点击程序图标进入：</h4>
+
+<p><code class="highlighter-rouge">iOS_applicationWillEnterForeground</code></p>
+
+<p><code class="highlighter-rouge">iOS_applicationDidBecomeActive</code></p>
+
 
                 <hr>
 
@@ -206,7 +247,7 @@
                     
                     
                     <li class="next">
-                        <a href="/2015/01/25/event/" data-toggle="tooltip" data-placement="top" title="交互事件的响应链">下一篇 &rarr;</a>
+                        <a href="/2015/01/25/event/" data-toggle="tooltip" data-placement="top" title="事件传递、响应者链条">下一篇 &rarr;</a>
                     </li>
                     
                 </ul>
