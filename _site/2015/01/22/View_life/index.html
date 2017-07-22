@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>UIView的生命周期 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/2015/01/22/View_life/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/clean-blog.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/Http/bg.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>UIView的生命周期</h1>
+                    
+                    <h2 class="subheading">UIView从头到尾的生命周期</h2>
+                    
+                    <span class="meta">Posted by Ted on January 22, 2015</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h3 id="一视图控制器">一、视图控制器</h3>
+
+<p>UIViewController采用懒加载的方式，也就是说第一次访问到<code class="highlighter-rouge">view</code>属性时才会加载或创建它。由于视图由视图控制器管理，所以讨论视图的加载方式时，主要讨论视图控制器的加载方式。</p>
+
+<ul>
+  <li>
+    <p>通过Storyboard加载：这是苹果推荐的方式。</p>
+
+    <p>通过这种方式创建<code class="highlighter-rouge">UIViewController</code>对象的话，首先生成<code class="highlighter-rouge">UIStoryboard</code>类型的对象，然后调用这个对象的<code class="highlighter-rouge">instantiateViewControllerWithIdentifier:</code>方法</p>
+  </li>
+  <li>
+    <p>通过Nib文件加载：</p>
+
+    <p>Nib文件其实就是xib文件，Storyboard相当于是聚合了多个nib文件，并且添加了对不同的<code class="highlighter-rouge">UIViewController</code>之间的segue和relationship的管理。但总的实现原理非常类似</p>
+
+    <p>通过这种方式加载视图,需要调用<code class="highlighter-rouge">UIViewController</code>类的<code class="highlighter-rouge">initWithNibName:bundle:</code>方法</p>
+  </li>
+  <li>
+    <p>通过loadview方法加载：</p>
+
+    <p>这就是通过代码加载。这需要我们在<code class="highlighter-rouge">loadView</code> 方法中，通过编程创建自己的<strong>视图层次</strong>，并且把把根视图赋值给<code class="highlighter-rouge">UIViewController</code>的<code class="highlighter-rouge">view</code>属性。</p>
+  </li>
+</ul>
+
+<h3 id="二生命周期">二、生命周期</h3>
+
+<p><img src="/img/Simple_1/01.png" alt="" /></p>
+
+<h4 id="1loadview">1、loadView</h4>
+
+<p>loadView方法是用来负责创建UIViewController的view</p>
+
+<p>首先，[super loadView]会先去查找与UIViewController相关联的xib文件，通过加载xib文件来创建UIViewController的view</p>
+
+<p>如果没有找到相关联的xib文件，就会创建一个空白的UIView，然后赋值给UIViewController的view属性</p>
+
+<h4 id="2viewdidload">2、ViewDidLoad</h4>
+
+<p><code class="highlighter-rouge">loadView</code>方法执行完之后，就会执行<code class="highlighter-rouge">viewDidLoad</code>方法。此时整个视图层次(view hierarchy)已经被放到内存中。</p>
+
+<p>无论是从nib文件加载，还是通过纯代码编写界面，<code class="highlighter-rouge">viewDidLoad</code>方法都会执行。我们可以重写这个方法，对通过nib文件加载的view做一些其他的初始化工作。比如可以移除一些视图，修改约束，加载数据等。</p>
+
+<h4 id="3viewwillappear">3、ViewWillAppear</h4>
+
+<p>在视图加载完成，并即将显示在屏幕上时，会调用<code class="highlighter-rouge">viewWillAppear</code>方法，在这个方法里，可以改变当前屏幕方向或状态栏的风格等。</p>
+
+<h4 id="4viewwilllayoutsubviews">4、viewWillLayoutSubviews</h4>
+
+<p>即将开始子视图位置布局</p>
+
+<h4 id="5viewdidlayoutsubviews">5、ViewDidLayoutSubviews</h4>
+
+<p>用于通知视图的位置布局已经完成</p>
+
+<h4 id="6viewdidappear">6、ViewDidAppear</h4>
+
+<p>当<code class="highlighter-rouge">viewWillAppear</code>方法执行完后，系统会执行<code class="highlighter-rouge">viewDidAppear</code>方法。在这个方法中，还可以对视图做一些关于展示效果方面的修改。</p>
+
+<h4 id="7viewwilldisappear">7、ViewWillDisAppear</h4>
+
+<p>视图即将消失</p>
+
+<h4 id="8viewdiddisappear">8、ViewDidDisAppear</h4>
+
+<p>视图已经消失</p>
+
+<h4 id="9viewwillunload已废弃">9、ViewWillUnload(已废弃)</h4>
+
+<p>当内存过低时，需要释放一些不需要使用的视图时，即将释放时调用；</p>
+
+<h4 id="10viewdidunload已废弃">10、ViewDidUnload(已废弃)</h4>
+
+<p>当内存过低，释放一些不需要的视图时调用。</p>
+
+<h3 id="三其他">三、其他</h3>
+
+<h4 id="layoutsubviews的被调用的时机">layoutSubviews的被调用的时机：</h4>
+
+<ul>
+  <li>addSubview会触发layoutSubviews，比如viewA add viewB，第一次添加A和B的layoutSubviews都会被调用，而第二次(viewA已经有了viewB)只调用viewB的</li>
+  <li>view的Frame<strong>变化</strong>会触发layoutSubviews</li>
+  <li>滚动一个UIScrollView会触发layoutSubviews</li>
+  <li>旋转Screen会触发父UIView上的layoutSubviews</li>
+  <li>改变transform属性时，当然frame也会变</li>
+  <li>处于key window的UIView才会调用(程序同一时间只有一个window为keyWindow，可以简单理解为显示在最前面的window为keywindow)</li>
+</ul>
+
+<h4 id="push到下一层的顺序">Push到下一层的顺序</h4>
+
+<p><code class="highlighter-rouge">viewWillDisappear</code>-&gt;viewWillAppear-&gt;<code class="highlighter-rouge">viewDidDisappear</code>-&gt;viewDidAppear</p>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    
+                    <li class="next">
+                        <a href="/2015/10/10/network/" data-toggle="tooltip" data-placement="top" title="网络">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2017</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+
+    
+
+
+</body>
+
+</html>
