@@ -132,6 +132,10 @@
 
 <p><img src="/img/Simple_1/01.png" alt="" /></p>
 
+<h4 id="0init">0、init</h4>
+
+<p>UIViewController-init不要出现创建view的代码。良好的设计，在init里应该只有相关数据的初始化，而且这些数据都是比较关键的数据。init里不要掉self.view，否则会导致viewcontroller创建view。（因为view是lazyinit的）。</p>
+
 <h4 id="1loadview">1、loadView</h4>
 
 <p>loadView方法是用来负责创建UIViewController的view</p>
@@ -144,11 +148,11 @@
 
 <p><code class="highlighter-rouge">loadView</code>方法执行完之后，就会执行<code class="highlighter-rouge">viewDidLoad</code>方法。此时整个视图层次(view hierarchy)已经被放到内存中。</p>
 
-<p>无论是从nib文件加载，还是通过纯代码编写界面，<code class="highlighter-rouge">viewDidLoad</code>方法都会执行。我们可以重写这个方法，对通过nib文件加载的view做一些其他的初始化工作。比如可以移除一些视图，修改约束，加载数据等。</p>
+<p>无论是从nib文件加载，还是通过纯代码编写界面，<code class="highlighter-rouge">viewDidLoad</code>方法都会执行。我们可以重写这个方法，对通过nib文件加载的view做一些其他的初始化工作。比如可以移除一些视图，修改约束，加载数据等。合创建一些附加的view和控件</p>
 
 <h4 id="3viewwillappear">3、ViewWillAppear</h4>
 
-<p>在视图加载完成，并即将显示在屏幕上时，会调用<code class="highlighter-rouge">viewWillAppear</code>方法，在这个方法里，可以改变当前屏幕方向或状态栏的风格等。</p>
+<p>在视图加载完成，并即将显示在屏幕上时，会调用<code class="highlighter-rouge">viewWillAppear</code>方法，在这个方法里，可以改变当前屏幕方向或状态栏的风格等。在这里可以进行一些显示前的处理。比如键盘弹出，一些特殊的过程动画（比如状态条和navigationbar颜色）。</p>
 
 <h4 id="4viewwilllayoutsubviews">4、viewWillLayoutSubviews</h4>
 
