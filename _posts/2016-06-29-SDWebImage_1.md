@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "iOS源码分析之SDWebImage"
+title:      "iOS源码分析之SDWebImage(一)"
 subtitle:   "对iOS常用第三方SDwebImage的源码解析"
 date:       2016-06-29 12:00:00
 author:     "Ted"
@@ -133,4 +133,8 @@ typedef NS_OPTIONS(NSUInteger, SDWebImageOptions) {
 #### 7、network result：网络结果处理
 
 ![](/img/SDWebImage/09.png)
+
+#### 8、storeImage：存储下载图片
+
+![](/img/SDWebImage/10.png)
 

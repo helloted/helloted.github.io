@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
 
-    <title>Helloted Blog</title>
+    <title>iOS源码分析之SDWebImage(二) - Helloted Blog</title>
 
-    <link rel="canonical" href="http://localhost:4000/">
+    <link rel="canonical" href="http://localhost:4000/2016/06/29/SDWebImage_2/">
 
     <link rel="shortcut icon" href="/img/favicon.ico">
    
@@ -83,215 +83,83 @@
 </nav>
 
 
-    <!-- Page Header -->
-<header class="intro-header" style="background-image: url('/img/home-bg.jpg')">
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="site-heading">
-                    <h1>Helloted Blog</h1>
-                    <hr class="small">
-                    <span class="subheading">曹浩之的博客(原创使人进步)</span>
+                <div class="post-heading">
+                    <h1>iOS源码分析之SDWebImage(二)</h1>
+                    
+                    <h2 class="subheading">对iOS常用第三方SDwebImage的源码解析</h2>
+                    
+                    <span class="meta">Posted by Ted on June 29, 2016</span>
                 </div>
             </div>
         </div>
     </div>
 </header>
 
-<!-- Main Content -->
-<div class="container">
-	<div class="row">
-		<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-			
-<div class="post-preview">
-    <a href="/2017/04/16/Runloop_3/">
-        <h2 class="post-title"> iOS之Runloop(3):应用
-        </h2>
-        
-        <h3 class="post-subtitle">
-            Runloop的一些实际应用
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on April 16, 2017</p>
-</div>
-<hr>
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
 
-<div class="post-preview">
-    <a href="/2017/04/16/Runloop_2/">
-        <h2 class="post-title"> iOS之Runloop(2):事件源
-        </h2>
-        
-        <h3 class="post-subtitle">
-            Runloop如何配置事件源Sources
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on April 16, 2017</p>
-</div>
-<hr>
+				<p>SDWebImage是iOS开发者最常用的第三方框架之一，用于异步下载网络图片，缓存图片，<a href="https://github.com/rs/SDWebImage">Github源码地址</a></p>
 
-<div class="post-preview">
-    <a href="/2017/04/10/Runloop_1/">
-        <h2 class="post-title"> iOS之Runloop(1):基础
-        </h2>
-        
-        <h3 class="post-subtitle">
-            Runloop的官方文档的部分翻译以及其实质介绍
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on April 10, 2017</p>
-</div>
-<hr>
+<h3 id="三核心架构">三、核心架构</h3>
 
-<div class="post-preview">
-    <a href="/2016/10/11/safety/">
-        <h2 class="post-title"> 漫谈iOS安全
-        </h2>
-        
-        <h3 class="post-subtitle">
-            讲一讲iOS的安全机制，如何保证APP安全
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on October 11, 2016</p>
-</div>
-<hr>
+<p><img src="/img/SDWebImage/00.png" alt="" /></p>
 
-<div class="post-preview">
-    <a href="/2016/10/06/smoothMonitor/">
-        <h2 class="post-title"> 监测APP卡顿
-        </h2>
-        
-        <h3 class="post-subtitle">
-            利用Runloop来监测APP卡顿
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on October 6, 2016</p>
-</div>
-<hr>
+<h3 id="四相关技术">四、相关技术</h3>
 
-<div class="post-preview">
-    <a href="/2016/09/20/dispatch_semaphore/">
-        <h2 class="post-title"> GCD之dispatch_semaphore
-        </h2>
-        
-        <h3 class="post-subtitle">
-            dispatch_semaphore信号控制可以达到线程锁、控制线程并发数
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on September 20, 2016</p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2016/09/13/Http/">
-        <h2 class="post-title"> Http与Https
-        </h2>
-        
-        <h3 class="post-subtitle">
-            Http与Https的一些知识点总结
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on September 13, 2016</p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2016/08/12/confuseCode/">
-        <h2 class="post-title"> Objective-C混淆代码
-        </h2>
-        
-        <h3 class="post-subtitle">
-            如何将源代码的方法名和属性名混淆
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on August 12, 2016</p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2016/06/29/SDWebImage_2/">
-        <h2 class="post-title"> iOS源码分析之SDWebImage(二)
-        </h2>
-        
-        <h3 class="post-subtitle">
-            对iOS常用第三方SDwebImage的源码解析
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on June 29, 2016</p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2016/06/29/SDWebImage_1/">
-        <h2 class="post-title"> iOS源码分析之SDWebImage(一)
-        </h2>
-        
-        <h3 class="post-subtitle">
-            对iOS常用第三方SDwebImage的源码解析
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on June 29, 2016</p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2016/05/22/ios-Thread/">
-        <h2 class="post-title"> iOS之多线程
-        </h2>
-        
-        <h3 class="post-subtitle">
-            三种多线程NSThread、GCD、NSOperation
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on May 22, 2016</p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2016/03/05/runtime/">
-        <h2 class="post-title"> 神奇的Runtime
-        </h2>
-        
-        <h3 class="post-subtitle">
-            Objective-C中Runtime的那点东西
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on March 5, 2016</p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2015/10/10/network/">
-        <h2 class="post-title"> 网络
-        </h2>
-        
-        <h3 class="post-subtitle">
-            网络模型，基础知识
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on October 10, 2015</p>
-</div>
-<hr>
+<ol>
+  <li>判断当前图片类型：只判断图片二进制数据的第一个字节</li>
+  <li>默认的缓存周期：1周</li>
+  <li>缓存策略：默认情况下既做内存缓存又做磁盘缓存，下载图片前先检查内存缓存，再检查磁盘缓存</li>
+  <li>缓存的实现方式：采用了苹果推出的专门用来处理缓存的类NSCache</li>
+  <li>框架内部允许的最大并发数：6</li>
+  <li>对系统内存警告的处理方式：框架内部监听系统内存警告的通知，当发生后移除内存缓存中的所有对象</li>
+  <li>下载队列中对多个图片任务的处理方式：提供了FIFO和LIFO两种方式，默认为FIFO</li>
+  <li>如何下载图片：采用NSURLConnection发送网络请求，在其代理方法中接收数据并处理进度回调等工作</li>
+  <li>请求超时的设定：15秒</li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>磁盘缓存图片的命名：以该图片的URL进行MD5散列加密【echo -n “url”</td>
+          <td>MD5】</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>缓存路径：~/Library/Caches/default/com.hackemist.SDWebImageCache.default</li>
+  <li>key—–&gt;URL(如何优化):用黑名单(当一个URL请求失败后,会被添加到黑名单,可以有效的防止一个错误的URL被多次尝试下载)</li>
+  <li>写文件到硬盘在单独 NSInvocationOperation 中完成，避免拖慢主线程。</li>
+  <li>如果是在iOS上运行，SDImageCache 在初始化的时候会注册notification 到 UIApplicationDidReceiveMemoryWarningNotification 以及  UIApplicationWillTerminateNotification,在内存警告的时候清理内存图片缓存，应用结束的时候清理过期图片。</li>
+</ol>
 
 
-<!-- Pager -->
+                <hr>
 
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2016/06/29/SDWebImage_1/" data-toggle="tooltip" data-placement="top" title="iOS源码分析之SDWebImage(一)">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2016/08/12/confuseCode/" data-toggle="tooltip" data-placement="top" title="Objective-C混淆代码">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
 
-		</div>
-	</div>
-</div>
+            </div>
+        </div>
+    </div>
+</article>
 
 <hr>
 
