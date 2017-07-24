@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-07-22T19:40:30+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS之Runloop(3):应用</title><link href="http://www.helloted.com/2017/04/16/Runloop_3/" rel="alternate" type="text/html" title="iOS之Runloop(3):应用" /><published>2017-04-16T20:00:00+08:00</published><updated>2017-04-16T20:00:00+08:00</updated><id>http://www.helloted.com/2017/04/16/Runloop_3</id><content type="html" xml:base="http://www.helloted.com/2017/04/16/Runloop_3/">&lt;p&gt;其他两篇关于Runloop:&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-07-24T20:35:28+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS之Runloop(3):应用</title><link href="http://www.helloted.com/2017/04/16/Runloop_3/" rel="alternate" type="text/html" title="iOS之Runloop(3):应用" /><published>2017-04-16T20:00:00+08:00</published><updated>2017-04-16T20:00:00+08:00</updated><id>http://www.helloted.com/2017/04/16/Runloop_3</id><content type="html" xml:base="http://www.helloted.com/2017/04/16/Runloop_3/">&lt;p&gt;其他两篇关于Runloop:&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;http://www.helloted.com/2017/04/10/Runloop_1/&quot;&gt;iOS之Runloop(1):基础&lt;/a&gt;&lt;/p&gt;
 
@@ -916,7 +916,99 @@ cancelPreviousPerformRequestsWithTarget:selector:object:
 
 &lt;p&gt;线程安全性取决于使用runloop的API。 Core Foundation中的功能通常是线程安全的，可以从任何线程调用。 但是，如果您想更改runloop的配置，那么尽可能从拥有runloop的线程执行此操作。&lt;/p&gt;
 
-&lt;p&gt;Cocoa NSRunLoop类并不像Core Foundation对象那样固有线程安全。 如果您正在使用NSRunLoop类来修改runloop，那你最好在同一线程执行这个操作。 将input sources或timers添加到属于不同线程的runloop可能会导致崩溃或者其他意外结果。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">其他两篇：</summary></entry><entry><title type="html">漫谈iOS安全</title><link href="http://www.helloted.com/2016/10/11/safety/" rel="alternate" type="text/html" title="漫谈iOS安全" /><published>2016-10-11T20:00:00+08:00</published><updated>2016-10-11T20:00:00+08:00</updated><id>http://www.helloted.com/2016/10/11/safety</id><content type="html" xml:base="http://www.helloted.com/2016/10/11/safety/">&lt;h3 id=&quot;一前言&quot;&gt;一、前言&lt;/h3&gt;
+&lt;p&gt;Cocoa NSRunLoop类并不像Core Foundation对象那样固有线程安全。 如果您正在使用NSRunLoop类来修改runloop，那你最好在同一线程执行这个操作。 将input sources或timers添加到属于不同线程的runloop可能会导致崩溃或者其他意外结果。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">其他两篇：</summary></entry><entry><title type="html">CoreData简介以及第三方框架MagicRecord源码解析</title><link href="http://www.helloted.com/2016/12/01/coredatamd/" rel="alternate" type="text/html" title="CoreData简介以及第三方框架MagicRecord源码解析" /><published>2016-12-01T20:00:00+08:00</published><updated>2016-12-01T20:00:00+08:00</updated><id>http://www.helloted.com/2016/12/01/coredatamd</id><content type="html" xml:base="http://www.helloted.com/2016/12/01/coredatamd/">&lt;h3 id=&quot;一coredata结构&quot;&gt;一、CoreData结构&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/coredata/01.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;nsmanagedobject&quot;&gt;NSManagedObject&lt;/h4&gt;
+
+&lt;p&gt;数据库对象，一个&lt;code class=&quot;highlighter-rouge&quot;&gt;NSManagedObject&lt;/code&gt;对应一张表，&lt;code class=&quot;highlighter-rouge&quot;&gt;NSManagedObject&lt;/code&gt;的一个属性对应数据表的一个字段。数据库的增删查改就是操作&lt;code class=&quot;highlighter-rouge&quot;&gt;NSManagedObject&lt;/code&gt;，通过&lt;em&gt;xCode-&amp;gt;Editor-&amp;gt;Create NSManagedObject Subclass…&lt;/em&gt;来创建对应表的对象model&lt;/p&gt;
+
+&lt;h4 id=&quot;nsmanagedobjectcontext&quot;&gt;NSManagedObjectContext&lt;/h4&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;NSManagedObject&lt;/code&gt;操作的上下文，&lt;code class=&quot;highlighter-rouge&quot;&gt;NSManagedObject&lt;/code&gt;的操作会先缓存在上下文中，还未存到磁盘中&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;- (NSManagedObjectContext *)managedObjectContext{
+    if (__managedObjectContext != nil) {
+        return __managedObjectContext;
+    }
+    NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
+    if (coordinator != nil) {
+        __managedObjectContext = [[NSManagedObjectContext alloc] init];
+        [__managedObjectContext setPersistentStoreCoordinator:coordinator];
+    }
+    return __managedObjectContext;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;生成&lt;code class=&quot;highlighter-rouge&quot;&gt;NSManagedObjectContext&lt;/code&gt;时需要设置&lt;code class=&quot;highlighter-rouge&quot;&gt;NSPersistentStoreCoordinator&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;有三种类型&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;NSConfinementConcurrencyType (或者不加参数，默认就是这个)&lt;/li&gt;
+  &lt;li&gt;NSMainQueueConcurrencyType (表示只会在主线程中执行)&lt;/li&gt;
+  &lt;li&gt;NSPrivateQueueConcurrencyType (表示可以在子线程中执行)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;通过 setParentContext 方法，可以设置另外一个 NSManagedObjectContext 为自己的父级，这个时候子级可以访问父级下所有的对象，而且子级 NSManagedObjectContext 的内容变化后，如果执行save方法，会自动的 merge 到父级 NSManagedObjectContext 中，也就是子级save后，变动会同步到父级 NSManagedObjectContext。当然这个时候父级也必须再save一次，如果父级没有父级了，那么就会直接向NSPersistentStoreCoordinator中写入，如果有就会接着向再上一层的父级冒泡……&lt;/p&gt;
+
+&lt;h4 id=&quot;nspersistentstorecoordinator&quot;&gt;NSPersistentStoreCoordinator&lt;/h4&gt;
+
+&lt;p&gt;用来管理保存数据到磁盘这个操作&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;- (NSPersistentStoreCoordinator *)persistentStoreCoordinator{
+    if (__persistentStoreCoordinator != nil) {
+        return __persistentStoreCoordinator;
+    }
+    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@&quot;HelloApp.sqlite&quot;];
+    NSError *error = nil;
+    __persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
+    if (![__persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&amp;amp;error]) {
+        NSLog(@&quot;Unresolved error %@, %@&quot;, error, [error userInfo]);
+        abort();
+    }    
+    return __persistentStoreCoordinator;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;生成&lt;code class=&quot;highlighter-rouge&quot;&gt;NSPersistentStoreCoordinator&lt;/code&gt;需要参数：文件保存路径、&lt;code class=&quot;highlighter-rouge&quot;&gt;NSManagedObjectModel&lt;/code&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;nsmanagedobjectmodel&quot;&gt;NSManagedObjectModel&lt;/h4&gt;
+
+&lt;p&gt;生成这个类的来源就是在 xCode 里的.xcdatamodeld文件，我们可以可视化的对这个文件进行操作，实际上这个文件也就相当于数据库的 schema，这个文件编译后就是.momd或.mom文件。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;- (NSManagedObjectModel *)managedObjectModel{
+    if (__managedObjectModel != nil) {
+        return __managedObjectModel;
+    }
+    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@&quot;HelloApp&quot; withExtension:@&quot;momd&quot;];
+    __managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+    return __managedObjectModel;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;二多线程里的coredata&quot;&gt;二、多线程里的CoreData&lt;/h3&gt;
+
+&lt;p&gt;在多线程中，每个线程都会有一个上下文&lt;code class=&quot;highlighter-rouge&quot;&gt;NSManagedObjectContext&lt;/code&gt;，而&lt;code class=&quot;highlighter-rouge&quot;&gt;NSManagedObjectContext&lt;/code&gt;可以共享一个&lt;code class=&quot;highlighter-rouge&quot;&gt;NSPersistentStoreCoordinator&lt;/code&gt;或者，每个&lt;code class=&quot;highlighter-rouge&quot;&gt;NSManagedObjectContext&lt;/code&gt;都对应一个&lt;code class=&quot;highlighter-rouge&quot;&gt;NSPersistentStoreCoordinator&lt;/code&gt;，所以会有以下几种方式:&lt;/p&gt;
+
+&lt;h4 id=&quot;1&quot;&gt;1、&lt;/h4&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/coredata/02.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;这种方式，最简单明了，在子线程的privatecontext里操作完数据库对象后，将操作缓存merger到主线程的maincontext，再由maincontext通过&lt;code class=&quot;highlighter-rouge&quot;&gt;NSPersistentStoreCoordinator&lt;/code&gt;存到本地磁盘。但是存到本地磁盘中是一个耗时的IO操作，对于主线程来说，这是不能忍的，所以不能用这种方式&lt;/p&gt;
+
+&lt;h4 id=&quot;2&quot;&gt;2、&lt;/h4&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/coredata/03.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;这个方式在跟第一个方式的区别在于，主线程上的maincontext与&lt;code class=&quot;highlighter-rouge&quot;&gt;NSPersistentStoreCoordinator&lt;/code&gt;交互之家再插了一层子线程的privatecontext，context之间的传递是很快的，这样可以有效地避免IO阻塞主线程，而且childContext调用save方法，其parentContext不用任何merge操作，CoreData自动将数据merge到parentContext当中，这样可以保证每个context的数据同步&lt;/p&gt;
+
+&lt;h4 id=&quot;3&quot;&gt;3、&lt;/h4&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/coredata/04.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;这种情况下，privatecontext与maincontext共同连接&lt;code class=&quot;highlighter-rouge&quot;&gt;NSPersistentStoreCoordinator&lt;/code&gt;，子线程中创建privateContext，进行数据增删改查操作，直接save到本地数据库，这时在回调之前注册的NSManagedObjectContextDidSaveNotification的回调方法，在该方法中调用mainContext的mergeChangesFromContextDidSaveNotification:notification方法，将所有的数据变动merge到mainContext中，这样就保持了两个Context中的数据同步。由于大部分的操作都是privateContext在子线程中操作的，所以这种设计是UI线程耗时最少的一种设计，但是它的代价是需要多写mergeChanges的方法。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、CoreData结构</summary></entry><entry><title type="html">漫谈iOS安全</title><link href="http://www.helloted.com/2016/10/11/safety/" rel="alternate" type="text/html" title="漫谈iOS安全" /><published>2016-10-11T20:00:00+08:00</published><updated>2016-10-11T20:00:00+08:00</updated><id>http://www.helloted.com/2016/10/11/safety</id><content type="html" xml:base="http://www.helloted.com/2016/10/11/safety/">&lt;h3 id=&quot;一前言&quot;&gt;一、前言&lt;/h3&gt;
 
 &lt;p&gt;经常都能听到大家说，iOS很安全，iPhone比安卓手机安全。那么为什么iOS会安全，难道仅仅是因为iOS是闭源然后安卓是开源的，开源的就一定比闭源安全？前段时间著名的&lt;em&gt;Xcode Ghost&lt;/em&gt; 事件也让人觉得iOS好像并不是那么地安全，今天就随便说说iOS的安全。&lt;/p&gt;
 
@@ -1534,145 +1626,4 @@ sqlite3 &lt;span class=&quot;nv&quot;&gt;$SYMBOL_DB_FILE&lt;/span&gt; .dump
   &lt;li&gt;key—–&amp;gt;URL(如何优化):用黑名单(当一个URL请求失败后,会被添加到黑名单,可以有效的防止一个错误的URL被多次尝试下载)&lt;/li&gt;
   &lt;li&gt;写文件到硬盘在单独 NSInvocationOperation 中完成，避免拖慢主线程。&lt;/li&gt;
   &lt;li&gt;如果是在iOS上运行，SDImageCache 在初始化的时候会注册notification 到 UIApplicationDidReceiveMemoryWarningNotification 以及  UIApplicationWillTerminateNotification,在内存警告的时候清理内存图片缓存，应用结束的时候清理过期图片。&lt;/li&gt;
-&lt;/ol&gt;</content><author><name>Ted</name></author><summary type="html">SDWebImage是iOS开发者最常用的第三方框架之一，用于异步下载网络图片，缓存图片，Github源码地址</summary></entry><entry><title type="html">iOS源码分析之SDWebImage(一)</title><link href="http://www.helloted.com/2016/06/29/SDWebImage_1/" rel="alternate" type="text/html" title="iOS源码分析之SDWebImage(一)" /><published>2016-06-29T20:00:00+08:00</published><updated>2016-06-29T20:00:00+08:00</updated><id>http://www.helloted.com/2016/06/29/SDWebImage_1</id><content type="html" xml:base="http://www.helloted.com/2016/06/29/SDWebImage_1/">&lt;p&gt;SDWebImage是iOS开发者最常用的第三方框架之一，用于异步下载网络图片，缓存图片，&lt;a href=&quot;https://github.com/rs/SDWebImage&quot;&gt;Github源码地址&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;一架构&quot;&gt;一、架构&lt;/h3&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/SDWebImage/01.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;sd_setImageWithURL：UIimageView/UIButton根据URL设置网络图片&lt;/li&gt;
-  &lt;li&gt;sd_internalSetImageWithURL：统一为UIView根据URL设置网络图片&lt;/li&gt;
-  &lt;li&gt;loadImageWithURL：加载图片&lt;/li&gt;
-  &lt;li&gt;queryDiskCacheForKey：根据URL转成的key从缓存或者硬盘存储中搜寻图片&lt;/li&gt;
-  &lt;li&gt;disk result：如果有结果，则返回搜寻结果&lt;/li&gt;
-  &lt;li&gt;downloadImage：如果搜寻没有结果，则开始从网络下载图片&lt;/li&gt;
-  &lt;li&gt;network result：返回网络下载结果&lt;/li&gt;
-  &lt;li&gt;storeImage：存储下载图片&lt;/li&gt;
-  &lt;li&gt;image：网络下载的图片&lt;/li&gt;
-  &lt;li&gt;set Image：设置图片&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&quot;二解析&quot;&gt;二、解析&lt;/h3&gt;
-
-&lt;h4 id=&quot;1sd_setimagewithurl&quot;&gt;1、sd_setImageWithURL：&lt;/h4&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/SDWebImage/02.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;UIButton和UIImageView都有WebCache的Category用来设置网络图片，以UIimageView为例，从简单到复杂分别有以下几种设置图片的方式&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/SDWebImage/03.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;最终下载方式都归为一类&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;sd_setImageWithURL:(nullable NSURL *)url
-          placeholderImage:(nullable UIImage *)placeholder
-                   options:(SDWebImageOptions)options
-                  progress:(nullable SDWebImageDownloaderProgressBlock)progressBlock
-                 completed:(nullable SDExternalCompletionBlock)completedBlock
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;url：网络图片的URL&lt;/li&gt;
-  &lt;li&gt;Placehoder：占位图片&lt;/li&gt;
-  &lt;li&gt;options：下载选项，是一个枚举类型&lt;/li&gt;
-  &lt;li&gt;progressBlock：下载进度block&lt;/li&gt;
-  &lt;li&gt;completedBlock：完成下载后的block&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h5 id=&quot;options&quot;&gt;options&lt;/h5&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;typedef NS_OPTIONS(NSUInteger, SDWebImageOptions) {
-    SDWebImageRetryFailed = 1 &amp;lt;&amp;lt; 0,
-    SDWebImageLowPriority = 1 &amp;lt;&amp;lt; 1,
-    SDWebImageCacheMemoryOnly = 1 &amp;lt;&amp;lt; 2,
-    SDWebImageProgressiveDownload = 1 &amp;lt;&amp;lt; 3,
-    SDWebImageRefreshCached = 1 &amp;lt;&amp;lt; 4,
-    SDWebImageContinueInBackground = 1 &amp;lt;&amp;lt; 5,
-    SDWebImageHandleCookies = 1 &amp;lt;&amp;lt; 6,
-    SDWebImageAllowInvalidSSLCertificates = 1 &amp;lt;&amp;lt; 7,
-    SDWebImageHighPriority = 1 &amp;lt;&amp;lt; 8,
-    SDWebImageDelayPlaceholder = 1 &amp;lt;&amp;lt; 9,
-    SDWebImageTransformAnimatedImage = 1 &amp;lt;&amp;lt; 10,
-    SDWebImageAvoidAutoSetImage = 1 &amp;lt;&amp;lt; 11
-};
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;SDWebImageRetryFailed = 1 « 0,:默认情况下,如果一个url在下载的时候失败了,那么这个url会被加入黑名单并且library不会尝试再次下载,这个flag会阻止library把失败的url加入黑名单(简单来说如果选择了这个flag,那么即使某个url下载失败了,sdwebimage还是会尝试再次下载他&lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;SDWebImageLowPriority = 1 « 1,:默认情况下,图片会在交互发生的时候下载(例如你滑动tableview的时候),这个flag会禁止这个特性,导致的结果就是在scrollview减速的时候,才会开始下载(也就是你滑动的时候scrollview不下载,你手从屏幕上移走,scrollview开始减速的时候才会开始下载图片&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;SDWebImageCacheMemoryOnly = 1 « 2,:这个flag禁止磁盘缓存,只有内存缓存&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;SDWebImageProgressiveDownload = 1 « 3,:这个flag会在图片下载的时候就显示(就像你用浏览器浏览网页的时候那种图片下载,一截一截的显示(待确认))&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;SDWebImageRefreshCached = 1 « 4,:一个图片缓存了,还是会重新请求.并且缓存侧略依据NSURLCache而不是SDWebImage.URL不变,图片会更新时使用&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;SDWebImageContinueInBackground = 1 « 5,:启动后台下载,加入你进入一个页面,有一张图片正在下载这时候你让app进入后台,图片还是会继续下载(这个估计要开backgroundfetch才有用)&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;SDWebImageHandleCookies = 1 « 6,:可以控制存在NSHTTPCookieStore的cookies.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;SDWebImageAllowInvalidSSLCertificates = 1 « 7,:允许不安全的SSL证书,在正式环境中慎用&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;SDWebImageHighPriority = 1 « 8,:默认情况下,image在装载的时候是按照他们在队列中的顺序装载的(就是先进先出).这个flag会把他们移动到队列的前端,并且立刻装载,而不是等到当前队列装载的时候再装载.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;SDWebImageDelayPlaceholder = 1 « 9,:默认情况下,占位图会在图片下载的时候显示.这个flag开启会延迟占位图显示的时间,等到图片下载完成之后才会显示占位图.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;SDWebImageTransformAnimatedImage = 1 « 10,:是否transform图片&lt;/li&gt;
-  &lt;li&gt;SDWebImageAvoidAutoSetImage = 1 « 11:默认是下载完后自动赋值图片，如果设置这个选项，则禁止此操作&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;2sd_internalsetimagewithurl&quot;&gt;2、sd_internalSetImageWithURL：&lt;/h4&gt;
-
-&lt;p&gt;在这里，将UIButton和UIImageView的下载统一为UIView的WebCache Category&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/SDWebImage/04.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;其中&lt;/p&gt;
-
-&lt;h5 id=&quot;dispatch_main_async_safe&quot;&gt;dispatch_main_async_safe&lt;/h5&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;#define dispatch_main_async_safe(block)\
-    if (strcmp(dispatch_queue_get_label(DISPATCH_CURRENT_QUEUE_LABEL), dispatch_queue_get_label(dispatch_get_main_queue())) == 0) {\
-        block();\
-    } else {\
-        dispatch_async(dispatch_get_main_queue(), block);\
-    }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;如果当前线程已经是主线程了，那么在调用dispatch_async(dispatch_get_main_queue(), block)有可能会出现crash&lt;/p&gt;
-
-&lt;p&gt;如果当前线程是主线程，直接调用，如果不是，调用dispatch_async(dispatch_get_main_queue(), block)&lt;/p&gt;
-
-&lt;h4 id=&quot;3loadimagewithurl加载图片&quot;&gt;3、loadImageWithURL：加载图片&lt;/h4&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/SDWebImage/05.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;4querydiskcacheforkey从缓存中或硬盘中查找图片&quot;&gt;4、queryDiskCacheForKey：从缓存中或硬盘中查找图片：&lt;/h4&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/SDWebImage/06.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;5disk-result如果有结果则返回搜寻结果否则去下载&quot;&gt;5、disk result：如果有结果，则返回搜寻结果，否则去下载&lt;/h4&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/SDWebImage/07.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;6downloadimage从网络下载图片&quot;&gt;6、downloadImage：从网络下载图片&lt;/h4&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/SDWebImage/08.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;7network-result网络结果处理&quot;&gt;7、network result：网络结果处理&lt;/h4&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/SDWebImage/09.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;8storeimage存储下载图片&quot;&gt;8、storeImage：存储下载图片&lt;/h4&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/SDWebImage/10.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">SDWebImage是iOS开发者最常用的第三方框架之一，用于异步下载网络图片，缓存图片，Github源码地址</summary></entry></feed>
+&lt;/ol&gt;</content><author><name>Ted</name></author><summary type="html">SDWebImage是iOS开发者最常用的第三方框架之一，用于异步下载网络图片，缓存图片，Github源码地址</summary></entry></feed>
