@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-07-24T20:35:28+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS之Runloop(3):应用</title><link href="http://www.helloted.com/2017/04/16/Runloop_3/" rel="alternate" type="text/html" title="iOS之Runloop(3):应用" /><published>2017-04-16T20:00:00+08:00</published><updated>2017-04-16T20:00:00+08:00</updated><id>http://www.helloted.com/2017/04/16/Runloop_3</id><content type="html" xml:base="http://www.helloted.com/2017/04/16/Runloop_3/">&lt;p&gt;其他两篇关于Runloop:&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-07-25T20:55:03+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS之Runloop(3):应用</title><link href="http://www.helloted.com/2017/04/16/Runloop_3/" rel="alternate" type="text/html" title="iOS之Runloop(3):应用" /><published>2017-04-16T20:00:00+08:00</published><updated>2017-04-16T20:00:00+08:00</updated><id>http://www.helloted.com/2017/04/16/Runloop_3</id><content type="html" xml:base="http://www.helloted.com/2017/04/16/Runloop_3/">&lt;p&gt;其他两篇关于Runloop:&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;http://www.helloted.com/2017/04/10/Runloop_1/&quot;&gt;iOS之Runloop(1):基础&lt;/a&gt;&lt;/p&gt;
 
@@ -1008,7 +1008,100 @@ cancelPreviousPerformRequestsWithTarget:selector:object:
 
 &lt;p&gt;&lt;img src=&quot;/img/coredata/04.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;这种情况下，privatecontext与maincontext共同连接&lt;code class=&quot;highlighter-rouge&quot;&gt;NSPersistentStoreCoordinator&lt;/code&gt;，子线程中创建privateContext，进行数据增删改查操作，直接save到本地数据库，这时在回调之前注册的NSManagedObjectContextDidSaveNotification的回调方法，在该方法中调用mainContext的mergeChangesFromContextDidSaveNotification:notification方法，将所有的数据变动merge到mainContext中，这样就保持了两个Context中的数据同步。由于大部分的操作都是privateContext在子线程中操作的，所以这种设计是UI线程耗时最少的一种设计，但是它的代价是需要多写mergeChanges的方法。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、CoreData结构</summary></entry><entry><title type="html">漫谈iOS安全</title><link href="http://www.helloted.com/2016/10/11/safety/" rel="alternate" type="text/html" title="漫谈iOS安全" /><published>2016-10-11T20:00:00+08:00</published><updated>2016-10-11T20:00:00+08:00</updated><id>http://www.helloted.com/2016/10/11/safety</id><content type="html" xml:base="http://www.helloted.com/2016/10/11/safety/">&lt;h3 id=&quot;一前言&quot;&gt;一、前言&lt;/h3&gt;
+&lt;p&gt;这种情况下，privatecontext与maincontext共同连接&lt;code class=&quot;highlighter-rouge&quot;&gt;NSPersistentStoreCoordinator&lt;/code&gt;，子线程中创建privateContext，进行数据增删改查操作，直接save到本地数据库，这时在回调之前注册的NSManagedObjectContextDidSaveNotification的回调方法，在该方法中调用mainContext的mergeChangesFromContextDidSaveNotification:notification方法，将所有的数据变动merge到mainContext中，这样就保持了两个Context中的数据同步。由于大部分的操作都是privateContext在子线程中操作的，所以这种设计是UI线程耗时最少的一种设计，但是它的代价是需要多写mergeChanges的方法。&lt;/p&gt;
+
+&lt;h3 id=&quot;三magicrecord源码解析&quot;&gt;三、MagicRecord源码解析&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;+ (void) setupCoreDataStackWithStoreAtURL:(NSURL *)storeURL
+{
+    if ([NSPersistentStoreCoordinator MR_defaultStoreCoordinator] != nil) return;
+    
+    NSPersistentStoreCoordinator *coordinator = [NSPersistentStoreCoordinator MR_coordinatorWithSqliteStoreAtURL:storeURL];
+    [NSPersistentStoreCoordinator MR_setDefaultStoreCoordinator:coordinator];
+    
+    [NSManagedObjectContext MR_initializeDefaultContextWithCoordinator:coordinator];
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;先生成一个默认的NSPersistentStoreCoordinator，再生成默认的context，如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;+ (void) MR_initializeDefaultContextWithCoordinator:(NSPersistentStoreCoordinator *)coordinator;
+{
+    NSAssert(coordinator, @&quot;Provided coordinator cannot be nil!&quot;);
+    if (MagicalRecordDefaultContext == nil)
+    {
+      	// NSPrivateQueueConcurrencyType
+        NSManagedObjectContext *rootContext = [self MR_contextWithStoreCoordinator:coordinator];
+        [self MR_setRootSavingContext:rootContext];
+		
+        //NSMainQueueConcurrencyType
+        NSManagedObjectContext *defaultContext = [self MR_newMainQueueContext];
+        [self MR_setDefaultContext:defaultContext];
+
+        [defaultContext setParentContext:rootContext];
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;MagicRecord生成了两个context:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;rootContext:NSPrivateQueueConcurrencyType，用以保存数据的上下文&lt;/li&gt;
+  &lt;li&gt;defaultContext:NSMainQueueConcurrencyType，用以主线程的上下文&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;defaultContext的父context是rootContext：RootSavingContext，可以看出MagicRecord默认用的是第二种模式，很简单就可以新建一个NSManagedObject并且保存&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        NSManagedObjectContext *current_context = [NSManagedObjectContext MR_contextWithParent:[NSManagedObjectContext MR_defaultContext]];
+        Person *person = [Person MR_createEntityInContext:current_context];
+        person.name = @&quot;jack&quot;;
+        [current_context MR_saveToPersistentStoreWithCompletion:^(BOOL contextDidSave, NSError * _Nullable error) {
+            NSLog(@&quot;finish save&quot;);
+        }];
+    });
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;2016-07-25 20:26:29.454 MagicR[19718:3903431] Created new private queue context: &amp;lt;NSManagedObjectContext: 0x6100001da220&amp;gt;
+2016-07-25 20:26:29.454 MagicR[19718:3903443] → Saving &amp;lt;NSManagedObjectContext (0x6100001da220): Untitled Context&amp;gt; on a background thread
+2016-07-25 20:26:29.460 MagicR[19718:3903375] → Saving &amp;lt;NSManagedObjectContext (0x6080001daa90): MagicalRecord Default Context&amp;gt; on the main thread
+2016-07-25 20:26:29.462 MagicR[19718:3903431] → Saving &amp;lt;NSManagedObjectContext (0x6180001da6d0): MagicalRecord Root Saving Context&amp;gt; on a background thread
+2016-07-25 20:26:29.466 MagicR[19718:3903375] finish save
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;从MagicRecord的日志就可以看出来，整个过程如下：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;在子线程新建了一个current_context，并且设置他的父context为主线程的context(default context),然后Person在子线程context改变&lt;/li&gt;
+  &lt;li&gt;将current_context的变动merge到父线程的context也就是defaultcontext，主线程的context同样merge到父线程的也就是rootcontext&lt;/li&gt;
+  &lt;li&gt;rootcontext在子线程将变动保存到磁盘&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;如果想用第三种方式的话可以这样：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        NSManagedObjectContext *current_context = [NSManagedObjectContext MR_newPrivateQueueContext];
+        [current_context setPersistentStoreCoordinator:[NSPersistentStoreCoordinator MR_defaultStoreCoordinator]];
+        Person *person = [Person MR_createEntityInContext:current_context];
+        person.name = @&quot;jack&quot;;
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(contextChanged:)
+                                                     name:NSManagedObjectContextDidSaveNotification
+                                                   object:current_context];
+        [current_context MR_saveToPersistentStoreWithCompletion:^(BOOL contextDidSave, NSError * _Nullable error) {
+            NSLog(@&quot;finish save&quot;);
+        }];
+    });
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (void)contextChanged:(NSNotification*)notification{
+    [[NSManagedObjectContext MR_newPrivateQueueContext] mergeChangesFromContextDidSaveNotification:notification];
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;这样就能保证子线程的Context与主线程的context内容修改可以同步&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、CoreData结构</summary></entry><entry><title type="html">漫谈iOS安全</title><link href="http://www.helloted.com/2016/10/11/safety/" rel="alternate" type="text/html" title="漫谈iOS安全" /><published>2016-10-11T20:00:00+08:00</published><updated>2016-10-11T20:00:00+08:00</updated><id>http://www.helloted.com/2016/10/11/safety</id><content type="html" xml:base="http://www.helloted.com/2016/10/11/safety/">&lt;h3 id=&quot;一前言&quot;&gt;一、前言&lt;/h3&gt;
 
 &lt;p&gt;经常都能听到大家说，iOS很安全，iPhone比安卓手机安全。那么为什么iOS会安全，难道仅仅是因为iOS是闭源然后安卓是开源的，开源的就一定比闭源安全？前段时间著名的&lt;em&gt;Xcode Ghost&lt;/em&gt; 事件也让人觉得iOS好像并不是那么地安全，今天就随便说说iOS的安全。&lt;/p&gt;
 

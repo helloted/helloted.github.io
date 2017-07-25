@@ -101,3 +101,97 @@ header-img: "img/bg_02.jpg"
 ![](/img/coredata/04.png)
 
 这种情况下，privatecontext与maincontext共同连接`NSPersistentStoreCoordinator`，子线程中创建privateContext，进行数据增删改查操作，直接save到本地数据库，这时在回调之前注册的NSManagedObjectContextDidSaveNotification的回调方法，在该方法中调用mainContext的mergeChangesFromContextDidSaveNotification:notification方法，将所有的数据变动merge到mainContext中，这样就保持了两个Context中的数据同步。由于大部分的操作都是privateContext在子线程中操作的，所以这种设计是UI线程耗时最少的一种设计，但是它的代价是需要多写mergeChanges的方法。
+
+### 三、MagicRecord源码解析
+
+```objective-c
++ (void) setupCoreDataStackWithStoreAtURL:(NSURL *)storeURL
+{
+    if ([NSPersistentStoreCoordinator MR_defaultStoreCoordinator] != nil) return;
+    
+    NSPersistentStoreCoordinator *coordinator = [NSPersistentStoreCoordinator MR_coordinatorWithSqliteStoreAtURL:storeURL];
+    [NSPersistentStoreCoordinator MR_setDefaultStoreCoordinator:coordinator];
+    
+    [NSManagedObjectContext MR_initializeDefaultContextWithCoordinator:coordinator];
+}
+```
+
+先生成一个默认的NSPersistentStoreCoordinator，再生成默认的context，如下：
+
+```objective-c
++ (void) MR_initializeDefaultContextWithCoordinator:(NSPersistentStoreCoordinator *)coordinator;
+{
+    NSAssert(coordinator, @"Provided coordinator cannot be nil!");
+    if (MagicalRecordDefaultContext == nil)
+    {
+      	// NSPrivateQueueConcurrencyType
+        NSManagedObjectContext *rootContext = [self MR_contextWithStoreCoordinator:coordinator];
+        [self MR_setRootSavingContext:rootContext];
+		
+        //NSMainQueueConcurrencyType
+        NSManagedObjectContext *defaultContext = [self MR_newMainQueueContext];
+        [self MR_setDefaultContext:defaultContext];
+
+        [defaultContext setParentContext:rootContext];
+    }
+}
+```
+
+MagicRecord生成了两个context:
+
+- rootContext:NSPrivateQueueConcurrencyType，用以保存数据的上下文
+- defaultContext:NSMainQueueConcurrencyType，用以主线程的上下文
+
+defaultContext的父context是rootContext：RootSavingContext，可以看出MagicRecord默认用的是第二种模式，很简单就可以新建一个NSManagedObject并且保存
+
+```objective-c
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        NSManagedObjectContext *current_context = [NSManagedObjectContext MR_contextWithParent:[NSManagedObjectContext MR_defaultContext]];
+        Person *person = [Person MR_createEntityInContext:current_context];
+        person.name = @"jack";
+        [current_context MR_saveToPersistentStoreWithCompletion:^(BOOL contextDidSave, NSError * _Nullable error) {
+            NSLog(@"finish save");
+        }];
+    });
+```
+
+```
+2016-07-25 20:26:29.454 MagicR[19718:3903431] Created new private queue context: <NSManagedObjectContext: 0x6100001da220>
+2016-07-25 20:26:29.454 MagicR[19718:3903443] → Saving <NSManagedObjectContext (0x6100001da220): Untitled Context> on a background thread
+2016-07-25 20:26:29.460 MagicR[19718:3903375] → Saving <NSManagedObjectContext (0x6080001daa90): MagicalRecord Default Context> on the main thread
+2016-07-25 20:26:29.462 MagicR[19718:3903431] → Saving <NSManagedObjectContext (0x6180001da6d0): MagicalRecord Root Saving Context> on a background thread
+2016-07-25 20:26:29.466 MagicR[19718:3903375] finish save
+```
+
+从MagicRecord的日志就可以看出来，整个过程如下：
+
+1. 在子线程新建了一个current_context，并且设置他的父context为主线程的context(default context),然后Person在子线程context改变
+2. 将current_context的变动merge到父线程的context也就是defaultcontext，主线程的context同样merge到父线程的也就是rootcontext
+3. rootcontext在子线程将变动保存到磁盘
+
+如果想用第三种方式的话可以这样：
+
+```objective-c
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        NSManagedObjectContext *current_context = [NSManagedObjectContext MR_newPrivateQueueContext];
+        [current_context setPersistentStoreCoordinator:[NSPersistentStoreCoordinator MR_defaultStoreCoordinator]];
+        Person *person = [Person MR_createEntityInContext:current_context];
+        person.name = @"jack";
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(contextChanged:)
+                                                     name:NSManagedObjectContextDidSaveNotification
+                                                   object:current_context];
+        [current_context MR_saveToPersistentStoreWithCompletion:^(BOOL contextDidSave, NSError * _Nullable error) {
+            NSLog(@"finish save");
+        }];
+    });
+```
+
+```
+- (void)contextChanged:(NSNotification*)notification{
+    [[NSManagedObjectContext MR_newPrivateQueueContext] mergeChangesFromContextDidSaveNotification:notification];
+}
+```
+
+这样就能保证子线程的Context与主线程的context内容修改可以同步
+
