@@ -9,6 +9,10 @@ header-img: "img/bg_02.jpg"
 
 ### 一、CoreData结构
 
+可以用两张图来表示：
+
+![](/img/coredata/00.png)
+
 ![](/img/coredata/01.png)
 
 #### NSManagedObject
