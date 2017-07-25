@@ -100,7 +100,7 @@ header-img: "img/bg_02.jpg"
 
 ![](/img/coredata/04.png)
 
-这种情况下，privatecontext与maincontext共同连接`NSPersistentStoreCoordinator`，子线程中创建privateContext，进行数据增删改查操作，直接save到本地数据库，这时在回调之前注册的NSManagedObjectContextDidSaveNotification的回调方法，在该方法中调用mainContext的mergeChangesFromContextDidSaveNotification:notification方法，将所有的数据变动merge到mainContext中，这样就保持了两个Context中的数据同步。由于大部分的操作都是privateContext在子线程中操作的，所以这种设计是UI线程耗时最少的一种设计，但是它的代价是需要多写mergeChanges的方法。
+这种情况下，privatecontext与maincontext共同连接`NSPersistentStoreCoordinator`，子线程中创建privateContext，进行数据增删改查操作，直接save到本地数据库，同时发出通知`NSManagedObjectContextDidSaveNotification`,在主线程mainContext的`mergeChangesFromContextDidSaveNotification:notification`方法，将所有的数据变动merge到mainContext中，这样就保持了两个Context中的数据同步。由于大部分的操作都是privateContext在子线程中操作的，所以这种设计是UI线程耗时最少的一种设计，但是它的代价是需要多写mergeChanges的方法。
 
 ### 三、MagicRecord源码解析
 
@@ -169,7 +169,7 @@ defaultContext的父context是rootContext：RootSavingContext，可以看出Magi
 2. 将current_context的变动merge到父线程的context也就是defaultcontext，主线程的context同样merge到父线程的也就是rootcontext
 3. rootcontext在子线程将变动保存到磁盘
 
-如果想用第三种方式的话可以这样：
+如果想用第三种方式的话可以这样：在修改之后发出`NSManagedObjectContextDidSaveNotification`通知主线程的context。而主线程的context通过`mergeChangesFromContextDidSaveNotification`来合并修改
 
 ```objective-c
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
