@@ -10,7 +10,7 @@
 
     <title>CoreData简介以及第三方框架MagicRecord源码解析 - Helloted Blog</title>
 
-    <link rel="canonical" href="http://www.helloted.com/2016/12/01/coredatamd/">
+    <link rel="canonical" href="http://www.helloted.com/2016/12/01/coredata/">
 
     <link rel="shortcut icon" href="/img/favicon.ico">
    
@@ -169,6 +169,8 @@
 <h4 id="nsmanagedobjectmodel">NSManagedObjectModel</h4>
 
 <p>生成这个类的来源就是在 xCode 里的.xcdatamodeld文件，我们可以可视化的对这个文件进行操作，实际上这个文件也就相当于数据库的 schema，这个文件编译后就是.momd或.mom文件。</p>
+
+<p>Model Vesion：版本升级，Editor-&gt;Add Model Version，生成新的momd文件来进行版本升级，并且重新生成相关类</p>
 
 <pre><code class="language-objective-c">- (NSManagedObjectModel *)managedObjectModel{
     if (__managedObjectModel != nil) {

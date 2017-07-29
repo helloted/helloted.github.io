@@ -109,17 +109,6 @@ dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), di
 
 异步添加，将指定的Block"非同步"地追加到指定的Queue中，该线程不做等待，继续往下执行；
 
-#### dispatch_barrier_sync:
-
-```objective-c
-用于数据库和文件访问解决资源竞争问题
-dispatch_async(queue, ^{NSLog(@"read");});
-dispatch_async(queue, ^{NSLog(@"read");});
-dispatch_async(queue, ^{NSLog(@"read");});
-dispatch_barrier_sync(queue, ^{NSLog(@"writing");});
-dispatch_async(queue, ^{NSLog(@"read");});
-```
-
 ### 五、队列
 
 Dispatch Queue：执行处理任务的队列，通过dispatch_async等函数API，在Block语法中记述想要执行的处理任务并将其追加到Dispatch Queue中，Dispatch Queue按照追加的顺序（先进先出FIFO）执行处理。
@@ -175,7 +164,47 @@ dispatch_after(dispatch_time(DISPATCH_TIME_NOW,150ull *NSEC_PER_MSEC),dispatch_g
 });
 ```
 
-### 七、NSOperation
+### 七、dispatch_group与dispatch_barrier
+
+dispatch_group应用于线程依赖：当添加到Queue中的所有任务都完成了，再来执行某个任务。
+
+举例，异步下载两张图片，这在这两张图片下载完毕之后，将两张图片合成
+
+```
+dispatch_group_t group = dispatch_group_create();
+dispatch_queue_t queue = dispatch_queue_create("com.gcd-group.www", DISPATCH_QUEUE_CONCURRENT);
+dispatch_group_async(group, queue, ^{
+    #异步下载第一张图片
+ });
+ 
+dispatch_group_async(group, queue, ^{
+    #异步下载第二张图片
+});
+     
+dispatch_group_notify(group, queue, ^{
+    #两张图片下载完后进行合成
+});
+```
+
+dispatch_barrier：barrier以为栅栏，阻碍。在串行队列中，无区别，但是在并行队列中，用这个函数添加的任务可以保证阻碍线程执行，即这个任务是串行执行的。可用于解决数据竞争问题。
+
+举例。多个操作对数据库进行读写，读的操作可以异步进行，但是为了保证写的线程安全，则必须用dispatch_barrier
+
+```
+dispatch_async(queue, ^{NSLog(@"read");});
+dispatch_async(queue, ^{NSLog(@"read");});
+dispatch_async(queue, ^{NSLog(@"read");});
+
+#可以保证写的时候只有这一个操作
+dispatch_barrier_sync(queue, ^{NSLog(@"writing");});
+
+dispatch_async(queue, ^{NSLog(@"read");});
+dispatch_async(queue, ^{NSLog(@"read");});
+```
+
+![](/img/Simple_01/03.png)
+
+### 八、NSOperation
 
 1、NSoperation是基于GCD封装的
 

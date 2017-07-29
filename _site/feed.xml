@@ -1,4 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-07-25T21:00:28+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS之Runloop(3):应用</title><link href="http://www.helloted.com/2017/04/16/Runloop_3/" rel="alternate" type="text/html" title="iOS之Runloop(3):应用" /><published>2017-04-16T20:00:00+08:00</published><updated>2017-04-16T20:00:00+08:00</updated><id>http://www.helloted.com/2017/04/16/Runloop_3</id><content type="html" xml:base="http://www.helloted.com/2017/04/16/Runloop_3/">&lt;p&gt;其他两篇关于Runloop:&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-07-29T16:23:49+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">热修复=Runtime+Javascriptcore</title><link href="http://www.helloted.com/2017/05/30/hotfix/" rel="alternate" type="text/html" title="热修复=Runtime+Javascriptcore" /><published>2017-05-30T20:00:00+08:00</published><updated>2017-05-30T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/30/hotfix</id><content type="html" xml:base="http://www.helloted.com/2017/05/30/hotfix/">&lt;p&gt;一、运行时&lt;/p&gt;
+
+&lt;p&gt;二、Javascriptcore&lt;/p&gt;
+
+&lt;p&gt;三、热修复&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、运行时</summary></entry><entry><title type="html">iOS之Runloop(3):应用</title><link href="http://www.helloted.com/2017/04/16/Runloop_3/" rel="alternate" type="text/html" title="iOS之Runloop(3):应用" /><published>2017-04-16T20:00:00+08:00</published><updated>2017-04-16T20:00:00+08:00</updated><id>http://www.helloted.com/2017/04/16/Runloop_3</id><content type="html" xml:base="http://www.helloted.com/2017/04/16/Runloop_3/">&lt;p&gt;其他两篇关于Runloop:&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;http://www.helloted.com/2017/04/10/Runloop_1/&quot;&gt;iOS之Runloop(1):基础&lt;/a&gt;&lt;/p&gt;
 
@@ -916,7 +920,7 @@ cancelPreviousPerformRequestsWithTarget:selector:object:
 
 &lt;p&gt;线程安全性取决于使用runloop的API。 Core Foundation中的功能通常是线程安全的，可以从任何线程调用。 但是，如果您想更改runloop的配置，那么尽可能从拥有runloop的线程执行此操作。&lt;/p&gt;
 
-&lt;p&gt;Cocoa NSRunLoop类并不像Core Foundation对象那样固有线程安全。 如果您正在使用NSRunLoop类来修改runloop，那你最好在同一线程执行这个操作。 将input sources或timers添加到属于不同线程的runloop可能会导致崩溃或者其他意外结果。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">其他两篇：</summary></entry><entry><title type="html">CoreData简介以及第三方框架MagicRecord源码解析</title><link href="http://www.helloted.com/2016/12/01/coredatamd/" rel="alternate" type="text/html" title="CoreData简介以及第三方框架MagicRecord源码解析" /><published>2016-12-01T20:00:00+08:00</published><updated>2016-12-01T20:00:00+08:00</updated><id>http://www.helloted.com/2016/12/01/coredatamd</id><content type="html" xml:base="http://www.helloted.com/2016/12/01/coredatamd/">&lt;h3 id=&quot;一coredata结构&quot;&gt;一、CoreData结构&lt;/h3&gt;
+&lt;p&gt;Cocoa NSRunLoop类并不像Core Foundation对象那样固有线程安全。 如果您正在使用NSRunLoop类来修改runloop，那你最好在同一线程执行这个操作。 将input sources或timers添加到属于不同线程的runloop可能会导致崩溃或者其他意外结果。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">其他两篇：</summary></entry><entry><title type="html">CoreData简介以及第三方框架MagicRecord源码解析</title><link href="http://www.helloted.com/2016/12/01/coredata/" rel="alternate" type="text/html" title="CoreData简介以及第三方框架MagicRecord源码解析" /><published>2016-12-01T20:00:00+08:00</published><updated>2016-12-01T20:00:00+08:00</updated><id>http://www.helloted.com/2016/12/01/coredata</id><content type="html" xml:base="http://www.helloted.com/2016/12/01/coredata/">&lt;h3 id=&quot;一coredata结构&quot;&gt;一、CoreData结构&lt;/h3&gt;
 
 &lt;p&gt;可以用两张图来表示：&lt;/p&gt;
 
@@ -981,6 +985,8 @@ cancelPreviousPerformRequestsWithTarget:selector:object:
 &lt;h4 id=&quot;nsmanagedobjectmodel&quot;&gt;NSManagedObjectModel&lt;/h4&gt;
 
 &lt;p&gt;生成这个类的来源就是在 xCode 里的.xcdatamodeld文件，我们可以可视化的对这个文件进行操作，实际上这个文件也就相当于数据库的 schema，这个文件编译后就是.momd或.mom文件。&lt;/p&gt;
+
+&lt;p&gt;Model Vesion：版本升级，Editor-&amp;gt;Add Model Version，生成新的momd文件来进行版本升级，并且重新生成相关类&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;- (NSManagedObjectModel *)managedObjectModel{
     if (__managedObjectModel != nil) {
@@ -1700,27 +1706,4 @@ sqlite3 &lt;span class=&quot;nv&quot;&gt;$SYMBOL_DB_FILE&lt;/span&gt; .dump
 
 &lt;p&gt;&lt;img src=&quot;/img/ConfuseCode/confuse_04.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/ConfuseCode/confuse_02.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、利用class-dump来查看源文件</summary></entry><entry><title type="html">iOS源码分析之SDWebImage(二)</title><link href="http://www.helloted.com/2016/06/29/SDWebImage_2/" rel="alternate" type="text/html" title="iOS源码分析之SDWebImage(二)" /><published>2016-06-29T20:00:00+08:00</published><updated>2016-06-29T20:00:00+08:00</updated><id>http://www.helloted.com/2016/06/29/SDWebImage_2</id><content type="html" xml:base="http://www.helloted.com/2016/06/29/SDWebImage_2/">&lt;p&gt;SDWebImage是iOS开发者最常用的第三方框架之一，用于异步下载网络图片，缓存图片，&lt;a href=&quot;https://github.com/rs/SDWebImage&quot;&gt;Github源码地址&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;三核心架构&quot;&gt;三、核心架构&lt;/h3&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/SDWebImage/00.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;四相关技术&quot;&gt;四、相关技术&lt;/h3&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;判断当前图片类型：只判断图片二进制数据的第一个字节&lt;/li&gt;
-  &lt;li&gt;默认的缓存周期：1周&lt;/li&gt;
-  &lt;li&gt;缓存策略：默认情况下既做内存缓存又做磁盘缓存，下载图片前先检查内存缓存，再检查磁盘缓存&lt;/li&gt;
-  &lt;li&gt;缓存的实现方式：采用了苹果推出的专门用来处理缓存的类NSCache&lt;/li&gt;
-  &lt;li&gt;框架内部允许的最大并发数：6&lt;/li&gt;
-  &lt;li&gt;对系统内存警告的处理方式：框架内部监听系统内存警告的通知，当发生后移除内存缓存中的所有对象&lt;/li&gt;
-  &lt;li&gt;下载队列中对多个图片任务的处理方式：提供了FIFO和LIFO两种方式，默认为FIFO&lt;/li&gt;
-  &lt;li&gt;如何下载图片：采用NSURLConnection发送网络请求，在其代理方法中接收数据并处理进度回调等工作&lt;/li&gt;
-  &lt;li&gt;请求超时的设定：15秒&lt;/li&gt;
-  &lt;li&gt;磁盘缓存图片的命名：以该图片的URL进行MD5散列加密&lt;/li&gt;
-  &lt;li&gt;缓存路径：~/Library/Caches/default/com.hackemist.SDWebImageCache.default&lt;/li&gt;
-  &lt;li&gt;key—–&amp;gt;URL(如何优化):用黑名单(当一个URL请求失败后,会被添加到黑名单,可以有效的防止一个错误的URL被多次尝试下载)&lt;/li&gt;
-  &lt;li&gt;写文件到硬盘在单独 NSInvocationOperation 中完成，避免拖慢主线程。&lt;/li&gt;
-  &lt;li&gt;如果是在iOS上运行，SDImageCache 在初始化的时候会注册notification 到 UIApplicationDidReceiveMemoryWarningNotification 以及  UIApplicationWillTerminateNotification,在内存警告的时候清理内存图片缓存，应用结束的时候清理过期图片。&lt;/li&gt;
-&lt;/ol&gt;</content><author><name>Ted</name></author><summary type="html">SDWebImage是iOS开发者最常用的第三方框架之一，用于异步下载网络图片，缓存图片，Github源码地址</summary></entry></feed>
+&lt;p&gt;&lt;img src=&quot;/img/ConfuseCode/confuse_02.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、利用class-dump来查看源文件</summary></entry></feed>
