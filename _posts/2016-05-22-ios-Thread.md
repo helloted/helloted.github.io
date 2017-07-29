@@ -202,7 +202,7 @@ dispatch_async(queue, ^{NSLog(@"read");});
 dispatch_async(queue, ^{NSLog(@"read");});
 ```
 
-![](/img/Simple_01/03.png)
+![](/img/Simple_1/03.png)
 
 ### 八、NSOperation
 
