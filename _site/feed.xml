@@ -1,6 +1,45 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-07-29T16:29:43+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">热修复=Runtime+Javascriptcore</title><link href="http://www.helloted.com/2017/05/30/hotfix/" rel="alternate" type="text/html" title="热修复=Runtime+Javascriptcore" /><published>2017-05-30T20:00:00+08:00</published><updated>2017-05-30T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/30/hotfix</id><content type="html" xml:base="http://www.helloted.com/2017/05/30/hotfix/">&lt;p&gt;一、运行时&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-07-29T17:02:13+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">热修复=Runtime+Javascriptcore</title><link href="http://www.helloted.com/2017/05/30/hotfix/" rel="alternate" type="text/html" title="热修复=Runtime+Javascriptcore" /><published>2017-05-30T20:00:00+08:00</published><updated>2017-05-30T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/30/hotfix</id><content type="html" xml:base="http://www.helloted.com/2017/05/30/hotfix/">&lt;h3 id=&quot;一运行时&quot;&gt;一、运行时&lt;/h3&gt;
 
-&lt;p&gt;二、Javascriptcore&lt;/p&gt;
+&lt;p&gt;热修复的基本原理就是Runtime运行时的方法替换，主要是下列几个方法&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;class_replaceMethod&lt;/code&gt;:方法替换&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;method_exchangeImplementations&lt;/code&gt;:IMP交换&lt;/p&gt;
+
+&lt;p&gt;实例，当我们要对某个类的old_method方法以new_method方法替换掉，则新建一个Category，在其load类方法(Load方法每次APP加载都会调用)中实现以下：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    static dispatch_once_t onceToken;
+    dispatch_once(&amp;amp;onceToken, ^{
+        Class class = [self class];
+        
+        SEL originalSelector = @selector(old_method);
+        SEL swizzledSelector = @selector(new_method);
+        
+        Method originalMethod = class_getInstanceMethod(class, originalSelector);
+        Method swizzledMethod = class_getInstanceMethod(class, swizzledSelector);
+        
+        
+        BOOL didAddMethod =
+        class_addMethod(class,
+                        originalSelector,
+                        method_getImplementation(swizzledMethod),
+                        method_getTypeEncoding(swizzledMethod));
+        
+        if (didAddMethod) {
+            class_replaceMethod(class,
+                                swizzledSelector,
+                                method_getImplementation(originalMethod),
+                                method_getTypeEncoding(originalMethod));
+        } else {
+            method_exchangeImplementations(originalMethod, swizzledMethod);
+        }
+    });
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;二javascriptcore&quot;&gt;二、Javascriptcore&lt;/h3&gt;
+
+&lt;p&gt;Javascriptcore是一个iOS原生框架，用于javascript与Objecive C语言进行相互调用，而我们热修改需要用到的就是javascript可以调用OC方法&lt;/p&gt;
 
 &lt;p&gt;三、热修复&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、运行时</summary></entry><entry><title type="html">iOS之Runloop(3):应用</title><link href="http://www.helloted.com/2017/04/16/Runloop_3/" rel="alternate" type="text/html" title="iOS之Runloop(3):应用" /><published>2017-04-16T20:00:00+08:00</published><updated>2017-04-16T20:00:00+08:00</updated><id>http://www.helloted.com/2017/04/16/Runloop_3</id><content type="html" xml:base="http://www.helloted.com/2017/04/16/Runloop_3/">&lt;p&gt;其他两篇关于Runloop:&lt;/p&gt;
 

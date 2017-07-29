@@ -104,9 +104,48 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
 
-				<p>一、运行时</p>
+				<h3 id="一运行时">一、运行时</h3>
 
-<p>二、Javascriptcore</p>
+<p>热修复的基本原理就是Runtime运行时的方法替换，主要是下列几个方法</p>
+
+<p><code class="highlighter-rouge">class_replaceMethod</code>:方法替换</p>
+
+<p><code class="highlighter-rouge">method_exchangeImplementations</code>:IMP交换</p>
+
+<p>实例，当我们要对某个类的old_method方法以new_method方法替换掉，则新建一个Category，在其load类方法(Load方法每次APP加载都会调用)中实现以下：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>    static dispatch_once_t onceToken;
+    dispatch_once(&amp;onceToken, ^{
+        Class class = [self class];
+        
+        SEL originalSelector = @selector(old_method);
+        SEL swizzledSelector = @selector(new_method);
+        
+        Method originalMethod = class_getInstanceMethod(class, originalSelector);
+        Method swizzledMethod = class_getInstanceMethod(class, swizzledSelector);
+        
+        
+        BOOL didAddMethod =
+        class_addMethod(class,
+                        originalSelector,
+                        method_getImplementation(swizzledMethod),
+                        method_getTypeEncoding(swizzledMethod));
+        
+        if (didAddMethod) {
+            class_replaceMethod(class,
+                                swizzledSelector,
+                                method_getImplementation(originalMethod),
+                                method_getTypeEncoding(originalMethod));
+        } else {
+            method_exchangeImplementations(originalMethod, swizzledMethod);
+        }
+    });
+</code></pre>
+</div>
+
+<h3 id="二javascriptcore">二、Javascriptcore</h3>
+
+<p>Javascriptcore是一个iOS原生框架，用于javascript与Objecive C语言进行相互调用，而我们热修改需要用到的就是javascript可以调用OC方法</p>
 
 <p>三、热修复</p>
 
