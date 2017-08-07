@@ -64,7 +64,9 @@ void *start(void *data) {
 + (void)sleepUntilDate:(NSDate *)date;
 ```
 
-### 四、添加任务到队列（同步、异步）：
+### 四、GCD
+
+#### 1、添加任务到队列（同步、异步）：
 
 #### dispatch_sync:
 
@@ -109,7 +111,7 @@ dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), di
 
 异步添加，将指定的Block"非同步"地追加到指定的Queue中，该线程不做等待，继续往下执行；
 
-### 五、队列
+#### 2、队列
 
 Dispatch Queue：执行处理任务的队列，通过dispatch_async等函数API，在Block语法中记述想要执行的处理任务并将其追加到Dispatch Queue中，Dispatch Queue按照追加的顺序（先进先出FIFO）执行处理。
 
@@ -150,7 +152,7 @@ dispatch_queue_t  serialQ = dispatch_queue_create("createName", DISPATCH_QUEUE_S
 改变队列优先级
 dispatch_set_target_queue(restQueue, targetQueue);
 ```
-### 六、延迟添加执行dispatch_after
+#### 3、延迟添加执行dispatch_after
 
 并不是在多少秒后执行，而是在3秒后将任务添加到Dispatch Queue中
 
@@ -164,7 +166,7 @@ dispatch_after(dispatch_time(DISPATCH_TIME_NOW,150ull *NSEC_PER_MSEC),dispatch_g
 });
 ```
 
-### 七、dispatch_group与dispatch_barrier
+#### 4、dispatch_group与dispatch_barrier
 
 dispatch_group应用于线程依赖：当添加到Queue中的所有任务都完成了，再来执行某个任务。
 
@@ -186,7 +188,7 @@ dispatch_group_notify(group, queue, ^{
 });
 ```
 
-dispatch_barrier：barrier以为栅栏，阻碍。在串行队列中，无区别，但是在并行队列中，用这个函数添加的任务可以保证阻碍线程执行，即这个任务是串行执行的。可用于解决数据竞争问题。
+dispatch_barrier：barrier以为栅栏，阻碍。在串行队列中，无区别，但是在并行队列中，用这个函数添加的任务可以保证阻碍线程执行，即这个任务是串行执行的。可用于解决数据竞争问题。有个坑要注意，并行队列必必须是自己dispatch_queue_create创建的，不能用dispatch_get_global_queue
 
 举例。多个操作对数据库进行读写，读的操作可以异步进行，但是为了保证写的线程安全，则必须用dispatch_barrier
 
@@ -204,7 +206,13 @@ dispatch_async(queue, ^{NSLog(@"read");});
 
 ![](/img/Simple_1/03.png)
 
-### 八、NSOperation
+#### 5、dispatch_semaphore
+
+semaphore是信号的意思，dispatch_semaphore有三个函数，分别是dispatch_semaphore_create，dispatch_semaphore_signal，dispatch_semaphore_wait
+
+[dispatch_semaphore信号量控制](http://www.helloted.com/2016/09/20/dispatch_semaphore/)
+
+### 五、NSOperation
 
 1、NSoperation是基于GCD封装的
 
