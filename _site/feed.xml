@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-08-07T14:16:01+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">热修复=Runtime+Javascriptcore</title><link href="http://www.helloted.com/2017/05/30/hotfix/" rel="alternate" type="text/html" title="热修复=Runtime+Javascriptcore" /><published>2017-05-30T20:00:00+08:00</published><updated>2017-05-30T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/30/hotfix</id><content type="html" xml:base="http://www.helloted.com/2017/05/30/hotfix/">&lt;h3 id=&quot;一运行时&quot;&gt;一、运行时&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-08-16T09:47:34+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">热修复=Runtime+Javascriptcore</title><link href="http://www.helloted.com/2017/05/30/hotfix/" rel="alternate" type="text/html" title="热修复=Runtime+Javascriptcore" /><published>2017-05-30T20:00:00+08:00</published><updated>2017-05-30T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/30/hotfix</id><content type="html" xml:base="http://www.helloted.com/2017/05/30/hotfix/">&lt;h3 id=&quot;一运行时&quot;&gt;一、运行时&lt;/h3&gt;
 
 &lt;p&gt;热修复的基本原理就是Runtime运行时的方法替换，主要是下列几个方法&lt;/p&gt;
 
@@ -1506,13 +1506,13 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
 
 &lt;h3 id=&quot;demo位置&quot;&gt;demo位置&lt;/h3&gt;
 
-&lt;p&gt;以上代码都放在&lt;a href=&quot;https://github.com/helloted/dispatch_semaphore&quot;&gt;dispatch_semaphore demo&lt;/a&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">几个函数的意义</summary></entry><entry><title type="html">Http与Https</title><link href="http://www.helloted.com/2016/09/13/Http/" rel="alternate" type="text/html" title="Http与Https" /><published>2016-09-13T20:00:00+08:00</published><updated>2016-09-13T20:00:00+08:00</updated><id>http://www.helloted.com/2016/09/13/Http</id><content type="html" xml:base="http://www.helloted.com/2016/09/13/Http/">&lt;h3 id=&quot;tcpip定义&quot;&gt;TCP/IP定义&lt;/h3&gt;
+&lt;p&gt;以上代码都放在&lt;a href=&quot;https://github.com/helloted/dispatch_semaphore&quot;&gt;dispatch_semaphore demo&lt;/a&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">几个函数的意义</summary></entry><entry><title type="html">Http与Https</title><link href="http://www.helloted.com/2016/09/13/Http/" rel="alternate" type="text/html" title="Http与Https" /><published>2016-09-13T20:00:00+08:00</published><updated>2016-09-13T20:00:00+08:00</updated><id>http://www.helloted.com/2016/09/13/Http</id><content type="html" xml:base="http://www.helloted.com/2016/09/13/Http/">&lt;h3 id=&quot;1tcpip定义&quot;&gt;1、TCP/IP定义&lt;/h3&gt;
 
 &lt;p&gt;TCP/IP是互联网相关的各类协议族的名称&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/Http/tcp.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
-&lt;h3 id=&quot;tcpip四层模型&quot;&gt;TCP/IP四层模型&lt;/h3&gt;
+&lt;h3 id=&quot;2tcpip四层模型&quot;&gt;2、TCP/IP四层模型&lt;/h3&gt;
 
 &lt;p&gt;OSI七层模型太过繁琐，所以就对应有了TCP/IP四层模型，对应的将OSI中的应用层、表示层、会话层统一归为应用层。&lt;/p&gt;
 
@@ -1535,7 +1535,19 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
 
 &lt;p&gt;&lt;img src=&quot;/img/Http/model.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
-&lt;h3 id=&quot;http报文&quot;&gt;HTTP报文&lt;/h3&gt;
+&lt;h3 id=&quot;3tcp三次握手四次挥手&quot;&gt;3、TCP三次握手，四次挥手&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Http/01.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;4一次完整的http请求&quot;&gt;4、一次完整的HTTP请求&lt;/h3&gt;
+
+&lt;p&gt;一次完整的HTTP请求过程从TCP三次握手建立连接成功后开始，客户端按照指定的格式开始向服务端发送HTTP请求，服务端接收请求后，解析HTTP请求，处理完业务逻辑，最后返回一个HTTP的响应给客户端，HTTP的响应内容同样有标准的格式。&lt;/p&gt;
+
+&lt;p&gt;HTTP请求格式主要有四部分组成，分别是：请求行(请求方法（GET/POST/DELETE/PUT/HEAD）、URI路径、HTTP的版本号)、请求头(缓存、客户端信息等)、空行、消息体(请求数据)，每部分内容占一行。&lt;/p&gt;
+
+&lt;p&gt;HTTP响应消息的格式包括：状态行(有HTTP协议版本号，状态码和状态说明)、响应头、空行、消息体。每部分内容占一行。&lt;/p&gt;
+
+&lt;h3 id=&quot;5http报文&quot;&gt;5、HTTP报文&lt;/h3&gt;
 
 &lt;h4 id=&quot;请求报文&quot;&gt;请求报文&lt;/h4&gt;
 
@@ -1598,7 +1610,7 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
 
 &lt;p&gt;服务器端发现客户端发送过来的Cookie后，会去检查究竟从哪一个客户端发来的连接请求，然后对比服务器上的记录，最后得到之前的状态信息。&lt;/p&gt;
 
-&lt;h3 id=&quot;https&quot;&gt;HTTPS&lt;/h3&gt;
+&lt;h3 id=&quot;6https&quot;&gt;6、HTTPS&lt;/h3&gt;
 
 &lt;p&gt;其实HTTPS从最终的数据解析的角度，与HTTP没有任何的区别，HTTPS就是将HTTP协议数据包放到SSL/TSL层加密后，在TCP/IP层组成IP数据报去传输，以此保证传输数据的安全；而对于接收端，在SSL/TSL将接收的数据包解密之后，将数据传给HTTP协议层，就是普通的HTTP数据。HTTP和SSL/TSL都处于OSI模型的应用层。从HTTP切换到HTTPS是一个非常简单的过程&lt;/p&gt;
 
@@ -1622,7 +1634,7 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
   &lt;li&gt;客户端发送的数据用抓包程序给的证书生成的密钥加密&lt;/li&gt;
   &lt;li&gt;抓包程序得到客户端发送的数据抓包程序用自己的证书解密出来，再用服务器证书加密&lt;/li&gt;
   &lt;li&gt;抓包程序再把数据发给服务器&lt;/li&gt;
-&lt;/ol&gt;</content><author><name>Ted</name></author><summary type="html">TCP/IP定义</summary></entry><entry><title type="html">Objective-C混淆代码</title><link href="http://www.helloted.com/2016/08/12/confuseCode/" rel="alternate" type="text/html" title="Objective-C混淆代码" /><published>2016-08-12T20:00:00+08:00</published><updated>2016-08-12T20:00:00+08:00</updated><id>http://www.helloted.com/2016/08/12/confuseCode</id><content type="html" xml:base="http://www.helloted.com/2016/08/12/confuseCode/">&lt;h3 id=&quot;一利用class-dump来查看源文件&quot;&gt;一、利用class-dump来查看源文件&lt;/h3&gt;
+&lt;/ol&gt;</content><author><name>Ted</name></author><summary type="html">1、TCP/IP定义</summary></entry><entry><title type="html">Objective-C混淆代码</title><link href="http://www.helloted.com/2016/08/12/confuseCode/" rel="alternate" type="text/html" title="Objective-C混淆代码" /><published>2016-08-12T20:00:00+08:00</published><updated>2016-08-12T20:00:00+08:00</updated><id>http://www.helloted.com/2016/08/12/confuseCode</id><content type="html" xml:base="http://www.helloted.com/2016/08/12/confuseCode/">&lt;h3 id=&quot;一利用class-dump来查看源文件&quot;&gt;一、利用class-dump来查看源文件&lt;/h3&gt;
 
 &lt;p&gt;class-dump是一个逆向工具，可以用来查看未加固的APP的方法名和属性名&lt;/p&gt;
 

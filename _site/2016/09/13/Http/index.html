@@ -104,13 +104,13 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
 
-				<h3 id="tcpip定义">TCP/IP定义</h3>
+				<h3 id="1tcpip定义">1、TCP/IP定义</h3>
 
 <p>TCP/IP是互联网相关的各类协议族的名称</p>
 
 <p><img src="/img/Http/tcp.png" alt="" /></p>
 
-<h3 id="tcpip四层模型">TCP/IP四层模型</h3>
+<h3 id="2tcpip四层模型">2、TCP/IP四层模型</h3>
 
 <p>OSI七层模型太过繁琐，所以就对应有了TCP/IP四层模型，对应的将OSI中的应用层、表示层、会话层统一归为应用层。</p>
 
@@ -133,7 +133,19 @@
 
 <p><img src="/img/Http/model.png" alt="" /></p>
 
-<h3 id="http报文">HTTP报文</h3>
+<h3 id="3tcp三次握手四次挥手">3、TCP三次握手，四次挥手</h3>
+
+<p><img src="/img/Http/01.jpg" alt="" /></p>
+
+<h3 id="4一次完整的http请求">4、一次完整的HTTP请求</h3>
+
+<p>一次完整的HTTP请求过程从TCP三次握手建立连接成功后开始，客户端按照指定的格式开始向服务端发送HTTP请求，服务端接收请求后，解析HTTP请求，处理完业务逻辑，最后返回一个HTTP的响应给客户端，HTTP的响应内容同样有标准的格式。</p>
+
+<p>HTTP请求格式主要有四部分组成，分别是：请求行(请求方法（GET/POST/DELETE/PUT/HEAD）、URI路径、HTTP的版本号)、请求头(缓存、客户端信息等)、空行、消息体(请求数据)，每部分内容占一行。</p>
+
+<p>HTTP响应消息的格式包括：状态行(有HTTP协议版本号，状态码和状态说明)、响应头、空行、消息体。每部分内容占一行。</p>
+
+<h3 id="5http报文">5、HTTP报文</h3>
 
 <h4 id="请求报文">请求报文</h4>
 
@@ -196,7 +208,7 @@
 
 <p>服务器端发现客户端发送过来的Cookie后，会去检查究竟从哪一个客户端发来的连接请求，然后对比服务器上的记录，最后得到之前的状态信息。</p>
 
-<h3 id="https">HTTPS</h3>
+<h3 id="6https">6、HTTPS</h3>
 
 <p>其实HTTPS从最终的数据解析的角度，与HTTP没有任何的区别，HTTPS就是将HTTP协议数据包放到SSL/TSL层加密后，在TCP/IP层组成IP数据报去传输，以此保证传输数据的安全；而对于接收端，在SSL/TSL将接收的数据包解密之后，将数据传给HTTP协议层，就是普通的HTTP数据。HTTP和SSL/TSL都处于OSI模型的应用层。从HTTP切换到HTTPS是一个非常简单的过程</p>
 
