@@ -197,6 +197,14 @@ dispatch_queue_t  serialQ = dispatch_queue_create("createName", DISPATCH_QUEUE_S
 改变队列优先级
 dispatch_set_target_queue(restQueue, targetQueue);
 ```
+#### 暂停恢复队列
+
+```objective-c
+dispatch_queue_t queue = dispatch_get_main_queue();
+dispatch_suspend(queue); //暂停队列queue
+dispatch_resume(queue);  //恢复队列queue
+```
+
 #### 3、延迟添加执行dispatch_after
 
 并不是在多少秒后执行，而是在3秒后将任务添加到Dispatch Queue中
@@ -259,6 +267,18 @@ semaphore是信号的意思，dispatch_semaphore有三个函数，分别是dispa
 
 [dispatch_semaphore信号量控制](http://www.helloted.com/2016/09/20/dispatch_semaphore/)
 
+#### 6、dispatch_apply 
+
+重复执行某段代码
+
+```objective-c
+dispatch_apply(5, globalQ, ^(size_t index) { 
+    // 执行5次 
+});
+```
+
+
+
 ### 五、NSOperation
 
 1、NSoperation是基于GCD封装的
@@ -280,9 +300,50 @@ NSOperationQueue 有两种不同类型的队列：主队列和自定义队列�
 
 我们可以通过设置 maxConcurrentOperationCount 属性来控制并发任务的数量，当设置为 1 时， 那么它就是一个串行队列。主对列默认是串行队列，这一点和 dispatch_queue_t 是相似的。
 
-3、NSOperation
+3、用法
 
-你可以使用系统提供的一些现成的 NSOperation 的子类， 如 NSBlockOperation、 NSInvocationOperation 等（如上例子）。你也可以实现自己的子类， 通过重写 main 或者 start 方法 来定义自己的 operations 。
+> NSOperation实现
+
+一个是直接使用NSInvocationOperation、NSBlockOperation两个子类，一个是自己实现NSOperation的子类
+
+```objective-c
+NSInvocationOperation *invocationOperation = [[NSInvocationOperation alloc]initWithTarget:selfselector:@selector(invocationOperationAction)object:nil];
+```
+
+```objective-c
+NSBlockOperation*blockOperation = [NSBlockOperationblockOperationWithBlock:^{
+
+}];
+```
+
+> 执行任务有两种方法：
+
+- start ：方法时与主线程同步，有阻塞主线程的情况,
+- 提交到NSOperationQueue中：与主线程是异步，不会阻塞到主线程。NSOperationQueue可以通过maxConcurrentOperationCount设置线程最大并行数量，为1的时候相当于串行，大于1时为并发。
+
+> 取消任务
+
+```objective-c
+//取消队列中的所有operation
+[queue cancelAllOperations];
+
+//取消单个
+[blockOperation cancel];
+```
+
+> 暂停和恢复
+
+```objective-c
+[queue setSuspended:YES];
+```
+
+> 任务依赖：
+
+```objective-c
+[operationB addDependency:operationA]; // 操作B依赖于操作A
+```
+
+> 自定义Operation
 
 A:使用 main 方法非常简单，开发者不需要管理一些状态属性（例如 isExecuting 和 isFinished），当 main 方法返回的时候，这个 operation 就结束了。这种方式使用起来非常简单，但是灵活性相对重写 start 来说要少一些， 因为main方法执行完就认为operation结束了，所以一般可以用来执行同步任务。
 
