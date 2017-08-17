@@ -252,7 +252,51 @@
 
 <p>这个函数只能在“构建一个类的过程中”调用。一旦完成类定义，就不能再添加成员变量了</p>
 
-<h3 id="六利用runtime可以作用的一些方法">六、利用Runtime可以作用的一些方法：</h3>
+<h3 id="六kvc与kvo">六、KVC与KVO</h3>
+
+<h4 id="1kvc">1、KVC</h4>
+
+<p>KVC运用了isa-swizzing技术。isa-swizzing就是类型混合指针机制。KVC通过isa-swizzing实现其内部查找定位。isa指针（is kind of 的意思）指向维护分发表的对象的类，该分发表实际上包含了指向实现类中的方法的指针和其他数据。</p>
+
+<p>比如说如下的一行KVC代码：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[site setValue:@"sitename" forKey:@"name"];
+</code></pre>
+</div>
+
+<p>会被编译器处理成</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>SEL sel = sel_get_uid(setValue:forKey);
+IMP method = objc_msg_loopup(site-&gt;isa,sel);
+method(site,sel,@"sitename",@"name");
+</code></pre>
+</div>
+
+<p>每个类都有一张方法表，是一个hash表，值是还书指针IMP，SEL的名称就是查表时所用的键。
+SEL数据类型：查找方法表时所用的键。定义成char*，实质上可以理解成int值。
+IMP数据类型：他其实就是一个编译器内部实现时候的函数指针。当Objective-C编译器去处理实现一个方法的时候，就会指向一个IMP对象，这个对象是C语言表述的类型。</p>
+
+<h4 id="2kvo">2、KVO</h4>
+
+<p>当某个类的对象第一次被观察时，系统就会在运行期动态地创建该类的一个派生类，在这个派生类中重写基类中任何被观察属性的 setter 方法。</p>
+
+<p>派生类在被重写的 setter 方法实现真正的通知机制，就如前面手动实现键值观察那样。这么做是基于设置属性会调用 setter 方法，而通过重写就获得了 KVO 需要的通知机制。当然前提是要通过遵循 KVO 的属性设置方式来变更属性值，如果仅是直接修改属性对应的成员变量，是无法实现 KVO 的。</p>
+
+<p>同时派生类还重写了 class 方法以“欺骗”外部调用者它就是起初的那个类。然后系统将这个对象的 isa 指针指向这个新诞生的派生类，因此这个对象就成为该派生类的对象了，因而在该对象上对 setter 的调用就会调用重写的 setter，从而激活键值通知机制。此外，派生类还重写了 dealloc 方法来释放资源。</p>
+
+<p>简单而言：在被观察时，生成派生类，对于观察属性重写setter方法，然后在valuewillchange方法和valuesdidchanged方法里发出通知</p>
+
+<p>1、当一个object有观察者时，动态创建这个object的类的子类</p>
+
+<p>2、对于每个被观察的property，重写其set方法</p>
+
+<p>3、在重写的set方法中调用- willChangeValueForKey:和- didChangeValueForKey:通知观察者</p>
+
+<p>4、当一个property没有观察者时，删除重写的方法</p>
+
+<p>5、当没有observer观察任何一个property时，删除动态创建的子类</p>
+
+<h3 id="七利用runtime可以作用的一些方法">七、利用Runtime可以作用的一些方法：</h3>
 
 <p>class_getName：获取类名</p>
 

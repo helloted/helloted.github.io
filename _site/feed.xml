@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-08-16T09:54:20+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">热修复=Runtime+Javascriptcore</title><link href="http://www.helloted.com/2017/05/30/hotfix/" rel="alternate" type="text/html" title="热修复=Runtime+Javascriptcore" /><published>2017-05-30T20:00:00+08:00</published><updated>2017-05-30T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/30/hotfix</id><content type="html" xml:base="http://www.helloted.com/2017/05/30/hotfix/">&lt;h3 id=&quot;一运行时&quot;&gt;一、运行时&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-08-17T14:24:55+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">热修复=Runtime+Javascriptcore</title><link href="http://www.helloted.com/2017/05/30/hotfix/" rel="alternate" type="text/html" title="热修复=Runtime+Javascriptcore" /><published>2017-05-30T20:00:00+08:00</published><updated>2017-05-30T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/30/hotfix</id><content type="html" xml:base="http://www.helloted.com/2017/05/30/hotfix/">&lt;h3 id=&quot;一运行时&quot;&gt;一、运行时&lt;/h3&gt;
 
 &lt;p&gt;热修复的基本原理就是Runtime运行时的方法替换，主要是下列几个方法&lt;/p&gt;
 
@@ -47,7 +47,14 @@
 
 &lt;p&gt;&lt;a href=&quot;http://www.helloted.com/2017/04/16/Runloop_2/&quot;&gt;iOS之Runloop(2):事件源&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;1、AutoreleasePool&lt;/p&gt;
+&lt;p&gt;前：&lt;/p&gt;
+
+&lt;p&gt;1、线程创建需要的内存和时间消耗都比较大，因此建议你的入口点函数做相当数量的工作，或建立一个Run Loops允许进行经常性的工作。
+2、Run Loops可以让你使用最小的资源来创建长时间运行线程。因为run loop在没有任何事件处理的时候会把它的线程置于休眠状态，它消除了消耗CPU周期轮询，并防止处理器本身进入休眠状态并节省电源。&lt;/p&gt;
+
+&lt;p&gt;RunLoop，就是一个循环，只是这个循环里加入很多特性。 首先循环体的开始需要检测是否有需要处理的事件，如果有则去处理，如果没有则进入睡眠以节省CPU时间。所以重点便是这个需要处理的事件，在RunLoop中，需要处理的事件分两类，一种是输入源，一种是定时器，定时器好理解就是那些需要定时执行的操作，输入源分三类：performSelector源，基于端口（Mach port）的源，以及自定义的源。编程的时候可以添加自己的源&lt;/p&gt;
+
+&lt;h4 id=&quot;1autoreleasepool&quot;&gt;1、AutoreleasePool&lt;/h4&gt;
 
 &lt;p&gt;App启动后，苹果在主线程 RunLoop 里注册了两个 Observer，其回调都是 _wrapRunLoopWithAutoreleasePoolHandler()。&lt;/p&gt;
 
@@ -57,7 +64,7 @@
 
 &lt;p&gt;在主线程执行的代码，通常是写在诸如事件回调、Timer回调内的。这些回调会被 RunLoop 创建好的 AutoreleasePool 环绕着，所以不会出现内存泄漏，开发者也不必显示创建 Pool 了。&lt;/p&gt;
 
-&lt;p&gt;2、定时器&lt;/p&gt;
+&lt;h4 id=&quot;2定时器&quot;&gt;2、定时器&lt;/h4&gt;
 
 &lt;p&gt;NSTimer 其实就是 CFRunLoopTimerRef，他们之间是 toll-free bridged 的。一个 NSTimer 注册到 RunLoop 后，RunLoop 会为其重复的时间点注册好事件。例如 10:00, 10:10, 10:20 这几个时间点。RunLoop为了节省资源，并不会在非常准确的时间点回调这个Timer。Timer 有个属性叫做 Tolerance (宽容度)，标示了当时间点到后，容许有多少最大误差。&lt;/p&gt;
 
@@ -65,13 +72,13 @@
 
 &lt;p&gt;CADisplayLink 是一个和屏幕刷新率一致的定时器（但实际实现原理更复杂，和 NSTimer 并不一样，其内部实际是操作了一个 Source）。如果在两次屏幕刷新之间执行了一个长任务，那其中就会有一帧被跳过去（和 NSTimer 相似），造成界面卡顿的感觉。在快速滑动TableView时，即使一帧的卡顿也会让用户有所察觉。Facebook 开源的 AsyncDisplayLink 就是为了解决界面卡顿的问题，其内部也用到了 RunLoop，这个稍后我会再单独写一页博客来分析。&lt;/p&gt;
 
-&lt;p&gt;3、PerformSelecter&lt;/p&gt;
+&lt;h4 id=&quot;3performselector&quot;&gt;3、PerformSelector&lt;/h4&gt;
 
 &lt;p&gt;当调用 NSObject 的 performSelecter:afterDelay: 后，实际上其内部会创建一个 Timer 并添加到当前线程的 RunLoop 中。所以如果当前线程没有 RunLoop，则这个方法会失效。&lt;/p&gt;
 
 &lt;p&gt;当调用 performSelector:onThread: 时，实际上其会创建一个 Timer 加到对应的线程去，同样的，如果对应线程没有 RunLoop 该方法也会失效。&lt;/p&gt;
 
-&lt;p&gt;4、事件响应&lt;/p&gt;
+&lt;h4 id=&quot;4事件响应&quot;&gt;4、事件响应&lt;/h4&gt;
 
 &lt;p&gt;苹果注册了一个 Source1 (基于 mach port 的) 用来接收系统事件，其回调函数为 __IOHIDEventSystemClientQueueCallback()。&lt;/p&gt;
 
@@ -79,7 +86,7 @@
 
 &lt;p&gt;_UIApplicationHandleEventQueue() 会把 IOHIDEvent 处理并包装成 UIEvent 进行处理或分发，其中包括识别 UIGesture/处理屏幕旋转/发送给 UIWindow 等。通常事件比如 UIButton 点击、touchesBegin/Move/End/Cancel 事件都是在这个回调中完成的。&lt;/p&gt;
 
-&lt;p&gt;5、手势识别&lt;/p&gt;
+&lt;h4 id=&quot;5手势识别&quot;&gt;5、手势识别&lt;/h4&gt;
 
 &lt;p&gt;当上面的 _UIApplicationHandleEventQueue() 识别了一个手势时，其首先会调用 Cancel 将当前的 touchesBegin/Move/End 系列回调打断。随后系统将对应的 UIGestureRecognizer 标记为待处理。&lt;/p&gt;
 
@@ -87,7 +94,7 @@
 
 &lt;p&gt;当有 UIGestureRecognizer 的变化(创建/销毁/状态改变)时，这个回调都会进行相应处理。&lt;/p&gt;
 
-&lt;p&gt;6、界面更新&lt;/p&gt;
+&lt;h4 id=&quot;6界面更新&quot;&gt;6、界面更新&lt;/h4&gt;
 
 &lt;p&gt;当在操作 UI 时，比如改变了 Frame、更新了 UIView/CALayer 的层次时，或者手动调用了 UIView/CALayer 的 setNeedsLayout/setNeedsDisplay方法后，这个 UIView/CALayer 就被标记为待处理，并被提交到一个全局的容器去。&lt;/p&gt;
 
@@ -108,13 +115,13 @@
                             [UIView drawRect];
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;7、关于GCD&lt;/p&gt;
+&lt;h4 id=&quot;7关于gcd&quot;&gt;7、关于GCD&lt;/h4&gt;
 
 &lt;p&gt;实际上 RunLoop 底层也会用到 GCD 的东西。但同时 GCD 提供的某些接口也用到了 RunLoop， 例如 dispatch_async()&lt;/p&gt;
 
 &lt;p&gt;当调用 dispatch_async(dispatch_get_main_queue(), block) 时，libDispatch 会向主线程的 RunLoop 发送消息，RunLoop会被唤醒，并从消息中取得这个 block，并在回调 &lt;strong&gt;CFRUNLOOP_IS_SERVICING_THE_MAIN_DISPATCH_QUEUE&lt;/strong&gt;() 里执行这个 block。但这个逻辑仅限于 dispatch 到主线程，dispatch 到其他线程仍然是由 libDispatch 处理的。&lt;/p&gt;
 
-&lt;p&gt;8、关于网络请求&lt;/p&gt;
+&lt;h4 id=&quot;8关于网络请求&quot;&gt;8、关于网络请求&lt;/h4&gt;
 
 &lt;p&gt;iOS 中，关于网络请求的接口自下至上有如下几层:&lt;/p&gt;
 
@@ -1605,19 +1612,23 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
 &lt;p&gt;常见状态码&lt;/p&gt;
 
 &lt;ul&gt;
+  &lt;li&gt;301被请求的资源已永久移动到新位置。服务器返回此响应（对 GET 或 HEAD 请求的响应）时，会自动将请求者转到新位置。&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;302请求的资源临时从不同的URI响应请求，但请求者应继续使用原有位置来进行以后的请求&lt;/p&gt;
+  &lt;/li&gt;
   &lt;li&gt;404 没有找到&lt;/li&gt;
   &lt;li&gt;405 方法不允许&lt;/li&gt;
   &lt;li&gt;408 请求超时&lt;/li&gt;
   &lt;li&gt;500 服务器内部错误&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&quot;7长连接&quot;&gt;7、长连接&lt;/h4&gt;
+&lt;h3 id=&quot;7长连接&quot;&gt;7、长连接&lt;/h3&gt;
 
 &lt;p&gt;在报文中有一个字段：connnection:keep-alive;是长连接的意思，从Http1.1开始就是默认TCP保持长连接，只要任意一端没有提出断开连接，则会一直保持连接状态，一次长连接可以进行多次请求和响应，好处是可以减少建立连接和断开连接的开销，减少服务器的负载，另外也可以加快Http请求和响应；&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/Http/connection.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
-&lt;h4 id=&quot;8cookies&quot;&gt;8、Cookies&lt;/h4&gt;
+&lt;h3 id=&quot;8cookies&quot;&gt;8、Cookies&lt;/h3&gt;
 
 &lt;p&gt;Http是无状态协议，但有的时候客户端与服务器又要保持某些状态，于是引入了Cookie技术。Cookie技术通过在请求和响应报文中写入Cookie信息来控制客户端的状态&lt;/p&gt;
 

@@ -138,6 +138,29 @@ void *start(void *data) {
 
 <h3 id="三nsthread">三、NSThread</h3>
 
+<h4 id="1创建线程的方式">1、创建线程的方式</h4>
+
+<p>NSThread实例方法：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>- (instancetype)initWithTarget:(id)target selector:(SEL)selector object:(nullable id)argument
+</code></pre>
+</div>
+
+<p>NSThread类方法：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>+ (void)detachNewThreadWithBlock:(void (^)(void))block 
++ (void)detachNewThreadSelector:(SEL)selector toTarget:(id)target withObject:(nullable id)argument;
+</code></pre>
+</div>
+
+<p>NSObject的实例方法</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>- (void)performSelectorInBackground:(SEL)aSelector withObject:(nullable id)arg
+</code></pre>
+</div>
+
+<h4 id="2nsthread线程操作">2、NSThread线程操作</h4>
+
 <div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">//取消线程
 </span><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">cancel</span><span class="p">;</span>
 
@@ -164,6 +187,28 @@ void *start(void *data) {
 <span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">sleepUntilDate</span><span class="p">:(</span><span class="n">NSDate</span> <span class="o">*</span><span class="p">)</span><span class="nv">date</span><span class="p">;</span>
 </code></pre>
 </div>
+
+<h4 id="3线程间的通信">3、线程间的通信</h4>
+
+<p>线程间通信分为两种，一个是线程间数据的传递，另外一种是一个线程完成后到另外一个线程继续执行任务，NSThread提供了两个方法来进行线程通信</p>
+
+<p>第一种方式为performSelector, runloop是实现performOnThread的基础——目标thread必须有runloop在运行，因为该实现的原理是基于runloop源的</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>- (void)performSelector:(SEL)aSelector onThread:(NSThread *)thr withObject:(nullable id)arg waitUntilDone:(BOOL)wait  
+</code></pre>
+</div>
+
+<p>主线程比较特殊，有专门的方法</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>- (void)performSelectorOnMainThread:(SEL)aSelector withObject:(nullable id)arg waitUntilDone:(BOOL)wait; //wait如果传入的是YES: 那么会等到主线程中的方法执行完毕, 才会继续执行下面其他行的代码
+</code></pre>
+</div>
+
+<p>第2种为NSMachPort方式。NSPort有3个子类，NSSocketPort、NSMessagePort、NSMachPort，但在iOS下只有NSMachPort可用。</p>
+
+<p>使用的方式为接收线程中注册NSMachPort，在另外的线程中使用此port发送消息，则被注册线程会收到相应消息，然后最终在主线程里调用某个回调函数。</p>
+
+<p>可以看到，使用NSMachPort的结果为调用了其它线程的1个函数，而这正是performSelector所做的事情，所以，NSMachPort是个鸡肋。线程间通信应该都通过performSelector来搞定。</p>
 
 <h3 id="四gcd">四、GCD</h3>
 
@@ -283,6 +328,8 @@ dispatch_group_notify(group, queue, ^{
 </div>
 
 <p>dispatch_barrier：barrier以为栅栏，阻碍。在串行队列中，无区别，但是在并行队列中，用这个函数添加的任务可以保证阻碍线程执行，即这个任务是串行执行的。可用于解决数据竞争问题。有个坑要注意，并行队列必必须是自己dispatch_queue_create创建的，不能用dispatch_get_global_queue</p>
+
+<p>实现原理：queue中的其他block已经开始在各自分配的线程执行，当从queue检出一个barrier时，是等待其他的block都执行完毕再执行barrier，此时不会并发执行其他的block，直到该barrier执行完毕。 这相当于给当前已经运行的bock们加了一个group和notify，在notify里面执行了barrier，然后再执行barrier下面的block</p>
 
 <p>举例。多个操作对数据库进行读写，读的操作可以异步进行，但是为了保证写的线程安全，则必须用dispatch_barrier</p>
 
