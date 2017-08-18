@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-08-17T18:45:03+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">热修复=Runtime+Javascriptcore</title><link href="http://www.helloted.com/2017/05/30/hotfix/" rel="alternate" type="text/html" title="热修复=Runtime+Javascriptcore" /><published>2017-05-30T20:00:00+08:00</published><updated>2017-05-30T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/30/hotfix</id><content type="html" xml:base="http://www.helloted.com/2017/05/30/hotfix/">&lt;h3 id=&quot;一运行时&quot;&gt;一、运行时&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-08-18T15:37:26+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">热修复=Runtime+Javascriptcore</title><link href="http://www.helloted.com/2017/05/30/hotfix/" rel="alternate" type="text/html" title="热修复=Runtime+Javascriptcore" /><published>2017-05-30T20:00:00+08:00</published><updated>2017-05-30T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/30/hotfix</id><content type="html" xml:base="http://www.helloted.com/2017/05/30/hotfix/">&lt;h3 id=&quot;一运行时&quot;&gt;一、运行时&lt;/h3&gt;
 
 &lt;p&gt;热修复的基本原理就是Runtime运行时的方法替换，主要是下列几个方法&lt;/p&gt;
 
@@ -1157,7 +1157,336 @@ cancelPreviousPerformRequestsWithTarget:selector:object:
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;这样就能保证子线程的Context与主线程的context内容修改可以同步&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、CoreData结构</summary></entry><entry><title type="html">漫谈iOS安全</title><link href="http://www.helloted.com/2016/10/11/safety/" rel="alternate" type="text/html" title="漫谈iOS安全" /><published>2016-10-11T20:00:00+08:00</published><updated>2016-10-11T20:00:00+08:00</updated><id>http://www.helloted.com/2016/10/11/safety</id><content type="html" xml:base="http://www.helloted.com/2016/10/11/safety/">&lt;h3 id=&quot;一前言&quot;&gt;一、前言&lt;/h3&gt;
+&lt;p&gt;这样就能保证子线程的Context与主线程的context内容修改可以同步&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、CoreData结构</summary></entry><entry><title type="html">OC对象模型</title><link href="http://www.helloted.com/2016/10/15/objectmodel/" rel="alternate" type="text/html" title="OC对象模型" /><published>2016-10-15T20:00:00+08:00</published><updated>2016-10-15T20:00:00+08:00</updated><id>http://www.helloted.com/2016/10/15/objectmodel</id><content type="html" xml:base="http://www.helloted.com/2016/10/15/objectmodel/">&lt;p&gt;先看OC关于NSObject的源码&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://opensource.apple.com/source/objc4/objc4-532.2/runtime/NSObject.mm&quot;&gt;NSObject源码&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;一alloc与init&quot;&gt;一、alloc与init&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;NSObject *obj = [NSObject alloc]init];
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;alloc与init发生了什么呢？&lt;/p&gt;
+
+&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;alloc&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_objc_rootAlloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_objc_rootAlloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Class&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cls&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#if 0  &amp;amp;&amp;amp;  __OBJC2__
+    // Skip over the +allocWithZone: call if the class doesn't override it.
+    // fixme not - this breaks ObjectAlloc
+    if (! ((class_t *)cls)-&amp;gt;isa-&amp;gt;hasCustomAWZ()) {
+        return class_createInstance(cls, 0);
+    }
+#endif
+&lt;/span&gt;    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cls&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;allocWithZone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;class_createInstance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Class&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cls&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;size_t&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;extraBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_class_createInstanceFromZone&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cls&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;extraBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_class_createInstanceFromZone&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Class&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cls&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;size_t&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;extraBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zone&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;bool&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cxxConstruct&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;size_t&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;outAllocatedSize&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;size_t&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cls&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;instanceSize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;extraBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;calloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;initInstanceIsa&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cls&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;hasCxxDtor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;可以看出，alloc类方法是开辟了一块内存，生成了一个实例对象，并且对实例对象进行了初始化&lt;/p&gt;
+
+&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;init&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_objc_rootInit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_objc_rootInit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// In practice, it will be hard to rely on this function.
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;// Many classes do not properly chain -init calls.
+&lt;/span&gt;    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;init方法只是返回了该实例对象&lt;/p&gt;
+
+&lt;h3 id=&quot;二nsobject与class&quot;&gt;二、NSObject与Class&lt;/h3&gt;
+
+&lt;h4 id=&quot;1对象&quot;&gt;1、对象&lt;/h4&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;NSObject&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;@interface NSObject &amp;lt;NSObject&amp;gt;
+{
+    Class isa;
+}
+@end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;每一个NSObject里都有一个Class（isa指针），表明这个类的类别Class&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;id类型&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;typedef struct objc_object { 
+    Class isa; 
+} *id; 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;从上面可以看出id类型里面也有一个Class&lt;/p&gt;
+
+&lt;h4 id=&quot;2class&quot;&gt;2、Class&lt;/h4&gt;
+
+&lt;p&gt;Class的定义&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;typedef struct objc_class *Class;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;objc_class&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;struct objc_class {
+    Class isa;
+
+#if !__OBJC2__
+    Class super_class                                        OBJC2_UNAVAILABLE;
+    const char *name                                         OBJC2_UNAVAILABLE;
+    long version                                             OBJC2_UNAVAILABLE;
+    long info                                                OBJC2_UNAVAILABLE;
+    long instance_size                                       OBJC2_UNAVAILABLE;
+    struct objc_ivar_list *ivars                             OBJC2_UNAVAILABLE;
+    struct objc_method_list **methodLists                    OBJC2_UNAVAILABLE;
+    struct objc_cache *cache                                 OBJC2_UNAVAILABLE;
+    struct objc_protocol_list *protocols                     OBJC2_UNAVAILABLE;
+#endif
+} OBJC2_UNAVAILABLE;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;isa指针指向哪里？&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://ojx0q9o9x.bkt.clouddn.com/Runtime_00.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;从图上的虚线箭头就能看出，实例对象的isa指向类，类的isa指向元类(meta)，元类的isa指向Root元类&lt;/p&gt;
+
+&lt;h3 id=&quot;三iskindofclass与ismemberofclass&quot;&gt;三、isKindOfClass与isMemberOfClass&lt;/h3&gt;
+
+&lt;h4 id=&quot;1获取class&quot;&gt;1、获取class&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;+ (Class)class {
+    return self;
+}
+
+- (Class)class {
+    return object_getClass(self);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;static inline Class _object_getClass(id obj)
+{
+#if SUPPORT_TAGGED_POINTERS
+    if (OBJC_IS_TAGGED_PTR(obj)) {
+        uint8_t slotNumber = ((uint8_t) (uint64_t) obj) &amp;amp; 0x0F;
+        Class isa = _objc_tagged_isa_table[slotNumber];
+        return isa;
+    }
+#endif
+    if (obj) return obj-&amp;gt;isa;
+    else return Nil;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;从上面可以看到，class类方法和实例方法都是获取当前Class也就是isa指针&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;实例方法调用时，通过对象的 isa 在类中获取方法的实现&lt;/li&gt;
+  &lt;li&gt;类方法调用时，通过类的 isa 在元类中获取方法的实现&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;2ismemberofclass&quot;&gt;2、isMemberOfClass&lt;/h4&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;isMemberOfClass: Returns a Boolean value that indicates whether the receiver is an instance of a given class.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;+ (BOOL)isMemberOfClass:(Class)cls {
+    return object_getClass((id)self) == cls;
+}
+
+- (BOOL)isMemberOfClass:(Class)cls {
+    return [self class] == cls;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;可以看出，isMemberOfClass是判断当前实例/类是否是那个类型&lt;/p&gt;
+
+&lt;h4 id=&quot;3iskindofclass&quot;&gt;3、isKindOfClass&lt;/h4&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;isKindOfClass: Returns a Boolean value that indicates whether the receiver is an instance of given class or an instance of any class that inherits from that class.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;+ (BOOL)isKindOfClass:(Class)cls {
+    for (Class tcls = object_getClass((id)self); tcls; tcls = class_getSuperclass(tcls)) {
+        if (tcls == cls) return YES;
+    }
+    return NO;
+}
+
+- (BOOL)isKindOfClass:(Class)cls {
+    for (Class tcls = [self class]; tcls; tcls = class_getSuperclass(tcls)) {
+        if (tcls == cls) return YES;
+    }
+    return NO;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;isKindOfClass是用来判断实例/类是否是那个类型，或者继承自那个类。&lt;/p&gt;
+
+&lt;h3 id=&quot;四kvo与kvc&quot;&gt;四、KVO与KVC&lt;/h3&gt;
+
+&lt;h4 id=&quot;1kvokey-value-observing&quot;&gt;1、KVO(Key-Value Observing)&lt;/h4&gt;
+
+&lt;p&gt;先看看官方文档&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Key-Value Observing Implementation Details
+Automatic key-value observing is implemented using a technique called isa-swizzling.
+The isa pointer, as the name suggests, points to the object’s class which maintains a dispatch table. This dispatch table essentially contains pointers to the methods the class implements, among other data.
+When an observer is registered for an attribute of an object the isa pointer of the observed object is modified, pointing to an intermediate class rather than at the true class. As a result the value of the isa pointer does not necessarily reflect the actual class of the instance.
+You should never rely on the isa pointer to determine class membership. Instead, you should use the class method to determine the class of an object instance.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;KVO运用了一个isa-swizzling的机制，runtime还有一个method-swizzling的机制，称为’黑魔法’。&lt;/p&gt;
+
+&lt;p&gt;当某个类的对象第一次被观察时，系统就会在运行期动态地创建该类的一个&lt;em&gt;派生类&lt;/em&gt;，在这个&lt;em&gt;派生类&lt;/em&gt;中重写基类中任何被观察属性的 setter 方法。然后在派生类的setter方法里实现通知机制。&lt;/p&gt;
+
+&lt;p&gt;同时派生类还重写了 class 方法以“欺骗”外部调用者它就是起初的那个类。然后系统将这个对象的 isa 指针指向这个新诞生的派生类，因此这个对象就成为该派生类的对象了，因而在该对象上对 setter 的调用就会调用重写的 setter，从而激活键值通知机制。此外，派生类还重写了 dealloc 方法来释放资源。&lt;/p&gt;
+
+&lt;p&gt;当没有observer观察任何一个property时，删除动态创建的子类。&lt;/p&gt;
+
+&lt;p&gt;简单而言：实例对象在被观察时，生成派生类，派生类在setter方法中valuewillchange方法和valuesdidchanged方法里发出通知，并且通过isa-swizzling，从而使实例对象成为派生类的对象，所以实例对象在setter属性时可以产生通知。达到观察的目的。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_1/04.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;2kvckey-value-coding&quot;&gt;2、KVC(Key Value Coding)&lt;/h4&gt;
+
+&lt;p&gt;KVC是是一种可以通过字符串的名字（key）来访问类属性的机制。&lt;/p&gt;
+
+&lt;p&gt;isa指针（is kind of 的意思）指向维护分发表的对象的类，该分发表实际上包含了指向实现类中的方法的指针和其他数据。&lt;/p&gt;
+
+&lt;p&gt;比如说如下的一行KVC代码：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[site setValue:@&quot;sitename&quot; forKey:@&quot;name&quot;];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;//会被编译器处理成&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SEL sel = sel_get_uid(setValue:forKey);
+IMP method = objc_msg_loopup(site-&amp;gt;isa,sel);
+method(site,sel,@&quot;sitename&quot;,@&quot;name&quot;);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;每个类都有一张方法表，是一个hash表，值是还书指针IMP，SEL的名称就是查表时所用的键。&lt;/p&gt;
+
+&lt;p&gt;SEL数据类型：查找方法表时所用的键。定义成char*，实质上可以理解成int值。&lt;/p&gt;
+
+&lt;p&gt;IMP数据类型：他其实就是一个编译器内部实现时候的函数指针。当Objective-C编译器去处理实现一个方法的时候，就会指向一个IMP对象，这个对象是C语言表述的类型。&lt;/p&gt;
+
+&lt;h3 id=&quot;五self与super&quot;&gt;五、Self与Super&lt;/h3&gt;
+
+&lt;h4 id=&quot;1self-class与super-class&quot;&gt;1、[self class]与[super class]&lt;/h4&gt;
+
+&lt;p&gt;有一个有意思的题目，有一个Son类继承自Father类&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;    @implementation Son : Father
+    - (id)init
+    {
+        self = [super init];
+        if (self) {
+            NSLog(@&quot;%@&quot;, NSStringFromClass([self class]));
+            NSLog(@&quot;%@&quot;, NSStringFromClass([super class]));
+        }
+        return self;
+    }
+    @end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;最终结果都是Son，为什么呢？&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;官方文档中self相关解释&lt;/strong&gt;
+Whenever you’re writing a method implementation, you have access to an important hidden value, self. Conceptually, self is a way to refer to “the object that’s received this message.” It’s apointer, just like the greeting value above, and can be used to call a method on the current receiving object.
+&lt;strong&gt;super解释&lt;/strong&gt;
+There’s anotherimportant keyword available to you in Objective-C, called super. Sending a message to super is a way to call through to a method implementation defined by a superclass further up the inheritance chain. The most common use of super is when overriding a method.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;简而言之是self调用自己方法，super调用父类方法&lt;/p&gt;
+
+&lt;p&gt;但是底层原理呢？我们知道，OC的消息转发机制，当self时，方法转换成&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;id objc_msgSend(id receiver, SEL theSelector, ...)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;​	objc_msgSend sends a message with a simple return value to an instance of a class&lt;/p&gt;
+
+&lt;p&gt;而super关键字调用方法则转换成&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;id objc_msgSendSuper(struct objc_super *super, SEL op, ...)
+
+struct objc_super {
+  id receiver;
+  Class superClass;
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;​	objc_msgSendSuper sends a message with a simple return value to the superclass of an instance of a class.&lt;/p&gt;
+
+&lt;p&gt;可以看到objc_msgSendSuper的receiver还是son。&lt;/p&gt;
+
+&lt;p&gt;objc_msgSend与objc_msgSendSuperd都去查找class的Seletor，一直查到NSObject类才查到class方法&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (Class)class {
+    return object_getClass(self);
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;也就是说，最终都是调用的receiver也就是son，获取到了Class.&lt;/p&gt;
+
+&lt;h4 id=&quot;2self--super-init&quot;&gt;2、self = [super init]&lt;/h4&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;If a class does implement an initializer, it should invoke an initializer of its superclass as the first step. This requirement ensures a series of initializations for an object down the inheritance chain, starting with the root object. The &lt;code class=&quot;highlighter-rouge&quot;&gt;NSObject&lt;/code&gt; class declares the &lt;code class=&quot;highlighter-rouge&quot;&gt;init&lt;/code&gt; method as the default object initializer, so it is always invoked last but returns first.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_1/05.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;所以标准的初始化代码&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (id)init {
+    if (self = [super init]) { // equivalent to &quot;self does not equal nil&quot;
+        self ...
+    }
+    return self;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;</content><author><name>Ted</name></author><summary type="html">先看OC关于NSObject的源码</summary></entry><entry><title type="html">漫谈iOS安全</title><link href="http://www.helloted.com/2016/10/11/safety/" rel="alternate" type="text/html" title="漫谈iOS安全" /><published>2016-10-11T20:00:00+08:00</published><updated>2016-10-11T20:00:00+08:00</updated><id>http://www.helloted.com/2016/10/11/safety</id><content type="html" xml:base="http://www.helloted.com/2016/10/11/safety/">&lt;h3 id=&quot;一前言&quot;&gt;一、前言&lt;/h3&gt;
 
 &lt;p&gt;经常都能听到大家说，iOS很安全，iPhone比安卓手机安全。那么为什么iOS会安全，难道仅仅是因为iOS是闭源然后安卓是开源的，开源的就一定比闭源安全？前段时间著名的&lt;em&gt;Xcode Ghost&lt;/em&gt; 事件也让人觉得iOS好像并不是那么地安全，今天就随便说说iOS的安全。&lt;/p&gt;
 
@@ -1660,127 +1989,4 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
   &lt;li&gt;客户端发送的数据用抓包程序给的证书生成的密钥加密&lt;/li&gt;
   &lt;li&gt;抓包程序得到客户端发送的数据抓包程序用自己的证书解密出来，再用服务器证书加密&lt;/li&gt;
   &lt;li&gt;抓包程序再把数据发给服务器&lt;/li&gt;
-&lt;/ol&gt;</content><author><name>Ted</name></author><summary type="html">1、TCP/IP定义</summary></entry><entry><title type="html">Objective-C混淆代码</title><link href="http://www.helloted.com/2016/08/12/confuseCode/" rel="alternate" type="text/html" title="Objective-C混淆代码" /><published>2016-08-12T20:00:00+08:00</published><updated>2016-08-12T20:00:00+08:00</updated><id>http://www.helloted.com/2016/08/12/confuseCode</id><content type="html" xml:base="http://www.helloted.com/2016/08/12/confuseCode/">&lt;h3 id=&quot;一利用class-dump来查看源文件&quot;&gt;一、利用class-dump来查看源文件&lt;/h3&gt;
-
-&lt;p&gt;class-dump是一个逆向工具，可以用来查看未加固的APP的方法名和属性名&lt;/p&gt;
-
-&lt;h4 id=&quot;安装class-dump&quot;&gt;安装class-dump&lt;/h4&gt;
-
-&lt;p&gt;从&lt;a href=&quot;http://stevenygard.com/projects/class-dump&quot;&gt;class-dump下载地址&lt;/a&gt;将dmg文件下载下来，将class-dump复制到/usr/bin目录，并在终端执行下面命令赋予权限&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sudo chmod 777 /usr/bin/class-dump
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;如果没有办法复制到根目录，则先要开启系统权限&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;重启 Mac，按住 Command+R 键直到 Apple logo 出现，进入 Recovery Mode
-点击 Utilities &amp;gt; Terminal
-在 Terminal 中输入 csrutil disable，之后回车
-重启 Mac&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;在终端中输入class-dump看到如下就说明安装成功了&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/ConfuseCode/confuse_00.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;查看头文件&quot;&gt;查看头文件&lt;/h4&gt;
-
-&lt;p&gt;将ipa改名为zip并解压能看到一个.app结尾的文件,执行&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class-dump -H /Users/imac/Desktop/Payload/test.app -o /Users/imac/Desktop/heads
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;其中&lt;font color=&quot;gray&quot;&gt;/Users/imac/Desktop/Payload/test.app&lt;/font&gt;是源文件路径,&lt;font color=&quot;gray&quot;&gt; /Users/imac/Desktop/heads&lt;/font&gt;是要导出的头文件的路径&lt;/p&gt;
-
-&lt;p&gt;可以在head文件夹里看到包含第三方库的头文件，里面可以看到属性名和方法名&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/ConfuseCode/confuse_01.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;二混淆代码&quot;&gt;二、混淆代码&lt;/h3&gt;
-
-&lt;p&gt;在项目里添加两个文件confuse.sh、func.list&lt;/p&gt;
-
-&lt;p&gt;在funlist里写上你要混淆的字符串；&lt;/p&gt;
-
-&lt;p&gt;在confuse.sh添加以下代码&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/usr/bin/env bash&lt;/span&gt;
-
-&lt;span class=&quot;nv&quot;&gt;TABLENAME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;symbols
-&lt;span class=&quot;nv&quot;&gt;SYMBOL_DB_FILE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;symbols&quot;&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;STRING_SYMBOL_FILE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;func.list&quot;&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;HEAD_FILE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$PROJECT_DIR&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$PROJECT_NAME&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/codeObfuscation.h&quot;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;LC_CTYPE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;C
-
-&lt;span class=&quot;c&quot;&gt;#维护数据库方便日后作排重&lt;/span&gt;
-createTable&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;create table &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$TABLENAME&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;(src text, des text);&quot;&lt;/span&gt; | sqlite3 &lt;span class=&quot;nv&quot;&gt;$SYMBOL_DB_FILE&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-
-insertValue&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;insert into &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$TABLENAME&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; values('&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;' ,'&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$2&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;');&quot;&lt;/span&gt; | sqlite3 &lt;span class=&quot;nv&quot;&gt;$SYMBOL_DB_FILE&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-
-query&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;select * from &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$TABLENAME&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; where src='&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;';&quot;&lt;/span&gt; | sqlite3 &lt;span class=&quot;nv&quot;&gt;$SYMBOL_DB_FILE&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-
-ramdomString&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-    openssl rand -base64 64 | tr -cd &lt;span class=&quot;s1&quot;&gt;'a-zA-Z'&lt;/span&gt; |head -c 16
-&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-
-rm -f &lt;span class=&quot;nv&quot;&gt;$SYMBOL_DB_FILE&lt;/span&gt;
-rm -f &lt;span class=&quot;nv&quot;&gt;$HEAD_FILE&lt;/span&gt;
-createTable
-
-touch &lt;span class=&quot;nv&quot;&gt;$HEAD_FILE&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'#ifndef Demo_codeObfuscation_h
-#define Demo_codeObfuscation_h'&lt;/span&gt; &amp;gt;&amp;gt; &lt;span class=&quot;nv&quot;&gt;$HEAD_FILE&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;//confuse string at &lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;date&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &amp;gt;&amp;gt; &lt;span class=&quot;nv&quot;&gt;$HEAD_FILE&lt;/span&gt;
-cat &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$STRING_SYMBOL_FILE&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; | &lt;span class=&quot;k&quot;&gt;while &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;read&lt;/span&gt; -ra line; &lt;span class=&quot;k&quot;&gt;do
-    if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt; ! -z &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$line&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt;; &lt;span class=&quot;k&quot;&gt;then
-        &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ramdom&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;ramdomString&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
-        &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$line&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ramdom&lt;/span&gt;
-        insertValue &lt;span class=&quot;nv&quot;&gt;$line&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ramdom&lt;/span&gt;
-        &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;#define &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$line&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$ramdom&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &amp;gt;&amp;gt; &lt;span class=&quot;nv&quot;&gt;$HEAD_FILE&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;fi
-done
-&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;#endif&quot;&lt;/span&gt; &amp;gt;&amp;gt; &lt;span class=&quot;nv&quot;&gt;$HEAD_FILE&lt;/span&gt;
-
-sqlite3 &lt;span class=&quot;nv&quot;&gt;$SYMBOL_DB_FILE&lt;/span&gt; .dump
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;用终端给confuse.sh添加权限&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;chmod 755 confuse.sh
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;并且在Build Phase里添加运行脚本&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/ConfuseCode/confuse_03.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;并且在pch文件中加入&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#ifdef __OBJC__  
-    #import &amp;lt;UIKit/UIKit.h&amp;gt;  
-    #import &amp;lt;Foundation/Foundation.h&amp;gt;  
-    //添加混淆作用的头文件（这个文件名是脚本confuse.sh中定义的）  
-    #import &quot;codeObfuscation.h&quot;  
-#endif  
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;再次打包用class-dump测试一下，会发现代码乱了&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/ConfuseCode/confuse_04.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/ConfuseCode/confuse_02.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、利用class-dump来查看源文件</summary></entry></feed>
+&lt;/ol&gt;</content><author><name>Ted</name></author><summary type="html">1、TCP/IP定义</summary></entry></feed>

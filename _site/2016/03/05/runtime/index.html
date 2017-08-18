@@ -222,23 +222,19 @@
 </code></pre>
 
 <ol>
-  <li>
-    <p>检测Target是否是nil对象，如果是nil就忽略，OC是nil不崩溃；</p>
-  </li>
-  <li>
-    <p>查找这个类的IMP（先从cache里查找，然后再到方法列表里去找），找到后就到函数实现去执行；</p>
-  </li>
-  <li>
-    <p>如果Class的方法列表里还找不到，就去SuperClass里找，一直到NSObject;</p>
-  </li>
-  <li>
-    <p>再找不到就要到动态方法解析了,当 Runtime 系统在Cache和方法分发表中（包括超类）找不到要执行的方法时，Runtime会调用resolveInstanceMethod:或resolveClassMethod:来给程序员一次动态添加方法实现的机会</p>
-
-    <p><img src="/img/Runtime/runtime_01.png" alt="" /></p>
-
-    <p><img src="/img/Runtime/runtime_02.jpg" alt="" /></p>
-  </li>
+  <li>判断接受者是否为空？ 如果为空，调用nil-handler, 默认为什么都不做。</li>
+  <li>检查class的方法调用cache，是否调用过此方法。</li>
+  <li>检查方法列表是否有此方法，有则调用。</li>
+  <li>检查父类方法列表是否有此方法，有则调用。（如果一直找不到会找到最根的父类如NSObject, NSProxy）</li>
+  <li><code class="highlighter-rouge">resolveInstanceMethod:</code></li>
+  <li><code class="highlighter-rouge">forwardingTargetForSelector:</code> 此处不要返回<code class="highlighter-rouge">self</code>, 否则会产生循环。</li>
+  <li><code class="highlighter-rouge">methodSignatureForSelector:</code>, 如果返回非nil，创建一个<code class="highlighter-rouge">NSInvocation</code> 并传递给<code class="highlighter-rouge">forwardInvocation</code>.</li>
+  <li>调用<code class="highlighter-rouge">doesNotRecognizeSelector:</code> 默认实现为抛一个异常。</li>
 </ol>
+
+<p><img src="/img/Runtime/runtime_01.png" alt="" /></p>
+
+<p><img src="/img/Runtime/runtime_02.jpg" alt="" /></p>
 
 <h3 id="五动态添加属性">五、动态添加属性</h3>
 
