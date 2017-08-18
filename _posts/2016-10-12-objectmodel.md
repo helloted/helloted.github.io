@@ -228,9 +228,35 @@ KVO运用了一个isa-swizzling的机制，runtime还有一个method-swizzling�
 
 KVC是是一种可以通过字符串的名字（key）来访问类属性的机制。
 
-isa指针（is kind of 的意思）指向维护分发表的对象的类，该分发表实际上包含了指向实现类中的方法的指针和其他数据。
+**修改值**
+setValue:forKey:
+setValue:forKeyPath:
+setValue:forUnderfinedKey:
+setNilValueForKey: 对非类对象属性设置nil时调用，默认抛出异常。
 
-比如说如下的一行KVC代码：
+1、首先搜索setKey:方法。（key指成员变量名，首字母大写）
+
+2、上面的setter方法没找到，如果类方法accessInstanceVariablesDirectly返回YES。那么按 _key，_isKey，key，iskey的顺序搜索成员名。（NSKeyValueCodingCatogery中实现的类方法，默认实现为返回YES）
+
+3、如果没有找到成员变量，调用setValue:forUnderfinedKey:
+
+**获取值**
+valueForKey: 传入NSString属性的名字。
+valueForKeyPath: 属性的路径，xx.xx
+valueForUndefinedKey 默认实现是抛出异常，可重写这个函数做错误处理
+
+1、首先按getKey，key，isKey的顺序查找getter方法，找到直接调用。如果是BOOL、int等内建值类型，会做NSNumber的转换。
+
+2、上面的getter没找到，查找countOfKey、objectInKeyAtindex、KeyAtindexes格式的方法。如果countOfKey和另外两个方法中的一个找到，那么就会返回一个可以响应NSArray所有方法的代理集合的NSArray消息方法。
+
+3、还没找到，查找countOfKey、enumeratorOfKey、memberOfKey格式的方法。如果这三个方法都找到，那么就返回一个可以响应NSSet所有方法的代理集合。
+4、还是没找到，如果类方法accessInstanceVariablesDirectly返回YES。那么按 _key，_isKey，key，iskey的顺序搜索成员名。
+
+5、再没找到，调用valueForUndefinedKey。
+
+**原理**
+
+isa指针（is kind of 的意思）指向维护分发表的对象的类，该分发表实际上包含了指向实现类中的方法的指针和其他数据。比如说如下的一行KVC代码：
 
 ```
 [site setValue:@"sitename" forKey:@"name"];
@@ -329,3 +355,28 @@ objc_msgSend与objc_msgSendSuperd都去查找class的Seletor，一直查到NSObj
 }
 ```
 
+### 六、属性与变量(property & instance variable)
+
+在ios5以后我们使用@property来声明属性变量，编译器会自动(@syntheszie var = _var)为我们生成对应的一个以下 划线加属性名 命名的实例变量，还有其对应的getter、setter
+
+```
+@property (copy, nonatomic) NSString *var;
+ 
+------------------等效分割线------------------
+NSString *_var;
+ 
+- (NSString *)var {
+    return _var;
+}
+ 
+- (void)setVar:(NSString *)var {
+    _var = var;
+}
+```
+
+这样一来我们就可以看出通过self.var和_var访问实例变量的区别，在.m文件中可以通过_var来访问实例变量，但是getter、setter不会被调用，而来自外部的访问，需要通过getter、setter。
+
+注意，使用readonly关键字修饰后，编译器只会为我们生成getter。
+
+假如一个属性被关键字@dynamic所修饰，则编译器不会自动生成其对应的getter、setter，然而如果开发者没有自行创造getter、setter，将不会在编译期提醒，运行时触发则会发生crash。
+顺便一提@dynamic还能帮助我们替换掉某类中本来就存在的，而我们又想自己创造的property。

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-08-18T15:37:26+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">热修复=Runtime+Javascriptcore</title><link href="http://www.helloted.com/2017/05/30/hotfix/" rel="alternate" type="text/html" title="热修复=Runtime+Javascriptcore" /><published>2017-05-30T20:00:00+08:00</published><updated>2017-05-30T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/30/hotfix</id><content type="html" xml:base="http://www.helloted.com/2017/05/30/hotfix/">&lt;h3 id=&quot;一运行时&quot;&gt;一、运行时&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-08-18T17:09:57+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">热修复=Runtime+Javascriptcore</title><link href="http://www.helloted.com/2017/05/30/hotfix/" rel="alternate" type="text/html" title="热修复=Runtime+Javascriptcore" /><published>2017-05-30T20:00:00+08:00</published><updated>2017-05-30T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/30/hotfix</id><content type="html" xml:base="http://www.helloted.com/2017/05/30/hotfix/">&lt;h3 id=&quot;一运行时&quot;&gt;一、运行时&lt;/h3&gt;
 
 &lt;p&gt;热修复的基本原理就是Runtime运行时的方法替换，主要是下列几个方法&lt;/p&gt;
 
@@ -1384,9 +1384,35 @@ You should never rely on the isa pointer to determine class membership. Instead,
 
 &lt;p&gt;KVC是是一种可以通过字符串的名字（key）来访问类属性的机制。&lt;/p&gt;
 
-&lt;p&gt;isa指针（is kind of 的意思）指向维护分发表的对象的类，该分发表实际上包含了指向实现类中的方法的指针和其他数据。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;修改值&lt;/strong&gt;
+setValue:forKey:
+setValue:forKeyPath:
+setValue:forUnderfinedKey:
+setNilValueForKey: 对非类对象属性设置nil时调用，默认抛出异常。&lt;/p&gt;
 
-&lt;p&gt;比如说如下的一行KVC代码：&lt;/p&gt;
+&lt;p&gt;1、首先搜索setKey:方法。（key指成员变量名，首字母大写）&lt;/p&gt;
+
+&lt;p&gt;2、上面的setter方法没找到，如果类方法accessInstanceVariablesDirectly返回YES。那么按 _key，_isKey，key，iskey的顺序搜索成员名。（NSKeyValueCodingCatogery中实现的类方法，默认实现为返回YES）&lt;/p&gt;
+
+&lt;p&gt;3、如果没有找到成员变量，调用setValue:forUnderfinedKey:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;获取值&lt;/strong&gt;
+valueForKey: 传入NSString属性的名字。
+valueForKeyPath: 属性的路径，xx.xx
+valueForUndefinedKey 默认实现是抛出异常，可重写这个函数做错误处理&lt;/p&gt;
+
+&lt;p&gt;1、首先按getKey，key，isKey的顺序查找getter方法，找到直接调用。如果是BOOL、int等内建值类型，会做NSNumber的转换。&lt;/p&gt;
+
+&lt;p&gt;2、上面的getter没找到，查找countOfKey、objectInKeyAtindex、KeyAtindexes格式的方法。如果countOfKey和另外两个方法中的一个找到，那么就会返回一个可以响应NSArray所有方法的代理集合的NSArray消息方法。&lt;/p&gt;
+
+&lt;p&gt;3、还没找到，查找countOfKey、enumeratorOfKey、memberOfKey格式的方法。如果这三个方法都找到，那么就返回一个可以响应NSSet所有方法的代理集合。
+4、还是没找到，如果类方法accessInstanceVariablesDirectly返回YES。那么按 _key，_isKey，key，iskey的顺序搜索成员名。&lt;/p&gt;
+
+&lt;p&gt;5、再没找到，调用valueForUndefinedKey。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;原理&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;isa指针（is kind of 的意思）指向维护分发表的对象的类，该分发表实际上包含了指向实现类中的方法的指针和其他数据。比如说如下的一行KVC代码：&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[site setValue:@&quot;sitename&quot; forKey:@&quot;name&quot;];
 &lt;/code&gt;&lt;/pre&gt;
@@ -1486,7 +1512,33 @@ struct objc_super {
     return self;
 }
 &lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;</content><author><name>Ted</name></author><summary type="html">先看OC关于NSObject的源码</summary></entry><entry><title type="html">漫谈iOS安全</title><link href="http://www.helloted.com/2016/10/11/safety/" rel="alternate" type="text/html" title="漫谈iOS安全" /><published>2016-10-11T20:00:00+08:00</published><updated>2016-10-11T20:00:00+08:00</updated><id>http://www.helloted.com/2016/10/11/safety</id><content type="html" xml:base="http://www.helloted.com/2016/10/11/safety/">&lt;h3 id=&quot;一前言&quot;&gt;一、前言&lt;/h3&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;六属性与变量property--instance-variable&quot;&gt;六、属性与变量(property &amp;amp; instance variable)&lt;/h3&gt;
+
+&lt;p&gt;在ios5以后我们使用@property来声明属性变量，编译器会自动(@syntheszie var = _var)为我们生成对应的一个以下 划线加属性名 命名的实例变量，还有其对应的getter、setter&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;@property&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;copy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nonatomic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;var&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+ 
+&lt;span class=&quot;o&quot;&gt;------------------&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;等效分割线&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;------------------&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_var&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+ 
+&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_var&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+ 
+&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;setVar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;_var&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;var&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;这样一来我们就可以看出通过self.var和_var访问实例变量的区别，在.m文件中可以通过_var来访问实例变量，但是getter、setter不会被调用，而来自外部的访问，需要通过getter、setter。&lt;/p&gt;
+
+&lt;p&gt;注意，使用readonly关键字修饰后，编译器只会为我们生成getter。&lt;/p&gt;
+
+&lt;p&gt;假如一个属性被关键字@dynamic所修饰，则编译器不会自动生成其对应的getter、setter，然而如果开发者没有自行创造getter、setter，将不会在编译期提醒，运行时触发则会发生crash。
+顺便一提@dynamic还能帮助我们替换掉某类中本来就存在的，而我们又想自己创造的property。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">先看OC关于NSObject的源码</summary></entry><entry><title type="html">漫谈iOS安全</title><link href="http://www.helloted.com/2016/10/11/safety/" rel="alternate" type="text/html" title="漫谈iOS安全" /><published>2016-10-11T20:00:00+08:00</published><updated>2016-10-11T20:00:00+08:00</updated><id>http://www.helloted.com/2016/10/11/safety</id><content type="html" xml:base="http://www.helloted.com/2016/10/11/safety/">&lt;h3 id=&quot;一前言&quot;&gt;一、前言&lt;/h3&gt;
 
 &lt;p&gt;经常都能听到大家说，iOS很安全，iPhone比安卓手机安全。那么为什么iOS会安全，难道仅仅是因为iOS是闭源然后安卓是开源的，开源的就一定比闭源安全？前段时间著名的&lt;em&gt;Xcode Ghost&lt;/em&gt; 事件也让人觉得iOS好像并不是那么地安全，今天就随便说说iOS的安全。&lt;/p&gt;
 

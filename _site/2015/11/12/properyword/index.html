@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>iOS内存管理、属性关键字 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/2015/11/12/properyword/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/clean-blog.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/bg_02.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>iOS内存管理、属性关键字</h1>
+                    
+                    <h2 class="subheading">iOS内存管理，OC属性修饰关键字的理解与使用</h2>
+                    
+                    <span class="meta">Posted by Ted on November 12, 2015</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h3 id="一引用计数内存管理">一、引用计数、内存管理</h3>
+
+<p>在ObjC中没有垃圾回收机制，那么ObjC中内存又是如何管理的呢？其实在ObjC中内存的管理是依赖对象引用计数器来进行的：在ObjC中每个对象内部都有一个与之对应的整数（retainCount），叫“引用计数器”，当一个对象在创建(alloc，new)之后它的引用计数器为1，</p>
+
+<p>当调用这个对象的retain、copy方法之后引用计数器自动在原来的基础上加1（ObjC中调用一个对象的方法就是给这个对象发送一个消息），</p>
+
+<p>当调用这个对象的release方法之后它的引用计数器减1，</p>
+
+<p>如果一个对象的引用计数器为0，则系统会自动调用这个对象的dealloc方法来销毁这个对象。</p>
+
+<h3 id="二autorealsepool自动延缓释放池">二、autorealsepool、自动延缓释放池</h3>
+
+<blockquote>
+  <p>原理</p>
+</blockquote>
+
+<p>当调用对象autorealse方法后，对象的引用计数没有减一，对象就进入了autorealsepool当中，当autoreleasepool被pop时，会对池中的所有对象进行release一次，从而进行对象释放。</p>
+
+<blockquote>
+  <p>@autoreleasepool</p>
+</blockquote>
+
+<p>自动释放池可以延长对象的声明周期，如果一个事件周期很长，比如有一个很长的循环逻辑，那么一个临时变量可能很长时间都不会被释放，一直在内存中保留，那么内存的峰值就会一直增加，但是其实这个临时变量是我们不再需要的。这个时候就通过@autoreleasepool创建新的自动释放池来缩短临时变量的生命周期来降低内存的峰值。</p>
+
+<blockquote>
+  <p>过程</p>
+</blockquote>
+
+<ul>
+  <li>创建：Runloop进入 kCFRunLoopEntry 时创建，Runloop回调_objc_autoreleasePoolPush() 创建自动释放池，其 order 是-2147483647，优先级最高，保证创建释放池发生在其他所有回调之前。</li>
+  <li>更新：Runloop状态kCFRunLoopBeforeWaiting(准备进入休眠) 时调用_objc_autoreleasePoolPop() 和 _objc_autoreleasePoolPush() 释放旧的池并创建新池；</li>
+  <li>销毁： Runloop状态kCFRunLoopExit(即将退出Loop) 时调用 _objc_autoreleasePoolPop() 来释放自动释放池。这个 Observer 的 order 是 2147483647，优先级最低，保证其释放池子发生在其他所有回调之后。</li>
+</ul>
+
+<h3 id="三属性修饰符">三、属性修饰符</h3>
+
+<p>属性修饰符用来指示数据可访问性与特性，共有一下几个关键字</p>
+
+<ol>
+  <li>atomic 			//default</li>
+  <li>nonatomic</li>
+  <li>strong=retain	//default</li>
+  <li>weak= unsafe_unretained</li>
+  <li>assign 		//default</li>
+  <li>copy</li>
+  <li>readonly</li>
+  <li>readwrite 	        //default</li>
+</ol>
+
+<h4 id="atomic">atomic</h4>
+
+<ul>
+  <li>只有一个线程会同时访问这个变量，是线程安全的，会加锁以保证安全访问</li>
+  <li>效率比较差</li>
+  <li>是一个默认的属性关键字</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">var</span><span class="p">;</span>
+ 
+<span class="o">------------------</span><span class="err">等效分割线</span><span class="o">------------------</span>
+<span class="k">@synthesize</span> <span class="n">var</span><span class="p">;</span> 
+<span class="k">-</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">var</span> <span class="p">{</span>
+	  <span class="k">@synchronized</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">_var</span><span class="p">;</span>
+	  <span class="p">}</span>   
+<span class="p">}</span>
+ 
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">setVar</span><span class="o">:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">var</span> <span class="p">{</span>
+	<span class="k">@synchronized</span><span class="p">(</span><span class="n">self</span><span class="p">){</span>
+      <span class="n">_var</span> <span class="o">=</span> <span class="n">var</span><span class="p">;</span>
+	<span class="p">}</span>   
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<h4 id="nonatomic">nonatomic</h4>
+
+<ul>
+  <li>可以多个线程同时访问这个属性变量，可能会导致不可预料的结果</li>
+  <li>效率高，iOS推荐用这个属性</li>
+</ul>
+
+<h4 id="strong-ios4--retain-">strong (iOS4 = retain )</h4>
+
+<ul>
+  <li>强引用，引用计数加1</li>
+  <li>会一直保存在堆heap中直到没有指针指向这个属性</li>
+  <li>对象属性的默认修饰</li>
+  <li>在ARC阶段，不需要收到管理对象的引用计数 (retain count of an object），retain用strong取而代之</li>
+</ul>
+
+<h4 id="copy">copy</h4>
+
+<ul>
+  <li>与Strong一样是引用计数加1</li>
+  <li>如果属性是可变的，需要用这个修饰。</li>
+  <li>copy会重新开辟一个内存空间，复制将内容复制过去。而Strong是将指针指过去而已。</li>
+  <li>Copy是这块内存的拥有者，不会被其他干扰</li>
+</ul>
+
+<h4 id="weak-ios4--unsafe_unretained-">weak (iOS4 = unsafe_unretained )</h4>
+
+<ul>
+  <li>弱引用，不会引用计数加1</li>
+  <li>不会影响对象的释放，即只要对象没有任何强引用指向，即使有100个弱引用对象指向也没用，该对象依然会被释放。</li>
+  <li>对象在被释放的同时，指向它的弱引用会自动被置nil，这个技术叫zeroing weak pointer。这样有效得防止无效指针、野指针的产生。</li>
+  <li>weak一般用在delegate关系中防止循环引用或者用来修饰指向由Interface Builder编辑与生成的UI控件。</li>
+  <li>与Strong区别在于，只要有一个Strong指针指向该对象，则不会被释放，但是如果只有weak指针指向，无论多少weak，依旧会被释放</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code> <span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">str</span><span class="p">;</span>   
+ 
+ <span class="n">NSString</span> <span class="o">*</span><span class="n">first</span> <span class="o">=</span> <span class="s">@"Hello"</span><span class="p">;</span>
+ <span class="n">self</span><span class="p">.</span><span class="n">str</span>  <span class="o">=</span> <span class="n">first</span><span class="p">;</span>
+ <span class="n">first</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+</code></pre>
+</div>
+
+<p>代码解释，first是强指针引用，之后str也指向”Hello”这个内存，</p>
+
+<p>当str是Strong类型时，虽然first这个指针没有了，但是有str强引用，@”hello”依然不会被释放。</p>
+
+<p>当str是weak类型时，first指针被清空，只有str弱引用，@”hello”会被释放</p>
+
+<h4 id="assign">assign</h4>
+
+<ul>
+  <li>非对象类型，数值类型的修饰</li>
+  <li>与weak的区别在于，weak修饰的引用被释放后会自动置为nil，而assign不会，这样会导致野指针</li>
+</ul>
+
+<h4 id="readonly">readonly</h4>
+
+<ul>
+  <li>只读</li>
+  <li>只会生成getter方法</li>
+</ul>
+
+<h4 id="readwrite">readwrite</h4>
+
+<ul>
+  <li>可读写</li>
+  <li>默认属性</li>
+</ul>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2015/10/10/network/" data-toggle="tooltip" data-placement="top" title="网络">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2016/03/05/runtime/" data-toggle="tooltip" data-placement="top" title="神奇的Runtime">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2017</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+
+    
+
+
+</body>
+
+</html>
