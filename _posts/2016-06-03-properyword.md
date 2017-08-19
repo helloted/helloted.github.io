@@ -2,7 +2,7 @@
 layout:     post
 title:      "iOS内存管理、属性关键字"
 subtitle:   "iOS内存管理，OC属性修饰关键字的理解与使用"
-date:       2015-11-12 12:00:00
+date:       2016-06-03 12:00:00
 author:     "Ted"
 header-img: "img/bg_02.jpg"
 ---
@@ -39,12 +39,12 @@ header-img: "img/bg_02.jpg"
 
 1. atomic 			//default
 2. nonatomic
-3. strong=retain	//default
-4. weak= unsafe_unretained
-5. assign 		//default
-6. copy
-7. readonly
-8. readwrite 	        //default
+ 3. strong=retain//default
+3. weak= unsafe_unretained
+ 5. assign 	//default
+4. copy
+5. readonly
+ 8. readwrite         //default
 
 #### atomic
 
