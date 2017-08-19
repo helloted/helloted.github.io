@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
 
-    <title>iOS之多线程 - Helloted Blog</title>
+    <title>iOS多线程(一):NSThread - Helloted Blog</title>
 
-    <link rel="canonical" href="http://www.helloted.com/2016/05/22/ios-Thread/">
+    <link rel="canonical" href="http://www.helloted.com/2016/05/22/ios-Thread-1/">
 
     <link rel="shortcut icon" href="/img/favicon.ico">
    
@@ -87,9 +87,9 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <div class="post-heading">
-                    <h1>iOS之多线程</h1>
+                    <h1>iOS多线程(一):NSThread</h1>
                     
-                    <h2 class="subheading">三种多线程NSThread、GCD、NSOperation</h2>
+                    <h2 class="subheading">iOS三种多线程之NSThread</h2>
                     
                     <span class="meta">Posted by Ted on May 22, 2016</span>
                 </div>
@@ -210,257 +210,6 @@ void *start(void *data) {
 
 <p>可以看到，使用NSMachPort的结果为调用了其它线程的1个函数，而这正是performSelector所做的事情，所以，NSMachPort是个鸡肋。线程间通信应该都通过performSelector来搞定。</p>
 
-<h3 id="四gcd">四、GCD</h3>
-
-<h4 id="1添加任务到队列同步异步">1、添加任务到队列（同步、异步）：</h4>
-
-<h4 id="dispatch_sync">dispatch_sync:</h4>
-
-<p>同步添加，将指定的任务block同步追加到queue中，在追加的block结束之前，dispatch_sync会一直等待；</p>
-
-<p>如果在主线程上执行同步任务（任务也在主线程执行），会造成死锁：</p>
-
-<pre><code class="language-objective-c">//会造成死锁
-dispatch_sync(dispatch_get_main_queue(), ^{
-	//
-});
-</code></pre>
-
-<p>但是在异步任务里可以用来切换到主线程</p>
-
-<pre><code class="language-objective-c">dispatch_async(dispatch_get_global_queue(0,0), ^{
-	//耗时操作；
-	dispatch_sync(dispatch_get_main_queue(), ^{
-		//回到主线程；
-	});
-});
-</code></pre>
-
-<p>可以用来阻塞线程：</p>
-
-<pre><code class="language-objective-c">dispatch_sync(dispatch_get_global_queue(0,0), ^{
-  sleep(2);
-  NSLog(@"2秒后执行，但是会阻塞线程");
-});
-</code></pre>
-
-<pre><code class="language-objective-c">dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-   NSLog(@"2秒后执行，但是不阻塞线程");
-});
-</code></pre>
-
-<h4 id="dispatch_async">dispatch_async：</h4>
-
-<p>异步添加，将指定的Block”非同步”地追加到指定的Queue中，该线程不做等待，继续往下执行；</p>
-
-<h4 id="2队列">2、队列</h4>
-
-<p>Dispatch Queue：执行处理任务的队列，通过dispatch_async等函数API，在Block语法中记述想要执行的处理任务并将其追加到Dispatch Queue中，Dispatch Queue按照追加的顺序（先进先出FIFO）执行处理。</p>
-
-<h4 id="serial-dispatch-queue串行队列">Serial Dispatch Queue（串行队列）：</h4>
-
-<p>等待现在执行中处理结束，一旦生成Serial Dispatch Queue并追加处理。系统对于一个Serial Dispatch Queue就只生成并使用一个线程，但是如果生成过多的线程，会导致消耗大量的内存，引起大量的上下文切换，大幅度降低系统的响应性能，因此只在为了避免多个线程更新相同的资源导致数据竞争时使用。</p>
-
-<h4 id="concurrent-dispatch-queue并行队列">Concurrent Dispatch Queue（并行队列）：</h4>
-
-<p>不等待现在执行中处理结束，可以并行执行多个处理，并行处理的处理数量取决于当前系统状态，生成所需的线程执行处理，当处理结束，应当执行的处理数减少时，XNU内核会结束不再需要的线程，因此当想并行执行不发生数据竞争等问题处理时使用并行队列，有效管理线程，不会出现太多线程。</p>
-
-<p>系统默认有一个串行队列：主队列（main_queue）和并行队列：全局队列（global_queue），不需要自己手动释放，或者自己创建用户队列（需要手动释放）。</p>
-
-<h4 id="主队列main">主队列（main）:</h4>
-
-<p>dispatch_queue_t mainQ = dispatch_get_main_queue()
-注意：不能sync向主队列提交任务，因为会造成死锁，只能async提交任务</p>
-
-<h4 id="全局队列global_queue">全局队列（global_queue）：</h4>
-
-<p>有执行优先级</p>
-
-<pre><code class="language-objective-c">dispatch_queue_t globalQ = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
-
-DISPATCH_QUEUE_PRIORITY_HIGH:             //优先级最高，在default,和low之前执行
-DISPATCH_QUEUE_PRIORITY_DEFAULT           //默认优先级，在low之前，在high之后
-DISPATCH_QUEUE_PRIORITY_LOW               //在high和default后执行
-DISPATCH_QUEUE_PRIORITY_BACKGROUND        //提交到这个队列的任务会在high优先级的任务和已经提交到background队列的执行完后执行。
-</code></pre>
-<h4 id="创建队列create_queue">创建队列：（create_queue）:</h4>
-
-<p>尽管是ARC，使用结束后也要dispatch_release释放</p>
-
-<pre><code class="language-objective-c">dispatch_queue_t  concurrentQ = dispatch_queue_create("createName",DISPATCH_QUEUE_CONCURRENT)
-dispatch_queue_t  serialQ = dispatch_queue_create("createName", DISPATCH_QUEUE_SERIAL)
-改变队列优先级
-dispatch_set_target_queue(restQueue, targetQueue);
-</code></pre>
-<h4 id="暂停恢复队列">暂停恢复队列</h4>
-
-<pre><code class="language-objective-c">dispatch_queue_t queue = dispatch_get_main_queue();
-dispatch_suspend(queue); //暂停队列queue
-dispatch_resume(queue);  //恢复队列queue
-</code></pre>
-
-<h4 id="3延迟添加执行dispatch_after">3、延迟添加执行dispatch_after</h4>
-
-<p>并不是在多少秒后执行，而是在3秒后将任务添加到Dispatch Queue中</p>
-
-<pre><code class="language-objective-c">dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3*NSEC_PER_SEC)),dispatch_get_main_queue(), ^{
-	//秒
-});
-
-dispatch_after(dispatch_time(DISPATCH_TIME_NOW,150ull *NSEC_PER_MSEC),dispatch_get_main_queue(), ^{
-    //毫秒
-});
-</code></pre>
-
-<h4 id="4dispatch_group与dispatch_barrier">4、dispatch_group与dispatch_barrier</h4>
-
-<p>dispatch_group应用于线程依赖：当添加到Queue中的所有任务都完成了，再来执行某个任务。</p>
-
-<p>举例，异步下载两张图片，这在这两张图片下载完毕之后，将两张图片合成</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>dispatch_group_t group = dispatch_group_create();
-dispatch_queue_t queue = dispatch_queue_create("com.gcd-group.www", DISPATCH_QUEUE_CONCURRENT);
-dispatch_group_async(group, queue, ^{
-    #异步下载第一张图片
- });
- 
-dispatch_group_async(group, queue, ^{
-    #异步下载第二张图片
-});
-     
-dispatch_group_notify(group, queue, ^{
-    #两张图片下载完后进行合成
-});
-</code></pre>
-</div>
-
-<p>dispatch_barrier：barrier以为栅栏，阻碍。在串行队列中，无区别，但是在并行队列中，用这个函数添加的任务可以保证阻碍线程执行，即这个任务是串行执行的。可用于解决数据竞争问题。有个坑要注意，并行队列必必须是自己dispatch_queue_create创建的，不能用dispatch_get_global_queue</p>
-
-<p>实现原理：queue中的其他block已经开始在各自分配的线程执行，当从queue检出一个barrier时，是等待其他的block都执行完毕再执行barrier，此时不会并发执行其他的block，直到该barrier执行完毕。 这相当于给当前已经运行的bock们加了一个group和notify，在notify里面执行了barrier，然后再执行barrier下面的block</p>
-
-<p>举例。多个操作对数据库进行读写，读的操作可以异步进行，但是为了保证写的线程安全，则必须用dispatch_barrier</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>dispatch_async(queue, ^{NSLog(@"read");});
-dispatch_async(queue, ^{NSLog(@"read");});
-dispatch_async(queue, ^{NSLog(@"read");});
-
-#可以保证写的时候只有这一个操作
-dispatch_barrier_sync(queue, ^{NSLog(@"writing");});
-
-dispatch_async(queue, ^{NSLog(@"read");});
-dispatch_async(queue, ^{NSLog(@"read");});
-</code></pre>
-</div>
-
-<p><img src="/img/Simple_1/03.png" alt="" /></p>
-
-<h4 id="5dispatch_semaphore">5、dispatch_semaphore</h4>
-
-<p>semaphore是信号的意思，dispatch_semaphore有三个函数，分别是dispatch_semaphore_create，dispatch_semaphore_signal，dispatch_semaphore_wait</p>
-
-<p><a href="http://www.helloted.com/2016/09/20/dispatch_semaphore/">dispatch_semaphore信号量控制</a></p>
-
-<h4 id="6dispatch_apply">6、dispatch_apply</h4>
-
-<p>重复执行某段代码</p>
-
-<pre><code class="language-objective-c">dispatch_apply(5, globalQ, ^(size_t index) { 
-    // 执行5次 
-});
-</code></pre>
-
-<h3 id="五nsoperation">五、NSOperation</h3>
-
-<p>1、NSoperation是基于GCD封装的</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>dispatch_async(_Queue, ^{    //请求数据  NSData *data = [NSData dataWithContentURL:[NSURL URLWithString:@"http://domain.com/a.png"]];    dispatch_async(dispatch_get_main_queue(), ^{         [self refreshViews:data];    });});
-</code></pre>
-</div>
-
-<p>有个致命的问题：这个任务是无法取消的 dataWithContentURL:是同步的拉取数据，它会一直阻塞线程直到完成请求，如果是遇到了超时的情况，它在这个时间内会一直占有这个线程；在这个期间并发队列就需要为其他任务新建线程，这样可能导致性能下降等问题。</p>
-
-<p>2、NSOperationQueue相对于GCD来说有以下优点：</p>
-
-<ul>
-  <li>提供了在 GCD 中不那么容易复制的有用特性。</li>
-  <li>可以很方便的取消一个NSOperation的执行</li>
-  <li>可以更容易的添加任务的依赖关系</li>
-  <li>提供了任务的状态：isExecuteing, isFinished.</li>
-</ul>
-
-<p>NSOperationQueue 有两种不同类型的队列：主队列和自定义队列。主队列运行在主线程之上，而自定义队列在后台执行。在两种类型中，这些队列所处理的任务都使用 NSOperation 的子类来表述。</p>
-
-<p>我们可以通过设置 maxConcurrentOperationCount 属性来控制并发任务的数量，当设置为 1 时， 那么它就是一个串行队列。主对列默认是串行队列，这一点和 dispatch_queue_t 是相似的。</p>
-
-<p>3、用法</p>
-
-<blockquote>
-  <p>NSOperation实现</p>
-</blockquote>
-
-<p>一个是直接使用NSInvocationOperation、NSBlockOperation两个子类，一个是自己实现NSOperation的子类</p>
-
-<pre><code class="language-objective-c">NSInvocationOperation *invocationOperation = [[NSInvocationOperation alloc]initWithTarget:selfselector:@selector(invocationOperationAction)object:nil];
-</code></pre>
-
-<pre><code class="language-objective-c">NSBlockOperation*blockOperation = [NSBlockOperationblockOperationWithBlock:^{
-
-}];
-</code></pre>
-
-<blockquote>
-  <p>执行任务有两种方法：</p>
-</blockquote>
-
-<ul>
-  <li>start ：方法时与主线程同步，有阻塞主线程的情况,</li>
-  <li>提交到NSOperationQueue中：与主线程是异步，不会阻塞到主线程。NSOperationQueue可以通过maxConcurrentOperationCount设置线程最大并行数量，为1的时候相当于串行，大于1时为并发。</li>
-</ul>
-
-<blockquote>
-  <p>取消任务</p>
-</blockquote>
-
-<pre><code class="language-objective-c">//取消队列中的所有operation
-[queue cancelAllOperations];
-
-//取消单个
-[blockOperation cancel];
-</code></pre>
-
-<blockquote>
-  <p>暂停和恢复</p>
-</blockquote>
-
-<pre><code class="language-objective-c">[queue setSuspended:YES];
-</code></pre>
-
-<blockquote>
-  <p>任务依赖：</p>
-</blockquote>
-
-<pre><code class="language-objective-c">[operationB addDependency:operationA]; // 操作B依赖于操作A
-</code></pre>
-
-<blockquote>
-  <p>自定义Operation</p>
-</blockquote>
-
-<p>A:使用 main 方法非常简单，开发者不需要管理一些状态属性（例如 isExecuting 和 isFinished），当 main 方法返回的时候，这个 operation 就结束了。这种方式使用起来非常简单，但是灵活性相对重写 start 来说要少一些， 因为main方法执行完就认为operation结束了，所以一般可以用来执行同步任务。</p>
-
-<p>B:如果你希望拥有更多的控制权，或者想在一个操作中可以执行异步任务，那么就重写 start 方法, 但是注意：这种情况下，你必须手动管理操作的状态， 只有当发送 isFinished 的 KVO 消息时，才认为是 operation 结束</p>
-
-<p>当实现了start方法时，默认会执行start方法，而不执行main方法</p>
-
-<p>为了让操作队列能够捕获到操作的改变，需要将状态的属性以配合 KVO 的方式进行实现。如果你不使用它们默认的 setter 来进行设置的话，你就需要在合适的时候发送合适的 KVO 消息。</p>
-
-<p>需要手动管理的状态有：</p>
-
-<ul>
-  <li>isExecuting 代表任务正在执行中</li>
-  <li>isFinished 代表任务已经执行完成</li>
-  <li>isCancelled 代表任务已经取消执行</li>
-</ul>
 
 
                 <hr>
@@ -473,7 +222,7 @@ dispatch_async(queue, ^{NSLog(@"read");});
                     
                     
                     <li class="next">
-                        <a href="/2016/06/29/SDWebImage_1/" data-toggle="tooltip" data-placement="top" title="iOS源码分析之SDWebImage(一)">下一篇 &rarr;</a>
+                        <a href="/2016/05/23/ios-Thread-2/" data-toggle="tooltip" data-placement="top" title="iOS多线程(二):GCD">下一篇 &rarr;</a>
                     </li>
                     
                 </ul>
