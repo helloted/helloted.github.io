@@ -110,6 +110,65 @@
 
 <p><img src="/img/data/08.jpg" alt="img" /></p>
 
+<h3 id="一冒泡排序">一、冒泡排序</h3>
+
+<p>解析：每一次遍历，从下往上排，如果有更大的就往下换一下，小的就会不断往上冒泡。</p>
+
+<p>核心思想：每一轮内循环，都能使基准位置的数比后面的数更小。</p>
+
+<p><strong>时间复杂度分析</strong>：O(n^2)，冒泡排序是一种不稳定排序算法</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">bubbling_sor</span><span class="p">(</span><span class="n">orgin_list</span><span class="p">):</span>
+    <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">orgin_list</span><span class="p">)</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c"># 从list[0]开始遍历，进行外循环，list[i]作为基准位置比较数</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length</span><span class="p">):</span>
+        <span class="c"># 用之后的数值与基准位置的数进行比较，进行内循环</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">length</span><span class="p">):</span>
+            <span class="c"># 如果基准位置之后的数，比基准位置更小，就进行替换，这样一轮内循环，都能保证基准位置的数比其后面的数值更大</span>
+            <span class="k">if</span> <span class="n">orgin_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">orgin_list</span><span class="p">[</span><span class="n">j</span><span class="p">]:</span>
+                <span class="n">orgin_list</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">orgin_list</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">orgin_list</span><span class="p">[</span><span class="n">j</span><span class="p">],</span><span class="n">orgin_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">orgin_list</span>
+</code></pre>
+</div>
+
+<h3 id="二快速排序填坑排序">二、快速排序(填坑排序)</h3>
+
+<p>快速排序是冒泡排序的一种优化，可称为填坑</p>
+
+<p>由于已经将a[0]中的数保存到X中，可以理解成在数组a[0]上挖了个坑，可以将其它数据填充到这来。</p>
+
+<p>从j开始向前找一个比X小或等于X的数。当j=8，符合条件，将a[8]挖出再填到上一个坑a[0]中。a[0]=a[8]; i++;  这样一个坑a[0]就被搞定了，但又形成了一个新坑a[8]，这怎么办了？简单，再找数字来填a[8]这个坑。这次从i开始向后找一个大于X的数，当i=3，符合条件，将a[3]挖出再填到上一个坑中a[8]=a[3]; j–;</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">sub_solt</span><span class="p">(</span><span class="n">orgin</span><span class="p">,</span><span class="n">l</span><span class="p">,</span><span class="n">high</span><span class="p">):</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">orgin</span><span class="p">[</span><span class="n">l</span><span class="p">]</span>
+    <span class="k">while</span> <span class="n">l</span> <span class="o">&lt;</span> <span class="n">high</span><span class="p">:</span>
+        <span class="k">while</span> <span class="n">l</span> <span class="o">&lt;</span> <span class="n">high</span> <span class="ow">and</span> <span class="n">orgin</span><span class="p">[</span><span class="n">high</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">key</span><span class="p">:</span>
+            <span class="n">high</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="k">while</span> <span class="n">l</span> <span class="o">&lt;</span> <span class="n">high</span> <span class="ow">and</span> <span class="n">orgin</span><span class="p">[</span><span class="n">high</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">key</span><span class="p">:</span>
+            <span class="n">orgin</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">=</span> <span class="n">orgin</span><span class="p">[</span><span class="n">high</span><span class="p">]</span>
+            <span class="n">l</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">orgin</span><span class="p">[</span><span class="n">high</span><span class="p">]</span> <span class="o">=</span> <span class="n">orgin</span><span class="p">[</span><span class="n">l</span><span class="p">]</span>
+    <span class="n">orgin</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">=</span> <span class="n">key</span>
+    <span class="k">return</span> <span class="n">l</span>
+
+
+<span class="k">def</span> <span class="nf">quick_solt</span><span class="p">(</span><span class="n">orgin</span><span class="p">,</span><span class="n">l</span><span class="p">,</span><span class="n">high</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">l</span> <span class="o">&lt;</span> <span class="n">high</span><span class="p">:</span>
+        <span class="c"># 分治法找到分治点，左边为小于分治数，右边为大于分治数</span>
+        <span class="n">key_index</span> <span class="o">=</span> <span class="n">sub_solt</span><span class="p">(</span><span class="n">orgin</span><span class="p">,</span><span class="n">l</span><span class="p">,</span><span class="n">high</span><span class="p">)</span>
+        <span class="c"># 分别进行排序</span>
+        <span class="n">quick_solt</span><span class="p">(</span><span class="n">orgin</span><span class="p">,</span><span class="n">l</span><span class="p">,</span><span class="n">key_index</span><span class="p">)</span>
+        <span class="n">quick_solt</span><span class="p">(</span><span class="n">orgin</span><span class="p">,</span><span class="n">key_index</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">high</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="n">orgin</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">]</span>
+    <span class="n">quick_solt</span><span class="p">(</span><span class="n">orgin</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">orgin</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</code></pre>
+</div>
+
 
 
                 <hr>
