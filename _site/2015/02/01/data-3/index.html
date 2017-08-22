@@ -188,6 +188,76 @@
 
 <h3 id="四插入排序二希尔排序">四、插入排序(二)：希尔排序</h3>
 
+<p>希尔排序是把记录按下标的一定增量分组，对每组使用直接插入排序算法排序；随着增量逐渐减少，每组包含的关键词越来越多，当增量减至1时，整个文件恰被分成一组，算法便终止。</p>
+
+<pre><code class="language-Python">def shellSort(nums):
+    # 设定步长
+    step = len(nums)/2
+    while step &gt; 0:
+        for i in range(step, len(nums)):
+            # 类似插入排序, 当前值与指定步长之前的值比较, 符合条件则交换位置
+            while i &gt;= step and nums[i-step] &gt; nums[i]:
+                nums[i], nums[i-step] = nums[i-step], nums[i]
+                i -= step
+        step = step/2
+    return nums
+</code></pre>
+
+<h3 id="五选择排序一简单选择排序">五、选择排序(一)：简单选择排序</h3>
+
+<p><strong>基本思想：</strong>在要排序的一组数中，选出最小（或者最大）的一个数与第1个位置的数交换；然后在剩下的数当中再找最小（或者最大）的与第2个位置的数交换，依次类推，直到第n-1个元素（倒数第二个数）和第n个元素（最后一个数）比较为止。</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">select_sort</span><span class="p">(</span><span class="n">orgin_list</span><span class="p">):</span>
+    <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">orgin_list</span><span class="p">)</span>
+    <span class="c"># 从list[0]开始遍历，进行外循环，list[i]作为基准位置比较数</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">mi</span> <span class="o">=</span> <span class="n">i</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">length</span><span class="p">):</span>
+            <span class="c">#找到最小的一个数的位置</span>
+            <span class="k">if</span> <span class="n">orgin_list</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">orgin_list</span><span class="p">[</span><span class="n">mi</span><span class="p">]:</span>
+                <span class="n">mi</span> <span class="o">=</span> <span class="n">j</span>
+        <span class="n">orgin_list</span><span class="p">[</span><span class="n">mi</span><span class="p">],</span><span class="n">orgin_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">orgin_list</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">orgin_list</span><span class="p">[</span><span class="n">mi</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">orgin_list</span>
+</code></pre>
+</div>
+
+<h3 id="六选择排序二堆排序">六、选择排序(二)：堆排序</h3>
+
+<p>堆排序(Heapsort)是指利用堆积树（堆）这种数据结构所设计的一种排序算法，它是选择排序的一种。可以利用数组的特点快速定位指定索引的元素。堆分为大根堆和小根堆，是完全二叉树。大根堆的要求是每个节点的值都不大于其父节点的值，即A[PARENT[i]] &gt;= A[i]。在数组的非降序排序中，需要使用的就是大根堆，因为根据大根堆的要求可知，最大的值一定在堆顶。</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">adjust_heap</span><span class="p">(</span><span class="n">lists</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+    <span class="n">lchild</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">rchild</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">2</span>
+    <span class="nb">max</span> <span class="o">=</span> <span class="n">i</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span> <span class="o">/</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">lchild</span> <span class="o">&lt;</span> <span class="n">size</span> <span class="ow">and</span> <span class="n">lists</span><span class="p">[</span><span class="n">lchild</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">lists</span><span class="p">[</span><span class="nb">max</span><span class="p">]:</span>
+            <span class="nb">max</span> <span class="o">=</span> <span class="n">lchild</span>
+        <span class="k">if</span> <span class="n">rchild</span> <span class="o">&lt;</span> <span class="n">size</span> <span class="ow">and</span> <span class="n">lists</span><span class="p">[</span><span class="n">rchild</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">lists</span><span class="p">[</span><span class="nb">max</span><span class="p">]:</span>
+            <span class="nb">max</span> <span class="o">=</span> <span class="n">rchild</span>
+        <span class="k">if</span> <span class="nb">max</span> <span class="o">!=</span> <span class="n">i</span><span class="p">:</span>
+            <span class="n">lists</span><span class="p">[</span><span class="nb">max</span><span class="p">],</span> <span class="n">lists</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">lists</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">lists</span><span class="p">[</span><span class="nb">max</span><span class="p">]</span>
+            <span class="n">adjust_heap</span><span class="p">(</span><span class="n">lists</span><span class="p">,</span> <span class="nb">max</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">build_heap</span><span class="p">(</span><span class="n">lists</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">size</span><span class="o">/</span><span class="mi">2</span><span class="p">))[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="n">adjust_heap</span><span class="p">(</span><span class="n">lists</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">heap_sort</span><span class="p">(</span><span class="n">lists</span><span class="p">):</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lists</span><span class="p">)</span>
+    <span class="n">build_heap</span><span class="p">(</span><span class="n">lists</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="n">lists</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lists</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">lists</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">lists</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">adjust_heap</span><span class="p">(</span><span class="n">lists</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<h3 id="七归并排序">七、归并排序</h3>
+
+<p>归并（Merge）排序法是将两个（或两个以上）有序表合并成一个新的有序表，即把待排序序列分为若干个子序列，每个子序列是有序的。然后再把有序子序列合并为整体有序序列。</p>
+
+<h3 id="八基数排序桶排序">八、基数排序(桶排序)</h3>
+
+<p>是将数列分到有限数量的桶里。每个桶再个别排序（有可能再使用别的排序算法或是以递回方式继续使用桶排序进行排序）。桶排序是鸽巢排序的一种归纳结果。当要被排序的阵列内的数值是均匀分配的时候，桶排序使用线性时间O(n)。但桶排序并不是比较排序，不受到O(n*log n)下限的影响。</p>
 
 
                 <hr>
