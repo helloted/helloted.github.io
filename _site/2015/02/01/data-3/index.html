@@ -110,7 +110,7 @@
 
 <p><img src="/img/data/08.jpg" alt="img" /></p>
 
-<h3 id="一冒泡排序">一、冒泡排序</h3>
+<h3 id="一选择排序一冒泡排序">一、选择排序(一)：冒泡排序</h3>
 
 <p>解析：每一次遍历，从下往上排，如果有更大的就往下换一下，小的就会不断往上冒泡。</p>
 
@@ -133,7 +133,7 @@
 </code></pre>
 </div>
 
-<h3 id="二快速排序填坑排序">二、快速排序(填坑排序)</h3>
+<h3 id="二选择排序二快速排序填坑排序">二、选择排序(二)：快速排序(填坑排序)</h3>
 
 <p>快速排序是冒泡排序的一种优化，可称为填坑</p>
 
@@ -168,6 +168,25 @@
     <span class="n">quick_solt</span><span class="p">(</span><span class="n">orgin</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">orgin</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 </code></pre>
 </div>
+
+<h3 id="三插入排序一直接插入排序">三、插入排序(一)：直接插入排序</h3>
+
+<p><strong>基本思想：</strong>将待排序的无序数列看成是一个仅含有一个元素的有序数列和一个无序数列，将无序数列中的元素逐次插入到有序数列中，从而获得最终的有序数列。</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">insert_sort</span><span class="p">(</span><span class="n">orgin_list</span><span class="p">):</span>
+    <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">orgin_list</span><span class="p">)</span>
+    <span class="c"># 从list[0]开始遍历，进行外循环，list[i]作为基准位置比较数</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="c"># 拿有序的数组之后的一个数，往里面插</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">orgin_list</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">orgin_list</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="k">break</span>
+            <span class="n">orgin_list</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">orgin_list</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">orgin_list</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">orgin_list</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">orgin_list</span>
+</code></pre>
+</div>
+
+<h3 id="四插入排序二希尔排序">四、插入排序(二)：希尔排序</h3>
 
 
 
