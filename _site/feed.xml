@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-08-22T17:51:00+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">热修复=Runtime+Javascriptcore</title><link href="http://www.helloted.com/2017/05/30/hotfix/" rel="alternate" type="text/html" title="热修复=Runtime+Javascriptcore" /><published>2017-05-30T20:00:00+08:00</published><updated>2017-05-30T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/30/hotfix</id><content type="html" xml:base="http://www.helloted.com/2017/05/30/hotfix/">&lt;h3 id=&quot;一运行时&quot;&gt;一、运行时&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-08-23T11:32:09+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">热修复=Runtime+Javascriptcore</title><link href="http://www.helloted.com/2017/05/30/hotfix/" rel="alternate" type="text/html" title="热修复=Runtime+Javascriptcore" /><published>2017-05-30T20:00:00+08:00</published><updated>2017-05-30T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/30/hotfix</id><content type="html" xml:base="http://www.helloted.com/2017/05/30/hotfix/">&lt;h3 id=&quot;一运行时&quot;&gt;一、运行时&lt;/h3&gt;
 
 &lt;p&gt;热修复的基本原理就是Runtime运行时的方法替换，主要是下列几个方法&lt;/p&gt;
 
@@ -966,7 +966,194 @@ cancelPreviousPerformRequestsWithTarget:selector:object:
 
 &lt;p&gt;线程安全性取决于使用runloop的API。 Core Foundation中的功能通常是线程安全的，可以从任何线程调用。 但是，如果您想更改runloop的配置，那么尽可能从拥有runloop的线程执行此操作。&lt;/p&gt;
 
-&lt;p&gt;Cocoa NSRunLoop类并不像Core Foundation对象那样固有线程安全。 如果您正在使用NSRunLoop类来修改runloop，那你最好在同一线程执行这个操作。 将input sources或timers添加到属于不同线程的runloop可能会导致崩溃或者其他意外结果。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">其他两篇：</summary></entry><entry><title type="html">CoreData简介以及第三方框架MagicRecord源码解析</title><link href="http://www.helloted.com/2016/12/01/coredata/" rel="alternate" type="text/html" title="CoreData简介以及第三方框架MagicRecord源码解析" /><published>2016-12-01T20:00:00+08:00</published><updated>2016-12-01T20:00:00+08:00</updated><id>http://www.helloted.com/2016/12/01/coredata</id><content type="html" xml:base="http://www.helloted.com/2016/12/01/coredata/">&lt;h3 id=&quot;一coredata结构&quot;&gt;一、CoreData结构&lt;/h3&gt;
+&lt;p&gt;Cocoa NSRunLoop类并不像Core Foundation对象那样固有线程安全。 如果您正在使用NSRunLoop类来修改runloop，那你最好在同一线程执行这个操作。 将input sources或timers添加到属于不同线程的runloop可能会导致崩溃或者其他意外结果。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">其他两篇：</summary></entry><entry><title type="html">iOS图形</title><link href="http://www.helloted.com/2017/01/10/draw/" rel="alternate" type="text/html" title="iOS图形" /><published>2017-01-10T20:00:00+08:00</published><updated>2017-01-10T20:00:00+08:00</updated><id>http://www.helloted.com/2017/01/10/draw</id><content type="html" xml:base="http://www.helloted.com/2017/01/10/draw/">&lt;p&gt;&lt;img src=&quot;/img/draw/01.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;一概念&quot;&gt;一、概念&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Core Graphics Framework&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Core Graphics Framework 是一套基于C的API框架，使用了Quartz作为绘图引擎。它提供了低级别、轻量级、高保真度的2D渲染。该框架可以用于基于路径的绘图、变换、颜色管理、脱屏渲染，模板、渐变、遮蔽、图像数据管理、图像的创建、遮罩以及PDF文档的创建、显示和分析&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Graphics Context&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Graphics Context是一个数据类型(CGContextRef)、Quartz绘制图像到输出设备的信息都保存在其中，Graphics Context定义了基本的绘制属性，如颜色、裁减区域、线条宽度和样式信息、字体信息、混合模式等&lt;/p&gt;
+
+&lt;p&gt;使用UiKit，你只能在&lt;strong&gt;当前上下文中&lt;/strong&gt;绘图，所以如果你当前处于&lt;strong&gt;UIGraphicsBeginImageContextWithOptions&lt;/strong&gt;函数或&lt;strong&gt;drawRect&lt;/strong&gt;：方法中，你就可以直接使用UIKit提供的方法进行绘图。如果你持有一个context：参数，那么使用UIKit提供的方法之前，必须将该上下文参数转化为当前上下文。幸运的是，调用&lt;strong&gt;UIGraphicsPushContext&lt;/strong&gt; 函数可以方便的将context：参数转化为当前上下文，记住最后别忘了调用&lt;strong&gt;UIGraphicsPopContext函数&lt;/strong&gt;恢复上下文环境。&lt;/p&gt;
+
+&lt;p&gt;通过调用UIGraphicsGetCurrentContext()方法可以获取当前的Graphics Context&lt;/p&gt;
+
+&lt;h3 id=&quot;二五种绘图方式&quot;&gt;二、五种绘图方式&lt;/h3&gt;
+
+&lt;p&gt;用六种方式来画下面这个圆&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/draw/03.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;所有的代码可以&lt;a href=&quot;https://github.com/helloted/drawdemo&quot;&gt;Github-五种绘图方式&lt;/a&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;1uiviewdrawrectuibezierpath&quot;&gt;1、UIView+drawRect+UIBezierPath&lt;/h4&gt;
+
+&lt;p&gt;重写drawRect能够自动生成Context，所以可以在drawRect方法里面画图形&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;- (void)drawRect:(CGRect)rect{
+    UIBezierPath *p = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(100,100,100,100)];
+    [[UIColor orangeColor] setFill];
+    [p fill];
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&quot;2uiviewdrawrectcontext&quot;&gt;2、UIView+drawRect+context&lt;/h4&gt;
+
+&lt;p&gt;获取到drawRect自动生成的context,在context里画图形&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;- (void)drawRect:(CGRect)rect{
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextAddEllipseInRect(context, CGRectMake(100,100,100,100));
+    CGContextSetFillColorWithColor(context, [UIColor orangeColor].CGColor);
+    CGContextFillPath(context);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&quot;3uiviewdrawlayer-incontext&quot;&gt;3、UIView+drawLayer: inContext:&lt;/h4&gt;
+
+&lt;p&gt;注意要显式调用[view.layer setNeedsDisplay]这个方法才起作用&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx{
+    CGContextAddEllipseInRect(ctx, CGRectMake(100,100,100,100));
+    CGContextSetFillColorWithColor(ctx, [UIColor orangeColor].CGColor);
+    CGContextFillPath(ctx);
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;或者&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx{
+    UIGraphicsPushContext(ctx);
+    UIBezierPath* p = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(100,100,100,100)];
+    [[UIColor orangeColor] setFill];
+    [p fill];
+    UIGraphicsPopContext();
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&quot;4calayerdrawincontext&quot;&gt;4、CALayer+drawInContext&lt;/h4&gt;
+
+&lt;p&gt;插入Layer层，注意插入Layer层时，要显式调用setNeedsDisplay，这样就会调用drawInContext&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;    DrawLayer *layer = [[DrawLayer alloc]init];
+    layer.frame = self.view.bounds;
+    [layer setNeedsDisplay];
+    [self.view.layer addSublayer:layer];
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;@implementation DrawLayer
+
+- (void)drawInContext:(CGContextRef)ctx{
+    CGContextAddEllipseInRect(ctx, CGRectMake(100,100,100,100));
+    CGContextSetFillColorWithColor(ctx, [UIColor orangeColor].CGColor);
+    CGContextFillPath(ctx);
+}
+@end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&quot;5uigraphicsbeginimagecontextwithoptions&quot;&gt;5、UIGraphicsBeginImageContextWithOptions&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;- (void)drawImage{
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(100,100), NO, 0);
+    CGContextRef con = UIGraphicsGetCurrentContext();
+    CGContextAddEllipseInRect(con, CGRectMake(0,0,100,100));
+    CGContextSetFillColorWithColor(con, [UIColor orangeColor].CGColor);
+    CGContextFillPath(con);
+    UIImage* image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    UIImageView  *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(100, 100, 100, 100)];
+    [imageView setImage:image];
+    [self.view addSubview:imageView];    
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;或者&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;    UIGraphicsBeginImageContextWithOptions(CGSizeMake(100,100), NO, 0);
+    UIBezierPath* p = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(0,0,100,100)];
+    [[UIColor blueColor] setFill];
+    [p fill];
+    UIImage* image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    UIImageView  *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(100, 100, 100, 100)];
+    [imageView setImage:image];
+    [self.view addSubview:imageView];
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;三上下文切换&quot;&gt;三、上下文切换&lt;/h3&gt;
+
+&lt;h4 id=&quot;1cgcontextsavegstatecgcontextrestoregstate&quot;&gt;1、CGContextSaveGState/CGContextRestoreGState&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[[UIColor redColor] setStroke]; //画笔红色
+CGContextSaveGState(UIGraphicsGetCurrentContext()); //记录上下文的当前状态
+[[UIColor blackColor] setStroke]; //画笔黑色
+CGContextRestoreGState(UIGraphicsGetCurrentContext()); //恢复之前记录的上下文状态
+UIRectFill(CGRectMake(10, 10, 100, 100)); //绘制红色矩形
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;2uigraphicspushcontextuigraphicspopcontext&quot;&gt;2、UIGraphicsPushContext/UIGraphicsPopContext&lt;/h4&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;当前正在使用CoreGraphics绘制图形A，想要使用UIKit绘制完全不同的图形B，此时就希望保存当前绘图context及已绘制内容。&lt;/li&gt;
+  &lt;li&gt;使用UIGraphicsPushContext切换到一个全新的绘图context。&lt;/li&gt;
+  &lt;li&gt;使用UIKit绘制图形B。&lt;/li&gt;
+  &lt;li&gt;使用UIGraphicsPopContext恢复之前的绘图context，继续使用CoreGraphics绘制图形A。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx{
+    UIGraphicsPushContext(ctx);
+    UIBezierPath* p = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(100,100,100,100)];
+    [[UIColor orangeColor] setFill];
+    [p fill];
+    UIGraphicsPopContext();
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;3uigraphicsbeginimagecontextuigraphicsendimagecontext&quot;&gt;3、UIGraphicsBeginImageContext/UIGraphicsEndImageContext&lt;/h4&gt;
+
+&lt;p&gt;如果想在切换绘图context后，继续使用CoreGraphics绘图（而非UIKit），则不需要使用UIGraphicsPushContext/UIGraphicsPopContext。因为CoreGraphics已将绘图context视为参数。使用场景是：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;当前正在绘制图形A。&lt;/li&gt;
+  &lt;li&gt;使用UIGraphicsBeginImageContext将旧的绘图context入栈，创建新的绘图context并使用。&lt;/li&gt;
+  &lt;li&gt;绘制图形B。&lt;/li&gt;
+  &lt;li&gt;结束绘制图形B之后，使用UIGraphicsEndImageContext恢复到之前的绘图context，继续绘制图形A。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// 绘图中
+UIGraphicsBeginImageContext(CGSizeMake(200, 200));
+[self.view drawViewHierarchyInRect:self.view.bounds afterScreenUpdates:YES];
+UIImage *snapshot = UIGraphicsGetImageFromCurrentImageContext();
+UIGraphicsEndImageContext();
+imageView.image = snapshot;
+// 继续绘图
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;四calayer与uiview&quot;&gt;四、CALayer与UIView&lt;/h3&gt;
+
+&lt;p&gt;视图即UIView，并不是直接显示在屏幕上，而是在创建视图对象的时候视图对象会自动创建一个层，而视图对象把要显示的东西绘制在层上，待到需要显示时硬件将所有的层拷贝，然后按Z轴的高低合成最终的显示结果&lt;/p&gt;
+
+&lt;p&gt;view的完整显示过程&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;view.layer会准备一个Layer Graphics Contex(图层类型的上下文)&lt;/li&gt;
+  &lt;li&gt;调用view.layer.delegate(view)的drawLayer:inContext:,并传入刚才准备好的上下文&lt;/li&gt;
+  &lt;li&gt;view的drawLayer:inContext:方法内部又会调用view的drawRect:方法&lt;/li&gt;
+  &lt;li&gt;view就可以在drawRect:方法中实现绘图代码, 所有东西最终都绘制到view.layer上面&lt;/li&gt;
+  &lt;li&gt;系统再将view.layer的内容拷贝到屏幕, 于是完成了view的显示&lt;/li&gt;
+&lt;/ol&gt;</content><author><name>Ted</name></author><summary type="html"></summary></entry><entry><title type="html">CoreData简介以及第三方框架MagicRecord源码解析</title><link href="http://www.helloted.com/2016/12/01/coredata/" rel="alternate" type="text/html" title="CoreData简介以及第三方框架MagicRecord源码解析" /><published>2016-12-01T20:00:00+08:00</published><updated>2016-12-01T20:00:00+08:00</updated><id>http://www.helloted.com/2016/12/01/coredata</id><content type="html" xml:base="http://www.helloted.com/2016/12/01/coredata/">&lt;h3 id=&quot;一coredata结构&quot;&gt;一、CoreData结构&lt;/h3&gt;
 
 &lt;p&gt;可以用两张图来表示：&lt;/p&gt;
 
@@ -1894,151 +2081,4 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
 
 &lt;h3 id=&quot;demo位置&quot;&gt;demo位置&lt;/h3&gt;
 
-&lt;p&gt;以上代码都放在&lt;a href=&quot;https://github.com/helloted/dispatch_semaphore&quot;&gt;dispatch_semaphore demo&lt;/a&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">几个函数的意义</summary></entry><entry><title type="html">Http与Https</title><link href="http://www.helloted.com/2016/09/13/Http/" rel="alternate" type="text/html" title="Http与Https" /><published>2016-09-13T20:00:00+08:00</published><updated>2016-09-13T20:00:00+08:00</updated><id>http://www.helloted.com/2016/09/13/Http</id><content type="html" xml:base="http://www.helloted.com/2016/09/13/Http/">&lt;h3 id=&quot;1tcpip定义&quot;&gt;1、TCP/IP定义&lt;/h3&gt;
-
-&lt;p&gt;TCP/IP是互联网相关的各类协议族的名称&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Http/tcp.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;2tcpip四层模型&quot;&gt;2、TCP/IP四层模型&lt;/h3&gt;
-
-&lt;p&gt;OSI七层模型太过繁琐，所以就对应有了TCP/IP四层模型，对应的将OSI中的应用层、表示层、会话层统一归为应用层。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Http/OSI.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;应用层：决定了向用户提供应用服务时通信的活动。HTTP协议。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;传输层：提供处于网络连接中的两台计算机之间的数据传输，TCP和UDP协议就在这一层&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;网络层：用来处理在网络上流动的数据包，数据包是网络传输的最小数据单位。该层规定了通过怎样的路径到达对方计算机，并把数据包传送给对方。IP协议&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;链路层：用来处理连接网络的硬件部分。&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Http/model.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;3tcp三次握手四次挥手&quot;&gt;3、TCP三次握手，四次挥手&lt;/h3&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Http/01.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;4一次完整的http请求&quot;&gt;4、一次完整的HTTP请求&lt;/h3&gt;
-
-&lt;p&gt;一次完整的HTTP请求过程从TCP三次握手建立连接成功后开始，客户端按照指定的格式开始向服务端发送HTTP请求，服务端接收请求后，解析HTTP请求，处理完业务逻辑，最后返回一个HTTP的响应给客户端，HTTP的响应内容同样有标准的格式。&lt;/p&gt;
-
-&lt;p&gt;HTTP请求格式主要有四部分组成，分别是：请求行(请求方法（GET/POST/DELETE/PUT/HEAD）、URI路径、HTTP的版本号)、请求头(缓存、客户端信息等)、空行、消息体(请求数据)，每部分内容占一行。&lt;/p&gt;
-
-&lt;p&gt;HTTP响应消息的格式包括：状态行(有HTTP协议版本号，状态码和状态说明)、响应头、空行、消息体。每部分内容占一行。&lt;/p&gt;
-
-&lt;h3 id=&quot;5http请求报文&quot;&gt;5、HTTP请求报文&lt;/h3&gt;
-
-&lt;h4 id=&quot;51请求报文&quot;&gt;5.1请求报文&lt;/h4&gt;
-
-&lt;p&gt;一个HTTP请求报文由请求行（request line）、请求头部（header）、空行、请求数据4个部分组成&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Http/request.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Http/02.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;52请求行&quot;&gt;5.2请求行&lt;/h4&gt;
-
-&lt;p&gt;由方法、服务器内部URL(使用GET方法时，请求参数和对应的值附加在URL后面，利用一个问号（“?”）代表URL的结尾与请求参数的开始)、协议版本组成&lt;/p&gt;
-
-&lt;h4 id=&quot;53请求方法&quot;&gt;5.3请求方法&lt;/h4&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;GET：请求获取Request-URI所标识的资源。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;POST：在Request-URI所标识的资源后附加新的数据。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;HEAD：请求获取由Request-URI所标识的资源的响应消息报头。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;PUT：请求服务器存储一个资源，并用Request-URI作为其标识。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Delete：请求服务器删除Request-URI所标识的资源。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;TRACE：请求服务器回送收到的请求信息，主要用于测试或诊断。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;CONNECT：保留将来使用。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;OPTIONS：请求查询服务器的性能，或者查询与资源相关的选项和需求。&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;6http返回报文&quot;&gt;6、HTTP返回报文&lt;/h4&gt;
-
-&lt;p&gt;状态行(有HTTP协议版本号，状态码和状态说明)、响应头、空行、消息体&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Http/response.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Http/03.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;状态码&quot;&gt;状态码&lt;/h4&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Http/statusCode.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;常见状态码&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;301被请求的资源已永久移动到新位置。服务器返回此响应（对 GET 或 HEAD 请求的响应）时，会自动将请求者转到新位置。&lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;302请求的资源临时从不同的URI响应请求，但请求者应继续使用原有位置来进行以后的请求&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;404 没有找到&lt;/li&gt;
-  &lt;li&gt;405 方法不允许&lt;/li&gt;
-  &lt;li&gt;408 请求超时&lt;/li&gt;
-  &lt;li&gt;500 服务器内部错误&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;7长连接&quot;&gt;7、长连接&lt;/h3&gt;
-
-&lt;p&gt;在报文中有一个字段：connnection:keep-alive;是长连接的意思，从Http1.1开始就是默认TCP保持长连接，只要任意一端没有提出断开连接，则会一直保持连接状态，一次长连接可以进行多次请求和响应，好处是可以减少建立连接和断开连接的开销，减少服务器的负载，另外也可以加快Http请求和响应；&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Http/connection.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;8cookies&quot;&gt;8、Cookies&lt;/h3&gt;
-
-&lt;p&gt;Http是无状态协议，但有的时候客户端与服务器又要保持某些状态，于是引入了Cookie技术。Cookie技术通过在请求和响应报文中写入Cookie信息来控制客户端的状态&lt;/p&gt;
-
-&lt;p&gt;Cookie会根据从服务器端发送的响应报文中的一个Set-Cookie的头部信息，通知客户端来保持Cookie。当下次客户端再往服务器发送请求时，客户端会自动在请求报文中加入Cookie后发送出去。&lt;/p&gt;
-
-&lt;p&gt;服务器端发现客户端发送过来的Cookie后，会去检查究竟从哪一个客户端发来的连接请求，然后对比服务器上的记录，最后得到之前的状态信息。&lt;/p&gt;
-
-&lt;h3 id=&quot;9https&quot;&gt;9、HTTPS&lt;/h3&gt;
-
-&lt;p&gt;其实HTTPS从最终的数据解析的角度，与HTTP没有任何的区别，HTTPS就是将HTTP协议数据包放到SSL/TSL层加密后，在TCP/IP层组成IP数据报去传输，以此保证传输数据的安全；而对于接收端，在SSL/TSL将接收的数据包解密之后，将数据传给HTTP协议层，就是普通的HTTP数据。HTTP和SSL/TSL都处于OSI模型的应用层。从HTTP切换到HTTPS是一个非常简单的过程&lt;/p&gt;
-
-&lt;h4 id=&quot;http有以下不足&quot;&gt;Http有以下不足&lt;/h4&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;通信使用明文，内容可能被窃听&lt;/li&gt;
-  &lt;li&gt;不验证通信双方的身份，因此有可能遭遇伪装&lt;/li&gt;
-  &lt;li&gt;无法证明报文的完整性，所以有可能遭到篡改&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;ssltsl&quot;&gt;SSL/TSL&lt;/h4&gt;
-
-&lt;p&gt;是个加密套件，负责对HTTP的数据进行加密。TLS是SSL的升级版， HTTPS就是在http和TCP之间加了一层TSL/SSL协议。先通过公开加密生成对称密钥，之后用对称密钥进行对话。&lt;/p&gt;
-
-&lt;h4 id=&quot;https抓包原理&quot;&gt;HTTPS抓包原理&lt;/h4&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Https抓包的原理就是抓包程序将服务器返回的证书截获&lt;/li&gt;
-  &lt;li&gt;然后给客户端返回一个抓包程序的证书，&lt;/li&gt;
-  &lt;li&gt;客户端发送的数据用抓包程序给的证书生成的密钥加密&lt;/li&gt;
-  &lt;li&gt;抓包程序得到客户端发送的数据抓包程序用自己的证书解密出来，再用服务器证书加密&lt;/li&gt;
-  &lt;li&gt;抓包程序再把数据发给服务器&lt;/li&gt;
-&lt;/ol&gt;</content><author><name>Ted</name></author><summary type="html">1、TCP/IP定义</summary></entry></feed>
+&lt;p&gt;以上代码都放在&lt;a href=&quot;https://github.com/helloted/dispatch_semaphore&quot;&gt;dispatch_semaphore demo&lt;/a&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">几个函数的意义</summary></entry></feed>
