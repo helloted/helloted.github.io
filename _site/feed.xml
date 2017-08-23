@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-08-23T15:11:50+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">热修复=Runtime+Javascriptcore</title><link href="http://www.helloted.com/2017/05/30/hotfix/" rel="alternate" type="text/html" title="热修复=Runtime+Javascriptcore" /><published>2017-05-30T20:00:00+08:00</published><updated>2017-05-30T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/30/hotfix</id><content type="html" xml:base="http://www.helloted.com/2017/05/30/hotfix/">&lt;h3 id=&quot;一运行时&quot;&gt;一、运行时&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-08-23T19:06:18+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">热修复=Runtime+Javascriptcore</title><link href="http://www.helloted.com/2017/05/30/hotfix/" rel="alternate" type="text/html" title="热修复=Runtime+Javascriptcore" /><published>2017-05-30T20:00:00+08:00</published><updated>2017-05-30T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/30/hotfix</id><content type="html" xml:base="http://www.helloted.com/2017/05/30/hotfix/">&lt;h3 id=&quot;一运行时&quot;&gt;一、运行时&lt;/h3&gt;
 
 &lt;p&gt;热修复的基本原理就是Runtime运行时的方法替换，主要是下列几个方法&lt;/p&gt;
 
@@ -1147,7 +1147,34 @@ testLabel.attributedText = attributedStr;
 
 &lt;h4 id=&quot;5uitextview&quot;&gt;5、UITextView&lt;/h4&gt;
 
-&lt;p&gt;UITextView作为显示出来的实际的文本视图，在 TextKit 中，文本视图有两个目的：第一，它是文本系统用来绘制的视图。文本视图它自己并不会做任何绘制；它仅仅提供一个供其它类绘制的区域。作为视图层级机构中唯一的组件，第二个目的是处理所有的用户交互。具体来说，文本视图实现 UITextInput 的协议来处理键盘事件，它为用户提供了一种途径来设置一个插入点或选择文本。它并不对文本做任何实际上的改变，仅仅将这些改变请求转发给刚刚讨论的文本存储。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、概念架构：</summary></entry><entry><title type="html">iOS图形</title><link href="http://www.helloted.com/2017/01/10/draw/" rel="alternate" type="text/html" title="iOS图形" /><published>2017-01-10T20:00:00+08:00</published><updated>2017-01-10T20:00:00+08:00</updated><id>http://www.helloted.com/2017/01/10/draw</id><content type="html" xml:base="http://www.helloted.com/2017/01/10/draw/">&lt;p&gt;&lt;img src=&quot;/img/draw/01.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;UITextView作为显示出来的实际的文本视图，在 TextKit 中，文本视图有两个目的：第一，它是文本系统用来绘制的视图。文本视图它自己并不会做任何绘制；它仅仅提供一个供其它类绘制的区域。作为视图层级机构中唯一的组件，第二个目的是处理所有的用户交互。具体来说，文本视图实现 UITextInput 的协议来处理键盘事件，它为用户提供了一种途径来设置一个插入点或选择文本。它并不对文本做任何实际上的改变，仅仅将这些改变请求转发给刚刚讨论的文本存储。&lt;/p&gt;
+
+&lt;h3 id=&quot;四textkit实例&quot;&gt;四、TextKit实例&lt;/h3&gt;
+
+&lt;h3 id=&quot;1添加图片-nstextattachment&quot;&gt;1、添加图片-NSTextAttachment&lt;/h3&gt;
+
+&lt;p&gt;NSTextAttachment用于添加图片&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;	//添加表情
+    UIImage * image = [UIImage imageNamed:@&quot;011&quot;];
+    NSTextAttachment * attachment1 = [[NSTextAttachment alloc] init];
+    #表情的大小
+    attachment.bounds = CGRectMake(0, 0, 15, 15);
+    attachment.image = image;
+    NSAttributedString * attachStr = [NSAttributedString 		attributedStringWithAttachment:attachment];
+    
+    #根据占位符，将文字换成表情
+    NSRange range = [[str string]rangeOfString:@&quot;[icon]&quot;];  
+    [str replaceCharactersInRange:range withAttributedString:attachStr];  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&quot;2文字环绕图片-exclusionpaths&quot;&gt;2、文字环绕图片-exclusionPaths&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;UIBezierPath * path = [UIBezierPath bezierPathWithRect:rect];
+textView.textContainer.exclusionPaths = @[path];
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;rect就是文字会环绕的区域&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、概念架构：</summary></entry><entry><title type="html">iOS图形</title><link href="http://www.helloted.com/2017/01/10/draw/" rel="alternate" type="text/html" title="iOS图形" /><published>2017-01-10T20:00:00+08:00</published><updated>2017-01-10T20:00:00+08:00</updated><id>http://www.helloted.com/2017/01/10/draw</id><content type="html" xml:base="http://www.helloted.com/2017/01/10/draw/">&lt;p&gt;&lt;img src=&quot;/img/draw/01.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;一概念&quot;&gt;一、概念&lt;/h3&gt;
 

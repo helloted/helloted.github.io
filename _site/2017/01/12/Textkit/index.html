@@ -287,6 +287,32 @@ testLabel.attributedText = attributedStr;
 
 <p>UITextView作为显示出来的实际的文本视图，在 TextKit 中，文本视图有两个目的：第一，它是文本系统用来绘制的视图。文本视图它自己并不会做任何绘制；它仅仅提供一个供其它类绘制的区域。作为视图层级机构中唯一的组件，第二个目的是处理所有的用户交互。具体来说，文本视图实现 UITextInput 的协议来处理键盘事件，它为用户提供了一种途径来设置一个插入点或选择文本。它并不对文本做任何实际上的改变，仅仅将这些改变请求转发给刚刚讨论的文本存储。</p>
 
+<h3 id="四textkit实例">四、TextKit实例</h3>
+
+<h3 id="1添加图片-nstextattachment">1、添加图片-NSTextAttachment</h3>
+
+<p>NSTextAttachment用于添加图片</p>
+
+<pre><code class="language-objective-c">	//添加表情
+    UIImage * image = [UIImage imageNamed:@"011"];
+    NSTextAttachment * attachment1 = [[NSTextAttachment alloc] init];
+    #表情的大小
+    attachment.bounds = CGRectMake(0, 0, 15, 15);
+    attachment.image = image;
+    NSAttributedString * attachStr = [NSAttributedString 		attributedStringWithAttachment:attachment];
+    
+    #根据占位符，将文字换成表情
+    NSRange range = [[str string]rangeOfString:@"[icon]"];  
+    [str replaceCharactersInRange:range withAttributedString:attachStr];  
+</code></pre>
+
+<h4 id="2文字环绕图片-exclusionpaths">2、文字环绕图片-exclusionPaths</h4>
+
+<pre><code class="language-objective-c">UIBezierPath * path = [UIBezierPath bezierPathWithRect:rect];
+textView.textContainer.exclusionPaths = @[path];
+</code></pre>
+
+<p>rect就是文字会环绕的区域</p>
 
 
                 <hr>
