@@ -126,31 +126,98 @@ Core Text 正结合了这两者！你可以完全控制位置、布局、类似�
 
 <p>Text Kit 是一系列类和协议，这些类和协议提供了高性能的排版服务，这个服务可以让应用以很好的排版形式存储、布局和展示所有的字符，比如字间距、连笔、断行、两端对齐。是基于Core Text构建的快速、先进的文本排版和渲染引擎，并且与UIKit很好的集合。UITextView，UITextField、UILabel都已经基于Text Kit重新构建，所以它们都支持分页文本、文本包装、富文本编辑、交互式文本着色、文本折叠和自定义截取等特性。</p>
 
-<h3 id="二coretext实例讲解">二、CoreText实例讲解</h3>
+<h3 id="二coretext">二、CoreText</h3>
 
-<pre><code class="language-objective-c">    //1.获取当前设备上下文
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    //2.翻转坐标系(coreText坐标系是以左下角为坐标原点，UIKit以左上角为坐标原点)
-    CGContextSetTextMatrix(context, CGAffineTransformIdentity);
-    CGContextTranslateCTM(context, 0, self.bounds.size.height);
-    CGContextScaleCTM(context, 1.0, -1.0);
-    //3.设置绘制区域
-    CGMutablePathRef path = CGPathCreateMutable();
-    CGPathAddRect(path, NULL, CGRectMake(10, 20, self.bounds.size.width - 20, self.bounds.size.height - 40));
-    //4.设置文本内容
-    NSAttributedString *attString = [[NSAttributedString alloc] initWithString:@"Hello world"];
-    //5.设置CTFrame
-    CTFramesetterRef ctFrameSetting = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)attString);
-    CTFrameRef ctFrame = CTFramesetterCreateFrame(ctFrameSetting, CFRangeMake(0, [attString length]), path, NULL);
-    //6.在CTFrame中绘制文本关联到上下文
-    CTFrameDraw(ctFrame, context);
-    //7.释放变量
-    CFRelease(path);
-    CFRelease(ctFrameSetting);
-    CFRelease(ctFrame);
+<p>CoreText绘制的流程图</p>
+
+<p><img src="/img/textkit/03.png" alt="img" /></p>
+
+<p>CFAttributedStringRef ：属性字符串，用于存储需要绘制的文字字符和字符属性</p>
+
+<p>CTFramesetterRef：通过CFAttributedStringRef进行初始化，作为CTFrame对象的生产工厂，负责根据path创建对应的CTFrame</p>
+
+<p>CTFrame：用于绘制文字的类，可以通过CTFrameDraw函数，直接将文字绘制到context上</p>
+
+<p>CTLine：在CTFrame内部是由多个CTLine来组成的，每个CTLine代表一行</p>
+
+<p>CTRun：每个CTLine又是由多个CTRun组成的，每个CTRun代表一组显示风格一致的文本</p>
+
+<p>实际上CoreText是不直接支持绘制图片的，但是我们可以先在需要显示图片的地方用一个特殊的空白占位符代替，同时设置该字体的CTRunDelegate信息为要显示的图片的宽度和高度，这样绘制文字的时候就会先把图片的位置留出来，再在drawRect方法里面用CGContextDrawImage绘制图片。</p>
+
+<pre><code class="language-objective-c">    - (void)drawRect:(CGRect)rect {
+    
+    [super drawRect:rect];    // 省略步骤1-4  ，步骤8
+    // 步骤9：图文混排部分
+    // CTRunDelegateCallbacks：一个用于保存指针的结构体，由CTRun delegate进行回调
+    CTRunDelegateCallbacks callbacks;
+    memset(&amp;callbacks, 0, sizeof(CTRunDelegateCallbacks));
+    callbacks.version = kCTRunDelegateVersion1;
+    callbacks.getAscent = ascentCallback;
+    callbacks.getDescent = descentCallback;
+    callbacks.getWidth = widthCallback;    
+    // 图片信息字典
+    NSDictionary *imgInfoDic = @{@"width":@100,@"height":@30};    
+    // 设置CTRun的代理
+    CTRunDelegateRef delegate = CTRunDelegateCreate(&amp;callbacks, (__bridge void *)imgInfoDic);    
+    // 使用0xFFFC作为空白的占位符
+    unichar objectReplacementChar = 0xFFFC;    NSString *content = [NSString stringWithCharacters:&amp;objectReplacementChar length:1];    NSMutableAttributedString *space = [[NSMutableAttributedString alloc] initWithString:content];    CFAttributedStringSetAttribute((CFMutableAttributedStringRef)space, CFRangeMake(0, 1), kCTRunDelegateAttributeName, delegate);    CFRelease(delegate); 
+    // 将创建的空白AttributedString插入进当前的attrString中，位置可以随便指定，不能越界
+    [attrString insertAttributedString:space atIndex:50];    
+    // 省略步骤5-6
+    
+    // 步骤10：绘制图片
+    UIImage *image = [UIImage imageNamed:@"coretext-img-1.png"];    CGContextDrawImage(context, [self calculateImagePositionInCTFrame:frame], image.CGImage);   
+    // 省略步骤7
+ } 
+ #pragma mark - CTRun delegate 回调方法
+
+ static CGFloat ascentCallback(void *ref) {    
+    return [(NSNumber *)[(__bridge NSDictionary *)ref objectForKey:@"height"] floatValue];
+ } static CGFloat descentCallback(void *ref) {    
+    return 0;
+ } 
+ static CGFloat widthCallback(void *ref) {    
+    return [(NSNumber *)[(__bridge NSDictionary *)ref objectForKey:@"width"] floatValue];
+ } 
+ /**
+ *  根据CTFrameRef获得绘制图片的区域
+ *
+ *  @param ctFrame CTFrameRef对象
+ *
+ *  @return绘制图片的区域
+ */
+ - (CGRect)calculateImagePositionInCTFrame:(CTFrameRef)ctFrame {    
+    // 获得CTLine数组
+    NSArray *lines = (NSArray *)CTFrameGetLines(ctFrame);    NSInteger lineCount = [lines count];    CGPoint lineOrigins[lineCount];
+    CTFrameGetLineOrigins(ctFrame, CFRangeMake(0, 0), lineOrigins);    
+    // 遍历每个CTLine
+    for (NSInteger i = 0 ; i &lt; lineCount; i++) {
+        
+        CTLineRef line = (__bridge CTLineRef)lines[i];        NSArray *runObjArray = (NSArray *)CTLineGetGlyphRuns(line);        
+        // 遍历每个CTLine中的CTRun
+        for (id runObj in runObjArray) {
+            
+            CTRunRef run = (__bridge CTRunRef)runObj;            NSDictionary *runAttributes = (NSDictionary *)CTRunGetAttributes(run);
+            CTRunDelegateRef delegate = (__bridge CTRunDelegateRef)[runAttributes valueForKey:(id)kCTRunDelegateAttributeName];            if (delegate == nil) {                continue;
+            }            
+            NSDictionary *metaDic = CTRunDelegateGetRefCon(delegate);            if (![metaDic isKindOfClass:[NSDictionary class]]) {                continue;
+            }            
+            CGRect runBounds;            CGFloat ascent;            CGFloat descent;
+            
+            runBounds.size.width = CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &amp;ascent, &amp;descent, NULL);
+            runBounds.size.height = ascent + descent;            
+            CGFloat xOffset = CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, NULL);
+            runBounds.origin.x = lineOrigins[i].x + xOffset;
+            runBounds.origin.y = lineOrigins[i].y;
+            runBounds.origin.y -= descent;            
+            CGPathRef pathRef = CTFrameGetPath(ctFrame);            CGRect colRect = CGPathGetBoundingBox(pathRef);            
+            CGRect delegateBounds = CGRectOffset(runBounds, colRect.origin.x, colRect.origin.y);            return delegateBounds;
+        }
+    }    return CGRectZero;
+ }
 </code></pre>
 
-<h3 id="二textkit架构解析">二、TextKit架构解析</h3>
+<h3 id="三textkit架构解析">三、TextKit架构解析</h3>
 
 <h4 id="1nsmutableattributedstring">1、NSMutableAttributedString</h4>
 
