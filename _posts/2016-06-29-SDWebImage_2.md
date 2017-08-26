@@ -13,6 +13,94 @@ SDWebImage是iOS开发者最常用的第三方框架之一，用于异步下载�
 
 ![](/img/SDWebImage/00.png)
 
+### 四、缓存策略
+
+#### 1、SDImageCacheConfig
+
+这是默认的缓存策略，清理缓存的规则分两步进行。 第一步先清除掉过期的缓存文件。 如果清除掉过期的缓存之后，空间还不够。 那么就继续按文件时间从早到晚排序，先清除最早的缓存文件，直到剩余空间达到要求。
+
+```
+static const NSInteger kDefaultCacheMaxCacheAge = 60 * 60 * 24 * 7; // 1 week
+
+@implementation SDImageCacheConfig
+
+- (instancetype)init {
+    if (self = [super init]) {
+        _shouldDecompressImages = YES; 
+        _shouldDisableiCloud = YES; //不存储到iCloud
+        _shouldCacheImagesInMemory = YES; //是否应该要缓存到Memroy
+        _maxCacheAge = kDefaultCacheMaxCacheAge;  //清理硬盘缓存时默认时间
+        _maxCacheSize = 0; //清理硬盘缓存
+    }
+    return self;
+}
+
+@end
+```
+
+```
+
+/**
+ * The maximum "total cost" of the in-memory image cache. The cost function is the number of pixels held in memory.
+ */
+@property (assign, nonatomic) NSUInteger maxMemoryCost;
+
+/**
+ * The maximum number of objects the cache should hold.
+ */
+@property (assign, nonatomic) NSUInteger maxMemoryCountLimit;
+```
+
+设置最大内存消耗和最多数量的限制
+
+#### 2、清理Memory缓存
+
+```
+@interface AutoPurgeCache : NSCache
+@end
+
+@implementation AutoPurgeCache
+
+- (nonnull instancetype)init {
+    self = [super init];
+    if (self) {
+#if SD_UIKIT
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeAllObjects) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
+#endif
+    }
+    return self;
+}
+
+- (void)dealloc {
+#if SD_UIKIT
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
+#endif
+}
+
+@end
+```
+
+可以看到，内存缓存类AutoPurgeCache里有一个接收系统通知，如有内存报警，会移除全部
+
+#### 3、清理Disk缓存
+
+当 App 进入关闭或进入后台时,清理磁盘缓存
+
+```
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(clearMemory)                                                    name:UIApplicationDidReceiveMemoryWarningNotification
+                                                   object:nil];
+
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(deleteOldFiles)                                                     name:UIApplicationWillTerminateNotification
+                                                   object:nil];
+
+        [[NSNotificationCenter defaultCenter] addObserver:self                                                selector:@selector(backgroundDeleteOldFiles)                                                    name:UIApplicationDidEnterBackgroundNotification
+                                                   object:nil];
+```
+
+
+
 ### 四、相关技术
 
 1. 判断当前图片类型：只判断图片二进制数据的第一个字节

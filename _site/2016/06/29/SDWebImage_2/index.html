@@ -110,6 +110,92 @@
 
 <p><img src="/img/SDWebImage/00.png" alt="" /></p>
 
+<h3 id="四缓存策略">四、缓存策略</h3>
+
+<h4 id="1sdimagecacheconfig">1、SDImageCacheConfig</h4>
+
+<p>这是默认的缓存策略，清理缓存的规则分两步进行。 第一步先清除掉过期的缓存文件。 如果清除掉过期的缓存之后，空间还不够。 那么就继续按文件时间从早到晚排序，先清除最早的缓存文件，直到剩余空间达到要求。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">static</span> <span class="k">const</span> <span class="n">NSInteger</span> <span class="n">kDefaultCacheMaxCacheAge</span> <span class="o">=</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">7</span><span class="p">;</span> <span class="c1">// 1 week
+</span>
+<span class="k">@implementation</span> <span class="nc">SDImageCacheConfig</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="n">init</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nf">init</span><span class="p">])</span> <span class="p">{</span>
+        <span class="n">_shouldDecompressImages</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span> 
+        <span class="n">_shouldDisableiCloud</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span> <span class="c1">//不存储到iCloud
+</span>        <span class="n">_shouldCacheImagesInMemory</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span> <span class="c1">//是否应该要缓存到Memroy
+</span>        <span class="n">_maxCacheAge</span> <span class="o">=</span> <span class="n">kDefaultCacheMaxCacheAge</span><span class="p">;</span>  <span class="c1">//清理硬盘缓存时默认时间
+</span>        <span class="n">_maxCacheSize</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">//清理硬盘缓存
+</span>    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">@end</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>
+<span class="cm">/**
+ * The maximum "total cost" of the in-memory image cache. The cost function is the number of pixels held in memory.
+ */</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSUInteger</span> <span class="n">maxMemoryCost</span><span class="p">;</span>
+
+<span class="cm">/**
+ * The maximum number of objects the cache should hold.
+ */</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSUInteger</span> <span class="n">maxMemoryCountLimit</span><span class="p">;</span>
+</code></pre>
+</div>
+
+<p>设置最大内存消耗和最多数量的限制</p>
+
+<h4 id="2清理memory缓存">2、清理Memory缓存</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">AutoPurgeCache</span> <span class="p">:</span> <span class="nc">NSCache</span>
+<span class="k">@end</span>
+
+<span class="k">@implementation</span> <span class="nc">AutoPurgeCache</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span><span class="n">init</span> <span class="p">{</span>
+    <span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nf">init</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="p">{</span>
+<span class="cp">#if SD_UIKIT
+</span>        <span class="p">[[</span><span class="n">NSNotificationCenter</span> <span class="nf">defaultCenter</span><span class="p">]</span> <span class="nf">addObserver</span><span class="p">:</span><span class="n">self</span> <span class="nf">selector</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="n">removeAllObjects</span><span class="p">)</span> <span class="n">name</span><span class="o">:</span><span class="n">UIApplicationDidReceiveMemoryWarningNotification</span> <span class="n">object</span><span class="o">:</span><span class="nb">nil</span><span class="p">];</span>
+<span class="cp">#endif
+</span>    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">dealloc</span> <span class="p">{</span>
+<span class="cp">#if SD_UIKIT
+</span>    <span class="p">[[</span><span class="n">NSNotificationCenter</span> <span class="nf">defaultCenter</span><span class="p">]</span> <span class="nf">removeObserver</span><span class="p">:</span><span class="n">self</span> <span class="nf">name</span><span class="p">:</span><span class="n">UIApplicationDidReceiveMemoryWarningNotification</span> <span class="n">object</span><span class="o">:</span><span class="nb">nil</span><span class="p">];</span>
+<span class="cp">#endif
+</span><span class="p">}</span>
+
+<span class="k">@end</span>
+</code></pre>
+</div>
+
+<p>可以看到，内存缓存类AutoPurgeCache里有一个接收系统通知，如有内存报警，会移除全部</p>
+
+<h4 id="3清理disk缓存">3、清理Disk缓存</h4>
+
+<p>当 App 进入关闭或进入后台时,清理磁盘缓存</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(clearMemory)                                                    name:UIApplicationDidReceiveMemoryWarningNotification
+                                                   object:nil];
+
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(deleteOldFiles)                                                     name:UIApplicationWillTerminateNotification
+                                                   object:nil];
+
+        [[NSNotificationCenter defaultCenter] addObserver:self                                                selector:@selector(backgroundDeleteOldFiles)                                                    name:UIApplicationDidEnterBackgroundNotification
+                                                   object:nil];
+</code></pre>
+</div>
+
 <h3 id="四相关技术">四、相关技术</h3>
 
 <ol>
