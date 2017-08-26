@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-08-24T15:05:50+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">热修复=Runtime+Javascriptcore</title><link href="http://www.helloted.com/2017/05/30/hotfix/" rel="alternate" type="text/html" title="热修复=Runtime+Javascriptcore" /><published>2017-05-30T20:00:00+08:00</published><updated>2017-05-30T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/30/hotfix</id><content type="html" xml:base="http://www.helloted.com/2017/05/30/hotfix/">&lt;h3 id=&quot;一运行时&quot;&gt;一、运行时&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-08-26T13:17:47+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">热修复=Runtime+Javascriptcore</title><link href="http://www.helloted.com/2017/05/30/hotfix/" rel="alternate" type="text/html" title="热修复=Runtime+Javascriptcore" /><published>2017-05-30T20:00:00+08:00</published><updated>2017-05-30T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/30/hotfix</id><content type="html" xml:base="http://www.helloted.com/2017/05/30/hotfix/">&lt;h3 id=&quot;一运行时&quot;&gt;一、运行时&lt;/h3&gt;
 
 &lt;p&gt;热修复的基本原理就是Runtime运行时的方法替换，主要是下列几个方法&lt;/p&gt;
 
@@ -1083,7 +1083,7 @@ Core Text 正结合了这两者！你可以完全控制位置、布局、类似�
 
 &lt;h4 id=&quot;1nsmutableattributedstring&quot;&gt;1、NSMutableAttributedString&lt;/h4&gt;
 
-&lt;p&gt;NSMutableAttributedString是NString的一个子类，可以利用对文本设置颜色字体间距等属性&lt;/p&gt;
+&lt;p&gt;NSAttributedString是&lt;code class=&quot;highlighter-rouge&quot;&gt;NSObject&lt;/code&gt;的一个子类，可以利用对文本设置颜色字体间距等属性&lt;/p&gt;
 
 &lt;p&gt;attributeDict字典中存放一些属性名和属性值&lt;/p&gt;
 
@@ -1198,7 +1198,9 @@ testLabel.attributedText = attributedStr;
 textView.textContainer.exclusionPaths = @[path];
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;rect就是文字会环绕的区域&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、概念架构：</summary></entry><entry><title type="html">iOS图形</title><link href="http://www.helloted.com/2017/01/10/draw/" rel="alternate" type="text/html" title="iOS图形" /><published>2017-01-10T20:00:00+08:00</published><updated>2017-01-10T20:00:00+08:00</updated><id>http://www.helloted.com/2017/01/10/draw</id><content type="html" xml:base="http://www.helloted.com/2017/01/10/draw/">&lt;p&gt;&lt;img src=&quot;/img/draw/01.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;rect就是文字会环绕的区域&lt;/p&gt;
+
+&lt;p&gt;Demo地址：&lt;a href=&quot;https://github.com/helloted/textkit&quot;&gt;Github-TextKit&lt;/a&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、概念架构：</summary></entry><entry><title type="html">iOS图形</title><link href="http://www.helloted.com/2017/01/10/draw/" rel="alternate" type="text/html" title="iOS图形" /><published>2017-01-10T20:00:00+08:00</published><updated>2017-01-10T20:00:00+08:00</updated><id>http://www.helloted.com/2017/01/10/draw</id><content type="html" xml:base="http://www.helloted.com/2017/01/10/draw/">&lt;p&gt;&lt;img src=&quot;/img/draw/01.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;一概念&quot;&gt;一、概念&lt;/h3&gt;
 
