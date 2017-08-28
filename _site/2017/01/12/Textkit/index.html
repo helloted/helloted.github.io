@@ -136,13 +136,68 @@ Core Text 正结合了这两者！你可以完全控制位置、布局、类似�
 
 <p>CTFramesetterRef：通过CFAttributedStringRef进行初始化，作为CTFrame对象的生产工厂，负责根据path创建对应的CTFrame</p>
 
-<p>CTFrame：用于绘制文字的类，可以通过CTFrameDraw函数，直接将文字绘制到context上</p>
+<ul>
+  <li>CTFrameRef：画布，包含多个CTLine</li>
+  <li>CTLineRef：每一行就是一个CTLine</li>
+  <li>CTRunRef：每一行可以分为多个属性相同的小段，每一个小段就是一个CTRun</li>
+</ul>
 
-<p>CTLine：在CTFrame内部是由多个CTLine来组成的，每个CTLine代表一行</p>
+<p>先来一个简单的富文本排版:</p>
 
-<p>CTRun：每个CTLine又是由多个CTRun组成的，每个CTRun代表一组显示风格一致的文本</p>
+<p>获取Context-&gt;变换坐标-&gt;设置绘制路劲-&gt;创建富文本字符串-&gt;由富文本字符串转成framesetter-&gt;根据framesetter得到画的的CTFrame-&gt;在Context里面画-&gt;手动释放CoreFoundation。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">drawRect</span><span class="p">:(</span><span class="n">CGRect</span><span class="p">)</span><span class="nv">rect</span> <span class="p">{</span>
+
+    <span class="p">[</span><span class="n">super</span> <span class="nf">drawRect</span><span class="p">:</span><span class="n">rect</span><span class="p">];</span>
+
+    <span class="n">CGContextRef</span> <span class="n">context</span> <span class="o">=</span> <span class="n">UIGraphicsGetCurrentContext</span><span class="p">();</span>
+
+    <span class="c1">//变换坐标
+</span>    <span class="n">CGContextSetTextMatrix</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">CGAffineTransformIdentity</span><span class="p">);</span>
+    <span class="n">CGContextTranslateCTM</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">bounds</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">height</span><span class="p">);</span>
+    <span class="n">CGContextScaleCTM</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="p">);</span>
+
+    <span class="c1">//设置绘制的路径
+</span>    <span class="n">CGMutablePathRef</span> <span class="n">path</span> <span class="o">=</span> <span class="n">CGPathCreateMutable</span><span class="p">();</span>
+    <span class="n">CGPathAddRect</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">bounds</span><span class="p">);</span>
+
+    <span class="c1">//创建属性字符串
+</span>    <span class="n">NSMutableAttributedString</span> <span class="o">*</span> <span class="n">attStr</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSMutableAttributedString</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithString</span><span class="p">:</span><span class="n">str4</span><span class="p">];</span>
+
+    <span class="c1">//颜色
+</span>    <span class="p">[</span><span class="n">attStr</span> <span class="nf">addAttribute</span><span class="p">:(</span><span class="n">__bridge</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">kCTForegroundColorAttributeName</span> <span class="nf">value</span><span class="p">:(</span><span class="n">__bridge</span> <span class="n">id</span><span class="p">)[</span><span class="n">UIColor</span> <span class="nf">redColor</span><span class="p">].</span><span class="n">CGColor</span> <span class="n">range</span><span class="o">:</span><span class="n">NSMakeRange</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">)];</span>
+
+    <span class="c1">//字体
+</span>    <span class="n">UIFont</span> <span class="o">*</span> <span class="n">font</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIFont</span> <span class="nf">systemFontOfSize</span><span class="p">:</span><span class="mi">25</span><span class="p">];</span>
+    <span class="n">CTFontRef</span> <span class="n">fontRef</span> <span class="o">=</span> <span class="n">CTFontCreateWithName</span><span class="p">((</span><span class="n">__bridge</span> <span class="n">CFStringRef</span><span class="p">)</span><span class="n">font</span><span class="p">.</span><span class="n">fontName</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="p">[</span><span class="n">attStr</span> <span class="nf">addAttribute</span><span class="p">:(</span><span class="n">__bridge</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">kCTFontAttributeName</span> <span class="nf">value</span><span class="p">:(</span><span class="n">__bridge</span> <span class="n">id</span><span class="p">)</span><span class="n">fontRef</span> <span class="n">range</span><span class="o">:</span><span class="n">NSMakeRange</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">)];</span>
+
+    <span class="c1">//空心字
+</span>    <span class="p">[</span><span class="n">attStr</span> <span class="nf">addAttribute</span><span class="p">:(</span><span class="n">__bridge</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">kCTStrokeWidthAttributeName</span> <span class="nf">value</span><span class="p">:</span><span class="err">@</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="n">range</span><span class="o">:</span><span class="n">NSMakeRange</span><span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mi">5</span><span class="p">)];</span>
+    <span class="p">[</span><span class="n">attStr</span> <span class="nf">addAttribute</span><span class="p">:(</span><span class="n">__bridge</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">kCTStrokeColorAttributeName</span> <span class="nf">value</span><span class="p">:(</span><span class="n">__bridge</span> <span class="n">id</span><span class="p">)[</span><span class="n">UIColor</span> <span class="nf">blueColor</span><span class="p">].</span><span class="n">CGColor</span> <span class="n">range</span><span class="o">:</span><span class="n">NSMakeRange</span><span class="p">(</span><span class="mi">37</span><span class="p">,</span> <span class="mi">10</span><span class="p">)];</span>
+
+    <span class="c1">//下划线
+</span>    <span class="p">[</span><span class="n">attStr</span> <span class="nf">addAttribute</span><span class="p">:(</span><span class="n">__bridge</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">kCTUnderlineStyleAttributeName</span> <span class="nf">value</span><span class="p">:</span><span class="err">@</span><span class="p">(</span><span class="n">kCTUnderlineStyleSingle</span> <span class="o">|</span> <span class="n">kCTUnderlinePatternDot</span><span class="p">)</span> <span class="n">range</span><span class="o">:</span><span class="n">NSMakeRange</span><span class="p">(</span><span class="mi">45</span><span class="p">,</span> <span class="mi">15</span><span class="p">)];</span>
+
+
+    <span class="n">CTFramesetterRef</span> <span class="n">framesetter</span> <span class="o">=</span> <span class="n">CTFramesetterCreateWithAttributedString</span><span class="p">((</span><span class="n">CFAttributedStringRef</span><span class="p">)</span><span class="n">attStr</span><span class="p">);</span>
+    <span class="n">CTFrameRef</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">CTFramesetterCreateFrame</span><span class="p">(</span><span class="n">framesetter</span><span class="p">,</span> <span class="n">CFRangeMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">attStr</span><span class="p">.</span><span class="n">length</span><span class="p">),</span> <span class="n">path</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+
+    <span class="c1">//绘制内容
+</span>    <span class="n">CTFrameDraw</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">context</span><span class="p">);</span>
+
+    <span class="n">CFRelease</span><span class="p">(</span><span class="n">fontRef</span><span class="p">);</span>
+    <span class="n">CFRelease</span><span class="p">(</span><span class="n">frame</span><span class="p">);</span>
+    <span class="n">CFRelease</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
+    <span class="n">CFRelease</span><span class="p">(</span><span class="n">framesetter</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">@end</span>
+</code></pre>
+</div>
 
 <p>实际上CoreText是不直接支持绘制图片的，但是我们可以先在需要显示图片的地方用一个特殊的空白占位符代替，同时设置该字体的CTRunDelegate信息为要显示的图片的宽度和高度，这样绘制文字的时候就会先把图片的位置留出来，再在drawRect方法里面用CGContextDrawImage绘制图片。</p>
+
+<p>CoreText实现表情混排的原理，在简介中介绍过，一个CTLine代表一行，而一个CTLine又由多个CTRun组成，这里实现表情混排的原理其实就是把CTLine中的某一个CTRun替换成空白字符，然后再根据这个CTRun的具体位置，把图片绘制到这个位置上</p>
 
 <pre><code class="language-objective-c">    - (void)drawRect:(CGRect)rect {
     
