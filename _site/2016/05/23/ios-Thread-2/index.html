@@ -256,9 +256,16 @@ dispatch_async(queue, ^{NSLog(@"read");});
 
 <p>重复执行某段代码</p>
 
-<pre><code class="language-objective-c">dispatch_apply(5, globalQ, ^(size_t index) { 
-    // 执行5次 
-});
+<p>在某些场景下使用dispatch_apply会对性能有很大的提升，比如你的代码需要以每个像素为基准来处理计算image图片。同时dispatch apply能够避免一些线程爆炸的情况发生</p>
+
+<pre><code class="language-objective-c">//危险，可能导致线程爆炸以及死锁
+for (int i = 0; i &lt; 999; i++){
+   dispatch_async(q, ^{...});
+}
+dispatch_barrier_sync(q, ^{});
+
+// 较优选择， GCD 会管理并发
+dispatch_apply(999, q, ^(size_t i){...});
 </code></pre>
 
 
