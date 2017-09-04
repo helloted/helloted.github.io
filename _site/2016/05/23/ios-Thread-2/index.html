@@ -263,10 +263,29 @@ for (int i = 0; i &lt; 999; i++){
    dispatch_async(q, ^{...});
 }
 dispatch_barrier_sync(q, ^{});
-
 // 较优选择， GCD 会管理并发
 dispatch_apply(999, q, ^(size_t i){...});
 </code></pre>
+
+<h4 id="7dispatch_block_cancel">7、dispatch_block_cancel</h4>
+
+<p>iOS8之后，提交到gcd队列中的dispatch block也可取消了，只需要简单的调用dispatch_block_cancel传入想要取消的block即可:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>dispatch_queue_t queue = dispatch_queue_create("queue", DISPATCH_QUEUE_SERIAL);
+dispatch_block_t block1 = dispatch_block_create(0, ^{
+    NSLog(@"block1 begin");
+    [NSThread sleepForTimeInterval:1];
+    NSLog(@"block1 done");
+});
+dispatch_block_t block2 = dispatch_block_create(0, ^{
+    NSLog(@"block2 ");
+});
+dispatch_async(queue, block1);
+dispatch_async(queue, block2);
+dispatch_block_cancel(block2);
+</code></pre>
+</div>
+
 
 
                 <hr>

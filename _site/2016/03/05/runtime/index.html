@@ -210,6 +210,10 @@
 
 <p>IMP:具体的方法的地址，IMP 是一个函数指针，这个被指向的函数包含一个接收消息的对象id(self  指针), 调用方法的选标 SEL (方法名)，以及不定个数的方法参数，并返回一个id。也就是说 IMP 是消息最终调用的执行代码，是方法真正的实现代码 class_getMethodImplementation(class, SEL)。</p>
 
+<p>1、methodForSelector-&gt;Method</p>
+
+<p>2、method_getImplementation-&gt;IMP</p>
+
 <h3 id="四消息发送机制">四、消息发送机制：</h3>
 
 <p>伪代码：</p>
