@@ -9,11 +9,17 @@ header-img: "img/bg_02.jpg"
 
 ### 一、引用计数、内存管理
 
-在ObjC中没有垃圾回收机制，那么ObjC中内存又是如何管理的呢？其实在ObjC中内存的管理是依赖对象引用计数器来进行的：在ObjC中每个对象内部都有一个与之对应的整数（retainCount），叫“引用计数器”，当一个对象在创建(alloc，new)之后它的引用计数器为1，
+> 生命周期
 
-当调用这个对象的retain、copy方法之后引用计数器自动在原来的基础上加1（ObjC中调用一个对象的方法就是给这个对象发送一个消息），
+每当对象创建出来，它的生命就已经开始了，一直到操作系统释放了 该对象，对象的生命才结束
 
-当调用这个对象的release方法之后它的引用计数器减1，
+> 基于计数器的内存管理
+
+每个对象都有 一个引用计数器，它记录了对象被使用的情况。
+
+当使用 alloc、copy、new 三种方法之中的任一种方法创建对象时，对象计数器会被自动设 置为 1。
+
+如果向对象发送 retain 消息，对象计数器会自动加 1。而向对象发送 release 消 息，对象计数器会自动减 1。
 
 如果一个对象的引用计数器为0，则系统会自动调用这个对象的dealloc方法来销毁这个对象。
 
@@ -39,12 +45,12 @@ header-img: "img/bg_02.jpg"
 
 1. atomic 			//default
 2. nonatomic
- 3. strong=retain//default
-3. weak= unsafe_unretained
- 5. assign 	//default
-4. copy
-5. readonly
- 8. readwrite         //default
+3. strong=retain//default
+4. weak= unsafe_unretained
+   5. assign //default
+5. copy
+6. readonly
+7. readwrite         //default
 
 #### atomic
 
