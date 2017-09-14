@@ -45,5 +45,63 @@ MVC是Cocoa框架采用推荐的一种设计模式，也是iOS开发中最常用
 
 概念：使用原型实例指定对象的种类，并通过复制这个原型创建新的对象，原型模型也称为复制模式，此模式是生成对象的真实副本，以用作同一环境下其他相关事物的基础(原型)
 
-应用：NSObject的派生类提供了实现深复制的协议，子类需要实现NSCopying协议及其方法`-(id)copyWithZone:(NSZone *)zone`来实现`-(id)copy`方法，否则会引发异常。思路是复制必需的成员变量与资源，传给此类的新实例。
+应用：NSObject的派生类提供了实现深复制的协议，其他类需要实现NSCopying协议及其方法`-(id)copyWithZone:(NSZone *)zone`来实现`-(id)copy`方法，否则会引发异常。思路是复制必需的成员变量与资源，传给此类的新实例。
+
+#### 4、简单工厂模式(Simple Factory)
+
+概念：提供一个创建实例的接口，根据传入值不一样来获取不一样的类
+
+应用：
+
+```
+@interface AnimalFactory:NSObject
+-(Animal *)createAnimalyWithType:(Type)type;
+@end;
+```
+
+#### 5、工厂方法模式(Factory Method)
+
+概念：封装类中不变的部分，提取其中个性化善变的部分为独立类，通过依赖注入以达到解耦、复用和方便后期维护拓展的目的.定义一个创建产品对象的工厂接口，将实际创建工作推迟到子类当中
+
+应用：
+
+```
+@interface AnimalFactory:NSObject
+-(Animal*)createAnimal;
+@end;
+```
+
+```
+@interface DogFactory:AnimalFactory;
+@implementation DogFactory
+-(Animal *)createAnimal{
+#Dog继承自Animal
+retrurn [[Dog alloc]init];
+}
+```
+
+```
+@interface CatFactory:AnimalFactory;
+@implementation Cat Factory
+-(Animal *)createAnimal
+retrurn [[Cat alloc]init];
+}
+```
+
+#### 6、抽象工厂模式(Abstract Factory)
+
+概念：提供一个创建一系列相关或者相互依赖对象的接口，而无需指定它们具体的类
+
+应用：
+
+```
+@interface AnimalFactory:NSObject
+-(Dog *)createDog;
+-(Cat *)createCat;
+@end;
+```
+
+Cocoa中的NSNumber也是如此，numberWithBool:和numberWithInt:分别返回的是NSCFBoolean、NSCFNumber类型
+
+
 
