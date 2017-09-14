@@ -7,6 +7,8 @@ author:     "Ted"
 header-img: "img/default.jpg"
 ---
 
+部分代码位置[Github-设计模式](https://github.com/helloted/designpattern)
+
 #### 1、单例模式(Singleton)
 
 概念理解：整个应用或系统只能有该类的一个实例
