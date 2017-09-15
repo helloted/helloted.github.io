@@ -22,12 +22,13 @@ iOS中几个常用的单例：
 我们也可以自己去生成一个单例
 
 ```
-+ (Singleton *)sharedSingleton{
-    static dispatch_once_t once_token;<3>
-    dispatch_once(&once_token,^{
-        sharedSingleton = [[self alloc] init];
++ (SingleObject *)sharedSingleton{
+    static SingleObject *_singleObj = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _singleObj = [[self alloc] init];
     });
-    return sharedSingleton;<5>
+    return _singleObj;
 }
 ```
 
@@ -102,6 +103,20 @@ retrurn [[Cat alloc]init];
 ```
 
 Cocoa中的NSNumber也是如此，numberWithBool:和numberWithInt:分别返回的是NSCFBoolean、NSCFNumber类型
+
+#### 7、生成器模式(Builder)
+
+概念：将一个复杂对象的构建与它的表现分离，通过分层来构建对象。领导者->生成者->产品。领导者提供原料，生产者去实现加工成产品，不同的生产者提供不同等级的产品
+
+应用：
+
+与抽象工厂模式的区别：
+
+- 生成器构建复杂对象，抽象工厂构建简单或者复杂对象；
+- 生成器以多个步骤构建对象，抽象工厂以单一步骤构建对象；
+- 生成器以多种方式构建对象昂，抽象工厂以单一步骤构建对象；
+- 生成器在构建过程的最后一步返回产品，抽象工厂立刻返回产品；
+- 生成器专注一个特定产品的不同等级，抽象工厂强调一套产品。
 
 
 
