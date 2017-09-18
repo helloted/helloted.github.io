@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-09-14T22:53:45+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS设计模式</title><link href="http://www.helloted.com/2017/09/08/designPatten/" rel="alternate" type="text/html" title="iOS设计模式" /><published>2017-09-08T20:00:00+08:00</published><updated>2017-09-08T20:00:00+08:00</updated><id>http://www.helloted.com/2017/09/08/designPatten</id><content type="html" xml:base="http://www.helloted.com/2017/09/08/designPatten/">&lt;p&gt;部分代码位置&lt;a href=&quot;https://github.com/helloted/designpattern&quot;&gt;Github-设计模式&lt;/a&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-09-18T11:22:57+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS设计模式</title><link href="http://www.helloted.com/2017/09/08/designPatten/" rel="alternate" type="text/html" title="iOS设计模式" /><published>2017-09-08T20:00:00+08:00</published><updated>2017-09-08T20:00:00+08:00</updated><id>http://www.helloted.com/2017/09/08/designPatten</id><content type="html" xml:base="http://www.helloted.com/2017/09/08/designPatten/">&lt;p&gt;部分代码位置&lt;a href=&quot;https://github.com/helloted/designpattern&quot;&gt;Github-设计模式&lt;/a&gt;&lt;/p&gt;
 
 &lt;h4 id=&quot;1单例模式singleton&quot;&gt;1、单例模式(Singleton)&lt;/h4&gt;
 
@@ -16,12 +16,13 @@
 
 &lt;p&gt;我们也可以自己去生成一个单例&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;+ (Singleton *)sharedSingleton{
-    static dispatch_once_t once_token;&amp;lt;3&amp;gt;
-    dispatch_once(&amp;amp;once_token,^{
-        sharedSingleton = [[self alloc] init];
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;+ (SingleObject *)sharedSingleton{
+    static SingleObject *_singleObj = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&amp;amp;onceToken, ^{
+        _singleObj = [[self alloc] init];
     });
-    return sharedSingleton;&amp;lt;5&amp;gt;
+    return _singleObj;
 }
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
@@ -96,7 +97,37 @@
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;Cocoa中的NSNumber也是如此，numberWithBool:和numberWithInt:分别返回的是NSCFBoolean、NSCFNumber类型&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">部分代码位置Github-设计模式</summary></entry><entry><title type="html">热修复=Runtime+Javascriptcore</title><link href="http://www.helloted.com/2017/05/30/hotfix/" rel="alternate" type="text/html" title="热修复=Runtime+Javascriptcore" /><published>2017-05-30T20:00:00+08:00</published><updated>2017-05-30T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/30/hotfix</id><content type="html" xml:base="http://www.helloted.com/2017/05/30/hotfix/">&lt;h3 id=&quot;一运行时&quot;&gt;一、运行时&lt;/h3&gt;
+&lt;p&gt;Cocoa中的NSNumber也是如此，numberWithBool:和numberWithInt:分别返回的是NSCFBoolean、NSCFNumber类型&lt;/p&gt;
+
+&lt;h4 id=&quot;7生成器模式builder&quot;&gt;7、生成器模式(Builder)&lt;/h4&gt;
+
+&lt;p&gt;概念：将一个复杂对象的构建与它的表现分离，通过分层来构建对象。领导者-&amp;gt;生成者-&amp;gt;产品。领导者提供原料，生产者去实现加工成产品，不同的生产者提供不同等级的产品&lt;/p&gt;
+
+&lt;p&gt;应用：&lt;a href=&quot;https://github.com/helloted/designpattern&quot;&gt;Github-设计模式&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;与抽象工厂模式的区别：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;生成器构建复杂对象，抽象工厂构建简单或者复杂对象；&lt;/li&gt;
+  &lt;li&gt;生成器以多个步骤构建对象，抽象工厂以单一步骤构建对象；&lt;/li&gt;
+  &lt;li&gt;生成器以多种方式构建对象昂，抽象工厂以单一步骤构建对象；&lt;/li&gt;
+  &lt;li&gt;生成器在构建过程的最后一步返回产品，抽象工厂立刻返回产品；&lt;/li&gt;
+  &lt;li&gt;生成器专注一个特定产品的不同等级，抽象工厂强调一套产品。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;8适配器模式adapter&quot;&gt;8、适配器模式(Adapter)&lt;/h4&gt;
+
+&lt;p&gt;概念：有时也称为“包装器”(Wrapper)，用于连接两种不同种类的对象，使其毫无问题地协同工作，将一个类的接口转换成客户希望的另外一个接口&lt;/p&gt;
+
+&lt;p&gt;应用：&lt;code class=&quot;highlighter-rouge&quot;&gt;-(void)laodData:(AModel*)model ;&lt;/code&gt;,我们的视图需要一个AModel，但此时有一个BModel，就需要一个适配器来适配BModel,&lt;code class=&quot;highlighter-rouge&quot;&gt;-(AModel *)adapterfrom(BModel *)model&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;优点：&lt;/p&gt;
+
+&lt;p&gt;解耦合，让视图类不合数据类产生耦合，使视图类更加独立。  新增加数据类的时候不需要修改视图类。&lt;/p&gt;
+
+&lt;p&gt;缺点：&lt;/p&gt;
+
+&lt;p&gt;会新增加很多类，使系统更凌乱，代码可读性更弱了。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">部分代码位置Github-设计模式</summary></entry><entry><title type="html">热修复=Runtime+Javascriptcore</title><link href="http://www.helloted.com/2017/05/30/hotfix/" rel="alternate" type="text/html" title="热修复=Runtime+Javascriptcore" /><published>2017-05-30T20:00:00+08:00</published><updated>2017-05-30T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/30/hotfix</id><content type="html" xml:base="http://www.helloted.com/2017/05/30/hotfix/">&lt;h3 id=&quot;一运行时&quot;&gt;一、运行时&lt;/h3&gt;
 
 &lt;p&gt;热修复的基本原理就是Runtime运行时的方法替换，主要是下列几个方法&lt;/p&gt;
 
