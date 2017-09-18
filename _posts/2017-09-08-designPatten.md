@@ -187,9 +187,9 @@ Cocoa中的NSNumber也是如此，numberWithBool:和numberWithInt:分别返回�
 
 应用：
 
-![img](/img/Simple_01/06.png)
+![img](/img/Simple_1/07.png)
 
-![img](/img/Simple_01/07.png)
+![img](/img/Simple_1/08.png)
 
 [中介者模式-Mediator](https://github.com/helloted/designpattern/tree/master/Designpattern/DesignPattern/Mediator)
 
