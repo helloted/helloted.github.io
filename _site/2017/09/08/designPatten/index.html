@@ -239,7 +239,7 @@
 
 <p>概念：桥接模式的目的是把抽象层次结构从其实现中分离出来，使其能够独立变更。抽象层定义了供客户端使用的上层的抽象接口。实现层定义了供抽象层使用的底层接口。实现类的引用被封装于抽象层的实例中，桥接就形成。（与外观模式有一定的相似之处）。</p>
 
-<p>应用：<a href="https://github.com/helloted/designpattern/tree/master/Designpattern/DesignPattern/Bridge">Bridge</a></p>
+<p>应用：<a href="https://github.com/helloted/designpattern/tree/master/Designpattern/DesignPattern/Bridge">桥接模式-Bridge</a></p>
 
 <p>优点：</p>
 
@@ -249,6 +249,51 @@
 
 <p>缺点：桥接模式的引入会增加系统的理解与设计难度，由于聚合关系建立在抽象层，要求开发者针对抽象进行设计与编程。
 桥接模式要求正确识别出系统中两个独立变化的维度，因此其使用范围具有一定的局限性。</p>
+
+<h4 id="10外观模式facade">10、外观模式(Facade)</h4>
+
+<p>概念：为系统中的一组接口提供一个统一的接口</p>
+
+<p>应用：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">Facade</span> <span class="p">:</span> <span class="nc">NSObject</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">createApp</span>
+<span class="k">@end</span>
+
+<span class="k">@implementation</span> <span class="nc">NSObject</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="n">init</span>
+<span class="p">{</span>
+    <span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nf">init</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">ios_dev</span> <span class="o">=</span> <span class="p">[[</span><span class="n">IosDev</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+        <span class="n">andriod_dev</span> <span class="o">=</span> <span class="p">[[</span><span class="n">AndroidDev</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+        <span class="n">server_dev</span> <span class="o">=</span> <span class="p">[[</span><span class="n">ServerDev</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">createApp</span><span class="p">{</span>
+  <span class="p">[</span><span class="n">ios_dev</span> <span class="nf">ios</span><span class="p">]</span>
+  <span class="p">[</span><span class="n">andriod_dev</span> <span class="nf">android</span><span class="p">]</span>
+  <span class="p">[</span><span class="n">server_dev</span> <span class="nf">server</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<h4 id="11中介者模式mediator">11、中介者模式(Mediator)</h4>
+
+<p>概念：用一个对象来封装一系列对象的交互方式，中介者使各对象不需要显式地相互引用，从而使其耦合松散。</p>
+
+<p>应用：</p>
+
+<p><img src="/img/Simple_01/06.png" alt="img" /></p>
+
+<p><img src="/img/Simple_01/07.png" alt="img" /></p>
+
+<p><a href="https://github.com/helloted/designpattern/tree/master/Designpattern/DesignPattern/Mediator">中介者模式-Mediator</a></p>
+
+<p>####</p>
 
 
 

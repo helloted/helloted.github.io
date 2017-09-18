@@ -139,7 +139,7 @@ Cocoa中的NSNumber也是如此，numberWithBool:和numberWithInt:分别返回�
 
 概念：桥接模式的目的是把抽象层次结构从其实现中分离出来，使其能够独立变更。抽象层定义了供客户端使用的上层的抽象接口。实现层定义了供抽象层使用的底层接口。实现类的引用被封装于抽象层的实例中，桥接就形成。（与外观模式有一定的相似之处）。
 
-应用：[Bridge](https://github.com/helloted/designpattern/tree/master/Designpattern/DesignPattern/Bridge)
+应用：[桥接模式-Bridge](https://github.com/helloted/designpattern/tree/master/Designpattern/DesignPattern/Bridge)
 
 优点：
 
@@ -150,7 +150,52 @@ Cocoa中的NSNumber也是如此，numberWithBool:和numberWithInt:分别返回�
 缺点：桥接模式的引入会增加系统的理解与设计难度，由于聚合关系建立在抽象层，要求开发者针对抽象进行设计与编程。
 桥接模式要求正确识别出系统中两个独立变化的维度，因此其使用范围具有一定的局限性。
 
+#### 10、外观模式(Facade)
 
+概念：为系统中的一组接口提供一个统一的接口
+
+应用：
+
+```
+@interface Facade : NSObject
+- (void)createApp
+@end
+
+@implementation NSObject
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        ios_dev = [[IosDev alloc] init];
+        andriod_dev = [[AndroidDev alloc] init];
+        server_dev = [[ServerDev alloc] init];
+    }
+    return self;
+}
+
+- (void)createApp{
+  [ios_dev ios]
+  [andriod_dev android]
+  [server_dev server]
+}
+```
+
+#### 11、中介者模式(Mediator)
+
+概念：用一个对象来封装一系列对象的交互方式，中介者使各对象不需要显式地相互引用，从而使其耦合松散。
+
+应用：
+
+![img](/img/Simple_01/06.png)
+
+![img](/img/Simple_01/07.png)
+
+[中介者模式-Mediator](https://github.com/helloted/designpattern/tree/master/Designpattern/DesignPattern/Mediator)
+
+
+
+#### 
 
 
 
