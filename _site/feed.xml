@@ -1,4 +1,46 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-09-22T11:23:23+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS设计模式</title><link href="http://www.helloted.com/2017/09/08/designPatten/" rel="alternate" type="text/html" title="iOS设计模式" /><published>2017-09-08T20:00:00+08:00</published><updated>2017-09-08T20:00:00+08:00</updated><id>http://www.helloted.com/2017/09/08/designPatten</id><content type="html" xml:base="http://www.helloted.com/2017/09/08/designPatten/">&lt;p&gt;部分代码位置&lt;a href=&quot;https://github.com/helloted/designpattern&quot;&gt;Github-设计模式&lt;/a&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-09-22T16:03:56+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS设计模式</title><link href="http://www.helloted.com/2017/09/08/designPatten/" rel="alternate" type="text/html" title="iOS设计模式" /><published>2017-09-08T20:00:00+08:00</published><updated>2017-09-08T20:00:00+08:00</updated><id>http://www.helloted.com/2017/09/08/designPatten</id><content type="html" xml:base="http://www.helloted.com/2017/09/08/designPatten/">&lt;p&gt;部分代码位置&lt;a href=&quot;https://github.com/helloted/designpattern&quot;&gt;Github-设计模式&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;创建型&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;单件模式&lt;/li&gt;
+  &lt;li&gt;工厂模式&lt;/li&gt;
+  &lt;li&gt;抽象工厂模式&lt;/li&gt;
+  &lt;li&gt;创建者模式&lt;/li&gt;
+  &lt;li&gt;原型模式&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;结构型&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;组合模式&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;外观模式&lt;/li&gt;
+  &lt;li&gt;适配器模式&lt;/li&gt;
+  &lt;li&gt;桥模式&lt;/li&gt;
+  &lt;li&gt;装饰模式&lt;/li&gt;
+  &lt;li&gt;享元模式&lt;/li&gt;
+  &lt;li&gt;代理模式&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;行为型&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;命令模式&lt;/li&gt;
+  &lt;li&gt;观察者模式&lt;/li&gt;
+  &lt;li&gt;策略模式&lt;/li&gt;
+  &lt;li&gt;职责模式&lt;/li&gt;
+  &lt;li&gt;模板模式&lt;/li&gt;
+  &lt;li&gt;中介者模式&lt;/li&gt;
+  &lt;li&gt;解释器模式&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;h4 id=&quot;1单例模式singleton&quot;&gt;1、单例模式(Singleton)&lt;/h4&gt;
 
@@ -292,7 +334,31 @@
 3、 使用策略模式可以避免使用多重条件转移语句。多重转移语句不易维护，它把采取哪一种算法或采取哪一种行为的逻辑与算法或行为的逻辑混合在一起，统统列在一个多重转移语句里面，比使用继承的办法还要原始和落后。
 缺点：
 1、客户端必须知道所有的策略类，并自行决定使用哪一个策略类。这就意味着客户端必须理解这些算法的区别，以便适时选择恰当的算法类。换言之，策略模式只适用于客户端知道所有的算法或行为的情况。
-2、 策略模式造成很多的策略类，每个具体策略类都会产生一个新类。有时候可以通过把依赖于环境的状态保存到客户端里面，而将策略类设计成可共享的，这样策略类实例可以被不同客户端使用。换言之，可以使用享元模式来减少对象的数量。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">部分代码位置Github-设计模式</summary></entry><entry><title type="html">热修复=Runtime+Javascriptcore</title><link href="http://www.helloted.com/2017/05/30/hotfix/" rel="alternate" type="text/html" title="热修复=Runtime+Javascriptcore" /><published>2017-05-30T20:00:00+08:00</published><updated>2017-05-30T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/30/hotfix</id><content type="html" xml:base="http://www.helloted.com/2017/05/30/hotfix/">&lt;h3 id=&quot;一运行时&quot;&gt;一、运行时&lt;/h3&gt;
+2、 策略模式造成很多的策略类，每个具体策略类都会产生一个新类。有时候可以通过把依赖于环境的状态保存到客户端里面，而将策略类设计成可共享的，这样策略类实例可以被不同客户端使用。换言之，可以使用享元模式来减少对象的数量。&lt;/p&gt;
+
+&lt;h4 id=&quot;20命令模式command&quot;&gt;20、命令模式(Command)&lt;/h4&gt;
+
+&lt;p&gt;概念：将请求封装成对象，以便使用不同的请求、日志、队列等来参数化其他对象。命令模式也支持撤销操作。这个封装请求比原始的请求要灵活并且可以在对象之前被传递，存储，动态修改或者放进队列里面。一般在想让应用程序支持撤销与恢复的情况下使用这一模式。&lt;/p&gt;
+
+&lt;p&gt;应用：Target-Action机制和NSInvocation&lt;/p&gt;
+
+&lt;h4 id=&quot;21享元模式flyweight&quot;&gt;21、享元模式(Flyweight)&lt;/h4&gt;
+
+&lt;p&gt;概念：复用我们内存中已存在的对象，降低系统创建对象实例的性能消耗。&lt;/p&gt;
+
+&lt;p&gt;应用：UITableViewCell复用&lt;/p&gt;
+
+&lt;h4 id=&quot;22代理模式proxy&quot;&gt;22、代理模式(Proxy)&lt;/h4&gt;
+
+&lt;p&gt;概念：为其他对象提供一种代理以控制对这个对象的访问。&lt;/p&gt;
+
+&lt;p&gt;应用：Delegate&lt;/p&gt;
+
+&lt;h4 id=&quot;23备忘录模式memento&quot;&gt;23、备忘录模式(Memento)&lt;/h4&gt;
+
+&lt;p&gt;概念：在不破坏封装的前提下，捕获一个对象的内部状态，以后可以将该对象回复到原先保存的状态&lt;/p&gt;
+
+&lt;p&gt;应用：对象序列化保存&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">部分代码位置Github-设计模式</summary></entry><entry><title type="html">热修复=Runtime+Javascriptcore</title><link href="http://www.helloted.com/2017/05/30/hotfix/" rel="alternate" type="text/html" title="热修复=Runtime+Javascriptcore" /><published>2017-05-30T20:00:00+08:00</published><updated>2017-05-30T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/30/hotfix</id><content type="html" xml:base="http://www.helloted.com/2017/05/30/hotfix/">&lt;h3 id=&quot;一运行时&quot;&gt;一、运行时&lt;/h3&gt;
 
 &lt;p&gt;热修复的基本原理就是Runtime运行时的方法替换，主要是下列几个方法&lt;/p&gt;
 
