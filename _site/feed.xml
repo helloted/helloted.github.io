@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-09-21T14:01:16+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS设计模式</title><link href="http://www.helloted.com/2017/09/08/designPatten/" rel="alternate" type="text/html" title="iOS设计模式" /><published>2017-09-08T20:00:00+08:00</published><updated>2017-09-08T20:00:00+08:00</updated><id>http://www.helloted.com/2017/09/08/designPatten</id><content type="html" xml:base="http://www.helloted.com/2017/09/08/designPatten/">&lt;p&gt;部分代码位置&lt;a href=&quot;https://github.com/helloted/designpattern&quot;&gt;Github-设计模式&lt;/a&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-09-22T11:23:23+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS设计模式</title><link href="http://www.helloted.com/2017/09/08/designPatten/" rel="alternate" type="text/html" title="iOS设计模式" /><published>2017-09-08T20:00:00+08:00</published><updated>2017-09-08T20:00:00+08:00</updated><id>http://www.helloted.com/2017/09/08/designPatten</id><content type="html" xml:base="http://www.helloted.com/2017/09/08/designPatten/">&lt;p&gt;部分代码位置&lt;a href=&quot;https://github.com/helloted/designpattern&quot;&gt;Github-设计模式&lt;/a&gt;&lt;/p&gt;
 
 &lt;h4 id=&quot;1单例模式singleton&quot;&gt;1、单例模式(Singleton)&lt;/h4&gt;
 
@@ -259,7 +259,7 @@
 
 &lt;p&gt;概念：定义一个操作中的算法的骨架，而将一些步骤延迟到子类中。模板方法使得子类可以不改变一个算法的结构即可重定义该算法的某些特定步骤。核心思想就是通过把不变的行为搬移到超类，去除子类中的重复代码来体现它的优势。其实，模板方法模式就是提供了一个很好的代码复用平台。定义一个父类，有父类定义接口规范，然后不同的行为在子类中实现。这样一方面提高了代码的复用性，另一方面还可以利用面向对象的多态性，在运行时选择一种具体子类&lt;/p&gt;
 
-&lt;p&gt;应用：&lt;/p&gt;
+&lt;p&gt;应用：&lt;code class=&quot;highlighter-rouge&quot;&gt;-(void)drawRect:(CGRect)rect&lt;/code&gt;&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;模板模式和策略模式的不同点：&lt;/p&gt;
@@ -278,7 +278,21 @@
 &lt;ul&gt;
   &lt;li&gt;相同的算法放在一个类中（父类）将算法变化的部分放在子类中。&lt;/li&gt;
   &lt;li&gt;子类公共的算法放在一个公共类中，避免代码重复。&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Ted</name></author><summary type="html">部分代码位置Github-设计模式</summary></entry><entry><title type="html">热修复=Runtime+Javascriptcore</title><link href="http://www.helloted.com/2017/05/30/hotfix/" rel="alternate" type="text/html" title="热修复=Runtime+Javascriptcore" /><published>2017-05-30T20:00:00+08:00</published><updated>2017-05-30T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/30/hotfix</id><content type="html" xml:base="http://www.helloted.com/2017/05/30/hotfix/">&lt;h3 id=&quot;一运行时&quot;&gt;一、运行时&lt;/h3&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;19策略模式strategy&quot;&gt;19、策略模式(Strategy)&lt;/h4&gt;
+
+&lt;p&gt;概念：定义了一系列的算法，并将每一个算法封装起来，而且使它们还可以相互替换。策略模式让算法独立于使用它的客户而独立变化。策略模式是对算法的包装，是把使用算法的责任和算法本身分割开来，委派给不同的对象管理。看到策略模式的时候有的时候跟简单工厂相比较，其实有很大的迷惑性，都是继承多态感觉没有太大的差异性，简单工厂模式是对对象的管理，策略模式是对行为的封装。&lt;/p&gt;
+
+&lt;p&gt;应用：&lt;a href=&quot;https://github.com/helloted/designpattern/tree/master/Designpattern/DesignPattern/Strategy&quot;&gt;策略模式demo&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;优点：
+1、 策略模式提供了管理相关的算法族的办法。策略类的等级结构定义了一个算法或行为族。恰当使用继承可以把公共的代码转移到父类里面，从而避免重复的代码。
+2、 策略模式提供了可以替换继承关系的办法。继承可以处理多种算法或行为。如果不是用策略模式，那么使用算法或行为的环境类就可能会有一些子类，每一个子类提供一个不同的算法或行为。但是，这样一来算法或行为的使用者就和算法或行为本身混在一起。决定使用哪一种算法或采取哪一种行为的逻辑就和算法或行为的逻辑混合在一起，从而不可能再独立演化。继承使得动态改变算法或行为变得不可能。
+3、 使用策略模式可以避免使用多重条件转移语句。多重转移语句不易维护，它把采取哪一种算法或采取哪一种行为的逻辑与算法或行为的逻辑混合在一起，统统列在一个多重转移语句里面，比使用继承的办法还要原始和落后。
+缺点：
+1、客户端必须知道所有的策略类，并自行决定使用哪一个策略类。这就意味着客户端必须理解这些算法的区别，以便适时选择恰当的算法类。换言之，策略模式只适用于客户端知道所有的算法或行为的情况。
+2、 策略模式造成很多的策略类，每个具体策略类都会产生一个新类。有时候可以通过把依赖于环境的状态保存到客户端里面，而将策略类设计成可共享的，这样策略类实例可以被不同客户端使用。换言之，可以使用享元模式来减少对象的数量。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">部分代码位置Github-设计模式</summary></entry><entry><title type="html">热修复=Runtime+Javascriptcore</title><link href="http://www.helloted.com/2017/05/30/hotfix/" rel="alternate" type="text/html" title="热修复=Runtime+Javascriptcore" /><published>2017-05-30T20:00:00+08:00</published><updated>2017-05-30T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/30/hotfix</id><content type="html" xml:base="http://www.helloted.com/2017/05/30/hotfix/">&lt;h3 id=&quot;一运行时&quot;&gt;一、运行时&lt;/h3&gt;
 
 &lt;p&gt;热修复的基本原理就是Runtime运行时的方法替换，主要是下列几个方法&lt;/p&gt;
 
