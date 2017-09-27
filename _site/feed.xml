@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-09-27T15:58:28+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS开发之声音</title><link href="http://www.helloted.com/2017/09/26/voice/" rel="alternate" type="text/html" title="iOS开发之声音" /><published>2017-09-26T20:00:00+08:00</published><updated>2017-09-26T20:00:00+08:00</updated><id>http://www.helloted.com/2017/09/26/voice</id><content type="html" xml:base="http://www.helloted.com/2017/09/26/voice/">&lt;p&gt;部分代码位置&lt;a href=&quot;https://github.com/helloted/voice&quot;&gt;Github-VoiceDemo&lt;/a&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-09-27T18:19:44+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS开发之声音</title><link href="http://www.helloted.com/2017/09/26/voice/" rel="alternate" type="text/html" title="iOS开发之声音" /><published>2017-09-26T20:00:00+08:00</published><updated>2017-09-26T20:00:00+08:00</updated><id>http://www.helloted.com/2017/09/26/voice</id><content type="html" xml:base="http://www.helloted.com/2017/09/26/voice/">&lt;p&gt;部分代码位置&lt;a href=&quot;https://github.com/helloted/voice&quot;&gt;Github-VoiceDemo&lt;/a&gt;&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;Pre&lt;/p&gt;
@@ -493,7 +493,35 @@
 
 &lt;p&gt;Javascriptcore是一个iOS原生框架，用于javascript与Objecive C语言进行相互调用，而我们热修改需要用到的就是javascript可以调用OC方法&lt;/p&gt;
 
-&lt;p&gt;三、热修复&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、运行时</summary></entry><entry><title type="html">iOS之Runloop(3):应用</title><link href="http://www.helloted.com/2017/04/16/Runloop_3/" rel="alternate" type="text/html" title="iOS之Runloop(3):应用" /><published>2017-04-16T20:00:00+08:00</published><updated>2017-04-16T20:00:00+08:00</updated><id>http://www.helloted.com/2017/04/16/Runloop_3</id><content type="html" xml:base="http://www.helloted.com/2017/04/16/Runloop_3/">&lt;p&gt;其他两篇关于Runloop:&lt;/p&gt;
+&lt;p&gt;三、热修复&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、运行时</summary></entry><entry><title type="html">AFNetworking源码分析(一)</title><link href="http://www.helloted.com/2017/05/26/AFNetWorking_1/" rel="alternate" type="text/html" title="AFNetworking源码分析(一)" /><published>2017-05-26T20:00:00+08:00</published><updated>2017-05-26T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/26/AFNetWorking_1</id><content type="html" xml:base="http://www.helloted.com/2017/05/26/AFNetWorking_1/">&lt;h3 id=&quot;0前言&quot;&gt;0、前言&lt;/h3&gt;
+
+&lt;p&gt;AFNetworking这个框架是iOS必备的一个第三方框架，其高效简洁的API使其成为最好的iOS网络请求框架，也让iOS开发的网络请求轻松许多，&lt;a href=&quot;https://github.com/AFNetworking/AFNetworking&quot;&gt;AFNetworking-Github&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;本文分析基于版本是3.1.0&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pod 'AFNetworking', '~&amp;gt; 3.1.0'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;因为iOS9开始NSURLConnection这个类已经被废弃，所以框架的主要类也由&lt;code class=&quot;highlighter-rouge&quot;&gt;AFHTTPRequestOperationManager&lt;/code&gt;变为&lt;code class=&quot;highlighter-rouge&quot;&gt;AFHTTPSessionManager&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;一架构分析&quot;&gt;一、架构分析&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/AFNetworking/01.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;从图中就可以看出，整体分为以下几个部分&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;NSURLSession：网络请求的主要类，&lt;code class=&quot;highlighter-rouge&quot;&gt;AFURLSessionManager&lt;/code&gt;封装的是&lt;code class=&quot;highlighter-rouge&quot;&gt;NSURLSession&lt;/code&gt;,而&lt;code class=&quot;highlighter-rouge&quot;&gt;AFHTTPSessionManager&lt;/code&gt;是其子类，用于HTTP请求做了一些优化&lt;/li&gt;
+  &lt;li&gt;Reachability：网络状况，&lt;code class=&quot;highlighter-rouge&quot;&gt;AFNetworkReachabilityManager&lt;/code&gt;是用来监测当前网络状况的一个类&lt;/li&gt;
+  &lt;li&gt;Security：网络安全，HTTPS请求就要用到&lt;code class=&quot;highlighter-rouge&quot;&gt;AFSecurityPolicy&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Serialization：序列化，&lt;code class=&quot;highlighter-rouge&quot;&gt;AFURLRequestSerialization&lt;/code&gt;是请求前的序列化，&lt;code class=&quot;highlighter-rouge&quot;&gt;AFURLResponseSerialization&lt;/code&gt;是请求完成后对结果的序列化&lt;/li&gt;
+  &lt;li&gt;UIKit：里面则是一些UIkit的拓展Category&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;所以整个AFNetworking网络请求的过程就是：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/AFNetworking/02.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">0、前言</summary></entry><entry><title type="html">iOS之Runloop(3):应用</title><link href="http://www.helloted.com/2017/04/16/Runloop_3/" rel="alternate" type="text/html" title="iOS之Runloop(3):应用" /><published>2017-04-16T20:00:00+08:00</published><updated>2017-04-16T20:00:00+08:00</updated><id>http://www.helloted.com/2017/04/16/Runloop_3</id><content type="html" xml:base="http://www.helloted.com/2017/04/16/Runloop_3/">&lt;p&gt;其他两篇关于Runloop:&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;http://www.helloted.com/2017/04/10/Runloop_1/&quot;&gt;iOS之Runloop(1):基础&lt;/a&gt;&lt;/p&gt;
 
@@ -2177,120 +2205,4 @@ struct objc_super {
 &lt;p&gt;注意，使用readonly关键字修饰后，编译器只会为我们生成getter。&lt;/p&gt;
 
 &lt;p&gt;假如一个属性被关键字@dynamic所修饰，则编译器不会自动生成其对应的getter、setter，然而如果开发者没有自行创造getter、setter，将不会在编译期提醒，运行时触发则会发生crash。
-顺便一提@dynamic还能帮助我们替换掉某类中本来就存在的，而我们又想自己创造的property。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">先看OC关于NSObject的源码</summary></entry><entry><title type="html">漫谈iOS安全</title><link href="http://www.helloted.com/2016/10/11/safety/" rel="alternate" type="text/html" title="漫谈iOS安全" /><published>2016-10-11T20:00:00+08:00</published><updated>2016-10-11T20:00:00+08:00</updated><id>http://www.helloted.com/2016/10/11/safety</id><content type="html" xml:base="http://www.helloted.com/2016/10/11/safety/">&lt;h3 id=&quot;一前言&quot;&gt;一、前言&lt;/h3&gt;
-
-&lt;p&gt;经常都能听到大家说，iOS很安全，iPhone比安卓手机安全。那么为什么iOS会安全，难道仅仅是因为iOS是闭源然后安卓是开源的，开源的就一定比闭源安全？前段时间著名的&lt;em&gt;Xcode Ghost&lt;/em&gt; 事件也让人觉得iOS好像并不是那么地安全，今天就随便说说iOS的安全。&lt;/p&gt;
-
-&lt;h3 id=&quot;二沙盒机制&quot;&gt;二、沙盒机制&lt;/h3&gt;
-
-&lt;h4 id=&quot;沙盒简介&quot;&gt;沙盒简介&lt;/h4&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Complex systems will always have vulnerabilities, and software complexity only increases over time. No matter how carefully you adopt secure coding practices and guard against bugs, attackers only need to get through your defenses once to succeed. While App Sandbox doesn’t prevent attacks against your app, it does minimize the harm a successful one can cause.&lt;/p&gt;
-
-  &lt;p&gt;A non-sandboxed app has the full rights of the user who is running that app, and can access any resources that the user can access. If that app or any framework it is linked against contain security holes, an attacker can potentially exploit those holes to take control of that app, and in doing so, the attacker gains the ability to do anything that the user can do.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;复杂系统始终都会存在漏洞，软件复杂性只会随着时间的推移而增加。 无论你采取安全的编码方式多么谨慎来避免错误，攻击者只需要击穿一次防御就能成功。 虽然应用程序沙盒不能防止对您的应用程序的攻击，但它确实最大限度地减少了可能导致的危害。&lt;/p&gt;
-
-&lt;p&gt;非沙盒应用程序具有正在运行该应用程序的用户的完全权限，并且可以访问用户可以访问的任何资源。 如果该应用程序或任何框架被链接到一些安全漏洞，攻击者可能潜在地利用这些漏洞来控制该应用程序，并且在这样做时，攻击者可以执行任何用户可以执行的操作。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Designed to mitigate this problem, the App Sandbox strategy is twofold:&lt;/p&gt;
-
-  &lt;ol&gt;
-    &lt;li&gt;App Sandbox enables you to describe how your app interacts with the system. The system then grants your app the access it needs to get its job done, and no more.&lt;/li&gt;
-    &lt;li&gt;App Sandbox allows the user to transparently grant your app additional access by way of Open and Save dialogs, drag and drop, and other familiar user interactions.&lt;/li&gt;
-  &lt;/ol&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;为了解决上面的问题，沙盒策略有两个方面：&lt;/p&gt;
-
-&lt;p&gt;应用程序沙盒允许您描述应用程序如何与系统进行交互。 系统然后授予您的应用程序所需的访问权限，以完成其工作，不会赋予更多的权限。
-应用程序沙盒允许用户通过打开和保存对话框，拖放和其他熟悉的用户交互方式透明地授予您的应用程序附加访问权限。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/safety/safety_01.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;ios的沙盒&quot;&gt;iOS的沙盒&lt;/h4&gt;
-
-&lt;p&gt;来看看iOS的沙盒结构图&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/safety/safety_00.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;iOS应用程序只能在为该改程序创建的文件系统中读取文件，不可以去其它地方访问，此区域被成为沙盒，所以所有的非代码文件都要保存在此，例如图像，图标，声音，映像，属性列表，文本文件等。&lt;/p&gt;
-
-  &lt;ol&gt;
-    &lt;li&gt;每个应用程序都有自己的存储空间&lt;/li&gt;
-    &lt;li&gt;应用程序不能翻过自己的围墙去访问别的存储空间的内容&lt;/li&gt;
-    &lt;li&gt;应用程序请求的数据都要通过权限检测，假如不符合条件的话，不会被放行。&lt;/li&gt;
-  &lt;/ol&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/safety/safety_02.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;三https&quot;&gt;三、HTTPS&lt;/h3&gt;
-
-&lt;p&gt;这是对网络数据传输过程中的加密。&lt;/p&gt;
-
-&lt;p&gt;其实HTTPS从最终的数据解析的角度，与HTTP没有任何的区别，HTTPS就是将HTTP协议数据包放到SSL/TSL层加密后，在TCP/IP层组成IP数据报去传输，以此保证传输数据的安全；而对于接收端，在SSL/TSL将接收的数据包解密之后，将数据传给HTTP协议层，就是普通的HTTP数据。HTTP和SSL/TSL都处于OSI模型的应用层。从HTTP切换到HTTPS是一个非常简单的过程。&lt;/p&gt;
-
-&lt;p&gt;可参考这篇博文&lt;a href=&quot;http://www.helloted.com/2016/09/13/Http/&quot;&gt;Http与Https&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;四app加固&quot;&gt;四、APP加固&lt;/h3&gt;
-
-&lt;h4 id=&quot;1字符串混淆&quot;&gt;1、字符串混淆&lt;/h4&gt;
-
-&lt;p&gt;我们在代码中有时候会用到一些静态字符串，比如像一些SDK的key、网络加密使用的“盐”等字符串，不能使用明文保存，需要对这些静态字符串进行加密，以防止在APP被反编译后泄露。然后在需要使用字符串的地方进行解密。通常我们使用异或加密来加密字符串.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;异或的运算方法是一个二进制运算：
-1^1=0
-0^0=0
-1^0=1
-0^1=1&lt;/p&gt;
-
-  &lt;p&gt;&lt;strong&gt;两者相等为0,不等为1.&lt;/strong&gt;&lt;/p&gt;
-
-  &lt;p&gt;对于一个字符来说,都可以用二进制码来表示.如A:01000001，字符的异或就是对每一位进行二进制运算.
-用于加密算法时,假设你要加密的内容为A,密钥为B,则可以用&lt;/p&gt;
-
-  &lt;p&gt;异或加密:C=A^B
-在数据中保存加密后的C就行了.
-用的时候:A=B^C
-即可取得原加密A的内容,所以只要知道密钥,就可以完成加密和解密.&lt;/p&gt;
-
-  &lt;p&gt;异或加密和解密的方法一致，运算一次就是加密，再运算一次就是解密。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (NSString *)xorStr:(NSString *)xorStr withKey:(NSString *)key{
-    NSData  *strData = [xorStr dataUsingEncoding:NSUTF8StringEncoding];
-    NSData *keyData = [key dataUsingEncoding:NSUTF8StringEncoding];
-    Byte *keyBytes = (Byte *)[keyData bytes];   //取关键字的Byte数组, keyBytes一直指向头部
-    Byte *sourceDataPoint = (Byte *)[strData bytes];  //取需要异或的数据的Byte数组
-    for (long i = 0; i &amp;lt; [strData length]; i++) {
-        sourceDataPoint[i] = sourceDataPoint[i] ^ keyBytes[(i % [keyData length])]; //然后按位进行异或运算
-    }
-    NSString *outStr = [[NSString alloc]initWithData:strData encoding:NSUTF8StringEncoding];
-    return outStr;
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;strong&gt;类名、方法名混淆&lt;/strong&gt;&lt;/p&gt;
-
-    &lt;p&gt;对应用程序的方法名和方法体进行混淆，保证源码被逆向后很难明白它的真正功能。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;strong&gt;程序结构混淆加密&lt;/strong&gt;&lt;/p&gt;
-
-    &lt;p&gt;对应用程序逻辑结构进行打乱混排，保证源码可读性降到最低。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;strong&gt;反调试、反注入等一些主动保护策略&lt;/strong&gt;&lt;/p&gt;
-
-    &lt;p&gt;这是一些主动保护策略，增大破解者调试、分析APP的门槛。&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;</content><author><name>Ted</name></author><summary type="html">一、前言</summary></entry></feed>
+顺便一提@dynamic还能帮助我们替换掉某类中本来就存在的，而我们又想自己创造的property。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">先看OC关于NSObject的源码</summary></entry></feed>
