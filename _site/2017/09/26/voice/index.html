@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
 
-    <title>Helloted Blog</title>
+    <title>iOS开发之声音 - Helloted Blog</title>
 
-    <link rel="canonical" href="http://www.helloted.com/page2/">
+    <link rel="canonical" href="http://www.helloted.com/2017/09/26/voice/">
 
     <link rel="shortcut icon" href="/img/favicon.ico">
    
@@ -81,154 +81,139 @@
 </nav>
 
 
-    <!-- Page Header -->
-<header class="intro-header" style="background-image: url('/img/home-bg.jpg')">
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="site-heading">
-                    <h1>Helloted Blog</h1>
-                    <hr class="small">
-                    <span class="subheading">曹浩之的博客(原创使人进步)</span>
+                <div class="post-heading">
+                    <h1>iOS开发之声音</h1>
+                    
+                    <h2 class="subheading">记录一下iOS开发中用到的录音功能和声音播放功能</h2>
+                    
+                    <span class="meta">Posted by Ted on September 26, 2017</span>
                 </div>
             </div>
         </div>
     </div>
 </header>
 
-<!-- Main Content -->
-<div class="container">
-	<div class="row">
-		<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-			
-<div class="post-preview">
-    <a href="/2016/03/05/runtime/">
-        <h2 class="post-title"> 神奇的Runtime
-        </h2>
-        
-        <h3 class="post-subtitle">
-            Objective-C中Runtime的那点东西
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on March 5, 2016</p>
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<p>部分代码位置<a href="https://github.com/helloted/voice">Github-VoiceDemo</a></p>
+
+<blockquote>
+  <p>Pre</p>
+</blockquote>
+
+<p>与图片中默认的格式为PNG格式一样，iOS开发中声音的格式也有默认格式，为wav格式，本文中的产生的格式均为wav格式，其他格式则需要转换</p>
+
+<h3 id="一声音录制">一、声音录制</h3>
+
+<p>要先引入AVFoundation的框架</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>#import &lt;AVFoundation/AVFoundation.h&gt;
+</code></pre>
 </div>
-<hr>
 
-<div class="post-preview">
-    <a href="/2015/10/10/network/">
-        <h2 class="post-title"> 网络
-        </h2>
+<div class="highlighter-rouge"><pre class="highlight"><code>    self.voiceRecorder = [[AVAudioRecorder alloc]initWithURL:[NSURL fileURLWithPath:self.voicePath] settings:self.recorderSetting error:nil];
+    if ([self.voiceRecorder prepareToRecord]){
+        [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayAndRecord error:nil];
+        [[AVAudioSession sharedInstance] setActive:YES error:nil];
         
-        <h3 class="post-subtitle">
-            网络模型，基础知识
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on October 10, 2015</p>
+        //开始录音
+        [self.voiceRecorder record];
+    }
+</code></pre>
 </div>
-<hr>
 
-<div class="post-preview">
-    <a href="/2015/07/12/Textkit/">
-        <h2 class="post-title"> iOS图文混排
-        </h2>
-        
-        <h3 class="post-subtitle">
-            总结一下iOS图文混排以及涉及到的CoreText,TextKit
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on July 12, 2015</p>
+<p>录制声音主要设置两个参数，Path和Setting</p>
+
+<p>Path：声音文件录制后存储的路径</p>
+
+<p>Setting：一个录制参数的字典</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>        _recorderSetting = [[NSDictionary alloc] initWithObjectsAndKeys:
+                            [NSNumber numberWithFloat: 8000.0],AVSampleRateKey, //采样率
+                            [NSNumber numberWithInt: kAudioFormatLinearPCM],AVFormatIDKey,
+                            [NSNumber numberWithInt:16],AVLinearPCMBitDepthKey,//采样位数 默认 16
+                            [NSNumber numberWithInt: 1], AVNumberOfChannelsKey,//通道的数目
+                            nil];
+</code></pre>
 </div>
-<hr>
 
-<div class="post-preview">
-    <a href="/2015/02/01/data-3/">
-        <h2 class="post-title"> 数据结构与算法(三):排序算法
-        </h2>
-        
-        <h3 class="post-subtitle">
-            八大常用排序算法
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on February 1, 2015</p>
+<p><code class="highlighter-rouge">AVAudioRecorder</code>在录制的时候可以暂停和恢复</p>
+
+<p>暂停</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>- (void)pause; /* pause recording */
+</code></pre>
 </div>
-<hr>
 
-<div class="post-preview">
-    <a href="/2015/02/01/data-2/">
-        <h2 class="post-title"> 数据结构与算法(二):查找算法
-        </h2>
-        
-        <h3 class="post-subtitle">
-            七大查找算法
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on February 1, 2015</p>
+<p>恢复/开始</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>- (void)record;
+</code></pre>
 </div>
-<hr>
 
-<div class="post-preview">
-    <a href="/2015/02/01/data-1/">
-        <h2 class="post-title"> 数据结构与算法(一):数据结构
-        </h2>
-        
-        <h3 class="post-subtitle">
-            简单地总结一下常用的数据结构
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on February 1, 2015</p>
+<p>录制完成</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>- (void)stop;
+</code></pre>
 </div>
-<hr>
 
-<div class="post-preview">
-    <a href="/2015/01/25/event/">
-        <h2 class="post-title"> 事件传递、响应者链条
-        </h2>
-        
-        <h3 class="post-subtitle">
-            事件传递以及处理事件的响应者链条
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on January 25, 2015</p>
+<h3 id="二声音播放">二、声音播放</h3>
+
+<p>先引入MediaPlayer</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>#import &lt;MediaPlayer/MediaPlayer.h&gt;
+@import AVFoundation;
+@import AudioToolbox;
+</code></pre>
 </div>
-<hr>
 
-<div class="post-preview">
-    <a href="/2015/01/22/life/">
-        <h2 class="post-title"> 生命周期
-        </h2>
-        
-        <h3 class="post-subtitle">
-            UIView生命周期、程序的生命周期
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on January 22, 2015</p>
+<p>设置好录音文件路径就可以播放</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>    if (_player) { // 如果正在播放上一段录音，则停止
+        [_player stop];
+    }
+    [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayback error:nil];
+    [[AVAudioSession sharedInstance] setActive:YES error:nil];
+    if (path&amp;&amp; [self fileSizeAtPath:path]) {
+        self.player = [self.player initWithContentsOfURL:[NSURL URLWithString:path] error:nil];
+        self.player.delegate = self;
+        [self.player play];
+        NSLog(@"开始播放");
+    }else{
+        NSLog(@"no voice");
+    }
+</code></pre>
 </div>
-<hr>
+
+<p>声音播放也可以暂停恢复和停止</p>
+
+<p>完整代码位置<a href="https://github.com/helloted/voice">Github-VoiceDemo</a></p>
 
 
-<!-- Pager -->
+                <hr>
 
-<ul class="pager">
-    
-    <li class="previous">
-        <a href="/">&larr; 最新</a>
-    </li>
-    
-    
-</ul>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2017/09/08/designPatten/" data-toggle="tooltip" data-placement="top" title="iOS设计模式">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                </ul>
 
-
-		</div>
-	</div>
-</div>
+            </div>
+        </div>
+    </div>
+</article>
 
 <hr>
 

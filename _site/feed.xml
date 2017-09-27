@@ -1,4 +1,96 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-09-22T16:27:30+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS设计模式</title><link href="http://www.helloted.com/2017/09/08/designPatten/" rel="alternate" type="text/html" title="iOS设计模式" /><published>2017-09-08T20:00:00+08:00</published><updated>2017-09-08T20:00:00+08:00</updated><id>http://www.helloted.com/2017/09/08/designPatten</id><content type="html" xml:base="http://www.helloted.com/2017/09/08/designPatten/">&lt;p&gt;部分代码位置&lt;a href=&quot;https://github.com/helloted/designpattern&quot;&gt;Github-设计模式&lt;/a&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-09-27T10:16:52+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS开发之声音</title><link href="http://www.helloted.com/2017/09/26/voice/" rel="alternate" type="text/html" title="iOS开发之声音" /><published>2017-09-26T20:00:00+08:00</published><updated>2017-09-26T20:00:00+08:00</updated><id>http://www.helloted.com/2017/09/26/voice</id><content type="html" xml:base="http://www.helloted.com/2017/09/26/voice/">&lt;p&gt;部分代码位置&lt;a href=&quot;https://github.com/helloted/voice&quot;&gt;Github-VoiceDemo&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Pre&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;与图片中默认的格式为PNG格式一样，iOS开发中声音的格式也有默认格式，为wav格式，本文中的产生的格式均为wav格式，其他格式则需要转换&lt;/p&gt;
+
+&lt;h3 id=&quot;一声音录制&quot;&gt;一、声音录制&lt;/h3&gt;
+
+&lt;p&gt;要先引入AVFoundation的框架&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#import &amp;lt;AVFoundation/AVFoundation.h&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    self.voiceRecorder = [[AVAudioRecorder alloc]initWithURL:[NSURL fileURLWithPath:self.voicePath] settings:self.recorderSetting error:nil];
+    if ([self.voiceRecorder prepareToRecord]){
+        [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayAndRecord error:nil];
+        [[AVAudioSession sharedInstance] setActive:YES error:nil];
+        
+        //开始录音
+        [self.voiceRecorder record];
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;录制声音主要设置两个参数，Path和Setting&lt;/p&gt;
+
+&lt;p&gt;Path：声音文件录制后存储的路径&lt;/p&gt;
+
+&lt;p&gt;Setting：一个录制参数的字典&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;        _recorderSetting = [[NSDictionary alloc] initWithObjectsAndKeys:
+                            [NSNumber numberWithFloat: 8000.0],AVSampleRateKey, //采样率
+                            [NSNumber numberWithInt: kAudioFormatLinearPCM],AVFormatIDKey,
+                            [NSNumber numberWithInt:16],AVLinearPCMBitDepthKey,//采样位数 默认 16
+                            [NSNumber numberWithInt: 1], AVNumberOfChannelsKey,//通道的数目
+                            nil];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;AVAudioRecorder&lt;/code&gt;在录制的时候可以暂停和恢复&lt;/p&gt;
+
+&lt;p&gt;暂停&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (void)pause; /* pause recording */
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;恢复/开始&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (void)record;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;录制完成&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (void)stop;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;二声音播放&quot;&gt;二、声音播放&lt;/h3&gt;
+
+&lt;p&gt;先引入MediaPlayer&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#import &amp;lt;MediaPlayer/MediaPlayer.h&amp;gt;
+@import AVFoundation;
+@import AudioToolbox;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;设置好录音文件路径就可以播放&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    if (_player) { // 如果正在播放上一段录音，则停止
+        [_player stop];
+    }
+    [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayback error:nil];
+    [[AVAudioSession sharedInstance] setActive:YES error:nil];
+    if (path&amp;amp;&amp;amp; [self fileSizeAtPath:path]) {
+        self.player = [self.player initWithContentsOfURL:[NSURL URLWithString:path] error:nil];
+        self.player.delegate = self;
+        [self.player play];
+        NSLog(@&quot;开始播放&quot;);
+    }else{
+        NSLog(@&quot;no voice&quot;);
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;声音播放也可以暂停恢复和停止&lt;/p&gt;
+
+&lt;p&gt;完整代码位置&lt;a href=&quot;https://github.com/helloted/voice&quot;&gt;Github-VoiceDemo&lt;/a&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">部分代码位置Github-VoiceDemo</summary></entry><entry><title type="html">iOS设计模式</title><link href="http://www.helloted.com/2017/09/08/designPatten/" rel="alternate" type="text/html" title="iOS设计模式" /><published>2017-09-08T20:00:00+08:00</published><updated>2017-09-08T20:00:00+08:00</updated><id>http://www.helloted.com/2017/09/08/designPatten</id><content type="html" xml:base="http://www.helloted.com/2017/09/08/designPatten/">&lt;p&gt;部分代码位置&lt;a href=&quot;https://github.com/helloted/designpattern&quot;&gt;Github-设计模式&lt;/a&gt;&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;创建型&lt;/p&gt;
@@ -2201,157 +2293,4 @@ struct objc_super {
 
     &lt;p&gt;这是一些主动保护策略，增大破解者调试、分析APP的门槛。&lt;/p&gt;
   &lt;/li&gt;
-&lt;/ol&gt;</content><author><name>Ted</name></author><summary type="html">一、前言</summary></entry><entry><title type="html">监测APP卡顿</title><link href="http://www.helloted.com/2016/10/06/smoothMonitor/" rel="alternate" type="text/html" title="监测APP卡顿" /><published>2016-10-06T20:00:00+08:00</published><updated>2016-10-06T20:00:00+08:00</updated><id>http://www.helloted.com/2016/10/06/smoothMonitor</id><content type="html" xml:base="http://www.helloted.com/2016/10/06/smoothMonitor/">&lt;h3 id=&quot;一简介&quot;&gt;一、简介&lt;/h3&gt;
-
-&lt;p&gt;我们说的卡顿，一般指操作某个功能时，UI界面无及时反应，这种卡顿日常测试一般难以追踪以及重现，所以除了工程师开发测试的时候发现卡顿，还有一个重要的渠道就是从用户实际体验来监测卡顿，但是我们又不能拿到用户的手机或者让用户来回馈问题，所以一个完整的监测体系就很有必要了。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;监测卡顿：开一个子线程，利用Runloop来监测卡顿；&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;收集堆栈：将卡顿时的堆栈收集起来；&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;上传记录：将卡顿上传到后台或自定义；&lt;/p&gt;
-
-    &lt;p&gt;这里我引用一张微信开发团队的监测流程图：&lt;/p&gt;
-
-    &lt;p&gt;&lt;img src=&quot;/img/Smooth/smooth_01.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;二监测卡顿&quot;&gt;二、监测卡顿&lt;/h3&gt;
-
-&lt;p&gt;首先我们来看一个Runloop的运行方式，如下&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;int32_t __CFRunLoopRun()
-{
-    // 通知即将进入runloop
-  	//创建AutoreleasePool: _objc_autoreleasePoolPush();
-    __CFRunLoopDoObservers(KCFRunLoopEntry);
-    
-    do
-    {
-        // 通知将要处理timer和source
-        __CFRunLoopDoObservers(kCFRunLoopBeforeTimers);
-        __CFRunLoopDoObservers(kCFRunLoopBeforeSources);
-        
-        // 处理非延迟的主线程调用
-        __CFRunLoopDoBlocks();
-        // 处理UIEvent事件
-        __CFRunLoopDoSource0();
-        
-        // GCD dispatch main queue
-        CheckIfExistMessagesInMainDispatchQueue();
-        
-        // 即将进入休眠
-      	//释放并新建AutoreleasePool: _objc_autoreleasePoolPop(); _objc_autoreleasePoolPush();
-        __CFRunLoopDoObservers(kCFRunLoopBeforeWaiting);
-        
-        // 等待内核mach_msg事件
-        mach_port_t wakeUpPort = SleepAndWaitForWakingUpPorts();
-        
-        // Zzz...
-        
-        // 从等待中醒来
-        __CFRunLoopDoObservers(kCFRunLoopAfterWaiting);
-                
-        if (wakeUpPort == timerPort){// 处理因timer的唤醒
-          __CFRunLoopDoTimers();
-        }else if (wakeUpPort == mainDispatchQueuePort){// 处理异步方法唤醒,如dispatch_async
-          __CFRUNLOOP_IS_SERVICING_THE_MAIN_DISPATCH_QUEUE__()
-        } else{// UI刷新,动画显示
-          __CFRunLoopDoSource1();
-        }   
-        // 再次确保是否有同步的方法需要调用
-        __CFRunLoopDoBlocks();
-        
-    } while (!stop &amp;amp;&amp;amp; !timeout);
-    
-    // 通知即将退出runloop
-  	//释放AutoreleasePool: _objc_autoreleasePoolPop();
-    __CFRunLoopDoObservers(CFRunLoopExit);
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;UI更新一般&lt;font color=&quot;gray&quot;&gt;kCFRunLoopBeforeSources&lt;/font&gt;和&lt;font color=&quot;gray&quot;&gt;kCFRunLoopBeforeWaiting&lt;/font&gt;之间，所以我们监测他们之间的时间段就能知道UI是否卡顿了&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (void)startMoniter{
-	//添加监听
-    CFRunLoopObserverContext context = {0,(__bridge void*)self,NULL,NULL};
-    _observer = CFRunLoopObserverCreate(kCFAllocatorDefault,
-                                        kCFRunLoopAllActivities,
-                                        YES,
-                                        0,
-                                        &amp;amp;runLoopObserverCallBack,
-                                        &amp;amp;context);
-    CFRunLoopAddObserver(CFRunLoopGetMain(), _observer, kCFRunLoopCommonModes);
-    
-    // 创建信号
-    _semaphore = dispatch_semaphore_create(0);
-    
-    // 在子线程监控时长
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        while (YES)
-        {
-            NSLog(@&quot;smooth--monitering&quot;);
-            //100ms则将堆栈记录下来
-            long st = dispatch_semaphore_wait(_semaphore, dispatch_time(DISPATCH_TIME_NOW, 100*NSEC_PER_MSEC));
-            if (st != 0)
-            {
-                if (_activity==kCFRunLoopBeforeSources || _activity==kCFRunLoopAfterWaiting)
-                {
-                    [self logStack];
-                }
-            }
-        }
-    });
-}
-
-static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActivity activity, void *info)
-{
-    SmoothMoniter *instrance = [SmoothMoniter sharedInstance];
-    instrance.activity = activity;
-    dispatch_semaphore_t semaphore = instrance.semaphore;
-    dispatch_semaphore_signal(semaphore);
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h3 id=&quot;三收集堆栈&quot;&gt;三、收集堆栈&lt;/h3&gt;
-
-&lt;p&gt;收集堆栈信息以用来分析卡顿引起的代码&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#import &amp;lt;libkern/OSAtomic.h&amp;gt;
-#import &amp;lt;execinfo.h&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (void)logStack{
-    void* callstack[128];
-    int frames = backtrace(callstack, 128);
-    char **strs = backtrace_symbols(callstack, frames);
-    int i;
-    NSMutableArray *backtrace = [NSMutableArray arrayWithCapacity:frames];
-    for ( i = 0 ; i &amp;lt; frames ; i++ ){
-        [backtrace addObject:[NSString stringWithUTF8String:strs[i]]];
-    }
-    free(strs);
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;可以得到类似于下方的堆栈记录&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Smooth/smooth_02.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;四上传记录&quot;&gt;四、上传记录&lt;/h3&gt;
-
-&lt;p&gt;1、频率以及流量：是否所有的用户都要做统计？上传的频率？文件压缩以减少流量？这些问题都要根据实际情况作好准备。&lt;/p&gt;
-
-&lt;p&gt;2、上传位置，一种是自己建立后台来统计这些卡顿，嫌麻烦的话是利用第三方平台、如友盟（统计崩溃比较多）、听云、OneApm、博睿，都大同小异。&lt;/p&gt;
-
-&lt;h3 id=&quot;五代码&quot;&gt;五、代码&lt;/h3&gt;
-
-&lt;p&gt;上面的代码可以在&lt;a href=&quot;https://github.com/helloted/smoothMonitor&quot;&gt;smoothMonitor&lt;/a&gt; 下载&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、简介</summary></entry></feed>
+&lt;/ol&gt;</content><author><name>Ted</name></author><summary type="html">一、前言</summary></entry></feed>
