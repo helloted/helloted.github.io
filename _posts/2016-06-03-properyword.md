@@ -132,3 +132,85 @@ header-img: "img/bg_02.jpg"
 - 可读写
 - 默认属性
 
+
+### 四、其他关键字
+
+#### 1、Static
+
+> 保证局部变量永远只初始化一次，在程序的运行过程中永远只有一份内存
+
+先看一下区别
+
+```
+    for (int i = 0; i < 10; i ++) {
+        int a = 0;    
+        a ++;    //打印结果
+        NSLog(@"a=%d",a);
+    }
+    
+    //打印结果是：
+    a = 1
+    a = 1
+    a = 1
+    ...
+```
+
+加Static关键字
+
+```
+    for (int i = 0; i < 10; i ++) {
+        int static a = 0;    
+        a ++;    //打印结果
+        NSLog(@"a=%d",a);
+    }
+    
+    //打印结果是：
+    a = 1
+    a = 2
+    a = 3
+    ...
+```
+
+> 使全局变量的作用域仅限于当前文件内部，即当前文件内部才能访问该全局变量。
+
+```
++ (SingleObject *)sharedSingleton{
+    static SingleObject *_singleObj = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _singleObj = [[self alloc] init];
+    });
+    return _singleObj;
+}
+```
+
+#### 2、Const
+
+（1 const用来修饰右边的基本变量或指针变量
+（2 被修饰的变量只读，不能被修改
+
+```
+int  const  *p   //  *p只读 ;p变量
+int  * const  p  // *p变量 ; p只读
+const  int   * const p //p和*p都只读
+int  const  * const  p   //p和*p都只读
+```
+
+#### 3、extern
+
+我们可以在.h文件中extern声明一些全局的常量
+
+```
+.h声明一些全局常量
+extern NSString * const name;extern NSInteger const count;
+```
+
+然后在.m文件中去实现
+
+```
+.m实现
+NSString *const name = @"helloted";
+NSInteger const count = 6;
+```
+
+这样，只要导入头文件，就可以全局的使用定义的变量或常量。
