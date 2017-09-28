@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
 
-    <title>Helloted Blog</title>
+    <title>AFNetworking源码分析(二) - Helloted Blog</title>
 
-    <link rel="canonical" href="http://www.helloted.com/page2/">
+    <link rel="canonical" href="http://www.helloted.com/2017/05/26/AFNetWorking_2/">
 
     <link rel="shortcut icon" href="/img/favicon.ico">
    
@@ -81,182 +81,105 @@
 </nav>
 
 
-    <!-- Page Header -->
-<header class="intro-header" style="background-image: url('/img/home-bg.jpg')">
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="site-heading">
-                    <h1>Helloted Blog</h1>
-                    <hr class="small">
-                    <span class="subheading">曹浩之的博客(原创使人进步)</span>
+                <div class="post-heading">
+                    <h1>AFNetworking源码分析(二)</h1>
+                    
+                    <h2 class="subheading">AFHTTPSessionManager与AFURLSessionManager</h2>
+                    
+                    <span class="meta">Posted by Ted on May 26, 2017</span>
                 </div>
             </div>
         </div>
     </div>
 </header>
 
-<!-- Main Content -->
-<div class="container">
-	<div class="row">
-		<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-			
-<div class="post-preview">
-    <a href="/2016/05/23/ios-Thread-2/">
-        <h2 class="post-title"> iOS多线程(二):GCD
-        </h2>
-        
-        <h3 class="post-subtitle">
-            iOS多线程之GCD
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on May 23, 2016</p>
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h3 id="三afhttpsessionmanager">三、AFHTTPSessionManager</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>- (nullable NSURLSessionDataTask *)GET:(NSString *)URLString
+                   parameters:(nullable id)parameters
+                      success:(nullable void (^)(NSURLSessionDataTask *task, id _Nullable responseObject))success
+                      failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError *error))failure
+</code></pre>
 </div>
-<hr>
 
-<div class="post-preview">
-    <a href="/2016/05/22/ios-Thread-1/">
-        <h2 class="post-title"> iOS多线程(一):NSThread
-        </h2>
-        
-        <h3 class="post-subtitle">
-            iOS三种多线程之NSThread
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on May 22, 2016</p>
+<p>除了GET，还有PUT，PATCH，DELETE几个方法的封装，最终都汇总到</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>- (NSURLSessionDataTask *)dataTaskWithHTTPMethod:(NSString *)method
+                                       URLString:(NSString *)URLString
+                                      parameters:(id)parameters
+                                  uploadProgress:(nullable void (^)(NSProgress *uploadProgress)) uploadProgress
+                                downloadProgress:(nullable void (^)(NSProgress *downloadProgress)) downloadProgress
+                                         success:(void (^)(NSURLSessionDataTask *, id))success
+                                         failure:(void (^)(NSURLSessionDataTask *, NSError *))failure
+{
+    NSError *serializationError = nil;
+    NSMutableURLRequest *request = [self.requestSerializer requestWithMethod:method URLString:[[NSURL URLWithString:URLString relativeToURL:self.baseURL] absoluteString] parameters:parameters error:&amp;serializationError];
+    if (serializationError) {
+        if (failure) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wgnu"
+            dispatch_async(self.completionQueue ?: dispatch_get_main_queue(), ^{
+                failure(nil, serializationError);
+            });
+#pragma clang diagnostic pop
+        }
+
+        return nil;
+    }
+
+    __block NSURLSessionDataTask *dataTask = nil;
+    dataTask = [self dataTaskWithRequest:request
+                          uploadProgress:uploadProgress
+                        downloadProgress:downloadProgress
+                       completionHandler:^(NSURLResponse * __unused response, id responseObject, NSError *error) {
+        if (error) {
+            if (failure) {
+                failure(dataTask, error);
+            }
+        } else {
+            if (success) {
+                success(dataTask, responseObject);
+            }
+        }
+    }];
+
+    return dataTask;
+}
+</code></pre>
 </div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2016/03/05/runtime/">
-        <h2 class="post-title"> 神奇的Runtime
-        </h2>
-        
-        <h3 class="post-subtitle">
-            Objective-C中Runtime的那点东西
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on March 5, 2016</p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2015/10/10/network/">
-        <h2 class="post-title"> 网络
-        </h2>
-        
-        <h3 class="post-subtitle">
-            网络模型，基础知识
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on October 10, 2015</p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2015/07/12/Textkit/">
-        <h2 class="post-title"> iOS图文混排
-        </h2>
-        
-        <h3 class="post-subtitle">
-            总结一下iOS图文混排以及涉及到的CoreText,TextKit
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on July 12, 2015</p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2015/02/01/data-3/">
-        <h2 class="post-title"> 数据结构与算法(三):排序算法
-        </h2>
-        
-        <h3 class="post-subtitle">
-            八大常用排序算法
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on February 1, 2015</p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2015/02/01/data-2/">
-        <h2 class="post-title"> 数据结构与算法(二):查找算法
-        </h2>
-        
-        <h3 class="post-subtitle">
-            七大查找算法
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on February 1, 2015</p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2015/02/01/data-1/">
-        <h2 class="post-title"> 数据结构与算法(一):数据结构
-        </h2>
-        
-        <h3 class="post-subtitle">
-            简单地总结一下常用的数据结构
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on February 1, 2015</p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2015/01/25/event/">
-        <h2 class="post-title"> 事件传递、响应者链条
-        </h2>
-        
-        <h3 class="post-subtitle">
-            事件传递以及处理事件的响应者链条
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on January 25, 2015</p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2015/01/22/life/">
-        <h2 class="post-title"> 生命周期
-        </h2>
-        
-        <h3 class="post-subtitle">
-            UIView生命周期、程序的生命周期
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on January 22, 2015</p>
-</div>
-<hr>
 
 
-<!-- Pager -->
 
-<ul class="pager">
-    
-    <li class="previous">
-        <a href="/">&larr; 最新</a>
-    </li>
-    
-    
-</ul>
+                <hr>
 
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2017/05/26/AFNetWorking_1/" data-toggle="tooltip" data-placement="top" title="AFNetworking源码分析(一)">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2017/05/30/hotfix/" data-toggle="tooltip" data-placement="top" title="热修复=Runtime+Javascriptcore">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
 
-		</div>
-	</div>
-</div>
+            </div>
+        </div>
+    </div>
+</article>
 
 <hr>
 
