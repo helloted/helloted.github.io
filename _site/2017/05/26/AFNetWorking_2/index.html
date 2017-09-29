@@ -106,24 +106,48 @@
 
 				<h3 id="三afhttpsessionmanager">三、AFHTTPSessionManager</h3>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (nullable NSURLSessionDataTask *)GET:(NSString *)URLString
-                   parameters:(nullable id)parameters
-                      success:(nullable void (^)(NSURLSessionDataTask *task, id _Nullable responseObject))success
-                      failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError *error))failure
+<p>AFHTTPSessionManager继承自AFURLSessionManager，实际上就是针对HTTP的几种请求进行封装。</p>
+
+<p>下面这个方法是AFHTTPSessionManager开启一个新请求的一个API</p>
+
+<div class="language-c highlighter-rouge"><pre class="highlight"><code><span class="c1">// AFHTTPSessionManager.h
+</span><span class="o">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">NSURLSessionDataTask</span> <span class="o">*</span><span class="p">)</span><span class="n">GET</span><span class="o">:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">URLString</span>
+                   <span class="n">parameters</span><span class="o">:</span><span class="p">(</span><span class="n">nullable</span> <span class="n">id</span><span class="p">)</span><span class="n">parameters</span>
+                      <span class="n">success</span><span class="o">:</span><span class="p">(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">NSURLSessionDataTask</span> <span class="o">*</span><span class="n">task</span><span class="p">,</span> <span class="n">id</span> <span class="n">_Nullable</span> <span class="n">responseObject</span><span class="p">))</span><span class="n">success</span>
+                      <span class="n">failure</span><span class="o">:</span><span class="p">(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">NSURLSessionDataTask</span> <span class="o">*</span> <span class="n">_Nullable</span> <span class="n">task</span><span class="p">,</span> <span class="n">NSError</span> <span class="o">*</span><span class="n">error</span><span class="p">))</span><span class="n">failure</span>
 </code></pre>
 </div>
 
-<p>除了GET，还有PUT，PATCH，DELETE几个方法的封装，最终都汇总到一个方法，</p>
+<p>除了GET，还有PUT，PATCH，DELETE几个方法的封装，请求方式都一样,最终都汇总到一个方法，</p>
 
 <p><img src="/img/AFNetworking/03.png" alt="img" /></p>
 
-<p>返回的dataTask,调用</p>
+<p>AFHTTPSessionManager的封装步骤</p>
+
+<p>1、根据不同的HTTP Method和不同的请求参数序列化方式，从<code class="highlighter-rouge">AFURLRequestSerialization</code>类里封装出一个NSMutableURLRequest对象</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code># AFURLRequestSerialization.h
+- (NSMutableURLRequest *)requestWithMethod:(NSString *)method
+                                 URLString:(NSString *)URLString
+                                parameters:(id)parameters
+                                     error:(NSError *__autoreleasing *)error
+</code></pre>
+</div>
+
+<p>2、NSMutableURLRequest对象，作为一个参数重写父类AFURLSessionManager的方法生成一个NSURLSessionDataTask对象</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>- (NSURLSessionDataTask *)dataTaskWithRequest:(NSURLRequest *)request
+                               uploadProgress:(nullable void (^)(NSProgress *uploadProgress)) uploadProgressBlock
+                             downloadProgress:(nullable void (^)(NSProgress *downloadProgress)) downloadProgressBlock
+                            completionHandler:(nullable void (^)(NSURLResponse *response, id _Nullable responseObject,  NSError * _Nullable error))completionHandler 
+</code></pre>
+</div>
+
+<p>3、NSURLSessionDataTask对象开始网络请求</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>[dataTask resume];
 </code></pre>
 </div>
-
-<p>开始网络请求；</p>
 
 
 
