@@ -9,6 +9,10 @@ header-img: "img/default.jpg"
 
 ### 三、AFHTTPSessionManager
 
+```
+@interface AFHTTPSessionManager : AFURLSessionManager <NSSecureCoding, NSCopying>
+```
+
 >  `AFHTTPSessionManager` is a subclass of `AFURLSessionManager` with convenience methods for making HTTP requests. When a `baseURL` is provided, requests made with the `GET` / `POST` / et al. convenience methods can be made with relative paths.
 >
 >  ## Subclassing Notes
@@ -21,7 +25,7 @@ header-img: "img/default.jpg"
 
 AFHTTPSessionManager继承自AFURLSessionManager，提供了便捷的方法用于HTTP请求，当一个baseURL，根据相对路径，可以很方便地进行GET/POST或者其他请求
 
-鼓励iOS 7之后的开发者在 AFHTTPSessionManager的基础上再进行一次封装，封装一些开发者自己的需要。而针对iOS 6以及更早的得建议使用AFHTTPRequestOperationManager
+建议iOS 7之后的开发者在 AFHTTPSessionManager的基础上再进行一次封装，封装一些开发者自己的需要。而针对iOS 6以及更早的则建议使用AFHTTPRequestOperationManager
 
 注：AFHTTPRequestOperationManager基于开发的NSURLConnection已经在iOS 9被废弃。
 
@@ -46,6 +50,10 @@ AFHTTPSessionManager对象的初始化有两种方式：
     [NSURL URLWithString:@"http://example2.com/" relativeToURL:baseURL]; // http://example2.com/
 ```
 
+![img](/img/AFNetworking/06.png)
+
+初始化的时候对url做了一下格式化处理，请求序列化默认用的是AFHTTPRequestSerializer进行序列化，返回结果的序列化默认用的是AFJSONResponseSerializer
+
 下面这个方法是AFHTTPSessionManager对象开启一个新请求的一个API
 
 ```c
@@ -60,7 +68,7 @@ AFHTTPSessionManager对象的初始化有两种方式：
 
 ![img](/img/AFNetworking/03.png)
 
-AFHTTPSessionManager的封装步骤
+> AFHTTPSessionManager的封装步骤
 
 1、根据不同的HTTP Method和不同的请求参数序列化方式，以及URL合成，从`AFURLRequestSerialization`类里封装出一个NSMutableURLRequest对象
 
@@ -89,5 +97,28 @@ AFHTTPSessionManager的封装步骤
 [dataTask resume];
 ```
 
+### 四、AFURLSessionManager之request请求
 
+```
+@interface AFURLSessionManager : NSObject <NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate, NSURLSessionDownloadDelegate, NSSecureCoding, NSCopying>
+```
 
+AFURLSessionManager是对`NSURLSession`的封装，`NSURLSession`提供了下面三种的API
+
+```
+- (NSURLSessionDataTask *)dataTaskWithRequest:(NSURLRequest *)request;
+- (NSURLSessionUploadTask *)uploadTaskWithStreamedRequest:(NSURLRequest *)request;
+- (NSURLSessionDownloadTask *)downloadTaskWithRequest:(NSURLRequest *)request;
+```
+
+相对的，AFURLSessionManager提供了request请求，上传，下载的三种封装
+
+![img](/img/AFNetworking/04.png)
+
+在生成NSURLSessionDataTask对象时采用了url_session_manager_create_task_safely的方式，查看代码
+
+![img](/img/AFNetworking/05.png)
+
+是因为之前iOS的一个bug，在并发队列中生成NSURLSessionDataTask对象会有问题，所以做了一个处理：
+
+如果版本低，则自己生成一个串行队列。
