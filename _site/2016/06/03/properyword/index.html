@@ -262,6 +262,91 @@
   <li>默认属性</li>
 </ul>
 
+<h3 id="四其他关键字">四、其他关键字</h3>
+
+<h4 id="1static">1、Static</h4>
+
+<blockquote>
+  <p>保证局部变量永远只初始化一次，在程序的运行过程中永远只有一份内存</p>
+</blockquote>
+
+<p>先看一下区别</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>    for (int i = 0; i &lt; 10; i ++) {
+        int a = 0;    
+        a ++;    //打印结果
+        NSLog(@"a=%d",a);
+    }
+    
+    //打印结果是：
+    a = 1
+    a = 1
+    a = 1
+    ...
+</code></pre>
+</div>
+
+<p>加Static关键字</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>    for (int i = 0; i &lt; 10; i ++) {
+        int static a = 0;    
+        a ++;    //打印结果
+        NSLog(@"a=%d",a);
+    }
+    
+    //打印结果是：
+    a = 1
+    a = 2
+    a = 3
+    ...
+</code></pre>
+</div>
+
+<blockquote>
+  <p>使全局变量的作用域仅限于当前文件内部，即当前文件内部才能访问该全局变量。</p>
+</blockquote>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>+ (SingleObject *)sharedSingleton{
+    static SingleObject *_singleObj = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&amp;onceToken, ^{
+        _singleObj = [[self alloc] init];
+    });
+    return _singleObj;
+}
+</code></pre>
+</div>
+
+<h4 id="2const">2、Const</h4>
+
+<p>（1 const用来修饰右边的基本变量或指针变量
+（2 被修饰的变量只读，不能被修改</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>int  const  *p   //  *p只读 ;p变量
+int  * const  p  // *p变量 ; p只读
+const  int   * const p //p和*p都只读
+int  const  * const  p   //p和*p都只读
+</code></pre>
+</div>
+
+<h4 id="3extern">3、extern</h4>
+
+<p>我们可以在.h文件中extern声明一些全局的常量</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>.h声明一些全局常量
+extern NSString * const name;extern NSInteger const count;
+</code></pre>
+</div>
+
+<p>然后在.m文件中去实现</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>.m实现
+NSString *const name = @"helloted";
+NSInteger const count = 6;
+</code></pre>
+</div>
+
+<p>这样，只要导入头文件，就可以全局的使用定义的变量或常量。</p>
 
 
                 <hr>

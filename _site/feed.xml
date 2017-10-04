@@ -1,4 +1,138 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-09-19T15:53:42+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS设计模式</title><link href="http://www.helloted.com/2017/09/08/designPatten/" rel="alternate" type="text/html" title="iOS设计模式" /><published>2017-09-08T20:00:00+08:00</published><updated>2017-09-08T20:00:00+08:00</updated><id>http://www.helloted.com/2017/09/08/designPatten</id><content type="html" xml:base="http://www.helloted.com/2017/09/08/designPatten/">&lt;p&gt;部分代码位置&lt;a href=&quot;https://github.com/helloted/designpattern&quot;&gt;Github-设计模式&lt;/a&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-09-29T16:05:31+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS开发之声音</title><link href="http://www.helloted.com/2017/09/26/voice/" rel="alternate" type="text/html" title="iOS开发之声音" /><published>2017-09-26T20:00:00+08:00</published><updated>2017-09-26T20:00:00+08:00</updated><id>http://www.helloted.com/2017/09/26/voice</id><content type="html" xml:base="http://www.helloted.com/2017/09/26/voice/">&lt;p&gt;部分代码位置&lt;a href=&quot;https://github.com/helloted/voice&quot;&gt;Github-VoiceDemo&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Pre&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;与图片中默认的格式为PNG格式一样，iOS开发中声音的格式也有默认格式，为wav格式，本文中的产生的格式均为wav格式，其他格式则需要转换&lt;/p&gt;
+
+&lt;h3 id=&quot;一声音录制&quot;&gt;一、声音录制&lt;/h3&gt;
+
+&lt;p&gt;要先引入AVFoundation的框架&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#import &amp;lt;AVFoundation/AVFoundation.h&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    self.voiceRecorder = [[AVAudioRecorder alloc]initWithURL:[NSURL fileURLWithPath:self.voicePath] settings:self.recorderSetting error:nil];
+    if ([self.voiceRecorder prepareToRecord]){
+        [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayAndRecord error:nil];
+        [[AVAudioSession sharedInstance] setActive:YES error:nil];
+        
+        //开始录音
+        [self.voiceRecorder record];
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;录制声音主要设置两个参数，Path和Setting&lt;/p&gt;
+
+&lt;p&gt;Path：声音文件录制后存储的路径&lt;/p&gt;
+
+&lt;p&gt;Setting：一个录制参数的字典&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;        _recorderSetting = [[NSDictionary alloc] initWithObjectsAndKeys:
+                            [NSNumber numberWithFloat: 8000.0],AVSampleRateKey, //采样率
+                            [NSNumber numberWithInt: kAudioFormatLinearPCM],AVFormatIDKey,
+                            [NSNumber numberWithInt:16],AVLinearPCMBitDepthKey,//采样位数 默认 16
+                            [NSNumber numberWithInt: 1], AVNumberOfChannelsKey,//通道的数目
+                            nil];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;AVAudioRecorder&lt;/code&gt;在录制的时候可以暂停和恢复&lt;/p&gt;
+
+&lt;p&gt;暂停&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (void)pause; /* pause recording */
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;恢复/开始&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (void)record;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;录制完成&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (void)stop;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;二声音播放&quot;&gt;二、声音播放&lt;/h3&gt;
+
+&lt;p&gt;先引入MediaPlayer&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#import &amp;lt;MediaPlayer/MediaPlayer.h&amp;gt;
+@import AVFoundation;
+@import AudioToolbox;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;设置好录音文件路径就可以播放&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    if (_player) { // 如果正在播放上一段录音，则停止
+        [_player stop];
+    }
+    [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayback error:nil];
+    [[AVAudioSession sharedInstance] setActive:YES error:nil];
+    if (path&amp;amp;&amp;amp; [self fileSizeAtPath:path]) {
+        self.player = [self.player initWithContentsOfURL:[NSURL URLWithString:path] error:nil];
+        self.player.delegate = self;
+        [self.player play];
+        NSLog(@&quot;开始播放&quot;);
+    }else{
+        NSLog(@&quot;no voice&quot;);
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;声音播放也可以暂停恢复和停止&lt;/p&gt;
+
+&lt;p&gt;完整代码位置&lt;a href=&quot;https://github.com/helloted/voice&quot;&gt;Github-VoiceDemo&lt;/a&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">部分代码位置Github-VoiceDemo</summary></entry><entry><title type="html">iOS设计模式</title><link href="http://www.helloted.com/2017/09/08/designPatten/" rel="alternate" type="text/html" title="iOS设计模式" /><published>2017-09-08T20:00:00+08:00</published><updated>2017-09-08T20:00:00+08:00</updated><id>http://www.helloted.com/2017/09/08/designPatten</id><content type="html" xml:base="http://www.helloted.com/2017/09/08/designPatten/">&lt;p&gt;部分代码位置&lt;a href=&quot;https://github.com/helloted/designpattern&quot;&gt;Github-设计模式&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;创建型&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;单件模式&lt;/li&gt;
+  &lt;li&gt;工厂模式&lt;/li&gt;
+  &lt;li&gt;抽象工厂模式&lt;/li&gt;
+  &lt;li&gt;创建者模式&lt;/li&gt;
+  &lt;li&gt;原型模式&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;结构型&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;组合模式&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;外观模式&lt;/li&gt;
+  &lt;li&gt;适配器模式&lt;/li&gt;
+  &lt;li&gt;桥模式&lt;/li&gt;
+  &lt;li&gt;装饰模式&lt;/li&gt;
+  &lt;li&gt;享元模式&lt;/li&gt;
+  &lt;li&gt;代理模式&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;行为型&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;命令模式&lt;/li&gt;
+  &lt;li&gt;观察者模式&lt;/li&gt;
+  &lt;li&gt;策略模式&lt;/li&gt;
+  &lt;li&gt;职责模式&lt;/li&gt;
+  &lt;li&gt;模板模式&lt;/li&gt;
+  &lt;li&gt;中介者模式&lt;/li&gt;
+  &lt;li&gt;解释器模式&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;h4 id=&quot;1单例模式singleton&quot;&gt;1、单例模式(Singleton)&lt;/h4&gt;
 
@@ -219,7 +353,104 @@
 &lt;span class=&quot;k&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CurrentItem&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;@end&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;</content><author><name>Ted</name></author><summary type="html">部分代码位置Github-设计模式</summary></entry><entry><title type="html">热修复=Runtime+Javascriptcore</title><link href="http://www.helloted.com/2017/05/30/hotfix/" rel="alternate" type="text/html" title="热修复=Runtime+Javascriptcore" /><published>2017-05-30T20:00:00+08:00</published><updated>2017-05-30T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/30/hotfix</id><content type="html" xml:base="http://www.helloted.com/2017/05/30/hotfix/">&lt;h3 id=&quot;一运行时&quot;&gt;一、运行时&lt;/h3&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;15访问者模式vistor&quot;&gt;15、访问者模式(Vistor)&lt;/h4&gt;
+
+&lt;p&gt;概念：表示一个作用于表示一个作用于某对象结构中的各个元素的操作，它让我们可以在不改变各元素的类的前提下定义作用于这些元素的新操作&lt;/p&gt;
+
+&lt;p&gt;应用：这用于某个对象结构中的元素数目比较固定（基本不会变动），而对于这些元素的操作可能要变化（增加新操作），vistor提供了在某个状态下，对对象结构中各元素的不同操作的访问接口，对象中使用accept接口接受一个具体的访问者。符合open-close原则。&lt;/p&gt;
+
+&lt;p&gt;访问者模式适用于数据结构相对稳定的系统，它把数据结构和作用于结构上的操作之间的耦合解开，使得操作集合可以相对自由地演化。&lt;/p&gt;
+
+&lt;p&gt;访问者模式的优点就是增加新的操作很容易，因为增加新的操作就意味着增加一个新的访问者。访问者模式将有关的行为集中到一个访问者对象中。缺点是是增加新的数据结构变得复杂&lt;/p&gt;
+
+&lt;h4 id=&quot;16装饰者模式decorator&quot;&gt;16、装饰者模式(Decorator)&lt;/h4&gt;
+
+&lt;p&gt;概念：是面向对象编程领域中，一种动态地往一个类中添加新的行为的设计模式。就功能而言，修饰模式相比生成子类更为灵活，这样可以给某个对象而不是整个类添加一些功能&lt;/p&gt;
+
+&lt;p&gt;应用：Category,Delegate&lt;/p&gt;
+
+&lt;h4 id=&quot;17责任链模式chain-of-responsibility&quot;&gt;17、责任链模式(Chain of Responsibility)&lt;/h4&gt;
+
+&lt;p&gt;概念：使多个对象都有机会处理请求，从而避免请求的发送者和接收者之间发生耦合。此模式将这些对象连成一条链，并沿着这条链传递请求，直到有一个对象处理它为止。&lt;/p&gt;
+
+&lt;p&gt;应用：响应者链条&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;优点：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;降低耦合度。
+可简化对象的相互连接。
+增强给对象指派职责的灵活性。
+增加新的请求处理类很方便。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;缺点：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;不能保证请求一定被接收。
+系统性能将受到一定影响，而且在进行代码调试时不太方便（可能会造成循环调用）。&lt;/p&gt;
+
+&lt;h4 id=&quot;18模板方法模式template-method&quot;&gt;18、模板方法模式(Template Method)&lt;/h4&gt;
+
+&lt;p&gt;概念：定义一个操作中的算法的骨架，而将一些步骤延迟到子类中。模板方法使得子类可以不改变一个算法的结构即可重定义该算法的某些特定步骤。核心思想就是通过把不变的行为搬移到超类，去除子类中的重复代码来体现它的优势。其实，模板方法模式就是提供了一个很好的代码复用平台。定义一个父类，有父类定义接口规范，然后不同的行为在子类中实现。这样一方面提高了代码的复用性，另一方面还可以利用面向对象的多态性，在运行时选择一种具体子类&lt;/p&gt;
+
+&lt;p&gt;应用：&lt;code class=&quot;highlighter-rouge&quot;&gt;-(void)drawRect:(CGRect)rect&lt;/code&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;模板模式和策略模式的不同点：&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;（1）策略模式的应用场景:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;多个类的区别只是在于行为不同。&lt;/li&gt;
+  &lt;li&gt;你需要行为的算法做很多变动。&lt;/li&gt;
+  &lt;li&gt;客户端不知道算法使用的数据。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;（2）模板模式的使用场景：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;相同的算法放在一个类中（父类）将算法变化的部分放在子类中。&lt;/li&gt;
+  &lt;li&gt;子类公共的算法放在一个公共类中，避免代码重复。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;19策略模式strategy&quot;&gt;19、策略模式(Strategy)&lt;/h4&gt;
+
+&lt;p&gt;概念：定义了一系列的算法，并将每一个算法封装起来，而且使它们还可以相互替换。策略模式让算法独立于使用它的客户而独立变化。策略模式是对算法的包装，是把使用算法的责任和算法本身分割开来，委派给不同的对象管理。看到策略模式的时候有的时候跟简单工厂相比较，其实有很大的迷惑性，都是继承多态感觉没有太大的差异性，简单工厂模式是对对象的管理，策略模式是对行为的封装。&lt;/p&gt;
+
+&lt;p&gt;应用：&lt;a href=&quot;https://github.com/helloted/designpattern/tree/master/Designpattern/DesignPattern/Strategy&quot;&gt;策略模式demo&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;优点：
+1、 策略模式提供了管理相关的算法族的办法。策略类的等级结构定义了一个算法或行为族。恰当使用继承可以把公共的代码转移到父类里面，从而避免重复的代码。
+2、 策略模式提供了可以替换继承关系的办法。继承可以处理多种算法或行为。如果不是用策略模式，那么使用算法或行为的环境类就可能会有一些子类，每一个子类提供一个不同的算法或行为。但是，这样一来算法或行为的使用者就和算法或行为本身混在一起。决定使用哪一种算法或采取哪一种行为的逻辑就和算法或行为的逻辑混合在一起，从而不可能再独立演化。继承使得动态改变算法或行为变得不可能。
+3、 使用策略模式可以避免使用多重条件转移语句。多重转移语句不易维护，它把采取哪一种算法或采取哪一种行为的逻辑与算法或行为的逻辑混合在一起，统统列在一个多重转移语句里面，比使用继承的办法还要原始和落后。
+缺点：
+1、客户端必须知道所有的策略类，并自行决定使用哪一个策略类。这就意味着客户端必须理解这些算法的区别，以便适时选择恰当的算法类。换言之，策略模式只适用于客户端知道所有的算法或行为的情况。
+2、 策略模式造成很多的策略类，每个具体策略类都会产生一个新类。有时候可以通过把依赖于环境的状态保存到客户端里面，而将策略类设计成可共享的，这样策略类实例可以被不同客户端使用。换言之，可以使用享元模式来减少对象的数量。&lt;/p&gt;
+
+&lt;h4 id=&quot;20命令模式command&quot;&gt;20、命令模式(Command)&lt;/h4&gt;
+
+&lt;p&gt;概念：将请求封装成对象，以便使用不同的请求、日志、队列等来参数化其他对象。命令模式也支持撤销操作。这个封装请求比原始的请求要灵活并且可以在对象之前被传递，存储，动态修改或者放进队列里面。一般在想让应用程序支持撤销与恢复的情况下使用这一模式。&lt;/p&gt;
+
+&lt;p&gt;应用：Target-Action机制和NSInvocation&lt;/p&gt;
+
+&lt;h4 id=&quot;21享元模式flyweight&quot;&gt;21、享元模式(Flyweight)&lt;/h4&gt;
+
+&lt;p&gt;概念：复用我们内存中已存在的对象，降低系统创建对象实例的性能消耗。&lt;/p&gt;
+
+&lt;p&gt;应用：UITableViewCell复用&lt;/p&gt;
+
+&lt;h4 id=&quot;22代理模式proxy&quot;&gt;22、代理模式(Proxy)&lt;/h4&gt;
+
+&lt;p&gt;概念：为其他对象提供一种代理以控制对这个对象的访问。&lt;/p&gt;
+
+&lt;p&gt;应用：Delegate&lt;/p&gt;
+
+&lt;h4 id=&quot;23备忘录模式memento&quot;&gt;23、备忘录模式(Memento)&lt;/h4&gt;
+
+&lt;p&gt;概念：在不破坏封装的前提下，捕获一个对象的内部状态，以后可以将该对象回复到原先保存的状态&lt;/p&gt;
+
+&lt;p&gt;应用：对象序列化保存&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">部分代码位置Github-设计模式</summary></entry><entry><title type="html">热修复=Runtime+Javascriptcore</title><link href="http://www.helloted.com/2017/05/30/hotfix/" rel="alternate" type="text/html" title="热修复=Runtime+Javascriptcore" /><published>2017-05-30T20:00:00+08:00</published><updated>2017-05-30T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/30/hotfix</id><content type="html" xml:base="http://www.helloted.com/2017/05/30/hotfix/">&lt;h3 id=&quot;一运行时&quot;&gt;一、运行时&lt;/h3&gt;
 
 &lt;p&gt;热修复的基本原理就是Runtime运行时的方法替换，主要是下列几个方法&lt;/p&gt;
 
@@ -262,7 +493,155 @@
 
 &lt;p&gt;Javascriptcore是一个iOS原生框架，用于javascript与Objecive C语言进行相互调用，而我们热修改需要用到的就是javascript可以调用OC方法&lt;/p&gt;
 
-&lt;p&gt;三、热修复&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、运行时</summary></entry><entry><title type="html">iOS之Runloop(3):应用</title><link href="http://www.helloted.com/2017/04/16/Runloop_3/" rel="alternate" type="text/html" title="iOS之Runloop(3):应用" /><published>2017-04-16T20:00:00+08:00</published><updated>2017-04-16T20:00:00+08:00</updated><id>http://www.helloted.com/2017/04/16/Runloop_3</id><content type="html" xml:base="http://www.helloted.com/2017/04/16/Runloop_3/">&lt;p&gt;其他两篇关于Runloop:&lt;/p&gt;
+&lt;p&gt;三、热修复&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、运行时</summary></entry><entry><title type="html">AFNetworking源码分析(二)</title><link href="http://www.helloted.com/2017/05/26/AFNetWorking_2/" rel="alternate" type="text/html" title="AFNetworking源码分析(二)" /><published>2017-05-26T20:00:00+08:00</published><updated>2017-05-26T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/26/AFNetWorking_2</id><content type="html" xml:base="http://www.helloted.com/2017/05/26/AFNetWorking_2/">&lt;h3 id=&quot;三afhttpsessionmanager&quot;&gt;三、AFHTTPSessionManager&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@interface AFHTTPSessionManager : AFURLSessionManager &amp;lt;NSSecureCoding, NSCopying&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;AFHTTPSessionManager&lt;/code&gt; is a subclass of &lt;code class=&quot;highlighter-rouge&quot;&gt;AFURLSessionManager&lt;/code&gt; with convenience methods for making HTTP requests. When a &lt;code class=&quot;highlighter-rouge&quot;&gt;baseURL&lt;/code&gt; is provided, requests made with the &lt;code class=&quot;highlighter-rouge&quot;&gt;GET&lt;/code&gt; / &lt;code class=&quot;highlighter-rouge&quot;&gt;POST&lt;/code&gt; / et al. convenience methods can be made with relative paths.&lt;/p&gt;
+
+  &lt;p&gt;## Subclassing Notes&lt;/p&gt;
+
+  &lt;p&gt;Developers targeting iOS 7 or Mac OS X 10.9 or later that deal extensively with a web service are encouraged to subclass &lt;code class=&quot;highlighter-rouge&quot;&gt;AFHTTPSessionManager&lt;/code&gt;, providing a class method that returns a shared singleton object on which authentication and other configuration can be shared across the application.&lt;/p&gt;
+
+  &lt;p&gt;For developers targeting iOS 6 or Mac OS X 10.8 or earlier, &lt;code class=&quot;highlighter-rouge&quot;&gt;AFHTTPRequestOperationManager&lt;/code&gt; may be used to similar effect.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;文档翻译：&lt;/p&gt;
+
+&lt;p&gt;AFHTTPSessionManager继承自AFURLSessionManager，提供了便捷的方法用于HTTP请求，当一个baseURL，根据相对路径，可以很方便地进行GET/POST或者其他请求&lt;/p&gt;
+
+&lt;p&gt;建议iOS 7之后的开发者在 AFHTTPSessionManager的基础上再进行一次封装，封装一些开发者自己的需要。而针对iOS 6以及更早的则建议使用AFHTTPRequestOperationManager&lt;/p&gt;
+
+&lt;p&gt;注：AFHTTPRequestOperationManager基于开发的NSURLConnection已经在iOS 9被废弃。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;初始化&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;AFHTTPSessionManager对象的初始化有两种方式：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;+ (instancetype)manager;
+- (instancetype)initWithBaseURL:(nullable NSURL *)url;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;两种方式的区别在于后一种初始化方式会让你传入一个BaseURL，而前一种类方法则默认BaseURL为nil，BaseURL在生成全URL时有作用，AFHTTPSessionManager文档里也提供了说明。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    NSURL *baseURL = [NSURL URLWithString:@&quot;http://example.com/v1/&quot;];
+    [NSURL URLWithString:@&quot;foo&quot; relativeToURL:baseURL];                  // http://example.com/v1/foo
+    [NSURL URLWithString:@&quot;foo?bar=baz&quot; relativeToURL:baseURL];          // http://example.com/v1/foo?bar=baz
+    [NSURL URLWithString:@&quot;/foo&quot; relativeToURL:baseURL];                 // http://example.com/foo
+    [NSURL URLWithString:@&quot;foo/&quot; relativeToURL:baseURL];                 // http://example.com/v1/foo
+    [NSURL URLWithString:@&quot;/foo/&quot; relativeToURL:baseURL];                // http://example.com/foo/
+    [NSURL URLWithString:@&quot;http://example2.com/&quot; relativeToURL:baseURL]; // http://example2.com/
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/AFNetworking/06.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;初始化的时候对url做了一下格式化处理，请求序列化默认用的是AFHTTPRequestSerializer进行序列化，返回结果的序列化默认用的是AFJSONResponseSerializer&lt;/p&gt;
+
+&lt;p&gt;下面这个方法是AFHTTPSessionManager对象开启一个新请求的一个API&lt;/p&gt;
+
+&lt;div class=&quot;language-c highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// AFHTTPSessionManager.h
+&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nullable&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NSURLSessionDataTask&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GET&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;URLString&lt;/span&gt;
+                   &lt;span class=&quot;n&quot;&gt;parameters&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nullable&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parameters&lt;/span&gt;
+                      &lt;span class=&quot;n&quot;&gt;success&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nullable&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSURLSessionDataTask&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;task&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_Nullable&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;responseObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;success&lt;/span&gt;
+                      &lt;span class=&quot;n&quot;&gt;failure&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nullable&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSURLSessionDataTask&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_Nullable&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;task&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NSError&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;failure&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;除了GET，还有PUT，PATCH，DELETE几个方法的封装，请求方式都一样,最终都汇总到一个方法，&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/AFNetworking/03.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;AFHTTPSessionManager的封装步骤&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;1、根据不同的HTTP Method和不同的请求参数序列化方式，以及URL合成，从&lt;code class=&quot;highlighter-rouge&quot;&gt;AFURLRequestSerialization&lt;/code&gt;类里封装出一个NSMutableURLRequest对象&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# AFURLRequestSerialization.h
+- (NSMutableURLRequest *)requestWithMethod:(NSString *)method
+                                 URLString:(NSString *)URLString
+                                parameters:(id)parameters
+                                     error:(NSError *__autoreleasing *)error
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;2、NSMutableURLRequest对象，作为一个参数重写父类&lt;code class=&quot;highlighter-rouge&quot;&gt;AFURLSessionManager&lt;/code&gt;的方法生成一个NSURLSessionDataTask对象&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// AFURLSessionManager.h
+- (NSURLSessionDataTask *)dataTaskWithRequest:(NSURLRequest *)request
+                               uploadProgress:(nullable void (^)(NSProgress *uploadProgress)) uploadProgressBlock
+                             downloadProgress:(nullable void (^)(NSProgress *downloadProgress)) downloadProgressBlock
+                            completionHandler:(nullable void (^)(NSURLResponse *response, id _Nullable responseObject,  NSError * _Nullable error))completionHandler 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;3、NSURLSessionDataTask对象开始网络请求&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// AFHTTPSessionManager.h
+[dataTask resume];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;四afurlsessionmanager之request请求&quot;&gt;四、AFURLSessionManager之request请求&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@interface AFURLSessionManager : NSObject &amp;lt;NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate, NSURLSessionDownloadDelegate, NSSecureCoding, NSCopying&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;AFURLSessionManager是对&lt;code class=&quot;highlighter-rouge&quot;&gt;NSURLSession&lt;/code&gt;的封装，&lt;code class=&quot;highlighter-rouge&quot;&gt;NSURLSession&lt;/code&gt;提供了下面三种的API&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (NSURLSessionDataTask *)dataTaskWithRequest:(NSURLRequest *)request;
+- (NSURLSessionUploadTask *)uploadTaskWithStreamedRequest:(NSURLRequest *)request;
+- (NSURLSessionDownloadTask *)downloadTaskWithRequest:(NSURLRequest *)request;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;相对的，AFURLSessionManager提供了request请求，上传，下载的三种封装&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/AFNetworking/04.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;在生成NSURLSessionDataTask对象时采用了url_session_manager_create_task_safely的方式，查看代码&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/AFNetworking/05.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;是因为之前iOS的一个bug，在并发队列中生成NSURLSessionDataTask对象会有问题，所以做了一个处理：&lt;/p&gt;
+
+&lt;p&gt;如果版本低，则自己生成一个串行队列。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">三、AFHTTPSessionManager</summary></entry><entry><title type="html">AFNetworking源码分析(一)</title><link href="http://www.helloted.com/2017/05/26/AFNetWorking_1/" rel="alternate" type="text/html" title="AFNetworking源码分析(一)" /><published>2017-05-26T20:00:00+08:00</published><updated>2017-05-26T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/26/AFNetWorking_1</id><content type="html" xml:base="http://www.helloted.com/2017/05/26/AFNetWorking_1/">&lt;h3 id=&quot;0前言&quot;&gt;0、前言&lt;/h3&gt;
+
+&lt;p&gt;AFNetworking这个框架是iOS必备的一个第三方框架，其高效简洁的API使其成为最好的iOS网络请求框架，也让iOS开发的网络请求轻松许多，&lt;a href=&quot;https://github.com/AFNetworking/AFNetworking&quot;&gt;AFNetworking-Github&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;本文分析基于版本是3.1.0&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pod 'AFNetworking', '~&amp;gt; 3.1.0'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;因为iOS9开始NSURLConnection这个类已经被废弃，所以框架的主要类也由&lt;code class=&quot;highlighter-rouge&quot;&gt;AFHTTPRequestOperationManager&lt;/code&gt;变为&lt;code class=&quot;highlighter-rouge&quot;&gt;AFHTTPSessionManager&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;一架构分析&quot;&gt;一、架构分析&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/AFNetworking/01.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;从图中就可以看出，整体分为以下几个部分&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;NSURLSession：网络请求的主要类，&lt;code class=&quot;highlighter-rouge&quot;&gt;AFURLSessionManager&lt;/code&gt;封装的是&lt;code class=&quot;highlighter-rouge&quot;&gt;NSURLSession&lt;/code&gt;,而&lt;code class=&quot;highlighter-rouge&quot;&gt;AFHTTPSessionManager&lt;/code&gt;是其子类，用于HTTP请求做了一些优化&lt;/li&gt;
+  &lt;li&gt;Reachability：网络状况，&lt;code class=&quot;highlighter-rouge&quot;&gt;AFNetworkReachabilityManager&lt;/code&gt;是用来监测当前网络状况的一个类&lt;/li&gt;
+  &lt;li&gt;Security：网络安全，HTTPS请求就要用到&lt;code class=&quot;highlighter-rouge&quot;&gt;AFSecurityPolicy&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Serialization：序列化，&lt;code class=&quot;highlighter-rouge&quot;&gt;AFURLRequestSerialization&lt;/code&gt;是请求前的序列化，&lt;code class=&quot;highlighter-rouge&quot;&gt;AFURLResponseSerialization&lt;/code&gt;是请求完成后对结果的序列化&lt;/li&gt;
+  &lt;li&gt;UIKit：里面则是一些UIkit的拓展Category&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;所以整个AFNetworking网络请求的过程就是：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/AFNetworking/02.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">0、前言</summary></entry><entry><title type="html">iOS之Runloop(3):应用</title><link href="http://www.helloted.com/2017/04/16/Runloop_3/" rel="alternate" type="text/html" title="iOS之Runloop(3):应用" /><published>2017-04-16T20:00:00+08:00</published><updated>2017-04-16T20:00:00+08:00</updated><id>http://www.helloted.com/2017/04/16/Runloop_3</id><content type="html" xml:base="http://www.helloted.com/2017/04/16/Runloop_3/">&lt;p&gt;其他两篇关于Runloop:&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;http://www.helloted.com/2017/04/10/Runloop_1/&quot;&gt;iOS之Runloop(1):基础&lt;/a&gt;&lt;/p&gt;
 
@@ -1565,654 +1944,4 @@ imageView.image = snapshot;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;这样就能保证子线程的Context与主线程的context内容修改可以同步&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、CoreData结构</summary></entry><entry><title type="html">OC对象模型</title><link href="http://www.helloted.com/2016/10/15/objectmodel/" rel="alternate" type="text/html" title="OC对象模型" /><published>2016-10-15T20:00:00+08:00</published><updated>2016-10-15T20:00:00+08:00</updated><id>http://www.helloted.com/2016/10/15/objectmodel</id><content type="html" xml:base="http://www.helloted.com/2016/10/15/objectmodel/">&lt;p&gt;先看OC关于NSObject的源码&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://opensource.apple.com/source/objc4/objc4-532.2/runtime/NSObject.mm&quot;&gt;NSObject源码&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;一alloc与init&quot;&gt;一、alloc与init&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;NSObject *obj = [NSObject alloc]init];
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;alloc与init发生了什么呢？&lt;/p&gt;
-
-&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;alloc&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_objc_rootAlloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_objc_rootAlloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Class&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cls&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;#if 0  &amp;amp;&amp;amp;  __OBJC2__
-    // Skip over the +allocWithZone: call if the class doesn't override it.
-    // fixme not - this breaks ObjectAlloc
-    if (! ((class_t *)cls)-&amp;gt;isa-&amp;gt;hasCustomAWZ()) {
-        return class_createInstance(cls, 0);
-    }
-#endif
-&lt;/span&gt;    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cls&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;allocWithZone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;class_createInstance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Class&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cls&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;size_t&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;extraBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_class_createInstanceFromZone&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cls&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;extraBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_class_createInstanceFromZone&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Class&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cls&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;size_t&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;extraBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zone&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;bool&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cxxConstruct&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;size_t&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;outAllocatedSize&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;size_t&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cls&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;instanceSize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;extraBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-
-    &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;calloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;initInstanceIsa&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cls&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;hasCxxDtor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;可以看出，alloc类方法是开辟了一块内存，生成了一个实例对象，并且对实例对象进行了初始化&lt;/p&gt;
-
-&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;init&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_objc_rootInit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_objc_rootInit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// In practice, it will be hard to rely on this function.
-&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;// Many classes do not properly chain -init calls.
-&lt;/span&gt;    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;init方法只是返回了该实例对象&lt;/p&gt;
-
-&lt;h3 id=&quot;二nsobject与class&quot;&gt;二、NSObject与Class&lt;/h3&gt;
-
-&lt;h4 id=&quot;1对象&quot;&gt;1、对象&lt;/h4&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;NSObject&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;@interface NSObject &amp;lt;NSObject&amp;gt;
-{
-    Class isa;
-}
-@end
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;每一个NSObject里都有一个Class（isa指针），表明这个类的类别Class&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;id类型&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;typedef struct objc_object { 
-    Class isa; 
-} *id; 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;从上面可以看出id类型里面也有一个Class&lt;/p&gt;
-
-&lt;h4 id=&quot;2class&quot;&gt;2、Class&lt;/h4&gt;
-
-&lt;p&gt;Class的定义&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;typedef struct objc_class *Class;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;objc_class&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;struct objc_class {
-    Class isa;
-
-#if !__OBJC2__
-    Class super_class                                        OBJC2_UNAVAILABLE;
-    const char *name                                         OBJC2_UNAVAILABLE;
-    long version                                             OBJC2_UNAVAILABLE;
-    long info                                                OBJC2_UNAVAILABLE;
-    long instance_size                                       OBJC2_UNAVAILABLE;
-    struct objc_ivar_list *ivars                             OBJC2_UNAVAILABLE;
-    struct objc_method_list **methodLists                    OBJC2_UNAVAILABLE;
-    struct objc_cache *cache                                 OBJC2_UNAVAILABLE;
-    struct objc_protocol_list *protocols                     OBJC2_UNAVAILABLE;
-#endif
-} OBJC2_UNAVAILABLE;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;isa指针指向哪里？&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://ojx0q9o9x.bkt.clouddn.com/Runtime_00.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;从图上的虚线箭头就能看出，实例对象的isa指向类，类的isa指向元类(meta)，元类的isa指向Root元类&lt;/p&gt;
-
-&lt;h3 id=&quot;三iskindofclass与ismemberofclass&quot;&gt;三、isKindOfClass与isMemberOfClass&lt;/h3&gt;
-
-&lt;h4 id=&quot;1获取class&quot;&gt;1、获取class&lt;/h4&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;+ (Class)class {
-    return self;
-}
-
-- (Class)class {
-    return object_getClass(self);
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;static inline Class _object_getClass(id obj)
-{
-#if SUPPORT_TAGGED_POINTERS
-    if (OBJC_IS_TAGGED_PTR(obj)) {
-        uint8_t slotNumber = ((uint8_t) (uint64_t) obj) &amp;amp; 0x0F;
-        Class isa = _objc_tagged_isa_table[slotNumber];
-        return isa;
-    }
-#endif
-    if (obj) return obj-&amp;gt;isa;
-    else return Nil;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;从上面可以看到，class类方法和实例方法都是获取当前Class也就是isa指针&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;实例方法调用时，通过对象的 isa 在类中获取方法的实现&lt;/li&gt;
-  &lt;li&gt;类方法调用时，通过类的 isa 在元类中获取方法的实现&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;2ismemberofclass&quot;&gt;2、isMemberOfClass&lt;/h4&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;isMemberOfClass: Returns a Boolean value that indicates whether the receiver is an instance of a given class.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;+ (BOOL)isMemberOfClass:(Class)cls {
-    return object_getClass((id)self) == cls;
-}
-
-- (BOOL)isMemberOfClass:(Class)cls {
-    return [self class] == cls;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;可以看出，isMemberOfClass是判断当前实例/类是否是那个类型&lt;/p&gt;
-
-&lt;h4 id=&quot;3iskindofclass&quot;&gt;3、isKindOfClass&lt;/h4&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;isKindOfClass: Returns a Boolean value that indicates whether the receiver is an instance of given class or an instance of any class that inherits from that class.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;+ (BOOL)isKindOfClass:(Class)cls {
-    for (Class tcls = object_getClass((id)self); tcls; tcls = class_getSuperclass(tcls)) {
-        if (tcls == cls) return YES;
-    }
-    return NO;
-}
-
-- (BOOL)isKindOfClass:(Class)cls {
-    for (Class tcls = [self class]; tcls; tcls = class_getSuperclass(tcls)) {
-        if (tcls == cls) return YES;
-    }
-    return NO;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;isKindOfClass是用来判断实例/类是否是那个类型，或者继承自那个类。&lt;/p&gt;
-
-&lt;h3 id=&quot;四kvo与kvc&quot;&gt;四、KVO与KVC&lt;/h3&gt;
-
-&lt;h4 id=&quot;1kvokey-value-observing&quot;&gt;1、KVO(Key-Value Observing)&lt;/h4&gt;
-
-&lt;p&gt;先看看官方文档&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Key-Value Observing Implementation Details
-Automatic key-value observing is implemented using a technique called isa-swizzling.
-The isa pointer, as the name suggests, points to the object’s class which maintains a dispatch table. This dispatch table essentially contains pointers to the methods the class implements, among other data.
-When an observer is registered for an attribute of an object the isa pointer of the observed object is modified, pointing to an intermediate class rather than at the true class. As a result the value of the isa pointer does not necessarily reflect the actual class of the instance.
-You should never rely on the isa pointer to determine class membership. Instead, you should use the class method to determine the class of an object instance.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;KVO运用了一个isa-swizzling的机制，runtime还有一个method-swizzling的机制，称为’黑魔法’。&lt;/p&gt;
-
-&lt;p&gt;当某个类的对象第一次被观察时，系统就会在运行期动态地创建该类的一个&lt;em&gt;派生类&lt;/em&gt;，在这个&lt;em&gt;派生类&lt;/em&gt;中重写基类中任何被观察属性的 setter 方法。然后在派生类的setter方法里实现通知机制。&lt;/p&gt;
-
-&lt;p&gt;同时派生类还重写了 class 方法以“欺骗”外部调用者它就是起初的那个类。然后系统将这个对象的 isa 指针指向这个新诞生的派生类，因此这个对象就成为该派生类的对象了，因而在该对象上对 setter 的调用就会调用重写的 setter，从而激活键值通知机制。此外，派生类还重写了 dealloc 方法来释放资源。&lt;/p&gt;
-
-&lt;p&gt;当没有observer观察任何一个property时，删除动态创建的子类。&lt;/p&gt;
-
-&lt;p&gt;简单而言：实例对象在被观察时，生成派生类，派生类在setter方法中valuewillchange方法和valuesdidchanged方法里发出通知，并且通过isa-swizzling，从而使实例对象成为派生类的对象，所以实例对象在setter属性时可以产生通知。达到观察的目的。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_1/04.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;2kvckey-value-coding&quot;&gt;2、KVC(Key Value Coding)&lt;/h4&gt;
-
-&lt;p&gt;KVC是是一种可以通过字符串的名字（key）来访问类属性的机制。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;修改值&lt;/strong&gt;
-setValue:forKey:
-setValue:forKeyPath:
-setValue:forUnderfinedKey:
-setNilValueForKey: 对非类对象属性设置nil时调用，默认抛出异常。&lt;/p&gt;
-
-&lt;p&gt;1、首先搜索setKey:方法。（key指成员变量名，首字母大写）&lt;/p&gt;
-
-&lt;p&gt;2、上面的setter方法没找到，如果类方法accessInstanceVariablesDirectly返回YES。那么按 _key，_isKey，key，iskey的顺序搜索成员名。（NSKeyValueCodingCatogery中实现的类方法，默认实现为返回YES）&lt;/p&gt;
-
-&lt;p&gt;3、如果没有找到成员变量，调用setValue:forUnderfinedKey:&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;获取值&lt;/strong&gt;
-valueForKey: 传入NSString属性的名字。
-valueForKeyPath: 属性的路径，xx.xx
-valueForUndefinedKey 默认实现是抛出异常，可重写这个函数做错误处理&lt;/p&gt;
-
-&lt;p&gt;1、首先按getKey，key，isKey的顺序查找getter方法，找到直接调用。如果是BOOL、int等内建值类型，会做NSNumber的转换。&lt;/p&gt;
-
-&lt;p&gt;2、上面的getter没找到，查找countOfKey、objectInKeyAtindex、KeyAtindexes格式的方法。如果countOfKey和另外两个方法中的一个找到，那么就会返回一个可以响应NSArray所有方法的代理集合的NSArray消息方法。&lt;/p&gt;
-
-&lt;p&gt;3、还没找到，查找countOfKey、enumeratorOfKey、memberOfKey格式的方法。如果这三个方法都找到，那么就返回一个可以响应NSSet所有方法的代理集合。
-4、还是没找到，如果类方法accessInstanceVariablesDirectly返回YES。那么按 _key，_isKey，key，iskey的顺序搜索成员名。&lt;/p&gt;
-
-&lt;p&gt;5、再没找到，调用valueForUndefinedKey。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;原理&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;isa指针（is kind of 的意思）指向维护分发表的对象的类，该分发表实际上包含了指向实现类中的方法的指针和其他数据。比如说如下的一行KVC代码：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[site setValue:@&quot;sitename&quot; forKey:@&quot;name&quot;];
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;//会被编译器处理成&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SEL sel = sel_get_uid(setValue:forKey);
-IMP method = objc_msg_loopup(site-&amp;gt;isa,sel);
-method(site,sel,@&quot;sitename&quot;,@&quot;name&quot;);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;每个类都有一张方法表，是一个hash表，值是还书指针IMP，SEL的名称就是查表时所用的键。&lt;/p&gt;
-
-&lt;p&gt;SEL数据类型：查找方法表时所用的键。定义成char*，实质上可以理解成int值。&lt;/p&gt;
-
-&lt;p&gt;IMP数据类型：他其实就是一个编译器内部实现时候的函数指针。当Objective-C编译器去处理实现一个方法的时候，就会指向一个IMP对象，这个对象是C语言表述的类型。&lt;/p&gt;
-
-&lt;h3 id=&quot;五self与super&quot;&gt;五、Self与Super&lt;/h3&gt;
-
-&lt;h4 id=&quot;1self-class与super-class&quot;&gt;1、[self class]与[super class]&lt;/h4&gt;
-
-&lt;p&gt;有一个有意思的题目，有一个Son类继承自Father类&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;    @implementation Son : Father
-    - (id)init
-    {
-        self = [super init];
-        if (self) {
-            NSLog(@&quot;%@&quot;, NSStringFromClass([self class]));
-            NSLog(@&quot;%@&quot;, NSStringFromClass([super class]));
-        }
-        return self;
-    }
-    @end
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;最终结果都是Son，为什么呢？&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;&lt;strong&gt;官方文档中self相关解释&lt;/strong&gt;
-Whenever you’re writing a method implementation, you have access to an important hidden value, self. Conceptually, self is a way to refer to “the object that’s received this message.” It’s apointer, just like the greeting value above, and can be used to call a method on the current receiving object.
-&lt;strong&gt;super解释&lt;/strong&gt;
-There’s anotherimportant keyword available to you in Objective-C, called super. Sending a message to super is a way to call through to a method implementation defined by a superclass further up the inheritance chain. The most common use of super is when overriding a method.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;简而言之是self调用自己方法，super调用父类方法&lt;/p&gt;
-
-&lt;p&gt;但是底层原理呢？我们知道，OC的消息转发机制，当self时，方法转换成&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;id objc_msgSend(id receiver, SEL theSelector, ...)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;​	objc_msgSend sends a message with a simple return value to an instance of a class&lt;/p&gt;
-
-&lt;p&gt;而super关键字调用方法则转换成&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;id objc_msgSendSuper(struct objc_super *super, SEL op, ...)
-
-struct objc_super {
-  id receiver;
-  Class superClass;
-};
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;​	objc_msgSendSuper sends a message with a simple return value to the superclass of an instance of a class.&lt;/p&gt;
-
-&lt;p&gt;可以看到objc_msgSendSuper的receiver还是son。&lt;/p&gt;
-
-&lt;p&gt;objc_msgSend与objc_msgSendSuperd都去查找class的Seletor，一直查到NSObject类才查到class方法&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (Class)class {
-    return object_getClass(self);
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;也就是说，最终都是调用的receiver也就是son，获取到了Class.&lt;/p&gt;
-
-&lt;h4 id=&quot;2self--super-init&quot;&gt;2、self = [super init]&lt;/h4&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;If a class does implement an initializer, it should invoke an initializer of its superclass as the first step. This requirement ensures a series of initializations for an object down the inheritance chain, starting with the root object. The &lt;code class=&quot;highlighter-rouge&quot;&gt;NSObject&lt;/code&gt; class declares the &lt;code class=&quot;highlighter-rouge&quot;&gt;init&lt;/code&gt; method as the default object initializer, so it is always invoked last but returns first.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_1/05.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;所以标准的初始化代码&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (id)init {
-    if (self = [super init]) { // equivalent to &quot;self does not equal nil&quot;
-        self ...
-    }
-    return self;
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h3 id=&quot;六属性与变量property--instance-variable&quot;&gt;六、属性与变量(property &amp;amp; instance variable)&lt;/h3&gt;
-
-&lt;p&gt;在ios5以后我们使用@property来声明属性变量，编译器会自动(@syntheszie var = _var)为我们生成对应的一个以下 划线加属性名 命名的实例变量，还有其对应的getter、setter&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;@property&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;copy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nonatomic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;var&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
- 
-&lt;span class=&quot;o&quot;&gt;------------------&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;等效分割线&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;------------------&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_var&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
- 
-&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_var&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
- 
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;setVar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;_var&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;var&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;这样一来我们就可以看出通过self.var和_var访问实例变量的区别，在.m文件中可以通过_var来访问实例变量，但是getter、setter不会被调用，而来自外部的访问，需要通过getter、setter。&lt;/p&gt;
-
-&lt;p&gt;注意，使用readonly关键字修饰后，编译器只会为我们生成getter。&lt;/p&gt;
-
-&lt;p&gt;假如一个属性被关键字@dynamic所修饰，则编译器不会自动生成其对应的getter、setter，然而如果开发者没有自行创造getter、setter，将不会在编译期提醒，运行时触发则会发生crash。
-顺便一提@dynamic还能帮助我们替换掉某类中本来就存在的，而我们又想自己创造的property。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">先看OC关于NSObject的源码</summary></entry><entry><title type="html">漫谈iOS安全</title><link href="http://www.helloted.com/2016/10/11/safety/" rel="alternate" type="text/html" title="漫谈iOS安全" /><published>2016-10-11T20:00:00+08:00</published><updated>2016-10-11T20:00:00+08:00</updated><id>http://www.helloted.com/2016/10/11/safety</id><content type="html" xml:base="http://www.helloted.com/2016/10/11/safety/">&lt;h3 id=&quot;一前言&quot;&gt;一、前言&lt;/h3&gt;
-
-&lt;p&gt;经常都能听到大家说，iOS很安全，iPhone比安卓手机安全。那么为什么iOS会安全，难道仅仅是因为iOS是闭源然后安卓是开源的，开源的就一定比闭源安全？前段时间著名的&lt;em&gt;Xcode Ghost&lt;/em&gt; 事件也让人觉得iOS好像并不是那么地安全，今天就随便说说iOS的安全。&lt;/p&gt;
-
-&lt;h3 id=&quot;二沙盒机制&quot;&gt;二、沙盒机制&lt;/h3&gt;
-
-&lt;h4 id=&quot;沙盒简介&quot;&gt;沙盒简介&lt;/h4&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Complex systems will always have vulnerabilities, and software complexity only increases over time. No matter how carefully you adopt secure coding practices and guard against bugs, attackers only need to get through your defenses once to succeed. While App Sandbox doesn’t prevent attacks against your app, it does minimize the harm a successful one can cause.&lt;/p&gt;
-
-  &lt;p&gt;A non-sandboxed app has the full rights of the user who is running that app, and can access any resources that the user can access. If that app or any framework it is linked against contain security holes, an attacker can potentially exploit those holes to take control of that app, and in doing so, the attacker gains the ability to do anything that the user can do.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;复杂系统始终都会存在漏洞，软件复杂性只会随着时间的推移而增加。 无论你采取安全的编码方式多么谨慎来避免错误，攻击者只需要击穿一次防御就能成功。 虽然应用程序沙盒不能防止对您的应用程序的攻击，但它确实最大限度地减少了可能导致的危害。&lt;/p&gt;
-
-&lt;p&gt;非沙盒应用程序具有正在运行该应用程序的用户的完全权限，并且可以访问用户可以访问的任何资源。 如果该应用程序或任何框架被链接到一些安全漏洞，攻击者可能潜在地利用这些漏洞来控制该应用程序，并且在这样做时，攻击者可以执行任何用户可以执行的操作。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Designed to mitigate this problem, the App Sandbox strategy is twofold:&lt;/p&gt;
-
-  &lt;ol&gt;
-    &lt;li&gt;App Sandbox enables you to describe how your app interacts with the system. The system then grants your app the access it needs to get its job done, and no more.&lt;/li&gt;
-    &lt;li&gt;App Sandbox allows the user to transparently grant your app additional access by way of Open and Save dialogs, drag and drop, and other familiar user interactions.&lt;/li&gt;
-  &lt;/ol&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;为了解决上面的问题，沙盒策略有两个方面：&lt;/p&gt;
-
-&lt;p&gt;应用程序沙盒允许您描述应用程序如何与系统进行交互。 系统然后授予您的应用程序所需的访问权限，以完成其工作，不会赋予更多的权限。
-应用程序沙盒允许用户通过打开和保存对话框，拖放和其他熟悉的用户交互方式透明地授予您的应用程序附加访问权限。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/safety/safety_01.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;ios的沙盒&quot;&gt;iOS的沙盒&lt;/h4&gt;
-
-&lt;p&gt;来看看iOS的沙盒结构图&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/safety/safety_00.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;iOS应用程序只能在为该改程序创建的文件系统中读取文件，不可以去其它地方访问，此区域被成为沙盒，所以所有的非代码文件都要保存在此，例如图像，图标，声音，映像，属性列表，文本文件等。&lt;/p&gt;
-
-  &lt;ol&gt;
-    &lt;li&gt;每个应用程序都有自己的存储空间&lt;/li&gt;
-    &lt;li&gt;应用程序不能翻过自己的围墙去访问别的存储空间的内容&lt;/li&gt;
-    &lt;li&gt;应用程序请求的数据都要通过权限检测，假如不符合条件的话，不会被放行。&lt;/li&gt;
-  &lt;/ol&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/safety/safety_02.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;三https&quot;&gt;三、HTTPS&lt;/h3&gt;
-
-&lt;p&gt;这是对网络数据传输过程中的加密。&lt;/p&gt;
-
-&lt;p&gt;其实HTTPS从最终的数据解析的角度，与HTTP没有任何的区别，HTTPS就是将HTTP协议数据包放到SSL/TSL层加密后，在TCP/IP层组成IP数据报去传输，以此保证传输数据的安全；而对于接收端，在SSL/TSL将接收的数据包解密之后，将数据传给HTTP协议层，就是普通的HTTP数据。HTTP和SSL/TSL都处于OSI模型的应用层。从HTTP切换到HTTPS是一个非常简单的过程。&lt;/p&gt;
-
-&lt;p&gt;可参考这篇博文&lt;a href=&quot;http://www.helloted.com/2016/09/13/Http/&quot;&gt;Http与Https&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;四app加固&quot;&gt;四、APP加固&lt;/h3&gt;
-
-&lt;h4 id=&quot;1字符串混淆&quot;&gt;1、字符串混淆&lt;/h4&gt;
-
-&lt;p&gt;我们在代码中有时候会用到一些静态字符串，比如像一些SDK的key、网络加密使用的“盐”等字符串，不能使用明文保存，需要对这些静态字符串进行加密，以防止在APP被反编译后泄露。然后在需要使用字符串的地方进行解密。通常我们使用异或加密来加密字符串.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;异或的运算方法是一个二进制运算：
-1^1=0
-0^0=0
-1^0=1
-0^1=1&lt;/p&gt;
-
-  &lt;p&gt;&lt;strong&gt;两者相等为0,不等为1.&lt;/strong&gt;&lt;/p&gt;
-
-  &lt;p&gt;对于一个字符来说,都可以用二进制码来表示.如A:01000001，字符的异或就是对每一位进行二进制运算.
-用于加密算法时,假设你要加密的内容为A,密钥为B,则可以用&lt;/p&gt;
-
-  &lt;p&gt;异或加密:C=A^B
-在数据中保存加密后的C就行了.
-用的时候:A=B^C
-即可取得原加密A的内容,所以只要知道密钥,就可以完成加密和解密.&lt;/p&gt;
-
-  &lt;p&gt;异或加密和解密的方法一致，运算一次就是加密，再运算一次就是解密。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (NSString *)xorStr:(NSString *)xorStr withKey:(NSString *)key{
-    NSData  *strData = [xorStr dataUsingEncoding:NSUTF8StringEncoding];
-    NSData *keyData = [key dataUsingEncoding:NSUTF8StringEncoding];
-    Byte *keyBytes = (Byte *)[keyData bytes];   //取关键字的Byte数组, keyBytes一直指向头部
-    Byte *sourceDataPoint = (Byte *)[strData bytes];  //取需要异或的数据的Byte数组
-    for (long i = 0; i &amp;lt; [strData length]; i++) {
-        sourceDataPoint[i] = sourceDataPoint[i] ^ keyBytes[(i % [keyData length])]; //然后按位进行异或运算
-    }
-    NSString *outStr = [[NSString alloc]initWithData:strData encoding:NSUTF8StringEncoding];
-    return outStr;
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;strong&gt;类名、方法名混淆&lt;/strong&gt;&lt;/p&gt;
-
-    &lt;p&gt;对应用程序的方法名和方法体进行混淆，保证源码被逆向后很难明白它的真正功能。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;strong&gt;程序结构混淆加密&lt;/strong&gt;&lt;/p&gt;
-
-    &lt;p&gt;对应用程序逻辑结构进行打乱混排，保证源码可读性降到最低。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;strong&gt;反调试、反注入等一些主动保护策略&lt;/strong&gt;&lt;/p&gt;
-
-    &lt;p&gt;这是一些主动保护策略，增大破解者调试、分析APP的门槛。&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;</content><author><name>Ted</name></author><summary type="html">一、前言</summary></entry><entry><title type="html">监测APP卡顿</title><link href="http://www.helloted.com/2016/10/06/smoothMonitor/" rel="alternate" type="text/html" title="监测APP卡顿" /><published>2016-10-06T20:00:00+08:00</published><updated>2016-10-06T20:00:00+08:00</updated><id>http://www.helloted.com/2016/10/06/smoothMonitor</id><content type="html" xml:base="http://www.helloted.com/2016/10/06/smoothMonitor/">&lt;h3 id=&quot;一简介&quot;&gt;一、简介&lt;/h3&gt;
-
-&lt;p&gt;我们说的卡顿，一般指操作某个功能时，UI界面无及时反应，这种卡顿日常测试一般难以追踪以及重现，所以除了工程师开发测试的时候发现卡顿，还有一个重要的渠道就是从用户实际体验来监测卡顿，但是我们又不能拿到用户的手机或者让用户来回馈问题，所以一个完整的监测体系就很有必要了。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;监测卡顿：开一个子线程，利用Runloop来监测卡顿；&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;收集堆栈：将卡顿时的堆栈收集起来；&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;上传记录：将卡顿上传到后台或自定义；&lt;/p&gt;
-
-    &lt;p&gt;这里我引用一张微信开发团队的监测流程图：&lt;/p&gt;
-
-    &lt;p&gt;&lt;img src=&quot;/img/Smooth/smooth_01.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;二监测卡顿&quot;&gt;二、监测卡顿&lt;/h3&gt;
-
-&lt;p&gt;首先我们来看一个Runloop的运行方式，如下&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;int32_t __CFRunLoopRun()
-{
-    // 通知即将进入runloop
-  	//创建AutoreleasePool: _objc_autoreleasePoolPush();
-    __CFRunLoopDoObservers(KCFRunLoopEntry);
-    
-    do
-    {
-        // 通知将要处理timer和source
-        __CFRunLoopDoObservers(kCFRunLoopBeforeTimers);
-        __CFRunLoopDoObservers(kCFRunLoopBeforeSources);
-        
-        // 处理非延迟的主线程调用
-        __CFRunLoopDoBlocks();
-        // 处理UIEvent事件
-        __CFRunLoopDoSource0();
-        
-        // GCD dispatch main queue
-        CheckIfExistMessagesInMainDispatchQueue();
-        
-        // 即将进入休眠
-      	//释放并新建AutoreleasePool: _objc_autoreleasePoolPop(); _objc_autoreleasePoolPush();
-        __CFRunLoopDoObservers(kCFRunLoopBeforeWaiting);
-        
-        // 等待内核mach_msg事件
-        mach_port_t wakeUpPort = SleepAndWaitForWakingUpPorts();
-        
-        // Zzz...
-        
-        // 从等待中醒来
-        __CFRunLoopDoObservers(kCFRunLoopAfterWaiting);
-                
-        if (wakeUpPort == timerPort){// 处理因timer的唤醒
-          __CFRunLoopDoTimers();
-        }else if (wakeUpPort == mainDispatchQueuePort){// 处理异步方法唤醒,如dispatch_async
-          __CFRUNLOOP_IS_SERVICING_THE_MAIN_DISPATCH_QUEUE__()
-        } else{// UI刷新,动画显示
-          __CFRunLoopDoSource1();
-        }   
-        // 再次确保是否有同步的方法需要调用
-        __CFRunLoopDoBlocks();
-        
-    } while (!stop &amp;amp;&amp;amp; !timeout);
-    
-    // 通知即将退出runloop
-  	//释放AutoreleasePool: _objc_autoreleasePoolPop();
-    __CFRunLoopDoObservers(CFRunLoopExit);
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;UI更新一般&lt;font color=&quot;gray&quot;&gt;kCFRunLoopBeforeSources&lt;/font&gt;和&lt;font color=&quot;gray&quot;&gt;kCFRunLoopBeforeWaiting&lt;/font&gt;之间，所以我们监测他们之间的时间段就能知道UI是否卡顿了&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (void)startMoniter{
-	//添加监听
-    CFRunLoopObserverContext context = {0,(__bridge void*)self,NULL,NULL};
-    _observer = CFRunLoopObserverCreate(kCFAllocatorDefault,
-                                        kCFRunLoopAllActivities,
-                                        YES,
-                                        0,
-                                        &amp;amp;runLoopObserverCallBack,
-                                        &amp;amp;context);
-    CFRunLoopAddObserver(CFRunLoopGetMain(), _observer, kCFRunLoopCommonModes);
-    
-    // 创建信号
-    _semaphore = dispatch_semaphore_create(0);
-    
-    // 在子线程监控时长
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        while (YES)
-        {
-            NSLog(@&quot;smooth--monitering&quot;);
-            //100ms则将堆栈记录下来
-            long st = dispatch_semaphore_wait(_semaphore, dispatch_time(DISPATCH_TIME_NOW, 100*NSEC_PER_MSEC));
-            if (st != 0)
-            {
-                if (_activity==kCFRunLoopBeforeSources || _activity==kCFRunLoopAfterWaiting)
-                {
-                    [self logStack];
-                }
-            }
-        }
-    });
-}
-
-static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActivity activity, void *info)
-{
-    SmoothMoniter *instrance = [SmoothMoniter sharedInstance];
-    instrance.activity = activity;
-    dispatch_semaphore_t semaphore = instrance.semaphore;
-    dispatch_semaphore_signal(semaphore);
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h3 id=&quot;三收集堆栈&quot;&gt;三、收集堆栈&lt;/h3&gt;
-
-&lt;p&gt;收集堆栈信息以用来分析卡顿引起的代码&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#import &amp;lt;libkern/OSAtomic.h&amp;gt;
-#import &amp;lt;execinfo.h&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (void)logStack{
-    void* callstack[128];
-    int frames = backtrace(callstack, 128);
-    char **strs = backtrace_symbols(callstack, frames);
-    int i;
-    NSMutableArray *backtrace = [NSMutableArray arrayWithCapacity:frames];
-    for ( i = 0 ; i &amp;lt; frames ; i++ ){
-        [backtrace addObject:[NSString stringWithUTF8String:strs[i]]];
-    }
-    free(strs);
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;可以得到类似于下方的堆栈记录&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Smooth/smooth_02.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;四上传记录&quot;&gt;四、上传记录&lt;/h3&gt;
-
-&lt;p&gt;1、频率以及流量：是否所有的用户都要做统计？上传的频率？文件压缩以减少流量？这些问题都要根据实际情况作好准备。&lt;/p&gt;
-
-&lt;p&gt;2、上传位置，一种是自己建立后台来统计这些卡顿，嫌麻烦的话是利用第三方平台、如友盟（统计崩溃比较多）、听云、OneApm、博睿，都大同小异。&lt;/p&gt;
-
-&lt;h3 id=&quot;五代码&quot;&gt;五、代码&lt;/h3&gt;
-
-&lt;p&gt;上面的代码可以在&lt;a href=&quot;https://github.com/helloted/smoothMonitor&quot;&gt;smoothMonitor&lt;/a&gt; 下载&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、简介</summary></entry></feed>
+&lt;p&gt;这样就能保证子线程的Context与主线程的context内容修改可以同步&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、CoreData结构</summary></entry></feed>
