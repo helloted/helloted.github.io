@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-10-08T21:58:37+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS开发之声音</title><link href="http://www.helloted.com/2017/09/26/voice/" rel="alternate" type="text/html" title="iOS开发之声音" /><published>2017-09-26T20:00:00+08:00</published><updated>2017-09-26T20:00:00+08:00</updated><id>http://www.helloted.com/2017/09/26/voice</id><content type="html" xml:base="http://www.helloted.com/2017/09/26/voice/">&lt;p&gt;部分代码位置&lt;a href=&quot;https://github.com/helloted/voice&quot;&gt;Github-VoiceDemo&lt;/a&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-10-09T10:17:31+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS开发之声音</title><link href="http://www.helloted.com/2017/09/26/voice/" rel="alternate" type="text/html" title="iOS开发之声音" /><published>2017-09-26T20:00:00+08:00</published><updated>2017-09-26T20:00:00+08:00</updated><id>http://www.helloted.com/2017/09/26/voice</id><content type="html" xml:base="http://www.helloted.com/2017/09/26/voice/">&lt;p&gt;部分代码位置&lt;a href=&quot;https://github.com/helloted/voice&quot;&gt;Github-VoiceDemo&lt;/a&gt;&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;Pre&lt;/p&gt;
@@ -595,11 +595,36 @@
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;AFURLSessionManager是对&lt;code class=&quot;highlighter-rouge&quot;&gt;NSURLSession&lt;/code&gt;的封装，&lt;code class=&quot;highlighter-rouge&quot;&gt;NSURLSession&lt;/code&gt;提供了下面三种的API&lt;/p&gt;
+&lt;p&gt;AFURLSessionManager是对&lt;code class=&quot;highlighter-rouge&quot;&gt;NSURLSession&lt;/code&gt;的封装，&lt;code class=&quot;highlighter-rouge&quot;&gt;NSURLSession&lt;/code&gt;提供了下面网络请求三种的API，返回三种不同的Task&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (NSURLSessionDataTask *)dataTaskWithRequest:(NSURLRequest *)request;
 - (NSURLSessionUploadTask *)uploadTaskWithStreamedRequest:(NSURLRequest *)request;
 - (NSURLSessionDownloadTask *)downloadTaskWithRequest:(NSURLRequest *)request;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cm&quot;&gt;/*
+ * An NSURLSessionDataTask does not provide any additional
+ * functionality over an NSURLSessionTask and its presence is merely
+ * to provide lexical differentiation from download and upload tasks.
+ */&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;@interface&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;NSURLSessionDataTask&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;NSURLSessionTask&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;@end&lt;/span&gt;
+
+&lt;span class=&quot;cm&quot;&gt;/*
+ * An NSURLSessionUploadTask does not currently provide any additional
+ * functionality over an NSURLSessionDataTask.  All delegate messages
+ * that may be sent referencing an NSURLSessionDataTask equally apply
+ * to NSURLSessionUploadTasks.
+ */&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;@interface&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;NSURLSessionUploadTask&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;NSURLSessionDataTask&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;@end&lt;/span&gt;
+
+&lt;span class=&quot;cm&quot;&gt;/*
+ * NSURLSessionDownloadTask is a task that represents a download to
+ * local storage.
+ */&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;@interface&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;NSURLSessionDownloadTask&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;NSURLSessionTask&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 

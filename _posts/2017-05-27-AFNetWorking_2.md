@@ -103,12 +103,37 @@ AFHTTPSessionManager对象的初始化有两种方式：
 @interface AFURLSessionManager : NSObject <NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate, NSURLSessionDownloadDelegate, NSSecureCoding, NSCopying>
 ```
 
-AFURLSessionManager是对`NSURLSession`的封装，`NSURLSession`提供了下面三种的API
+AFURLSessionManager是对`NSURLSession`的封装，`NSURLSession`提供了下面网络请求三种的API，返回三种不同的Task
 
 ```
 - (NSURLSessionDataTask *)dataTaskWithRequest:(NSURLRequest *)request;
 - (NSURLSessionUploadTask *)uploadTaskWithStreamedRequest:(NSURLRequest *)request;
 - (NSURLSessionDownloadTask *)downloadTaskWithRequest:(NSURLRequest *)request;
+```
+
+```
+/*
+ * An NSURLSessionDataTask does not provide any additional
+ * functionality over an NSURLSessionTask and its presence is merely
+ * to provide lexical differentiation from download and upload tasks.
+ */
+@interface NSURLSessionDataTask : NSURLSessionTask
+@end
+
+/*
+ * An NSURLSessionUploadTask does not currently provide any additional
+ * functionality over an NSURLSessionDataTask.  All delegate messages
+ * that may be sent referencing an NSURLSessionDataTask equally apply
+ * to NSURLSessionUploadTasks.
+ */
+@interface NSURLSessionUploadTask : NSURLSessionDataTask
+@end
+
+/*
+ * NSURLSessionDownloadTask is a task that represents a download to
+ * local storage.
+ */
+@interface NSURLSessionDownloadTask : NSURLSessionTask
 ```
 
 相对的，AFURLSessionManager提供了request请求，上传，下载的三种封装

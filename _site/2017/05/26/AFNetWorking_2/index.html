@@ -206,11 +206,36 @@
 </code></pre>
 </div>
 
-<p>AFURLSessionManager是对<code class="highlighter-rouge">NSURLSession</code>的封装，<code class="highlighter-rouge">NSURLSession</code>提供了下面三种的API</p>
+<p>AFURLSessionManager是对<code class="highlighter-rouge">NSURLSession</code>的封装，<code class="highlighter-rouge">NSURLSession</code>提供了下面网络请求三种的API，返回三种不同的Task</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>- (NSURLSessionDataTask *)dataTaskWithRequest:(NSURLRequest *)request;
 - (NSURLSessionUploadTask *)uploadTaskWithStreamedRequest:(NSURLRequest *)request;
 - (NSURLSessionDownloadTask *)downloadTaskWithRequest:(NSURLRequest *)request;
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="cm">/*
+ * An NSURLSessionDataTask does not provide any additional
+ * functionality over an NSURLSessionTask and its presence is merely
+ * to provide lexical differentiation from download and upload tasks.
+ */</span>
+<span class="k">@interface</span> <span class="nc">NSURLSessionDataTask</span> <span class="p">:</span> <span class="nc">NSURLSessionTask</span>
+<span class="k">@end</span>
+
+<span class="cm">/*
+ * An NSURLSessionUploadTask does not currently provide any additional
+ * functionality over an NSURLSessionDataTask.  All delegate messages
+ * that may be sent referencing an NSURLSessionDataTask equally apply
+ * to NSURLSessionUploadTasks.
+ */</span>
+<span class="k">@interface</span> <span class="nc">NSURLSessionUploadTask</span> <span class="p">:</span> <span class="nc">NSURLSessionDataTask</span>
+<span class="k">@end</span>
+
+<span class="cm">/*
+ * NSURLSessionDownloadTask is a task that represents a download to
+ * local storage.
+ */</span>
+<span class="k">@interface</span> <span class="nc">NSURLSessionDownloadTask</span> <span class="p">:</span> <span class="nc">NSURLSessionTask</span>
 </code></pre>
 </div>
 
