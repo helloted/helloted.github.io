@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-10-10T11:36:02+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS开发之声音</title><link href="http://www.helloted.com/2017/09/26/voice/" rel="alternate" type="text/html" title="iOS开发之声音" /><published>2017-09-26T20:00:00+08:00</published><updated>2017-09-26T20:00:00+08:00</updated><id>http://www.helloted.com/2017/09/26/voice</id><content type="html" xml:base="http://www.helloted.com/2017/09/26/voice/">&lt;p&gt;部分代码位置&lt;a href=&quot;https://github.com/helloted/voice&quot;&gt;Github-VoiceDemo&lt;/a&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-10-10T14:48:24+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS开发之声音</title><link href="http://www.helloted.com/2017/09/26/voice/" rel="alternate" type="text/html" title="iOS开发之声音" /><published>2017-09-26T20:00:00+08:00</published><updated>2017-09-26T20:00:00+08:00</updated><id>http://www.helloted.com/2017/09/26/voice</id><content type="html" xml:base="http://www.helloted.com/2017/09/26/voice/">&lt;p&gt;部分代码位置&lt;a href=&quot;https://github.com/helloted/voice&quot;&gt;Github-VoiceDemo&lt;/a&gt;&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;Pre&lt;/p&gt;
@@ -628,9 +628,17 @@
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;相对的，AFURLSessionManager提供了request请求，上传，下载的三种封装&lt;/p&gt;
+&lt;p&gt;相对的，AFURLSessionManager提供了request请求，上传，下载的三种封装。&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/AFNetworking/04.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;上面的代码主要就两个步骤：&lt;/p&gt;
+
+&lt;p&gt;1.根据初始化生成的Session生成datatask;&lt;/p&gt;
+
+&lt;p&gt;2.给datatask绑定一个代理&lt;code class=&quot;highlighter-rouge&quot;&gt;AFURLSessionManagerTaskDelegate&lt;/code&gt;；&lt;/p&gt;
+
+&lt;p&gt;依次来查看一下这两个步骤：&lt;/p&gt;
 
 &lt;p&gt;在生成NSURLSessionDataTask对象时采用了url_session_manager_create_task_safely的方式，查看代码&lt;/p&gt;
 
@@ -640,11 +648,104 @@
 
 &lt;p&gt;如果版本低，则自己生成一个串行队列。&lt;/p&gt;
 
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;self.session&lt;/code&gt;则是在初始化中生成了&lt;/p&gt;
+
 &lt;blockquote&gt;
   &lt;p&gt;初始化&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/AFNetworking/07.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">三、AFHTTPSessionManager</summary></entry><entry><title type="html">AFNetworking源码分析(一)</title><link href="http://www.helloted.com/2017/05/26/AFNetWorking_1/" rel="alternate" type="text/html" title="AFNetworking源码分析(一)" /><published>2017-05-26T20:00:00+08:00</published><updated>2017-05-26T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/26/AFNetWorking_1</id><content type="html" xml:base="http://www.helloted.com/2017/05/26/AFNetWorking_1/">&lt;h3 id=&quot;0前言&quot;&gt;0、前言&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&quot;/img/AFNetworking/07.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;初始化过程中，主要是生成了一个NSURLSession并将其添加到了异步线程。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;AFURLSessionManagerTaskDelegate&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;AFURLSessionManagerTaskDelegate主要负责处理SessionTask网络请求过程中的事项，以及请求完成的事项。AFN给每个dataTask都绑定了一个代理，主要处理例如下载进度，下载完成后的一些格式处理&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (void)addDelegateForDataTask:(NSURLSessionDataTask *)dataTask
+                uploadProgress:(nullable void (^)(NSProgress *uploadProgress)) uploadProgressBlock
+              downloadProgress:(nullable void (^)(NSProgress *downloadProgress)) downloadProgressBlock
+             completionHandler:(void (^)(NSURLResponse *response, id responseObject, NSError *error))completionHandler
+{
+    AFURLSessionManagerTaskDelegate *delegate = [[AFURLSessionManagerTaskDelegate alloc] init];
+    delegate.manager = self;
+    delegate.completionHandler = completionHandler;
+
+    dataTask.taskDescription = self.taskDescriptionForSessionTasks;
+    [self setDelegate:delegate forTask:dataTask];
+
+    delegate.uploadProgressBlock = uploadProgressBlock;
+    delegate.downloadProgressBlock = downloadProgressBlock;
+}
+
+
+- (void)setDelegate:(AFURLSessionManagerTaskDelegate *)delegate
+            forTask:(NSURLSessionTask *)task
+{
+    NSParameterAssert(task);
+    NSParameterAssert(delegate);
+
+    [self.lock lock];
+    self.mutableTaskDelegatesKeyedByTaskIdentifier[@(task.taskIdentifier)] = delegate;
+    [delegate setupProgressForTask:task];
+    // 进度处理
+    [self addNotificationObserverForTask:task];
+    [self.lock unlock];
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;进度处理&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;是通过KVO的方式监听task的几个值&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [task addObserver:self
+           forKeyPath:NSStringFromSelector(@selector(countOfBytesReceived))
+              options:NSKeyValueObservingOptionNew
+              context:NULL];
+    [task addObserver:self
+           forKeyPath:NSStringFromSelector(@selector(countOfBytesExpectedToReceive))
+              options:NSKeyValueObservingOptionNew
+              context:NULL];
+
+    [task addObserver:self
+           forKeyPath:NSStringFromSelector(@selector(countOfBytesSent))
+              options:NSKeyValueObservingOptionNew
+              context:NULL];
+    [task addObserver:self
+           forKeyPath:NSStringFromSelector(@selector(countOfBytesExpectedToSend))
+              options:NSKeyValueObservingOptionNew
+              context:NULL];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;请求完成或错误&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;请求完成的处理是在SessionTask的代理方法NSURLSessionTaskDelegate&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;\- (void)URLSession:(__unused NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/AFNetworking/08.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;分为error处理和成功完成请求，如果对请求处理有提前设置异步线程manager.completionQueue去处理，否则回到主线程处理。到这里一个完整的请求就完成了。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;总结&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;所以，AFURLSessionManager做的封装主要是&lt;/p&gt;
+
+&lt;p&gt;1、生成Session，并对一些参数进行默认设置，并将session放到异步线程&lt;/p&gt;
+
+&lt;p&gt;2、根据Session生成Task，然后task开启，并对task的一些值进行监听从而获取请求的进度&lt;/p&gt;
+
+&lt;p&gt;3、在task的完成代理方法里，对请求完成或者错误再次封装一次&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">三、AFHTTPSessionManager</summary></entry><entry><title type="html">AFNetworking源码分析(一)</title><link href="http://www.helloted.com/2017/05/26/AFNetWorking_1/" rel="alternate" type="text/html" title="AFNetworking源码分析(一)" /><published>2017-05-26T20:00:00+08:00</published><updated>2017-05-26T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/26/AFNetWorking_1</id><content type="html" xml:base="http://www.helloted.com/2017/05/26/AFNetWorking_1/">&lt;h3 id=&quot;0前言&quot;&gt;0、前言&lt;/h3&gt;
 
 &lt;p&gt;AFNetworking这个框架是iOS必备的一个第三方框架，其高效简洁的API使其成为最好的iOS网络请求框架，也让iOS开发的网络请求轻松许多，&lt;a href=&quot;https://github.com/AFNetworking/AFNetworking&quot;&gt;AFNetworking-Github&lt;/a&gt;&lt;/p&gt;
 

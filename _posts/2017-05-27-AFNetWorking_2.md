@@ -136,9 +136,17 @@ AFURLSessionManager是对`NSURLSession`的封装，`NSURLSession`提供了下面
 @interface NSURLSessionDownloadTask : NSURLSessionTask
 ```
 
-相对的，AFURLSessionManager提供了request请求，上传，下载的三种封装
+相对的，AFURLSessionManager提供了request请求，上传，下载的三种封装。
 
 ![img](/img/AFNetworking/04.png)
+
+上面的代码主要就两个步骤：
+
+1.根据初始化生成的Session生成datatask;
+
+2.给datatask绑定一个代理`AFURLSessionManagerTaskDelegate`；
+
+依次来查看一下这两个步骤：
 
 在生成NSURLSessionDataTask对象时采用了url_session_manager_create_task_safely的方式，查看代码
 
@@ -148,7 +156,91 @@ AFURLSessionManager是对`NSURLSession`的封装，`NSURLSession`提供了下面
 
 如果版本低，则自己生成一个串行队列。
 
+`self.session`则是在初始化中生成了
+
 > 初始化
 
 ![img](/img/AFNetworking/07.png)
 
+初始化过程中，主要是生成了一个NSURLSession并将其添加到了异步线程。
+
+> AFURLSessionManagerTaskDelegate
+
+AFURLSessionManagerTaskDelegate主要负责处理SessionTask网络请求过程中的事项，以及请求完成的事项。AFN给每个dataTask都绑定了一个代理，主要处理例如下载进度，下载完成后的一些格式处理
+
+```
+- (void)addDelegateForDataTask:(NSURLSessionDataTask *)dataTask
+                uploadProgress:(nullable void (^)(NSProgress *uploadProgress)) uploadProgressBlock
+              downloadProgress:(nullable void (^)(NSProgress *downloadProgress)) downloadProgressBlock
+             completionHandler:(void (^)(NSURLResponse *response, id responseObject, NSError *error))completionHandler
+{
+    AFURLSessionManagerTaskDelegate *delegate = [[AFURLSessionManagerTaskDelegate alloc] init];
+    delegate.manager = self;
+    delegate.completionHandler = completionHandler;
+
+    dataTask.taskDescription = self.taskDescriptionForSessionTasks;
+    [self setDelegate:delegate forTask:dataTask];
+
+    delegate.uploadProgressBlock = uploadProgressBlock;
+    delegate.downloadProgressBlock = downloadProgressBlock;
+}
+
+
+- (void)setDelegate:(AFURLSessionManagerTaskDelegate *)delegate
+            forTask:(NSURLSessionTask *)task
+{
+    NSParameterAssert(task);
+    NSParameterAssert(delegate);
+
+    [self.lock lock];
+    self.mutableTaskDelegatesKeyedByTaskIdentifier[@(task.taskIdentifier)] = delegate;
+    [delegate setupProgressForTask:task];
+    // 进度处理
+    [self addNotificationObserverForTask:task];
+    [self.lock unlock];
+}
+```
+
+> 进度处理
+
+是通过KVO的方式监听task的几个值
+
+```
+    [task addObserver:self
+           forKeyPath:NSStringFromSelector(@selector(countOfBytesReceived))
+              options:NSKeyValueObservingOptionNew
+              context:NULL];
+    [task addObserver:self
+           forKeyPath:NSStringFromSelector(@selector(countOfBytesExpectedToReceive))
+              options:NSKeyValueObservingOptionNew
+              context:NULL];
+
+    [task addObserver:self
+           forKeyPath:NSStringFromSelector(@selector(countOfBytesSent))
+              options:NSKeyValueObservingOptionNew
+              context:NULL];
+    [task addObserver:self
+           forKeyPath:NSStringFromSelector(@selector(countOfBytesExpectedToSend))
+              options:NSKeyValueObservingOptionNew
+              context:NULL];
+```
+
+> 请求完成或错误
+
+请求完成的处理是在SessionTask的代理方法NSURLSessionTaskDelegate
+
+`\- (void)URLSession:(__unused NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error`
+
+![img](/img/AFNetworking/08.png)
+
+分为error处理和成功完成请求，如果对请求处理有提前设置异步线程manager.completionQueue去处理，否则回到主线程处理。到这里一个完整的请求就完成了。
+
+> 总结
+
+所以，AFURLSessionManager做的封装主要是
+
+1、生成Session，并对一些参数进行默认设置，并将session放到异步线程
+
+2、根据Session生成Task，然后task开启，并对task的一些值进行监听从而获取请求的进度
+
+3、在task的完成代理方法里，对请求完成或者错误再次封装一次
