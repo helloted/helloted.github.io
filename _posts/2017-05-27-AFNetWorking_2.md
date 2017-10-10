@@ -23,9 +23,9 @@ header-img: "img/default.jpg"
 
 文档翻译：
 
-AFHTTPSessionManager继承自AFURLSessionManager，提供了便捷的方法用于HTTP请求，当一个baseURL，根据相对路径，可以很方便地进行GET/POST或者其他请求
+AFHTTPSessionManager继承自AFURLSessionManager，提供了便捷的方法用于HTTP请求，当一个baseURL，根据相对路径，可以很方便地进行GET/POST或者其他请求。AFHTTPSessionManager本身并没有做什么实事，只是作为一个封装，将一些需求分发到其他相关类去做。
 
-建议iOS 7之后的开发者在 AFHTTPSessionManager的基础上再进行一次封装，封装一些开发者自己的需要。而针对iOS 6以及更早的则建议使用AFHTTPRequestOperationManager
+建议iOS 7之后的开发者在 AFHTTPSessionManager的基础上再进行一次封装，封装一些开发者自己的需要。而针对iOS 6以及更早的则建议使用AFHTTPRequestOperationManager。
 
 注：AFHTTPRequestOperationManager基于开发的NSURLConnection已经在iOS 9被废弃。
 
@@ -147,3 +147,8 @@ AFURLSessionManager是对`NSURLSession`的封装，`NSURLSession`提供了下面
 是因为之前iOS的一个bug，在并发队列中生成NSURLSessionDataTask对象会有问题，所以做了一个处理：
 
 如果版本低，则自己生成一个串行队列。
+
+> 初始化
+
+![img](/img/AFNetworking/07.png)
+
