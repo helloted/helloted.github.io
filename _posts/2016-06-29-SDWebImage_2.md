@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "第三方框架SDWebImage源码分析(二)"
+title:      "源码分析之SDWebImage(二)"
 subtitle:   "对iOS常用第三方SDwebImage的源码解析"
 date:       2016-06-29 12:00:00
 author:     "Ted"
