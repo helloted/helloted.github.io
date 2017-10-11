@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "AFNetworking源码分析(一)"
+title:      "第三方框架AFNetworking源码分析(一)"
 subtitle:   "AFNetworking整体架构分析"
 date:       2017-05-26 12:00:00
 author:     "Ted"
