@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>AFNetworking源码分析(三) - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/2017/05/26/AFNetWorking_3/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/clean-blog.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>AFNetworking源码分析(三)</h1>
+                    
+                    <h2 class="subheading">AFNetworkReachabilityManager网络监听</h2>
+                    
+                    <span class="meta">Posted by Ted on May 26, 2017</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h3 id="五afnetworkreachabilitymanager">五、AFNetworkReachabilityManager</h3>
+
+<h4 id="一文档翻译">（一）文档翻译</h4>
+
+<blockquote>
+  <p>/**</p>
+
+  <p><code class="highlighter-rouge">AFNetworkReachabilityManager</code> monitors the reachability of domains, and addresses for both WWAN and WiFi network interfaces.</p>
+
+  <p>Reachability can be used to determine background information about why a network operation failed, or to trigger a network operation retrying when a connection is established. It should not be used to prevent a user from initiating a network request, as it’s possible that an initial request may be required to establish reachability.</p>
+
+  <p>See Apple’s Reachability Sample Code ( https://developer.apple.com/library/ios/samplecode/reachability/ )</p>
+
+  <p>@warning Instances of <code class="highlighter-rouge">AFNetworkReachabilityManager</code> must be started with <code class="highlighter-rouge">-startMonitoring</code> before reachability status can be determined.</p>
+
+  <p>*/</p>
+</blockquote>
+
+<p><code class="highlighter-rouge">AFNetworkReachabilityManager</code>用于监测domains和addresses的可达性，包括WWAN和WiFi</p>
+
+<p>Reachability模块可以用来监测一个网络活动失败的背景原因，或者当一个连接建立之后，去触发重复请求，它不应该被用来阻止用户初始化一个网络请求，但是初始化一个网络请求需要建立可达性。</p>
+
+<p><code class="highlighter-rouge">AFNetworkReachabilityManager</code>的实例必须启用<code class="highlighter-rouge">-startMonitoring</code>才能开始监听状态</p>
+
+<h4 id="二状态">（二）状态</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>typedef NS_ENUM(NSInteger, AFNetworkReachabilityStatus) {
+    AFNetworkReachabilityStatusUnknown          = -1,  //未知状态
+    AFNetworkReachabilityStatusNotReachable     = 0,   //不可到达状态
+    AFNetworkReachabilityStatusReachableViaWWAN = 1,   //蜂窝网络状态
+    AFNetworkReachabilityStatusReachableViaWiFi = 2,  //Wifi网络状态
+};
+</code></pre>
+</div>
+
+<p>可以检测出总共四种状态：未知状态、不可到达状态、蜂窝网络(2G,3G,4G)状态、Wifi网络状态</p>
+
+<h4 id="三使用方式">（三）使用方式</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>    AFNetworkReachabilityManager *manager = [AFNetworkReachabilityManager sharedManager];
+    [manager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+		NSLog(@"current--%@",[manager localizedNetworkReachabilityStatusString]);
+	}];
+    [manager startMonitoring];
+</code></pre>
+</div>
+
+<h4 id="四初始化">（四）初始化</h4>
+
+<p>有四种类型的初始化方式</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Creates and returns a network reachability manager with the default socket address.
+ // 监控一个默认的地址
++ (instancetype)manager;
+
+
+ Creates and returns a network reachability manager for the specified domain.
+  // 监控一个默认的地址
++ (instancetype)managerForDomain:(NSString *)domain;
+
+/**
+ Creates and returns a network reachability manager for the socket address.
+ // 监测指定的地址
++ (instancetype)managerForAddress:(const void *)address;
+
+/**
+ Initializes an instance of a network reachability manager from the specified reachability object.
+- (instancetype)initWithReachability:(SCNetworkReachabilityRef)reachability；
+</code></pre>
+</div>
+
+<p>下面是其中一种方法的实现</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>+ (instancetype)managerForDomain:(NSString *)domain {
+    SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(kCFAllocatorDefault, [domain UTF8String]);
+    AFNetworkReachabilityManager *manager = [[self alloc] initWithReachability:reachability];  
+    CFRelease(reachability);
+    return manager;
+}
+
+</code></pre>
+</div>
+
+<p>可以发现，最终都是要得到<code class="highlighter-rouge">SCNetworkReachabilityRef</code>这个东西，这是何许东西？</p>
+
+<blockquote>
+  <p>​	@discussion The SCNetworkReachability API allows an application to</p>
+
+  <p>​		determine the status of a system’s current network</p>
+
+  <p>​		configuration and the reachability of a target host.</p>
+
+  <p>​		In addition, reachability can be monitored with notifications</p>
+
+  <p>​		that are sent when the status has changed.</p>
+
+  <p>​		“Reachability” reflects whether a data packet, sent by</p>
+
+  <p>​		an application into the network stack, can leave the local</p>
+
+  <p>​		computer.</p>
+</blockquote>
+
+<p>SCNetworkReachability可以监测APP的当前网络状态，对于目标host的可达性，当状态发送改变时，reachability可以监测到这个通知。</p>
+
+<p>“Reachability”反应的是，一个数据包是否会离开本机，并不能确保可以被主机收到</p>
+
+<h4 id="五开启监控">（五）开启监控</h4>
+
+<p><img src="/img/AFNetworking/09.png" alt="img" /></p>
+
+<p>里面有两个技术细节：</p>
+
+<p>1、在Block外面调用<code class="highlighter-rouge">__weak __typeof(self)weakSelf = self;</code>，目的是防止循环引用，在Block内部调用<code class="highlighter-rouge">__strong __typeof(weakSelf)strongSelf = weakSelf;</code>，目的是为了防止weakself被提前释放</p>
+
+<p>2、将整个监测放到异步线程，将优先级设为最低，并且开启了Runloop模式，目的是为了一直监测</p>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2017/05/26/AFNetWorking_2/" data-toggle="tooltip" data-placement="top" title="AFNetworking源码分析(二)">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2017/05/30/hotfix/" data-toggle="tooltip" data-placement="top" title="热修复=Runtime+Javascriptcore">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2017</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

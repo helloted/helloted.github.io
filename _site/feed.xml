@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-10-10T14:48:24+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS开发之声音</title><link href="http://www.helloted.com/2017/09/26/voice/" rel="alternate" type="text/html" title="iOS开发之声音" /><published>2017-09-26T20:00:00+08:00</published><updated>2017-09-26T20:00:00+08:00</updated><id>http://www.helloted.com/2017/09/26/voice</id><content type="html" xml:base="http://www.helloted.com/2017/09/26/voice/">&lt;p&gt;部分代码位置&lt;a href=&quot;https://github.com/helloted/voice&quot;&gt;Github-VoiceDemo&lt;/a&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-10-11T10:33:13+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS开发之声音</title><link href="http://www.helloted.com/2017/09/26/voice/" rel="alternate" type="text/html" title="iOS开发之声音" /><published>2017-09-26T20:00:00+08:00</published><updated>2017-09-26T20:00:00+08:00</updated><id>http://www.helloted.com/2017/09/26/voice</id><content type="html" xml:base="http://www.helloted.com/2017/09/26/voice/">&lt;p&gt;部分代码位置&lt;a href=&quot;https://github.com/helloted/voice&quot;&gt;Github-VoiceDemo&lt;/a&gt;&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;Pre&lt;/p&gt;
@@ -493,7 +493,122 @@
 
 &lt;p&gt;Javascriptcore是一个iOS原生框架，用于javascript与Objecive C语言进行相互调用，而我们热修改需要用到的就是javascript可以调用OC方法&lt;/p&gt;
 
-&lt;p&gt;三、热修复&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、运行时</summary></entry><entry><title type="html">AFNetworking源码分析(二)</title><link href="http://www.helloted.com/2017/05/26/AFNetWorking_2/" rel="alternate" type="text/html" title="AFNetworking源码分析(二)" /><published>2017-05-26T20:00:00+08:00</published><updated>2017-05-26T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/26/AFNetWorking_2</id><content type="html" xml:base="http://www.helloted.com/2017/05/26/AFNetWorking_2/">&lt;h3 id=&quot;三afhttpsessionmanager&quot;&gt;三、AFHTTPSessionManager&lt;/h3&gt;
+&lt;p&gt;三、热修复&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、运行时</summary></entry><entry><title type="html">AFNetworking源码分析(三)</title><link href="http://www.helloted.com/2017/05/26/AFNetWorking_3/" rel="alternate" type="text/html" title="AFNetworking源码分析(三)" /><published>2017-05-26T20:00:00+08:00</published><updated>2017-05-26T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/26/AFNetWorking_3</id><content type="html" xml:base="http://www.helloted.com/2017/05/26/AFNetWorking_3/">&lt;h3 id=&quot;五afnetworkreachabilitymanager&quot;&gt;五、AFNetworkReachabilityManager&lt;/h3&gt;
+
+&lt;h4 id=&quot;一文档翻译&quot;&gt;（一）文档翻译&lt;/h4&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;/**&lt;/p&gt;
+
+  &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;AFNetworkReachabilityManager&lt;/code&gt; monitors the reachability of domains, and addresses for both WWAN and WiFi network interfaces.&lt;/p&gt;
+
+  &lt;p&gt;Reachability can be used to determine background information about why a network operation failed, or to trigger a network operation retrying when a connection is established. It should not be used to prevent a user from initiating a network request, as it’s possible that an initial request may be required to establish reachability.&lt;/p&gt;
+
+  &lt;p&gt;See Apple’s Reachability Sample Code ( https://developer.apple.com/library/ios/samplecode/reachability/ )&lt;/p&gt;
+
+  &lt;p&gt;@warning Instances of &lt;code class=&quot;highlighter-rouge&quot;&gt;AFNetworkReachabilityManager&lt;/code&gt; must be started with &lt;code class=&quot;highlighter-rouge&quot;&gt;-startMonitoring&lt;/code&gt; before reachability status can be determined.&lt;/p&gt;
+
+  &lt;p&gt;*/&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;AFNetworkReachabilityManager&lt;/code&gt;用于监测domains和addresses的可达性，包括WWAN和WiFi&lt;/p&gt;
+
+&lt;p&gt;Reachability模块可以用来监测一个网络活动失败的背景原因，或者当一个连接建立之后，去触发重复请求，它不应该被用来阻止用户初始化一个网络请求，但是初始化一个网络请求需要建立可达性。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;AFNetworkReachabilityManager&lt;/code&gt;的实例必须启用&lt;code class=&quot;highlighter-rouge&quot;&gt;-startMonitoring&lt;/code&gt;才能开始监听状态&lt;/p&gt;
+
+&lt;h4 id=&quot;二状态&quot;&gt;（二）状态&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typedef NS_ENUM(NSInteger, AFNetworkReachabilityStatus) {
+    AFNetworkReachabilityStatusUnknown          = -1,  //未知状态
+    AFNetworkReachabilityStatusNotReachable     = 0,   //不可到达状态
+    AFNetworkReachabilityStatusReachableViaWWAN = 1,   //蜂窝网络状态
+    AFNetworkReachabilityStatusReachableViaWiFi = 2,  //Wifi网络状态
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;可以检测出总共四种状态：未知状态、不可到达状态、蜂窝网络(2G,3G,4G)状态、Wifi网络状态&lt;/p&gt;
+
+&lt;h4 id=&quot;三使用方式&quot;&gt;（三）使用方式&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    AFNetworkReachabilityManager *manager = [AFNetworkReachabilityManager sharedManager];
+    [manager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+		NSLog(@&quot;current--%@&quot;,[manager localizedNetworkReachabilityStatusString]);
+	}];
+    [manager startMonitoring];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;四初始化&quot;&gt;（四）初始化&lt;/h4&gt;
+
+&lt;p&gt;有四种类型的初始化方式&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Creates and returns a network reachability manager with the default socket address.
+ // 监控一个默认的地址
++ (instancetype)manager;
+
+
+ Creates and returns a network reachability manager for the specified domain.
+  // 监控一个默认的地址
++ (instancetype)managerForDomain:(NSString *)domain;
+
+/**
+ Creates and returns a network reachability manager for the socket address.
+ // 监测指定的地址
++ (instancetype)managerForAddress:(const void *)address;
+
+/**
+ Initializes an instance of a network reachability manager from the specified reachability object.
+- (instancetype)initWithReachability:(SCNetworkReachabilityRef)reachability；
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;下面是其中一种方法的实现&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;+ (instancetype)managerForDomain:(NSString *)domain {
+    SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(kCFAllocatorDefault, [domain UTF8String]);
+    AFNetworkReachabilityManager *manager = [[self alloc] initWithReachability:reachability];  
+    CFRelease(reachability);
+    return manager;
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;可以发现，最终都是要得到&lt;code class=&quot;highlighter-rouge&quot;&gt;SCNetworkReachabilityRef&lt;/code&gt;这个东西，这是何许东西？&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;​	@discussion The SCNetworkReachability API allows an application to&lt;/p&gt;
+
+  &lt;p&gt;​		determine the status of a system’s current network&lt;/p&gt;
+
+  &lt;p&gt;​		configuration and the reachability of a target host.&lt;/p&gt;
+
+  &lt;p&gt;​		In addition, reachability can be monitored with notifications&lt;/p&gt;
+
+  &lt;p&gt;​		that are sent when the status has changed.&lt;/p&gt;
+
+  &lt;p&gt;​		“Reachability” reflects whether a data packet, sent by&lt;/p&gt;
+
+  &lt;p&gt;​		an application into the network stack, can leave the local&lt;/p&gt;
+
+  &lt;p&gt;​		computer.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;SCNetworkReachability可以监测APP的当前网络状态，对于目标host的可达性，当状态发送改变时，reachability可以监测到这个通知。&lt;/p&gt;
+
+&lt;p&gt;“Reachability”反应的是，一个数据包是否会离开本机，并不能确保可以被主机收到&lt;/p&gt;
+
+&lt;h4 id=&quot;五开启监控&quot;&gt;（五）开启监控&lt;/h4&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/AFNetworking/09.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;里面有两个技术细节：&lt;/p&gt;
+
+&lt;p&gt;1、在Block外面调用&lt;code class=&quot;highlighter-rouge&quot;&gt;__weak __typeof(self)weakSelf = self;&lt;/code&gt;，目的是防止循环引用，在Block内部调用&lt;code class=&quot;highlighter-rouge&quot;&gt;__strong __typeof(weakSelf)strongSelf = weakSelf;&lt;/code&gt;，目的是为了防止weakself被提前释放&lt;/p&gt;
+
+&lt;p&gt;2、将整个监测放到异步线程，将优先级设为最低，并且开启了Runloop模式，目的是为了一直监测&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">五、AFNetworkReachabilityManager</summary></entry><entry><title type="html">AFNetworking源码分析(二)</title><link href="http://www.helloted.com/2017/05/26/AFNetWorking_2/" rel="alternate" type="text/html" title="AFNetworking源码分析(二)" /><published>2017-05-26T20:00:00+08:00</published><updated>2017-05-26T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/26/AFNetWorking_2</id><content type="html" xml:base="http://www.helloted.com/2017/05/26/AFNetWorking_2/">&lt;h3 id=&quot;三afhttpsessionmanager&quot;&gt;三、AFHTTPSessionManager&lt;/h3&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@interface AFHTTPSessionManager : AFURLSessionManager &amp;lt;NSSecureCoding, NSCopying&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
@@ -1885,195 +2000,4 @@ imageView.image = snapshot;
   &lt;li&gt;view的drawLayer:inContext:方法内部又会调用view的drawRect:方法&lt;/li&gt;
   &lt;li&gt;view就可以在drawRect:方法中实现绘图代码, 所有东西最终都绘制到view.layer上面&lt;/li&gt;
   &lt;li&gt;系统再将view.layer的内容拷贝到屏幕, 于是完成了view的显示&lt;/li&gt;
-&lt;/ol&gt;</content><author><name>Ted</name></author><summary type="html"></summary></entry><entry><title type="html">CoreData简介以及第三方框架MagicRecord源码解析</title><link href="http://www.helloted.com/2016/12/01/coredata/" rel="alternate" type="text/html" title="CoreData简介以及第三方框架MagicRecord源码解析" /><published>2016-12-01T20:00:00+08:00</published><updated>2016-12-01T20:00:00+08:00</updated><id>http://www.helloted.com/2016/12/01/coredata</id><content type="html" xml:base="http://www.helloted.com/2016/12/01/coredata/">&lt;h3 id=&quot;一coredata结构&quot;&gt;一、CoreData结构&lt;/h3&gt;
-
-&lt;p&gt;可以用两张图来表示：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/coredata/00.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/coredata/01.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;nsmanagedobject&quot;&gt;NSManagedObject&lt;/h4&gt;
-
-&lt;p&gt;数据库对象，一个&lt;code class=&quot;highlighter-rouge&quot;&gt;NSManagedObject&lt;/code&gt;对应一张表，&lt;code class=&quot;highlighter-rouge&quot;&gt;NSManagedObject&lt;/code&gt;的一个属性对应数据表的一个字段。数据库的增删查改就是操作&lt;code class=&quot;highlighter-rouge&quot;&gt;NSManagedObject&lt;/code&gt;，通过&lt;em&gt;xCode-&amp;gt;Editor-&amp;gt;Create NSManagedObject Subclass…&lt;/em&gt;来创建对应表的对象model&lt;/p&gt;
-
-&lt;h4 id=&quot;nsmanagedobjectcontext&quot;&gt;NSManagedObjectContext&lt;/h4&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;NSManagedObject&lt;/code&gt;操作的上下文，&lt;code class=&quot;highlighter-rouge&quot;&gt;NSManagedObject&lt;/code&gt;的操作会先缓存在上下文中，还未存到磁盘中&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;- (NSManagedObjectContext *)managedObjectContext{
-    if (__managedObjectContext != nil) {
-        return __managedObjectContext;
-    }
-    NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
-    if (coordinator != nil) {
-        __managedObjectContext = [[NSManagedObjectContext alloc] init];
-        [__managedObjectContext setPersistentStoreCoordinator:coordinator];
-    }
-    return __managedObjectContext;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;生成&lt;code class=&quot;highlighter-rouge&quot;&gt;NSManagedObjectContext&lt;/code&gt;时需要设置&lt;code class=&quot;highlighter-rouge&quot;&gt;NSPersistentStoreCoordinator&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;有三种类型&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;NSConfinementConcurrencyType (或者不加参数，默认就是这个)&lt;/li&gt;
-  &lt;li&gt;NSMainQueueConcurrencyType (表示只会在主线程中执行)&lt;/li&gt;
-  &lt;li&gt;NSPrivateQueueConcurrencyType (表示可以在子线程中执行)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;通过 setParentContext 方法，可以设置另外一个 NSManagedObjectContext 为自己的父级，这个时候子级可以访问父级下所有的对象，而且子级 NSManagedObjectContext 的内容变化后，如果执行save方法，会自动的 merge 到父级 NSManagedObjectContext 中，也就是子级save后，变动会同步到父级 NSManagedObjectContext。当然这个时候父级也必须再save一次，如果父级没有父级了，那么就会直接向NSPersistentStoreCoordinator中写入，如果有就会接着向再上一层的父级冒泡……&lt;/p&gt;
-
-&lt;h4 id=&quot;nspersistentstorecoordinator&quot;&gt;NSPersistentStoreCoordinator&lt;/h4&gt;
-
-&lt;p&gt;用来管理保存数据到磁盘这个操作&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;- (NSPersistentStoreCoordinator *)persistentStoreCoordinator{
-    if (__persistentStoreCoordinator != nil) {
-        return __persistentStoreCoordinator;
-    }
-    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@&quot;HelloApp.sqlite&quot;];
-    NSError *error = nil;
-    __persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
-    if (![__persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&amp;amp;error]) {
-        NSLog(@&quot;Unresolved error %@, %@&quot;, error, [error userInfo]);
-        abort();
-    }    
-    return __persistentStoreCoordinator;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;生成&lt;code class=&quot;highlighter-rouge&quot;&gt;NSPersistentStoreCoordinator&lt;/code&gt;需要参数：文件保存路径、&lt;code class=&quot;highlighter-rouge&quot;&gt;NSManagedObjectModel&lt;/code&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;nsmanagedobjectmodel&quot;&gt;NSManagedObjectModel&lt;/h4&gt;
-
-&lt;p&gt;生成这个类的来源就是在 xCode 里的.xcdatamodeld文件，我们可以可视化的对这个文件进行操作，实际上这个文件也就相当于数据库的 schema，这个文件编译后就是.momd或.mom文件。&lt;/p&gt;
-
-&lt;p&gt;Model Vesion：版本升级，Editor-&amp;gt;Add Model Version，生成新的momd文件来进行版本升级，并且重新生成相关类&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;- (NSManagedObjectModel *)managedObjectModel{
-    if (__managedObjectModel != nil) {
-        return __managedObjectModel;
-    }
-    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@&quot;HelloApp&quot; withExtension:@&quot;momd&quot;];
-    __managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
-    return __managedObjectModel;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&quot;二多线程里的coredata&quot;&gt;二、多线程里的CoreData&lt;/h3&gt;
-
-&lt;p&gt;在多线程中，每个线程都会有一个上下文&lt;code class=&quot;highlighter-rouge&quot;&gt;NSManagedObjectContext&lt;/code&gt;，而&lt;code class=&quot;highlighter-rouge&quot;&gt;NSManagedObjectContext&lt;/code&gt;可以共享一个&lt;code class=&quot;highlighter-rouge&quot;&gt;NSPersistentStoreCoordinator&lt;/code&gt;或者，每个&lt;code class=&quot;highlighter-rouge&quot;&gt;NSManagedObjectContext&lt;/code&gt;都对应一个&lt;code class=&quot;highlighter-rouge&quot;&gt;NSPersistentStoreCoordinator&lt;/code&gt;，所以会有以下几种方式:&lt;/p&gt;
-
-&lt;h4 id=&quot;1&quot;&gt;1、&lt;/h4&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/coredata/02.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;这种方式，最简单明了，在子线程的privatecontext里操作完数据库对象后，将操作缓存merger到主线程的maincontext，再由maincontext通过&lt;code class=&quot;highlighter-rouge&quot;&gt;NSPersistentStoreCoordinator&lt;/code&gt;存到本地磁盘。但是存到本地磁盘中是一个耗时的IO操作，对于主线程来说，这是不能忍的，所以不能用这种方式&lt;/p&gt;
-
-&lt;h4 id=&quot;2&quot;&gt;2、&lt;/h4&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/coredata/03.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;这个方式在跟第一个方式的区别在于，主线程上的maincontext与&lt;code class=&quot;highlighter-rouge&quot;&gt;NSPersistentStoreCoordinator&lt;/code&gt;交互之家再插了一层子线程的privatecontext，context之间的传递是很快的，这样可以有效地避免IO阻塞主线程，而且childContext调用save方法，其parentContext不用任何merge操作，CoreData自动将数据merge到parentContext当中，这样可以保证每个context的数据同步&lt;/p&gt;
-
-&lt;h4 id=&quot;3&quot;&gt;3、&lt;/h4&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/coredata/04.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;这种情况下，privatecontext与maincontext共同连接&lt;code class=&quot;highlighter-rouge&quot;&gt;NSPersistentStoreCoordinator&lt;/code&gt;，子线程中创建privateContext，进行数据增删改查操作，直接save到本地数据库，同时发出通知&lt;code class=&quot;highlighter-rouge&quot;&gt;NSManagedObjectContextDidSaveNotification&lt;/code&gt;,在主线程mainContext的&lt;code class=&quot;highlighter-rouge&quot;&gt;mergeChangesFromContextDidSaveNotification:notification&lt;/code&gt;方法，将所有的数据变动merge到mainContext中，这样就保持了两个Context中的数据同步。由于大部分的操作都是privateContext在子线程中操作的，所以这种设计是UI线程耗时最少的一种设计，但是它的代价是需要多写mergeChanges的方法。&lt;/p&gt;
-
-&lt;h3 id=&quot;三magicrecord源码解析&quot;&gt;三、MagicRecord源码解析&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;+ (void) setupCoreDataStackWithStoreAtURL:(NSURL *)storeURL
-{
-    if ([NSPersistentStoreCoordinator MR_defaultStoreCoordinator] != nil) return;
-    
-    NSPersistentStoreCoordinator *coordinator = [NSPersistentStoreCoordinator MR_coordinatorWithSqliteStoreAtURL:storeURL];
-    [NSPersistentStoreCoordinator MR_setDefaultStoreCoordinator:coordinator];
-    
-    [NSManagedObjectContext MR_initializeDefaultContextWithCoordinator:coordinator];
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;先生成一个默认的NSPersistentStoreCoordinator，再生成默认的context，如下：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;+ (void) MR_initializeDefaultContextWithCoordinator:(NSPersistentStoreCoordinator *)coordinator;
-{
-    NSAssert(coordinator, @&quot;Provided coordinator cannot be nil!&quot;);
-    if (MagicalRecordDefaultContext == nil)
-    {
-      	// NSPrivateQueueConcurrencyType
-        NSManagedObjectContext *rootContext = [self MR_contextWithStoreCoordinator:coordinator];
-        [self MR_setRootSavingContext:rootContext];
-		
-        //NSMainQueueConcurrencyType
-        NSManagedObjectContext *defaultContext = [self MR_newMainQueueContext];
-        [self MR_setDefaultContext:defaultContext];
-
-        [defaultContext setParentContext:rootContext];
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;MagicRecord生成了两个context:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;rootContext:NSPrivateQueueConcurrencyType，用以保存数据的上下文&lt;/li&gt;
-  &lt;li&gt;defaultContext:NSMainQueueConcurrencyType，用以主线程的上下文&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;defaultContext的父context是rootContext：RootSavingContext，可以看出MagicRecord默认用的是第二种模式，很简单就可以新建一个NSManagedObject并且保存&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        NSManagedObjectContext *current_context = [NSManagedObjectContext MR_contextWithParent:[NSManagedObjectContext MR_defaultContext]];
-        Person *person = [Person MR_createEntityInContext:current_context];
-        person.name = @&quot;jack&quot;;
-        [current_context MR_saveToPersistentStoreWithCompletion:^(BOOL contextDidSave, NSError * _Nullable error) {
-            NSLog(@&quot;finish save&quot;);
-        }];
-    });
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;2016-07-25 20:26:29.454 MagicR[19718:3903431] Created new private queue context: &amp;lt;NSManagedObjectContext: 0x6100001da220&amp;gt;
-2016-07-25 20:26:29.454 MagicR[19718:3903443] → Saving &amp;lt;NSManagedObjectContext (0x6100001da220): Untitled Context&amp;gt; on a background thread
-2016-07-25 20:26:29.460 MagicR[19718:3903375] → Saving &amp;lt;NSManagedObjectContext (0x6080001daa90): MagicalRecord Default Context&amp;gt; on the main thread
-2016-07-25 20:26:29.462 MagicR[19718:3903431] → Saving &amp;lt;NSManagedObjectContext (0x6180001da6d0): MagicalRecord Root Saving Context&amp;gt; on a background thread
-2016-07-25 20:26:29.466 MagicR[19718:3903375] finish save
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;从MagicRecord的日志就可以看出来，整个过程如下：&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;在子线程新建了一个current_context，并且设置他的父context为主线程的context(default context),然后Person在子线程context改变&lt;/li&gt;
-  &lt;li&gt;将current_context的变动merge到父线程的context也就是defaultcontext，主线程的context同样merge到父线程的也就是rootcontext&lt;/li&gt;
-  &lt;li&gt;rootcontext在子线程将变动保存到磁盘&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;如果想用第三种方式的话可以这样：在修改之后发出&lt;code class=&quot;highlighter-rouge&quot;&gt;NSManagedObjectContextDidSaveNotification&lt;/code&gt;通知主线程的context。而主线程的context通过&lt;code class=&quot;highlighter-rouge&quot;&gt;mergeChangesFromContextDidSaveNotification&lt;/code&gt;来合并修改&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        NSManagedObjectContext *current_context = [NSManagedObjectContext MR_newPrivateQueueContext];
-        [current_context setPersistentStoreCoordinator:[NSPersistentStoreCoordinator MR_defaultStoreCoordinator]];
-        Person *person = [Person MR_createEntityInContext:current_context];
-        person.name = @&quot;jack&quot;;
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(contextChanged:)
-                                                     name:NSManagedObjectContextDidSaveNotification
-                                                   object:current_context];
-        [current_context MR_saveToPersistentStoreWithCompletion:^(BOOL contextDidSave, NSError * _Nullable error) {
-            NSLog(@&quot;finish save&quot;);
-        }];
-    });
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (void)contextChanged:(NSNotification*)notification{
-    [[NSManagedObjectContext MR_newPrivateQueueContext] mergeChangesFromContextDidSaveNotification:notification];
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;这样就能保证子线程的Context与主线程的context内容修改可以同步&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、CoreData结构</summary></entry></feed>
+&lt;/ol&gt;</content><author><name>Ted</name></author><summary type="html"></summary></entry></feed>
