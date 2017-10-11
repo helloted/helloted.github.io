@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-10-11T10:33:13+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS开发之声音</title><link href="http://www.helloted.com/2017/09/26/voice/" rel="alternate" type="text/html" title="iOS开发之声音" /><published>2017-09-26T20:00:00+08:00</published><updated>2017-09-26T20:00:00+08:00</updated><id>http://www.helloted.com/2017/09/26/voice</id><content type="html" xml:base="http://www.helloted.com/2017/09/26/voice/">&lt;p&gt;部分代码位置&lt;a href=&quot;https://github.com/helloted/voice&quot;&gt;Github-VoiceDemo&lt;/a&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-10-11T10:35:31+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS开发之声音</title><link href="http://www.helloted.com/2017/09/26/voice/" rel="alternate" type="text/html" title="iOS开发之声音" /><published>2017-09-26T20:00:00+08:00</published><updated>2017-09-26T20:00:00+08:00</updated><id>http://www.helloted.com/2017/09/26/voice</id><content type="html" xml:base="http://www.helloted.com/2017/09/26/voice/">&lt;p&gt;部分代码位置&lt;a href=&quot;https://github.com/helloted/voice&quot;&gt;Github-VoiceDemo&lt;/a&gt;&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;Pre&lt;/p&gt;
@@ -450,50 +450,7 @@
 
 &lt;p&gt;概念：在不破坏封装的前提下，捕获一个对象的内部状态，以后可以将该对象回复到原先保存的状态&lt;/p&gt;
 
-&lt;p&gt;应用：对象序列化保存&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">部分代码位置Github-设计模式</summary></entry><entry><title type="html">热修复=Runtime+Javascriptcore</title><link href="http://www.helloted.com/2017/05/30/hotfix/" rel="alternate" type="text/html" title="热修复=Runtime+Javascriptcore" /><published>2017-05-30T20:00:00+08:00</published><updated>2017-05-30T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/30/hotfix</id><content type="html" xml:base="http://www.helloted.com/2017/05/30/hotfix/">&lt;h3 id=&quot;一运行时&quot;&gt;一、运行时&lt;/h3&gt;
-
-&lt;p&gt;热修复的基本原理就是Runtime运行时的方法替换，主要是下列几个方法&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;class_replaceMethod&lt;/code&gt;:方法替换&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;method_exchangeImplementations&lt;/code&gt;:IMP交换&lt;/p&gt;
-
-&lt;p&gt;实例，当我们要对某个类的old_method方法以new_method方法替换掉，则新建一个Category，在其load类方法(Load方法每次APP加载都会调用)中实现以下：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    static dispatch_once_t onceToken;
-    dispatch_once(&amp;amp;onceToken, ^{
-        Class class = [self class];
-        
-        SEL originalSelector = @selector(old_method);
-        SEL swizzledSelector = @selector(new_method);
-        
-        Method originalMethod = class_getInstanceMethod(class, originalSelector);
-        Method swizzledMethod = class_getInstanceMethod(class, swizzledSelector);
-        
-        
-        BOOL didAddMethod =
-        class_addMethod(class,
-                        originalSelector,
-                        method_getImplementation(swizzledMethod),
-                        method_getTypeEncoding(swizzledMethod));
-        
-        if (didAddMethod) {
-            class_replaceMethod(class,
-                                swizzledSelector,
-                                method_getImplementation(originalMethod),
-                                method_getTypeEncoding(originalMethod));
-        } else {
-            method_exchangeImplementations(originalMethod, swizzledMethod);
-        }
-    });
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h3 id=&quot;二javascriptcore&quot;&gt;二、Javascriptcore&lt;/h3&gt;
-
-&lt;p&gt;Javascriptcore是一个iOS原生框架，用于javascript与Objecive C语言进行相互调用，而我们热修改需要用到的就是javascript可以调用OC方法&lt;/p&gt;
-
-&lt;p&gt;三、热修复&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、运行时</summary></entry><entry><title type="html">AFNetworking源码分析(三)</title><link href="http://www.helloted.com/2017/05/26/AFNetWorking_3/" rel="alternate" type="text/html" title="AFNetworking源码分析(三)" /><published>2017-05-26T20:00:00+08:00</published><updated>2017-05-26T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/26/AFNetWorking_3</id><content type="html" xml:base="http://www.helloted.com/2017/05/26/AFNetWorking_3/">&lt;h3 id=&quot;五afnetworkreachabilitymanager&quot;&gt;五、AFNetworkReachabilityManager&lt;/h3&gt;
+&lt;p&gt;应用：对象序列化保存&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">部分代码位置Github-设计模式</summary></entry><entry><title type="html">AFNetworking源码分析(三)</title><link href="http://www.helloted.com/2017/05/26/AFNetWorking_3/" rel="alternate" type="text/html" title="AFNetworking源码分析(三)" /><published>2017-05-26T20:00:00+08:00</published><updated>2017-05-26T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/26/AFNetWorking_3</id><content type="html" xml:base="http://www.helloted.com/2017/05/26/AFNetWorking_3/">&lt;h3 id=&quot;五afnetworkreachabilitymanager&quot;&gt;五、AFNetworkReachabilityManager&lt;/h3&gt;
 
 &lt;h4 id=&quot;一文档翻译&quot;&gt;（一）文档翻译&lt;/h4&gt;
 
@@ -888,7 +845,50 @@
 
 &lt;p&gt;所以整个AFNetworking网络请求的过程就是：&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/AFNetworking/02.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">0、前言</summary></entry><entry><title type="html">iOS之Runloop(3):应用</title><link href="http://www.helloted.com/2017/04/16/Runloop_3/" rel="alternate" type="text/html" title="iOS之Runloop(3):应用" /><published>2017-04-16T20:00:00+08:00</published><updated>2017-04-16T20:00:00+08:00</updated><id>http://www.helloted.com/2017/04/16/Runloop_3</id><content type="html" xml:base="http://www.helloted.com/2017/04/16/Runloop_3/">&lt;p&gt;其他两篇关于Runloop:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/img/AFNetworking/02.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">0、前言</summary></entry><entry><title type="html">热修复=Runtime+Javascriptcore</title><link href="http://www.helloted.com/2017/04/30/hotfix/" rel="alternate" type="text/html" title="热修复=Runtime+Javascriptcore" /><published>2017-04-30T20:00:00+08:00</published><updated>2017-04-30T20:00:00+08:00</updated><id>http://www.helloted.com/2017/04/30/hotfix</id><content type="html" xml:base="http://www.helloted.com/2017/04/30/hotfix/">&lt;h3 id=&quot;一运行时&quot;&gt;一、运行时&lt;/h3&gt;
+
+&lt;p&gt;热修复的基本原理就是Runtime运行时的方法替换，主要是下列几个方法&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;class_replaceMethod&lt;/code&gt;:方法替换&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;method_exchangeImplementations&lt;/code&gt;:IMP交换&lt;/p&gt;
+
+&lt;p&gt;实例，当我们要对某个类的old_method方法以new_method方法替换掉，则新建一个Category，在其load类方法(Load方法每次APP加载都会调用)中实现以下：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    static dispatch_once_t onceToken;
+    dispatch_once(&amp;amp;onceToken, ^{
+        Class class = [self class];
+        
+        SEL originalSelector = @selector(old_method);
+        SEL swizzledSelector = @selector(new_method);
+        
+        Method originalMethod = class_getInstanceMethod(class, originalSelector);
+        Method swizzledMethod = class_getInstanceMethod(class, swizzledSelector);
+        
+        
+        BOOL didAddMethod =
+        class_addMethod(class,
+                        originalSelector,
+                        method_getImplementation(swizzledMethod),
+                        method_getTypeEncoding(swizzledMethod));
+        
+        if (didAddMethod) {
+            class_replaceMethod(class,
+                                swizzledSelector,
+                                method_getImplementation(originalMethod),
+                                method_getTypeEncoding(originalMethod));
+        } else {
+            method_exchangeImplementations(originalMethod, swizzledMethod);
+        }
+    });
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;二javascriptcore&quot;&gt;二、Javascriptcore&lt;/h3&gt;
+
+&lt;p&gt;Javascriptcore是一个iOS原生框架，用于javascript与Objecive C语言进行相互调用，而我们热修改需要用到的就是javascript可以调用OC方法&lt;/p&gt;
+
+&lt;p&gt;三、热修复&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、运行时</summary></entry><entry><title type="html">iOS之Runloop(3):应用</title><link href="http://www.helloted.com/2017/04/16/Runloop_3/" rel="alternate" type="text/html" title="iOS之Runloop(3):应用" /><published>2017-04-16T20:00:00+08:00</published><updated>2017-04-16T20:00:00+08:00</updated><id>http://www.helloted.com/2017/04/16/Runloop_3</id><content type="html" xml:base="http://www.helloted.com/2017/04/16/Runloop_3/">&lt;p&gt;其他两篇关于Runloop:&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;http://www.helloted.com/2017/04/10/Runloop_1/&quot;&gt;iOS之Runloop(1):基础&lt;/a&gt;&lt;/p&gt;
 
