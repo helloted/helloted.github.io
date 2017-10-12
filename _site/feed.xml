@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-10-11T13:45:45+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS开发之声音</title><link href="http://www.helloted.com/2017/09/26/voice/" rel="alternate" type="text/html" title="iOS开发之声音" /><published>2017-09-26T20:00:00+08:00</published><updated>2017-09-26T20:00:00+08:00</updated><id>http://www.helloted.com/2017/09/26/voice</id><content type="html" xml:base="http://www.helloted.com/2017/09/26/voice/">&lt;p&gt;部分代码位置&lt;a href=&quot;https://github.com/helloted/voice&quot;&gt;Github-VoiceDemo&lt;/a&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-10-12T19:36:30+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS开发之声音</title><link href="http://www.helloted.com/2017/09/26/voice/" rel="alternate" type="text/html" title="iOS开发之声音" /><published>2017-09-26T20:00:00+08:00</published><updated>2017-09-26T20:00:00+08:00</updated><id>http://www.helloted.com/2017/09/26/voice</id><content type="html" xml:base="http://www.helloted.com/2017/09/26/voice/">&lt;p&gt;部分代码位置&lt;a href=&quot;https://github.com/helloted/voice&quot;&gt;Github-VoiceDemo&lt;/a&gt;&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;Pre&lt;/p&gt;
@@ -845,7 +845,156 @@
 
 &lt;p&gt;所以整个AFNetworking网络请求的过程就是：&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/AFNetworking/02.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">0、前言</summary></entry><entry><title type="html">热修复=Runtime+Javascriptcore</title><link href="http://www.helloted.com/2017/04/30/hotfix/" rel="alternate" type="text/html" title="热修复=Runtime+Javascriptcore" /><published>2017-04-30T20:00:00+08:00</published><updated>2017-04-30T20:00:00+08:00</updated><id>http://www.helloted.com/2017/04/30/hotfix</id><content type="html" xml:base="http://www.helloted.com/2017/04/30/hotfix/">&lt;h3 id=&quot;一运行时&quot;&gt;一、运行时&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&quot;/img/AFNetworking/02.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">0、前言</summary></entry><entry><title type="html">Runtime运用：Json转Model</title><link href="http://www.helloted.com/2017/05/09/JsonToModel/" rel="alternate" type="text/html" title="Runtime运用：Json转Model" /><published>2017-05-09T20:00:00+08:00</published><updated>2017-05-09T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/09/JsonToModel</id><content type="html" xml:base="http://www.helloted.com/2017/05/09/JsonToModel/">&lt;p&gt;完整版代码可以在&lt;a href=&quot;https://github.com/helloted/JsonToModel&quot;&gt;GitHub-JsonToModel&lt;/a&gt;下载&lt;/p&gt;
+
+&lt;h3 id=&quot;一前言&quot;&gt;一、前言&lt;/h3&gt;
+
+&lt;p&gt;与后台交互，后台返回的数据一般是Json类型的，然而我们的定义的模型一般是继承自NSObject，Json与Model之间的转换，第三方工具也有很多，比如YYModel,JSONModel,MJExtention.&lt;/p&gt;
+
+&lt;p&gt;这三个第三方框架的测试效率为YYModel&amp;gt;MJExtention&amp;gt;JsonModel&lt;/p&gt;
+
+&lt;p&gt;其中JSon转Model的核心知识点就在于利用Runtime的特点来获取属性以及KVC进行赋值，尝试了一下，封装了一个简易版的工具，一行代码即可完成转换&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;User *user = [User ht_modelFromJson:jsonStr];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;二流程&quot;&gt;二、流程&lt;/h3&gt;
+
+&lt;p&gt;首先要引入runtime&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#import &amp;lt;objc/runtime.h&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;拿到Model里的所有属性&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//获取当前类中的所有属性
+ unsigned int propertyCount;
+ objc_property_t *allPropertys = class_copyPropertyList([self class], &amp;amp;propertyCount);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;获取属性的name&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  //拿到属性名称
+ NSString *property_name = [NSString stringWithUTF8String:property_getName(property)];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;以name为key从Json字典里获取值&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// 从Json字典里获取值
+id value = [dict objectForKey:key];
+if (value == nil) {
+continue;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;KVC赋值&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[self setValue:value forKey:key];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;三补充&quot;&gt;三、补充&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;1、拿到的可能不是Json字典，而是Json字符串或者是二进制类型NSData，那么首先要对将Json字符串转成Json字典&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (NSDictionary *)dictionaryWithJSON:(id)json
+{
+    if (!json) {
+        return nil;
+    }
+    // 若是NSDictionary类型，直接返回
+    if ([json isKindOfClass:[NSDictionary class]]) {
+        return json;
+    }
+    
+    NSDictionary *dict = nil;
+    NSData *jsonData = nil;
+    
+    // 如果是NSString，就先转化为NSData
+    if ([json isKindOfClass:[NSString class]]) {
+        jsonData = [(NSString *)json dataUsingEncoding:NSUTF8StringEncoding];
+    } else if ([json isKindOfClass:[NSData class]]) {
+        jsonData = json;
+    }
+    
+    // 如果时NSData类型，使用NSJSONSerialization
+    if (jsonData &amp;amp;&amp;amp; [jsonData isKindOfClass:[NSData class]]) {
+        NSError *error = nil;
+        dict = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&amp;amp;error];
+        if (error) {
+            NSLog(@&quot;dictionaryWithJSON error:%@&quot;, error);
+            return nil;
+        }
+        if (![dict isKindOfClass:[NSDictionary class]]) {
+            return nil;
+        }
+    }
+    
+    return dict;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;2、如果字典属性与模型属性不完全相同，则需要匹配一下&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;解决方案是定义一个Protocol&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;@protocol&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;JSONModelSpecialAttributesProtocol&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSObject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;@optional&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// 属性匹配
+&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSDictionary&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;attributesMapperDictionary&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// 嵌套模型
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSDictionary&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;attributesNestDictionary&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;@end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;如果某个Model与字典不一一匹配，则遵循这个协议，将需要配套的属性返回即可，在赋值的时候，将key现行转换一下&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;c1&quot;&gt;// 某些属性需要重新映射===
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;NSDictionary&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mapperDict&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;conformsToProtocol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;@protocol&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;JSONModelSpecialAttributesProtocol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;respondsToSelector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;@selector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;attributesMapperDictionary&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)])&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;mapperDict&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;attributesMapperDictionary&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    
+    &lt;span class=&quot;c1&quot;&gt;// 如果有属性需要重新映射===
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;property_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mapperDict&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mapperDict&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;objectForKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;property_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mapperDict&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;objectForKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;property_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;3、如果模型里面嵌套了模型，也是需要先自定义下，在赋值时做个区分&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;      // 如果有属性嵌套其他Model
+        if (nestDict &amp;amp;&amp;amp; [nestDict objectForKey:property_name]) {
+            NSString *className = [nestDict objectForKey:property_name];
+            Class class = NSClassFromString(className);
+            id obj = [[class alloc]init];
+            [obj modelWithJsonDictionary:value];
+            [self setValue:obj forKey:key];
+        }else{
+            [self setValue:value forKey:key];
+        }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;完整版代码可以在&lt;a href=&quot;https://github.com/helloted/JsonToModel&quot;&gt;GitHub-JsonToModel&lt;/a&gt;下载&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">完整版代码可以在GitHub-JsonToModel下载</summary></entry><entry><title type="html">热修复=Runtime+Javascriptcore</title><link href="http://www.helloted.com/2017/04/30/hotfix/" rel="alternate" type="text/html" title="热修复=Runtime+Javascriptcore" /><published>2017-04-30T20:00:00+08:00</published><updated>2017-04-30T20:00:00+08:00</updated><id>http://www.helloted.com/2017/04/30/hotfix</id><content type="html" xml:base="http://www.helloted.com/2017/04/30/hotfix/">&lt;h3 id=&quot;一运行时&quot;&gt;一、运行时&lt;/h3&gt;
 
 &lt;p&gt;热修复的基本原理就是Runtime运行时的方法替换，主要是下列几个方法&lt;/p&gt;
 
@@ -1813,191 +1962,4 @@ cancelPreviousPerformRequestsWithTarget:selector:object:
 
 &lt;p&gt;线程安全性取决于使用runloop的API。 Core Foundation中的功能通常是线程安全的，可以从任何线程调用。 但是，如果您想更改runloop的配置，那么尽可能从拥有runloop的线程执行此操作。&lt;/p&gt;
 
-&lt;p&gt;Cocoa NSRunLoop类并不像Core Foundation对象那样固有线程安全。 如果您正在使用NSRunLoop类来修改runloop，那你最好在同一线程执行这个操作。 将input sources或timers添加到属于不同线程的runloop可能会导致崩溃或者其他意外结果。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">其他两篇：</summary></entry><entry><title type="html">iOS图形</title><link href="http://www.helloted.com/2017/01/10/draw/" rel="alternate" type="text/html" title="iOS图形" /><published>2017-01-10T20:00:00+08:00</published><updated>2017-01-10T20:00:00+08:00</updated><id>http://www.helloted.com/2017/01/10/draw</id><content type="html" xml:base="http://www.helloted.com/2017/01/10/draw/">&lt;p&gt;&lt;img src=&quot;/img/draw/01.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;一概念&quot;&gt;一、概念&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Core Graphics Framework&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Core Graphics Framework 是一套基于C的API框架，使用了Quartz作为绘图引擎。它提供了低级别、轻量级、高保真度的2D渲染。该框架可以用于基于路径的绘图、变换、颜色管理、脱屏渲染，模板、渐变、遮蔽、图像数据管理、图像的创建、遮罩以及PDF文档的创建、显示和分析&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Graphics Context&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Graphics Context是一个数据类型(CGContextRef)、Quartz绘制图像到输出设备的信息都保存在其中，Graphics Context定义了基本的绘制属性，如颜色、裁减区域、线条宽度和样式信息、字体信息、混合模式等&lt;/p&gt;
-
-&lt;p&gt;使用UiKit，你只能在&lt;strong&gt;当前上下文中&lt;/strong&gt;绘图，所以如果你当前处于&lt;strong&gt;UIGraphicsBeginImageContextWithOptions&lt;/strong&gt;函数或&lt;strong&gt;drawRect&lt;/strong&gt;：方法中，你就可以直接使用UIKit提供的方法进行绘图。如果你持有一个context：参数，那么使用UIKit提供的方法之前，必须将该上下文参数转化为当前上下文。幸运的是，调用&lt;strong&gt;UIGraphicsPushContext&lt;/strong&gt; 函数可以方便的将context：参数转化为当前上下文，记住最后别忘了调用&lt;strong&gt;UIGraphicsPopContext函数&lt;/strong&gt;恢复上下文环境。&lt;/p&gt;
-
-&lt;p&gt;通过调用UIGraphicsGetCurrentContext()方法可以获取当前的Graphics Context&lt;/p&gt;
-
-&lt;h3 id=&quot;二五种绘图方式&quot;&gt;二、五种绘图方式&lt;/h3&gt;
-
-&lt;p&gt;用六种方式来画下面这个圆&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/draw/03.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;所有的代码可以&lt;a href=&quot;https://github.com/helloted/drawdemo&quot;&gt;Github-五种绘图方式&lt;/a&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;1uiviewdrawrectuibezierpath&quot;&gt;1、UIView+drawRect+UIBezierPath&lt;/h4&gt;
-
-&lt;p&gt;重写drawRect能够自动生成Context，所以可以在drawRect方法里面画图形&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;- (void)drawRect:(CGRect)rect{
-    UIBezierPath *p = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(100,100,100,100)];
-    [[UIColor orangeColor] setFill];
-    [p fill];
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&quot;2uiviewdrawrectcontext&quot;&gt;2、UIView+drawRect+context&lt;/h4&gt;
-
-&lt;p&gt;获取到drawRect自动生成的context,在context里画图形&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;- (void)drawRect:(CGRect)rect{
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextAddEllipseInRect(context, CGRectMake(100,100,100,100));
-    CGContextSetFillColorWithColor(context, [UIColor orangeColor].CGColor);
-    CGContextFillPath(context);
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&quot;3uiviewdrawlayer-incontext&quot;&gt;3、UIView+drawLayer: inContext:&lt;/h4&gt;
-
-&lt;p&gt;注意要显式调用[view.layer setNeedsDisplay]这个方法才起作用&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx{
-    CGContextAddEllipseInRect(ctx, CGRectMake(100,100,100,100));
-    CGContextSetFillColorWithColor(ctx, [UIColor orangeColor].CGColor);
-    CGContextFillPath(ctx);
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;或者&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx{
-    UIGraphicsPushContext(ctx);
-    UIBezierPath* p = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(100,100,100,100)];
-    [[UIColor orangeColor] setFill];
-    [p fill];
-    UIGraphicsPopContext();
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&quot;4calayerdrawincontext&quot;&gt;4、CALayer+drawInContext&lt;/h4&gt;
-
-&lt;p&gt;插入Layer层，注意插入Layer层时，要显式调用setNeedsDisplay，这样就会调用drawInContext&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;    DrawLayer *layer = [[DrawLayer alloc]init];
-    layer.frame = self.view.bounds;
-    [layer setNeedsDisplay];
-    [self.view.layer addSublayer:layer];
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;@implementation DrawLayer
-
-- (void)drawInContext:(CGContextRef)ctx{
-    CGContextAddEllipseInRect(ctx, CGRectMake(100,100,100,100));
-    CGContextSetFillColorWithColor(ctx, [UIColor orangeColor].CGColor);
-    CGContextFillPath(ctx);
-}
-@end
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&quot;5uigraphicsbeginimagecontextwithoptions&quot;&gt;5、UIGraphicsBeginImageContextWithOptions&lt;/h4&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;- (void)drawImage{
-    UIGraphicsBeginImageContextWithOptions(CGSizeMake(100,100), NO, 0);
-    CGContextRef con = UIGraphicsGetCurrentContext();
-    CGContextAddEllipseInRect(con, CGRectMake(0,0,100,100));
-    CGContextSetFillColorWithColor(con, [UIColor orangeColor].CGColor);
-    CGContextFillPath(con);
-    UIImage* image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    UIImageView  *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(100, 100, 100, 100)];
-    [imageView setImage:image];
-    [self.view addSubview:imageView];    
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;或者&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;    UIGraphicsBeginImageContextWithOptions(CGSizeMake(100,100), NO, 0);
-    UIBezierPath* p = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(0,0,100,100)];
-    [[UIColor blueColor] setFill];
-    [p fill];
-    UIImage* image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    UIImageView  *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(100, 100, 100, 100)];
-    [imageView setImage:image];
-    [self.view addSubview:imageView];
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&quot;三上下文切换&quot;&gt;三、上下文切换&lt;/h3&gt;
-
-&lt;h4 id=&quot;1cgcontextsavegstatecgcontextrestoregstate&quot;&gt;1、CGContextSaveGState/CGContextRestoreGState&lt;/h4&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[[UIColor redColor] setStroke]; //画笔红色
-CGContextSaveGState(UIGraphicsGetCurrentContext()); //记录上下文的当前状态
-[[UIColor blackColor] setStroke]; //画笔黑色
-CGContextRestoreGState(UIGraphicsGetCurrentContext()); //恢复之前记录的上下文状态
-UIRectFill(CGRectMake(10, 10, 100, 100)); //绘制红色矩形
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h4 id=&quot;2uigraphicspushcontextuigraphicspopcontext&quot;&gt;2、UIGraphicsPushContext/UIGraphicsPopContext&lt;/h4&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;当前正在使用CoreGraphics绘制图形A，想要使用UIKit绘制完全不同的图形B，此时就希望保存当前绘图context及已绘制内容。&lt;/li&gt;
-  &lt;li&gt;使用UIGraphicsPushContext切换到一个全新的绘图context。&lt;/li&gt;
-  &lt;li&gt;使用UIKit绘制图形B。&lt;/li&gt;
-  &lt;li&gt;使用UIGraphicsPopContext恢复之前的绘图context，继续使用CoreGraphics绘制图形A。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx{
-    UIGraphicsPushContext(ctx);
-    UIBezierPath* p = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(100,100,100,100)];
-    [[UIColor orangeColor] setFill];
-    [p fill];
-    UIGraphicsPopContext();
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h4 id=&quot;3uigraphicsbeginimagecontextuigraphicsendimagecontext&quot;&gt;3、UIGraphicsBeginImageContext/UIGraphicsEndImageContext&lt;/h4&gt;
-
-&lt;p&gt;如果想在切换绘图context后，继续使用CoreGraphics绘图（而非UIKit），则不需要使用UIGraphicsPushContext/UIGraphicsPopContext。因为CoreGraphics已将绘图context视为参数。使用场景是：&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;当前正在绘制图形A。&lt;/li&gt;
-  &lt;li&gt;使用UIGraphicsBeginImageContext将旧的绘图context入栈，创建新的绘图context并使用。&lt;/li&gt;
-  &lt;li&gt;绘制图形B。&lt;/li&gt;
-  &lt;li&gt;结束绘制图形B之后，使用UIGraphicsEndImageContext恢复到之前的绘图context，继续绘制图形A。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// 绘图中
-UIGraphicsBeginImageContext(CGSizeMake(200, 200));
-[self.view drawViewHierarchyInRect:self.view.bounds afterScreenUpdates:YES];
-UIImage *snapshot = UIGraphicsGetImageFromCurrentImageContext();
-UIGraphicsEndImageContext();
-imageView.image = snapshot;
-// 继续绘图
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h3 id=&quot;四calayer与uiview&quot;&gt;四、CALayer与UIView&lt;/h3&gt;
-
-&lt;p&gt;视图即UIView，并不是直接显示在屏幕上，而是在创建视图对象的时候视图对象会自动创建一个层，而视图对象把要显示的东西绘制在层上，待到需要显示时硬件将所有的层拷贝，然后按Z轴的高低合成最终的显示结果&lt;/p&gt;
-
-&lt;p&gt;view的完整显示过程&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;view.layer会准备一个Layer Graphics Contex(图层类型的上下文)&lt;/li&gt;
-  &lt;li&gt;调用view.layer.delegate(view)的drawLayer:inContext:,并传入刚才准备好的上下文&lt;/li&gt;
-  &lt;li&gt;view的drawLayer:inContext:方法内部又会调用view的drawRect:方法&lt;/li&gt;
-  &lt;li&gt;view就可以在drawRect:方法中实现绘图代码, 所有东西最终都绘制到view.layer上面&lt;/li&gt;
-  &lt;li&gt;系统再将view.layer的内容拷贝到屏幕, 于是完成了view的显示&lt;/li&gt;
-&lt;/ol&gt;</content><author><name>Ted</name></author><summary type="html"></summary></entry></feed>
+&lt;p&gt;Cocoa NSRunLoop类并不像Core Foundation对象那样固有线程安全。 如果您正在使用NSRunLoop类来修改runloop，那你最好在同一线程执行这个操作。 将input sources或timers添加到属于不同线程的runloop可能会导致崩溃或者其他意外结果。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">其他两篇：</summary></entry></feed>
