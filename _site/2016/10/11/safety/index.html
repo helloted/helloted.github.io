@@ -144,6 +144,8 @@
 
 <p><img src="/img/safety/safety_00.png" alt="img" /></p>
 
+<p><img src="/img/safety/safety_04.png" alt="img" /></p>
+
 <blockquote>
   <p>iOS应用程序只能在为该改程序创建的文件系统中读取文件，不可以去其它地方访问，此区域被成为沙盒，所以所有的非代码文件都要保存在此，例如图像，图标，声音，映像，属性列表，文本文件等。</p>
 
@@ -154,7 +156,41 @@
   </ol>
 </blockquote>
 
-<p><img src="/img/safety/safety_02.png" alt="img" /></p>
+<p>1、AppName.app 目录：这是应用程序的程序包目录，这里面存放的是应用程序的源文件，包括资源文件和可执行文件。包含应用程序的本身。由于应用程序必须经过签名，所以您在运行时不能对这个目录中的内容进行修改，否则可能会使应用程序无法启动。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>NSLog(@"%@",[[NSBundle mainBundle] bundlePath]);
+NSString *imagePath = [[NSBundle mainBundle] pathForResource:@"apple" ofType:@"png"];
+UIImage *appleImage = [[UIImage alloc] initWithContentsOfFile:imagePath];
+</code></pre>
+</div>
+
+<p>2、Documents 目录：您应该将所有的应用程序数据文件写入到这个目录下。这个目录用于存储用户数据。该路径可通过配置实现iTunes共享文件。可被iTunes备份。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+</code></pre>
+</div>
+
+<p>3、Library 目录：这个目录下有两个子目录：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>NSString *libDir = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) lastObject];
+</code></pre>
+</div>
+
+<p>Preferences 目录：包含应用程序的偏好设置文件。您不应该直接创建偏好设置文件，而是应该使用NSUserDefaults类来取得和设置应用程序的偏好.
+Caches 目录：用于存放应用程序专用的支持文件，保存应用程序再次启动过程中需要的信息。
+可创建子文件夹。可以用来放置您希望被备份但不希望被用户看到的数据。该路径下的文件夹，除Caches以外，都会被iTunes备份。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>NSString *cachesDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
+</code></pre>
+</div>
+
+<p>4、tmp 目录：这个目录用于存放临时文件，保存应用程序再次启动过程中不需要的信息。该路径下的文件不会被iTunes备份。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>NSString *tmpDir =  NSTemporaryDirectory();
+</code></pre>
+</div>
+
+<p>综上，itunes会备份的目录为Documents以及Library目录里除Caches目录的文件。</p>
 
 <h3 id="三https">三、HTTPS</h3>
 
