@@ -346,5 +346,5 @@ Cocoa中的NSNumber也是如此，numberWithBool:和numberWithInt:分别返回�
 
 应用：对象序列化保存
 
-部分代码位置[Github-设计模式](https://github.com/helloted/designpattern)
+
 
