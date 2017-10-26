@@ -106,7 +106,9 @@
 
 				<h4 id="1nsoperation是基于gcd封装的">1、NSoperation是基于GCD封装的</h4>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>dispatch_async(_Queue, ^{    //请求数据  NSData *data = [NSData dataWithContentURL:[NSURL URLWithString:@"http://domain.com/a.png"]];    dispatch_async(dispatch_get_main_queue(), ^{         [self refreshViews:data];    });});
+<div class="highlighter-rouge"><pre class="highlight"><code>dispatch_async(_Queue, ^{    //请求数据  
+NSData *data = [NSData dataWithContentURL:[NSURL URLWithString:@"http://domain.com/a.png"]];    
+dispatch_async(dispatch_get_main_queue(), ^{         [self refreshViews:data];    });});
 </code></pre>
 </div>
 
