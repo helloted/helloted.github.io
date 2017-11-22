@@ -112,7 +112,7 @@
 
 <p><img src="/img/data/11.png" alt="img" /></p>
 
-<h3 id="一选择排序一冒泡排序">一、选择排序(一)：冒泡排序</h3>
+<h3 id="一交换排序一冒泡排序">一、交换排序(一)：冒泡排序</h3>
 
 <p>解析：</p>
 
@@ -137,39 +137,52 @@
 </code></pre>
 </div>
 
-<h3 id="二选择排序二快速排序填坑排序">二、选择排序(二)：快速排序(填坑排序)</h3>
+<h3 id="二交换排序二快速排序填坑排序分治排序">二、交换排序(二)：快速排序(填坑排序、分治排序)</h3>
 
-<p>快速排序是冒泡排序的一种优化，可称为填坑</p>
+<p>快速排序是冒泡排序的一种优化，先用填坑法将数组进行分割，左边小于基准数，右边全部大于基准数，再用分治法分别递归，</p>
 
-<p>由于已经将a[0]中的数保存到X中，可以理解成在数组a[0]上挖了个坑，可以将其它数据填充到这来。</p>
+<p>1、将A[0]，作为基准数，挖走到temp中，A[0]现在为坑</p>
 
-<p>从j开始向前找一个比X小或等于X的数。当j=8，符合条件，将a[8]挖出再填到上一个坑a[0]中。a[0]=a[8]; i++;  这样一个坑a[0]就被搞定了，但又形成了一个新坑a[8]，这怎么办了？简单，再找数字来填a[8]这个坑。这次从i开始向后找一个大于X的数，当i=3，符合条件，将a[3]挖出再填到上一个坑中a[8]=a[3]; j–;</p>
+<p>2、从右到左扫，找到第一个比基准数小的位置j，将这个位置的数A[j]放到A[0]，此时A[j]留坑</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">sub_solt</span><span class="p">(</span><span class="n">orgin</span><span class="p">,</span><span class="n">l</span><span class="p">,</span><span class="n">high</span><span class="p">):</span>
-    <span class="n">key</span> <span class="o">=</span> <span class="n">orgin</span><span class="p">[</span><span class="n">l</span><span class="p">]</span>
-    <span class="k">while</span> <span class="n">l</span> <span class="o">&lt;</span> <span class="n">high</span><span class="p">:</span>
-        <span class="k">while</span> <span class="n">l</span> <span class="o">&lt;</span> <span class="n">high</span> <span class="ow">and</span> <span class="n">orgin</span><span class="p">[</span><span class="n">high</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">key</span><span class="p">:</span>
-            <span class="n">high</span> <span class="o">-=</span> <span class="mi">1</span>
-        <span class="k">while</span> <span class="n">l</span> <span class="o">&lt;</span> <span class="n">high</span> <span class="ow">and</span> <span class="n">orgin</span><span class="p">[</span><span class="n">high</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">key</span><span class="p">:</span>
-            <span class="n">orgin</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">=</span> <span class="n">orgin</span><span class="p">[</span><span class="n">high</span><span class="p">]</span>
-            <span class="n">l</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="n">orgin</span><span class="p">[</span><span class="n">high</span><span class="p">]</span> <span class="o">=</span> <span class="n">orgin</span><span class="p">[</span><span class="n">l</span><span class="p">]</span>
-    <span class="n">orgin</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">=</span> <span class="n">key</span>
-    <span class="k">return</span> <span class="n">l</span>
+<p>3、从A[1]，开始从左向右扫，找到第一个比基准数的位置i，将这个数A[i]放到A[j]，此时A[i]留坑</p>
 
+<p>4、重复2、3步骤，一直到i,j会合。将temp放入a[i]，这样i左边的数就比A[i]小，右边比A[i]大</p>
 
-<span class="k">def</span> <span class="nf">quick_solt</span><span class="p">(</span><span class="n">orgin</span><span class="p">,</span><span class="n">l</span><span class="p">,</span><span class="n">high</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">l</span> <span class="o">&lt;</span> <span class="n">high</span><span class="p">:</span>
-        <span class="c"># 分治法找到分治点，左边为小于分治数，右边为大于分治数</span>
-        <span class="n">key_index</span> <span class="o">=</span> <span class="n">sub_solt</span><span class="p">(</span><span class="n">orgin</span><span class="p">,</span><span class="n">l</span><span class="p">,</span><span class="n">high</span><span class="p">)</span>
-        <span class="c"># 分别进行排序</span>
-        <span class="n">quick_solt</span><span class="p">(</span><span class="n">orgin</span><span class="p">,</span><span class="n">l</span><span class="p">,</span><span class="n">key_index</span><span class="p">)</span>
-        <span class="n">quick_solt</span><span class="p">(</span><span class="n">orgin</span><span class="p">,</span><span class="n">key_index</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">high</span><span class="p">)</span>
+<p>5、对左边和右边分别进行递归。</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">quick_sort</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">left</span><span class="p">,</span><span class="n">right</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">left</span> <span class="o">&lt;</span> <span class="n">right</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">left</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="n">right</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">left</span><span class="p">]</span> <span class="c"># 将第一个数作为基准数，存入temp,同时基准位置就留坑了</span>
+            <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">j</span><span class="p">:</span>
+                <span class="c"># 从右向前扫，找到小于基准数的值，将其放入坑中，再次留出一个坑</span>
+                <span class="k">while</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">temp</span> <span class="ow">and</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">j</span><span class="p">):</span>
+                    <span class="n">j</span> <span class="o">-=</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">j</span><span class="p">:</span>
+                    <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="c"># 从前往后扫，找到大于基准数的值，将其放入上一个坑，从而留出一个坑</span>
+                <span class="k">while</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">temp</span> <span class="ow">and</span> <span class="n">i</span><span class="o">&lt;</span> <span class="n">j</span><span class="p">):</span>
+                    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">j</span><span class="p">:</span>
+                    <span class="n">A</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="n">j</span> <span class="o">-=</span> <span class="mi">1</span>
+
+            <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span> <span class="c"># 将最开始挖出来的数填入坑中，至此，i左边的数就小于i,i右边的数都大于i.</span>
+            <span class="c"># 大小分离结束</span>
+
+            <span class="c"># 分治开始，递归排序</span>
+            <span class="n">quick_sort</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">left</span><span class="p">,</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">quick_sort</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">right</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">A</span>
 
 
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
     <span class="n">orgin</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">]</span>
-    <span class="n">quick_solt</span><span class="p">(</span><span class="n">orgin</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">orgin</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">quick_sort</span><span class="p">(</span><span class="n">orgin</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">orgin</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 </code></pre>
 </div>
 
