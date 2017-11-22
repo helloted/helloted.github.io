@@ -72,7 +72,7 @@ NSOperationQueue *queue = [[NSOperationQueue alloc] init];
 
 App1通过openURL的方法跳转到App2，并且在URL中带上想要的参数，有点类似http的get请求那样进行参数传递。这种方式是使用最多的最常见的，使用方法也很简单只需要源App1在info.plist中配置LSApplicationQueriesSchemes，指定目标App2的scheme；然后在目标App2的info.plist中配置好URL types，表示该app接受何种URL scheme的唤起。
 
-![img](/img/Simple_01/09.jpeg)
+![img](/img/Simple_1/09.jpeg)
 
 ```
 UIApplication *application = [UIApplication sharedApplication];
@@ -133,7 +133,7 @@ UIDocumentInteractionController主要是用来实现同设备上app之间的共�
 }
 ```
 
-![img](/img/Simple_01/10.jpeg)
+![img](/img/Simple_1/10.jpeg)
 
 #### 5、local socket
 
@@ -143,4 +143,4 @@ App1在本地的端口port1234进行TCP的bind和listen，另外一个App2在同
 
 它是常用使用场景就是某个App1具有特殊的能力，比如能够跟硬件进行通信，在硬件上处理相关数据。而App2则没有这个能力，但是它能给App1提供相关的数据，这样APP2跟App1建立本地socket连接，传输数据到App1，然后App1在把数据传给硬件进行处理。
 
-![img](/img/Simple_01/11.jpeg)
+![img](/img/Simple_1/11.jpeg)

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-11-21T11:14:45+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS进程/线程间通信</title><link href="http://www.helloted.com/2017/10/26/thread_message/" rel="alternate" type="text/html" title="iOS进程/线程间通信" /><published>2017-10-26T20:00:00+08:00</published><updated>2017-10-26T20:00:00+08:00</updated><id>http://www.helloted.com/2017/10/26/thread_message</id><content type="html" xml:base="http://www.helloted.com/2017/10/26/thread_message/">&lt;h3 id=&quot;一线程间通信&quot;&gt;一、线程间通信&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-11-22T10:08:22+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS进程/线程间通信</title><link href="http://www.helloted.com/2017/10/26/thread_message/" rel="alternate" type="text/html" title="iOS进程/线程间通信" /><published>2017-10-26T20:00:00+08:00</published><updated>2017-10-26T20:00:00+08:00</updated><id>http://www.helloted.com/2017/10/26/thread_message</id><content type="html" xml:base="http://www.helloted.com/2017/10/26/thread_message/">&lt;h3 id=&quot;一线程间通信&quot;&gt;一、线程间通信&lt;/h3&gt;
 
 &lt;p&gt;因为线程是共享内存空间的，所以线程间通信相比于进程间通信会简单一些，线程间通信的体现&lt;/p&gt;
 
@@ -65,7 +65,7 @@
 
 &lt;p&gt;App1通过openURL的方法跳转到App2，并且在URL中带上想要的参数，有点类似http的get请求那样进行参数传递。这种方式是使用最多的最常见的，使用方法也很简单只需要源App1在info.plist中配置LSApplicationQueriesSchemes，指定目标App2的scheme；然后在目标App2的info.plist中配置好URL types，表示该app接受何种URL scheme的唤起。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/Simple_01/09.jpeg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/img/Simple_1/09.jpeg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;UIApplication *application = [UIApplication sharedApplication];
 [application openURL:URL options:@{} completionHandler:nil];
@@ -126,7 +126,7 @@
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/Simple_01/10.jpeg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/img/Simple_1/10.jpeg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 
 &lt;h4 id=&quot;5local-socket&quot;&gt;5、local socket&lt;/h4&gt;
 
@@ -136,7 +136,7 @@
 
 &lt;p&gt;它是常用使用场景就是某个App1具有特殊的能力，比如能够跟硬件进行通信，在硬件上处理相关数据。而App2则没有这个能力，但是它能给App1提供相关的数据，这样APP2跟App1建立本地socket连接，传输数据到App1，然后App1在把数据传给硬件进行处理。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/Simple_01/11.jpeg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、线程间通信</summary></entry><entry><title type="html">iOS设计模式</title><link href="http://www.helloted.com/2017/09/08/designPatten/" rel="alternate" type="text/html" title="iOS设计模式" /><published>2017-09-08T20:00:00+08:00</published><updated>2017-09-08T20:00:00+08:00</updated><id>http://www.helloted.com/2017/09/08/designPatten</id><content type="html" xml:base="http://www.helloted.com/2017/09/08/designPatten/">&lt;p&gt;部分代码位置&lt;a href=&quot;https://github.com/helloted/designpattern&quot;&gt;Github-设计模式&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/img/Simple_1/11.jpeg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、线程间通信</summary></entry><entry><title type="html">iOS设计模式</title><link href="http://www.helloted.com/2017/09/08/designPatten/" rel="alternate" type="text/html" title="iOS设计模式" /><published>2017-09-08T20:00:00+08:00</published><updated>2017-09-08T20:00:00+08:00</updated><id>http://www.helloted.com/2017/09/08/designPatten</id><content type="html" xml:base="http://www.helloted.com/2017/09/08/designPatten/">&lt;p&gt;部分代码位置&lt;a href=&quot;https://github.com/helloted/designpattern&quot;&gt;Github-设计模式&lt;/a&gt;&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;创建型&lt;/p&gt;
