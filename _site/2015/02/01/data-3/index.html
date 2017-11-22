@@ -110,13 +110,17 @@
 
 <p><img src="/img/data/08.jpg" alt="img" /></p>
 
+<p><img src="/img/data/11.png" alt="img" /></p>
+
 <h3 id="一选择排序一冒泡排序">一、选择排序(一)：冒泡排序</h3>
 
-<p>解析：每一次遍历，从下往上排，如果有更大的就往下换一下，小的就会不断往上冒泡。</p>
+<p>解析：</p>
 
-<p>核心思想：每一轮内循环，都能使基准位置的数比后面的数更小。</p>
+<p>第1轮，从(0,n)遍历，找出第1小的数，放在第1位</p>
 
-<p><strong>时间复杂度分析</strong>：O(n^2)，冒泡排序是一种不稳定排序算法</p>
+<p>第2轮，从(1,n)遍历，找出第2小的数，放在第2位</p>
+
+<p>核心思想：每一循环，都能找到基准位置对应的数(第1小，第2小)。</p>
 
 <div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">bubbling_sor</span><span class="p">(</span><span class="n">orgin_list</span><span class="p">):</span>
     <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">orgin_list</span><span class="p">)</span>
