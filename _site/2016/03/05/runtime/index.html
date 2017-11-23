@@ -225,16 +225,39 @@
 }
 </code></pre>
 
-<ol>
-  <li>判断接受者是否为空？ 如果为空，调用nil-handler, 默认为什么都不做。</li>
-  <li>检查class的方法调用cache，是否调用过此方法。</li>
-  <li>检查方法列表是否有此方法，有则调用。</li>
-  <li>检查父类方法列表是否有此方法，有则调用。（如果一直找不到会找到最根的父类如NSObject, NSProxy）</li>
-  <li><code class="highlighter-rouge">resolveInstanceMethod:</code></li>
-  <li><code class="highlighter-rouge">forwardingTargetForSelector:</code> 此处不要返回<code class="highlighter-rouge">self</code>, 否则会产生循环。</li>
-  <li><code class="highlighter-rouge">methodSignatureForSelector:</code>, 如果返回非nil，创建一个<code class="highlighter-rouge">NSInvocation</code> 并传递给<code class="highlighter-rouge">forwardInvocation</code>.</li>
-  <li>调用<code class="highlighter-rouge">doesNotRecognizeSelector:</code> 默认实现为抛一个异常。</li>
-</ol>
+<blockquote>
+  <p>receiver查找：</p>
+</blockquote>
+
+<p>1、判断接受者receiver，也就是第一个参数self，是否为空？ 如果为空，调用nil-handler, 默认为什么都不做。</p>
+
+<blockquote>
+  <p>方法查找</p>
+</blockquote>
+
+<p>2、检查class的方法调用cache，是否调用过此方法。找到了则分发，否则</p>
+
+<p>3、用objc-class.mm中<code class="highlighter-rouge">_class_lookupMethodAndLoadCache3</code>检查从本class的method list寻找selector，如果找到，填充到缓存中，并返回selector。否则</p>
+
+<p>4、寻找父类的method list，并依次往上寻找(会找到NSObject)，直到找到selector，填充到缓存中，并返回selector，否则</p>
+
+<blockquote>
+  <p>动态解析</p>
+</blockquote>
+
+<p>5、如果找到可以动态resolve为一个selector（调用 <code class="highlighter-rouge">resolveInstanceMethod:</code> 和 <code class="highlighter-rouge">resolveClassMethod:</code> 方法添加实例方法实现和类方法实现。），不缓存，方法返回，否则</p>
+
+<blockquote>
+  <p>消息重定向</p>
+</blockquote>
+
+<p>6、消息转发机制执行前，Runtime 系统允许我们替换消息的接收者为其他对象。通过 <code class="highlighter-rouge">- (id)forwardingTargetForSelector:(SEL)aSelector</code> 方法。</p>
+
+<blockquote>
+  <p>消息转发</p>
+</blockquote>
+
+<p>7、首先runtime发送<code class="highlighter-rouge">methodSignatureForSelector:</code>消息查看Selector对应的方法签名，即参数与返回值的类型信息。如果有方法签名返回，runtime则根据方法签名创建描述该消息的NSInvocation，向当前对象发送<code class="highlighter-rouge">forwardInvocation:</code>消息，以创建的NSInvocation对象作为参数；若<code class="highlighter-rouge">methodSignatureForSelector:</code>无方法签名返回，则向当前对象发送<code class="highlighter-rouge">doesNotRecognizeSelector:</code>消息,程序抛出异常退出。</p>
 
 <p><img src="/img/Runtime/runtime_01.png" alt="" /></p>
 
