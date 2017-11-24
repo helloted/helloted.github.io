@@ -241,6 +241,20 @@
 
 <p>当str是weak类型时，first指针被清空，只有str弱引用，@”hello”会被释放</p>
 
+<blockquote>
+  <p>weak指针置为nil?</p>
+</blockquote>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="err">id</span><span class="w"> </span><span class="err">__weak</span><span class="w"> </span><span class="err">obj_weak</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">obj;//obj已被赋值。而且是strong类型的</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>Runtime维护了一个Weak表，用于存储指向某个对象的所有Weak指针。Weak表其实是一个哈希表，objc_storeWeak函数以把obj的地址作为键值，obj_weak的地址作为值存放到weak表（weak是一个hash表）中。</p>
+
+<p>当obj对象引用计数为0时，就要delloc被回收，objc_clear_deallocating方法将obj_weak置为nil，并且将记录从weak表中清楚</p>
+
 <h4 id="assign">assign</h4>
 
 <ul>

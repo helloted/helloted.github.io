@@ -117,6 +117,18 @@ header-img: "img/bg_02.jpg"
 
 当str是weak类型时，first指针被清空，只有str弱引用，@"hello"会被释放
 
+> weak指针置为nil?
+
+```
+{
+    id __weak obj_weak = obj;//obj已被赋值。而且是strong类型的
+}
+```
+
+Runtime维护了一个Weak表，用于存储指向某个对象的所有Weak指针。Weak表其实是一个哈希表，objc_storeWeak函数以把obj的地址作为键值，obj_weak的地址作为值存放到weak表（weak是一个hash表）中。
+
+当obj对象引用计数为0时，就要delloc被回收，objc_clear_deallocating方法将obj_weak置为nil，并且将记录从weak表中清楚
+
 #### assign
 
 - 非对象类型，数值类型的修饰
