@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
 
-    <title>python基础：socket - Helloted Blog</title>
+    <title>Helloted Blog</title>
 
-    <link rel="canonical" href="http://www.helloted.com/2016/08/20/python_socket/">
+    <link rel="canonical" href="http://www.helloted.com/page3/">
 
     <link rel="shortcut icon" href="/img/favicon.ico">
    
@@ -81,156 +81,98 @@
 </nav>
 
 
-    <!-- Post Header -->
-<header class="intro-header" style="background-image: url('/img/bg_02.jpg')">
+    <!-- Page Header -->
+<header class="intro-header" style="background-image: url('/img/home-bg.jpg')">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="post-heading">
-                    <h1>python基础：socket</h1>
-                    
-                    <h2 class="subheading">socket中TCP与UDP连接服务</h2>
-                    
-                    <span class="meta">Posted by Ted on August 20, 2016</span>
+                <div class="site-heading">
+                    <h1>Helloted Blog</h1>
+                    <hr class="small">
+                    <span class="subheading">曹浩之的博客(原创使人进步)</span>
                 </div>
             </div>
         </div>
     </div>
 </header>
 
-<!-- Post Content -->
-<article>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-
-				<p>Socket是对TCP/UDP协议的封装，Socket本身并不是协议，而是一个调用接口（API），通过Socket，我们才能使用TCP/UDP协议。</p>
-
-<h3 id="一udp">一、UDP</h3>
-
-<p>UDP是传输层的协议，<strong>面向无连接，不具有可靠性的数据报协议。</strong>只确保发送消息，其他处理都由上层应用来完成。</p>
-
-<p>Receive:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>#coding=utf-8
-import socket
-
-s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-# 绑定端口:
-s.bind(('localhost', 3289))
-
-print 'Bind UDP on 9999...'
-while True:
-  # 接收数据:
-  data, addr = s.recvfrom(1024)
-  print 'Received from {addr} data:{data}'.format(data=data,addr=addr)
-  # s.sendto('Hello, %s!' % data, addr)
-</code></pre>
+<!-- Main Content -->
+<div class="container">
+	<div class="row">
+		<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+			
+<div class="post-preview">
+    <a href="/2015/02/01/data-2/">
+        <h2 class="post-title"> 数据结构与算法(二):查找算法
+        </h2>
+        
+        <h3 class="post-subtitle">
+            七大查找算法
+        </h3>
+        
+    </a>
+    <p class="post-meta">Posted by Ted on February 1, 2015</p>
 </div>
+<hr>
 
-<p>Send:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>#coding=utf-8
-import socket
-
-s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-for data in ['Michael', 'Tracy', 'Sarah']:
-  # 发送数据:
-  s.sendto(data, ('localhost', 3289))
-  # 接收数据:
-  print s.recv(1024)
-s.close()
-</code></pre>
+<div class="post-preview">
+    <a href="/2015/02/01/data-1/">
+        <h2 class="post-title"> 数据结构与算法(一):数据结构
+        </h2>
+        
+        <h3 class="post-subtitle">
+            简单地总结一下常用的数据结构
+        </h3>
+        
+    </a>
+    <p class="post-meta">Posted by Ted on February 1, 2015</p>
 </div>
+<hr>
 
-<h3 id="二tcp">二、TCP</h3>
-
-<p>TCP也是传输层协议，但是是面向连接的协议，TCP提供可靠的服务。也就是说，通过TCP连接传送的数据，无差错，不丢失，不重复，且按序到达。在发送数据之前，要先建立连接</p>
-
-<p>Server:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>from socket import *
-from time import ctime
-
-HOST=''
-PORT=12345
-BUFSIZ=1024
-ADDR=(HOST, PORT)
-sock=socket(AF_INET, SOCK_STREAM)
-
-sock.bind(ADDR)
-
-sock.listen(5)
-while True:
-    print('waiting for connection')
-    tcpClientSock, addr=sock.accept()
-    print('connect from ', addr)
-    while True:
-        try:
-            data=tcpClientSock.recv(BUFSIZ)
-        except:
-            print(e)
-            tcpClientSock.close()
-            break
-        if not data:
-            break
-        s='Hi,you send me :[%s] %s' %(ctime(), data.decode('utf8'))
-        tcpClientSock.send(s.encode('utf8'))
-        print([ctime()], ':', data.decode('utf8'))
-tcpClientSock.close()
-sock.close()
-</code></pre>
+<div class="post-preview">
+    <a href="/2015/01/25/event/">
+        <h2 class="post-title"> 事件传递、响应者链条
+        </h2>
+        
+        <h3 class="post-subtitle">
+            事件传递以及处理事件的响应者链条
+        </h3>
+        
+    </a>
+    <p class="post-meta">Posted by Ted on January 25, 2015</p>
 </div>
+<hr>
 
-<p>Client:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>from socket import *
-
-class TcpClient:
-    HOST='127.0.0.1'
-    PORT=12345
-    BUFSIZ=1024
-    ADDR=(HOST, PORT)
-    def __init__(self):
-        self.client=socket(AF_INET, SOCK_STREAM)
-        self.client.connect(self.ADDR)
-
-        while True:
-            data=input('&gt;')
-            if not data:
-                break
-            self.client.send(data.encode('utf8'))
-            data=self.client.recv(self.BUFSIZ)
-            if not data:
-                break
-            print(data.decode('utf8'))
-            
-if __name__ == '__main__':
-    client=TcpClient()
-</code></pre>
+<div class="post-preview">
+    <a href="/2015/01/22/life/">
+        <h2 class="post-title"> 生命周期
+        </h2>
+        
+        <h3 class="post-subtitle">
+            UIView生命周期、程序的生命周期
+        </h3>
+        
+    </a>
+    <p class="post-meta">Posted by Ted on January 22, 2015</p>
 </div>
+<hr>
 
 
+<!-- Pager -->
 
-                <hr>
+<ul class="pager">
+    
+    <li class="previous">
+        <a href="/page2">&larr; 最新</a>
+    </li>
+    
+    
+</ul>
 
-                <ul class="pager">
-                    
-                    <li class="previous">
-                        <a href="/2016/08/12/confuseCode/" data-toggle="tooltip" data-placement="top" title="Objective-C混淆代码">&larr; 上一篇</a>
-                    </li>
-                    
-                    
-                    <li class="next">
-                        <a href="/2016/09/13/Http/" data-toggle="tooltip" data-placement="top" title="Http与Https">下一篇 &rarr;</a>
-                    </li>
-                    
-                </ul>
 
-            </div>
-        </div>
-    </div>
-</article>
+		</div>
+	</div>
+</div>
 
 <hr>
 
