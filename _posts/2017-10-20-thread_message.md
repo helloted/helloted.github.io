@@ -2,7 +2,7 @@
 layout:     post
 title:      "iOS进程/线程间通信"
 subtitle:   "iOS开发中多线程的通信"
-date:       2017-10-26 12:00:00
+date:       2017-10-20 12:00:00
 author:     "Ted"
 header-img: "img/default.jpg"
 ---
