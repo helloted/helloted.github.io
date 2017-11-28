@@ -123,6 +123,14 @@
 <p>线程启动之后，线 程就进入三个状态中的任何一个:建立(create)、运行(running)、就绪(ready)、阻塞(blocked)、取消(cancled)。如果一个线程当前没有运行，那么它不是处于阻塞，就是等待外部输入，或者已经准备就绪等待分配 CPU。线程持续在这三个状态之间切换，直到它最终退出或者进入中断状态。</p>
 
 <blockquote>
+  <p>新建线程</p>
+</blockquote>
+
+<p>每个线程都代表一个代码的执行路径。每个应用程序启动时候都是一个线程，它执行程序的 main 函数。应用程序可以生成额外的线程，其中每个线程执行一个特定功能的代码。</p>
+
+<p>当应用程序生成一个新的线程的时候，该线程变成应用程序进程空间内的一个实体。每个线程都拥有它自己的执行堆栈，由内核调度独立的运行时间片。一个线程可以和其他线程或其他进程通信，执行 I/O 操作，甚至执行任何你想要它完成的任务。因为它们处于相同的进程空间，所以一个独立应用程序里面的所有线程共享相同的虚拟内存空间，并且具有和进程相同的访问权限。</p>
+
+<blockquote>
   <p>多线程问题</p>
 </blockquote>
 
@@ -151,6 +159,12 @@
 
 <p>iOS主线程是1MB，子线程是512KB，花费时间 90 ms</p>
 
+<blockquote>
+  <p>线程优先级</p>
+</blockquote>
+
+<p>你创建的任何线程默认的优先级是和你本身线程相同。内核调度算法在决定该运行那个线程时，把线程的优先级作为考量因素，较高优先级的线程会比较低优先级的线程具有更多的运行机会。较高优先级不保证你的线程具体执行的时间，只是相比较低优先级的线程，它更有可能被调度器选择执行而已。</p>
+
 <h4 id="二pthreads">二、Pthreads</h4>
 
 <p>POSIX线程（POSIX threads），简称Pthreads，是线程的POSIX标准。该标准定义了创建和操纵线程的一整套API。在类Unix操作系统（Unix、Linux、Mac OS X等）中，都使用Pthreads作为操作系统的线程,这是一套在很多操作系统上都通用的多线程API，所以移植性很强（然并卵），当然在 iOS 中也是可以的。不过这是基于 c语言的框架；</p>
@@ -173,6 +187,7 @@ void *start(void *data) {
 <p>NSThread实例方法：</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>- (instancetype)initWithTarget:(id)target selector:(SEL)selector object:(nullable id)argument
+- (void)start
 </code></pre>
 </div>
 
@@ -183,11 +198,7 @@ void *start(void *data) {
 </code></pre>
 </div>
 
-<p>NSObject的实例方法</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>- (void)performSelectorInBackground:(SEL)aSelector withObject:(nullable id)arg
-</code></pre>
-</div>
+<p>Datach Thread(脱离线程)，允许系统在线程完成时立即释放它的数据结构。</p>
 
 <h4 id="2nsthread线程操作">2、NSThread线程操作</h4>
 
@@ -218,7 +229,13 @@ void *start(void *data) {
 </code></pre>
 </div>
 
-<h4 id="3线程间的通信">3、线程间的通信</h4>
+<h4 id="3设置优先级">3、设置优先级</h4>
+
+<p>较高优先级的线程会比较低优先级的线程具有更多的运行机会</p>
+
+<p><img src="/img/Simple_2/01.png" alt="img" /></p>
+
+<h4 id="4线程间的通信">4、线程间的通信</h4>
 
 <p>线程间通信分为两种，一个是线程间数据的传递，另外一种是一个线程完成后到另外一个线程继续执行任务，NSThread提供了两个方法来进行线程通信</p>
 
@@ -239,6 +256,16 @@ void *start(void *data) {
 <p>使用的方式为接收线程中注册NSMachPort，在另外的线程中使用此port发送消息，则被注册线程会收到相应消息，然后最终在主线程里调用某个回调函数。</p>
 
 <p>可以看到，使用NSMachPort的结果为调用了其它线程的1个函数，而这正是performSelector所做的事情，所以，NSMachPort是个鸡肋。线程间通信应该都通过performSelector来搞定。</p>
+
+<h3 id="四使用nsobject来创建一个线程">四、使用NSObject来创建一个线程</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[obj performSelectorInBackground:@selector(backMethod) withObject:nil];
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[obj performSelectorOnMainThread:@selector(toMain) withObject:nil waitUntilDone:NO];
+</code></pre>
+</div>
 
 
 

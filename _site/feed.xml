@@ -1,4 +1,141 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-11-27T16:54:53+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS进程/线程间通信</title><link href="http://www.helloted.com/2017/10/20/thread_message/" rel="alternate" type="text/html" title="iOS进程/线程间通信" /><published>2017-10-20T20:00:00+08:00</published><updated>2017-10-20T20:00:00+08:00</updated><id>http://www.helloted.com/2017/10/20/thread_message</id><content type="html" xml:base="http://www.helloted.com/2017/10/20/thread_message/">&lt;h3 id=&quot;一线程间通信&quot;&gt;一、线程间通信&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-11-28T10:46:03+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS之Runtime运用:埋点统计</title><link href="http://www.helloted.com/2017/11/27/leakmonitor/" rel="alternate" type="text/html" title="iOS之Runtime运用:埋点统计" /><published>2017-11-27T20:00:00+08:00</published><updated>2017-11-27T20:00:00+08:00</updated><id>http://www.helloted.com/2017/11/27/leakmonitor</id><content type="html" xml:base="http://www.helloted.com/2017/11/27/leakmonitor/">&lt;h3 id=&quot;一前言&quot;&gt;一、前言&lt;/h3&gt;
+
+&lt;h4 id=&quot;1黑魔法&quot;&gt;1、黑魔法&lt;/h4&gt;
+
+&lt;p&gt;Runtime有个黑魔法，可以通过method swizzling在运行时将系统API进行替换，可以再自定义的方法中进行埋点。&lt;/p&gt;
+
+&lt;h4 id=&quot;2渲染时间&quot;&gt;2、渲染时间&lt;/h4&gt;
+
+&lt;p&gt;在UIViewController的生命周期中，Viewdidload和Viewdidappear之间的时间可以认为是“UI渲染时间”,我们可以通过统计二者之间的时间差距来统计页面的渲染时间，从而进行优化&lt;/p&gt;
+
+&lt;h4 id=&quot;3内存泄漏&quot;&gt;3、内存泄漏&lt;/h4&gt;
+
+&lt;p&gt;UIViewController进入下一个界面有两种方式，push或者present。对应的返回上一个界面的方式是pop和dismiss，一般在pop或者dismiss方法调用之后，随后就会调用dealloc方法，将UIViewController内存情况，内存得到释放，如果无法调用dealloc方法，则会造成内存泄漏。所以&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;通过监测dealloc方法就可以监测内存泄漏&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h4 id=&quot;二runtime黑魔法&quot;&gt;二、Runtime黑魔法&lt;/h4&gt;
+
+&lt;p&gt;可以通过method swizzling在运行时将系统API进行替换&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;void monitor_exchangeInstanceMethod(Class class, SEL originalSelector, SEL newSelector) {
+    Method originalMethod = class_getInstanceMethod(class, originalSelector);
+    Method newMethod = class_getInstanceMethod(class, newSelector);
+    if(class_addMethod(class, originalSelector, method_getImplementation(newMethod), method_getTypeEncoding(newMethod))) {
+        class_replaceMethod(class, newSelector, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod));
+    } else {
+        method_exchangeImplementations(originalMethod, newMethod);
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;其中originalSelector是系统API，newSelector则是我们自定义的方法&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;+ (void)load{
+    monitor_exchangeInstanceMethod([self class], @selector(viewDidLoad), @selector(ht_ViewDidLoad));
+    monitor_exchangeInstanceMethod([self class], @selector(viewWillAppear:), @selector(ht_viewWillAppear:));
+    monitor_exchangeInstanceMethod([self class], @selector(viewDidAppear:), @selector(ht_viewDidAppear:));
+    monitor_exchangeInstanceMethod([self class], @selector(viewWillDisappear:), @selector(ht_viewWillDisappear:));
+    monitor_exchangeInstanceMethod([self class], @selector(viewDidDisappear:), @selector(ht_viewDidDisappear:));
+    monitor_exchangeInstanceMethod([self class], NSSelectorFromString(@&quot;dealloc&quot;), @selector(ht_dealloc));
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;NSObject的load方法，在每个class导入的时候，只要实现了这方法，就会调用而且只调用一次这个方法。&lt;/p&gt;
+
+&lt;p&gt;在load方法中，将UIViewController的生命周期里的几个method都通过method swizzling替换成我们自定义的方法，在自定义的方法中进行埋点，从而达到统计和监测的目的。其中ARC中不能显式调用dealloc方法，所以用NSSelectorFromString来达到我们的目的&lt;/p&gt;
+
+&lt;h3 id=&quot;三渲染时间统计&quot;&gt;三、渲染时间统计&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (void)ht_ViewDidLoad{
+    long current =  [[NSDate date] timeIntervalSince1970]*1000;
+    self.didLoadTime = @(current);
+    [self ht_ViewDidLoad];
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (void)ht_viewDidAppear:(BOOL)animated{
+    long didload = self.didLoadTime.longValue;
+    if (didload!=0) {
+        long current =  [[NSDate date] timeIntervalSince1970]*1000;
+        long pass = current - didload;
+        // 用于埋点监测UI渲染时间
+        NSLog(@&quot;%@渲染UI用时:%@毫秒&quot;,NSStringFromClass([self class]),@(pass));
+        self.didLoadTime = @(0);
+    }
+    [self ht_viewDidAppear:animated];
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;通过method swizzling方法，已经将viewdidload和viewdidappear方法替换成了自定义的ht_ViewDidLoad以及ht_viewDidAppear。在这两个方法中分别获取当前时间戳，算得时间差就可以获得UI渲染时间。注意从下一个界面返回这个界面时也会调用viewdidappear，需要避免这个统计。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_1/12.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;四内存泄漏&quot;&gt;四、内存泄漏&lt;/h3&gt;
+
+&lt;p&gt;因为UIViewController得不到释放而造成内存泄漏的情景有三种&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;NSTimer&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;NSTimer:一方面，NSTimer经常会被作为某个类的成员变量，而NSTimer初始化时要指定self为target，容易造成循环引用。 另一方面，若timer一直处于validate的状态，则其引用计数将始终大于0。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Block&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Block:某个类将block作为自己的属性变量，然后该类在block的方法体里面又使用了该类本身，简单说就是self.someBlock = ^(Type var){[self dosomething],不一定要显式地出现”self”字眼才会引起循环引用。&lt;/p&gt;
+
+&lt;p&gt;注意，无论是UIView的addsubview或者UINavigationViewController或者UIViewContrllor的childernController都是引用，使用block一定要注意将其中一个弱引用&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Delegate&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Delegate:声明Delegate要用weak;当delegate指向的对象销毁后，delegate = nil;如果用assign，可以解决循环引用的问题，但是可能会出现野指针&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (void)ht_viewWillDisappear:(BOOL)animated{
+    [self ht_viewWillDisappear:animated];
+    if(self.isMovingFromParentViewController || self.isBeingDismissed){//将要被pop或者dismiss出去
+        [self ht_willDealloc];
+    }
+}
+
+- (void)ht_willDealloc{
+    NSString *VCName = NSStringFromClass([self class]);
+    self.ht_dellocBlock = dispatch_block_create(0, ^{
+        NSLog(@&quot;%@ 可能存在内存泄漏，没有delloc&quot;,VCName);
+    });
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), self.ht_dellocBlock);
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;在viewWillDisappear方法中，我们可以通过判断&lt;code class=&quot;highlighter-rouge&quot;&gt;self.isMovingFromParentViewController || self.isBeingDismissed&lt;/code&gt;来得知是否是被Pop或者dismiss。此时，通过在GCD的延迟来埋点。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (void)ht_dealloc{
+    if (self.ht_dellocBlock){
+        dispatch_block_cancel(self.ht_dellocBlock);
+    }
+    [self ht_dealloc];
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;如果dealloc方法顺利得到调用，则将统计取消，如果没有顺利调用，则说明造成了内存泄漏，从而可以进行统计&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_1/13.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;五demo&quot;&gt;五、demo&lt;/h3&gt;
+
+&lt;p&gt;以上代码可以在&lt;a href=&quot;git@github.com:helloted/MonitorMethod.git&quot;&gt;Github-Monitor&lt;/a&gt;下载&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、前言</summary></entry><entry><title type="html">iOS进程/线程间通信</title><link href="http://www.helloted.com/2017/10/20/thread_message/" rel="alternate" type="text/html" title="iOS进程/线程间通信" /><published>2017-10-20T20:00:00+08:00</published><updated>2017-10-20T20:00:00+08:00</updated><id>http://www.helloted.com/2017/10/20/thread_message</id><content type="html" xml:base="http://www.helloted.com/2017/10/20/thread_message/">&lt;h3 id=&quot;一线程间通信&quot;&gt;一、线程间通信&lt;/h3&gt;
 
 &lt;p&gt;因为线程是共享内存空间的，所以线程间通信相比于进程间通信会简单一些，线程间通信的体现&lt;/p&gt;
 
@@ -1275,317 +1412,4 @@ continue;
 
 &lt;p&gt;当开始网络传输时，我们可以看到 NSURLConnection 创建了两个新线程：com.apple.NSURLConnectionLoader 和 com.apple.CFSocket.private。其中 CFSocket 线程是处理底层 socket 连接的。NSURLConnectionLoader 这个线程内部会使用 RunLoop 来接收底层 socket 的事件，并通过之前添加的 Source0 通知到上层的 Delegate。&lt;/p&gt;
 
-&lt;p&gt;NSURLConnectionLoader 中的 RunLoop 通过一些基于 mach port 的 Source 接收来自底层 CFSocket 的通知。当收到通知后，其会在合适的时机向 CFMultiplexerSource 等 Source0 发送通知，同时唤醒 Delegate 线程的 RunLoop 来让其处理这些通知。CFMultiplexerSource 会在 Delegate 线程的 RunLoop 对 Delegate 执行实际的回调。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">其他两篇关于Runloop:</summary></entry><entry><title type="html">iOS之Runloop(2):事件源</title><link href="http://www.helloted.com/2017/04/16/Runloop_2/" rel="alternate" type="text/html" title="iOS之Runloop(2):事件源" /><published>2017-04-16T20:00:00+08:00</published><updated>2017-04-16T20:00:00+08:00</updated><id>http://www.helloted.com/2017/04/16/Runloop_2</id><content type="html" xml:base="http://www.helloted.com/2017/04/16/Runloop_2/">&lt;p&gt;其他两篇关于Runloop:&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://www.helloted.com/2017/04/10/Runloop_1/&quot;&gt;iOS之Runloop(2):基础&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://www.helloted.com/2017/04/16/Runloop_3/&quot;&gt;iOS之Runloop(3):应用&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;苹果官方文档：&lt;a href=&quot;https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html#//apple_ref/doc/uid/10000057i-CH16-SW7&quot;&gt;Run loops&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;一定义一个custom-input-source&quot;&gt;一、定义一个Custom Input Source&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Creating a custom input source involves defining the following:&lt;/p&gt;
-
-  &lt;ul&gt;
-    &lt;li&gt;The information you want your input source to process.&lt;/li&gt;
-    &lt;li&gt;A scheduler routine to let interested clients know how to contact your input source.&lt;/li&gt;
-    &lt;li&gt;A handler routine to perform requests sent by any clients.&lt;/li&gt;
-    &lt;li&gt;A cancellation routine to invalidate your input source.&lt;/li&gt;
-  &lt;/ul&gt;
-
-  &lt;p&gt;Because you create a custom input source to process custom information, the actual configuration is designed to be flexible. The scheduler, handler, and cancellation routines are the key routines you almost always need for your custom input source. Most of the rest of the input source behavior, however, happens outside of those handler routines. For example, it is up to you to define the mechanism for passing data to your input source and for communicating the presence of your input source to other threads.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;创建一个自定义的input source需要涉及以下几点：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;需要input source处理的信息&lt;/li&gt;
-  &lt;li&gt;调度程序让需要的端口知道怎么连接你的input source&lt;/li&gt;
-  &lt;li&gt;可用的程序来处理任意端口发出的请求&lt;/li&gt;
-  &lt;li&gt;有程序来取消input source&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;因为创建一个自定义的input source来处理自定义信息，可配置的还是很灵活的，调度程序、处理程序和取消是关键。其他的input source就是在这些程序之外。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Figure shows a sample configuration of a custom input source. In this example, the application’s main thread maintains references to the input source, the custom command buffer for that input source, and the run loop on which the input source is installed. When the main thread has a task it wants to hand off to the worker thread, it posts a command to the command buffer along with any information needed by the worker thread to start the task. (Because both the main thread and the input source of the worker thread have access to the command buffer, that access must be synchronized.) Once the command is posted, the main thread signals the input source and wakes up the worker thread’s run loop. Upon receiving the wake up command, the run loop calls the handler for the input source, which processes the commands found in the command buffer&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;下图展示了配置一个自定义input sources，主线程操控维护了input source的引用、input source的命令缓存区、input source安装在的那个runloop。当主线程有任务想要交给工作线程去处理，主线程发送命令到command buffer命令缓存区(命令带了工作线程工作所需的)。主线程和工作线程的input source都可以访问command buffer命令缓存区，所以这个访问必须是同步的。一旦命令发出，主线程通知input source并且唤醒工作线程的runloop。runloop一旦接到唤醒命令，runloop就会回调处理方法给input source，处理在command buffer命令缓存区里找到的命令。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Runloop/runloop_05.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;@interface&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;RunLoopSource&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;NSObject&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;CFRunLoopSourceRef&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;runLoopSource&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;NSMutableArray&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;commands&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
- 
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;addToCurrentRunLoop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;invalidate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
- 
-&lt;span class=&quot;c1&quot;&gt;// Handler method
-&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sourceFired&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
- 
-&lt;span class=&quot;c1&quot;&gt;// Client interface for registering commands to process
-&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;addCommand&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSInteger&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;command&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;withData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fireAllCommandsOnRunLoop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CFRunLoopRef&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;runloop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
- 
-&lt;span class=&quot;k&quot;&gt;@end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;RunLoopSource&lt;/code&gt; object manages a command buffer and uses that buffer to receive messages from other threads&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;RunLoopSource对象管理了一个command buffer并且用buffer来从其他线程接受信息。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// These are the CFRunLoopSourceRef callback functions.
-&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RunLoopSourceScheduleRoutine&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;info&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CFRunLoopRef&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CFStringRef&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RunLoopSourcePerformRoutine&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;info&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RunLoopSourceCancelRoutine&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;info&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CFRunLoopRef&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CFStringRef&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
- 
-&lt;span class=&quot;c1&quot;&gt;// RunLoopContext is a container object used during registration of the input source.
-&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;@interface&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;RunLoopContext&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;NSObject&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;CFRunLoopRef&lt;/span&gt;        &lt;span class=&quot;n&quot;&gt;runLoop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;RunLoopSource&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;        &lt;span class=&quot;n&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;@property&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;readonly&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CFRunLoopRef&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;runLoop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;@property&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;readonly&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RunLoopSource&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
- 
-&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;initWithSource&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RunLoopSource&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;src&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;andLoop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CFRunLoopRef&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;loop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;@end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;RunLoopContext&lt;/code&gt; object, which is really just a container object used to pass a &lt;code class=&quot;highlighter-rouge&quot;&gt;RunLoopSource&lt;/code&gt; object and a run loop reference to the application’s main thread.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;RunLoopContext对象是一个容器，用来传递RunLoopSource对象和runloop引用给主线程。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;The first of these functions is called when you actually attach the run loop source to your run loop，Because this input source has only one client (the main thread), it uses the scheduler function to send a message to register itself with the application delegate on that thread. When the delegate wants to communicate with the input source, it uses the information in &lt;code class=&quot;highlighter-rouge&quot;&gt;RunLoopContext&lt;/code&gt; object to do so&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;当你把runloop source放入到runloop时，实际会调用下面这个函数。因为input source只有一个端口（主线程），input source使用调度函数来发送一个消息从而注册他本身到线程的delegate上，当delegate用&lt;code class=&quot;highlighter-rouge&quot;&gt;RunLoopContext&lt;/code&gt;与input source交流，&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;void RunLoopSourceScheduleRoutine (void *info, CFRunLoopRef rl, CFStringRef mode)
-{
-    RunLoopSource* obj = (RunLoopSource*)info;
-    AppDelegate*   del = [AppDelegate sharedAppDelegate];
-    RunLoopContext* theContext = [[RunLoopContext alloc] initWithSource:obj andLoop:rl];
- 
-    [del performSelectorOnMainThread:@selector(registerSource:)
-                                withObject:theContext waitUntilDone:NO];
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;One of the most important callback routines is the one used to process custom data when your input source is signaled. Listing 3-5 shows the perform callback routine associated with the &lt;code class=&quot;highlighter-rouge&quot;&gt;RunLoopSource&lt;/code&gt; object. This function simply forwards the request to do the work to the &lt;code class=&quot;highlighter-rouge&quot;&gt;sourceFired&lt;/code&gt; method, which then processes any commands present in the command buffer.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;最重要之一的回调是当input sour发完信号时处理自定义的数据，下面的代码展示了RunLoopSource的处理回调。这个函数简单地将需求转发到sourceFired方法（处理任何在命令缓存池的命令）&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;void RunLoopSourcePerformRoutine (void *info)
-{
-    RunLoopSource*  obj = (RunLoopSource*)info;
-    [obj sourceFired];
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;f you ever remove your input source from its run loop using the &lt;code class=&quot;highlighter-rouge&quot;&gt;CFRunLoopSourceInvalidate&lt;/code&gt; function, the system calls your input source’s cancellation routine. You can use this routine to notify clients that your input source is no longer valid and that they should remove any references to it&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;如果你使用CFRunLoopSourceInvalidate这个函数来将input source移除，系统会调input source的移除例程函数，你可以用这个例程函数来通知客户端你的input source不再可用而且应该移除相关。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;void RunLoopSourceCancelRoutine (void *info, CFRunLoopRef rl, CFStringRef mode)
-{
-    RunLoopSource* obj = (RunLoopSource*)info;
-    AppDelegate* del = [AppDelegate sharedAppDelegate];
-    RunLoopContext* theContext = [[RunLoopContext alloc] initWithSource:obj andLoop:rl];
- 
-    [del performSelectorOnMainThread:@selector(removeSource:)
-                                withObject:theContext waitUntilDone:YES];
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h4 id=&quot;将input-source放入runloop&quot;&gt;将input source放入runloop&lt;/h4&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Installation of the input source does not occur until the worker thread invokes the &lt;code class=&quot;highlighter-rouge&quot;&gt;addToCurrentRunLoop&lt;/code&gt; method, at which point the &lt;code class=&quot;highlighter-rouge&quot;&gt;RunLoopSourceScheduleRoutine&lt;/code&gt; callback function is called. Once the input source is added to the run loop, the thread can run its run loop to wait on it.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;在工作线程调用addToCurrentRunLoop方法之前，input source并不会install，这个时候会调用RunLoopSourceScheduleRoutine回调函数，一旦input source被添加进runloop，线程就开始运行runloop.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (id)init
-{
-    CFRunLoopSourceContext    context = {0, self, NULL, NULL, NULL, NULL, NULL,
-                                        &amp;amp;RunLoopSourceScheduleRoutine,
-                                        RunLoopSourceCancelRoutine,
-                                        RunLoopSourcePerformRoutine};
- 
-    runLoopSource = CFRunLoopSourceCreate(NULL, 0, &amp;amp;context);
-    commands = [[NSMutableArray alloc] init];
- 
-    return self;
-}
- 
-- (void)addToCurrentRunLoop
-{
-    CFRunLoopRef runLoop = CFRunLoopGetCurrent();
-    CFRunLoopAddSource(runLoop, runLoopSource, kCFRunLoopDefaultMode);
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h4 id=&quot;调度input-source的客户端&quot;&gt;调度input source的客户端&lt;/h4&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;For your input source to be useful, you need to manipulate it and signal it from another thread. The whole point of an input source is to put its associated thread to sleep until there is something to do. That fact necessitates having other threads in your application know about the input source and have a way to communicate with it.&lt;/p&gt;
-
-  &lt;p&gt;One way to notify clients about your input source is to send out registration requests when your input source is first installed on its run loop. You can register your input source with as many clients as you want, or you can simply register it with some central agency that then vends your input source to interested clients.&lt;/p&gt;
-
-  &lt;p&gt;Listing 3-8 shows the registration method defined by the application delegate and invoked when the &lt;code class=&quot;highlighter-rouge&quot;&gt;RunLoopSource&lt;/code&gt; object’s scheduler function is called. This method receives the &lt;code class=&quot;highlighter-rouge&quot;&gt;RunLoopContext&lt;/code&gt; object provided by the &lt;code class=&quot;highlighter-rouge&quot;&gt;RunLoopSource&lt;/code&gt; object and adds it to its list of sources. This listing also shows the routine used to unregister the input source when it is removed from its run loop.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;为了使input source变得有用，需要操纵input source并从其他线程发出信号。输入源的全部要点是将线程休眠直到有事情做，这样的话就需要线程知道Input souce并与之沟通.&lt;/p&gt;
-
-&lt;p&gt;告诉客户端关于input source的一种方法就是当input source第一次installed在runloop时放一个注册需求。你可以注册随意多的客户端，或者简单地注册到一个中央机构可以将input source转交给客户端。&lt;/p&gt;
-
-&lt;p&gt;下面的代码显示了当调用RunloopSource对象的调度程序函数时，由程序delegate定义并调用的注册方法。这个方法接受RunLoopSource对象提供的RunLoopContext对象并将其添加到源列表里。代码还显示了当从runloop里移除input source时将其注销&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (void)registerSource:(RunLoopContext*)sourceInfo;
-{
-    [sourcesToPing addObject:sourceInfo];
-}
- 
-- (void)removeSource:(RunLoopContext*)sourceInfo
-{
-    id    objToRemove = nil;
- 
-    for (RunLoopContext* context in sourcesToPing)
-    {
-        if ([context isEqual:sourceInfo])
-        {
-            objToRemove = context;
-            break;
-        }
-    }
- 
-    if (objToRemove)
-        [sourcesToPing removeObject:objToRemove];
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h4 id=&quot;给input-source发出信号&quot;&gt;给input source发出信号&lt;/h4&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;After it hands off its data to the input source, a client must signal the source and wake up its run loop. Signaling the source lets the run loop know that the source is ready to be processed. And because the thread might be asleep when the signal occurs, you should always wake up the run loop explicitly. Failing to do so might result in a delay in processing the input source.&lt;/p&gt;
-
-  &lt;p&gt;Listing 3-9 shows the &lt;code class=&quot;highlighter-rouge&quot;&gt;fireCommandsOnRunLoop&lt;/code&gt; method of the &lt;code class=&quot;highlighter-rouge&quot;&gt;RunLoopSource&lt;/code&gt; object. Clients invoke this method when they are ready for the source to process the commands they added to the buffer&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;在将数据交给input soure之后，客户端必须向souce发出信号并将runloop唤醒。向source发出信号让runloop知道source已可以被处理，并且因为线程有可能已经休眠，所以当信号发出的时候，你必须明确地唤醒runloop，否则会导致处理input source的延迟&lt;/p&gt;
-
-&lt;p&gt;下面的代码显示了RunLoopSource对象的fireCommandsOnRunLoop方法，这个方法会在当客户端准备好source来处理添加到缓存区的命令时调用。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (void)fireCommandsOnRunLoop:(CFRunLoopRef)runloop
-{
-    CFRunLoopSourceSignal(runLoopSource);
-    CFRunLoopWakeUp(runloop);
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h3 id=&quot;二配置timer-sources&quot;&gt;二、配置Timer Sources&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;To create a timer source, all you have to do is create a timer object and schedule it on your run loop. In Cocoa, you use the &lt;code class=&quot;highlighter-rouge&quot;&gt;NSTimer&lt;/code&gt; class to create new timer objects, and in Core Foundation you use the &lt;code class=&quot;highlighter-rouge&quot;&gt;CFRunLoopTimerRef&lt;/code&gt; opaque type. Internally, the &lt;code class=&quot;highlighter-rouge&quot;&gt;NSTimer&lt;/code&gt; class is simply an extension of Core Foundation that provides some convenience features, like the ability to create and schedule a timer using the same method.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;创建一个timer source，你需要做的就是创建一个timer对象然后将其放入runloop，用NSTimer或者CFRunLoopTimerRef都可以。可以用下面的方法&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;scheduledTimerWithTimeInterval:target:selector:userInfo:repeats:
-scheduledTimerWithTimeInterval:invocation:repeats:
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;These methods create the timer and add it to the current thread’s run loop in the default mode (&lt;code class=&quot;highlighter-rouge&quot;&gt;NSDefaultRunLoopMode&lt;/code&gt;). You can also schedule a timer manually if you want by creating your &lt;code class=&quot;highlighter-rouge&quot;&gt;NSTimer&lt;/code&gt; object and then adding it to the run loop using the &lt;code class=&quot;highlighter-rouge&quot;&gt;addTimer:forMode:&lt;/code&gt; method of &lt;code class=&quot;highlighter-rouge&quot;&gt;NSRunLoop&lt;/code&gt;. Both techniques do basically the same thing but give you different levels of control over the timer’s configuration. For example, if you create the timer and add it to the run loop manually, you can do so using a mode other than the default mode. Listing 3-10 shows how to create timers using both techniques. The first timer has an initial delay of 1 second but then fires regularly every 0.1 seconds after that. The second timer begins firing after an initial 0.2 second delay and then fires every 0.2 seconds after that.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;上面的两个方法创建一个timer并且将它以默认模式NSDefaultRunLoopMode添加到当前线程的runloop。当然你也可以手动创建一个并用addTimer:forMode:添加进runloop.两种方法都是一样的，其中一个可以配置更多。下面的方法显示了两种方法的详细&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSRunLoop* myRunLoop = [NSRunLoop currentRunLoop];
- 
-// Create and schedule the first timer.
-NSDate* futureDate = [NSDate dateWithTimeIntervalSinceNow:1.0];
-NSTimer* myTimer = [[NSTimer alloc] initWithFireDate:futureDate
-                        interval:0.1
-                        target:self
-                        selector:@selector(myDoFireTimer1:)
-                        userInfo:nil
-                        repeats:YES];
-[myRunLoop addTimer:myTimer forMode:NSDefaultRunLoopMode];
- 
-// Create and schedule the second timer.
-[NSTimer scheduledTimerWithTimeInterval:0.2
-                        target:self
-                        selector:@selector(myDoFireTimer2:)
-                        userInfo:nil
-                        repeats:YES];
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;下面这个是用Core Foundation来添加一个timer&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;CFRunLoopRef runLoop = CFRunLoopGetCurrent();
-CFRunLoopTimerContext context = {0, NULL, NULL, NULL, NULL};
-CFRunLoopTimerRef timer = CFRunLoopTimerCreate(kCFAllocatorDefault, 0.1, 0.3, 0, 0,
-                                        &amp;amp;myCFTimerCallback, &amp;amp;context);
- 
-CFRunLoopAddTimer(runLoop, timer, kCFRunLoopCommonModes);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h3 id=&quot;三配置一个port-based-input-source&quot;&gt;三、配置一个Port-Based Input Source&lt;/h3&gt;
-
-&lt;h4 id=&quot;配置一个nsmachport对象&quot;&gt;配置一个NSMachPort对象&lt;/h4&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;To establish a local connection with an &lt;code class=&quot;highlighter-rouge&quot;&gt;NSMachPort&lt;/code&gt; object, you create the port object and add it to your primary thread’s run loop. When launching your secondary thread, you pass the same object to your thread’s entry-point function. The secondary thread can use the same object to send messages back to your primary thread.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;要建立一个与NSMachPort对象的本地连接，你需要创建一个port对象然后将它添加到你的主要线程的runloop.当启动辅助线程时，将相同的对象传递给线程的entry-point函数。辅助线程可以使用相同的对象将消息返回主要线程&lt;/p&gt;
-
-&lt;p&gt;下面代码显示了一个主要线程来启动一个辅助线程&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (void)launchThread
-{
-    NSPort* myPort = [NSMachPort port];
-    if (myPort)
-    {
-        // This class handles incoming port messages.
-        [myPort setDelegate:self];
- 
-        // Install the port as an input source on the current run loop.
-        [[NSRunLoop currentRunLoop] addPort:myPort forMode:NSDefaultRunLoopMode];
- 
-        // Detach the thread. Let the worker release the port.
-        [NSThread detachNewThreadSelector:@selector(LaunchThreadWithPort:)
-               toTarget:[MyWorkerClass class] withObject:myPort];
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;</content><author><name>Ted</name></author><summary type="html">其他两篇关于Runloop:</summary></entry></feed>
+&lt;p&gt;NSURLConnectionLoader 中的 RunLoop 通过一些基于 mach port 的 Source 接收来自底层 CFSocket 的通知。当收到通知后，其会在合适的时机向 CFMultiplexerSource 等 Source0 发送通知，同时唤醒 Delegate 线程的 RunLoop 来让其处理这些通知。CFMultiplexerSource 会在 Delegate 线程的 RunLoop 对 Delegate 执行实际的回调。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">其他两篇关于Runloop:</summary></entry></feed>
