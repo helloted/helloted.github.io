@@ -202,7 +202,7 @@ void *start(void *data) {
 
 <h4 id="2nsthread线程操作">2、NSThread线程操作</h4>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">//取消线程
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">//取消线程,并不是停止线程，这个只是一个标志位，对应isCanceled
 </span><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">cancel</span><span class="p">;</span>
 
 <span class="c1">//启动线程
@@ -220,8 +220,11 @@ void *start(void *data) {
 <span class="c1">//获取当前线程信息
 </span><span class="k">+</span> <span class="p">(</span><span class="n">NSThread</span> <span class="o">*</span><span class="p">)</span><span class="n">currentThread</span><span class="p">;</span>
 
+<span class="c1">//退出线程 不推荐使用，杀死一个线程阻止了线程本身的清理工作。线程分配的内存可能造成泄露，并且其他线程当前使用的资源可能没有被正确清理干净，之后造成潜在的问题
+</span><span class="k">+</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">exit</span><span class="err">；</span>
+
 <span class="c1">//获取主线程信息
-</span><span class="k">+</span> <span class="p">(</span><span class="n">NSThread</span> <span class="o">*</span><span class="p">)</span><span class="n">mainThread</span><span class="p">;</span>
+</span><span class="o">+</span> <span class="p">(</span><span class="n">NSThread</span> <span class="o">*</span><span class="p">)</span><span class="n">mainThread</span><span class="p">;</span>
 
 <span class="c1">//使当前线程暂停一段时间，或者暂停到某个时刻
 </span><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">sleepForTimeInterval</span><span class="p">:(</span><span class="n">NSTimeInterval</span><span class="p">)</span><span class="nv">time</span><span class="p">;</span>
