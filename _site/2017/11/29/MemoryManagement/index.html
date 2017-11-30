@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
 
-    <title>iOS多线程(三):NSOperation - Helloted Blog</title>
+    <title>内存管理 - Helloted Blog</title>
 
-    <link rel="canonical" href="http://www.helloted.com/2016/05/24/ios-Thread-3/">
+    <link rel="canonical" href="http://www.helloted.com/2017/11/29/MemoryManagement/">
 
     <link rel="shortcut icon" href="/img/favicon.ico">
    
@@ -87,11 +87,11 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <div class="post-heading">
-                    <h1>iOS多线程(三):NSOperation</h1>
+                    <h1>内存管理</h1>
                     
-                    <h2 class="subheading">iOS多线程之NSOperation</h2>
+                    <h2 class="subheading">iOS内存管理指南</h2>
                     
-                    <span class="meta">Posted by Ted on May 24, 2016</span>
+                    <span class="meta">Posted by Ted on November 29, 2017</span>
                 </div>
             </div>
         </div>
@@ -104,102 +104,36 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
 
-				<h4 id="1nsoperation是基于gcd封装的">1、NSoperation是基于GCD封装的</h4>
+				<p>本文翻译自<a href="https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/MemoryMgmt.html#//apple_ref/doc/uid/10000011i">Advanced Memory Management Programming Guide</a></p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>dispatch_async(_Queue, ^{    //请求数据  
-NSData *data = [NSData dataWithContentURL:[NSURL URLWithString:@"http://domain.com/a.png"]];    
-dispatch_async(dispatch_get_main_queue(), ^{         [self refreshViews:data];    });});
-</code></pre>
-</div>
-
-<p>有个致命的问题：这个任务是无法取消的 dataWithContentURL:是同步的拉取数据，它会一直阻塞线程直到完成请求，如果是遇到了超时的情况，它在这个时间内会一直占有这个线程；在这个期间并发队列就需要为其他任务新建线程，这样可能导致性能下降等问题。</p>
-
-<h4 id="2nsoperationqueue相对于gcd来说有以下优点">2、NSOperationQueue相对于GCD来说有以下优点：</h4>
-
-<ul>
-  <li>提供了在 GCD 中不那么容易复制的有用特性。</li>
-  <li>可以很方便的取消一个NSOperation的执行</li>
-  <li>可以更容易的添加任务的依赖关系</li>
-  <li>提供了任务的状态：isExecuteing, isFinished.</li>
-</ul>
-
-<p>NSOperationQueue 有两种不同类型的队列：主队列和自定义队列。主队列运行在主线程之上，而自定义队列在后台执行。在两种类型中，这些队列所处理的任务都使用 NSOperation 的子类来表述。</p>
-
-<p>我们可以通过设置 maxConcurrentOperationCount 属性来控制并发任务的数量，当设置为 1 时， 那么它就是一个串行队列。主对列默认是串行队列，这一点和 dispatch_queue_t 是相似的。</p>
-
-<p>Operation 对象默认按同步方式执行，也就是在调用 start 方法的那 个线程中直接执行。</p>
-
-<h4 id="3用法">3、用法</h4>
+<h3 id="一关于内存管理">一、关于内存管理</h3>
 
 <blockquote>
-  <p>NSOperation实现</p>
+  <p>Although memory management is typically considered at the level of an individual object, your goal is actually to manage <a href="">object graphs</a>. You want to make sure that you have no more objects in memory than you actually need.</p>
 </blockquote>
 
-<p>一个是直接使用NSInvocationOperation、NSBlockOperation两个子类，一个是自己实现NSOperation的子类</p>
+<p><img src="/img/Simple_2/02.png" alt="img" /></p>
 
-<pre><code class="language-objective-c">NSInvocationOperation *invocationOperation = [[NSInvocationOperation alloc]initWithTarget:selfselector:@selector(invocationOperationAction)object:nil];
-</code></pre>
+<p>内存管理通常被认为针对单个对象进行，目标实际去管理“对象图”，你需要确保除了你真的需要的对象，没有更多的对象再内存里。</p>
 
-<pre><code class="language-objective-c">NSBlockOperation*blockOperation = [NSBlockOperationblockOperationWithBlock:^{
+<h4 id="1objective-c有三种内存管理方式">1、Objective-C有三种内存管理方式：</h4>
 
-}];
-</code></pre>
+<p>1.1、MRR(manual retain-release):通过跟踪你所拥有的对象来显式地管理内存，采用了”引用计数（ reference counting）”的模型。该模型由基础类NSObject和运行时Runtime共同提供</p>
 
-<blockquote>
-  <p>执行任务有两种方法：</p>
-</blockquote>
+<p>1.2、ARC(Automatic Reference Counting):系统采用MRR相同的引用计数系统，不同的时，在编译的时候插入了内存管理的方法。</p>
 
-<ul>
-  <li>start ：方法时与主线程同步，有阻塞主线程的情况,</li>
-  <li>提交到NSOperationQueue中：与主线程是异步，不会阻塞到主线程。NSOperationQueue可以通过maxConcurrentOperationCount设置线程最大并行数量，为1的时候相当于串行，大于1时为并发。</li>
-</ul>
+<p>1.3、GC(Garbage Collection)：Mac下才能使用，iOS不支持</p>
 
-<blockquote>
-  <p>取消任务</p>
-</blockquote>
+<h4 id="2内存管理存在两种错误">2、内存管理存在两种错误</h4>
 
-<pre><code class="language-objective-c">//取消队列中的所有operation
-[queue cancelAllOperations];
+<p>2.1、释放(free)或者覆盖(over-write)正在使用中的数据。</p>
 
-//取消单个
-[blockOperation cancel];
-</code></pre>
+<p>​	这会造成内存异常，导致应用程序崩溃，导致数据损坏。</p>
 
-<blockquote>
-  <p>暂停和恢复</p>
-</blockquote>
+<p>2.2、不再使用的内存没有被释放，导致内存泄漏。</p>
 
-<pre><code class="language-objective-c">[queue setSuspended:YES];
-</code></pre>
+<p>​	内存泄露，就是有内存分配但是不释放它，哪怕这块内存已经不用了。泄露，导致你的应 用程序占用越来越多的内存，并导致整体性能的下降，或者在 iOS 平台上导致应用终止。</p>
 
-<p>挂起一个 queue 不会导致正在执行的 Operation 在任务中途暂停，只是简单地阻止调度新 Operation 执行，也就是只是暂停等待中的任务。你 可以在响应用户请求时，挂起一个 queue，来暂停等待中的任务。稍后 根据用户的请求，可以再次调用 setSuspended: 方法继续 Queue 中操作 的执行。</p>
-
-<blockquote>
-  <p>任务依赖：</p>
-</blockquote>
-
-<pre><code class="language-objective-c">[operationB addDependency:operationA]; // 操作B依赖于操作A
-</code></pre>
-
-<blockquote>
-  <p>自定义Operation</p>
-</blockquote>
-
-<p>A:使用 main 方法非常简单，开发者不需要管理一些状态属性（例如 isExecuting 和 isFinished），当 main 方法返回的时候，这个 operation 就结束了。这种方式使用起来非常简单，但是灵活性相对重写 start 来说要少一些， 因为main方法执行完就认为operation结束了，所以一般可以用来执行同步任务。</p>
-
-<p>B:如果你希望拥有更多的控制权，或者想在一个操作中可以执行异步任务，那么就重写 start 方法, 但是注意：这种情况下，你必须手动管理操作的状态， 只有当发送 isFinished 的 KVO 消息时，才认为是 operation 结束</p>
-
-<p>当实现了start方法时，默认会执行start方法，而不执行main方法</p>
-
-<p>为了让操作队列能够捕获到操作的改变，需要将状态的属性以配合 KVO 的方式进行实现。如果你不使用它们默认的 setter 来进行设置的话，你就需要在合适的时候发送合适的 KVO 消息。</p>
-
-<p>需要手动管理的状态有：</p>
-
-<ul>
-  <li>isExecuting 代表任务正在执行中</li>
-  <li>isFinished 代表任务已经执行完成</li>
-  <li>isCancelled 代表任务已经取消执行</li>
-</ul>
 
 
                 <hr>
@@ -207,13 +141,9 @@ dispatch_async(dispatch_get_main_queue(), ^{         [self refreshViews:data];  
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/2016/05/23/ios-Thread-2/" data-toggle="tooltip" data-placement="top" title="iOS多线程(二):GCD">&larr; 上一篇</a>
+                        <a href="/2017/11/27/leakmonitor/" data-toggle="tooltip" data-placement="top" title="iOS之Runtime运用:埋点统计">&larr; 上一篇</a>
                     </li>
                     
-                    
-                    <li class="next">
-                        <a href="/2016/05/27/ios-Thread-4/" data-toggle="tooltip" data-placement="top" title="iOS多线程(四):线程锁">下一篇 &rarr;</a>
-                    </li>
                     
                 </ul>
 

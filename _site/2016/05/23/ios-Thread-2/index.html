@@ -164,7 +164,7 @@ dispatch_sync(dispatch_get_main_queue(), ^{
 <p>dispatch_queue_t mainQ = dispatch_get_main_queue()
 注意：不能sync向主队列提交任务，因为会造成死锁，只能async提交任务</p>
 
-<h4 id="全局队列global_queue">全局队列（global_queue）：</h4>
+<h4 id="全局队列global_queue并发队列">全局队列（global_queue）：并发队列</h4>
 
 <p>有执行优先级</p>
 
@@ -175,7 +175,13 @@ DISPATCH_QUEUE_PRIORITY_DEFAULT           //默认优先级，在low之前，在
 DISPATCH_QUEUE_PRIORITY_LOW               //在high和default后执行
 DISPATCH_QUEUE_PRIORITY_BACKGROUND        //提交到这个队列的任务会在high优先级的任务和已经提交到background队列的执行完后执行。
 </code></pre>
-<h4 id="创建队列create_queue">创建队列：（create_queue）:</h4>
+<h4 id="获取队列create_queue">获取队列：（create_queue）:</h4>
+
+<p>如果是串行队列：dispatch_queue_create(“createName”, DISPATCH_QUEUE_SERIAL)</p>
+
+<p>如果是并行队列:推荐使用dispatch_get_global_queue</p>
+
+<p>如果需要用到barrier和group，才来dispatch_queue_create(“createName”,DISPATCH_QUEUE_CONCURRENT)</p>
 
 <p>尽管是ARC，使用结束后也要dispatch_release释放</p>
 
