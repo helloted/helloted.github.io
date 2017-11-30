@@ -35,3 +35,94 @@ header-img: "img/default.jpg"
 
 ​	内存泄露，就是有内存分配但是不释放它，哪怕这块内存已经不用了。泄露，导致你的应 用程序占用越来越多的内存，并导致整体性能的下降，或者在 iOS 平台上导致应用终止。
 
+### 二、内存管理策略
+
+NSObject定义了一个dealloc方法，当一个对象被清除时，这个方法会被自动调用
+
+#### 1、内存管理基本原则
+
+> The memory management model is based on object ownership. Any object may have one or more owners. As long as an object has at least one owner, it continues to exist. If an object has no owners, the runtime system destroys it automatically.
+
+内存管理模型是建立在一个对象的"所有权"上，当一个对象有至少一个"所有者"时，它就会继续存在。否则，运行时系统就会将其自动清除
+
+> - **You own any object you create**
+>
+>   You create an object using a method whose name begins with “alloc”, “new”, “copy”, or “mutableCopy” (for example, `alloc`, `newObject`, or `mutableCopy`).
+>
+> - **You can take ownership of an object using retain**
+>
+>   A received object is normally guaranteed to remain valid within the method it was received in, and that method may also safely return the object to its invoker. You use `retain` in two situations: (1) In the implementation of an accessor method or an `init` method, to take ownership of an object you want to store as a property value; and (2) To prevent an object from being invalidated as a side-effect of some other operation (as explained in [Avoid Causing Deallocation of Objects You’re Using](https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/mmPractical.html#//apple_ref/doc/uid/20000043-1000922)).
+>
+> - **When you no longer need it, you must relinquish ownership of an object you own**
+>
+>   You relinquish ownership of an object by sending it a `release` message or an `autorelease` message. In Cocoa terminology, relinquishing ownership of an object is therefore typically referred to as “releasing” an object.
+>
+> - **You must not relinquish ownership of an object you do not own**
+>
+>   This is just corollary of the previous policy rules, stated explicitly.
+
+- 你拥有你所创建的对象
+
+  你如果用下面字母作为开头的方法来创建对象，那么你将拥有这个对象:alloc、new、copy、mutableCopy。比如，alloc、newObject、或者 mutableCopy 等方法。
+
+- 你可以用 retain 来实现对一个对象的所有
+
+  如果你在一个方法体中，得到了一个对象，那么这个对象在本方法内部是一直都有效的。而且你还可以在本方法中将这个对象作为返回值返回给方法的调用者。在下面两种状况下，你需要用retain:(1)在访问方法(getter、setter)或者 init 方法中，你希望将得到的返回对象作为成员变量(property)来存储。 (2)在执行某些操作时，你担心在过程中对象变得无效。(在 避免你正在使用的对象被 dealloc 中详细解释。)
+
+- 你不再需要一个对象时，你必须放弃对对象的持有
+
+  通过向对象发送 release 消息或者 autorelease 消息来放弃所有权。用 Cocoa 的术语说，所谓放弃所有权，就是 release 一个对象。
+
+- 对于你正在使用的对象，不要 release 它
+
+#### 2、引用计数
+
+每个对象都有一个引用计数
+
+-    当新建一个对象时，它的 retain count 为 1;
+-    发送 retain 消息给一个对象时，它的 retain count 加 1;
+-    发送 release 消息给一个对象时，它的 retain count 减 1;
+-    发送 autorelease 消息，它的 retain count 将在未来某个时候减 1;
+-    如果 retain count 是 0，就会被 dealloc。
+
+#### 3、弱引用
+
+Retain 一个对象，实际是对一个对象的强引用(strong reference)。一个对象在所有的强引用 都解除之前，是不能被 dealloc 的，这导致一个被称为“循环引用”的问题:两个对象相互强引用 (可能是直接引用，也可能是通过其他对象间接地引用。)
+
+解决的方法就是弱引用：父对象建立对子对象的强引用，而子对象只对父对象建立弱引用。
+
+在 Cocoa 中，弱引用的例子包括(但不限于)Table 表格的数据源、Outline 视图项目(Outline view item)、通知观察者(Notification Observer)和其他的 target 以及 delegate。
+
+对你弱引用的对象发送消息时，需要注意:当你发送消息给一个被 dealloc 的弱引用对象时，你的程序会崩溃。因此，你必须细致地判断对象是否有效。多数情况下，被弱引用的对象是知道其 他对象对它的弱引用的(比如环形持有的情形)，所以需要通知其他对象它自己的 dealloc。举例， 当你向 Notification Center 注册一个对象时，Notification Center 对这个对象是弱引用的，并且在有 消息需要通知到这个对象时，就发送消息给这个对象。当这个对象 dealloc 的时候，你必须向 Notification Center 取消这个对象的注册。这样，这个 Notification Center 就不会再发送消息给这个 不存在的对象了。同样，当一个 delegate 对象被 dealloc 的时候，必须向其他对象发送一个 setDelegate:消息，并传递 nil 参数，从而将代理的关系撤销。这些消息通常在对象的 dealloc 方法 中发出。
+
+### 三、autorelease
+
+[Autorelease Pool](https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/mmAutoreleasePools.html#//apple_ref/doc/uid/20000047-CJBFBEDI)
+
+#### 1、autorelease
+
+当你需要延时 release 方式时，就需要 autorelease 了，特别是当你从方法中返回一个对象的时候。比如，你可以这样来实现 fullName: 方法:
+
+```
+   -(NSString *)fullName{
+      NSString *string = [[[NSString alloc] initWithFormat:@”%@ %@”,self.firstName, self.lastName] autorelease];
+       return string;
+    }
+```
+
+上例中，你使用 alloc 方法创建了 string，所以你有该对象的所有权，因此你有义务在失去对它的引用前放弃该所有权。但如果你用 release，那么这种所有权的放弃是“即刻的”，立即生效。可是我们却要将这个对象 return，这将造成 return 时对象已经实际失效，方法实际上返回了一个无效的对象。我们采用 autorelease 来声明(译者:注意这里仅仅是一种意愿的表达，而非实际放弃的动作。)我们对所有权的放弃，但是同时允许 fullName: 方法的调用者来使用该对象。
+
+你还可以按下面做法来实现这个方法:
+
+```
+   -(NSString *) fullName{
+       NSString *string = [NSString stringWithFormat:@”%@ %@”, self.firstName,   self.lastName] ;
+       return string;
+  }
+```
+
+根据我们说的基本规则，你对 stringWithFormat: 所返回的 string 没有所有权(译者:请注意到这里并没有使用 alloc，方法名也不是以 init 开始)。 因此你可以直接返回 string 给方法的调用者。
+
+#### 2、Autorelease Pool
+
+Autorelease pool是得到了 autorelease 消息的对象的容器。 在 autorelease pool被 dealloc 的时候，它自己会给容纳的所有对象发送 release 消息。一个对象可以被多次放到同一个 autorelease pool，每一次放入(发送 autorelease消息)都会造成将来收到一次release。
