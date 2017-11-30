@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-11-30T13:40:13+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">内存管理</title><link href="http://www.helloted.com/2017/11/29/MemoryManagement/" rel="alternate" type="text/html" title="内存管理" /><published>2017-11-29T20:00:00+08:00</published><updated>2017-11-29T20:00:00+08:00</updated><id>http://www.helloted.com/2017/11/29/MemoryManagement</id><content type="html" xml:base="http://www.helloted.com/2017/11/29/MemoryManagement/">&lt;p&gt;本文翻译自&lt;a href=&quot;https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/MemoryMgmt.html#//apple_ref/doc/uid/10000011i&quot;&gt;Advanced Memory Management Programming Guide&lt;/a&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-11-30T14:25:48+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS内存管理指南</title><link href="http://www.helloted.com/2017/11/29/MemoryManagement/" rel="alternate" type="text/html" title="iOS内存管理指南" /><published>2017-11-29T20:00:00+08:00</published><updated>2017-11-29T20:00:00+08:00</updated><id>http://www.helloted.com/2017/11/29/MemoryManagement</id><content type="html" xml:base="http://www.helloted.com/2017/11/29/MemoryManagement/">&lt;p&gt;本文翻译自&lt;a href=&quot;https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/MemoryMgmt.html#//apple_ref/doc/uid/10000011i&quot;&gt;Advanced Memory Management Programming Guide&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;一关于内存管理&quot;&gt;一、关于内存管理&lt;/h3&gt;
 
@@ -138,7 +138,109 @@
 
 &lt;h4 id=&quot;2autorelease-pool&quot;&gt;2、Autorelease Pool&lt;/h4&gt;
 
-&lt;p&gt;Autorelease pool是得到了 autorelease 消息的对象的容器。 在 autorelease pool被 dealloc 的时候，它自己会给容纳的所有对象发送 release 消息。一个对象可以被多次放到同一个 autorelease pool，每一次放入(发送 autorelease消息)都会造成将来收到一次release。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">本文翻译自Advanced Memory Management Programming Guide</summary></entry><entry><title type="html">iOS之Runtime运用:埋点统计</title><link href="http://www.helloted.com/2017/11/27/leakmonitor/" rel="alternate" type="text/html" title="iOS之Runtime运用:埋点统计" /><published>2017-11-27T20:00:00+08:00</published><updated>2017-11-27T20:00:00+08:00</updated><id>http://www.helloted.com/2017/11/27/leakmonitor</id><content type="html" xml:base="http://www.helloted.com/2017/11/27/leakmonitor/">&lt;h3 id=&quot;一前言&quot;&gt;一、前言&lt;/h3&gt;
+&lt;p&gt;2.1解析&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Autorelease pool blocks provide a mechanism whereby you can relinquish ownership of an object, but avoid the possibility of it being deallocated immediately (such as when you return an object from a method). Typically, you don’t need to create your own autorelease pool blocks, but there are some situations in which either you must or it is beneficial to do so.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Autorelease pool blocks 提供了一种机制：可以在放弃对象所有权的时间延后(当你想要从一个方法中返回对象的时候)，一般来说，你不需要自己去创建自己的Autorelease pool。&lt;/p&gt;
+
+&lt;p&gt;Autorelease pool是得到了 autorelease 消息的对象的容器。 在 autorelease pool被 dealloc 的时候，它自己会给容纳的所有对象发送 release 消息。一个对象可以被多次放到同一个 autorelease pool，每一次放入(发送 autorelease消息)都会造成将来收到一次release。&lt;/p&gt;
+
+&lt;p&gt;2.2、嵌套&lt;/p&gt;
+
+&lt;p&gt;Autorelease pool blocks可以嵌套&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@autoreleasepool {
+    // . . .
+    @autoreleasepool {
+        // . . .
+    }
+    . . .
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;实 际 上 它 们 是 按 照 栈( s t a c k ) 的方式工作的(译者:即类似于后进先出的队列)。当一个新的 autorelease 池创建后，它就位于这 个栈的最顶端。池被dealloc 的时候，就从栈中删除。当对象收到 autorelease 消息时，实际上它会被放到“这个线程”“当时”位于栈的最顶端的那个池中&lt;/p&gt;
+
+&lt;p&gt;2.3、自己创建的情况&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Three occasions when you might use your own autorelease pool blocks:&lt;/p&gt;
+
+  &lt;ul&gt;
+    &lt;li&gt;
+      &lt;p&gt;If you are writing a program that is not based on a UI framework, such as a command-line tool.&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+      &lt;p&gt;If you write a loop that creates many temporary objects.&lt;/p&gt;
+
+      &lt;p&gt;You may use an autorelease pool block inside the loop to dispose of those objects before the next iteration. Using an autorelease pool block in the loop helps to reduce the maximum memory footprint of the application.&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+      &lt;p&gt;If you spawn a secondary thread.&lt;/p&gt;
+
+      &lt;p&gt;You must create your own autorelease pool block as soon as the thread begins executing; otherwise, your application will leak objects. (See &lt;a href=&quot;https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/mmAutoreleasePools.html#//apple_ref/doc/uid/20000047-1041876&quot;&gt;Autorelease Pool Blocks and Threads&lt;/a&gt; for details.)&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;下面三种情形下，你却应该使用你自己的 autorelease 池:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;如果你写的程序，不是基于 UI Framwork。例如你写的是一个基于命令行的程序。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;如果你程序中的一个循环，在循环体中创建了大量的临时对象。&lt;/p&gt;
+
+    &lt;p&gt;你可以在循环体内部新建一个 autorelease 池，并在一次循环结束时销毁这些临时对象。这样可以减少你的程序对内存的占用峰值。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;如果你发起了一个 secondary 线程(译者:main 线程之外的线程)。这时你“必须”在线程的最初执行代码中创建 autorelease 池，否则你的程序就内存泄露了。(参看“Autorelease 池和线程”)&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;2.4、autoreleasepool 域&lt;/p&gt;
+
+&lt;p&gt;在 autorelease pool已经 dealloc 之后，那些曾经收到 autorelease 消息对象，只能被视为失效，而不要再给他们发消息，或者把他们作为返回值进行返回。如果你必须在 autorelease 之后还要使用某个临时对象，你可以先发一个 retain 消息，然后等到这时的池已经调用了 drain 之后，再发送 autorelease 消息。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;– (id)findMatchingObject:(id)anObject {
+    id match;
+    while (match == nil) {
+        @autoreleasepool {
+ 
+            /* Do a search that creates a lot of temporary objects. */
+            match = [self expensiveSearchForObject:anObject];
+ 
+            if (match != nil) {
+                [match retain]; /* Keep match around. */
+            }
+        }
+    }
+    return [match autorelease];   /* Let match go and return it. */
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;这种情况下，就可以再autoreleasepool外面也调用这个match对象&lt;/p&gt;
+
+&lt;p&gt;2.5、autorelease pool和线程的关系&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Each thread in a Cocoa application maintains its own stack of autorelease pool blocks. If you are writing a Foundation-only program or if you detach a thread, you need to create your own autorelease pool block.&lt;/p&gt;
+
+  &lt;p&gt;If your application or thread is long-lived and potentially generates a lot of autoreleased objects, you should use autorelease pool blocks (like AppKit and UIKit do on the main thread); otherwise, autoreleased objects accumulate and your memory footprint grows. If your detached thread does not make Cocoa calls, you do not need to use an autorelease pool block.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;每个线程都维护了一个autorelease pool的栈，如果你如果你写的程序仅仅是一个基于 Foundation 的程序，又或者你 detach一个线程你需要新建一个你自己的 autorelease pool。&lt;/p&gt;
+
+&lt;p&gt;如果你的程序是一个要长期运行的程序，可能会产生大量的临时对象，这是你必须周期性地销 毁、新建 autorelease pool(UIKit 在主线程中就是这么做的)，否则 autorelease 对象就会累积并吃掉 大量内存。如果你 detached 线程不调用 Cocoa，你就不必新建 autorelease 池。&lt;/p&gt;
+
+&lt;p&gt;​			
+​		
+​&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">本文翻译自Advanced Memory Management Programming Guide</summary></entry><entry><title type="html">iOS之Runtime运用:埋点统计</title><link href="http://www.helloted.com/2017/11/27/leakmonitor/" rel="alternate" type="text/html" title="iOS之Runtime运用:埋点统计" /><published>2017-11-27T20:00:00+08:00</published><updated>2017-11-27T20:00:00+08:00</updated><id>http://www.helloted.com/2017/11/27/leakmonitor</id><content type="html" xml:base="http://www.helloted.com/2017/11/27/leakmonitor/">&lt;h3 id=&quot;一前言&quot;&gt;一、前言&lt;/h3&gt;
 
 &lt;h4 id=&quot;1黑魔法&quot;&gt;1、黑魔法&lt;/h4&gt;
 

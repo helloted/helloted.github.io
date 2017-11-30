@@ -1,7 +1,7 @@
 ---
 layout:     post
-title:      "内存管理"
-subtitle:   "iOS内存管理指南"
+title:      "iOS内存管理指南"
+subtitle:   "iOS内存管理指南官方文档翻译"
 date:       2017-11-29 12:00:00
 author:     "Ted"
 header-img: "img/default.jpg"
@@ -125,4 +125,89 @@ Retain 一个对象，实际是对一个对象的强引用(strong reference)。�
 
 #### 2、Autorelease Pool
 
+2.1解析
+
+> Autorelease pool blocks provide a mechanism whereby you can relinquish ownership of an object, but avoid the possibility of it being deallocated immediately (such as when you return an object from a method). Typically, you don’t need to create your own autorelease pool blocks, but there are some situations in which either you must or it is beneficial to do so.
+
+Autorelease pool blocks 提供了一种机制：可以在放弃对象所有权的时间延后(当你想要从一个方法中返回对象的时候)，一般来说，你不需要自己去创建自己的Autorelease pool。
+
 Autorelease pool是得到了 autorelease 消息的对象的容器。 在 autorelease pool被 dealloc 的时候，它自己会给容纳的所有对象发送 release 消息。一个对象可以被多次放到同一个 autorelease pool，每一次放入(发送 autorelease消息)都会造成将来收到一次release。
+
+2.2、嵌套
+
+Autorelease pool blocks可以嵌套
+
+```
+@autoreleasepool {
+    // . . .
+    @autoreleasepool {
+        // . . .
+    }
+    . . .
+}
+```
+
+实 际 上 它 们 是 按 照 栈( s t a c k ) 的方式工作的(译者:即类似于后进先出的队列)。当一个新的 autorelease 池创建后，它就位于这 个栈的最顶端。池被dealloc 的时候，就从栈中删除。当对象收到 autorelease 消息时，实际上它会被放到“这个线程”“当时”位于栈的最顶端的那个池中
+
+2.3、自己创建的情况
+
+> Three occasions when you might use your own autorelease pool blocks:
+>
+> - If you are writing a program that is not based on a UI framework, such as a command-line tool.
+>
+> - If you write a loop that creates many temporary objects.
+>
+>   You may use an autorelease pool block inside the loop to dispose of those objects before the next iteration. Using an autorelease pool block in the loop helps to reduce the maximum memory footprint of the application.
+>
+> - If you spawn a secondary thread.
+>
+>   You must create your own autorelease pool block as soon as the thread begins executing; otherwise, your application will leak objects. (See [Autorelease Pool Blocks and Threads](https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/mmAutoreleasePools.html#//apple_ref/doc/uid/20000047-1041876) for details.)
+
+下面三种情形下，你却应该使用你自己的 autorelease 池:
+
+1. 如果你写的程序，不是基于 UI Framwork。例如你写的是一个基于命令行的程序。
+
+2. 如果你程序中的一个循环，在循环体中创建了大量的临时对象。
+
+   你可以在循环体内部新建一个 autorelease 池，并在一次循环结束时销毁这些临时对象。这样可以减少你的程序对内存的占用峰值。
+
+3. 如果你发起了一个 secondary 线程(译者:main 线程之外的线程)。这时你“必须”在线程的最初执行代码中创建 autorelease 池，否则你的程序就内存泄露了。(参看“Autorelease 池和线程”)
+
+2.4、autoreleasepool 域
+
+在 autorelease pool已经 dealloc 之后，那些曾经收到 autorelease 消息对象，只能被视为失效，而不要再给他们发消息，或者把他们作为返回值进行返回。如果你必须在 autorelease 之后还要使用某个临时对象，你可以先发一个 retain 消息，然后等到这时的池已经调用了 drain 之后，再发送 autorelease 消息。
+
+```
+– (id)findMatchingObject:(id)anObject {
+    id match;
+    while (match == nil) {
+        @autoreleasepool {
+ 
+            /* Do a search that creates a lot of temporary objects. */
+            match = [self expensiveSearchForObject:anObject];
+ 
+            if (match != nil) {
+                [match retain]; /* Keep match around. */
+            }
+        }
+    }
+    return [match autorelease];   /* Let match go and return it. */
+}
+```
+
+这种情况下，就可以再autoreleasepool外面也调用这个match对象
+
+2.5、autorelease pool和线程的关系
+
+> Each thread in a Cocoa application maintains its own stack of autorelease pool blocks. If you are writing a Foundation-only program or if you detach a thread, you need to create your own autorelease pool block.
+>
+> If your application or thread is long-lived and potentially generates a lot of autoreleased objects, you should use autorelease pool blocks (like AppKit and UIKit do on the main thread); otherwise, autoreleased objects accumulate and your memory footprint grows. If your detached thread does not make Cocoa calls, you do not need to use an autorelease pool block.
+
+每个线程都维护了一个autorelease pool的栈，如果你如果你写的程序仅仅是一个基于 Foundation 的程序，又或者你 detach一个线程你需要新建一个你自己的 autorelease pool。
+
+如果你的程序是一个要长期运行的程序，可能会产生大量的临时对象，这是你必须周期性地销 毁、新建 autorelease pool(UIKit 在主线程中就是这么做的)，否则 autorelease 对象就会累积并吃掉 大量内存。如果你 detached 线程不调用 Cocoa，你就不必新建 autorelease 池。
+
+
+​			
+​		
+​	
