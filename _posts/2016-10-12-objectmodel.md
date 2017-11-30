@@ -200,6 +200,27 @@ static inline Class _object_getClass(id obj)
 
 isKindOfClass是用来判断实例/类是否是那个类型，或者继承自那个类。
 
+经典题目
+
+```
+BOOL res1 = [(id)[NSObject class] isKindOfClass:[NSObject class]]; //YES
+BOOL res2 = [(id)[NSObject class] isMemberOfClass:[NSObject class]]; //NO
+BOOL res3 = [(id)[Sark class] isKindOfClass:[Sark class]]; //NO
+BOOL res4 = [(id)[Sark class] isMemberOfClass:[Sark class]]; //NO
+```
+
+```
+NSObject = [NSObject class]
+[NSObject isMemberOfClass:NSObject]?
+题目变成：
+object_getClass(NSObject)==NSObject?
+metat_NSObject = object_getClass(NSObject) 
+所以最终题目转化为
+metat_NSObject != NSObject?  ==> NO;
+```
+
+
+
 ### 四、KVO与KVC
 
 #### 1、KVO(Key-Value Observing)

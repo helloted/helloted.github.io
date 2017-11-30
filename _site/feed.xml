@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-11-30T14:25:48+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS内存管理指南</title><link href="http://www.helloted.com/2017/11/29/MemoryManagement/" rel="alternate" type="text/html" title="iOS内存管理指南" /><published>2017-11-29T20:00:00+08:00</published><updated>2017-11-29T20:00:00+08:00</updated><id>http://www.helloted.com/2017/11/29/MemoryManagement</id><content type="html" xml:base="http://www.helloted.com/2017/11/29/MemoryManagement/">&lt;p&gt;本文翻译自&lt;a href=&quot;https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/MemoryMgmt.html#//apple_ref/doc/uid/10000011i&quot;&gt;Advanced Memory Management Programming Guide&lt;/a&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-11-30T17:42:39+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS内存管理指南</title><link href="http://www.helloted.com/2017/11/29/MemoryManagement/" rel="alternate" type="text/html" title="iOS内存管理指南" /><published>2017-11-29T20:00:00+08:00</published><updated>2017-11-29T20:00:00+08:00</updated><id>http://www.helloted.com/2017/11/29/MemoryManagement</id><content type="html" xml:base="http://www.helloted.com/2017/11/29/MemoryManagement/">&lt;p&gt;本文翻译自&lt;a href=&quot;https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/MemoryMgmt.html#//apple_ref/doc/uid/10000011i&quot;&gt;Advanced Memory Management Programming Guide&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;一关于内存管理&quot;&gt;一、关于内存管理&lt;/h3&gt;
 
@@ -148,6 +148,23 @@
 
 &lt;p&gt;Autorelease pool是得到了 autorelease 消息的对象的容器。 在 autorelease pool被 dealloc 的时候，它自己会给容纳的所有对象发送 release 消息。一个对象可以被多次放到同一个 autorelease pool，每一次放入(发送 autorelease消息)都会造成将来收到一次release。&lt;/p&gt;
 
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;   NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	// Code benefitting from a local autorelease pool.
+	[pool release];
+   
+   @autoreleasepool{
+     // Code benefitting from a local autorelease pool.
+   }
+   
+   实际上等同于如下
+   {
+        void * atautoreleasepoolobj = objc_autoreleasePoolPush();
+        // Code benefitting from a local autorelease pool.
+        objc_autoreleasePoolPop(atautoreleasepoolobj);
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
 &lt;p&gt;2.2、嵌套&lt;/p&gt;
 
 &lt;p&gt;Autorelease pool blocks可以嵌套&lt;/p&gt;
@@ -226,7 +243,7 @@
 
 &lt;p&gt;这种情况下，就可以再autoreleasepool外面也调用这个match对象&lt;/p&gt;
 
-&lt;p&gt;2.5、autorelease pool和线程的关系&lt;/p&gt;
+&lt;p&gt;2.5、autorelease pool和线程、Runloop的关系&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;Each thread in a Cocoa application maintains its own stack of autorelease pool blocks. If you are writing a Foundation-only program or if you detach a thread, you need to create your own autorelease pool block.&lt;/p&gt;
@@ -238,8 +255,15 @@
 
 &lt;p&gt;如果你的程序是一个要长期运行的程序，可能会产生大量的临时对象，这是你必须周期性地销 毁、新建 autorelease pool(UIKit 在主线程中就是这么做的)，否则 autorelease 对象就会累积并吃掉 大量内存。如果你 detached 线程不调用 Cocoa，你就不必新建 autorelease 池。&lt;/p&gt;
 
-&lt;p&gt;​			
-​		
+&lt;blockquote&gt;
+  &lt;p&gt;The Application Kit creates an autorelease pool on the main thread at the beginning of every cycle of the event loop, and drains it at the end, thereby releasing any autoreleased objects generated while processing an event.&lt;/p&gt;
+
+  &lt;p&gt;Each thread (including the main thread) maintains its own stack of &lt;code class=&quot;highlighter-rouge&quot;&gt;NSAutoreleasePool&lt;/code&gt;objects (see &lt;a href=&quot;https://developer.apple.com/documentation/foundation/nsautoreleasepool#1651513?language=objc&quot;&gt;Threads&lt;/a&gt;). As new pools are created, they get added to the top of the stack. When pools are deallocated, they are removed from the stack. Autoreleased objects are placed into the top autorelease pool for the current thread. When a thread terminates, it automatically drains all of the autorelease pools associated with itself.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;主线程的Runloop在每个Event loop开始时就新建一个autorelease pool，并且在结束时drains。这样可以清空每次Event loop产生的对象&lt;/p&gt;
+
+&lt;p&gt;每个线程，包括主线程维护了一个自己的堆栈，一但新的pool创建，就被放到栈顶，当pool被销毁，就从栈中移除，Autoreleased对象会被放到当前线程的栈顶的pool里，当一个线程被终止，会自动drain所有与它相关联的pool.
 ​&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">本文翻译自Advanced Memory Management Programming Guide</summary></entry><entry><title type="html">iOS之Runtime运用:埋点统计</title><link href="http://www.helloted.com/2017/11/27/leakmonitor/" rel="alternate" type="text/html" title="iOS之Runtime运用:埋点统计" /><published>2017-11-27T20:00:00+08:00</published><updated>2017-11-27T20:00:00+08:00</updated><id>http://www.helloted.com/2017/11/27/leakmonitor</id><content type="html" xml:base="http://www.helloted.com/2017/11/27/leakmonitor/">&lt;h3 id=&quot;一前言&quot;&gt;一、前言&lt;/h3&gt;
 
 &lt;h4 id=&quot;1黑魔法&quot;&gt;1、黑魔法&lt;/h4&gt;

@@ -301,6 +301,25 @@
 
 <p>isKindOfClass是用来判断实例/类是否是那个类型，或者继承自那个类。</p>
 
+<p>经典题目</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>BOOL res1 = [(id)[NSObject class] isKindOfClass:[NSObject class]]; //YES
+BOOL res2 = [(id)[NSObject class] isMemberOfClass:[NSObject class]]; //NO
+BOOL res3 = [(id)[Sark class] isKindOfClass:[Sark class]]; //NO
+BOOL res4 = [(id)[Sark class] isMemberOfClass:[Sark class]]; //NO
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>NSObject = [NSObject class]
+[NSObject isMemberOfClass:NSObject]?
+题目变成：
+object_getClass(NSObject)==NSObject?
+metat_NSObject = object_getClass(NSObject) 
+所以最终题目转化为
+metat_NSObject != NSObject?  ==&gt; NO;
+</code></pre>
+</div>
+
 <h3 id="四kvo与kvc">四、KVO与KVC</h3>
 
 <h4 id="1kvokey-value-observing">1、KVO(Key-Value Observing)</h4>

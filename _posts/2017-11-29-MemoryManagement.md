@@ -133,6 +133,25 @@ Autorelease pool blocks 提供了一种机制：可以在放弃对象所有权�
 
 Autorelease pool是得到了 autorelease 消息的对象的容器。 在 autorelease pool被 dealloc 的时候，它自己会给容纳的所有对象发送 release 消息。一个对象可以被多次放到同一个 autorelease pool，每一次放入(发送 autorelease消息)都会造成将来收到一次release。
 
+```
+   NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	// Code benefitting from a local autorelease pool.
+	[pool release];
+   
+   @autoreleasepool{
+     // Code benefitting from a local autorelease pool.
+   }
+   
+   实际上等同于如下
+   {
+        void * atautoreleasepoolobj = objc_autoreleasePoolPush();
+        // Code benefitting from a local autorelease pool.
+        objc_autoreleasePoolPop(atautoreleasepoolobj);
+    }
+```
+
+
+
 2.2、嵌套
 
 Autorelease pool blocks可以嵌套
@@ -197,7 +216,7 @@ Autorelease pool blocks可以嵌套
 
 这种情况下，就可以再autoreleasepool外面也调用这个match对象
 
-2.5、autorelease pool和线程的关系
+2.5、autorelease pool和线程、Runloop的关系
 
 > Each thread in a Cocoa application maintains its own stack of autorelease pool blocks. If you are writing a Foundation-only program or if you detach a thread, you need to create your own autorelease pool block.
 >
@@ -207,7 +226,11 @@ Autorelease pool blocks可以嵌套
 
 如果你的程序是一个要长期运行的程序，可能会产生大量的临时对象，这是你必须周期性地销 毁、新建 autorelease pool(UIKit 在主线程中就是这么做的)，否则 autorelease 对象就会累积并吃掉 大量内存。如果你 detached 线程不调用 Cocoa，你就不必新建 autorelease 池。
 
+> The Application Kit creates an autorelease pool on the main thread at the beginning of every cycle of the event loop, and drains it at the end, thereby releasing any autoreleased objects generated while processing an event.
+>
+> Each thread (including the main thread) maintains its own stack of `NSAutoreleasePool`objects (see [Threads](https://developer.apple.com/documentation/foundation/nsautoreleasepool#1651513?language=objc)). As new pools are created, they get added to the top of the stack. When pools are deallocated, they are removed from the stack. Autoreleased objects are placed into the top autorelease pool for the current thread. When a thread terminates, it automatically drains all of the autorelease pools associated with itself.
 
-​			
-​		
+主线程的Runloop在每个Event loop开始时就新建一个autorelease pool，并且在结束时drains。这样可以清空每次Event loop产生的对象
+
+每个线程，包括主线程维护了一个自己的堆栈，一但新的pool创建，就被放到栈顶，当pool被销毁，就从栈中移除，Autoreleased对象会被放到当前线程的栈顶的pool里，当一个线程被终止，会自动drain所有与它相关联的pool.
 ​	
