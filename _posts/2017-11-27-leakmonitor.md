@@ -27,7 +27,7 @@ UIViewController进入下一个界面有两种方式，push或者present。对�
 
 可以通过method swizzling在运行时将系统API进行替换
 
-```
+```objc
 void monitor_exchangeInstanceMethod(Class class, SEL originalSelector, SEL newSelector) {
     Method originalMethod = class_getInstanceMethod(class, originalSelector);
     Method newMethod = class_getInstanceMethod(class, newSelector);
@@ -41,7 +41,7 @@ void monitor_exchangeInstanceMethod(Class class, SEL originalSelector, SEL newSe
 
 其中originalSelector是系统API，newSelector则是我们自定义的方法
 
-```
+```objc
 + (void)load{
     monitor_exchangeInstanceMethod([self class], @selector(viewDidLoad), @selector(ht_ViewDidLoad));
     monitor_exchangeInstanceMethod([self class], @selector(viewWillAppear:), @selector(ht_viewWillAppear:));
@@ -58,7 +58,7 @@ NSObject的load方法，在每个class导入的时候，只要实现了这方法
 
 ### 三、渲染时间统计
 
-```
+```objc
 - (void)ht_ViewDidLoad{
     long current =  [[NSDate date] timeIntervalSince1970]*1000;
     self.didLoadTime = @(current);
@@ -66,7 +66,7 @@ NSObject的load方法，在每个class导入的时候，只要实现了这方法
 }
 ```
 
-```
+```objc
 - (void)ht_viewDidAppear:(BOOL)animated{
     long didload = self.didLoadTime.longValue;
     if (didload!=0) {
@@ -102,7 +102,7 @@ Block:某个类将block作为自己的属性变量，然后该类在block的方�
 
 Delegate:声明Delegate要用weak;当delegate指向的对象销毁后，delegate = nil;如果用assign，可以解决循环引用的问题，但是可能会出现野指针
 
-```
+```objc
 - (void)ht_viewWillDisappear:(BOOL)animated{
     [self ht_viewWillDisappear:animated];
     if(self.isMovingFromParentViewController || self.isBeingDismissed){//将要被pop或者dismiss出去
@@ -121,7 +121,7 @@ Delegate:声明Delegate要用weak;当delegate指向的对象销毁后，delegate
 
 在viewWillDisappear方法中，我们可以通过判断`self.isMovingFromParentViewController || self.isBeingDismissed`来得知是否是被Pop或者dismiss。此时，通过在GCD的延迟来埋点。
 
-```
+```objc
 - (void)ht_dealloc{
     if (self.ht_dellocBlock){
         dispatch_block_cancel(self.ht_dellocBlock);

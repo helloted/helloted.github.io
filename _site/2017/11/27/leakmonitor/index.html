@@ -126,28 +126,28 @@
 
 <p>可以通过method swizzling在运行时将系统API进行替换</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>void monitor_exchangeInstanceMethod(Class class, SEL originalSelector, SEL newSelector) {
-    Method originalMethod = class_getInstanceMethod(class, originalSelector);
-    Method newMethod = class_getInstanceMethod(class, newSelector);
-    if(class_addMethod(class, originalSelector, method_getImplementation(newMethod), method_getTypeEncoding(newMethod))) {
-        class_replaceMethod(class, newSelector, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod));
-    } else {
-        method_exchangeImplementations(originalMethod, newMethod);
-    }
-}
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">monitor_exchangeInstanceMethod</span><span class="p">(</span><span class="n">Class</span> <span class="n">class</span><span class="p">,</span> <span class="n">SEL</span> <span class="n">originalSelector</span><span class="p">,</span> <span class="n">SEL</span> <span class="n">newSelector</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">Method</span> <span class="n">originalMethod</span> <span class="o">=</span> <span class="n">class_getInstanceMethod</span><span class="p">(</span><span class="n">class</span><span class="p">,</span> <span class="n">originalSelector</span><span class="p">);</span>
+    <span class="n">Method</span> <span class="n">newMethod</span> <span class="o">=</span> <span class="n">class_getInstanceMethod</span><span class="p">(</span><span class="n">class</span><span class="p">,</span> <span class="n">newSelector</span><span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">class_addMethod</span><span class="p">(</span><span class="n">class</span><span class="p">,</span> <span class="n">originalSelector</span><span class="p">,</span> <span class="n">method_getImplementation</span><span class="p">(</span><span class="n">newMethod</span><span class="p">),</span> <span class="n">method_getTypeEncoding</span><span class="p">(</span><span class="n">newMethod</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="n">class_replaceMethod</span><span class="p">(</span><span class="n">class</span><span class="p">,</span> <span class="n">newSelector</span><span class="p">,</span> <span class="n">method_getImplementation</span><span class="p">(</span><span class="n">originalMethod</span><span class="p">),</span> <span class="n">method_getTypeEncoding</span><span class="p">(</span><span class="n">originalMethod</span><span class="p">));</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">method_exchangeImplementations</span><span class="p">(</span><span class="n">originalMethod</span><span class="p">,</span> <span class="n">newMethod</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 </code></pre>
 </div>
 
 <p>其中originalSelector是系统API，newSelector则是我们自定义的方法</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>+ (void)load{
-    monitor_exchangeInstanceMethod([self class], @selector(viewDidLoad), @selector(ht_ViewDidLoad));
-    monitor_exchangeInstanceMethod([self class], @selector(viewWillAppear:), @selector(ht_viewWillAppear:));
-    monitor_exchangeInstanceMethod([self class], @selector(viewDidAppear:), @selector(ht_viewDidAppear:));
-    monitor_exchangeInstanceMethod([self class], @selector(viewWillDisappear:), @selector(ht_viewWillDisappear:));
-    monitor_exchangeInstanceMethod([self class], @selector(viewDidDisappear:), @selector(ht_viewDidDisappear:));
-    monitor_exchangeInstanceMethod([self class], NSSelectorFromString(@"dealloc"), @selector(ht_dealloc));
-}
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">load</span><span class="p">{</span>
+    <span class="n">monitor_exchangeInstanceMethod</span><span class="p">([</span><span class="n">self</span> <span class="nf">class</span><span class="p">],</span> <span class="k">@selector</span><span class="p">(</span><span class="n">viewDidLoad</span><span class="p">),</span> <span class="k">@selector</span><span class="p">(</span><span class="n">ht_ViewDidLoad</span><span class="p">));</span>
+    <span class="n">monitor_exchangeInstanceMethod</span><span class="p">([</span><span class="n">self</span> <span class="nf">class</span><span class="p">],</span> <span class="k">@selector</span><span class="p">(</span><span class="n">viewWillAppear</span><span class="o">:</span><span class="p">),</span> <span class="k">@selector</span><span class="p">(</span><span class="n">ht_viewWillAppear</span><span class="o">:</span><span class="p">));</span>
+    <span class="n">monitor_exchangeInstanceMethod</span><span class="p">([</span><span class="n">self</span> <span class="nf">class</span><span class="p">],</span> <span class="k">@selector</span><span class="p">(</span><span class="n">viewDidAppear</span><span class="o">:</span><span class="p">),</span> <span class="k">@selector</span><span class="p">(</span><span class="n">ht_viewDidAppear</span><span class="o">:</span><span class="p">));</span>
+    <span class="n">monitor_exchangeInstanceMethod</span><span class="p">([</span><span class="n">self</span> <span class="nf">class</span><span class="p">],</span> <span class="k">@selector</span><span class="p">(</span><span class="n">viewWillDisappear</span><span class="o">:</span><span class="p">),</span> <span class="k">@selector</span><span class="p">(</span><span class="n">ht_viewWillDisappear</span><span class="o">:</span><span class="p">));</span>
+    <span class="n">monitor_exchangeInstanceMethod</span><span class="p">([</span><span class="n">self</span> <span class="nf">class</span><span class="p">],</span> <span class="k">@selector</span><span class="p">(</span><span class="n">viewDidDisappear</span><span class="o">:</span><span class="p">),</span> <span class="k">@selector</span><span class="p">(</span><span class="n">ht_viewDidDisappear</span><span class="o">:</span><span class="p">));</span>
+    <span class="n">monitor_exchangeInstanceMethod</span><span class="p">([</span><span class="n">self</span> <span class="nf">class</span><span class="p">],</span> <span class="n">NSSelectorFromString</span><span class="p">(</span><span class="s">@"dealloc"</span><span class="p">),</span> <span class="k">@selector</span><span class="p">(</span><span class="n">ht_dealloc</span><span class="p">));</span>
+<span class="p">}</span>
 </code></pre>
 </div>
 
@@ -157,25 +157,25 @@
 
 <h3 id="三渲染时间统计">三、渲染时间统计</h3>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (void)ht_ViewDidLoad{
-    long current =  [[NSDate date] timeIntervalSince1970]*1000;
-    self.didLoadTime = @(current);
-    [self ht_ViewDidLoad];
-}
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">ht_ViewDidLoad</span><span class="p">{</span>
+    <span class="kt">long</span> <span class="n">current</span> <span class="o">=</span>  <span class="p">[[</span><span class="n">NSDate</span> <span class="nf">date</span><span class="p">]</span> <span class="nf">timeIntervalSince1970</span><span class="p">]</span><span class="o">*</span><span class="mi">1000</span><span class="p">;</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">didLoadTime</span> <span class="o">=</span> <span class="err">@</span><span class="p">(</span><span class="n">current</span><span class="p">);</span>
+    <span class="p">[</span><span class="n">self</span> <span class="nf">ht_ViewDidLoad</span><span class="p">];</span>
+<span class="p">}</span>
 </code></pre>
 </div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (void)ht_viewDidAppear:(BOOL)animated{
-    long didload = self.didLoadTime.longValue;
-    if (didload!=0) {
-        long current =  [[NSDate date] timeIntervalSince1970]*1000;
-        long pass = current - didload;
-        // 用于埋点监测UI渲染时间
-        NSLog(@"%@渲染UI用时:%@毫秒",NSStringFromClass([self class]),@(pass));
-        self.didLoadTime = @(0);
-    }
-    [self ht_viewDidAppear:animated];
-}
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">ht_viewDidAppear</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span><span class="p">{</span>
+    <span class="kt">long</span> <span class="n">didload</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">didLoadTime</span><span class="p">.</span><span class="n">longValue</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">didload</span><span class="o">!=</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">long</span> <span class="n">current</span> <span class="o">=</span>  <span class="p">[[</span><span class="n">NSDate</span> <span class="nf">date</span><span class="p">]</span> <span class="nf">timeIntervalSince1970</span><span class="p">]</span><span class="o">*</span><span class="mi">1000</span><span class="p">;</span>
+        <span class="kt">long</span> <span class="n">pass</span> <span class="o">=</span> <span class="n">current</span> <span class="o">-</span> <span class="n">didload</span><span class="p">;</span>
+        <span class="c1">// 用于埋点监测UI渲染时间
+</span>        <span class="n">NSLog</span><span class="p">(</span><span class="s">@"%@渲染UI用时:%@毫秒"</span><span class="p">,</span><span class="n">NSStringFromClass</span><span class="p">([</span><span class="n">self</span> <span class="nf">class</span><span class="p">]),</span><span class="err">@</span><span class="p">(</span><span class="n">pass</span><span class="p">));</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">didLoadTime</span> <span class="o">=</span> <span class="err">@</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="p">[</span><span class="n">self</span> <span class="nf">ht_viewDidAppear</span><span class="p">:</span><span class="n">animated</span><span class="p">];</span>
+<span class="p">}</span>
 </code></pre>
 </div>
 
@@ -207,31 +207,31 @@
 
 <p>Delegate:声明Delegate要用weak;当delegate指向的对象销毁后，delegate = nil;如果用assign，可以解决循环引用的问题，但是可能会出现野指针</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (void)ht_viewWillDisappear:(BOOL)animated{
-    [self ht_viewWillDisappear:animated];
-    if(self.isMovingFromParentViewController || self.isBeingDismissed){//将要被pop或者dismiss出去
-        [self ht_willDealloc];
-    }
-}
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">ht_viewWillDisappear</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">animated</span><span class="p">{</span>
+    <span class="p">[</span><span class="n">self</span> <span class="nf">ht_viewWillDisappear</span><span class="p">:</span><span class="n">animated</span><span class="p">];</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">isMovingFromParentViewController</span> <span class="o">||</span> <span class="n">self</span><span class="p">.</span><span class="n">isBeingDismissed</span><span class="p">){</span><span class="c1">//将要被pop或者dismiss出去
+</span>        <span class="p">[</span><span class="n">self</span> <span class="nf">ht_willDealloc</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-- (void)ht_willDealloc{
-    NSString *VCName = NSStringFromClass([self class]);
-    self.ht_dellocBlock = dispatch_block_create(0, ^{
-        NSLog(@"%@ 可能存在内存泄漏，没有delloc",VCName);
-    });
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), self.ht_dellocBlock);
-}
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">ht_willDealloc</span><span class="p">{</span>
+    <span class="n">NSString</span> <span class="o">*</span><span class="n">VCName</span> <span class="o">=</span> <span class="n">NSStringFromClass</span><span class="p">([</span><span class="n">self</span> <span class="nf">class</span><span class="p">]);</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">ht_dellocBlock</span> <span class="o">=</span> <span class="n">dispatch_block_create</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">^</span><span class="p">{</span>
+        <span class="n">NSLog</span><span class="p">(</span><span class="s">@"%@ 可能存在内存泄漏，没有delloc"</span><span class="p">,</span><span class="n">VCName</span><span class="p">);</span>
+    <span class="p">});</span>
+    <span class="n">dispatch_after</span><span class="p">(</span><span class="n">dispatch_time</span><span class="p">(</span><span class="n">DISPATCH_TIME_NOW</span><span class="p">,</span> <span class="p">(</span><span class="kt">int64_t</span><span class="p">)(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">NSEC_PER_SEC</span><span class="p">)),</span> <span class="n">dispatch_get_main_queue</span><span class="p">(),</span> <span class="n">self</span><span class="p">.</span><span class="n">ht_dellocBlock</span><span class="p">);</span>
+<span class="p">}</span>
 </code></pre>
 </div>
 
 <p>在viewWillDisappear方法中，我们可以通过判断<code class="highlighter-rouge">self.isMovingFromParentViewController || self.isBeingDismissed</code>来得知是否是被Pop或者dismiss。此时，通过在GCD的延迟来埋点。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (void)ht_dealloc{
-    if (self.ht_dellocBlock){
-        dispatch_block_cancel(self.ht_dellocBlock);
-    }
-    [self ht_dealloc];
-}
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">ht_dealloc</span><span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">ht_dellocBlock</span><span class="p">){</span>
+        <span class="n">dispatch_block_cancel</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">ht_dellocBlock</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="p">[</span><span class="n">self</span> <span class="nf">ht_dealloc</span><span class="p">];</span>
+<span class="p">}</span>
 </code></pre>
 </div>
 
