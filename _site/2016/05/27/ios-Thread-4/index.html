@@ -110,15 +110,15 @@
   <p>1、@synchronized</p>
 </blockquote>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>        // @synchronized
-        id obj = [NSObject new];
-        lastTime = CFAbsoluteTimeGetCurrent();
-        for (NSInteger i = 0; i &lt; KRunCount; ++i) {
-            @synchronized(obj) {
-            }
-        }
-        current = CFAbsoluteTimeGetCurrent();
-        NSLog(@"@synchronized: %f ms", (current - lastTime) * 1000);
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code>        <span class="c1">// @synchronized
+</span>        <span class="n">id</span> <span class="n">obj</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSObject</span> <span class="nf">new</span><span class="p">];</span>
+        <span class="n">lastTime</span> <span class="o">=</span> <span class="n">CFAbsoluteTimeGetCurrent</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">NSInteger</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">KRunCount</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">@synchronized</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="p">{</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="n">CFAbsoluteTimeGetCurrent</span><span class="p">();</span>
+        <span class="n">NSLog</span><span class="p">(</span><span class="s">@"@synchronized: %f ms"</span><span class="p">,</span> <span class="p">(</span><span class="n">current</span> <span class="o">-</span> <span class="n">lastTime</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">);</span>
 </code></pre>
 </div>
 
@@ -126,29 +126,29 @@
   <p>2、NSLock、NSLock+IMP</p>
 </blockquote>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>        // NSLock
-        NSLock *myLock = [NSLock new];
-        lastTime = CFAbsoluteTimeGetCurrent();
-        for (NSInteger i = 0; i &lt; KRunCount; ++i) {
-            [myLock lock];
-            [myLock unlock];
-        }
-        current = CFAbsoluteTimeGetCurrent();
-        NSLog(@"NSLock: %f ms", (current - lastTime) * 1000);
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code>        <span class="c1">// NSLock
+</span>        <span class="n">NSLock</span> <span class="o">*</span><span class="n">myLock</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSLock</span> <span class="nf">new</span><span class="p">];</span>
+        <span class="n">lastTime</span> <span class="o">=</span> <span class="n">CFAbsoluteTimeGetCurrent</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">NSInteger</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">KRunCount</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+            <span class="p">[</span><span class="n">myLock</span> <span class="nf">lock</span><span class="p">];</span>
+            <span class="p">[</span><span class="n">myLock</span> <span class="nf">unlock</span><span class="p">];</span>
+        <span class="p">}</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="n">CFAbsoluteTimeGetCurrent</span><span class="p">();</span>
+        <span class="n">NSLog</span><span class="p">(</span><span class="s">@"NSLock: %f ms"</span><span class="p">,</span> <span class="p">(</span><span class="n">current</span> <span class="o">-</span> <span class="n">lastTime</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">);</span>
         
-        // NSLock + IMP
-        typedef void (*func)(id, SEL);
-        SEL lockSEL = @selector(lock);
-        SEL unlockSEL = @selector(unlock);
-        func lockFunc = (void (*)(id, SEL))[myLock methodForSelector : lockSEL];
-        func unlockFunc = (void (*)(id, SEL))[myLock methodForSelector : unlockSEL];
-        lastTime = CFAbsoluteTimeGetCurrent();
-        for (NSInteger i = 0; i &lt; KRunCount; ++i) {
-            lockFunc(myLock, lockSEL);
-            unlockFunc(myLock, unlockSEL);
-        }
-        current = CFAbsoluteTimeGetCurrent();
-        NSLog(@"NSLock + IMP: %f ms", (current - lastTime) * 1000);
+        <span class="c1">// NSLock + IMP
+</span>        <span class="k">typedef</span> <span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">func</span><span class="p">)(</span><span class="n">id</span><span class="p">,</span> <span class="n">SEL</span><span class="p">);</span>
+        <span class="n">SEL</span> <span class="n">lockSEL</span> <span class="o">=</span> <span class="k">@selector</span><span class="p">(</span><span class="n">lock</span><span class="p">);</span>
+        <span class="n">SEL</span> <span class="n">unlockSEL</span> <span class="o">=</span> <span class="k">@selector</span><span class="p">(</span><span class="n">unlock</span><span class="p">);</span>
+        <span class="n">func</span> <span class="n">lockFunc</span> <span class="o">=</span> <span class="p">(</span><span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="p">)(</span><span class="n">id</span><span class="p">,</span> <span class="n">SEL</span><span class="p">))[</span><span class="n">myLock</span> <span class="nf">methodForSelector</span> <span class="p">:</span> <span class="n">lockSEL</span><span class="p">];</span>
+        <span class="n">func</span> <span class="n">unlockFunc</span> <span class="o">=</span> <span class="p">(</span><span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="p">)(</span><span class="n">id</span><span class="p">,</span> <span class="n">SEL</span><span class="p">))[</span><span class="n">myLock</span> <span class="nf">methodForSelector</span> <span class="p">:</span> <span class="n">unlockSEL</span><span class="p">];</span>
+        <span class="n">lastTime</span> <span class="o">=</span> <span class="n">CFAbsoluteTimeGetCurrent</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">NSInteger</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">KRunCount</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">lockFunc</span><span class="p">(</span><span class="n">myLock</span><span class="p">,</span> <span class="n">lockSEL</span><span class="p">);</span>
+            <span class="n">unlockFunc</span><span class="p">(</span><span class="n">myLock</span><span class="p">,</span> <span class="n">unlockSEL</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="n">CFAbsoluteTimeGetCurrent</span><span class="p">();</span>
+        <span class="n">NSLog</span><span class="p">(</span><span class="s">@"NSLock + IMP: %f ms"</span><span class="p">,</span> <span class="p">(</span><span class="n">current</span> <span class="o">-</span> <span class="n">lastTime</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">);</span>
 </code></pre>
 </div>
 
@@ -156,22 +156,22 @@
   <p>3、NSCondition</p>
 </blockquote>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (void)wait;
-- (BOOL)waitUntilDate:(NSDate *)limit;
-- (void)signal;
-- (void)broadcast;
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">wait</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">waitUntilDate</span><span class="p">:(</span><span class="n">NSDate</span> <span class="o">*</span><span class="p">)</span><span class="nv">limit</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">signal</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">broadcast</span><span class="p">;</span>
 </code></pre>
 </div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>        // NSCondition
-        NSCondition *condition = [[NSCondition alloc] init];
-        lastTime = CFAbsoluteTimeGetCurrent();
-        for (NSInteger i = 0; i &lt; KRunCount; ++i) {
-            [condition lock];
-            [condition unlock];
-        }
-        current = CFAbsoluteTimeGetCurrent();
-        NSLog(@"NSCondition: %f ms", (current - lastTime) * 1000);
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code>        <span class="c1">// NSCondition
+</span>        <span class="n">NSCondition</span> <span class="o">*</span><span class="n">condition</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSCondition</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+        <span class="n">lastTime</span> <span class="o">=</span> <span class="n">CFAbsoluteTimeGetCurrent</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">NSInteger</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">KRunCount</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+            <span class="p">[</span><span class="n">condition</span> <span class="nf">lock</span><span class="p">];</span>
+            <span class="p">[</span><span class="n">condition</span> <span class="nf">unlock</span><span class="p">];</span>
+        <span class="p">}</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="n">CFAbsoluteTimeGetCurrent</span><span class="p">();</span>
+        <span class="n">NSLog</span><span class="p">(</span><span class="s">@"NSCondition: %f ms"</span><span class="p">,</span> <span class="p">(</span><span class="n">current</span> <span class="o">-</span> <span class="n">lastTime</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">);</span>
 </code></pre>
 </div>
 
@@ -179,24 +179,24 @@
   <p>4、NSConditionLock</p>
 </blockquote>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (void)lockWhenCondition:(NSInteger)condition;
-- (BOOL)tryLock;
-- (BOOL)tryLockWhenCondition:(NSInteger)condition;
-- (void)unlockWithCondition:(NSInteger)condition;
-- (BOOL)lockBeforeDate:(NSDate *)limit;
-- (BOOL)lockWhenCondition:(NSInteger)condition beforeDate:(NSDate *)limit;
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">lockWhenCondition</span><span class="p">:(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">condition</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="n">tryLock</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">tryLockWhenCondition</span><span class="p">:(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">condition</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">unlockWithCondition</span><span class="p">:(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">condition</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">lockBeforeDate</span><span class="p">:(</span><span class="n">NSDate</span> <span class="o">*</span><span class="p">)</span><span class="nv">limit</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">lockWhenCondition</span><span class="p">:(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">condition</span> <span class="nf">beforeDate</span><span class="p">:(</span><span class="n">NSDate</span> <span class="o">*</span><span class="p">)</span><span class="nv">limit</span><span class="p">;</span>
 </code></pre>
 </div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>        // NSConditionLock
-        NSConditionLock *conditionLock = [[NSConditionLock alloc] init];
-        lastTime = CFAbsoluteTimeGetCurrent();
-        for (NSInteger i = 0; i &lt; KRunCount; ++i) {
-            [conditionLock lock];
-            [conditionLock unlock];
-        }
-        current = CFAbsoluteTimeGetCurrent();
-        NSLog(@"NSConditionLock: %f ms", (current - lastTime) * 1000);
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code>        <span class="c1">// NSConditionLock
+</span>        <span class="n">NSConditionLock</span> <span class="o">*</span><span class="n">conditionLock</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSConditionLock</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+        <span class="n">lastTime</span> <span class="o">=</span> <span class="n">CFAbsoluteTimeGetCurrent</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">NSInteger</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">KRunCount</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+            <span class="p">[</span><span class="n">conditionLock</span> <span class="nf">lock</span><span class="p">];</span>
+            <span class="p">[</span><span class="n">conditionLock</span> <span class="nf">unlock</span><span class="p">];</span>
+        <span class="p">}</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="n">CFAbsoluteTimeGetCurrent</span><span class="p">();</span>
+        <span class="n">NSLog</span><span class="p">(</span><span class="s">@"NSConditionLock: %f ms"</span><span class="p">,</span> <span class="p">(</span><span class="n">current</span> <span class="o">-</span> <span class="n">lastTime</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">);</span>
 </code></pre>
 </div>
 
@@ -206,15 +206,15 @@
 
 <p>递归锁，当我们线程中方法需要递归时用这个锁可以避免死锁</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>        // NSRecursiveLock
-        NSRecursiveLock *recursiveLock = [[NSRecursiveLock alloc] init];
-        lastTime = CFAbsoluteTimeGetCurrent();
-        for (NSInteger i = 0; i &lt; KRunCount; ++i) {
-            [recursiveLock lock];
-            [recursiveLock unlock];
-        }
-        current = CFAbsoluteTimeGetCurrent();
-        NSLog(@"NSRecursiveLock: %f ms", (current - lastTime) * 1000);
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code>        <span class="c1">// NSRecursiveLock
+</span>        <span class="n">NSRecursiveLock</span> <span class="o">*</span><span class="n">recursiveLock</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSRecursiveLock</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+        <span class="n">lastTime</span> <span class="o">=</span> <span class="n">CFAbsoluteTimeGetCurrent</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">NSInteger</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">KRunCount</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+            <span class="p">[</span><span class="n">recursiveLock</span> <span class="nf">lock</span><span class="p">];</span>
+            <span class="p">[</span><span class="n">recursiveLock</span> <span class="nf">unlock</span><span class="p">];</span>
+        <span class="p">}</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="n">CFAbsoluteTimeGetCurrent</span><span class="p">();</span>
+        <span class="n">NSLog</span><span class="p">(</span><span class="s">@"NSRecursiveLock: %f ms"</span><span class="p">,</span> <span class="p">(</span><span class="n">current</span> <span class="o">-</span> <span class="n">lastTime</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">);</span>
 </code></pre>
 </div>
 
@@ -222,17 +222,17 @@
   <p>6、pthread_mutex_t</p>
 </blockquote>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>        // pthread_mutex_t
-        pthread_mutex_t theLock;
-        pthread_mutex_init(&amp;theLock, NULL);
-        lastTime = CFAbsoluteTimeGetCurrent();
-        for (NSInteger i = 0; i &lt; KRunCount; ++i) {
-            pthread_mutex_lock(&amp;theLock);
-            pthread_mutex_unlock(&amp;theLock);
-        }
-        current = CFAbsoluteTimeGetCurrent();
-        NSLog(@"pthread_mutex: %f ms", (current - lastTime) * 1000);
-        pthread_mutex_destroy(&amp;theLock);
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code>        <span class="c1">// pthread_mutex_t
+</span>        <span class="n">pthread_mutex_t</span> <span class="n">theLock</span><span class="p">;</span>
+        <span class="n">pthread_mutex_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">theLock</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+        <span class="n">lastTime</span> <span class="o">=</span> <span class="n">CFAbsoluteTimeGetCurrent</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">NSInteger</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">KRunCount</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">theLock</span><span class="p">);</span>
+            <span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">theLock</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="n">CFAbsoluteTimeGetCurrent</span><span class="p">();</span>
+        <span class="n">NSLog</span><span class="p">(</span><span class="s">@"pthread_mutex: %f ms"</span><span class="p">,</span> <span class="p">(</span><span class="n">current</span> <span class="o">-</span> <span class="n">lastTime</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">);</span>
+        <span class="n">pthread_mutex_destroy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">theLock</span><span class="p">);</span>
 </code></pre>
 </div>
 
@@ -240,15 +240,15 @@
   <p>7、OSSpinLock</p>
 </blockquote>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>        // OSSpinLock
-        OSSpinLock spinlock = OS_SPINLOCK_INIT;
-        lastTime = CFAbsoluteTimeGetCurrent();
-        for (NSInteger i = 0; i &lt; KRunCount; ++i) {
-            OSSpinLockLock(&amp;spinlock);
-            OSSpinLockUnlock(&amp;spinlock);
-        }
-        current = CFAbsoluteTimeGetCurrent();
-        NSLog(@"OSSpinlock: %f ms", (current - lastTime) * 1000);
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code>        <span class="c1">// OSSpinLock
+</span>        <span class="n">OSSpinLock</span> <span class="n">spinlock</span> <span class="o">=</span> <span class="n">OS_SPINLOCK_INIT</span><span class="p">;</span>
+        <span class="n">lastTime</span> <span class="o">=</span> <span class="n">CFAbsoluteTimeGetCurrent</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">NSInteger</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">KRunCount</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">OSSpinLockLock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">spinlock</span><span class="p">);</span>
+            <span class="n">OSSpinLockUnlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">spinlock</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="n">CFAbsoluteTimeGetCurrent</span><span class="p">();</span>
+        <span class="n">NSLog</span><span class="p">(</span><span class="s">@"OSSpinlock: %f ms"</span><span class="p">,</span> <span class="p">(</span><span class="n">current</span> <span class="o">-</span> <span class="n">lastTime</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">);</span>
 </code></pre>
 </div>
 
@@ -256,18 +256,18 @@
   <p>8、dispatch_barrier_async</p>
 </blockquote>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>        // dispatch_barrier_async
-        dispatch_queue_t queue =
-        dispatch_queue_create("com.helloted", DISPATCH_QUEUE_CONCURRENT);
-        lastTime = CFAbsoluteTimeGetCurrent();
-        for (NSInteger i = 0; i &lt; 10; ++i) {
-            dispatch_barrier_async(queue, ^{
-                if (i==9) {
-                    current = CFAbsoluteTimeGetCurrent();
-                    NSLog(@"dispatch_barrier_async: %f ms", (current - lastTime) * 1000 * KRunCount / 10);
-                }
-            });
-        }
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code>        <span class="c1">// dispatch_barrier_async
+</span>        <span class="n">dispatch_queue_t</span> <span class="n">queue</span> <span class="o">=</span>
+        <span class="n">dispatch_queue_create</span><span class="p">(</span><span class="s">"com.helloted"</span><span class="p">,</span> <span class="n">DISPATCH_QUEUE_CONCURRENT</span><span class="p">);</span>
+        <span class="n">lastTime</span> <span class="o">=</span> <span class="n">CFAbsoluteTimeGetCurrent</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">NSInteger</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">dispatch_barrier_async</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="o">^</span><span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="o">==</span><span class="mi">9</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">current</span> <span class="o">=</span> <span class="n">CFAbsoluteTimeGetCurrent</span><span class="p">();</span>
+                    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"dispatch_barrier_async: %f ms"</span><span class="p">,</span> <span class="p">(</span><span class="n">current</span> <span class="o">-</span> <span class="n">lastTime</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span> <span class="o">*</span> <span class="n">KRunCount</span> <span class="o">/</span> <span class="mi">10</span><span class="p">);</span>
+                <span class="p">}</span>
+            <span class="p">});</span>
+        <span class="p">}</span>
 </code></pre>
 </div>
 
@@ -275,20 +275,20 @@
   <p>9、dispatch_semaphore_t</p>
 </blockquote>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>        // dispatch_semaphore_t
-        dispatch_queue_t my_queue = dispatch_queue_create("com.helloted2", DISPATCH_QUEUE_CONCURRENT);
-        dispatch_semaphore_t semaphore = dispatch_semaphore_create(1);
-        lastTime = CFAbsoluteTimeGetCurrent();
-        for (int index = 0; index &lt; 10; index++) {
-            dispatch_async(my_queue, ^(){
-                dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-                if (index==9) {
-                    current = CFAbsoluteTimeGetCurrent();
-                    NSLog(@"dispatch_barrier_async: %f ms", (current - lastTime) * 1000 * KRunCount / 10);
-                }
-                dispatch_semaphore_signal(semaphore);
-            });
-        }
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code>        <span class="c1">// dispatch_semaphore_t
+</span>        <span class="n">dispatch_queue_t</span> <span class="n">my_queue</span> <span class="o">=</span> <span class="n">dispatch_queue_create</span><span class="p">(</span><span class="s">"com.helloted2"</span><span class="p">,</span> <span class="n">DISPATCH_QUEUE_CONCURRENT</span><span class="p">);</span>
+        <span class="n">dispatch_semaphore_t</span> <span class="n">semaphore</span> <span class="o">=</span> <span class="n">dispatch_semaphore_create</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+        <span class="n">lastTime</span> <span class="o">=</span> <span class="n">CFAbsoluteTimeGetCurrent</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="n">index</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">dispatch_async</span><span class="p">(</span><span class="n">my_queue</span><span class="p">,</span> <span class="o">^</span><span class="p">(){</span>
+                <span class="n">dispatch_semaphore_wait</span><span class="p">(</span><span class="n">semaphore</span><span class="p">,</span> <span class="n">DISPATCH_TIME_FOREVER</span><span class="p">);</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">index</span><span class="o">==</span><span class="mi">9</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">current</span> <span class="o">=</span> <span class="n">CFAbsoluteTimeGetCurrent</span><span class="p">();</span>
+                    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"dispatch_barrier_async: %f ms"</span><span class="p">,</span> <span class="p">(</span><span class="n">current</span> <span class="o">-</span> <span class="n">lastTime</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span> <span class="o">*</span> <span class="n">KRunCount</span> <span class="o">/</span> <span class="mi">10</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="n">dispatch_semaphore_signal</span><span class="p">(</span><span class="n">semaphore</span><span class="p">);</span>
+            <span class="p">});</span>
+        <span class="p">}</span>
 </code></pre>
 </div>
 
