@@ -47,7 +47,7 @@ dispatch_semaphore_signal(dispatch_semaphore_t dsema);
 }
 ````
 
-![](/img/semaphore/semaphore_01.png)
+![](/img/Simple_3/01.png)
 
 2、加了semaphore之后，变成同步执行
 
@@ -71,7 +71,7 @@ dispatch_semaphore_signal(dispatch_semaphore_t dsema);
 }
 ````
 
-![](/img/semaphore/semaphore_02.png)
+![](/img/Simple_3/02.png)
 
 3、控制并发数
 
@@ -89,7 +89,7 @@ dispatch_semaphore_signal(dispatch_semaphore_t dsema);
     }
 ````
 
-![](/img/semaphore/semaphore_03.png)
+![](/img/Simple_3/03.png)
 
 可以看出，每次并发量被控制在2个
 

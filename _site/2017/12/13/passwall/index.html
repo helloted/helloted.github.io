@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>SS翻墙 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/2017/12/13/passwall/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/clean-blog.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>SS翻墙</h1>
+                    
+                    <h2 class="subheading">Showdosocks翻墙的简易教程</h2>
+                    
+                    <span class="meta">Posted by Ted on December 13, 2017</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h3 id="socks与vpn的区别">Socks与VPN的区别</h3>
+
+<p><strong>vpn</strong>–虚拟专用网络，它的功能是：在公用网络上建立专用网络，进行加密通讯。在企业网络和高校的网络中应用很广泛。你接入vpn，其实就是接入了一个专有网络，你的网络访问都从这个出口出去，你和vpn之间的通信是否加密，取决于你连接vpn的方式或者协议。</p>
+
+<p><strong>Socks5</strong>:代理是把你的网络数据请求通过一条连接你和代理服务器之间的通道，由服务器转发到目的地，这个过程中你是没有通过一条专用通道的，只是数据包的发出，然后被代理服务器收到，整个过程并没有额外的处理。</p>
+
+<p>vpn走的是专用通道，ss只是转发流量</p>
+
+<p>ss服务=国外VPS服务+showdosocks转发+本地showdosocks代理</p>
+
+<h3 id="一购买vps">一、购买VPS</h3>
+
+<p><em>VPS</em>:（Virtual Private Server 虚拟专用服务器）技术，将一台服务器分割成多个虚拟专享服务器的优质服务。</p>
+
+<p>VPS服务商有很多，像阿里云、亚马逊这种知名的互联网公司都有提供这种服务。而如果要建立翻墙作用，当然是要用境外的VPS。流行的境外VPS有<a href="https://www.vultr.com/">Vultr</a>和<a href="https://www.bwh1.net/">搬瓦工</a>等等。</p>
+
+<p>今天教程用的是Vultr的VPS服务</p>
+
+<p>1、注册账号</p>
+
+<p>2、充值。充值支持支付宝充值，每次至少10美金起</p>
+
+<p><img src="/img/Simple_2/07.png" alt="img" /></p>
+
+<p>3、充值完后，来到个人主页面</p>
+
+<p><img src="/img/Simple_2/08.png" alt="img" /></p>
+
+ 	所有已建立的服务都会在这里有一个列表的形式展现出来。点击右上角的+号按钮，新部署服务
+
+<p><img src="/img/Simple_2/09.png" alt="img" /></p>
+
+  	依次选择，国家、服务类型、大小、其他附加的条件。确定后就建立好了
+
+<p><img src="/img/Simple_2/10.png" alt="img" /></p>
+
+<p>​	按照服务商提供的IP地址和密码就可以登录VPS了</p>
+
+<h3 id="二showdosocks转发">二、showdosocks转发</h3>
+
+<p>1、Mac用终端登录远程服务器</p>
+
+<p>2、安装pip</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>yum -y install epel-release
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>yum -y install python-pip
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>yum clean all
+</code></pre>
+</div>
+
+<p>3、安装shadowsocks</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>pip install shadowsocks
+</code></pre>
+</div>
+
+<p>4、配置shadowsocks</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>/etc/shadowsocks.json
+</code></pre>
+</div>
+
+<p>​	配置的形式有官方样式两种</p>
+
+<p>​	一种是<a href="https://github.com/shadowsocks/shadowsocks/wiki/Configuration-via-Config-File">单人配置</a></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"server"</span><span class="p">:</span><span class="s2">"my_server_ip"</span><span class="p">,</span><span class="w">   </span><span class="err">//VPSIP</span><span class="w">
+    </span><span class="nt">"server_port"</span><span class="p">:</span><span class="mi">8388</span><span class="p">,</span><span class="w">  </span><span class="err">//VPS端口，</span><span class="w">
+    </span><span class="nt">"local_address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"127.0.0.1"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"local_port"</span><span class="p">:</span><span class="mi">1080</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"password"</span><span class="p">:</span><span class="s2">"mypassword"</span><span class="p">,</span><span class="w">  </span><span class="err">//shadowsocks客户端用密码</span><span class="w">
+    </span><span class="nt">"timeout"</span><span class="p">:</span><span class="mi">300</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"method"</span><span class="p">:</span><span class="s2">"aes-256-cfb"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"fast_open"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>​	<a href="https://github.com/shadowsocks/shadowsocks/wiki/Configure-Multiple-Users">多人模式</a></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"server"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.0.0.0"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"port_password"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"8381"</span><span class="p">:</span><span class="w"> </span><span class="s2">"foobar1"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"8382"</span><span class="p">:</span><span class="w"> </span><span class="s2">"foobar2"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"8383"</span><span class="p">:</span><span class="w"> </span><span class="s2">"foobar3"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"8384"</span><span class="p">:</span><span class="w"> </span><span class="s2">"foobar4"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"timeout"</span><span class="p">:</span><span class="w"> </span><span class="mi">300</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aes-256-cfb"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>5、开启防火墙端口。</p>
+
+<p>​     如果要打开防火墙，则应打开上面设置的端口，示例打开8388端口</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>iptables -A INPUT -p tcp --dport 8388 -j ACCEPT 
+</code></pre>
+</div>
+
+<p>​	相关防火墙配置可参考<a href="http://blog.csdn.net/u011846257/article/details/54707864">防火墙配置</a></p>
+
+<p>6、开启showdosocks转发</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>ssserver -c /etc/shadowsocks.json  //前台运行，可看到日志
+ssserver -c /etc/shadowsocks.json -d start    //后台运行
+ssserver -c /etc/shadowsocks.json -d stop  //停止
+</code></pre>
+</div>
+
+<p>到这里，服务端的配置就完成了</p>
+
+<h3 id="三本地showdosocks代理">三、本地showdosocks代理</h3>
+
+<p>1、下载客户端</p>
+
+<p>​	<a href="https://github.com/shadowsocks?utf8=%E2%9C%93&amp;q=&amp;type=&amp;language=">github下载地址</a></p>
+
+<p>2、设置客户端</p>
+
+<p><img src="/img/Simple_2/11.png" alt="img" /></p>
+
+<p>​      其中，地址是VPS的IP地址，端口和密码是刚才设置的</p>
+
+<p>这样就可以翻墙了~</p>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2017/12/06/stackoverflow/" data-toggle="tooltip" data-placement="top" title="Stackoverflow高分问题和答案整理">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2017</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+
+    
+
+
+</body>
+
+</html>
