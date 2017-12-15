@@ -1,4 +1,363 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-12-14T16:42:58+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">SS翻墙</title><link href="http://www.helloted.com/2017/12/13/passwall/" rel="alternate" type="text/html" title="SS翻墙" /><published>2017-12-13T20:00:00+08:00</published><updated>2017-12-13T20:00:00+08:00</updated><id>http://www.helloted.com/2017/12/13/passwall</id><content type="html" xml:base="http://www.helloted.com/2017/12/13/passwall/">&lt;h3 id=&quot;socks与vpn的区别&quot;&gt;Socks与VPN的区别&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-12-15T16:24:42+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">Objective-C Copy</title><link href="http://www.helloted.com/2017/12/14/copy/" rel="alternate" type="text/html" title="Objective-C Copy" /><published>2017-12-14T20:00:00+08:00</published><updated>2017-12-14T20:00:00+08:00</updated><id>http://www.helloted.com/2017/12/14/copy</id><content type="html" xml:base="http://www.helloted.com/2017/12/14/copy/">&lt;h3 id=&quot;一nsobject的copy实现&quot;&gt;一、NSObject的copy实现&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://developer.apple.com/documentation/objectivec/nsobject/1418807-copy?language=objc&quot;&gt;苹果官方文档对copy的描述&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;NSObject进行拷贝的方法是调用copy方法&lt;/p&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;newobj&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;copy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;前提是实现&lt;a href=&quot;https://developer.apple.com/documentation/foundation/nscopying?language=objc&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;NSCopying&lt;/code&gt;&lt;/a&gt;协议的&lt;a href=&quot;https://developer.apple.com/documentation/foundation/nscopying/1410311-copywithzone?language=objc&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;copyWithZone:&lt;/code&gt;&lt;/a&gt;方法，否则会导致出现找不到selector的崩溃。&lt;code class=&quot;highlighter-rouge&quot;&gt;**unrecognized selector sent to instance**&lt;/code&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;NSObject&lt;/code&gt; does not itself support the &lt;a href=&quot;https://developer.apple.com/documentation/foundation/nscopying?language=objc&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;NSCopying&lt;/code&gt;&lt;/a&gt; protocol. Subclasses must support the protocol and implement the &lt;a href=&quot;https://developer.apple.com/documentation/foundation/nscopying/1410311-copywithzone?language=objc&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;copyWithZone:&lt;/code&gt;&lt;/a&gt; method. A subclass version of the &lt;a href=&quot;https://developer.apple.com/documentation/foundation/nscopying/1410311-copywithzone?language=objc&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;copyWithZone:&lt;/code&gt;&lt;/a&gt; method should send the message to &lt;code class=&quot;highlighter-rouge&quot;&gt;super&lt;/code&gt; first, to incorporate its implementation, unless the subclass descends directly from &lt;code class=&quot;highlighter-rouge&quot;&gt;NSObject&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;NSObject&lt;/code&gt; 本身并不支持 &lt;a href=&quot;https://developer.apple.com/documentation/foundation/nscopying?language=objc&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;NSCopying&lt;/code&gt;&lt;/a&gt; 协议. 子类必须遵从协议并且实现 &lt;a href=&quot;https://developer.apple.com/documentation/foundation/nscopying/1410311-copywithzone?language=objc&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;copyWithZone:&lt;/code&gt;&lt;/a&gt; 方法. 除非是直接继承自  &lt;code class=&quot;highlighter-rouge&quot;&gt;NSObject&lt;/code&gt;.子类在实现 &lt;a href=&quot;https://developer.apple.com/documentation/foundation/nscopying/1410311-copywithzone?language=objc&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;copyWithZone:&lt;/code&gt;&lt;/a&gt; 必须先发送消息给 &lt;code class=&quot;highlighter-rouge&quot;&gt;super&lt;/code&gt; 。&lt;/p&gt;
+
+&lt;p&gt;简单例子&lt;/p&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// Person.h
+&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;@interface&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Person&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;NSObject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSCopying&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;@property&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nonatomic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;copy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt;   &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;@property&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nonatomic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;assign&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSUInteger&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;age&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;@end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;//Person.m
+&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;@implementation&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Person&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;copyWithZone&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSZone&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;zone&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Person&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;copyPerson&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Person&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;allocWithZone&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zone&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;copyPerson&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;age&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_age&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;copyPerson&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;copyPerson&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;@end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/12.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;二深拷贝deep-copy和浅拷贝shallow-copy&quot;&gt;二、深拷贝(Deep Copy)和浅拷贝(Shallow Copy)&lt;/h3&gt;
+
+&lt;p&gt;源自&lt;a href=&quot;https://developer.apple.com/library/content/documentation/General/Conceptual/DevPedia-CocoaCore/ObjectCopying.html&quot;&gt;苹果官方文档&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;An object can be copied if its class adopts the &lt;code class=&quot;highlighter-rouge&quot;&gt;NSCopying&lt;/code&gt; protocol and implements its single method, &lt;code class=&quot;highlighter-rouge&quot;&gt;copyWithZone:&lt;/code&gt;. If a class has mutable and immutable variants, the mutable class should adopt the &lt;code class=&quot;highlighter-rouge&quot;&gt;NSMutableCopying&lt;/code&gt; protocol (instead of &lt;code class=&quot;highlighter-rouge&quot;&gt;NSCopying&lt;/code&gt;) and implement the &lt;code class=&quot;highlighter-rouge&quot;&gt;mutableCopyWithZone:&lt;/code&gt; method to ensure that copied objects remain mutable. You make a duplicate of an object by sending it a &lt;code class=&quot;highlighter-rouge&quot;&gt;copy&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;mutableCopy&lt;/code&gt; message. These messages result in the invocation of the appropriate &lt;code class=&quot;highlighter-rouge&quot;&gt;NSCopying&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;NSMutableCopying&lt;/code&gt; method.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;如果一个对象的类采用了NSCopying协议并且实现了它的copyWithZone:方法，那么这个对象就可以被拷贝。&lt;/p&gt;
+
+&lt;p&gt;如果一个类具有可变和不可变的变体：那么可变类应该采用NSMutableCopying协议（而不是NSCopying）并实现mutableCopyWithZone:方法来确保拷贝的对象保持可变。&lt;/p&gt;
+
+&lt;p&gt;通过发送一个copy或mutableCopy消息来拷贝一个对象。这些消息导致调用适当的NSCopying或NSMutableCopying方法。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Copies of objects can be shallow or deep. Both shallow- and deep-copy approaches directly duplicate scalar properties but differ on how they handle pointer references, particularly references to objects (for example, &lt;code class=&quot;highlighter-rouge&quot;&gt;NSString *str&lt;/code&gt;). A deep copy duplicates the objects referenced while a shallow copy duplicates only the references to those objects. So if object A is shallow-copied to object B, object B refers to the same instance variable (or property) that object A refers to. Deep-copying objects is preferred to shallow-copying, especially with value objects.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;对象的copy可以是浅的或深的。浅拷贝和深拷贝方法都直接copy属性，但不同之处在于它们如何处理指针引用，特别是对对象的引用（例如NSString * str）。深拷贝复制所引用的对象，而浅拷贝仅复制对这些对象的引用。 因此，如果对象A被浅拷贝到对象B，则对象B引用对象A引用的同一个实例变量（或属性）。 深拷贝对象比浅拷贝更受欢迎，尤其是对于值对象。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/13.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;三值对象的深拷贝浅拷贝&quot;&gt;三、值对象的深拷贝，浅拷贝&lt;/h3&gt;
+
+&lt;p&gt;在值对象对象(NSString, NSNumber，NSData, NSDate,NSvalue)中：对immutable对象进行copy操作，是指针复制（浅复制），mutableCopy操作时内容复制（深）；对mutable对象进行copy和mutableCopy都是内容复制。用代码简单表示如下：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;[immutableObject copy] // 浅复制&lt;/li&gt;
+  &lt;li&gt;[immutableObject mutableCopy] //深复制&lt;/li&gt;
+  &lt;li&gt;[mutableObject copy] //深复制&lt;/li&gt;
+  &lt;li&gt;[mutableObject mutableCopy] //深复制&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/14.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;从示例中可以看到，NSString作为不可变对象，copy为浅复制，只是拷贝了一份引用，地址不变，mutableCopy则是深复制。&lt;/p&gt;
+
+&lt;h3 id=&quot;四集合类对象的深拷贝浅拷贝&quot;&gt;四、集合类对象的深拷贝，浅拷贝&lt;/h3&gt;
+
+&lt;p&gt;部分源自&lt;a href=&quot;https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/Collections/Articles/Copying.html&quot;&gt;苹果官方文档&lt;/a&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;1浅拷贝&quot;&gt;1、浅拷贝&lt;/h4&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;When you create a shallow copy, the objects in the original collection are sent a &lt;code class=&quot;highlighter-rouge&quot;&gt;retain&lt;/code&gt; message and the pointers are copied to the new collection.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;只会对集合里的对象的指针进行复制到新的集合里，有两种方法来进行浅拷贝&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSArray *shallowCopyArray = [someArray copyWithZone:nil];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSDictionary *shallowCopyDict = [[NSDictionary alloc] initWithDictionary:someDictionary copyItems:NO];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;2深拷贝&quot;&gt;2、深拷贝&lt;/h4&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;There are two ways to make deep copies of a collection. You can use the collection’s equivalent of &lt;code class=&quot;highlighter-rouge&quot;&gt;initWithArray:copyItems:&lt;/code&gt; with &lt;code class=&quot;highlighter-rouge&quot;&gt;YES&lt;/code&gt; as the second parameter. If you create a deep copy of a collection in this way, each object in the collection is sent a &lt;code class=&quot;highlighter-rouge&quot;&gt;copyWithZone:&lt;/code&gt; message. If the objects in the collection have adopted the &lt;code class=&quot;highlighter-rouge&quot;&gt;NSCopying&lt;/code&gt; protocol, the objects are deeply copied to the new collection, which is then the sole owner of the copied objects. If the objects do not adopt the &lt;code class=&quot;highlighter-rouge&quot;&gt;NSCopying&lt;/code&gt;protocol, attempting to copy them in such a way results in a runtime error. However, &lt;code class=&quot;highlighter-rouge&quot;&gt;copyWithZone:&lt;/code&gt; produces a shallow copy. This kind of copy is only capable of producing a one-level-deep copy. If you only need a one-level-deep copy, you can explicitly call for one as in Listing 2&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;有两种方式进行深拷贝：&lt;/p&gt;
+
+&lt;p&gt;你可以用&lt;code class=&quot;highlighter-rouge&quot;&gt;initWithArray:copyItems:&lt;/code&gt; 第二个参数传 &lt;code class=&quot;highlighter-rouge&quot;&gt;YES&lt;/code&gt;，如果用这种方法，集合里的每个对象都会被发送一个  &lt;code class=&quot;highlighter-rouge&quot;&gt;copyWithZone:&lt;/code&gt; 消息，如果集合里的对象已经适配了NSCopying协议，那么这些对象的引用就会被拷贝到新的集合里。如果这些对象没有适配NSCopying协议，这种拷贝方式就会报runtime错误。然而，&lt;code class=&quot;highlighter-rouge&quot;&gt;copyWithZone:&lt;/code&gt; 产生的是一个浅拷贝，这种类型的深拷贝，是指对集合对象的进行深拷贝。集合里的对象依旧是浅拷贝。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSArray *deepCopyArray=[[NSArray alloc] initWithArray:someArray copyItems:YES];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/15.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;通过对比对象地址我们可以发现，NSArray的集合对象是已经进行了深拷贝，但是集合里的每个对象都是进行的浅拷贝。&lt;/p&gt;
+
+&lt;p&gt;在集合类对象(NSArray、NSDictionary、NSSet)中，对immutable对象进行copy，是指针复制，mutableCopy是内容复制；对mutable对象进行copy和mutableCopy都是内容复制。但是：集合对象的内容复制仅限于对象本身，对象元素仍然是指针复制（浅复制）。用代码简单表示如下：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;[immutableObject copy] // 浅复制&lt;/li&gt;
+  &lt;li&gt;[immutableObject mutableCopy] //单层深复制 //NSArray层级的深复制&lt;/li&gt;
+  &lt;li&gt;[mutableObject copy] //单层深复制&lt;/li&gt;
+  &lt;li&gt;[mutableObject mutableCopy] //单层深复制&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;真深拷贝&quot;&gt;真*深拷贝&lt;/h4&gt;
+
+&lt;p&gt;如果你需要一个真正的深拷贝：集合里的对象也要进行深拷贝，那么要NSKeyedArchiver，里面的每个对象都要遵从NSCoding协议&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/16.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;通过内存地址比对，可以发现，所有的对象都进行了深拷贝。&lt;/p&gt;
+
+&lt;p&gt;以上代码都可以在&lt;a href=&quot;https://github.com/helloted/iOS_Demo/tree/master/CopyDemo&quot;&gt;Github&lt;/a&gt;下载&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、NSObject的copy实现</summary></entry><entry><title type="html">KVC Collection Operators</title><link href="http://www.helloted.com/2017/12/14/CollectionOperators/" rel="alternate" type="text/html" title="KVC Collection Operators" /><published>2017-12-14T20:00:00+08:00</published><updated>2017-12-14T20:00:00+08:00</updated><id>http://www.helloted.com/2017/12/14/CollectionOperators</id><content type="html" xml:base="http://www.helloted.com/2017/12/14/CollectionOperators/">&lt;h3 id=&quot;一使用集合运算&quot;&gt;一、使用集合运算&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/KeyValueCoding/CollectionOperators.html#//apple_ref/doc/uid/20002176-BAJEAIEE&quot;&gt;苹果官方文档&lt;/a&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;NSNumber&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;transactionAverage&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;transactions&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;valueForKeyPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;@avg.amount&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;当你发送符合键值的对象&lt;code class=&quot;highlighter-rouge&quot;&gt;valueForKeyPath：&lt;/code&gt;消息时，可以在key path中嵌入一个集合运算符。 一个集合运算符是一个小的关键字列表之一，前面有一个符号（@），它指定了getter在返回之前以某种方式对数据进行处理。NSObject提供的&lt;code class=&quot;highlighter-rouge&quot;&gt;valueForKeyPath&lt;/code&gt;默认实现实现了这种行为。&lt;/p&gt;
+
+&lt;p&gt;当 key path包含了集合运算符时，运算符之前的 key path的部分（称为左键路径）指明了该消息的接收方的集合。 如果将消息直接发送到集合对象（例如&lt;code class=&quot;highlighter-rouge&quot;&gt;NSArray&lt;/code&gt;实例），则可以省略左侧的key path（如上方的例子）。&lt;/p&gt;
+
+&lt;p&gt;运算符之后的部分（称为右键路径）指定运算符符应该在集合内操作的属性。 除了@count以外的所有集合运算符都需要一个正确的键路径。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/17.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;集合运算有三种类型的运算:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/KeyValueCoding/CollectionOperators.html#//apple_ref/doc/uid/20002176-SW5&quot;&gt;Aggregation Operators&lt;/a&gt;(聚合运算) 以某种方式合并集合的对象，并返回一个通常与右键路径中指定的属性的数据类型相匹配的对象。 @count运算符是一个例外，它不需要右键路径，总是返回一个NSNumber实例。&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/KeyValueCoding/CollectionOperators.html#//apple_ref/doc/uid/20002176-SW7&quot;&gt;Array Operators&lt;/a&gt; (数组运算)： 返回一个NSArray实例，该实例包含指定集合中的一些对象子集。&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/KeyValueCoding/CollectionOperators.html#//apple_ref/doc/uid/20002176-SW9&quot;&gt;Nesting Operators&lt;/a&gt; (嵌套运算)：处理包含其他集合的集合，并根据运算符返回一个NSArray或NSSet实例，这个实例以某种方式组合嵌套集合的对象。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;二聚合运算&quot;&gt;二、聚合运算&lt;/h3&gt;
+
+&lt;p&gt;有一个简单实例&lt;/p&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;@interface&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Transaction&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;NSObject&lt;/span&gt;
+ 
+&lt;span class=&quot;k&quot;&gt;@property&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nonatomic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;payee&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;// To whom
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;@property&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nonatomic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NSNumber&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;amount&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;// How much
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;@property&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nonatomic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NSDate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;date&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;      &lt;span class=&quot;c1&quot;&gt;// When
+&lt;/span&gt; 
+&lt;span class=&quot;k&quot;&gt;@end&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;有一个数组self.transactions包含了一些对象的数据&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;payee values&lt;/th&gt;
+      &lt;th&gt;amount values formatted as currency&lt;/th&gt;
+      &lt;th&gt;date values formatted as month day, year&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Green Power&lt;/td&gt;
+      &lt;td&gt;$120.00&lt;/td&gt;
+      &lt;td&gt;Dec 1, 2015&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Green Power&lt;/td&gt;
+      &lt;td&gt;$150.00&lt;/td&gt;
+      &lt;td&gt;Jan 1, 2016&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Green Power&lt;/td&gt;
+      &lt;td&gt;$170.00&lt;/td&gt;
+      &lt;td&gt;Feb 1, 2016&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Car Loan&lt;/td&gt;
+      &lt;td&gt;$250.00&lt;/td&gt;
+      &lt;td&gt;Jan 15, 2016&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Car Loan&lt;/td&gt;
+      &lt;td&gt;$250.00&lt;/td&gt;
+      &lt;td&gt;Feb 15, 2016&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Car Loan&lt;/td&gt;
+      &lt;td&gt;$250.00&lt;/td&gt;
+      &lt;td&gt;Mar 15, 2016&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;General Cable&lt;/td&gt;
+      &lt;td&gt;$120.00&lt;/td&gt;
+      &lt;td&gt;Dec 1, 2015&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;General Cable&lt;/td&gt;
+      &lt;td&gt;$155.00&lt;/td&gt;
+      &lt;td&gt;Jan 1, 2016&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;General Cable&lt;/td&gt;
+      &lt;td&gt;$120.00&lt;/td&gt;
+      &lt;td&gt;Feb 1, 2016&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Mortgage&lt;/td&gt;
+      &lt;td&gt;$1,250.00&lt;/td&gt;
+      &lt;td&gt;Jan 15, 2016&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Mortgage&lt;/td&gt;
+      &lt;td&gt;$1,250.00&lt;/td&gt;
+      &lt;td&gt;Feb 15, 2016&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Mortgage&lt;/td&gt;
+      &lt;td&gt;$1,250.00&lt;/td&gt;
+      &lt;td&gt;Mar 15, 2016&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Animal Hospital&lt;/td&gt;
+      &lt;td&gt;$600.00&lt;/td&gt;
+      &lt;td&gt;Jul 15, 2016&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&quot;avg求某个属性平均值&quot;&gt;@avg求某个属性平均值&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSNumber *transactionAverage = [self.transactions valueForKeyPath:@&quot;@avg.amount&quot;];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;这个可以求得&lt;code class=&quot;highlighter-rouge&quot;&gt;amount&lt;/code&gt;属性的平均值&lt;/p&gt;
+
+&lt;h4 id=&quot;count集合里对象的数量&quot;&gt;@count集合里对象的数量&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSNumber *numberOfTransactions = [self.transactions valueForKeyPath:@&quot;@count&quot;];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;可以求得集合里对象的总数量&lt;/p&gt;
+
+&lt;h4 id=&quot;max某个属性的最大值&quot;&gt;@max某个属性的最大值&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSDate *latestDate = [self.transactions valueForKeyPath:@&quot;@max.date&quot;];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;可以得到&lt;code class=&quot;highlighter-rouge&quot;&gt;date&lt;/code&gt;这个属性的最大值&lt;/p&gt;
+
+&lt;h4 id=&quot;min某个属性的最小值&quot;&gt;@min某个属性的最小值&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSDate *earliestDate = [self.transactions valueForKeyPath:@&quot;@min.date&quot;];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;可以得到&lt;code class=&quot;highlighter-rouge&quot;&gt;date&lt;/code&gt;这个属性的最小值&lt;/p&gt;
+
+&lt;h4 id=&quot;sum某个属性的总和&quot;&gt;@sum某个属性的总和&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSNumber *amountSum = [self.transactions valueForKeyPath:@&quot;@sum.amount&quot;];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;可以得到&lt;code class=&quot;highlighter-rouge&quot;&gt;amount&lt;/code&gt;这个属性的总和&lt;/p&gt;
+
+&lt;h3 id=&quot;三数组运算&quot;&gt;三、数组运算&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;The array operators cause &lt;code class=&quot;highlighter-rouge&quot;&gt;valueForKeyPath:&lt;/code&gt; to return an array of objects corresponding to a particular set of the objects indicated by the right key path.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;会根据键值路径返回一个对应的数组&lt;/p&gt;
+
+&lt;h4 id=&quot;distinctunionofobjects-某个属性的值的数组去重&quot;&gt;@distinctUnionOfObjects 某个属性的值的数组（去重）&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSArray *distinctPayees = [self.transactions valueForKeyPath:@&quot;@distinctUnionOfObjects.payee&quot;];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;会得到payee这个属性的的值，里面的值会去重&lt;/p&gt;
+
+&lt;h4 id=&quot;unionofobjects某个属性的所有值的数组未去重&quot;&gt;@unionOfObjects某个属性的所有值的数组（未去重）&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSArray *payees = [self.transactions valueForKeyPath:@&quot;@unionOfObjects.payee&quot;];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;会得到payee这个属性的的值，与上面那个不一样，里面的值不会去重&lt;/p&gt;
+
+&lt;h3 id=&quot;四嵌套运算&quot;&gt;四、嵌套运算&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;The nesting operators operate on nested collections, where each entry of the collection itself contains a collection.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;嵌套运算操作在嵌套集合(一个集合里包含了另外的集合)&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;valueForKeyPath:&lt;/code&gt; method raises an exception if any of the leaf objects is &lt;code class=&quot;highlighter-rouge&quot;&gt;nil&lt;/code&gt; when using nesting operators.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;有任何子对象为空，会出错。&lt;/p&gt;
+
+&lt;p&gt;我们增加一个数组进行嵌套&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSArray* moreTransactions = @[&amp;lt;# transaction data #&amp;gt;];
+NSArray* arrayOfArrays = @[self.transactions, moreTransactions];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;distinctunionofarrays-返回某个属性不同值&quot;&gt;@distinctUnionOfArrays 返回某个属性不同值&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSArray *collectedDistinctPayees = [arrayOfArrays valueForKeyPath:@&quot;@distinctUnionOfArrays.payee&quot;];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;会返回两个数组里payee属性不同的值，与 &lt;code class=&quot;highlighter-rouge&quot;&gt;@unionOfArrays&lt;/code&gt;类似，但是不会去重。&lt;/p&gt;
+
+&lt;h4 id=&quot;distinctunionofsets-返回的是nsset类型&quot;&gt;@distinctUnionOfSets 返回的是NSSet类型&lt;/h4&gt;
+
+&lt;h4 id=&quot;unionofarrays-返回某个属性所有的值&quot;&gt;@unionOfArrays 返回某个属性所有的值&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSArray *collectedPayees = [arrayOfArrays valueForKeyPath:@&quot;@unionOfArrays.payee&quot;];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;返回两个数组里payee属性所有的值，且不去重&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、使用集合运算</summary></entry><entry><title type="html">SS翻墙</title><link href="http://www.helloted.com/2017/12/13/passwall/" rel="alternate" type="text/html" title="SS翻墙" /><published>2017-12-13T20:00:00+08:00</published><updated>2017-12-13T20:00:00+08:00</updated><id>http://www.helloted.com/2017/12/13/passwall</id><content type="html" xml:base="http://www.helloted.com/2017/12/13/passwall/">&lt;h3 id=&quot;socks与vpn的区别&quot;&gt;Socks与VPN的区别&lt;/h3&gt;
 
 &lt;p&gt;&lt;strong&gt;vpn&lt;/strong&gt;–虚拟专用网络，它的功能是：在公用网络上建立专用网络，进行加密通讯。在企业网络和高校的网络中应用很广泛。你接入vpn，其实就是接入了一个专有网络，你的网络访问都从这个出口出去，你和vpn之间的通信是否加密，取决于你连接vpn的方式或者协议。&lt;/p&gt;
 
@@ -1354,371 +1713,4 @@ ssserver -c /etc/shadowsocks.json -d stop  //停止
 
 &lt;p&gt;声音播放也可以暂停恢复和停止&lt;/p&gt;
 
-&lt;p&gt;完整代码位置&lt;a href=&quot;https://github.com/helloted/voice&quot;&gt;Github-VoiceDemo&lt;/a&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">部分代码位置Github-VoiceDemo</summary></entry><entry><title type="html">源码分析之AFNetworking(三)</title><link href="http://www.helloted.com/2017/05/26/AFNetWorking_3/" rel="alternate" type="text/html" title="源码分析之AFNetworking(三)" /><published>2017-05-26T20:00:00+08:00</published><updated>2017-05-26T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/26/AFNetWorking_3</id><content type="html" xml:base="http://www.helloted.com/2017/05/26/AFNetWorking_3/">&lt;h3 id=&quot;五afnetworkreachabilitymanager&quot;&gt;五、AFNetworkReachabilityManager&lt;/h3&gt;
-
-&lt;h4 id=&quot;一文档翻译&quot;&gt;（一）文档翻译&lt;/h4&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;/**&lt;/p&gt;
-
-  &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;AFNetworkReachabilityManager&lt;/code&gt; monitors the reachability of domains, and addresses for both WWAN and WiFi network interfaces.&lt;/p&gt;
-
-  &lt;p&gt;Reachability can be used to determine background information about why a network operation failed, or to trigger a network operation retrying when a connection is established. It should not be used to prevent a user from initiating a network request, as it’s possible that an initial request may be required to establish reachability.&lt;/p&gt;
-
-  &lt;p&gt;See Apple’s Reachability Sample Code ( https://developer.apple.com/library/ios/samplecode/reachability/ )&lt;/p&gt;
-
-  &lt;p&gt;@warning Instances of &lt;code class=&quot;highlighter-rouge&quot;&gt;AFNetworkReachabilityManager&lt;/code&gt; must be started with &lt;code class=&quot;highlighter-rouge&quot;&gt;-startMonitoring&lt;/code&gt; before reachability status can be determined.&lt;/p&gt;
-
-  &lt;p&gt;*/&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;AFNetworkReachabilityManager&lt;/code&gt;用于监测domains和addresses的可达性，包括WWAN和WiFi&lt;/p&gt;
-
-&lt;p&gt;Reachability模块可以用来监测一个网络活动失败的背景原因，或者当一个连接建立之后，去触发重复请求，它不应该被用来阻止用户初始化一个网络请求，但是初始化一个网络请求需要建立可达性。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;AFNetworkReachabilityManager&lt;/code&gt;的实例必须启用&lt;code class=&quot;highlighter-rouge&quot;&gt;-startMonitoring&lt;/code&gt;才能开始监听状态&lt;/p&gt;
-
-&lt;h4 id=&quot;二状态&quot;&gt;（二）状态&lt;/h4&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typedef NS_ENUM(NSInteger, AFNetworkReachabilityStatus) {
-    AFNetworkReachabilityStatusUnknown          = -1,  //未知状态
-    AFNetworkReachabilityStatusNotReachable     = 0,   //不可到达状态
-    AFNetworkReachabilityStatusReachableViaWWAN = 1,   //蜂窝网络状态
-    AFNetworkReachabilityStatusReachableViaWiFi = 2,  //Wifi网络状态
-};
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;可以检测出总共四种状态：未知状态、不可到达状态、蜂窝网络(2G,3G,4G)状态、Wifi网络状态&lt;/p&gt;
-
-&lt;h4 id=&quot;三使用方式&quot;&gt;（三）使用方式&lt;/h4&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    AFNetworkReachabilityManager *manager = [AFNetworkReachabilityManager sharedManager];
-    [manager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
-		NSLog(@&quot;current--%@&quot;,[manager localizedNetworkReachabilityStatusString]);
-	}];
-    [manager startMonitoring];
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h4 id=&quot;四初始化&quot;&gt;（四）初始化&lt;/h4&gt;
-
-&lt;p&gt;有四种类型的初始化方式&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Creates and returns a network reachability manager with the default socket address.
- // 监控一个默认的地址
-+ (instancetype)manager;
-
-
- Creates and returns a network reachability manager for the specified domain.
-  // 监控一个默认的地址
-+ (instancetype)managerForDomain:(NSString *)domain;
-
-/**
- Creates and returns a network reachability manager for the socket address.
- // 监测指定的地址
-+ (instancetype)managerForAddress:(const void *)address;
-
-/**
- Initializes an instance of a network reachability manager from the specified reachability object.
-- (instancetype)initWithReachability:(SCNetworkReachabilityRef)reachability；
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;下面是其中一种方法的实现&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;+ (instancetype)managerForDomain:(NSString *)domain {
-    SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(kCFAllocatorDefault, [domain UTF8String]);
-    AFNetworkReachabilityManager *manager = [[self alloc] initWithReachability:reachability];  
-    CFRelease(reachability);
-    return manager;
-}
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;可以发现，最终都是要得到&lt;code class=&quot;highlighter-rouge&quot;&gt;SCNetworkReachabilityRef&lt;/code&gt;这个东西，这是何许东西？&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;​	@discussion The SCNetworkReachability API allows an application to&lt;/p&gt;
-
-  &lt;p&gt;​		determine the status of a system’s current network&lt;/p&gt;
-
-  &lt;p&gt;​		configuration and the reachability of a target host.&lt;/p&gt;
-
-  &lt;p&gt;​		In addition, reachability can be monitored with notifications&lt;/p&gt;
-
-  &lt;p&gt;​		that are sent when the status has changed.&lt;/p&gt;
-
-  &lt;p&gt;​		“Reachability” reflects whether a data packet, sent by&lt;/p&gt;
-
-  &lt;p&gt;​		an application into the network stack, can leave the local&lt;/p&gt;
-
-  &lt;p&gt;​		computer.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;SCNetworkReachability可以监测APP的当前网络状态，对于目标host的可达性，当状态发送改变时，reachability可以监测到这个通知。&lt;/p&gt;
-
-&lt;p&gt;“Reachability”反应的是，一个数据包是否会离开本机，并不能确保可以被主机收到&lt;/p&gt;
-
-&lt;h4 id=&quot;五开启监控&quot;&gt;（五）开启监控&lt;/h4&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/AFNetworking/09.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;里面有两个技术细节：&lt;/p&gt;
-
-&lt;p&gt;1、在Block外面调用&lt;code class=&quot;highlighter-rouge&quot;&gt;__weak __typeof(self)weakSelf = self;&lt;/code&gt;，目的是防止循环引用，在Block内部调用&lt;code class=&quot;highlighter-rouge&quot;&gt;__strong __typeof(weakSelf)strongSelf = weakSelf;&lt;/code&gt;，目的是为了防止weakself被提前释放&lt;/p&gt;
-
-&lt;p&gt;2、将整个监测放到异步线程，将优先级设为最低，并且开启了Runloop模式，目的是为了一直监测&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">五、AFNetworkReachabilityManager</summary></entry><entry><title type="html">源码分析之AFNetworking(二)</title><link href="http://www.helloted.com/2017/05/26/AFNetWorking_2/" rel="alternate" type="text/html" title="源码分析之AFNetworking(二)" /><published>2017-05-26T20:00:00+08:00</published><updated>2017-05-26T20:00:00+08:00</updated><id>http://www.helloted.com/2017/05/26/AFNetWorking_2</id><content type="html" xml:base="http://www.helloted.com/2017/05/26/AFNetWorking_2/">&lt;h3 id=&quot;三afhttpsessionmanager&quot;&gt;三、AFHTTPSessionManager&lt;/h3&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@interface AFHTTPSessionManager : AFURLSessionManager &amp;lt;NSSecureCoding, NSCopying&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;AFHTTPSessionManager&lt;/code&gt; is a subclass of &lt;code class=&quot;highlighter-rouge&quot;&gt;AFURLSessionManager&lt;/code&gt; with convenience methods for making HTTP requests. When a &lt;code class=&quot;highlighter-rouge&quot;&gt;baseURL&lt;/code&gt; is provided, requests made with the &lt;code class=&quot;highlighter-rouge&quot;&gt;GET&lt;/code&gt; / &lt;code class=&quot;highlighter-rouge&quot;&gt;POST&lt;/code&gt; / et al. convenience methods can be made with relative paths.&lt;/p&gt;
-
-  &lt;p&gt;## Subclassing Notes&lt;/p&gt;
-
-  &lt;p&gt;Developers targeting iOS 7 or Mac OS X 10.9 or later that deal extensively with a web service are encouraged to subclass &lt;code class=&quot;highlighter-rouge&quot;&gt;AFHTTPSessionManager&lt;/code&gt;, providing a class method that returns a shared singleton object on which authentication and other configuration can be shared across the application.&lt;/p&gt;
-
-  &lt;p&gt;For developers targeting iOS 6 or Mac OS X 10.8 or earlier, &lt;code class=&quot;highlighter-rouge&quot;&gt;AFHTTPRequestOperationManager&lt;/code&gt; may be used to similar effect.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;文档翻译：&lt;/p&gt;
-
-&lt;p&gt;AFHTTPSessionManager继承自AFURLSessionManager，提供了便捷的方法用于HTTP请求，当一个baseURL，根据相对路径，可以很方便地进行GET/POST或者其他请求。AFHTTPSessionManager本身并没有做什么实事，只是作为一个封装，将一些需求分发到其他相关类去做。&lt;/p&gt;
-
-&lt;p&gt;建议iOS 7之后的开发者在 AFHTTPSessionManager的基础上再进行一次封装，封装一些开发者自己的需要。而针对iOS 6以及更早的则建议使用AFHTTPRequestOperationManager。&lt;/p&gt;
-
-&lt;p&gt;注：AFHTTPRequestOperationManager基于开发的NSURLConnection已经在iOS 9被废弃。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;初始化&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;AFHTTPSessionManager对象的初始化有两种方式：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;+ (instancetype)manager;
-- (instancetype)initWithBaseURL:(nullable NSURL *)url;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;两种方式的区别在于后一种初始化方式会让你传入一个BaseURL，而前一种类方法则默认BaseURL为nil，BaseURL在生成全URL时有作用，AFHTTPSessionManager文档里也提供了说明。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    NSURL *baseURL = [NSURL URLWithString:@&quot;http://example.com/v1/&quot;];
-    [NSURL URLWithString:@&quot;foo&quot; relativeToURL:baseURL];                  // http://example.com/v1/foo
-    [NSURL URLWithString:@&quot;foo?bar=baz&quot; relativeToURL:baseURL];          // http://example.com/v1/foo?bar=baz
-    [NSURL URLWithString:@&quot;/foo&quot; relativeToURL:baseURL];                 // http://example.com/foo
-    [NSURL URLWithString:@&quot;foo/&quot; relativeToURL:baseURL];                 // http://example.com/v1/foo
-    [NSURL URLWithString:@&quot;/foo/&quot; relativeToURL:baseURL];                // http://example.com/foo/
-    [NSURL URLWithString:@&quot;http://example2.com/&quot; relativeToURL:baseURL]; // http://example2.com/
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/AFNetworking/06.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;初始化的时候对url做了一下格式化处理，请求序列化默认用的是AFHTTPRequestSerializer进行序列化，返回结果的序列化默认用的是AFJSONResponseSerializer&lt;/p&gt;
-
-&lt;p&gt;下面这个方法是AFHTTPSessionManager对象开启一个新请求的一个API&lt;/p&gt;
-
-&lt;div class=&quot;language-c highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// AFHTTPSessionManager.h
-&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nullable&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NSURLSessionDataTask&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GET&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;URLString&lt;/span&gt;
-                   &lt;span class=&quot;n&quot;&gt;parameters&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nullable&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parameters&lt;/span&gt;
-                      &lt;span class=&quot;n&quot;&gt;success&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nullable&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSURLSessionDataTask&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;task&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_Nullable&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;responseObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;success&lt;/span&gt;
-                      &lt;span class=&quot;n&quot;&gt;failure&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nullable&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSURLSessionDataTask&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_Nullable&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;task&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NSError&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;failure&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;除了GET，还有PUT，PATCH，DELETE几个方法的封装，请求方式都一样,最终都汇总到一个方法，&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/AFNetworking/03.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;AFHTTPSessionManager的封装步骤&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;1、根据不同的HTTP Method和不同的请求参数序列化方式，以及URL合成，从&lt;code class=&quot;highlighter-rouge&quot;&gt;AFURLRequestSerialization&lt;/code&gt;类里封装出一个NSMutableURLRequest对象&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# AFURLRequestSerialization.h
-- (NSMutableURLRequest *)requestWithMethod:(NSString *)method
-                                 URLString:(NSString *)URLString
-                                parameters:(id)parameters
-                                     error:(NSError *__autoreleasing *)error
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;2、NSMutableURLRequest对象，作为一个参数重写父类&lt;code class=&quot;highlighter-rouge&quot;&gt;AFURLSessionManager&lt;/code&gt;的方法生成一个NSURLSessionDataTask对象&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// AFURLSessionManager.h
-- (NSURLSessionDataTask *)dataTaskWithRequest:(NSURLRequest *)request
-                               uploadProgress:(nullable void (^)(NSProgress *uploadProgress)) uploadProgressBlock
-                             downloadProgress:(nullable void (^)(NSProgress *downloadProgress)) downloadProgressBlock
-                            completionHandler:(nullable void (^)(NSURLResponse *response, id _Nullable responseObject,  NSError * _Nullable error))completionHandler 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;3、NSURLSessionDataTask对象开始网络请求&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// AFHTTPSessionManager.h
-[dataTask resume];
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h3 id=&quot;四afurlsessionmanager之request请求&quot;&gt;四、AFURLSessionManager之request请求&lt;/h3&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@interface AFURLSessionManager : NSObject &amp;lt;NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate, NSURLSessionDownloadDelegate, NSSecureCoding, NSCopying&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;AFURLSessionManager是对&lt;code class=&quot;highlighter-rouge&quot;&gt;NSURLSession&lt;/code&gt;的封装，&lt;code class=&quot;highlighter-rouge&quot;&gt;NSURLSession&lt;/code&gt;提供了下面网络请求三种的API，返回三种不同的Task&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (NSURLSessionDataTask *)dataTaskWithRequest:(NSURLRequest *)request;
-- (NSURLSessionUploadTask *)uploadTaskWithStreamedRequest:(NSURLRequest *)request;
-- (NSURLSessionDownloadTask *)downloadTaskWithRequest:(NSURLRequest *)request;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cm&quot;&gt;/*
- * An NSURLSessionDataTask does not provide any additional
- * functionality over an NSURLSessionTask and its presence is merely
- * to provide lexical differentiation from download and upload tasks.
- */&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;@interface&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;NSURLSessionDataTask&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;NSURLSessionTask&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;@end&lt;/span&gt;
-
-&lt;span class=&quot;cm&quot;&gt;/*
- * An NSURLSessionUploadTask does not currently provide any additional
- * functionality over an NSURLSessionDataTask.  All delegate messages
- * that may be sent referencing an NSURLSessionDataTask equally apply
- * to NSURLSessionUploadTasks.
- */&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;@interface&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;NSURLSessionUploadTask&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;NSURLSessionDataTask&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;@end&lt;/span&gt;
-
-&lt;span class=&quot;cm&quot;&gt;/*
- * NSURLSessionDownloadTask is a task that represents a download to
- * local storage.
- */&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;@interface&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;NSURLSessionDownloadTask&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;NSURLSessionTask&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;相对的，AFURLSessionManager提供了request请求，上传，下载的三种封装。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/AFNetworking/04.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;上面的代码主要就两个步骤：&lt;/p&gt;
-
-&lt;p&gt;1.根据初始化生成的Session生成datatask;&lt;/p&gt;
-
-&lt;p&gt;2.给datatask绑定一个代理&lt;code class=&quot;highlighter-rouge&quot;&gt;AFURLSessionManagerTaskDelegate&lt;/code&gt;；&lt;/p&gt;
-
-&lt;p&gt;依次来查看一下这两个步骤：&lt;/p&gt;
-
-&lt;p&gt;在生成NSURLSessionDataTask对象时采用了url_session_manager_create_task_safely的方式，查看代码&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/AFNetworking/05.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;是因为之前iOS的一个bug，在并发队列中生成NSURLSessionDataTask对象会有问题，所以做了一个处理：&lt;/p&gt;
-
-&lt;p&gt;如果版本低，则自己生成一个串行队列。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;self.session&lt;/code&gt;则是在初始化中生成了&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;初始化&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/AFNetworking/07.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;初始化过程中，主要是生成了一个NSURLSession并将其添加到了异步线程。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;AFURLSessionManagerTaskDelegate&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;AFURLSessionManagerTaskDelegate主要负责处理SessionTask网络请求过程中的事项，以及请求完成的事项。AFN给每个dataTask都绑定了一个代理，主要处理例如下载进度，下载完成后的一些格式处理&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (void)addDelegateForDataTask:(NSURLSessionDataTask *)dataTask
-                uploadProgress:(nullable void (^)(NSProgress *uploadProgress)) uploadProgressBlock
-              downloadProgress:(nullable void (^)(NSProgress *downloadProgress)) downloadProgressBlock
-             completionHandler:(void (^)(NSURLResponse *response, id responseObject, NSError *error))completionHandler
-{
-    AFURLSessionManagerTaskDelegate *delegate = [[AFURLSessionManagerTaskDelegate alloc] init];
-    delegate.manager = self;
-    delegate.completionHandler = completionHandler;
-
-    dataTask.taskDescription = self.taskDescriptionForSessionTasks;
-    [self setDelegate:delegate forTask:dataTask];
-
-    delegate.uploadProgressBlock = uploadProgressBlock;
-    delegate.downloadProgressBlock = downloadProgressBlock;
-}
-
-
-- (void)setDelegate:(AFURLSessionManagerTaskDelegate *)delegate
-            forTask:(NSURLSessionTask *)task
-{
-    NSParameterAssert(task);
-    NSParameterAssert(delegate);
-
-    [self.lock lock];
-    self.mutableTaskDelegatesKeyedByTaskIdentifier[@(task.taskIdentifier)] = delegate;
-    [delegate setupProgressForTask:task];
-    // 进度处理
-    [self addNotificationObserverForTask:task];
-    [self.lock unlock];
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;进度处理&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;是通过KVO的方式监听task的几个值&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [task addObserver:self
-           forKeyPath:NSStringFromSelector(@selector(countOfBytesReceived))
-              options:NSKeyValueObservingOptionNew
-              context:NULL];
-    [task addObserver:self
-           forKeyPath:NSStringFromSelector(@selector(countOfBytesExpectedToReceive))
-              options:NSKeyValueObservingOptionNew
-              context:NULL];
-
-    [task addObserver:self
-           forKeyPath:NSStringFromSelector(@selector(countOfBytesSent))
-              options:NSKeyValueObservingOptionNew
-              context:NULL];
-    [task addObserver:self
-           forKeyPath:NSStringFromSelector(@selector(countOfBytesExpectedToSend))
-              options:NSKeyValueObservingOptionNew
-              context:NULL];
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;请求完成或错误&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;请求完成的处理是在SessionTask的代理方法NSURLSessionTaskDelegate&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;\- (void)URLSession:(__unused NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/AFNetworking/08.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;分为error处理和成功完成请求，如果对请求处理有提前设置异步线程manager.completionQueue去处理，否则回到主线程处理。到这里一个完整的请求就完成了。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;总结&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;所以，AFURLSessionManager做的封装主要是&lt;/p&gt;
-
-&lt;p&gt;1、生成Session，并对一些参数进行默认设置，并将session放到异步线程&lt;/p&gt;
-
-&lt;p&gt;2、根据Session生成Task，然后task开启，并对task的一些值进行监听从而获取请求的进度&lt;/p&gt;
-
-&lt;p&gt;3、在task的完成代理方法里，对请求完成或者错误再次封装一次&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">三、AFHTTPSessionManager</summary></entry></feed>
+&lt;p&gt;完整代码位置&lt;a href=&quot;https://github.com/helloted/voice&quot;&gt;Github-VoiceDemo&lt;/a&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">部分代码位置Github-VoiceDemo</summary></entry></feed>
