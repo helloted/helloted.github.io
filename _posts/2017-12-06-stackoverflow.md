@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "Stackoverflow高分问题和答案整理"
+title:      "Stackoverflow-iOS"
 subtitle:   "Stackoverflow上面iOS相关的高分问题和答案整理"
 date:       2017-12-06 12:00:00
 author:     "Ted"
@@ -51,4 +51,8 @@ stackoverflow上Votes数排名靠前的部分问题整理，[Github地址](https
 40. [for循环 vs. enumerateObjectsUsingBlock](https://github.com/helloted/stackoverflow_top_ios/blob/master/content/when-to-use-enumerateobjectsusingblock-vs-for.md)
 41. [设备唯一标识/MAC地址](https://github.com/helloted/stackoverflow_top_ios/blob/master/content/how-can-i-programmatically-get-the-mac-address-of-an-iphone.md)
 42. [数组去重](https://github.com/helloted/stackoverflow_top_ios/blob/master/content/the-best-way-to-remove-duplicate-values-from-nsmutablearray-in-objective-c.md)
+
+
+
+[Github地址](https://github.com/helloted/stackoverflow_top_ios)，不断更新中......
 
