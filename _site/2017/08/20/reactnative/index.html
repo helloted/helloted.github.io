@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
 
-    <title>iOS开发之声音 - Helloted Blog</title>
+    <title>React Native简易使用 - Helloted Blog</title>
 
-    <link rel="canonical" href="http://www.helloted.com/2017/08/26/voice/">
+    <link rel="canonical" href="http://www.helloted.com/2017/08/20/reactnative/">
 
     <link rel="shortcut icon" href="/img/favicon.ico">
    
@@ -87,11 +87,11 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <div class="post-heading">
-                    <h1>iOS开发之声音</h1>
+                    <h1>React Native简易使用</h1>
                     
-                    <h2 class="subheading">记录一下iOS开发中用到的录音功能和声音播放功能</h2>
+                    <h2 class="subheading">React Natieve的常用命令和第三方使用</h2>
                     
-                    <span class="meta">Posted by Ted on August 26, 2017</span>
+                    <span class="meta">Posted by Ted on August 20, 2017</span>
                 </div>
             </div>
         </div>
@@ -104,99 +104,65 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
 
-				<p>部分代码位置<a href="https://github.com/helloted/voice">Github-VoiceDemo</a></p>
+				<h3 id="一react-native简介以及开发环境搭建">一、React-Native简介以及开发环境搭建</h3>
 
-<blockquote>
-  <p>Pre</p>
-</blockquote>
+<p>React Native (简称RN)是Facebook于2015年4月开源的跨平台移动应用开发框架，是Facebook早先开源的UI框架 React 在原生移动应用平台的衍生产物，目前支持iOS和安卓两大平台。RN使用Javascript语言，类似于HTML的JSX，以及CSS来开发移动应用。(来自百度百科)</p>
 
-<p>与图片中默认的格式为PNG格式一样，iOS开发中声音的格式也有默认格式，为wav格式，本文中的产生的格式均为wav格式，其他格式则需要转换。有第三方的框架，进行转换成amr等格式</p>
+<p>类似的框架还有Vue以及对应的移动框架Weex(已由阿里开源维护)。</p>
 
-<h3 id="一声音录制">一、声音录制</h3>
+<p>1、利用HomeBrew来安装Node</p>
 
-<p>要先引入AVFoundation的框架</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>#import &lt;AVFoundation/AVFoundation.h&gt;
+<div class="highlighter-rouge"><pre class="highlight"><code>brew install node
 </code></pre>
 </div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>    self.voiceRecorder = [[AVAudioRecorder alloc]initWithURL:[NSURL fileURLWithPath:self.voicePath] settings:self.recorderSetting error:nil];
-    if ([self.voiceRecorder prepareToRecord]){
-        [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayAndRecord error:nil];
-        [[AVAudioSession sharedInstance] setActive:YES error:nil];
-        
-        //开始录音
-        [self.voiceRecorder record];
-    }
+<p>2、安装React Native</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>npm install react-native-cli
 </code></pre>
 </div>
 
-<p>录制声音主要设置两个参数，Path和Setting</p>
+<p>3、安装Yarn，Yarn是FaceBook用来替代npm的工具</p>
 
-<p>Path：声音文件录制后存储的路径</p>
-
-<p>Setting：一个录制参数的字典，设置一些录制的必要的参数，需要进行调整到合适的值</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>        _recorderSetting = [[NSDictionary alloc] initWithObjectsAndKeys:
-                            [NSNumber numberWithFloat: 8000.0],AVSampleRateKey, //采样率
-                            [NSNumber numberWithInt: kAudioFormatLinearPCM],AVFormatIDKey,
-                            [NSNumber numberWithInt:16],AVLinearPCMBitDepthKey,//采样位数 默认 16
-                            [NSNumber numberWithInt: 1], AVNumberOfChannelsKey,//通道的数目
-                            nil];
+<div class="highlighter-rouge"><pre class="highlight"><code>npm install -g yarn
 </code></pre>
 </div>
 
-<p><code class="highlighter-rouge">AVAudioRecorder</code>在录制的时候可以暂停和恢复</p>
+<p>4、初始化React Native，第一个Demo，FirstDemo，先cd要某个文件夹</p>
 
-<p>暂停</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>- (void)pause; /* pause recording */
+<div class="highlighter-rouge"><pre class="highlight"><code>react-native init FirstDemo
 </code></pre>
 </div>
 
-<p>恢复/开始</p>
+<p>5、运行，直接点Xcode的Run或者用命令行</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (void)record;
+<div class="highlighter-rouge"><pre class="highlight"><code>cd FirstDemo
+react-native run-ios
 </code></pre>
 </div>
 
-<p>录制完成</p>
+<p>6、真机运行，手机与mac在同一个网络下面</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (void)stop;
+<div class="highlighter-rouge"><pre class="highlight"><code>jsCodeLocation =  [NSURL URLWithString:@"http://本机IP:8081/index.bundle?platform=ios"];
 </code></pre>
 </div>
 
-<h3 id="二声音播放">二、声音播放</h3>
+<p><img src="/img/Simple_1/14.png" alt="" /></p>
 
-<p>先引入MediaPlayer</p>
+<h3 id="二常用命令">二、常用命令</h3>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>#import &lt;MediaPlayer/MediaPlayer.h&gt;
-@import AVFoundation;
-@import AudioToolbox;
+<p>本地IP地址</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>ifconfig | grep "inet " | grep -v 127.0.0.1
 </code></pre>
 </div>
 
-<p>设置好录音文件路径就可以播放。注意：如果在播上一段录音，同时再点播放的话，两个声音会一起播放</p>
+<p>添加第三方库，比如react-navigation，cd到根目录，执行</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>    if (_player) { // 如果正在播放上一段录音，则停止
-        [_player stop];
-    }
-    [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayback error:nil];
-    [[AVAudioSession sharedInstance] setActive:YES error:nil];
-    if (path&amp;&amp; [self fileSizeAtPath:path]) {
-        self.player = [self.player initWithContentsOfURL:[NSURL URLWithString:path] error:nil];
-        self.player.delegate = self;
-        [self.player play];
-        NSLog(@"开始播放");
-    }else{
-        NSLog(@"no voice");
-    }
+<div class="highlighter-rouge"><pre class="highlight"><code>yarn add react-navigation
 </code></pre>
 </div>
 
-<p>声音播放也可以暂停恢复和停止</p>
-
-<p>完整代码位置<a href="https://github.com/helloted/voice">Github-VoiceDemo</a></p>
 
 
                 <hr>
@@ -204,12 +170,12 @@
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/2017/08/20/reactnative/" data-toggle="tooltip" data-placement="top" title="React Native简易使用">&larr; 上一篇</a>
+                        <a href="/2017/05/26/AFNetWorking_3/" data-toggle="tooltip" data-placement="top" title="源码分析之AFNetworking(三)">&larr; 上一篇</a>
                     </li>
                     
                     
                     <li class="next">
-                        <a href="/2017/09/08/designPatten/" data-toggle="tooltip" data-placement="top" title="iOS设计模式">下一篇 &rarr;</a>
+                        <a href="/2017/08/26/voice/" data-toggle="tooltip" data-placement="top" title="iOS开发之声音">下一篇 &rarr;</a>
                     </li>
                     
                 </ul>
