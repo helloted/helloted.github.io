@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "iOS内存管理指南"
+title:      "【译】iOS内存管理指南"
 subtitle:   "iOS内存管理指南官方文档翻译"
 date:       2017-11-29 12:00:00
 author:     "Ted"

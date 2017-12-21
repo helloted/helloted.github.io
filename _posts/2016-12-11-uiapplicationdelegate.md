@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "UIApplicationDelegate"
+title:      "【译】UIApplicationDelegate"
 subtitle:   "UIApplicationDelegate与APP状态"
 date:       2016-12-11 12:00:00
 author:     "Ted"
