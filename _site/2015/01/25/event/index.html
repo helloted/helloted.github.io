@@ -112,18 +112,19 @@
 
 <p>在UIResponder里，有以下事件处理</p>
 
-<pre><code class="language-objective-c"> // 触摸事件
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event;
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event;
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event;
-- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event;
-// 加速计事件
-- (void)motionBegan:(UIEventSubtype)motion withEvent:(UIEvent *)event;
-- (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event;
-- (void)motionCancelled:(UIEventSubtype)motion withEvent:(UIEvent *)event;
-// 远程控制事件
-- (void)remoteControlReceivedWithEvent:(UIEvent *)event;
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code> <span class="c1">// 触摸事件
+</span><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">touchesBegan</span><span class="p">:(</span><span class="n">NSSet</span> <span class="o">*</span><span class="p">)</span><span class="nv">touches</span> <span class="nf">withEvent</span><span class="p">:(</span><span class="n">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="nv">event</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">touchesMoved</span><span class="p">:(</span><span class="n">NSSet</span> <span class="o">*</span><span class="p">)</span><span class="nv">touches</span> <span class="nf">withEvent</span><span class="p">:(</span><span class="n">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="nv">event</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">touchesEnded</span><span class="p">:(</span><span class="n">NSSet</span> <span class="o">*</span><span class="p">)</span><span class="nv">touches</span> <span class="nf">withEvent</span><span class="p">:(</span><span class="n">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="nv">event</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">touchesCancelled</span><span class="p">:(</span><span class="n">NSSet</span> <span class="o">*</span><span class="p">)</span><span class="nv">touches</span> <span class="nf">withEvent</span><span class="p">:(</span><span class="n">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="nv">event</span><span class="p">;</span>
+<span class="c1">// 加速计事件
+</span><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">motionBegan</span><span class="p">:(</span><span class="n">UIEventSubtype</span><span class="p">)</span><span class="nv">motion</span> <span class="nf">withEvent</span><span class="p">:(</span><span class="n">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="nv">event</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">motionEnded</span><span class="p">:(</span><span class="n">UIEventSubtype</span><span class="p">)</span><span class="nv">motion</span> <span class="nf">withEvent</span><span class="p">:(</span><span class="n">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="nv">event</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">motionCancelled</span><span class="p">:(</span><span class="n">UIEventSubtype</span><span class="p">)</span><span class="nv">motion</span> <span class="nf">withEvent</span><span class="p">:(</span><span class="n">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="nv">event</span><span class="p">;</span>
+<span class="c1">// 远程控制事件
+</span><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">remoteControlReceivedWithEvent</span><span class="p">:(</span><span class="n">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="nv">event</span><span class="p">;</span>
 </code></pre>
+</div>
 
 <h3 id="二寻找响应者uiresponder-事件传递">二、寻找响应者(UIResponder)-事件传递</h3>
 
@@ -131,13 +132,15 @@
 
 <p>当一个Touch事件产生时，要先找到响应者，iOS通过Hit-Test机制来寻找响应者，每一个UIView(继承自UIResponder)都有以下的方法</p>
 
-<pre><code class="language-objective-c">- (nullable UIView *)hitTest:(CGPoint)point withEvent:(nullable UIEvent *)event; 
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">UIView</span> <span class="o">*</span><span class="p">)</span><span class="nf">hitTest</span><span class="p">:(</span><span class="n">CGPoint</span><span class="p">)</span><span class="nv">point</span> <span class="nf">withEvent</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="nv">event</span><span class="p">;</span> 
 </code></pre>
+</div>
 
 <p>HitTest的顺序</p>
 
-<pre><code class="language-objective-c">UIApplication -&gt; UIWindow -&gt; Root View -&gt; subview -&gt; ··· -&gt; initalView
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">UIApplication</span> <span class="o">-&gt;</span> <span class="n">UIWindow</span> <span class="o">-&gt;</span> <span class="n">Root</span> <span class="n">View</span> <span class="o">-&gt;</span> <span class="n">subview</span> <span class="o">-&gt;</span> <span class="err">···</span> <span class="o">-&gt;</span> <span class="n">initalView</span>
 </code></pre>
+</div>
 
 <ol>
   <li>系统检测到手指触摸(Touch)操作时，将Touch 以UIEvent的方式加入UIApplication事件队列中。</li>
@@ -148,26 +151,26 @@
 
 <p><code class="highlighter-rouge">hitTest:withEvent:</code>原理</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>// point是该视图的坐标系上的点
-- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
-{
-    // 1.判断自己能否接收触摸事件
-    if (self.userInteractionEnabled == NO || self.hidden == YES || self.alpha &lt;= 0.01) return nil;
-    // 2.判断触摸点在不在自己范围内
-    if (![self pointInside:point withEvent:event]) return nil;
-    // 3.从后往前遍历自己的子控件，看是否有子控件更适合响应此事件
-    int count = self.subviews.count;
-    for (int i = count - 1; i &gt;= 0; i--) {
-        UIView *childView = self.subviews[i];
-        CGPoint childPoint = [self convertPoint:point toView:childView];
-        UIView *fitView = [childView hitTest:childPoint withEvent:event];
-        if (fitView) {
-            return fitView;
-        }
-    }
-    // 没有找到比自己更合适的view
-    return self;
-}
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="c1">// point是该视图的坐标系上的点
+</span><span class="k">-</span> <span class="p">(</span><span class="n">UIView</span> <span class="o">*</span><span class="p">)</span><span class="nf">hitTest</span><span class="p">:(</span><span class="n">CGPoint</span><span class="p">)</span><span class="nv">point</span> <span class="nf">withEvent</span><span class="p">:(</span><span class="n">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="nv">event</span>
+<span class="p">{</span>
+    <span class="c1">// 1.判断自己能否接收触摸事件
+</span>    <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">userInteractionEnabled</span> <span class="o">==</span> <span class="nb">NO</span> <span class="o">||</span> <span class="n">self</span><span class="p">.</span><span class="n">hidden</span> <span class="o">==</span> <span class="nb">YES</span> <span class="o">||</span> <span class="n">self</span><span class="p">.</span><span class="n">alpha</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">.</span><span class="mo">01</span><span class="p">)</span> <span class="k">return</span> <span class="nb">nil</span><span class="p">;</span>
+    <span class="c1">// 2.判断触摸点在不在自己范围内
+</span>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">[</span><span class="n">self</span> <span class="nf">pointInside</span><span class="p">:</span><span class="n">point</span> <span class="nf">withEvent</span><span class="p">:</span><span class="n">event</span><span class="p">])</span> <span class="k">return</span> <span class="nb">nil</span><span class="p">;</span>
+    <span class="c1">// 3.从后往前遍历自己的子控件，看是否有子控件更适合响应此事件
+</span>    <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">subviews</span><span class="p">.</span><span class="n">count</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">UIView</span> <span class="o">*</span><span class="n">childView</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">subviews</span><span class="p">[</span><span class="nf">i</span><span class="p">];</span>
+        <span class="n">CGPoint</span> <span class="n">childPoint</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span> <span class="nf">convertPoint</span><span class="p">:</span><span class="n">point</span> <span class="nf">toView</span><span class="p">:</span><span class="n">childView</span><span class="p">];</span>
+        <span class="n">UIView</span> <span class="o">*</span><span class="n">fitView</span> <span class="o">=</span> <span class="p">[</span><span class="n">childView</span> <span class="nf">hitTest</span><span class="p">:</span><span class="n">childPoint</span> <span class="nf">withEvent</span><span class="p">:</span><span class="n">event</span><span class="p">];</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">fitView</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">fitView</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="c1">// 没有找到比自己更合适的view
+</span>    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+<span class="p">}</span>
 </code></pre>
 </div>
 
@@ -199,10 +202,10 @@
 
 <h3 id="四实例分析">四、实例分析</h3>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>    UIButton *button = [UIButton buttonWithType:UIButtonTypeContactAdd];
-    button.frame = CGRectMake(100, 100, 40, 40);
-    [button addTarget:self action:@selector(click) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:button];
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code>    <span class="n">UIButton</span> <span class="o">*</span><span class="n">button</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIButton</span> <span class="nf">buttonWithType</span><span class="p">:</span><span class="n">UIButtonTypeContactAdd</span><span class="p">];</span>
+    <span class="n">button</span><span class="p">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">CGRectMake</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">40</span><span class="p">);</span>
+    <span class="p">[</span><span class="n">button</span> <span class="nf">addTarget</span><span class="p">:</span><span class="n">self</span> <span class="nf">action</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="n">click</span><span class="p">)</span> <span class="n">forControlEvents</span><span class="o">:</span><span class="n">UIControlEventTouchUpInside</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">view</span> <span class="nf">addSubview</span><span class="p">:</span><span class="n">button</span><span class="p">];</span>
 </code></pre>
 </div>
 

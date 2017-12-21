@@ -270,9 +270,9 @@
 
 <h4 id="flex-grow">flex-grow</h4>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>.item {
-  flex-grow: &lt;number&gt;; /* default 0 */
-}
+<div class="language-css highlighter-rouge"><pre class="highlight"><code><span class="nc">.item</span> <span class="p">{</span>
+  <span class="nl">flex-grow</span><span class="p">:</span> <span class="err">&lt;</span><span class="n">number</span><span class="err">&gt;</span><span class="p">;</span> <span class="c">/* default 0 */</span>
+<span class="p">}</span>
 </code></pre>
 </div>
 
@@ -293,9 +293,9 @@
 
 <h4 id="flex-basis">flex-basis</h4>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>.item {
-  flex-basis: &lt;length&gt; | auto; /* default auto */
-}
+<div class="language-css highlighter-rouge"><pre class="highlight"><code><span class="nc">.item</span> <span class="p">{</span>
+  <span class="nl">flex-basis</span><span class="p">:</span> <span class="err">&lt;</span><span class="n">length</span><span class="err">&gt;</span> <span class="err">|</span> <span class="nb">auto</span><span class="p">;</span> <span class="c">/* default auto */</span>
+<span class="p">}</span>
 </code></pre>
 </div>
 
@@ -386,20 +386,20 @@
 
 <p>Css</p>
 
-<div class="language-scss highlighter-rouge"><pre class="highlight"><code><span class="k">@import</span> <span class="s2">"compass/css3"</span><span class="p">;</span>
+<div class="language-css highlighter-rouge"><pre class="highlight"><code><span class="k">@import</span> <span class="s1">"compass/css3"</span><span class="p">;</span>
 
 <span class="nc">.flex-container</span> <span class="p">{</span>
   <span class="nl">padding</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span>
   <span class="nl">margin</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span>
   <span class="nl">list-style</span><span class="p">:</span> <span class="nb">none</span><span class="p">;</span>
   
-  <span class="nl">display</span><span class="p">:</span> <span class="o">-</span><span class="n">webkit-box</span><span class="p">;</span>
-  <span class="nl">display</span><span class="p">:</span> <span class="o">-</span><span class="n">moz-box</span><span class="p">;</span>
-  <span class="nl">display</span><span class="p">:</span> <span class="o">-</span><span class="n">ms-flexbox</span><span class="p">;</span>
-  <span class="nl">display</span><span class="p">:</span> <span class="o">-</span><span class="n">webkit-flex</span><span class="p">;</span>
+  <span class="nl">display</span><span class="p">:</span> <span class="n">-webkit-box</span><span class="p">;</span>
+  <span class="nl">display</span><span class="p">:</span> <span class="n">-moz-box</span><span class="p">;</span>
+  <span class="nl">display</span><span class="p">:</span> <span class="n">-ms-flexbox</span><span class="p">;</span>
+  <span class="nl">display</span><span class="p">:</span> <span class="n">-webkit-flex</span><span class="p">;</span>
   <span class="nl">display</span><span class="p">:</span> <span class="n">flex</span><span class="p">;</span>
   
-  <span class="na">-webkit-flex-flow</span><span class="p">:</span> <span class="n">row</span> <span class="n">wrap</span><span class="p">;</span>
+  <span class="nl">-webkit-flex-flow</span><span class="p">:</span> <span class="n">row</span> <span class="n">wrap</span><span class="p">;</span>
   <span class="nl">justify-content</span><span class="p">:</span> <span class="n">space-around</span><span class="p">;</span>
 <span class="p">}</span>
 
@@ -470,7 +470,7 @@
 
 <p>Css:</p>
 
-<div class="language-scss highlighter-rouge"><pre class="highlight"><code><span class="k">@import</span> <span class="s2">"compass/css3"</span><span class="p">;</span>
+<div class="language-css highlighter-rouge"><pre class="highlight"><code><span class="k">@import</span> <span class="s1">"compass/css3"</span><span class="p">;</span>
 
 <span class="nc">.navigation</span> <span class="p">{</span>
   <span class="nl">list-style</span><span class="p">:</span> <span class="nb">none</span><span class="p">;</span>
@@ -478,13 +478,13 @@
   
   <span class="nl">background</span><span class="p">:</span> <span class="no">deepskyblue</span><span class="p">;</span>
   
-  <span class="nl">display</span><span class="p">:</span> <span class="o">-</span><span class="n">webkit-box</span><span class="p">;</span>
-  <span class="nl">display</span><span class="p">:</span> <span class="o">-</span><span class="n">moz-box</span><span class="p">;</span>
-  <span class="nl">display</span><span class="p">:</span> <span class="o">-</span><span class="n">ms-flexbox</span><span class="p">;</span>
-  <span class="nl">display</span><span class="p">:</span> <span class="o">-</span><span class="n">webkit-flex</span><span class="p">;</span>
+  <span class="nl">display</span><span class="p">:</span> <span class="n">-webkit-box</span><span class="p">;</span>
+  <span class="nl">display</span><span class="p">:</span> <span class="n">-moz-box</span><span class="p">;</span>
+  <span class="nl">display</span><span class="p">:</span> <span class="n">-ms-flexbox</span><span class="p">;</span>
+  <span class="nl">display</span><span class="p">:</span> <span class="n">-webkit-flex</span><span class="p">;</span>
   <span class="nl">display</span><span class="p">:</span> <span class="n">flex</span><span class="p">;</span>
   
-  <span class="na">-webkit-flex-flow</span><span class="p">:</span> <span class="n">row</span> <span class="n">wrap</span><span class="p">;</span>
+  <span class="nl">-webkit-flex-flow</span><span class="p">:</span> <span class="n">row</span> <span class="n">wrap</span><span class="p">;</span>
   <span class="nl">justify-content</span><span class="p">:</span> <span class="n">flex-end</span><span class="p">;</span>
 <span class="p">}</span>
 
@@ -496,18 +496,18 @@
 <span class="p">}</span>
 
 <span class="nc">.navigation</span> <span class="nt">a</span><span class="nd">:hover</span> <span class="p">{</span>
-  <span class="nl">background</span><span class="p">:</span> <span class="nf">darken</span><span class="p">(</span><span class="no">deepskyblue</span><span class="o">,</span> <span class="m">2%</span><span class="p">);</span>
+  <span class="nl">background</span><span class="p">:</span> <span class="n">darken</span><span class="p">(</span><span class="no">deepskyblue</span><span class="p">,</span> <span class="m">2%</span><span class="p">);</span>
 <span class="p">}</span>
 
-<span class="k">@media</span> <span class="n">all</span> <span class="nf">and</span> <span class="p">(</span><span class="n">max-width</span><span class="o">:</span> <span class="m">800px</span><span class="p">)</span> <span class="p">{</span>
+<span class="k">@media</span> <span class="n">all</span> <span class="n">and</span> <span class="p">(</span><span class="n">max-width</span><span class="p">:</span> <span class="m">800px</span><span class="p">)</span> <span class="p">{</span>
   <span class="nc">.navigation</span> <span class="p">{</span>
     <span class="nl">justify-content</span><span class="p">:</span> <span class="n">space-around</span><span class="p">;</span>
   <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="k">@media</span> <span class="n">all</span> <span class="nf">and</span> <span class="p">(</span><span class="n">max-width</span><span class="o">:</span> <span class="m">600px</span><span class="p">)</span> <span class="p">{</span>
+<span class="k">@media</span> <span class="n">all</span> <span class="n">and</span> <span class="p">(</span><span class="n">max-width</span><span class="p">:</span> <span class="m">600px</span><span class="p">)</span> <span class="p">{</span>
   <span class="nc">.navigation</span> <span class="p">{</span>
-    <span class="na">-webkit-flex-flow</span><span class="p">:</span> <span class="n">column</span> <span class="n">wrap</span><span class="p">;</span>
+    <span class="nl">-webkit-flex-flow</span><span class="p">:</span> <span class="n">column</span> <span class="n">wrap</span><span class="p">;</span>
     <span class="nl">flex-flow</span><span class="p">:</span> <span class="n">column</span> <span class="n">wrap</span><span class="p">;</span>
     <span class="nl">padding</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span>
   <span class="p">}</span>
@@ -515,8 +515,8 @@
   <span class="nc">.navigation</span> <span class="nt">a</span> <span class="p">{</span> 
     <span class="nl">text-align</span><span class="p">:</span> <span class="nb">center</span><span class="p">;</span> 
     <span class="nl">padding</span><span class="p">:</span> <span class="m">10px</span><span class="p">;</span>
-    <span class="nl">border-top</span><span class="p">:</span> <span class="m">1px</span> <span class="nb">solid</span> <span class="nf">rgba</span><span class="p">(</span><span class="m">255</span><span class="o">,</span><span class="m">255</span><span class="o">,</span><span class="m">255</span><span class="o">,</span><span class="m">0</span><span class="mi">.3</span><span class="p">);</span> 
-    <span class="nl">border-bottom</span><span class="p">:</span> <span class="m">1px</span> <span class="nb">solid</span> <span class="nf">rgba</span><span class="p">(</span><span class="m">0</span><span class="o">,</span><span class="m">0</span><span class="o">,</span><span class="m">0</span><span class="o">,</span><span class="m">0</span><span class="mi">.1</span><span class="p">);</span> 
+    <span class="nl">border-top</span><span class="p">:</span> <span class="m">1px</span> <span class="nb">solid</span> <span class="n">rgba</span><span class="p">(</span><span class="m">255</span><span class="p">,</span><span class="m">255</span><span class="p">,</span><span class="m">255</span><span class="p">,</span><span class="m">0.3</span><span class="p">);</span> 
+    <span class="nl">border-bottom</span><span class="p">:</span> <span class="m">1px</span> <span class="nb">solid</span> <span class="n">rgba</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">0.1</span><span class="p">);</span> 
   <span class="p">}</span>
 
   
@@ -553,7 +553,7 @@
 
 <p>Css:</p>
 
-<div class="language-scss highlighter-rouge"><pre class="highlight"><code><span class="nc">.wrapper</span> <span class="p">{</span>
+<div class="language-css highlighter-rouge"><pre class="highlight"><code><span class="nc">.wrapper</span> <span class="p">{</span>
   <span class="nl">display</span><span class="p">:</span> <span class="n">flex</span><span class="p">;</span>  
   <span class="nl">flex-flow</span><span class="p">:</span> <span class="n">row</span> <span class="n">wrap</span><span class="p">;</span>
   <span class="nl">font-weight</span><span class="p">:</span> <span class="nb">bold</span><span class="p">;</span>
@@ -586,11 +586,11 @@
   <span class="nl">background</span><span class="p">:</span> <span class="no">hotpink</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="k">@media</span> <span class="n">all</span> <span class="nf">and</span> <span class="p">(</span><span class="n">min-width</span><span class="o">:</span> <span class="m">600px</span><span class="p">)</span> <span class="p">{</span>
+<span class="k">@media</span> <span class="n">all</span> <span class="n">and</span> <span class="p">(</span><span class="n">min-width</span><span class="p">:</span> <span class="m">600px</span><span class="p">)</span> <span class="p">{</span>
   <span class="nc">.aside</span> <span class="p">{</span> <span class="nl">flex</span><span class="p">:</span> <span class="m">1</span> <span class="nb">auto</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="k">@media</span> <span class="n">all</span> <span class="nf">and</span> <span class="p">(</span><span class="n">min-width</span><span class="o">:</span> <span class="m">800px</span><span class="p">)</span> <span class="p">{</span>
+<span class="k">@media</span> <span class="n">all</span> <span class="n">and</span> <span class="p">(</span><span class="n">min-width</span><span class="p">:</span> <span class="m">800px</span><span class="p">)</span> <span class="p">{</span>
   <span class="nc">.main</span>    <span class="p">{</span> <span class="nl">flex</span><span class="p">:</span> <span class="m">3</span> <span class="m">0px</span><span class="p">;</span> <span class="p">}</span>
   <span class="nc">.aside-1</span> <span class="p">{</span> <span class="nl">order</span><span class="p">:</span> <span class="m">1</span><span class="p">;</span> <span class="p">}</span> 
   <span class="nc">.main</span>    <span class="p">{</span> <span class="nl">order</span><span class="p">:</span> <span class="m">2</span><span class="p">;</span> <span class="p">}</span>
