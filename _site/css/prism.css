@@ -7,7 +7,7 @@ http://prismjs.com/download.html?themes=prism-okaidia&languages=markup+css+clike
  */
 
 code[class*="language-"],
-pre[class*="language-"] {
+pre[class*="language-"],pre[class*="highlight"]{
 	color: #f8f8f2;
 	background: none;
 	text-shadow: 0 1px rgba(0, 0, 0, 0.3);
@@ -38,7 +38,7 @@ pre[class*="language-"] {
 }
 
 :not(pre) > code[class*="language-"],
-pre[class*="language-"] {
+pre[class*="language-"],pre[class*="highlight"] {
 	background: #272822;
 }
 
