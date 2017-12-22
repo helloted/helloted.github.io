@@ -18,7 +18,7 @@ header-img: "img/default.jpg"
 
 #### 1、NSObject
 
-```
+```objc
 /*
  *  回到主线程执行，执行self的showImage方法，参数是image
  */
@@ -29,7 +29,7 @@ header-img: "img/default.jpg"
 //    如果传入的是NO: 那么不用等到主线程中的方法执行完毕, 就可以继续执行下面其他行的低吗
 ```
 
-```
+```objc
 /*
  *  去xx线程执行aSelector方法，参数是arg
  */
@@ -38,7 +38,7 @@ header-img: "img/default.jpg"
 
 #### 2、GCD
 
-```
+```objc
 dispatch_async(queue, ^{
 		# do something
 		
@@ -51,7 +51,7 @@ dispatch_async(queue, ^{
 
 #### 3、NSOperation
 
-```
+```objc
 NSOperationQueue *queue = [[NSOperationQueue alloc] init];
 
     // 2.添加任务(操作)
@@ -74,7 +74,7 @@ App1通过openURL的方法跳转到App2，并且在URL中带上想要的参数�
 
 ![img](/img/Simple_1/09.jpeg)
 
-```
+```objc
 UIApplication *application = [UIApplication sharedApplication];
 [application openURL:URL options:@{} completionHandler:nil];
 ```
@@ -97,7 +97,7 @@ UIPasteboard典型的使用场景就是淘宝跟微信/QQ的链接分享。淘�
 
 UIDocumentInteractionController主要是用来实现同设备上app之间的共享文档，以及文档预览、打印、发邮件和复制等功能。它的使用非常简单.
 
-```
+```objc
 #import "ViewController.h"
 
 @interface ViewController ()<UIDocumentInteractionControllerDelegate>

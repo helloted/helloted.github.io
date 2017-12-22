@@ -116,18 +116,18 @@
 
 <p>要先引入AVFoundation的框架</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>#import &lt;AVFoundation/AVFoundation.h&gt;
-</code></pre>
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="cp">#import &lt;AVFoundation/AVFoundation.h&gt;
+</span></code></pre>
 </div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>    self.voiceRecorder = [[AVAudioRecorder alloc]initWithURL:[NSURL fileURLWithPath:self.voicePath] settings:self.recorderSetting error:nil];
-    if ([self.voiceRecorder prepareToRecord]){
-        [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayAndRecord error:nil];
-        [[AVAudioSession sharedInstance] setActive:YES error:nil];
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code>    <span class="n">self</span><span class="p">.</span><span class="n">voiceRecorder</span> <span class="o">=</span> <span class="p">[[</span><span class="n">AVAudioRecorder</span> <span class="nf">alloc</span><span class="p">]</span><span class="nf">initWithURL</span><span class="p">:[</span><span class="n">NSURL</span> <span class="nf">fileURLWithPath</span><span class="p">:</span><span class="n">self</span><span class="p">.</span><span class="n">voicePath</span><span class="p">]</span> <span class="nf">settings</span><span class="p">:</span><span class="n">self</span><span class="p">.</span><span class="n">recorderSetting</span> <span class="n">error</span><span class="o">:</span><span class="nb">nil</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">([</span><span class="n">self</span><span class="p">.</span><span class="n">voiceRecorder</span> <span class="nf">prepareToRecord</span><span class="p">]){</span>
+        <span class="p">[[</span><span class="n">AVAudioSession</span> <span class="nf">sharedInstance</span><span class="p">]</span> <span class="nf">setCategory</span><span class="p">:</span> <span class="n">AVAudioSessionCategoryPlayAndRecord</span> <span class="nf">error</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span>
+        <span class="p">[[</span><span class="n">AVAudioSession</span> <span class="nf">sharedInstance</span><span class="p">]</span> <span class="nf">setActive</span><span class="p">:</span><span class="nb">YES</span> <span class="nf">error</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span>
         
-        //开始录音
-        [self.voiceRecorder record];
-    }
+        <span class="c1">//开始录音
+</span>        <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">voiceRecorder</span> <span class="nf">record</span><span class="p">];</span>
+    <span class="p">}</span>
 </code></pre>
 </div>
 
@@ -137,12 +137,12 @@
 
 <p>Setting：一个录制参数的字典，设置一些录制的必要的参数，需要进行调整到合适的值</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>        _recorderSetting = [[NSDictionary alloc] initWithObjectsAndKeys:
-                            [NSNumber numberWithFloat: 8000.0],AVSampleRateKey, //采样率
-                            [NSNumber numberWithInt: kAudioFormatLinearPCM],AVFormatIDKey,
-                            [NSNumber numberWithInt:16],AVLinearPCMBitDepthKey,//采样位数 默认 16
-                            [NSNumber numberWithInt: 1], AVNumberOfChannelsKey,//通道的数目
-                            nil];
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code>        <span class="n">_recorderSetting</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSDictionary</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithObjectsAndKeys</span><span class="p">:</span>
+                            <span class="p">[</span><span class="n">NSNumber</span> <span class="nf">numberWithFloat</span><span class="p">:</span> <span class="mi">8000</span><span class="p">.</span><span class="mi">0</span><span class="p">],</span><span class="n">AVSampleRateKey</span><span class="p">,</span> <span class="c1">//采样率
+</span>                            <span class="p">[</span><span class="n">NSNumber</span> <span class="nf">numberWithInt</span><span class="p">:</span> <span class="n">kAudioFormatLinearPCM</span><span class="p">],</span><span class="n">AVFormatIDKey</span><span class="p">,</span>
+                            <span class="p">[</span><span class="n">NSNumber</span> <span class="nf">numberWithInt</span><span class="p">:</span><span class="mi">16</span><span class="p">],</span><span class="n">AVLinearPCMBitDepthKey</span><span class="p">,</span><span class="c1">//采样位数 默认 16
+</span>                            <span class="p">[</span><span class="n">NSNumber</span> <span class="nf">numberWithInt</span><span class="p">:</span> <span class="mi">1</span><span class="p">],</span> <span class="n">AVNumberOfChannelsKey</span><span class="p">,</span><span class="c1">//通道的数目
+</span>                            <span class="nb">nil</span><span class="p">];</span>
 </code></pre>
 </div>
 
@@ -150,19 +150,19 @@
 
 <p>暂停</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (void)pause; /* pause recording */
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">pause</span><span class="p">;</span> <span class="cm">/* pause recording */</span>
 </code></pre>
 </div>
 
 <p>恢复/开始</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (void)record;
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">record</span><span class="p">;</span>
 </code></pre>
 </div>
 
 <p>录制完成</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (void)stop;
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">stop</span><span class="p">;</span>
 </code></pre>
 </div>
 
@@ -170,27 +170,27 @@
 
 <p>先引入MediaPlayer</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>#import &lt;MediaPlayer/MediaPlayer.h&gt;
-@import AVFoundation;
-@import AudioToolbox;
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="cp">#import &lt;MediaPlayer/MediaPlayer.h&gt;
+</span><span class="k">@import</span> <span class="n">AVFoundation</span><span class="p">;</span>
+<span class="k">@import</span> <span class="n">AudioToolbox</span><span class="p">;</span>
 </code></pre>
 </div>
 
 <p>设置好录音文件路径就可以播放。注意：如果在播上一段录音，同时再点播放的话，两个声音会一起播放</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>    if (_player) { // 如果正在播放上一段录音，则停止
-        [_player stop];
-    }
-    [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayback error:nil];
-    [[AVAudioSession sharedInstance] setActive:YES error:nil];
-    if (path&amp;&amp; [self fileSizeAtPath:path]) {
-        self.player = [self.player initWithContentsOfURL:[NSURL URLWithString:path] error:nil];
-        self.player.delegate = self;
-        [self.player play];
-        NSLog(@"开始播放");
-    }else{
-        NSLog(@"no voice");
-    }
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code>    <span class="k">if</span> <span class="p">(</span><span class="n">_player</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 如果正在播放上一段录音，则停止
+</span>        <span class="p">[</span><span class="n">_player</span> <span class="nf">stop</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="p">[[</span><span class="n">AVAudioSession</span> <span class="nf">sharedInstance</span><span class="p">]</span> <span class="nf">setCategory</span><span class="p">:</span> <span class="n">AVAudioSessionCategoryPlayback</span> <span class="nf">error</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span>
+    <span class="p">[[</span><span class="n">AVAudioSession</span> <span class="nf">sharedInstance</span><span class="p">]</span> <span class="nf">setActive</span><span class="p">:</span><span class="nb">YES</span> <span class="nf">error</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">path</span><span class="o">&amp;&amp;</span> <span class="p">[</span><span class="n">self</span> <span class="nf">fileSizeAtPath</span><span class="p">:</span><span class="n">path</span><span class="p">])</span> <span class="p">{</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">player</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">player</span> <span class="nf">initWithContentsOfURL</span><span class="p">:[</span><span class="n">NSURL</span> <span class="nf">URLWithString</span><span class="p">:</span><span class="n">path</span><span class="p">]</span> <span class="nf">error</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">player</span><span class="p">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="n">self</span><span class="p">;</span>
+        <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">player</span> <span class="nf">play</span><span class="p">];</span>
+        <span class="n">NSLog</span><span class="p">(</span><span class="s">@"开始播放"</span><span class="p">);</span>
+    <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+        <span class="n">NSLog</span><span class="p">(</span><span class="s">@"no voice"</span><span class="p">);</span>
+    <span class="p">}</span>
 </code></pre>
 </div>
 

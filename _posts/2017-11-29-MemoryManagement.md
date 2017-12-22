@@ -103,7 +103,7 @@ Retain 一个对象，实际是对一个对象的强引用(strong reference)。�
 
 当你需要延时 release 方式时，就需要 autorelease 了，特别是当你从方法中返回一个对象的时候。比如，你可以这样来实现 fullName: 方法:
 
-```
+```objc
    -(NSString *)fullName{
       NSString *string = [[[NSString alloc] initWithFormat:@”%@ %@”,self.firstName, self.lastName] autorelease];
        return string;
@@ -114,7 +114,7 @@ Retain 一个对象，实际是对一个对象的强引用(strong reference)。�
 
 你还可以按下面做法来实现这个方法:
 
-```
+```objc
    -(NSString *) fullName{
        NSString *string = [NSString stringWithFormat:@”%@ %@”, self.firstName,   self.lastName] ;
        return string;
@@ -133,7 +133,7 @@ Autorelease pool blocks 提供了一种机制：可以在放弃对象所有权�
 
 Autorelease pool是得到了 autorelease 消息的对象的容器。 在 autorelease pool被 dealloc 的时候，它自己会给容纳的所有对象发送 release 消息。一个对象可以被多次放到同一个 autorelease pool，每一次放入(发送 autorelease消息)都会造成将来收到一次release。
 
-```
+```objc
    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	// Code benefitting from a local autorelease pool.
 	[pool release];
@@ -156,7 +156,7 @@ Autorelease pool是得到了 autorelease 消息的对象的容器。 在 autorel
 
 Autorelease pool blocks可以嵌套
 
-```
+```objc
 @autoreleasepool {
     // . . .
     @autoreleasepool {
@@ -196,7 +196,7 @@ Autorelease pool blocks可以嵌套
 
 在 autorelease pool已经 dealloc 之后，那些曾经收到 autorelease 消息对象，只能被视为失效，而不要再给他们发消息，或者把他们作为返回值进行返回。如果你必须在 autorelease 之后还要使用某个临时对象，你可以先发一个 retain 消息，然后等到这时的池已经调用了 drain 之后，再发送 autorelease 消息。
 
-```
+```objc
 – (id)findMatchingObject:(id)anObject {
     id match;
     while (match == nil) {

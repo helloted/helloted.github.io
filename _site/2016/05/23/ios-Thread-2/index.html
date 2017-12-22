@@ -112,34 +112,38 @@
 
 <p>如果在主线程上执行同步任务（任务也在主线程执行），会造成死锁：</p>
 
-<pre><code class="language-objective-c">//会造成死锁
-dispatch_sync(dispatch_get_main_queue(), ^{
-	//
-});
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="c1">//会造成死锁
+</span><span class="n">dispatch_sync</span><span class="p">(</span><span class="n">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">{</span>
+	<span class="c1">//
+</span><span class="p">});</span>
 </code></pre>
+</div>
 
 <p>但是在异步任务里可以用来切换到主线程</p>
 
-<pre><code class="language-objective-c">dispatch_async(dispatch_get_global_queue(0,0), ^{
-	//耗时操作；
-	dispatch_sync(dispatch_get_main_queue(), ^{
-		//回到主线程；
-	});
-});
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">dispatch_async</span><span class="p">(</span><span class="n">dispatch_get_global_queue</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="o">^</span><span class="p">{</span>
+	<span class="c1">//耗时操作；
+</span>	<span class="n">dispatch_sync</span><span class="p">(</span><span class="n">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">{</span>
+		<span class="c1">//回到主线程；
+</span>	<span class="p">});</span>
+<span class="p">});</span>
 </code></pre>
+</div>
 
 <p>可以用来阻塞线程：</p>
 
-<pre><code class="language-objective-c">dispatch_sync(dispatch_get_global_queue(0,0), ^{
-  sleep(2);
-  NSLog(@"2秒后执行，但是会阻塞线程");
-});
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">dispatch_sync</span><span class="p">(</span><span class="n">dispatch_get_global_queue</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="o">^</span><span class="p">{</span>
+  <span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+  <span class="n">NSLog</span><span class="p">(</span><span class="s">@"2秒后执行，但是会阻塞线程"</span><span class="p">);</span>
+<span class="p">});</span>
 </code></pre>
+</div>
 
-<pre><code class="language-objective-c">dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-   NSLog(@"2秒后执行，但是不阻塞线程");
-});
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">dispatch_after</span><span class="p">(</span><span class="n">dispatch_time</span><span class="p">(</span><span class="n">DISPATCH_TIME_NOW</span><span class="p">,</span> <span class="p">(</span><span class="kt">int64_t</span><span class="p">)(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">NSEC_PER_SEC</span><span class="p">)),</span> <span class="n">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">{</span>
+   <span class="n">NSLog</span><span class="p">(</span><span class="s">@"2秒后执行，但是不阻塞线程"</span><span class="p">);</span>
+<span class="p">});</span>
 </code></pre>
+</div>
 
 <h4 id="dispatch_async">dispatch_async：</h4>
 
@@ -168,13 +172,14 @@ dispatch_sync(dispatch_get_main_queue(), ^{
 
 <p>有执行优先级</p>
 
-<pre><code class="language-objective-c">dispatch_queue_t globalQ = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">dispatch_queue_t</span> <span class="n">globalQ</span> <span class="o">=</span> <span class="n">dispatch_get_global_queue</span><span class="p">(</span><span class="n">DISPATCH_QUEUE_PRIORITY_DEFAULT</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
-DISPATCH_QUEUE_PRIORITY_HIGH:             //优先级最高，在default,和low之前执行
-DISPATCH_QUEUE_PRIORITY_DEFAULT           //默认优先级，在low之前，在high之后
-DISPATCH_QUEUE_PRIORITY_LOW               //在high和default后执行
-DISPATCH_QUEUE_PRIORITY_BACKGROUND        //提交到这个队列的任务会在high优先级的任务和已经提交到background队列的执行完后执行。
-</code></pre>
+<span class="n">DISPATCH_QUEUE_PRIORITY_HIGH</span><span class="o">:</span>             <span class="c1">//优先级最高，在default,和low之前执行
+</span><span class="n">DISPATCH_QUEUE_PRIORITY_DEFAULT</span>           <span class="c1">//默认优先级，在low之前，在high之后
+</span><span class="n">DISPATCH_QUEUE_PRIORITY_LOW</span>               <span class="c1">//在high和default后执行
+</span><span class="n">DISPATCH_QUEUE_PRIORITY_BACKGROUND</span>        <span class="c1">//提交到这个队列的任务会在high优先级的任务和已经提交到background队列的执行完后执行。
+</span></code></pre>
+</div>
 <h4 id="获取队列create_queue">获取队列：（create_queue）:</h4>
 
 <p>如果是串行队列：dispatch_queue_create(“createName”, DISPATCH_QUEUE_SERIAL)</p>
@@ -185,30 +190,33 @@ DISPATCH_QUEUE_PRIORITY_BACKGROUND        //提交到这个队列的任务会在
 
 <p>尽管是ARC，使用结束后也要dispatch_release释放</p>
 
-<pre><code class="language-objective-c">dispatch_queue_t  concurrentQ = dispatch_queue_create("createName",DISPATCH_QUEUE_CONCURRENT)
-dispatch_queue_t  serialQ = dispatch_queue_create("createName", DISPATCH_QUEUE_SERIAL)
-改变队列优先级
-dispatch_set_target_queue(restQueue, targetQueue);
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">dispatch_queue_t</span>  <span class="n">concurrentQ</span> <span class="o">=</span> <span class="n">dispatch_queue_create</span><span class="p">(</span><span class="s">"createName"</span><span class="p">,</span><span class="n">DISPATCH_QUEUE_CONCURRENT</span><span class="p">)</span>
+<span class="n">dispatch_queue_t</span>  <span class="n">serialQ</span> <span class="o">=</span> <span class="n">dispatch_queue_create</span><span class="p">(</span><span class="s">"createName"</span><span class="p">,</span> <span class="n">DISPATCH_QUEUE_SERIAL</span><span class="p">)</span>
+<span class="err">改变队列优先级</span>
+<span class="n">dispatch_set_target_queue</span><span class="p">(</span><span class="n">restQueue</span><span class="p">,</span> <span class="n">targetQueue</span><span class="p">);</span>
 </code></pre>
+</div>
 <h4 id="暂停恢复队列">暂停恢复队列</h4>
 
-<pre><code class="language-objective-c">dispatch_queue_t queue = dispatch_get_main_queue();
-dispatch_suspend(queue); //暂停队列queue
-dispatch_resume(queue);  //恢复队列queue
-</code></pre>
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">dispatch_queue_t</span> <span class="n">queue</span> <span class="o">=</span> <span class="n">dispatch_get_main_queue</span><span class="p">();</span>
+<span class="n">dispatch_suspend</span><span class="p">(</span><span class="n">queue</span><span class="p">);</span> <span class="c1">//暂停队列queue
+</span><span class="n">dispatch_resume</span><span class="p">(</span><span class="n">queue</span><span class="p">);</span>  <span class="c1">//恢复队列queue
+</span></code></pre>
+</div>
 
 <h4 id="3延迟添加执行dispatch_after">3、延迟添加执行dispatch_after</h4>
 
 <p>并不是在多少秒后执行，而是在3秒后将任务添加到Dispatch Queue中</p>
 
-<pre><code class="language-objective-c">dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3*NSEC_PER_SEC)),dispatch_get_main_queue(), ^{
-	//秒
-});
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">dispatch_after</span><span class="p">(</span><span class="n">dispatch_time</span><span class="p">(</span><span class="n">DISPATCH_TIME_NOW</span><span class="p">,</span> <span class="p">(</span><span class="kt">int64_t</span><span class="p">)(</span><span class="mi">3</span><span class="o">*</span><span class="n">NSEC_PER_SEC</span><span class="p">)),</span><span class="n">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">{</span>
+	<span class="c1">//秒
+</span><span class="p">});</span>
 
-dispatch_after(dispatch_time(DISPATCH_TIME_NOW,150ull *NSEC_PER_MSEC),dispatch_get_main_queue(), ^{
-    //毫秒
-});
+<span class="n">dispatch_after</span><span class="p">(</span><span class="n">dispatch_time</span><span class="p">(</span><span class="n">DISPATCH_TIME_NOW</span><span class="p">,</span><span class="mi">150ull</span> <span class="o">*</span><span class="n">NSEC_PER_MSEC</span><span class="p">),</span><span class="n">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">{</span>
+    <span class="c1">//毫秒
+</span><span class="p">});</span>
 </code></pre>
+</div>
 
 <h4 id="4dispatch_group与dispatch_barrier">4、dispatch_group与dispatch_barrier</h4>
 
@@ -216,19 +224,19 @@ dispatch_after(dispatch_time(DISPATCH_TIME_NOW,150ull *NSEC_PER_MSEC),dispatch_g
 
 <p>举例，异步下载两张图片，这在这两张图片下载完毕之后，将两张图片合成</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>dispatch_group_t group = dispatch_group_create();
-dispatch_queue_t queue = dispatch_queue_create("com.gcd-group.www", DISPATCH_QUEUE_CONCURRENT);
-dispatch_group_async(group, queue, ^{
-    #异步下载第一张图片
- });
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">dispatch_group_t</span> <span class="n">group</span> <span class="o">=</span> <span class="n">dispatch_group_create</span><span class="p">();</span>
+<span class="n">dispatch_queue_t</span> <span class="n">queue</span> <span class="o">=</span> <span class="n">dispatch_queue_create</span><span class="p">(</span><span class="s">"com.gcd-group.www"</span><span class="p">,</span> <span class="n">DISPATCH_QUEUE_CONCURRENT</span><span class="p">);</span>
+<span class="n">dispatch_group_async</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="o">^</span><span class="p">{</span>
+    <span class="cp">#异步下载第一张图片
+</span> <span class="p">});</span>
  
-dispatch_group_async(group, queue, ^{
-    #异步下载第二张图片
-});
+<span class="n">dispatch_group_async</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="o">^</span><span class="p">{</span>
+    <span class="cp">#异步下载第二张图片
+</span><span class="p">});</span>
      
-dispatch_group_notify(group, queue, ^{
-    #两张图片下载完后进行合成
-});
+<span class="n">dispatch_group_notify</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="o">^</span><span class="p">{</span>
+    <span class="cp">#两张图片下载完后进行合成
+</span><span class="p">});</span>
 </code></pre>
 </div>
 
@@ -238,7 +246,7 @@ dispatch_group_notify(group, queue, ^{
 
 <p>举例。多个操作对数据库进行读写，读的操作可以异步进行，但是为了保证写的线程安全，则必须用dispatch_barrier</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>dispatch_async(queue, ^{NSLog(@"read");});
+<pre><code class="language-Objc">dispatch_async(queue, ^{NSLog(@"read");});
 dispatch_async(queue, ^{NSLog(@"read");});
 dispatch_async(queue, ^{NSLog(@"read");});
 
@@ -248,7 +256,6 @@ dispatch_barrier_sync(queue, ^{NSLog(@"writing");});
 dispatch_async(queue, ^{NSLog(@"read");});
 dispatch_async(queue, ^{NSLog(@"read");});
 </code></pre>
-</div>
 
 <p><img src="/img/Simple_1/03.png" alt="" /></p>
 
@@ -264,31 +271,32 @@ dispatch_async(queue, ^{NSLog(@"read");});
 
 <p>在某些场景下使用dispatch_apply会对性能有很大的提升，比如你的代码需要以每个像素为基准来处理计算image图片。同时dispatch apply能够避免一些线程爆炸的情况发生</p>
 
-<pre><code class="language-objective-c">//危险，可能导致线程爆炸以及死锁
-for (int i = 0; i &lt; 999; i++){
-   dispatch_async(q, ^{...});
-}
-dispatch_barrier_sync(q, ^{});
-// 较优选择， GCD 会管理并发
-dispatch_apply(999, q, ^(size_t i){...});
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="c1">//危险，可能导致线程爆炸以及死锁
+</span><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">999</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>
+   <span class="n">dispatch_async</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="o">^</span><span class="p">{...});</span>
+<span class="p">}</span>
+<span class="n">dispatch_barrier_sync</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="o">^</span><span class="p">{});</span>
+<span class="c1">// 较优选择， GCD 会管理并发
+</span><span class="n">dispatch_apply</span><span class="p">(</span><span class="mi">999</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="o">^</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="p">){...});</span>
 </code></pre>
+</div>
 
 <h4 id="7dispatch_block_cancel">7、dispatch_block_cancel</h4>
 
 <p>iOS8之后，提交到gcd队列中的dispatch block也可取消了，只需要简单的调用dispatch_block_cancel传入想要取消的block即可:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>dispatch_queue_t queue = dispatch_queue_create("queue", DISPATCH_QUEUE_SERIAL);
-dispatch_block_t block1 = dispatch_block_create(0, ^{
-    NSLog(@"block1 begin");
-    [NSThread sleepForTimeInterval:1];
-    NSLog(@"block1 done");
-});
-dispatch_block_t block2 = dispatch_block_create(0, ^{
-    NSLog(@"block2 ");
-});
-dispatch_async(queue, block1);
-dispatch_async(queue, block2);
-dispatch_block_cancel(block2);
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">dispatch_queue_t</span> <span class="n">queue</span> <span class="o">=</span> <span class="n">dispatch_queue_create</span><span class="p">(</span><span class="s">"queue"</span><span class="p">,</span> <span class="n">DISPATCH_QUEUE_SERIAL</span><span class="p">);</span>
+<span class="n">dispatch_block_t</span> <span class="n">block1</span> <span class="o">=</span> <span class="n">dispatch_block_create</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">^</span><span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"block1 begin"</span><span class="p">);</span>
+    <span class="p">[</span><span class="n">NSThread</span> <span class="nf">sleepForTimeInterval</span><span class="p">:</span><span class="mi">1</span><span class="p">];</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"block1 done"</span><span class="p">);</span>
+<span class="p">});</span>
+<span class="n">dispatch_block_t</span> <span class="n">block2</span> <span class="o">=</span> <span class="n">dispatch_block_create</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">^</span><span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"block2 "</span><span class="p">);</span>
+<span class="p">});</span>
+<span class="n">dispatch_async</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">block1</span><span class="p">);</span>
+<span class="n">dispatch_async</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">block2</span><span class="p">);</span>
+<span class="n">dispatch_block_cancel</span><span class="p">(</span><span class="n">block2</span><span class="p">);</span>
 </code></pre>
 </div>
 

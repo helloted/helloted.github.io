@@ -117,49 +117,49 @@
 
 <h4 id="1nsobject">1、NSObject</h4>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>/*
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="cm">/*
  *  回到主线程执行，执行self的showImage方法，参数是image
- */
-[self performSelectorOnMainThread:@selector(showImage:) withObject:image waitUntilDone:YES];
+ */</span>
+<span class="p">[</span><span class="n">self</span> <span class="nf">performSelectorOnMainThread</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nf">showImage</span><span class="p">:)</span> <span class="n">withObject</span><span class="o">:</span><span class="n">image</span> <span class="n">waitUntilDone</span><span class="o">:</span><span class="nb">YES</span><span class="p">];</span>
 
-// waitUntilDone的含义:
+<span class="c1">// waitUntilDone的含义:
 //    如果传入的是YES: 那么会等到主线程中的方法执行完毕, 才会继续执行下面其他行的代码
 //    如果传入的是NO: 那么不用等到主线程中的方法执行完毕, 就可以继续执行下面其他行的低吗
-</code></pre>
+</span></code></pre>
 </div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>/*
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="cm">/*
  *  去xx线程执行aSelector方法，参数是arg
- */
-- (void)performSelector:(SEL)aSelector onThread:(NSThread *)thr withObject:(id)arg waitUntilDone:(BOOL)wait;
+ */</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">performSelector</span><span class="p">:(</span><span class="n">SEL</span><span class="p">)</span><span class="nv">aSelector</span> <span class="nf">onThread</span><span class="p">:(</span><span class="n">NSThread</span> <span class="o">*</span><span class="p">)</span><span class="nv">thr</span> <span class="nf">withObject</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">arg</span> <span class="nf">waitUntilDone</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">wait</span><span class="p">;</span>
 </code></pre>
 </div>
 
 <h4 id="2gcd">2、GCD</h4>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>dispatch_async(queue, ^{
-		# do something
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">dispatch_async</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="o">^</span><span class="p">{</span>
+		<span class="cp"># do something
+</span>		
 		
-		
-        dispatch_sync(dispatch_get_main_queue(), ^{
-			#回到主线程
-        });
-    });
+        <span class="n">dispatch_sync</span><span class="p">(</span><span class="n">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">{</span>
+			<span class="cp">#回到主线程
+</span>        <span class="p">});</span>
+    <span class="p">});</span>
 </code></pre>
 </div>
 
 <h4 id="3nsoperation">3、NSOperation</h4>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">NSOperationQueue</span> <span class="o">*</span><span class="n">queue</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSOperationQueue</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
 
-    // 2.添加任务(操作)
-    [queue addOperationWithBlock:^{
+    <span class="c1">// 2.添加任务(操作)
+</span>    <span class="p">[</span><span class="n">queue</span> <span class="nf">addOperationWithBlock</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
 		
-		# 回到主线程
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            self.imageView.image = image;
-        }];
-    }];
+		<span class="cp"># 回到主线程
+</span>        <span class="p">[[</span><span class="n">NSOperationQueue</span> <span class="nf">mainQueue</span><span class="p">]</span> <span class="nf">addOperationWithBlock</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">imageView</span><span class="p">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="p">;</span>
+        <span class="p">}];</span>
+    <span class="p">}];</span>
 </code></pre>
 </div>
 
@@ -173,8 +173,8 @@
 
 <p><img src="/img/Simple_1/09.jpeg" alt="img" /></p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>UIApplication *application = [UIApplication sharedApplication];
-[application openURL:URL options:@{} completionHandler:nil];
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">UIApplication</span> <span class="o">*</span><span class="n">application</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIApplication</span> <span class="nf">sharedApplication</span><span class="p">];</span>
+<span class="p">[</span><span class="n">application</span> <span class="nf">openURL</span><span class="p">:</span><span class="n">URL</span> <span class="nf">options</span><span class="p">:@{}</span> <span class="n">completionHandler</span><span class="o">:</span><span class="nb">nil</span><span class="p">];</span>
 </code></pre>
 </div>
 
@@ -196,7 +196,7 @@
 
 <p>UIDocumentInteractionController主要是用来实现同设备上app之间的共享文档，以及文档预览、打印、发邮件和复制等功能。它的使用非常简单.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="cp">#import "ViewController.h"
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="cp">#import "ViewController.h"
 </span>
 <span class="k">@interface</span> <span class="nc">ViewController</span> <span class="p">()</span><span class="o">&lt;</span><span class="n">UIDocumentInteractionControllerDelegate</span><span class="o">&gt;</span>
 <span class="k">@end</span>

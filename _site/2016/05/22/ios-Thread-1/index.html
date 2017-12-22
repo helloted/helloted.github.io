@@ -169,16 +169,17 @@
 
 <p>POSIX线程（POSIX threads），简称Pthreads，是线程的POSIX标准。该标准定义了创建和操纵线程的一整套API。在类Unix操作系统（Unix、Linux、Mac OS X等）中，都使用Pthreads作为操作系统的线程,这是一套在很多操作系统上都通用的多线程API，所以移植性很强（然并卵），当然在 iOS 中也是可以的。不过这是基于 c语言的框架；</p>
 
-<pre><code class="language-objective-c">- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    pthread_t thread;
-    //创建一个线程并自动执行
-    pthread_create(&amp;thread, NULL, start, NULL);
-}
-void *start(void *data) {
-    NSLog(@"%@", [NSThread currentThread]);
-    return NULL;
-}
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">touchesBegan</span><span class="p">:(</span><span class="n">NSSet</span> <span class="o">*</span><span class="p">)</span><span class="nv">touches</span> <span class="nf">withEvent</span><span class="p">:(</span><span class="n">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="nv">event</span> <span class="p">{</span>
+    <span class="n">pthread_t</span> <span class="kr">thread</span><span class="p">;</span>
+    <span class="c1">//创建一个线程并自动执行
+</span>    <span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="kr">thread</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="o">*</span><span class="nf">start</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"%@"</span><span class="p">,</span> <span class="p">[</span><span class="n">NSThread</span> <span class="nf">currentThread</span><span class="p">]);</span>
+    <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="p">}</span>
 </code></pre>
+</div>
 
 <h3 id="三nsthread">三、NSThread</h3>
 
@@ -186,15 +187,15 @@ void *start(void *data) {
 
 <p>NSThread实例方法：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (instancetype)initWithTarget:(id)target selector:(SEL)selector object:(nullable id)argument
-- (void)start
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithTarget</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">target</span> <span class="nf">selector</span><span class="p">:(</span><span class="n">SEL</span><span class="p">)</span><span class="nv">selector</span> <span class="nf">object</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">id</span><span class="p">)</span><span class="nv">argument</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">start</span>
 </code></pre>
 </div>
 
 <p>NSThread类方法：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>+ (void)detachNewThreadWithBlock:(void (^)(void))block 
-+ (void)detachNewThreadSelector:(SEL)selector toTarget:(id)target withObject:(nullable id)argument;
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">detachNewThreadWithBlock</span><span class="p">:(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">block</span> 
+<span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">detachNewThreadSelector</span><span class="p">:(</span><span class="n">SEL</span><span class="p">)</span><span class="nv">selector</span> <span class="nf">toTarget</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">target</span> <span class="nf">withObject</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">id</span><span class="p">)</span><span class="nv">argument</span><span class="p">;</span>
 </code></pre>
 </div>
 
@@ -202,7 +203,7 @@ void *start(void *data) {
 
 <h4 id="2nsthread线程操作">2、NSThread线程操作</h4>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">//取消线程,并不是停止线程，这个只是一个标志位，对应isCanceled
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="c1">//取消线程,并不是停止线程，这个只是一个标志位，对应isCanceled
 </span><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">cancel</span><span class="p">;</span>
 
 <span class="c1">//启动线程
@@ -244,14 +245,14 @@ void *start(void *data) {
 
 <p>第一种方式为performSelector, runloop是实现performOnThread的基础——目标thread必须有runloop在运行，因为该实现的原理是基于runloop源的</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (void)performSelector:(SEL)aSelector onThread:(NSThread *)thr withObject:(nullable id)arg waitUntilDone:(BOOL)wait  
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">performSelector</span><span class="p">:(</span><span class="n">SEL</span><span class="p">)</span><span class="nv">aSelector</span> <span class="nf">onThread</span><span class="p">:(</span><span class="n">NSThread</span> <span class="o">*</span><span class="p">)</span><span class="nv">thr</span> <span class="nf">withObject</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">id</span><span class="p">)</span><span class="nv">arg</span> <span class="nf">waitUntilDone</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">wait</span>  
 </code></pre>
 </div>
 
 <p>主线程比较特殊，有专门的方法</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (void)performSelectorOnMainThread:(SEL)aSelector withObject:(nullable id)arg waitUntilDone:(BOOL)wait; //wait如果传入的是YES: 那么会等到主线程中的方法执行完毕, 才会继续执行下面其他行的代码
-</code></pre>
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">performSelectorOnMainThread</span><span class="p">:(</span><span class="n">SEL</span><span class="p">)</span><span class="nv">aSelector</span> <span class="nf">withObject</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">id</span><span class="p">)</span><span class="nv">arg</span> <span class="nf">waitUntilDone</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">wait</span><span class="p">;</span> <span class="c1">//wait如果传入的是YES: 那么会等到主线程中的方法执行完毕, 才会继续执行下面其他行的代码
+</span></code></pre>
 </div>
 
 <p>第2种为NSMachPort方式。NSPort有3个子类，NSSocketPort、NSMessagePort、NSMachPort，但在iOS下只有NSMachPort可用。</p>

@@ -201,11 +201,11 @@
 
 <p>只会对集合里的对象的指针进行复制到新的集合里，有两种方法来进行浅拷贝</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>NSArray *shallowCopyArray = [someArray copyWithZone:nil];
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">NSArray</span> <span class="o">*</span><span class="n">shallowCopyArray</span> <span class="o">=</span> <span class="p">[</span><span class="n">someArray</span> <span class="nf">copyWithZone</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span>
 </code></pre>
 </div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>NSDictionary *shallowCopyDict = [[NSDictionary alloc] initWithDictionary:someDictionary copyItems:NO];
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">NSDictionary</span> <span class="o">*</span><span class="n">shallowCopyDict</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSDictionary</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithDictionary</span><span class="p">:</span><span class="n">someDictionary</span> <span class="nf">copyItems</span><span class="p">:</span><span class="nb">NO</span><span class="p">];</span>
 </code></pre>
 </div>
 

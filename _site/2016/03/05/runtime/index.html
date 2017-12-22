@@ -108,8 +108,9 @@
 
 <p>[receiver message]不是一个简单地方法调用，而是在编译阶段被编译器转化为</p>
 
-<pre><code class="language-objective-c">objc_msgSend(Class receiver,SEL selector, arg1, arg2, ...)
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">objc_msgSend</span><span class="p">(</span><span class="n">Class</span> <span class="n">receiver</span><span class="p">,</span><span class="n">SEL</span> <span class="n">selector</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="p">...)</span>
 </code></pre>
+</div>
 
 <p>，只是在编译阶段确定了要向receiver发送message这条消息，而receiver如何响应这条消息，要看运行时来决定，消息的receiver能够找到对应的selector，那么就相当于直接执行了receiver这个对象的特定方法；否则，消息要么被转发，或是临时向receiver动态添加这个selector对应的实现内容，要么就干脆崩溃掉。</p>
 
@@ -117,26 +118,28 @@
 
 <h3 id="二class结构objc_msgsendclass-receiversel-selector-arg1-arg2-之receiver">二、Class结构[objc_msgSend(Class receiver,SEL selector, arg1, arg2, …)之Receiver]</h3>
 
-<pre><code class="language-objective-c">@interface NSObject &lt;NSObject&gt; {
-    Class isa;
-}
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">NSObject</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="n">Class</span> <span class="n">isa</span><span class="p">;</span>
+<span class="p">}</span>
 </code></pre>
+</div>
 
 <p>有一个Class类型的isa属性，typedef struct objc_class *Class，所以Class是一个objc_class结构类型的指针；</p>
 
-<pre><code class="language-objective-c">struct objc_class {  
-    struct objc_class *isa;  	     //指向该对象所属类型的类型对象（Class Object），而类的isa指针指向它的metaclass.
-    struct objc_class *super_class;  //指向父类,如果该类已经是最顶层的根类(如 NSObject 或 NSProxy),那么 super_class 就为 NULL.
-    const charchar *name;            //类名称
-    long version; 		     //类的版本信息
-    long info; 			     //运行期使用的标志位，比如0x1（CLS_CLASS）表示该类为普通class，0x2（CLS_META）表示该类为metaclass 
-    long instance_size; 	     //实例大小，即内存所占空间
-    struct objc_ivar_list *ivars;    //指向成员变量列表的指针
-    struct objc_method_list **methodLists; //根据info标志位的不同可能指向不同，比如可能指向实例方法列表，或者指向类方法列表 
-    struct objc_cache *cache;        //因为Objective-C的消息转发需要查找dispatch table甚至可能需要遍历继承体系，所以缓存最近使用的方法。  
-    struct objc_protocol_list *protocols;  //类需要遵守的协议
-  }
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">struct</span><span class="err"> </span><span class="n">objc_class</span><span class="err"> </span><span class="p">{</span><span class="err">  </span>
+<span class="err">    </span><span class="k">struct</span><span class="err"> </span><span class="n">objc_class</span><span class="err"> </span><span class="o">*</span><span class="n">isa</span><span class="p">;</span>  	     <span class="c1">//指向该对象所属类型的类型对象（Class Object），而类的isa指针指向它的metaclass.
+</span><span class="err">    </span><span class="k">struct</span><span class="err"> </span><span class="n">objc_class</span><span class="err"> </span><span class="o">*</span><span class="n">super_class</span><span class="p">;</span><span class="err">  </span><span class="c1">//指向父类,如果该类已经是最顶层的根类(如 NSObject 或 NSProxy),那么 super_class 就为 NULL.
+</span><span class="err">    </span><span class="k">const</span><span class="err"> </span><span class="n">charchar</span><span class="err"> </span><span class="o">*</span><span class="n">name</span><span class="p">;</span><span class="err"> </span>          <span class="err"> </span><span class="c1">//类名称
+</span><span class="err">    </span><span class="kt">long</span><span class="err"> </span><span class="n">version</span><span class="p">;</span><span class="err"> </span>		    <span class="err"> </span><span class="c1">//类的版本信息
+</span><span class="err">    </span><span class="kt">long</span><span class="err"> </span><span class="n">info</span><span class="p">;</span><span class="err"> </span>			     <span class="c1">//运行期使用的标志位，比如0x1（CLS_CLASS）表示该类为普通class，0x2（CLS_META）表示该类为metaclass 
+</span><span class="err">    </span><span class="kt">long</span><span class="err"> </span><span class="n">instance_size</span><span class="p">;</span><span class="err"> </span>	     <span class="c1">//实例大小，即内存所占空间
+</span><span class="err">    </span><span class="k">struct</span><span class="err"> </span><span class="n">objc_ivar_list</span><span class="err"> </span><span class="o">*</span><span class="n">ivars</span><span class="p">;</span><span class="err">  </span>  <span class="c1">//指向成员变量列表的指针
+</span><span class="err">    </span><span class="k">struct</span><span class="err"> </span><span class="n">objc_method_list</span><span class="err"> </span><span class="o">**</span><span class="n">methodLists</span><span class="p">;</span><span class="err"> </span><span class="c1">//根据info标志位的不同可能指向不同，比如可能指向实例方法列表，或者指向类方法列表 
+</span><span class="err">    </span><span class="k">struct</span><span class="err"> </span><span class="n">objc_cache</span><span class="err"> </span><span class="o">*</span><span class="n">cache</span><span class="p">;</span><span class="err">  </span>      <span class="c1">//因为Objective-C的消息转发需要查找dispatch table甚至可能需要遍历继承体系，所以缓存最近使用的方法。  
+</span><span class="err">    </span><span class="k">struct</span><span class="err"> </span><span class="n">objc_protocol_list</span><span class="err"> </span><span class="o">*</span><span class="n">protocols</span><span class="p">;</span><span class="err">  </span><span class="c1">//类需要遵守的协议
+</span><span class="err">  </span><span class="p">}</span>
 </code></pre>
+</div>
 
 <p>isa&amp;superclass</p>
 
@@ -160,24 +163,26 @@
 
 <p>objc_ivar_list 成员变量的数组，成员变量生成后变不能修改</p>
 
-<pre><code class="language-objective-c">struct objc_ivar_list {  
-    int ivar_count;  /* variable length structure */  
-    struct objc_ivar ivar_list[1]; 
-} 
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">struct</span><span class="err"> </span><span class="n">objc_ivar_list</span><span class="err"> </span><span class="p">{</span><span class="err">  </span>
+<span class="err">    </span><span class="kt">int</span><span class="err"> </span><span class="n">ivar_count</span><span class="p">;</span><span class="err">  </span><span class="cm">/* variable length structure */</span><span class="err">  </span>
+<span class="err">    </span><span class="k">struct</span><span class="err"> </span><span class="n">objc_ivar</span><span class="err"> </span><span class="n">ivar_list</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span><span class="err"> </span>
+<span class="p">}</span><span class="err"> </span>
 </code></pre>
+</div>
 
 <p>objc_method_list 方法列表指针，存储着objc_method列表，可以动态修改方法列表的值来添加成员方法</p>
 
-<pre><code class="language-objective-c">struct objc_method_list {  
-    struct objc_method_list *obsolete;  
-    int method_count;  /* variable length structure */  
-    struct objc_method method_list[1];  
-}
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">struct</span><span class="err"> </span><span class="n">objc_method_list</span><span class="err"> </span><span class="p">{</span><span class="err">  </span>
+<span class="err">    </span><span class="k">struct</span><span class="err"> </span><span class="n">objc_method_list</span><span class="err"> </span><span class="o">*</span><span class="n">obsolete</span><span class="p">;</span><span class="err">  </span>
+<span class="err">    </span><span class="kt">int</span><span class="err"> </span><span class="n">method_count</span><span class="p">;</span><span class="err">  </span><span class="cm">/* variable length structure */</span><span class="err">  </span>
+<span class="err">    </span><span class="k">struct</span><span class="err"> </span><span class="n">objc_method</span><span class="err"> </span><span class="n">method_list</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span><span class="err">  </span>
+<span class="p">}</span>
 </code></pre>
+</div>
 
 <p>objc_cache 指向最近使用的方法.用于方法调用的优化.</p>
 
-<pre><code class="language-objective-c">struct objc_cache {  
+<pre><code class="language-Objc">struct objc_cache {  
     unsigned int mask /* total = mask + 1 */;  
     unsigned int occupied;  
     Method buckets[1];  
@@ -186,12 +191,13 @@
 
 <p>protocols 协议的数组指针</p>
 
-<pre><code class="language-objective-c">struct objc_protocol_list {  
-    struct objc_protocol_list *next;  
-    long count;  
-    Protocol *list[1];  
-}; 
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">struct</span><span class="err"> </span><span class="n">objc_protocol_list</span><span class="err"> </span><span class="p">{</span><span class="err">  </span>
+<span class="err">    </span><span class="k">struct</span><span class="err"> </span><span class="n">objc_protocol_list</span><span class="err"> </span><span class="o">*</span><span class="n">next</span><span class="p">;</span><span class="err">  </span>
+<span class="err">    </span><span class="kt">long</span><span class="err"> </span><span class="n">count</span><span class="p">;</span><span class="err">  </span>
+<span class="err">    </span><span class="n">Protocol</span><span class="err"> </span><span class="o">*</span><span class="n">list</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span><span class="err">  </span>
+<span class="p">};</span><span class="err"> </span>
 </code></pre>
+</div>
 
 <h3 id="三selobjc_msgsendclass-receiversel-selector-arg1-arg2-之selector">三、SEL[objc_msgSend(Class receiver,SEL selector, arg1, arg2, …)之selector]</h3>
 
@@ -201,12 +207,13 @@
 
 <p>在Class的objc_method_list里有一个objc_method列表</p>
 
-<pre><code class="language-objective-c">struct objc_method {
-    SEL method_name                           
-    char *method_types     存储着方法的参数类型和返回值类型                                 
-    IMP method_imp     指向了方法的实现，本质上是一个函数指针                                 
-} 
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">struct</span> <span class="n">objc_method</span> <span class="p">{</span>
+    <span class="n">SEL</span> <span class="n">method_name</span>                           
+    <span class="kt">char</span> <span class="o">*</span><span class="n">method_types</span>     <span class="err">存储着方法的参数类型和返回值类型</span>                                 
+    <span class="n">IMP</span> <span class="n">method_imp</span>     <span class="err">指向了方法的实现，本质上是一个函数指针</span>                                 
+<span class="p">}</span> 
 </code></pre>
+</div>
 
 <p>IMP:具体的方法的地址，IMP 是一个函数指针，这个被指向的函数包含一个接收消息的对象id(self  指针), 调用方法的选标 SEL (方法名)，以及不定个数的方法参数，并返回一个id。也就是说 IMP 是消息最终调用的执行代码，是方法真正的实现代码 class_getMethodImplementation(class, SEL)。</p>
 
@@ -218,12 +225,13 @@
 
 <p>伪代码：</p>
 
-<pre><code class="language-objective-c">id objc_msgSend(id self, SEL _cmd, ...) {
-  Class class = object_getClass(self);
-  IMP imp = class_getMethodImplementation(class, _cmd);
-  return imp ? imp(self, _cmd, ...) : 0;
-}
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">id</span> <span class="nf">objc_msgSend</span><span class="p">(</span><span class="n">id</span> <span class="n">self</span><span class="p">,</span> <span class="n">SEL</span> <span class="n">_cmd</span><span class="p">,</span> <span class="p">...)</span> <span class="p">{</span>
+  <span class="n">Class</span> <span class="n">class</span> <span class="o">=</span> <span class="n">object_getClass</span><span class="p">(</span><span class="n">self</span><span class="p">);</span>
+  <span class="n">IMP</span> <span class="n">imp</span> <span class="o">=</span> <span class="n">class_getMethodImplementation</span><span class="p">(</span><span class="n">class</span><span class="p">,</span> <span class="n">_cmd</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">imp</span> <span class="p">?</span> <span class="n">imp</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">_cmd</span><span class="p">,</span> <span class="p">...)</span> <span class="p">:</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
 </code></pre>
+</div>
 
 <blockquote>
   <p>receiver查找：</p>
@@ -283,15 +291,15 @@
 
 <p>比如说如下的一行KVC代码：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>[site setValue:@"sitename" forKey:@"name"];
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="p">[</span><span class="n">site</span> <span class="nf">setValue</span><span class="p">:</span><span class="s">@"sitename"</span> <span class="nf">forKey</span><span class="p">:</span><span class="s">@"name"</span><span class="p">];</span>
 </code></pre>
 </div>
 
 <p>会被编译器处理成</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>SEL sel = sel_get_uid(setValue:forKey);
-IMP method = objc_msg_loopup(site-&gt;isa,sel);
-method(site,sel,@"sitename",@"name");
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">SEL</span> <span class="n">sel</span> <span class="o">=</span> <span class="n">sel_get_uid</span><span class="p">(</span><span class="n">setValue</span><span class="o">:</span><span class="n">forKey</span><span class="p">);</span>
+<span class="n">IMP</span> <span class="n">method</span> <span class="o">=</span> <span class="n">objc_msg_loopup</span><span class="p">(</span><span class="n">site</span><span class="o">-&gt;</span><span class="n">isa</span><span class="p">,</span><span class="n">sel</span><span class="p">);</span>
+<span class="n">method</span><span class="p">(</span><span class="n">site</span><span class="p">,</span><span class="n">sel</span><span class="p">,</span><span class="s">@"sitename"</span><span class="p">,</span><span class="s">@"name"</span><span class="p">);</span>
 </code></pre>
 </div>
 

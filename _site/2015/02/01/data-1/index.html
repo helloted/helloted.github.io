@@ -203,13 +203,14 @@
 
 <p>2、OpenGL中的图形绘制</p>
 
-<pre><code class="language-objective-c">- (void)drawGreenCircle:(CGContextRef)ctxt {
-    UIGraphicsPushContext(ctxt);
-    [[UIColor greenColor] setFill];
-    // draw my circle
-    UIGraphicsPopContext();
-}
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">drawGreenCircle</span><span class="p">:(</span><span class="n">CGContextRef</span><span class="p">)</span><span class="nv">ctxt</span> <span class="p">{</span>
+    <span class="n">UIGraphicsPushContext</span><span class="p">(</span><span class="n">ctxt</span><span class="p">);</span>
+    <span class="p">[[</span><span class="n">UIColor</span> <span class="nf">greenColor</span><span class="p">]</span> <span class="nf">setFill</span><span class="p">];</span>
+    <span class="c1">// draw my circle
+</span>    <span class="n">UIGraphicsPopContext</span><span class="p">();</span>
+<span class="p">}</span>
 </code></pre>
+</div>
 
 <p>在drawGreenCircle方法中，在设置填充颜色之前，我们Push保存了绘图上下文的信息，然后在设置当前操作的一些环境变量，绘制图形，绘制完成之后，我们Pop出之前保存的绘图上下文信息，从而不影响后面的绘图。</p>
 
