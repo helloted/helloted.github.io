@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-12-24T23:58:53+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">【译】Flexbox布局指南</title><link href="http://www.helloted.com/2017/12/20/flexbox/" rel="alternate" type="text/html" title="【译】Flexbox布局指南" /><published>2017-12-20T20:00:00+08:00</published><updated>2017-12-20T20:00:00+08:00</updated><id>http://www.helloted.com/2017/12/20/flexbox</id><content type="html" xml:base="http://www.helloted.com/2017/12/20/flexbox/">&lt;p&gt;本文翻译来自&lt;a href=&quot;https://css-tricks.com/snippets/css/a-guide-to-flexbox/&quot;&gt;https://css-tricks.com/snippets/css/a-guide-to-flexbox/&lt;/a&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-12-25T00:53:43+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">【译】Flexbox布局指南</title><link href="http://www.helloted.com/2017/12/20/flexbox/" rel="alternate" type="text/html" title="【译】Flexbox布局指南" /><published>2017-12-20T20:00:00+08:00</published><updated>2017-12-20T20:00:00+08:00</updated><id>http://www.helloted.com/2017/12/20/flexbox</id><content type="html" xml:base="http://www.helloted.com/2017/12/20/flexbox/">&lt;p&gt;本文翻译来自&lt;a href=&quot;https://css-tricks.com/snippets/css/a-guide-to-flexbox/&quot;&gt;https://css-tricks.com/snippets/css/a-guide-to-flexbox/&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;一背景&quot;&gt;一、背景&lt;/h3&gt;
 
@@ -636,226 +636,7 @@
 
 &lt;p&gt;通过内存地址比对，可以发现，所有的对象都进行了深拷贝。&lt;/p&gt;
 
-&lt;p&gt;以上代码都可以在&lt;a href=&quot;https://github.com/helloted/iOS_Demo/tree/master/CopyDemo&quot;&gt;Github&lt;/a&gt;下载&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、NSObject的copy实现</summary></entry><entry><title type="html">KVC Collection Operators</title><link href="http://www.helloted.com/2017/12/14/CollectionOperators/" rel="alternate" type="text/html" title="KVC Collection Operators" /><published>2017-12-14T20:00:00+08:00</published><updated>2017-12-14T20:00:00+08:00</updated><id>http://www.helloted.com/2017/12/14/CollectionOperators</id><content type="html" xml:base="http://www.helloted.com/2017/12/14/CollectionOperators/">&lt;h3 id=&quot;一使用集合运算&quot;&gt;一、使用集合运算&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/KeyValueCoding/CollectionOperators.html#//apple_ref/doc/uid/20002176-BAJEAIEE&quot;&gt;苹果官方文档&lt;/a&gt;&lt;/p&gt;
-
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;NSNumber&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;transactionAverage&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;transactions&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;valueForKeyPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;@avg.amount&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;当你发送符合键值的对象&lt;code class=&quot;highlighter-rouge&quot;&gt;valueForKeyPath：&lt;/code&gt;消息时，可以在key path中嵌入一个集合运算符。 一个集合运算符是一个小的关键字列表之一，前面有一个符号（@），它指定了getter在返回之前以某种方式对数据进行处理。NSObject提供的&lt;code class=&quot;highlighter-rouge&quot;&gt;valueForKeyPath&lt;/code&gt;默认实现实现了这种行为。&lt;/p&gt;
-
-&lt;p&gt;当 key path包含了集合运算符时，运算符之前的 key path的部分（称为左键路径）指明了该消息的接收方的集合。 如果将消息直接发送到集合对象（例如&lt;code class=&quot;highlighter-rouge&quot;&gt;NSArray&lt;/code&gt;实例），则可以省略左侧的key path（如上方的例子）。&lt;/p&gt;
-
-&lt;p&gt;运算符之后的部分（称为右键路径）指定运算符符应该在集合内操作的属性。 除了@count以外的所有集合运算符都需要一个正确的键路径。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/17.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;集合运算有三种类型的运算:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/KeyValueCoding/CollectionOperators.html#//apple_ref/doc/uid/20002176-SW5&quot;&gt;Aggregation Operators&lt;/a&gt;(聚合运算) 以某种方式合并集合的对象，并返回一个通常与右键路径中指定的属性的数据类型相匹配的对象。 @count运算符是一个例外，它不需要右键路径，总是返回一个NSNumber实例。&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/KeyValueCoding/CollectionOperators.html#//apple_ref/doc/uid/20002176-SW7&quot;&gt;Array Operators&lt;/a&gt; (数组运算)： 返回一个NSArray实例，该实例包含指定集合中的一些对象子集。&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/KeyValueCoding/CollectionOperators.html#//apple_ref/doc/uid/20002176-SW9&quot;&gt;Nesting Operators&lt;/a&gt; (嵌套运算)：处理包含其他集合的集合，并根据运算符返回一个NSArray或NSSet实例，这个实例以某种方式组合嵌套集合的对象。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;二聚合运算&quot;&gt;二、聚合运算&lt;/h3&gt;
-
-&lt;p&gt;有一个简单实例&lt;/p&gt;
-
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;@interface&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Transaction&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;NSObject&lt;/span&gt;
- 
-&lt;span class=&quot;k&quot;&gt;@property&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nonatomic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;payee&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;// To whom
-&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;@property&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nonatomic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NSNumber&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;amount&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;// How much
-&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;@property&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nonatomic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NSDate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;date&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;      &lt;span class=&quot;c1&quot;&gt;// When
-&lt;/span&gt; 
-&lt;span class=&quot;k&quot;&gt;@end&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;有一个数组self.transactions包含了一些对象的数据&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;payee values&lt;/th&gt;
-      &lt;th&gt;amount values formatted as currency&lt;/th&gt;
-      &lt;th&gt;date values formatted as month day, year&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Green Power&lt;/td&gt;
-      &lt;td&gt;$120.00&lt;/td&gt;
-      &lt;td&gt;Dec 1, 2015&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Green Power&lt;/td&gt;
-      &lt;td&gt;$150.00&lt;/td&gt;
-      &lt;td&gt;Jan 1, 2016&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Green Power&lt;/td&gt;
-      &lt;td&gt;$170.00&lt;/td&gt;
-      &lt;td&gt;Feb 1, 2016&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Car Loan&lt;/td&gt;
-      &lt;td&gt;$250.00&lt;/td&gt;
-      &lt;td&gt;Jan 15, 2016&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Car Loan&lt;/td&gt;
-      &lt;td&gt;$250.00&lt;/td&gt;
-      &lt;td&gt;Feb 15, 2016&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Car Loan&lt;/td&gt;
-      &lt;td&gt;$250.00&lt;/td&gt;
-      &lt;td&gt;Mar 15, 2016&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;General Cable&lt;/td&gt;
-      &lt;td&gt;$120.00&lt;/td&gt;
-      &lt;td&gt;Dec 1, 2015&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;General Cable&lt;/td&gt;
-      &lt;td&gt;$155.00&lt;/td&gt;
-      &lt;td&gt;Jan 1, 2016&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;General Cable&lt;/td&gt;
-      &lt;td&gt;$120.00&lt;/td&gt;
-      &lt;td&gt;Feb 1, 2016&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Mortgage&lt;/td&gt;
-      &lt;td&gt;$1,250.00&lt;/td&gt;
-      &lt;td&gt;Jan 15, 2016&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Mortgage&lt;/td&gt;
-      &lt;td&gt;$1,250.00&lt;/td&gt;
-      &lt;td&gt;Feb 15, 2016&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Mortgage&lt;/td&gt;
-      &lt;td&gt;$1,250.00&lt;/td&gt;
-      &lt;td&gt;Mar 15, 2016&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Animal Hospital&lt;/td&gt;
-      &lt;td&gt;$600.00&lt;/td&gt;
-      &lt;td&gt;Jul 15, 2016&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h4 id=&quot;avg求某个属性平均值&quot;&gt;@avg求某个属性平均值&lt;/h4&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSNumber *transactionAverage = [self.transactions valueForKeyPath:@&quot;@avg.amount&quot;];
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;这个可以求得&lt;code class=&quot;highlighter-rouge&quot;&gt;amount&lt;/code&gt;属性的平均值&lt;/p&gt;
-
-&lt;h4 id=&quot;count集合里对象的数量&quot;&gt;@count集合里对象的数量&lt;/h4&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSNumber *numberOfTransactions = [self.transactions valueForKeyPath:@&quot;@count&quot;];
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;可以求得集合里对象的总数量&lt;/p&gt;
-
-&lt;h4 id=&quot;max某个属性的最大值&quot;&gt;@max某个属性的最大值&lt;/h4&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSDate *latestDate = [self.transactions valueForKeyPath:@&quot;@max.date&quot;];
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;可以得到&lt;code class=&quot;highlighter-rouge&quot;&gt;date&lt;/code&gt;这个属性的最大值&lt;/p&gt;
-
-&lt;h4 id=&quot;min某个属性的最小值&quot;&gt;@min某个属性的最小值&lt;/h4&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSDate *earliestDate = [self.transactions valueForKeyPath:@&quot;@min.date&quot;];
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;可以得到&lt;code class=&quot;highlighter-rouge&quot;&gt;date&lt;/code&gt;这个属性的最小值&lt;/p&gt;
-
-&lt;h4 id=&quot;sum某个属性的总和&quot;&gt;@sum某个属性的总和&lt;/h4&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSNumber *amountSum = [self.transactions valueForKeyPath:@&quot;@sum.amount&quot;];
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;可以得到&lt;code class=&quot;highlighter-rouge&quot;&gt;amount&lt;/code&gt;这个属性的总和&lt;/p&gt;
-
-&lt;h3 id=&quot;三数组运算&quot;&gt;三、数组运算&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;The array operators cause &lt;code class=&quot;highlighter-rouge&quot;&gt;valueForKeyPath:&lt;/code&gt; to return an array of objects corresponding to a particular set of the objects indicated by the right key path.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;会根据键值路径返回一个对应的数组&lt;/p&gt;
-
-&lt;h4 id=&quot;distinctunionofobjects-某个属性的值的数组去重&quot;&gt;@distinctUnionOfObjects 某个属性的值的数组（去重）&lt;/h4&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSArray *distinctPayees = [self.transactions valueForKeyPath:@&quot;@distinctUnionOfObjects.payee&quot;];
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;会得到payee这个属性的的值，里面的值会去重&lt;/p&gt;
-
-&lt;h4 id=&quot;unionofobjects某个属性的所有值的数组未去重&quot;&gt;@unionOfObjects某个属性的所有值的数组（未去重）&lt;/h4&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSArray *payees = [self.transactions valueForKeyPath:@&quot;@unionOfObjects.payee&quot;];
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;会得到payee这个属性的的值，与上面那个不一样，里面的值不会去重&lt;/p&gt;
-
-&lt;h3 id=&quot;四嵌套运算&quot;&gt;四、嵌套运算&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;The nesting operators operate on nested collections, where each entry of the collection itself contains a collection.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;嵌套运算操作在嵌套集合(一个集合里包含了另外的集合)&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;valueForKeyPath:&lt;/code&gt; method raises an exception if any of the leaf objects is &lt;code class=&quot;highlighter-rouge&quot;&gt;nil&lt;/code&gt; when using nesting operators.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;有任何子对象为空，会出错。&lt;/p&gt;
-
-&lt;p&gt;我们增加一个数组进行嵌套&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSArray* moreTransactions = @[&amp;lt;# transaction data #&amp;gt;];
-NSArray* arrayOfArrays = @[self.transactions, moreTransactions];
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h4 id=&quot;distinctunionofarrays-返回某个属性不同值&quot;&gt;@distinctUnionOfArrays 返回某个属性不同值&lt;/h4&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSArray *collectedDistinctPayees = [arrayOfArrays valueForKeyPath:@&quot;@distinctUnionOfArrays.payee&quot;];
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;会返回两个数组里payee属性不同的值，与 &lt;code class=&quot;highlighter-rouge&quot;&gt;@unionOfArrays&lt;/code&gt;类似，但是不会去重。&lt;/p&gt;
-
-&lt;h4 id=&quot;distinctunionofsets-返回的是nsset类型&quot;&gt;@distinctUnionOfSets 返回的是NSSet类型&lt;/h4&gt;
-
-&lt;h4 id=&quot;unionofarrays-返回某个属性所有的值&quot;&gt;@unionOfArrays 返回某个属性所有的值&lt;/h4&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSArray *collectedPayees = [arrayOfArrays valueForKeyPath:@&quot;@unionOfArrays.payee&quot;];
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;返回两个数组里payee属性所有的值，且不去重&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、使用集合运算</summary></entry><entry><title type="html">SS翻墙</title><link href="http://www.helloted.com/2017/12/13/passwall/" rel="alternate" type="text/html" title="SS翻墙" /><published>2017-12-13T20:00:00+08:00</published><updated>2017-12-13T20:00:00+08:00</updated><id>http://www.helloted.com/2017/12/13/passwall</id><content type="html" xml:base="http://www.helloted.com/2017/12/13/passwall/">&lt;h3 id=&quot;socks与vpn的区别&quot;&gt;Socks与VPN的区别&lt;/h3&gt;
+&lt;p&gt;以上代码都可以在&lt;a href=&quot;https://github.com/helloted/iOS_Demo/tree/master/CopyDemo&quot;&gt;Github&lt;/a&gt;下载&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、NSObject的copy实现</summary></entry><entry><title type="html">SS翻墙</title><link href="http://www.helloted.com/2017/12/13/passwall/" rel="alternate" type="text/html" title="SS翻墙" /><published>2017-12-13T20:00:00+08:00</published><updated>2017-12-13T20:00:00+08:00</updated><id>http://www.helloted.com/2017/12/13/passwall</id><content type="html" xml:base="http://www.helloted.com/2017/12/13/passwall/">&lt;h3 id=&quot;socks与vpn的区别&quot;&gt;Socks与VPN的区别&lt;/h3&gt;
 
 &lt;p&gt;&lt;strong&gt;vpn&lt;/strong&gt;–虚拟专用网络，它的功能是：在公用网络上建立专用网络，进行加密通讯。在企业网络和高校的网络中应用很广泛。你接入vpn，其实就是接入了一个专有网络，你的网络访问都从这个出口出去，你和vpn之间的通信是否加密，取决于你连接vpn的方式或者协议。&lt;/p&gt;
 
@@ -2121,4 +1902,96 @@ ssserver -c /etc/shadowsocks.json -d stop  //停止
 
 &lt;p&gt;应用：对象序列化保存&lt;/p&gt;
 
-&lt;p&gt;部分真实代码位置&lt;a href=&quot;https://github.com/helloted/designpattern&quot;&gt;Github-设计模式&lt;/a&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">部分代码位置Github-设计模式</summary></entry></feed>
+&lt;p&gt;部分真实代码位置&lt;a href=&quot;https://github.com/helloted/designpattern&quot;&gt;Github-设计模式&lt;/a&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">部分代码位置Github-设计模式</summary></entry><entry><title type="html">iOS开发之声音</title><link href="http://www.helloted.com/2017/08/26/voice/" rel="alternate" type="text/html" title="iOS开发之声音" /><published>2017-08-26T20:00:00+08:00</published><updated>2017-08-26T20:00:00+08:00</updated><id>http://www.helloted.com/2017/08/26/voice</id><content type="html" xml:base="http://www.helloted.com/2017/08/26/voice/">&lt;p&gt;部分代码位置&lt;a href=&quot;https://github.com/helloted/voice&quot;&gt;Github-VoiceDemo&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Pre&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;与图片中默认的格式为PNG格式一样，iOS开发中声音的格式也有默认格式，为wav格式，本文中的产生的格式均为wav格式，其他格式则需要转换。有第三方的框架，进行转换成amr等格式&lt;/p&gt;
+
+&lt;h3 id=&quot;一声音录制&quot;&gt;一、声音录制&lt;/h3&gt;
+
+&lt;p&gt;要先引入AVFoundation的框架&lt;/p&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;#import &amp;lt;AVFoundation/AVFoundation.h&amp;gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;voiceRecorder&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AVAudioRecorder&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;initWithURL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSURL&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;fileURLWithPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;voicePath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;recorderSetting&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;voiceRecorder&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;prepareToRecord&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]){&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AVAudioSession&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;sharedInstance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;setCategory&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;AVAudioSessionCategoryPlayAndRecord&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AVAudioSession&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;sharedInstance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;setActive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;YES&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+        
+        &lt;span class=&quot;c1&quot;&gt;//开始录音
+&lt;/span&gt;        &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;voiceRecorder&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;record&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;录制声音主要设置两个参数，Path和Setting&lt;/p&gt;
+
+&lt;p&gt;Path：声音文件录制后存储的路径&lt;/p&gt;
+
+&lt;p&gt;Setting：一个录制参数的字典，设置一些录制的必要的参数，需要进行调整到合适的值&lt;/p&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;        &lt;span class=&quot;n&quot;&gt;_recorderSetting&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSDictionary&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initWithObjectsAndKeys&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+                            &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSNumber&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;numberWithFloat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;8000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AVSampleRateKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//采样率
+&lt;/span&gt;                            &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSNumber&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;numberWithInt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;kAudioFormatLinearPCM&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AVFormatIDKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                            &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSNumber&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;numberWithInt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;16&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AVLinearPCMBitDepthKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//采样位数 默认 16
+&lt;/span&gt;                            &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSNumber&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;numberWithInt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;AVNumberOfChannelsKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//通道的数目
+&lt;/span&gt;                            &lt;span class=&quot;nb&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;AVAudioRecorder&lt;/code&gt;在录制的时候可以暂停和恢复&lt;/p&gt;
+
+&lt;p&gt;暂停&lt;/p&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pause&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;cm&quot;&gt;/* pause recording */&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;恢复/开始&lt;/p&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;record&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;录制完成&lt;/p&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;stop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;二声音播放&quot;&gt;二、声音播放&lt;/h3&gt;
+
+&lt;p&gt;先引入MediaPlayer&lt;/p&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;#import &amp;lt;MediaPlayer/MediaPlayer.h&amp;gt;
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;@import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;AVFoundation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;@import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;AudioToolbox&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;设置好录音文件路径就可以播放。注意：如果在播上一段录音，同时再点播放的话，两个声音会一起播放&lt;/p&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_player&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 如果正在播放上一段录音，则停止
+&lt;/span&gt;        &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_player&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;stop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AVAudioSession&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;sharedInstance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;setCategory&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;AVAudioSessionCategoryPlayback&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AVAudioSession&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;sharedInstance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;setActive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;YES&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;fileSizeAtPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initWithContentsOfURL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSURL&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;URLWithString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;player&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;delegate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;player&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;play&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;NSLog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;开始播放&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;NSLog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;no voice&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;声音播放也可以暂停恢复和停止&lt;/p&gt;
+
+&lt;p&gt;完整代码位置&lt;a href=&quot;https://github.com/helloted/voice&quot;&gt;Github-VoiceDemo&lt;/a&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">部分代码位置Github-VoiceDemo</summary></entry></feed>
