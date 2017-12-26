@@ -63,6 +63,77 @@ ifconfig | grep "inet " | grep -v 127.0.0.1
 添加第三方库，比如react-navigation，cd到根目录，执行
 
 ```
-yarn add react-navigation
+yarn add react-navigatio
 ```
 
+### 三、基础代码讲解
+
+iOS端
+
+```objc
+  jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"App" fallbackResource:nil];
+  RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
+                                                      moduleName:@"WeatherProject"
+                                               initialProperties:nil
+                                                   launchOptions:launchOptions];
+```
+
+里面有两个关键词，`App`和`WeatherProject`，其中`WeatherProject`是项目文件夹目录名称，App则是这个RCTRootView对应的js文件的名称，即对应的文件为App.js。
+
+App.js
+
+```jsx
+import React, { Component } from 'react';
+import {AppRegistry,Platform, StyleSheet, Text, View, Button} from 'react-native';
+import { StackNavigator } from 'react-navigation';
+
+// 将RootView指定为页面
+AppRegistry.registerComponent('WeatherProject', () => RootView);
+
+const instructions = Platform.select({
+  ios: 'Press Cmd+R to reload,\n' +
+    'Cmd+D or shake for dev menu',
+  android: 'Double tap R on your keyboard to reload,\n' +
+    'Shake or press menu button for dev menu',
+});
+
+//RootView的内容
+export default class RootView extends Component<{}> {
+  render() {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.welcome}>
+          Welcome to React Native!
+        </Text>
+        <Text style={styles.instructions}>
+          To get started, edit App.js
+        </Text>
+        <Text style={styles.instructions}>
+          {instructions}
+        </Text>
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
+  welcome: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10,
+  },
+  instructions: {
+    textAlign: 'center',
+    color: '#333333',
+    marginBottom: 5,
+  },
+});
+```
+
+其中Text, View, Button三个标签类似于iOS当中的UITextView,UIView,UIButton。
