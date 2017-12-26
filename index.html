@@ -14,7 +14,7 @@ description: "曹浩之的博客(原创使人进步)"
         </h3>
         {% endif %}
     </a>
-    <p class="post-meta">Posted by {% if post.author %}{{ post.author }}{% else %}{{ site.title }}{% endif %} on {{ post.date | date: "%B %-d, %Y" }}</p>
+    <p class="post-meta">Posted by {% if post.author %}{{ post.author }}{% else %}{{ site.title }}{% endif %} on {{ post.date | date: " %Y/%m/%d" }}</p>
 </div>
 <hr>
 {% endfor %}
