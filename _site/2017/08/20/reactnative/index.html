@@ -163,10 +163,80 @@ react-native run-ios
 
 <p>添加第三方库，比如react-navigation，cd到根目录，执行</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>yarn add react-navigation
+<div class="highlighter-rouge"><pre class="highlight"><code>yarn add react-navigatio
 </code></pre>
 </div>
 
+<h3 id="三基础代码讲解">三、基础代码讲解</h3>
+
+<p>iOS端</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code>  <span class="n">jsCodeLocation</span> <span class="o">=</span> <span class="p">[[</span><span class="n">RCTBundleURLProvider</span> <span class="nf">sharedSettings</span><span class="p">]</span> <span class="nf">jsBundleURLForBundleRoot</span><span class="p">:</span><span class="s">@"App"</span> <span class="nf">fallbackResource</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span>
+  <span class="n">RCTRootView</span> <span class="o">*</span><span class="n">rootView</span> <span class="o">=</span> <span class="p">[[</span><span class="n">RCTRootView</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithBundleURL</span><span class="p">:</span><span class="n">jsCodeLocation</span>
+                                                      <span class="nf">moduleName</span><span class="p">:</span><span class="s">@"WeatherProject"</span>
+                                               <span class="n">initialProperties</span><span class="o">:</span><span class="nb">nil</span>
+                                                   <span class="n">launchOptions</span><span class="o">:</span><span class="n">launchOptions</span><span class="p">];</span>
+</code></pre>
+</div>
+
+<p>里面有两个关键词，<code class="highlighter-rouge">App</code>和<code class="highlighter-rouge">WeatherProject</code>，其中<code class="highlighter-rouge">WeatherProject</code>是项目文件夹目录名称，App则是这个RCTRootView对应的js文件的名称，即对应的文件为App.js。</p>
+
+<p>App.js</p>
+
+<pre><code class="language-jsx">import React, { Component } from 'react';
+import {AppRegistry,Platform, StyleSheet, Text, View, Button} from 'react-native';
+import { StackNavigator } from 'react-navigation';
+
+// 将RootView指定为页面
+AppRegistry.registerComponent('WeatherProject', () =&gt; RootView);
+
+const instructions = Platform.select({
+  ios: 'Press Cmd+R to reload,\n' +
+    'Cmd+D or shake for dev menu',
+  android: 'Double tap R on your keyboard to reload,\n' +
+    'Shake or press menu button for dev menu',
+});
+
+//RootView的内容
+export default class RootView extends Component&lt;{}&gt; {
+  render() {
+    return (
+      &lt;View style={styles.container}&gt;
+        &lt;Text style={styles.welcome}&gt;
+          Welcome to React Native!
+        &lt;/Text&gt;
+        &lt;Text style={styles.instructions}&gt;
+          To get started, edit App.js
+        &lt;/Text&gt;
+        &lt;Text style={styles.instructions}&gt;
+          {instructions}
+        &lt;/Text&gt;
+      &lt;/View&gt;
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
+  welcome: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10,
+  },
+  instructions: {
+    textAlign: 'center',
+    color: '#333333',
+    marginBottom: 5,
+  },
+});
+</code></pre>
+
+<p>其中Text, View, Button三个标签类似于iOS当中的UITextView,UIView,UIButton。</p>
 
 
                 <hr>
