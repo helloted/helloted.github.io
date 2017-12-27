@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-12-26T19:19:00+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">【译】Flexbox布局指南</title><link href="http://www.helloted.com/2017/12/20/flexbox/" rel="alternate" type="text/html" title="【译】Flexbox布局指南" /><published>2017-12-20T20:00:00+08:00</published><updated>2017-12-20T20:00:00+08:00</updated><id>http://www.helloted.com/2017/12/20/flexbox</id><content type="html" xml:base="http://www.helloted.com/2017/12/20/flexbox/">&lt;p&gt;本文翻译来自&lt;a href=&quot;https://css-tricks.com/snippets/css/a-guide-to-flexbox/&quot;&gt;https://css-tricks.com/snippets/css/a-guide-to-flexbox/&lt;/a&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-12-27T11:31:40+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">【译】Flexbox布局指南</title><link href="http://www.helloted.com/2017/12/20/flexbox/" rel="alternate" type="text/html" title="【译】Flexbox布局指南" /><published>2017-12-20T20:00:00+08:00</published><updated>2017-12-20T20:00:00+08:00</updated><id>http://www.helloted.com/2017/12/20/flexbox</id><content type="html" xml:base="http://www.helloted.com/2017/12/20/flexbox/">&lt;p&gt;本文翻译来自&lt;a href=&quot;https://css-tricks.com/snippets/css/a-guide-to-flexbox/&quot;&gt;https://css-tricks.com/snippets/css/a-guide-to-flexbox/&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;一背景&quot;&gt;一、背景&lt;/h3&gt;
 
@@ -1940,132 +1940,98 @@ ssserver -c /etc/shadowsocks.json -d stop  //停止
 
 &lt;p&gt;应用：对象序列化保存&lt;/p&gt;
 
-&lt;p&gt;部分真实代码位置&lt;a href=&quot;https://github.com/helloted/designpattern&quot;&gt;Github-设计模式&lt;/a&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">部分代码位置Github-设计模式</summary></entry><entry><title type="html">React Native简易使用</title><link href="http://www.helloted.com/2017/08/20/reactnative/" rel="alternate" type="text/html" title="React Native简易使用" /><published>2017-08-20T20:00:00+08:00</published><updated>2017-08-20T20:00:00+08:00</updated><id>http://www.helloted.com/2017/08/20/reactnative</id><content type="html" xml:base="http://www.helloted.com/2017/08/20/reactnative/">&lt;h3 id=&quot;一react-native简介以及开发环境搭建&quot;&gt;一、React-Native简介以及开发环境搭建&lt;/h3&gt;
+&lt;p&gt;部分真实代码位置&lt;a href=&quot;https://github.com/helloted/designpattern&quot;&gt;Github-设计模式&lt;/a&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">部分代码位置Github-设计模式</summary></entry><entry><title type="html">React Native(二)：react-navigation使用</title><link href="http://www.helloted.com/2017/08/21/reactnative_2/" rel="alternate" type="text/html" title="React Native(二)：react-navigation使用" /><published>2017-08-21T20:00:00+08:00</published><updated>2017-08-21T20:00:00+08:00</updated><id>http://www.helloted.com/2017/08/21/reactnative_2</id><content type="html" xml:base="http://www.helloted.com/2017/08/21/reactnative_2/">&lt;h3 id=&quot;四react-navigation使用&quot;&gt;四、react-navigation使用&lt;/h3&gt;
 
-&lt;p&gt;React Native (简称RN)是Facebook于2015年4月开源的跨平台移动应用开发框架，是Facebook早先开源的UI框架 React 在原生移动应用平台的衍生产物，目前支持iOS和安卓两大平台。RN使用Javascript语言，类似于HTML的JSX，以及CSS来开发移动应用。(来自百度百科)&lt;/p&gt;
+&lt;p&gt;react-navigation是FaceBook推荐使用的一个库，用于导航效果，&lt;a href=&quot;https://reactnavigation.org/docs/intro/basic-app&quot;&gt;官方文档&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;类似的框架还有Vue以及对应的移动框架Weex(已由阿里开源维护)。&lt;/p&gt;
-
-&lt;p&gt;1、利用HomeBrew来安装Node&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;brew install node
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;2、安装React Native&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;npm install react-native-cli
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;3、安装Yarn，Yarn是FaceBook用来替代npm的工具&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;npm install -g yarn
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;4、初始化React Native，第一个Demo，FirstDemo，先cd要某个文件夹&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;react-native init FirstDemo
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;5、运行，直接点Xcode的Run或者用命令行&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cd FirstDemo
-react-native run-ios
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;6、真机运行，手机与mac在同一个网络下面&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;jsCodeLocation =  [NSURL URLWithString:@&quot;http://本机IP:8081/index.bundle?platform=ios&quot;];
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_1/14.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;二常用命令&quot;&gt;二、常用命令&lt;/h3&gt;
-
-&lt;p&gt;本地IP地址&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ifconfig | grep &quot;inet &quot; | grep -v 127.0.0.1
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;添加第三方库，比如react-navigation，cd到根目录，执行&lt;/p&gt;
+&lt;p&gt;使用之前先在根目录文件内执行命令&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;yarn add react-navigatio
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;h3 id=&quot;三基础代码讲解&quot;&gt;三、基础代码讲解&lt;/h3&gt;
+&lt;p&gt;它有三种类型的&lt;/p&gt;
 
-&lt;p&gt;iOS端&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;StackNavigator&lt;/code&gt; - 与iOS中的UINavigationController类似，也是采用栈类型，将一个新的页面push进栈中进行展示。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;TabNavigator&lt;/code&gt; - 与UITabbarContrller类似的效果，主要用于一个屏幕内横向切换不同界面&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;DrawerNavigator&lt;/code&gt; - 侧滑栏效果&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;n&quot;&gt;jsCodeLocation&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RCTBundleURLProvider&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;sharedSettings&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;jsBundleURLForBundleRoot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;App&quot;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;fallbackResource&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;RCTRootView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rootView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RCTRootView&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initWithBundleURL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jsCodeLocation&lt;/span&gt;
-                                                      &lt;span class=&quot;nf&quot;&gt;moduleName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;WeatherProject&quot;&lt;/span&gt;
-                                               &lt;span class=&quot;n&quot;&gt;initialProperties&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;nil&lt;/span&gt;
-                                                   &lt;span class=&quot;n&quot;&gt;launchOptions&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;launchOptions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;h3 id=&quot;五stacknavigator的使用&quot;&gt;五、StackNavigator的使用&lt;/h3&gt;
+
+&lt;p&gt;首先，先在根目录下生成一个stack.js的js文件，&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_1/14.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;在iOS将文件名替换为stack&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@&quot;stack&quot; fallbackResource:nil];
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;里面有两个关键词，&lt;code class=&quot;highlighter-rouge&quot;&gt;App&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;WeatherProject&lt;/code&gt;，其中&lt;code class=&quot;highlighter-rouge&quot;&gt;WeatherProject&lt;/code&gt;是项目文件夹目录名称，App则是这个RCTRootView对应的js文件的名称，即对应的文件为App.js。&lt;/p&gt;
+&lt;p&gt;照例，先定义好页面&lt;/p&gt;
 
-&lt;p&gt;App.js&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-jsx&quot;&gt;import React, { Component } from 'react';
-import {AppRegistry,Platform, StyleSheet, Text, View, Button} from 'react-native';
-import { StackNavigator } from 'react-navigation';
-
-// 将RootView指定为页面
-AppRegistry.registerComponent('WeatherProject', () =&amp;gt; RootView);
-
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' +
-    'Cmd+D or shake for dev menu',
-  android: 'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
-
-//RootView的内容
-export default class RootView extends Component&amp;lt;{}&amp;gt; {
+&lt;pre&gt;&lt;code class=&quot;language-jsx&quot;&gt;AppRegistry.registerComponent('DemoProject', () =&amp;gt; RootPage);
+export default class RootPage extends React.Component {
   render() {
+    return &amp;lt;CustomStack /&amp;gt;;
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中，&lt;code class=&quot;highlighter-rouge&quot;&gt;CustomStack&lt;/code&gt;是我们自定义的导航组件&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-jsx&quot;&gt;export const CustomStack = StackNavigator({
+  HomePage: {
+    screen: HomeVC
+  },
+  SecondPage: {
+    screen: SecondVC
+  },
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;由StackNavigator生成导航主键。HomePage和SecondPage是我们的两个页面，页面里带有screen的参数,里面的组件才是定义页面内容的地方。要注意的是，顺序依次是进栈的顺序。&lt;/p&gt;
+
+&lt;p&gt;分别定义HomeVC组件和SecondVC组件&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-jsx&quot;&gt;class HomeVC extends React.Component {
+  static navigationOptions = {
+    title: 'HomeVC',
+  };
+  render() {
+    const {
+      navigate
+    } = this.props.navigation;
     return (
-      &amp;lt;View style={styles.container}&amp;gt;
-        &amp;lt;Text style={styles.welcome}&amp;gt;
-          Welcome to React Native!
-        &amp;lt;/Text&amp;gt;
-        &amp;lt;Text style={styles.instructions}&amp;gt;
-          To get started, edit App.js
-        &amp;lt;/Text&amp;gt;
-        &amp;lt;Text style={styles.instructions}&amp;gt;
-          {instructions}
-        &amp;lt;/Text&amp;gt;
+      &amp;lt;View&amp;gt;
+        &amp;lt;Text&amp;gt;Hello, This is HomeVC!&amp;lt;/Text&amp;gt;
+        &amp;lt;Button
+          onPress={() =&amp;gt; navigate('SecondPage')}
+          title=&quot;Jump to SecondVC&quot;
+        /&amp;gt;
       &amp;lt;/View&amp;gt;
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
+
+class SecondVC extends React.Component {
+  static navigationOptions = {
+    title: 'SecondVC',
+  };
+  render() {
+    return (
+      &amp;lt;View&amp;gt;
+        &amp;lt;Text&amp;gt;Now, you are in SecondVC&amp;lt;/Text&amp;gt;
+      &amp;lt;/View&amp;gt;
+    );
+  }
+}
+
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;其中Text, View, Button三个标签类似于iOS当中的UITextView,UIView,UIButton。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、React-Native简介以及开发环境搭建</summary></entry></feed>
+&lt;p&gt;可以有以下的效果：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_1/17.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">四、react-navigation使用</summary></entry></feed>

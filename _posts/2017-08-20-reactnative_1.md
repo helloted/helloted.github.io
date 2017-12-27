@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "React Native简易使用"
+title:      "React Native(一)：简易使用"
 subtitle:   "React Natieve的常用命令和第三方使用"
 date:       2017-08-20 12:00:00
 author:     "Ted"
@@ -73,22 +73,26 @@ iOS端
 ```objc
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"App" fallbackResource:nil];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
-                                                      moduleName:@"WeatherProject"
+                                                      moduleName:@"DemoProject"
                                                initialProperties:nil
                                                    launchOptions:launchOptions];
 ```
 
-里面有两个关键词，`App`和`WeatherProject`，其中`WeatherProject`是项目文件夹目录名称，App则是这个RCTRootView对应的js文件的名称，即对应的文件为App.js。
+里面有两个关键词，`App`和`DemoProject`，其中`DemoProject`是项目文件夹目录名称，App则是这个RCTRootView对应的js文件的名称，即对应的文件为App.js。
 
 App.js
 
 ```jsx
-import React, { Component } from 'react';
-import {AppRegistry,Platform, StyleSheet, Text, View, Button} from 'react-native';
-import { StackNavigator } from 'react-navigation';
-
-// 将RootView指定为页面
-AppRegistry.registerComponent('WeatherProject', () => RootView);
+import React, {
+  Component
+} from 'react';
+import {
+  AppRegistry,
+  Platform,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
@@ -97,8 +101,11 @@ const instructions = Platform.select({
     'Shake or press menu button for dev menu',
 });
 
-//RootView的内容
-export default class RootView extends Component<{}> {
+//将RootPage注册
+AppRegistry.registerComponent('DemoProject', () => RootPage);
+
+// 自定义RootPage
+export default class RootPage extends Component < {} > {
   render() {
     return (
       <View style={styles.container}>
