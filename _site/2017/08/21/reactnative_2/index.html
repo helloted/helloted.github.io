@@ -114,7 +114,7 @@
 
 <p>使用之前先在根目录文件内执行命令</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>yarn add react-navigatio
+<div class="highlighter-rouge"><pre class="highlight"><code>yarn add react-navigation
 </code></pre>
 </div>
 
@@ -204,6 +204,266 @@ class SecondVC extends React.Component {
 
 <p><img src="/img/Simple_1/17.gif" alt="" /></p>
 
+<p>全部代码：</p>
+
+<p>stack.js</p>
+
+<pre><code class="language-jsx">import React from 'react';
+import {
+  AppRegistry,
+  StyleSheet,
+  Text,
+  View,
+  Button
+} from 'react-native';
+import {
+  StackNavigator
+} from 'react-navigation';
+
+AppRegistry.registerComponent('DemoProject', () =&gt; RootPage);
+export default class RootPage extends React.Component {
+  render() {
+    return &lt;CustomStack /&gt;;
+  }
+}
+
+
+
+class HomeVC extends React.Component {
+  static navigationOptions = {
+    title: 'HomeVC',
+  };
+  render() {
+    const {
+      navigate
+    } = this.props.navigation;
+    return (
+      &lt;View&gt;
+        &lt;Text&gt;Hello, This is HomeVC!&lt;/Text&gt;
+        &lt;Button
+          onPress={() =&gt; navigate('SecondPage')}
+          title="Jump to SecondVC"
+        /&gt;
+      &lt;/View&gt;
+    );
+  }
+}
+
+
+class SecondVC extends React.Component {
+  static navigationOptions = {
+    title: 'SecondVC',
+  };
+  render() {
+    return (
+      &lt;View&gt;
+        &lt;Text&gt;Now, you are in SecondVC&lt;/Text&gt;
+      &lt;/View&gt;
+    );
+  }
+}
+
+export const CustomStack = StackNavigator({
+  HomePage: {
+    screen: HomeVC
+  },
+  SecondPage: {
+    screen: SecondVC
+  },
+});
+</code></pre>
+
+<h3 id="六tabnavigator的使用">六、TabNavigator的使用</h3>
+
+<p>声明很简单</p>
+
+<pre><code class="language-jsx">const MainTabController = TabNavigator({
+  TabItem_1: {
+    screen: HomeVc
+  },
+  TabItem_2: {
+    screen: SecondVC
+  },
+  TabItem_3: {
+    screen: ThirdVC
+  },
+}, {
+  tabBarPosition: 'bottom',
+  tabBarOptions: {
+    activeTintColor: '#e91e63',
+  },
+});
+
+</code></pre>
+
+<p>每个VC都对应一个界面，</p>
+
+<p>tabBarPosition：位置，Tab有顶部top和底部bottom的位置</p>
+
+<p>activeTintColor：是选中时TabItem的颜色</p>
+
+<p>页面代码：</p>
+
+<pre><code class="language-jsx">class HomeVc extends React.Component {
+  static navigationOptions = {
+    tabBarLabel: 'Home',
+    tabBarIcon: ({
+      tintColor
+    }) =&gt; (
+      &lt;Image
+        source={require('./imgs/01.png')}
+        style={[styles.icon, {tintColor: tintColor}]}
+      /&gt;
+    ),
+  };
+  render() {
+    return (
+      &lt;View style={styles.homecontainer}&gt;
+        &lt;Text&gt;
+          This is HomeVC page
+        &lt;/Text&gt;
+      &lt;/View&gt;
+    );
+  }
+}
+</code></pre>
+
+<p>navigationOptions是Tab的一些选项，里面有Tab的名称和图片，依次设置三个页面后可以达到这个效果</p>
+
+<p><img src="/img/Simple_1/18.gif" alt="" /></p>
+
+<p>将StackNavigator作为一个Page插入TabItem</p>
+
+<pre><code class="language-jsx">const HomeNav = StackNavigator({
+  HomePage: {
+    screen: HomeVC,
+    navigationOptions: {
+      title: 'HomePage',
+    }
+  },
+  SecondPage: {
+    screen: SecondVC
+  },
+});
+
+const MainTabController = TabNavigator({
+  TabItem_1: {
+    screen: HomeNav  //Nav作为一个Page插入来
+  },
+  TabItem_2: {
+    screen: MessageVC
+  },
+  TabItem_3: {
+    screen: SettingVC
+  },
+}, {
+  tabBarPosition: 'bottom',
+  tabBarOptions: {
+    activeTintColor: '#e91e63',
+  },
+});
+</code></pre>
+
+<p>下面就是Tab+Nav的效果</p>
+
+<p><img src="/img/Simple_1/19.gif" alt="" /></p>
+
+<h3 id="七drawernavigator">七、DrawerNavigator</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>class MyHomeScreen extends React.Component {
+  static navigationOptions = {
+    drawerLabel: 'Home',
+    drawerIcon: ({
+      tintColor
+    }) =&gt; (
+      &lt;Image
+        source={require('./imgs/01.png')}
+        style={[styles.icon, {tintColor: tintColor}]}
+      /&gt;
+    ),
+  };
+
+  render() {
+    return (
+      &lt;View style={styles.container}&gt;
+      &lt;Text&gt;This HomePage&lt;/Text&gt;
+      &lt;Button
+        onPress={() =&gt; this.props.navigation.navigate('DrawerOpen')}
+        title="Show Drawer"
+      /&gt;
+      &lt;/View&gt;
+    );
+  }
+}
+
+class MyNotificationsScreen extends React.Component {
+  static navigationOptions = {
+    drawerLabel: 'Notifications',
+    drawerIcon: ({
+      tintColor
+    }) =&gt; (
+      &lt;Image
+        source={require('./imgs/02.png')}
+        style={[styles.icon, {tintColor: tintColor}]}
+      /&gt;
+    ),
+  };
+
+  render() {
+    return (
+      &lt;View style={styles.container}&gt;
+      &lt;Text&gt;This MyNotificationsScreen&lt;/Text&gt;
+      &lt;Button
+        onPress={() =&gt; this.props.navigation.navigate('DrawerOpen')}
+        title="Go back home"
+      /&gt;
+      &lt;/View&gt;
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  icon: {
+    width: 24,
+    height: 24,
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
+});
+
+const MyApp = DrawerNavigator({
+  Home: {
+    screen: MyHomeScreen,
+  },
+  Notifications: {
+    screen: MyNotificationsScreen,
+  },
+});
+</code></pre>
+</div>
+
+<p>其中</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>this.props.navigation.navigate('DrawerOpen')
+</code></pre>
+</div>
+
+<p>这是打开抽屉</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>this.props.navigation.navigate('DrawerClose')
+</code></pre>
+</div>
+
+<p>点击空白或者上面这句代码是关闭抽屉，</p>
+
+<p>navigationOptions里设置的是抽屉的标题或者图片</p>
+
+<p><img src="/img/Simple_1/20.gif" alt="" /></p>
+
 
 
                 <hr>
@@ -211,7 +471,7 @@ class SecondVC extends React.Component {
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/2017/08/20/reactnative_1/" data-toggle="tooltip" data-placement="top" title="React Native(一)：简易使用">&larr; 上一篇</a>
+                        <a href="/2017/08/20/reactnative_1/" data-toggle="tooltip" data-placement="top" title="React Native(一)：基础">&larr; 上一篇</a>
                     </li>
                     
                     

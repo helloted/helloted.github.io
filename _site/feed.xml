@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-12-27T11:31:40+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">【译】Flexbox布局指南</title><link href="http://www.helloted.com/2017/12/20/flexbox/" rel="alternate" type="text/html" title="【译】Flexbox布局指南" /><published>2017-12-20T20:00:00+08:00</published><updated>2017-12-20T20:00:00+08:00</updated><id>http://www.helloted.com/2017/12/20/flexbox</id><content type="html" xml:base="http://www.helloted.com/2017/12/20/flexbox/">&lt;p&gt;本文翻译来自&lt;a href=&quot;https://css-tricks.com/snippets/css/a-guide-to-flexbox/&quot;&gt;https://css-tricks.com/snippets/css/a-guide-to-flexbox/&lt;/a&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2017-12-27T16:28:48+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">【译】Flexbox布局指南</title><link href="http://www.helloted.com/2017/12/20/flexbox/" rel="alternate" type="text/html" title="【译】Flexbox布局指南" /><published>2017-12-20T20:00:00+08:00</published><updated>2017-12-20T20:00:00+08:00</updated><id>http://www.helloted.com/2017/12/20/flexbox</id><content type="html" xml:base="http://www.helloted.com/2017/12/20/flexbox/">&lt;p&gt;本文翻译来自&lt;a href=&quot;https://css-tricks.com/snippets/css/a-guide-to-flexbox/&quot;&gt;https://css-tricks.com/snippets/css/a-guide-to-flexbox/&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;一背景&quot;&gt;一、背景&lt;/h3&gt;
 
@@ -1946,7 +1946,7 @@ ssserver -c /etc/shadowsocks.json -d stop  //停止
 
 &lt;p&gt;使用之前先在根目录文件内执行命令&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;yarn add react-navigatio
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;yarn add react-navigation
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
@@ -2034,4 +2034,264 @@ class SecondVC extends React.Component {
 
 &lt;p&gt;可以有以下的效果：&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/Simple_1/17.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">四、react-navigation使用</summary></entry></feed>
+&lt;p&gt;&lt;img src=&quot;/img/Simple_1/17.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;全部代码：&lt;/p&gt;
+
+&lt;p&gt;stack.js&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-jsx&quot;&gt;import React from 'react';
+import {
+  AppRegistry,
+  StyleSheet,
+  Text,
+  View,
+  Button
+} from 'react-native';
+import {
+  StackNavigator
+} from 'react-navigation';
+
+AppRegistry.registerComponent('DemoProject', () =&amp;gt; RootPage);
+export default class RootPage extends React.Component {
+  render() {
+    return &amp;lt;CustomStack /&amp;gt;;
+  }
+}
+
+
+
+class HomeVC extends React.Component {
+  static navigationOptions = {
+    title: 'HomeVC',
+  };
+  render() {
+    const {
+      navigate
+    } = this.props.navigation;
+    return (
+      &amp;lt;View&amp;gt;
+        &amp;lt;Text&amp;gt;Hello, This is HomeVC!&amp;lt;/Text&amp;gt;
+        &amp;lt;Button
+          onPress={() =&amp;gt; navigate('SecondPage')}
+          title=&quot;Jump to SecondVC&quot;
+        /&amp;gt;
+      &amp;lt;/View&amp;gt;
+    );
+  }
+}
+
+
+class SecondVC extends React.Component {
+  static navigationOptions = {
+    title: 'SecondVC',
+  };
+  render() {
+    return (
+      &amp;lt;View&amp;gt;
+        &amp;lt;Text&amp;gt;Now, you are in SecondVC&amp;lt;/Text&amp;gt;
+      &amp;lt;/View&amp;gt;
+    );
+  }
+}
+
+export const CustomStack = StackNavigator({
+  HomePage: {
+    screen: HomeVC
+  },
+  SecondPage: {
+    screen: SecondVC
+  },
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;六tabnavigator的使用&quot;&gt;六、TabNavigator的使用&lt;/h3&gt;
+
+&lt;p&gt;声明很简单&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-jsx&quot;&gt;const MainTabController = TabNavigator({
+  TabItem_1: {
+    screen: HomeVc
+  },
+  TabItem_2: {
+    screen: SecondVC
+  },
+  TabItem_3: {
+    screen: ThirdVC
+  },
+}, {
+  tabBarPosition: 'bottom',
+  tabBarOptions: {
+    activeTintColor: '#e91e63',
+  },
+});
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;每个VC都对应一个界面，&lt;/p&gt;
+
+&lt;p&gt;tabBarPosition：位置，Tab有顶部top和底部bottom的位置&lt;/p&gt;
+
+&lt;p&gt;activeTintColor：是选中时TabItem的颜色&lt;/p&gt;
+
+&lt;p&gt;页面代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-jsx&quot;&gt;class HomeVc extends React.Component {
+  static navigationOptions = {
+    tabBarLabel: 'Home',
+    tabBarIcon: ({
+      tintColor
+    }) =&amp;gt; (
+      &amp;lt;Image
+        source={require('./imgs/01.png')}
+        style={[styles.icon, {tintColor: tintColor}]}
+      /&amp;gt;
+    ),
+  };
+  render() {
+    return (
+      &amp;lt;View style={styles.homecontainer}&amp;gt;
+        &amp;lt;Text&amp;gt;
+          This is HomeVC page
+        &amp;lt;/Text&amp;gt;
+      &amp;lt;/View&amp;gt;
+    );
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;navigationOptions是Tab的一些选项，里面有Tab的名称和图片，依次设置三个页面后可以达到这个效果&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_1/18.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;将StackNavigator作为一个Page插入TabItem&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-jsx&quot;&gt;const HomeNav = StackNavigator({
+  HomePage: {
+    screen: HomeVC,
+    navigationOptions: {
+      title: 'HomePage',
+    }
+  },
+  SecondPage: {
+    screen: SecondVC
+  },
+});
+
+const MainTabController = TabNavigator({
+  TabItem_1: {
+    screen: HomeNav  //Nav作为一个Page插入来
+  },
+  TabItem_2: {
+    screen: MessageVC
+  },
+  TabItem_3: {
+    screen: SettingVC
+  },
+}, {
+  tabBarPosition: 'bottom',
+  tabBarOptions: {
+    activeTintColor: '#e91e63',
+  },
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;下面就是Tab+Nav的效果&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_1/19.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;七drawernavigator&quot;&gt;七、DrawerNavigator&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class MyHomeScreen extends React.Component {
+  static navigationOptions = {
+    drawerLabel: 'Home',
+    drawerIcon: ({
+      tintColor
+    }) =&amp;gt; (
+      &amp;lt;Image
+        source={require('./imgs/01.png')}
+        style={[styles.icon, {tintColor: tintColor}]}
+      /&amp;gt;
+    ),
+  };
+
+  render() {
+    return (
+      &amp;lt;View style={styles.container}&amp;gt;
+      &amp;lt;Text&amp;gt;This HomePage&amp;lt;/Text&amp;gt;
+      &amp;lt;Button
+        onPress={() =&amp;gt; this.props.navigation.navigate('DrawerOpen')}
+        title=&quot;Show Drawer&quot;
+      /&amp;gt;
+      &amp;lt;/View&amp;gt;
+    );
+  }
+}
+
+class MyNotificationsScreen extends React.Component {
+  static navigationOptions = {
+    drawerLabel: 'Notifications',
+    drawerIcon: ({
+      tintColor
+    }) =&amp;gt; (
+      &amp;lt;Image
+        source={require('./imgs/02.png')}
+        style={[styles.icon, {tintColor: tintColor}]}
+      /&amp;gt;
+    ),
+  };
+
+  render() {
+    return (
+      &amp;lt;View style={styles.container}&amp;gt;
+      &amp;lt;Text&amp;gt;This MyNotificationsScreen&amp;lt;/Text&amp;gt;
+      &amp;lt;Button
+        onPress={() =&amp;gt; this.props.navigation.navigate('DrawerOpen')}
+        title=&quot;Go back home&quot;
+      /&amp;gt;
+      &amp;lt;/View&amp;gt;
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  icon: {
+    width: 24,
+    height: 24,
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
+});
+
+const MyApp = DrawerNavigator({
+  Home: {
+    screen: MyHomeScreen,
+  },
+  Notifications: {
+    screen: MyNotificationsScreen,
+  },
+});
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;其中&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;this.props.navigation.navigate('DrawerOpen')
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;这是打开抽屉&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;this.props.navigation.navigate('DrawerClose')
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;点击空白或者上面这句代码是关闭抽屉，&lt;/p&gt;
+
+&lt;p&gt;navigationOptions里设置的是抽屉的标题或者图片&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_1/20.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">四、react-navigation使用</summary></entry></feed>

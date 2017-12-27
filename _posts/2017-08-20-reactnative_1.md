@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "React Native(一)：简易使用"
+title:      "React Native(一)：基础"
 subtitle:   "React Natieve的常用命令和第三方使用"
 date:       2017-08-20 12:00:00
 author:     "Ted"
@@ -63,7 +63,7 @@ ifconfig | grep "inet " | grep -v 127.0.0.1
 添加第三方库，比如react-navigation，cd到根目录，执行
 
 ```
-yarn add react-navigatio
+yarn add react-navigation
 ```
 
 ### 三、基础代码讲解
