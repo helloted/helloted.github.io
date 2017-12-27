@@ -2,7 +2,7 @@
 layout:     post
 title:      "React Native(二)：react-navigation使用"
 subtitle:   "第三方导航栏react-navigation的使用"
-date:       2017-08-21 12:00:00
+date:       2017-11-21 12:00:00
 author:     "Ted"
 header-img: "img/default.jpg"
 ---
@@ -367,4 +367,6 @@ this.props.navigation.navigate('DrawerClose')
 navigationOptions里设置的是抽屉的标题或者图片
 
 ![](/img/Simple_1/20.gif)
+
+[完整代码Github](https://github.com/helloted/iOS_Demo/tree/master/DemoProject)
 

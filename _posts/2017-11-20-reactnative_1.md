@@ -2,7 +2,7 @@
 layout:     post
 title:      "React Native(一)：基础"
 subtitle:   "React Natieve的常用命令和第三方使用"
-date:       2017-08-20 12:00:00
+date:       2017-11-20 12:00:00
 author:     "Ted"
 header-img: "img/default.jpg"
 ---
