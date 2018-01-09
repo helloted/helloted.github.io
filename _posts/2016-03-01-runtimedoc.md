@@ -78,7 +78,7 @@ objc_msgSend(receiver, selector, arg1, arg2, ...)
 
 类的元素和对象结构如图所示:
 
-![img](/img/Simple/07.png)
+![img](/img/Simple_3/07.png)
 
 当一个消息被发送到一个对象时，消息传递函数跟随该对象的isa指针，指向在调度表中查找方法selector的类结构。如果在那里找不到selector，objc_msgSend将跟随指向超类的指针，并尝试在其派发表中找到selector。连续失败使得objc_msgSend一直向上层结构查找，直到它到达NSObject类。一旦找到selector，objc_msgSend函数将调用在表中输入的方法，并将接收对象的数据结构传递给方法。
 
@@ -176,3 +176,121 @@ void dynamicMethodIMP(id self, SEL _cmd) {
 
 Objective-C程序可以在运行时加载和链接新的class和category。新的代码被合并到程序中，并在开始时加载class和category。
 
+### 五、消息转发
+
+发送消息给一个不处理该消息的对象是一个错误。 但是，在声明错误之前，运行时系统给接收对象第二次机会来处理消息。
+
+#### 转发
+
+如果您发送消息给一个不处理该消息的对象，那么在声明错误之前，运行时会给该对象发送一个带有NSInvocation对象作为唯一参数的`forwardInvocation：`消息 
+
+你可以实现一个`forwardInvocation：`方法来给消息一个默认的响应，或者以某种方式避免错误。顾名思义，`forwardInvocation：`通常用于将消息转发给另一个对象。
+
+为了看到转发的范围和意图，想象下面的情况：
+
+首先，假设你正在设计一个可以响应一个名为`negotiate`的消息的对象，并且你希望它的响应包含另一种对象的响应。您可以通过将`negotiate`消息传递给您实现的`negotiate`方法的主体中的其他对象。
+
+更进一步，假设您希望对象对`negotiate`消息的响应完全是在另一个类中实现的响应。一种方法是使你的类继承另一个类的方法。但是，这样安排事情可能是不可能的。可能有很好的理由，为什么你的类和实现`negotiate`的类是在继承层次结构的不同分支。
+
+即使你的类不能继承`negotiate`方法，你仍然可以通过实现一个简单地将消息传递给另一个类的实例的方法来“借”它：
+
+```objc
+- (id)negotiate
+{
+    if ( [someOtherObject respondsTo:@selector(negotiate)] )
+        return [someOtherObject negotiate];
+    return self;
+}
+```
+
+这种做事的方式可能会有点麻烦，特别是如果有一些信息，你希望你的对象传递给另一个对象。 你必须实施一种方法来涵盖你想从其他类借用的每种方法。 而且，在你编写代码的时候，你不可能处理你不知道的情况，你可能想要转发的全部消息。 该集合可能取决于运行时的事件，并且可能会随着新的方法和类的实现而改变。
+
+`forwardInvocation：`消息提供的第二个机会为这个问题提供了一个不太临时的解决方案，而且是一个动态而不是静态的解决方案。 它的工作原理如下：当一个对象由于没有与消息中的选择符匹配的方法而无法响应消息时，运行时系统会通过发送`forwardInvocation：`消息来通知对象。 每个对象都继承NSObject类的`forwardInvocation：`方法。 但是，NSObject的版本只是调用`doesNotRecognizeSelector :`. 通过覆盖NSObject的版本并实现自己的版本，您可以利用`forwardInvocation：`消息提供的将消息转发给其他对象的机会。
+
+要转发一个消息,  `forwardInvocation:` 方法里需要做的是:
+
+- 检测这个消息需要发送到哪里，然后
+- 用原来的参数发送到那里去
+
+消息可以使用`invokeWithTarget：`方法发送：
+
+```objc
+- (void)forwardInvocation:(NSInvocation *)anInvocation
+{
+    if ([someOtherObject respondsToSelector:
+            [anInvocation selector]])
+        [anInvocation invokeWithTarget:someOtherObject];
+    else
+        [super forwardInvocation:anInvocation];
+}
+```
+
+被转发的消息的返回值将返回给原始发送者。 可以将所有类型的返回值传递给发送者，包括id，结构和双精度浮点数。
+
+`forwardInvocation：`方法可以充当无法识别的消息的分发中心，将其分发给不同的接收者。 或者它可以是一个中转站，将所有信息发送到同一个目的地。 它可以将一条消息翻译成另一条消息，或者简单地“吞下”一些消息，所以没有响应，也没有错误。 `forwardInvocation：`方法也可以将多个消息合并为一个响应。  `forwardInvocation：`做的是实现者。 但是，它提供的链接转发链中对象的机会为程序设计提供了可能性。
+
+注意：forwardInvocation：方法只有在不调用名义接收方中的现有方法时才能处理消息。 例如，如果您希望您的对象将`negotiate`消息转发给另一个对象，则不能拥有自己的`negotiate`方法。 如果有这个方法，该消息永远不会达到`forwardInvocation:`
+
+#### 转发与多重继承
+
+转发消息模仿继承，可以用来为Objective-C程序提供多重继承的一些效果。 如图所示，通过转发消息来响应消息的对象似乎借用或“继承”了另一个类中定义的方法实现。
+
+![img](/img/Simple_3/08.gif)
+
+在这个例子中，Warrior类的一个实例将协商消息转发给Diplomat类的一个实例。Warrior似乎会像Diplomat一样进行negotiate。它似乎对negotiate信息作出了回应，并且为了所有的实际目的，它确实做出了回应（尽管这是一个真正的Diplomat做的工作）。
+
+转发消息的对象因此从继承层次的两个分支（它自己的分支）和响应该消息的对象的分支“继承”方法。在上面的例子中，看起来好像Warrior类继承了Diplomat以及它自己的超类。
+
+转发提供了您通常希望从多重继承中获得的大部分功能。但是，两者之间有一个重要的区别：多重继承在一个对象中组合了不同的功能。它倾向于大而多面的物体。另一方面，转发将不同的责任分配给不同的对象。它将问题分解成更小的对象，但是以对消息发送者透明的方式关联这些对象。
+
+#### 代理对象
+
+转发不仅可以模仿多重继承，而且还可以开发用以代表或“覆盖”更多实体对象的轻量级对象。代理人代表另一个对象，并向其发送消息。
+
+在“Objective-C”中的“远程消息传递”中讨论的代理就是这样的代理。代理负责将消息转发到远程接收方的管理细节，确保参数值在连接中被复制和检索，等等。但是它并没有试图去做其他的事情。它不会复制远程对象的功能，只是给远程对象一个本地地址，一个可以在另一个应用程序中接收消息的地方。
+
+其他类型的代理对象也是可能的。例如，假设你有一个操纵大量数据的对象 - 可能会创建一个复杂的图像或读取磁盘上文件的内容。设置这个对象可能会非常耗时，所以您宁愿懒惰地去做 - 当真正需要时或系统资源暂时闲置时。同时，为了使应用程序中的其他对象正常工作，至少需要该对象的占位符。
+
+在这种情况下，你最初可以创建，而不是完整的对象，而是一个轻量级的替代品。这个对象可以自己做一些事情，比如回答关于数据的问题，但是大多数情况下它只是为更大的对象提供一个地方，并且当时间到了时，将消息转发给它。当代理的`forwardInvocation：`方法首先收到发往其他对象的消息时，它将确保该对象存在，如果没有，则会创建该消息。所有更大的对象的消息都通过代理，所以就程序其余部分而言，代理和更大的对象将是相同的。
+
+#### 转发和继承
+
+虽然转发模仿继承，NSObject类永远不会混淆两者。 像respondsToSelector：和isKindOfClass这样的方法：只能查看继承层次结构，而不能查看转发链。 例如，如果询问Warrior对象是否响应`negotiate`消息:
+
+```
+if ( [aWarrior respondsToSelector:@selector(negotiate)] )
+    ...
+```
+
+答案是NO，尽管它可以接受这个消息并且无误地回复。
+
+在很多情况下，NO是正确的答案。 但它也可能不是。 如果使用转发来设置代理对象或扩展类的功能，则转发机制应该与继承一样透明。 如果你希望你的对象的行为好像他们真的继承了它们转发消息的对象的行为，你需要重新实现`respondsToSelector：`和`isKindOfClass：`方法来包含你的转发算法：
+
+```objc
+- (BOOL)respondsToSelector:(SEL)aSelector
+{
+    if ( [super respondsToSelector:aSelector] )
+        return YES;
+    else {
+        /* Here, test whether the aSelector message can     *
+         * be forwarded to another object and whether that  *
+         * object can respond to it. Return YES if it can.  */
+    }
+    return NO;
+}
+```
+
+除了`respondsToSelector：`和`isKindOfClass：`之外，`instancesRespondToSelector：`方法也应该镜像转发算法。 如果使用协议，`conformsToProtocol：`方法同样应该被添加到列表中。 类似地，如果一个对象转发它接收到的任何远程消息，它应该有一个版本的`methodSignatureForSelector：`它可以返回最终响应转发消息的方法的准确描述; 例如，如果某个对象能够将消息转发给其代理，则可以实现`methodSignatureForSelector：`如下所示：
+
+```objc
+- (NSMethodSignature*)methodSignatureForSelector:(SEL)selector
+{
+    NSMethodSignature* signature = [super methodSignatureForSelector:selector];
+    if (!signature) {
+       signature = [surrogate methodSignatureForSelector:selector];
+    }
+    return signature;
+}
+```
+
+您可能会考虑将转发算法放在私有代码中，并使用`forwardInvocation：`included方法调用它。
