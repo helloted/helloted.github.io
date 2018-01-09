@@ -1,7 +1,7 @@
 ---
 layout:     post
-title:      "【译】Objective-C Runtime编程指南"
-subtitle:   "Objective-C中Runtime的官方文档"
+title:      "【译】Objective-C Runtime编程指南(1)"
+subtitle:   "Objective-C中Runtime的官方文档：消息"
 date:       2016-03-01 12:00:00
 author:     "Ted"
 header-img: "img/Runtime/bg.png"
@@ -294,3 +294,4 @@ if ( [aWarrior respondsToSelector:@selector(negotiate)] )
 ```
 
 您可能会考虑将转发算法放在私有代码中，并使用`forwardInvocation：`included方法调用它。
+

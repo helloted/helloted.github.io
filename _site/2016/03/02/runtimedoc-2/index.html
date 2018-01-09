@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>【译】Objective-C Runtime编程指南(2) - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/2016/03/02/runtimedoc-2/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/Runtime/bg.png')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>【译】Objective-C Runtime编程指南(2)</h1>
+                    
+                    <h2 class="subheading">Objective-C中Runtime的官方文档：属性</h2>
+                    
+                    <span class="meta">Posted by Ted on March 2, 2016</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<p>苹果官方文档<a href="https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008048-CH1-SW1">Objective-C Runtime Programming Guide</a></p>
+
+<h3 id="六类型编码">六、类型编码</h3>
+
+<p>为了帮助运行时系统，编译器将字符串中每个方法的返回值和参数类型进行编码，并将字符串与方法选择器相关联。 它使用的编码方案在其他上下文中也是有用的，所以通过<code class="highlighter-rouge">@encode（）</code>编译器指令公开可用。 当给定类型规范时，<code class="highlighter-rouge">@encode（）</code>返回一个编码该类型的字符串。 这个类型可以是一个基本的类型，比如int，指针，带标签的结构体或联合体，或者是一个类名，实际上，它可以用作C <code class="highlighter-rouge">sizeof（）</code>运算符的参数。</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="kt">char</span> <span class="o">*</span><span class="n">buf1</span> <span class="o">=</span> <span class="k">@encode</span><span class="p">(</span><span class="kt">int</span> <span class="o">**</span><span class="p">);</span>
+<span class="kt">char</span> <span class="o">*</span><span class="n">buf2</span> <span class="o">=</span> <span class="k">@encode</span><span class="p">(</span><span class="k">struct</span> <span class="n">key</span><span class="p">);</span>
+<span class="kt">char</span> <span class="o">*</span><span class="n">buf3</span> <span class="o">=</span> <span class="k">@encode</span><span class="p">(</span><span class="n">Rectangle</span><span class="p">);</span>
+</code></pre>
+</div>
+
+<p>下表列出了类型代码。 请注意，它们中的许多与用于存档或分发的对象编码时使用的代码重叠。 但是，这里列出的代码在编写代码时不能使用，并且在编写不是由<code class="highlighter-rouge">@encode（）</code>生成的代码时，可能需要使用代码。</p>
+
+<p><img src="/img/Simple_3/09.png" alt="img" /></p>
+
+<p><strong>重要:</strong> Objective-C 不支持 <code class="highlighter-rouge">long double</code> 类型. <code class="highlighter-rouge">@encode(long double)</code> 返回 <code class="highlighter-rouge">d</code>, 与 <code class="highlighter-rouge">double</code>一样。</p>
+
+<p>数组的类型代码用方括号括起来; 在数组类型之前，数组中元素的数目紧跟在开括号之后。 例如，一个由浮点数组成的12个指针的数组将被编码为：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[12^f]
+</code></pre>
+</div>
+
+<p>结构在大括号内指定，而在括号内结合。 首先列出结构标签，然后是等号和结构字段的代码。 例如，结构：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>typedef struct example {
+    id   anObject;
+    char *aString;
+    int  anInt;
+} Example;
+</code></pre>
+</div>
+
+<p>会被编码成这样：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="err">example=@*i</span><span class="p">}</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>不管定义的类型名称（example）还是结构标记（example）传递给@encode（），相同的编码都会生成。 结构指针的编码携带与结构字段相同的信息量：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>^{example=@*i}
+</code></pre>
+</div>
+
+<p>但是，另一个间接级别删除了内部类型规范：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>^^{example}
+</code></pre>
+</div>
+
+<p>对象被视为结构。例如，将NSObject类名称传递给@encode（）会产生以下编码：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="err">NSObject=#</span><span class="p">}</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>NSObject类只声明一个Class类型的实例变量isa。</p>
+
+<p>请注意，尽管@encode（）指令不返回它们，但运行时系统使用下表中列出的其他编码作为类型限定符，当它们用于在协议中声明方法时。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Code</th>
+      <th>Meaning</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">r</code></td>
+      <td><code class="highlighter-rouge">const</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">n</code></td>
+      <td><code class="highlighter-rouge">in</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">N</code></td>
+      <td><code class="highlighter-rouge">inout</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">o</code></td>
+      <td><code class="highlighter-rouge">out</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">O</code></td>
+      <td><code class="highlighter-rouge">bycopy</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">R</code></td>
+      <td><code class="highlighter-rouge">byref</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">V</code></td>
+      <td><code class="highlighter-rouge">oneway</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="七声明的属性">七、声明的属性</h3>
+
+<p>当编译器遇到属性声明时，它会生成与包含的类，类别或协议相关联的描述性元数据。 您可以使用支持在类或协议上按名称查找属性，以@encode字符串的形式获取属性的类型以及将属性的属性列表复制为C字符串数组的函数来访问此元数据。 已声明的属性列表可用于每个类和协议。</p>
+
+<h4 id="属性类型和函数">属性类型和函数</h4>
+
+<p>Property结构定义了一个属性描述符的不透明处理。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>typedef struct objc_property *Property;
+</code></pre>
+</div>
+
+<p>您可以使用函数<code class="highlighter-rouge">class_copyPropertyList</code>和<code class="highlighter-rouge">protocol_copyPropertyList</code>分别检索与类（包括加载的类）和协议相关的属性数组：</p>
+
+<pre><code class="language-Objc">objc_property_t *class_copyPropertyList(Class cls, unsigned int *outCount)
+objc_property_t *protocol_copyPropertyList(Protocol *proto, unsigned int *outCount)
+</code></pre>
+
+<p>例如：</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">Lender</span> <span class="p">:</span> <span class="nc">NSObject</span> <span class="p">{</span>
+    <span class="kt">float</span> <span class="n">alone</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">@property</span> <span class="kt">float</span> <span class="n">alone</span><span class="p">;</span>
+<span class="k">@end</span>
+</code></pre>
+</div>
+
+<p>你可以得到属性列表：</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">id</span> <span class="n">LenderClass</span> <span class="o">=</span> <span class="n">objc_getClass</span><span class="p">(</span><span class="s">"Lender"</span><span class="p">);</span>
+<span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">outCount</span><span class="p">;</span>
+<span class="n">objc_property_t</span> <span class="o">*</span><span class="n">properties</span> <span class="o">=</span> <span class="n">class_copyPropertyList</span><span class="p">(</span><span class="n">LenderClass</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">outCount</span><span class="p">);</span>
+</code></pre>
+</div>
+
+<p>你可以使用<code class="highlighter-rouge">property_getName</code>函数去获取属性的名称</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>const char *property_getName(objc_property_t property)
+</code></pre>
+</div>
+
+<p>你可以使用函数<code class="highlighter-rouge">class_getProperty</code>和<code class="highlighter-rouge">protocol_getProperty</code>分别获取对类中给定名称的属性的引用：</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">objc_property_t</span> <span class="n">class_getProperty</span><span class="p">(</span><span class="n">Class</span> <span class="n">cls</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">)</span>
+<span class="n">objc_property_t</span> <span class="n">protocol_getProperty</span><span class="p">(</span><span class="n">Protocol</span> <span class="o">*</span><span class="n">proto</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">,</span> <span class="n">BOOL</span> <span class="n">isRequiredProperty</span><span class="p">,</span> <span class="n">BOOL</span> <span class="n">isInstanceProperty</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>您可以使用property_getAttributes函数来发现属性的名称和@encode类型的字符串</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">property_getAttributes</span><span class="p">(</span><span class="n">objc_property_t</span> <span class="n">property</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>把它们放在一起，你可以使用下面的代码打印一个与类关联的所有属性的list：</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">id</span> <span class="n">LenderClass</span> <span class="o">=</span> <span class="n">objc_getClass</span><span class="p">(</span><span class="s">"Lender"</span><span class="p">);</span>
+<span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">outCount</span><span class="p">,</span> <span class="n">i</span><span class="p">;</span>
+<span class="n">objc_property_t</span> <span class="o">*</span><span class="n">properties</span> <span class="o">=</span> <span class="n">class_copyPropertyList</span><span class="p">(</span><span class="n">LenderClass</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">outCount</span><span class="p">);</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">outCount</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">objc_property_t</span> <span class="n">property</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="nf">i</span><span class="p">];</span>
+    <span class="n">fprintf</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="s">"%s %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">property_getName</span><span class="p">(</span><span class="n">property</span><span class="p">),</span> <span class="n">property_getAttributes</span><span class="p">(</span><span class="n">property</span><span class="p">));</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<h4 id="属性类型字符串">属性类型字符串</h4>
+
+<p>您可以使用property_getAttributes函数来发现名称，属性的@encode类型字符串以及属性的其他属性。</p>
+
+<p>该字符串以T开头，后跟@encode类型和逗号，并以V结尾，后面跟着实例变量的名称。 在这些之间，属性由以下描述符指定，用逗号分隔</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Code</th>
+      <th>Meaning</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">R</code></td>
+      <td>The property is read-only (<code class="highlighter-rouge">readonly</code>).</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">C</code></td>
+      <td>The property is a copy of the value last assigned (<code class="highlighter-rouge">copy</code>).</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">&amp;</code></td>
+      <td>The property is a reference to the value last assigned (<code class="highlighter-rouge">retain</code>).</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">N</code></td>
+      <td>The property is non-atomic (<code class="highlighter-rouge">nonatomic</code>).</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">G&lt;name&gt;</code></td>
+      <td>The property defines a custom getter selector name. The name follows the <code class="highlighter-rouge">G</code> (for example, <code class="highlighter-rouge">GcustomGetter,</code>).</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">S&lt;name&gt;</code></td>
+      <td>The property defines a custom setter selector name. The name follows the <code class="highlighter-rouge">S</code> (for example, <code class="highlighter-rouge">ScustomSetter:,</code>).</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">D</code></td>
+      <td>The property is dynamic (<code class="highlighter-rouge">@dynamic</code>).</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">W</code></td>
+      <td>The property is a weak reference (<code class="highlighter-rouge">__weak</code>).</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">P</code></td>
+      <td>The property is eligible for garbage collection.</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">t&lt;encoding&gt;</code></td>
+      <td>Specifies the type using old-style encoding.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="property属性描述示例">Property属性描述示例</h4>
+
+<p>给如下定义</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">enum</span> <span class="n">FooManChu</span> <span class="p">{</span> <span class="n">FOO</span><span class="p">,</span> <span class="n">MAN</span><span class="p">,</span> <span class="n">CHU</span> <span class="p">};</span>
+<span class="k">struct</span> <span class="n">YorkshireTeaStruct</span> <span class="p">{</span> <span class="kt">int</span> <span class="n">pot</span><span class="p">;</span> <span class="kt">char</span> <span class="n">lady</span><span class="p">;</span> <span class="p">};</span>
+<span class="k">typedef</span> <span class="k">struct</span> <span class="n">YorkshireTeaStruct</span> <span class="n">YorkshireTeaStructType</span><span class="p">;</span>
+<span class="k">union</span> <span class="n">MoneyUnion</span> <span class="p">{</span> <span class="kt">float</span> <span class="n">alone</span><span class="p">;</span> <span class="kt">double</span> <span class="n">down</span><span class="p">;</span> <span class="p">};</span>
+</code></pre>
+</div>
+
+<p>下表显示了示例属性声明和property_getAttributes返回的相应字符串：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property declaration</th>
+      <th>Property description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge"><span class="k">@property</span> <span class="kt">char</span> <span class="n">charDefault</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">Tc,VcharDefault</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge"><span class="k">@property</span> <span class="kt">double</span> <span class="n">doubleDefault</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">Td,VdoubleDefault</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge"><span class="k">@property</span> <span class="k">enum</span> <span class="n">FooManChu</span> <span class="n">enumDefault</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">Ti,VenumDefault</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge"><span class="k">@property</span> <span class="kt">float</span> <span class="n">floatDefault</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">Tf,VfloatDefault</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge"><span class="k">@property</span> <span class="kt">int</span> <span class="n">intDefault</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">Ti,VintDefault</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge"><span class="k">@property</span> <span class="kt">long</span> <span class="n">longDefault</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">Tl,VlongDefault</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge"><span class="k">@property</span> <span class="kt">short</span> <span class="n">shortDefault</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">Ts,VshortDefault</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge"><span class="k">@property</span> <span class="kt">signed</span> <span class="n">signedDefault</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">Ti,VsignedDefault</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge"><span class="k">@property</span> <span class="k">struct</span> <span class="n">YorkshireTeaStruct</span> <span class="n">structDefault</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">T{YorkshireTeaStruct="pot"i"lady"c},VstructDefault</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge"><span class="k">@property</span> <span class="n">YorkshireTeaStructType</span> <span class="n">typedefDefault</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">T{YorkshireTeaStruct="pot"i"lady"c},VtypedefDefault</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge"><span class="k">@property</span> <span class="k">union</span> <span class="n">MoneyUnion</span> <span class="n">unionDefault</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">T(MoneyUnion="alone"f"down"d),VunionDefault</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge"><span class="k">@property</span> <span class="kt">unsigned</span> <span class="n">unsignedDefault</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">TI,VunsignedDefault</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge"><span class="k">@property</span> <span class="kt">int</span> <span class="p">(</span><span class="o">*</span><span class="n">functionPointerDefault</span><span class="p">)(</span><span class="kt">char</span> <span class="o">*</span><span class="p">);</span></code></td>
+      <td><code class="highlighter-rouge">T^?,VfunctionPointerDefault</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge"><span class="k">@property</span> <span class="n">id</span> <span class="n">idDefault</span><span class="p">;</span></code>Note: the compiler warns: <code class="highlighter-rouge">"no 'assign', 'retain', or 'copy' attribute is specified - 'assign' is assumed"</code></td>
+      <td><code class="highlighter-rouge">T@,VidDefault</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge"><span class="k">@property</span> <span class="kt">int</span> <span class="o">*</span><span class="n">intPointer</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">T^i,VintPointer</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge"><span class="k">@property</span> <span class="kt">void</span> <span class="o">*</span><span class="n">voidPointerDefault</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">T^v,VvoidPointerDefault</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge"><span class="k">@property</span> <span class="kt">int</span> <span class="n">intSynthEquals</span><span class="p">;</span></code>In the implementation block:<code class="highlighter-rouge">@synthesize intSynthEquals=_intSynthEquals;</code></td>
+      <td><code class="highlighter-rouge">Ti,V_intSynthEquals</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge"><span class="k">@property</span><span class="p">(</span><span class="n">getter</span><span class="o">=</span><span class="n">intGetFoo</span><span class="p">,</span> <span class="n">setter</span><span class="o">=</span><span class="n">intSetFoo</span><span class="o">:</span><span class="p">)</span> <span class="kt">int</span> <span class="n">intSetterGetter</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">Ti,GintGetFoo,SintSetFoo:,VintSetterGetter</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge"><span class="k">@property</span><span class="p">(</span><span class="n">readonly</span><span class="p">)</span> <span class="kt">int</span> <span class="n">intReadonly</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">Ti,R,VintReadonly</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge"><span class="k">@property</span><span class="p">(</span><span class="n">getter</span><span class="o">=</span><span class="n">isIntReadOnlyGetter</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="kt">int</span> <span class="n">intReadonlyGetter</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">Ti,R,GisIntReadOnlyGetter</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge"><span class="k">@property</span><span class="p">(</span><span class="n">readwrite</span><span class="p">)</span> <span class="kt">int</span> <span class="n">intReadwrite</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">Ti,VintReadwrite</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge"><span class="k">@property</span><span class="p">(</span><span class="n">assign</span><span class="p">)</span> <span class="kt">int</span> <span class="n">intAssign</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">Ti,VintAssign</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge"><span class="k">@property</span><span class="p">(</span><span class="n">retain</span><span class="p">)</span> <span class="n">id</span> <span class="n">idRetain</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">T@,&amp;,VidRetain</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge"><span class="k">@property</span><span class="p">(</span><span class="n">copy</span><span class="p">)</span> <span class="n">id</span> <span class="n">idCopy</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">T@,C,VidCopy</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge"><span class="k">@property</span><span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="kt">int</span> <span class="n">intNonatomic</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">Ti,VintNonatomic</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge"><span class="k">@property</span><span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">,</span> <span class="n">copy</span><span class="p">)</span> <span class="n">id</span> <span class="n">idReadonlyCopyNonatomic</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">T@,R,C,VidReadonlyCopyNonatomic</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge"><span class="k">@property</span><span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">,</span> <span class="n">retain</span><span class="p">)</span> <span class="n">id</span> <span class="n">idReadonlyRetainNonatomic</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">T@,R,&amp;,VidReadonlyRetainNonatomic</code></td>
+    </tr>
+  </tbody>
+</table>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2016/03/01/runtimedoc/" data-toggle="tooltip" data-placement="top" title="【译】Objective-C Runtime编程指南(1)">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2016/03/05/runtime/" data-toggle="tooltip" data-placement="top" title="神奇的Runtime">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>
