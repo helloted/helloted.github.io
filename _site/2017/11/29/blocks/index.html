@@ -108,12 +108,15 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
 
-				<h3 id="一不含变量block">一、不含变量Block</h3>
+				<p>查看LLVM官方文档<a href="http://clang.llvm.org/docs/Block-ABI-Apple.html">Block-ABI-Apple</a></p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-    <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">blk</span><span class="p">)(</span><span class="kt">void</span><span class="p">)</span> <span class="o">=</span> <span class="o">^</span><span class="p">{</span>
-        <span class="n">printf</span><span class="p">(</span><span class="s">"hello world"</span><span class="p">);</span>
-    <span class="p">};</span>
+<h3 id="一不含变量block">一、不含变量Block</h3>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">blk</span><span class="p">)(</span><span class="kt">void</span><span class="p">)</span> <span class="o">=</span> <span class="o">^</span><span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"hello world"</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
     <span class="n">blk</span><span class="p">();</span>
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
@@ -126,11 +129,11 @@
 </code></pre>
 </div>
 
-<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">struct</span> <span class="n">__main_block_impl_0</span> <span class="p">{</span>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">struct</span> <span class="n">__blk_block_impl_0</span> <span class="p">{</span>
   <span class="k">struct</span> <span class="n">__block_impl</span> <span class="n">impl</span><span class="p">;</span>
-  <span class="k">struct</span> <span class="n">__main_block_desc_0</span><span class="o">*</span> <span class="n">Desc</span><span class="p">;</span>
-  <span class="n">__main_block_impl_0</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">fp</span><span class="p">,</span> <span class="k">struct</span> <span class="n">__main_block_desc_0</span> <span class="o">*</span><span class="n">desc</span><span class="p">,</span> <span class="kt">int</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">impl</span><span class="p">.</span><span class="n">isa</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">_NSConcreteStackBlock</span><span class="p">;</span>
+  <span class="k">struct</span> <span class="n">__blk_block_desc_0</span><span class="o">*</span> <span class="n">Desc</span><span class="p">;</span>
+  <span class="n">__blk_block_impl_0</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">fp</span><span class="p">,</span> <span class="k">struct</span> <span class="n">__blk_block_desc_0</span> <span class="o">*</span><span class="n">desc</span><span class="p">,</span> <span class="kt">int</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">impl</span><span class="p">.</span><span class="n">isa</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">_NSConcreteGlobalBlock</span><span class="p">;</span>
     <span class="n">impl</span><span class="p">.</span><span class="n">Flags</span> <span class="o">=</span> <span class="n">flags</span><span class="p">;</span>
     <span class="n">impl</span><span class="p">.</span><span class="n">FuncPtr</span> <span class="o">=</span> <span class="n">fp</span><span class="p">;</span>
     <span class="n">Desc</span> <span class="o">=</span> <span class="n">desc</span><span class="p">;</span>
@@ -159,11 +162,31 @@
 <p><code class="highlighter-rouge">__main_block_impl_0</code>这个结构体就是Block的底层实现了</p>
 
 <ul>
-  <li>isa:指向的是NSConcreteStackBlock</li>
+  <li>isa:指向的是_NSConcreteGlobalBlock，这个是全局block</li>
   <li>Flags:标志</li>
   <li>FuncPtr：实现函数指针</li>
   <li>Desc：block的一些信息</li>
 </ul>
+
+<p>还有一种情况</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>int main(int argc, const char * argv[]) {
+    void (^blk)(void) = ^{
+        printf("hello world dk");
+    };
+    NSLog(@"%@", blk);
+    return 0;
+}
+</code></pre>
+</div>
+
+<p>虽然，clang出来的结果isa是_NSConcreteStackBlock，但根据实际打印结果</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>lockDemo[59807:10443592] &lt;__NSGlobalBlock__: 0x100001040&gt;
+</code></pre>
+</div>
+
+<p>应该是_NSConcreteGlobalBlock，这里clang与LLVM有点不同。以LLVM为准。</p>
 
 <h3 id="二含变量的block">二、含变量的Block</h3>
 
@@ -174,9 +197,16 @@
     <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">blk</span><span class="p">)(</span><span class="kt">void</span><span class="p">)</span> <span class="o">=</span> <span class="o">^</span><span class="p">{</span>
         <span class="n">printf</span><span class="p">(</span><span class="s">"hello world %d"</span><span class="p">,</span><span class="n">i</span><span class="p">);</span>
     <span class="p">};</span>
+  	<span class="n">NSLog</span><span class="p">(</span><span class="s">@"%@"</span><span class="p">,</span><span class="n">blk</span><span class="p">);</span>
     <span class="n">blk</span><span class="p">();</span>
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
+</code></pre>
+</div>
+
+<p>打印结果</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">BlockDemo</span><span class="p">[</span><span class="mi">59851</span><span class="o">:</span><span class="mi">10455160</span><span class="p">]</span> <span class="o">&lt;</span><span class="n">__NSStackBlock__</span><span class="o">:</span> <span class="mh">0x7fff5fbff6a8</span><span class="o">&gt;</span>
 </code></pre>
 </div>
 
@@ -234,10 +264,17 @@
     void (^blk)(void) = ^{
         block_i = 50;
     };
+  	NSLog(@"%@",blk);
     blk();
     return 0;
 }
 </code></pre>
+
+<p>打印结果</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>BlockDemo[59873:10462816] &lt;__NSStackBlock__: 0x7fff5fbff688&gt;
+</code></pre>
+</div>
 
 <p>Clang之后变成</p>
 
@@ -292,6 +329,8 @@
 <p>当block从栈上被copy到堆上时，会调用<code class="highlighter-rouge">__main_block_copy_0</code>将__block类型的成员变量i从栈上复制到堆上，同时，栈上的<code class="highlighter-rouge">__Block_byref_i_0</code>结构体中的__forwarding指针也会指向堆上的地址。而当block被释放时，相应地会调用<code class="highlighter-rouge">_main_block_dispose_0</code>来释__block类型的成员变量i。</p>
 
 <p>这样，就成功地修改变量的值。</p>
+
+<p>因此在ARC情况下,创建的block仍然是NSConcreteStackBlock类型,只不过当block被引用或返回时,ARC帮助我们完成了copy和内存管理的工作变成NSConcreteMallocBlock放在堆上。</p>
 
 
                 <hr>
