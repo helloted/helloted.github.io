@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>【译】Objective-C Runtime编程指南 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/2016/03/01/runtimedoc/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/Runtime/bg.png')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>【译】Objective-C Runtime编程指南</h1>
+                    
+                    <h2 class="subheading">Objective-C中Runtime的官方文档</h2>
+                    
+                    <span class="meta">Posted by Ted on March 1, 2016</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<p>苹果官方文档<a href="https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008048-CH1-SW1">Objective-C Runtime Programming Guide</a></p>
+
+<h3 id="一简介">一、简介</h3>
+
+<p>Objective-C语言从编译时和链接时到运行时，推迟了尽可能多的决策。只要有可能，它就会动态地完成任务。这意味着该语言不仅需要编译器，还需要运行时系统来执行编译的代码。运行时系统作为Objective-C语言的一种操作系统来使得Objective-C工作的。</p>
+
+<p>本文档查看NSObject类以及Objective-C程序如何与运行时系统交互。特别是，它检查了在运行时动态加载新类的范例，并将消息转发给其他对象。它还提供了有关如何在程序运行时查找有关对象的信息的信息。</p>
+
+<h3 id="二使用runtime">二、使用Runtime</h3>
+
+<p>Objective-C程序与运行时系统在三个不同的层次上进行交互：通过Objective-C源代码; 通过在Foundation框架的NSObject类中定义的方法; 通过直接调用运行时功能。</p>
+
+<h4 id="1源代码">1、源代码</h4>
+
+<p>运行系统在大多数情况下自动运行在幕后。 您只需编写和编译Objective-C源代码即可使用它。</p>
+
+<p>编译包含Objective-C类和方法的代码时，编译器将创建实现该语言动态特性的数据结构和函数调用。 数据结构捕获类和类别定义以及协议声明中的信息; 它们包括Objective-C编程语言中定义类和协议以及方法选择器，实例变量模板和从源代码中提取的其他信息中讨论的类和协议对象。</p>
+
+<p>主体运行时功能是发送消息的功能。</p>
+
+<h4 id="2nsobject-方法">2、NSObject 方法</h4>
+
+<p>Cocoa中的大多数对象都是NSObject类的子类，所以大多数对象继承了它所定义的方法（值得注意的例外是NSProxy类）。因此，它的方法建立了每个实例和每个类对象所固有的行为。但是，只有在少数情况下，NSObject类定义了一个模板用于如何完成某些工作。它本身不提供所有必要的代码。</p>
+
+<p>例如，NSObject类定义了一个 <code class="highlighter-rouge">description</code> 实例方法，它返回一个描述类内容的字符串。这主要用于调试GDB <code class="highlighter-rouge">print-object</code>命令打印从此方法返回的字符串。 NSObject的这个方法的实现不知道这个类包含了什么，所以它返回一个字符串与对象的名字和地址。 NSObject的子类可以实现这个方法来返回更多的细节。例如，Foundation类NSArray返回它包含的对象的描述列表。</p>
+
+<p>一些NSObject方法只是查询运行时系统的信息。这些方法允许对象进行内查。这种方法的例子是<code class="highlighter-rouge">class</code>方法，它要求一个对象来识别它的类;<code class="highlighter-rouge"> isKindOfClass：</code>和<code class="highlighter-rouge">isMemberOfClass：</code>用于测试对象在继承层次结构中的位置; <code class="highlighter-rouge">respondsToSelector：</code>它表示一个对象是否可以接受一个特定的消息; <code class="highlighter-rouge">conformsToProtocol：</code>表示一个对象是否宣称要实现在特定协议中定义的方法;和<code class="highlighter-rouge">methodForSelector :,</code>它提供了一个方法实现的地址。像这些方法给了一个对象自省的能力。</p>
+
+<h4 id="3运行时功能">3、运行时功能</h4>
+
+<p>运行时系统是一个动态共享库，其公共接口由位于目录/ usr / include / objc中的头文件中的一组函数和数据结构组成。 这些函数中的许多函数允许您使用plain C来复制编译Objective-C代码时编译器的功能。 其他形成了通过NSObject类的方法导出功能的基础。 这些功能使开发运行时系统的其他接口成为可能，并生成增强开发环境的工具; 在Objective-C编程时不需要它们。 但是，在编写Objective-C程序时，有些运行时功能有时可能会很有用。</p>
+
+<h3 id="三消息">三、消息</h3>
+
+<h4 id="objc_msgsend功能">objc_msgSend功能</h4>
+
+<p>在Objective-C中，消息在运行时才被绑定到方法实现。</p>
+
+<p>编译器会将一个下面的一个消息表达式</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="p">[</span><span class="n">receiver</span> <span class="nf">message</span><span class="p">]</span>
+</code></pre>
+</div>
+
+<p>转变成一个消息函数 <code class="highlighter-rouge">objc_msgSend</code>，这个函数将接收者和消息中提到的方法的名称（即方法selector）作为其两个主要参数：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>objc_msgSend(receiver, selector)
+</code></pre>
+</div>
+
+<p>消息中传递的其他参数也在 <code class="highlighter-rouge">objc_msgSend</code>被处理</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>objc_msgSend(receiver, selector, arg1, arg2, ...)
+</code></pre>
+</div>
+
+<p>消息功能可以完成动态绑定所需的一切：</p>
+
+<ul>
+  <li>它首先找到selector引用的procedure,也就是方法实现。 由于相同的方法可以通过不同的类别来实现，所以它寻找的准确过程取决于receiver的类别。</li>
+  <li>然后调用procedure，将receiver（指向其数据的指针）以及为该方法指定的所有参数传递给procedure。</li>
+  <li>最后，它传递procedure的返回值作为它自己的返回值。</li>
+</ul>
+
+<p>消息传递的关键在于编译器为每个类和对象构建的结构。 每个类的结构都包括这两个基本要素：</p>
+
+<ul>
+  <li>指向superclass的指针</li>
+  <li>一个类调度表。 该表具有将方法selector与其识别的方法的类特定地址相关联的条目。<code class="highlighter-rouge"> setOrigin :</code>方法的selector与<code class="highlighter-rouge">setOrigin :</code>（实现的过程）的地址相关联，<code class="highlighter-rouge">display</code>方法的选择器与<code class="highlighter-rouge">display</code>地址相关联，依此类推。</li>
+</ul>
+
+<p>当一个新的对象被创建时，它的内存被分配，并且它的实例变量被初始化。 对象的变量中的第一个是指向其类结构的指针。 这个名为isa的指针为对象提供对其类的访问权限，并通过类访问所有从它继承的类。</p>
+
+<p>类的元素和对象结构如图所示:</p>
+
+<p><img src="/img/Simple/07.png" alt="img" /></p>
+
+<p>当一个消息被发送到一个对象时，消息传递函数跟随该对象的isa指针，指向在调度表中查找方法selector的类结构。如果在那里找不到selector，objc_msgSend将跟随指向超类的指针，并尝试在其派发表中找到selector。连续失败使得objc_msgSend一直向上层结构查找，直到它到达NSObject类。一旦找到selector，objc_msgSend函数将调用在表中输入的方法，并将接收对象的数据结构传递给方法。</p>
+
+<p>这是在运行时选择方法实现的方式 - 或者在面向对象编程的术语中，方法是动态绑定到消息的。</p>
+
+<p>为了加速消息处理，运行时系统缓存方法的selector和地址。每个类都有一个单独的缓存，它可以包含继承方法的selector以及类中定义的方法。在搜索调度表之前，消息传递例程首先检查接收对象类的缓存（理论上曾经使用过的方法可能会再次使用）。如果方法selector在缓存中，则消息传递仅比函数调用慢一点。一旦一个程序运行了足够长的时间来“加热”它的缓存，它发送的几乎所有消息都会找到一个缓存的方法。程序运行时，缓存动态增长以适应新的消息。</p>
+
+<h4 id="使用隐藏的参数">使用隐藏的参数</h4>
+
+<p>当objc_msgSend找到实现一个方法的procedure时，它会调用该procedure并将消息中的所有参数传递给该procedure。 它也传递了procedure两个隐藏的参数：</p>
+
+<ul>
+  <li>接收对象</li>
+  <li>该方法的selector</li>
+</ul>
+
+<p>这些参数为每个方法提供了有关调用它的消息表达式的明确信息。 他们被认为是“隐藏的”，因为他们没有在定义方法的源代码中声明。 编译代码时将它们插入到实现中。</p>
+
+<p>虽然这些参数没有明确的声明，但源代码仍然可以引用它们（就像它可以引用接收对象的实例变量一样）。 一个方法将接收对象称为self，并将其作为<code class="highlighter-rouge">_cmd</code>自己的选择器。 在下面的例子中，<code class="highlighter-rouge">_cmd</code>指向<code class="highlighter-rouge">strange</code>方法的选择器，而自己指向接收<code class="highlighter-rouge">strange</code>消息的对象。</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="o">-</span> <span class="n">strange</span>
+<span class="p">{</span>
+    <span class="n">id</span>  <span class="n">target</span> <span class="o">=</span> <span class="n">getTheReceiver</span><span class="p">();</span>
+    <span class="n">SEL</span> <span class="n">method</span> <span class="o">=</span> <span class="n">getTheMethod</span><span class="p">();</span>
+ 
+    <span class="k">if</span> <span class="p">(</span> <span class="n">target</span> <span class="o">==</span> <span class="n">self</span> <span class="o">||</span> <span class="n">method</span> <span class="o">==</span> <span class="n">_cmd</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="nb">nil</span><span class="p">;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">target</span> <span class="nf">performSelector</span><span class="p">:</span><span class="n">method</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<h4 id="获取方法地址">获取方法地址</h4>
+
+<p>规避动态绑定的唯一方法是获取方法的地址，并直接调用它，就像它是一个函数一样。 在特定的方法将被连续多次执行并且您希望避免每次执行该方法时消息的开销的情况下，这可能是适当的。</p>
+
+<p>使用NSObject类<code class="highlighter-rouge">methodForSelector：</code>中定义的方法，可以请求一个指向实现方法的过程的指针，然后使用指针调用该过程。<code class="highlighter-rouge"> methodForSelector：</code>返回的指针必须小心转换为正确的函数类型。 转换中应包含返回类型和参数类型。</p>
+
+<p>下面的例子展示了如何调用实现setFilled：方法的过程：</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">setter</span><span class="p">)(</span><span class="n">id</span><span class="p">,</span> <span class="n">SEL</span><span class="p">,</span> <span class="n">BOOL</span><span class="p">);</span>
+<span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+ 
+<span class="n">setter</span> <span class="o">=</span> <span class="p">(</span><span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="p">)(</span><span class="n">id</span><span class="p">,</span> <span class="n">SEL</span><span class="p">,</span> <span class="n">BOOL</span><span class="p">))[</span><span class="n">target</span>
+    <span class="nf">methodForSelector</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nf">setFilled</span><span class="p">:)];</span>
+<span class="k">for</span> <span class="p">(</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">1000</span> <span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+    <span class="n">setter</span><span class="p">(</span><span class="n">targetList</span><span class="p">[</span><span class="nf">i</span><span class="p">],</span> <span class="k">@selector</span><span class="p">(</span><span class="n">setFilled</span><span class="o">:</span><span class="p">),</span> <span class="nb">YES</span><span class="p">);</span>
+</code></pre>
+</div>
+
+<p>传递给procedure的前两个参数是接收对象（self）和方法选择器（_cmd）。 这些参数在方法语法中是隐藏的，但当方法被调用为函数时必须明确。</p>
+
+<p>使用methodForSelector：绕过动态绑定节省了消息传递所需的大部分时间。 但是，只有在特定消息重复多次的情况下，节省量才会显着，如上面所示的for循环。</p>
+
+<p>请注意，methodForSelector：由Cocoa运行时系统提供; 这不是Objective-C语言本身的特征。</p>
+
+<h3 id="四动态方法解析">四、动态方法解析</h3>
+
+<h4 id="动态解析">动态解析</h4>
+
+<p>在某些情况下，您可能想要动态地提供方法的实现。 例如，Objective-C声明的属性功能包含@dynamic指令：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>@dynamic propertyName;
+</code></pre>
+</div>
+
+<p>它告诉编译器与属性相关的方法将被动态地提供。</p>
+
+<p>您可以实现<code class="highlighter-rouge">resolveInstanceMethod：</code>和<code class="highlighter-rouge">resolveClassMethod</code>方法分别为实例和类方法的给定选择器动态提供实现。</p>
+
+<p>Objective-C方法只是一个C函数，它至少需要两个参数<code class="highlighter-rouge">self</code>和<code class="highlighter-rouge">_cmd</code>。 您可以使用函数<code class="highlighter-rouge">class_addMethod</code>将函数添加到类中。 因此，给出以下功能：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>void dynamicMethodIMP(id self, SEL _cmd) {
+    // implementation ....
+}
+</code></pre>
+</div>
+
+<p>你可以动态地将它以一个方法的形式添加到一个类中 (调用 <code class="highlighter-rouge">resolveThisMethodDynamically</code>) 用<code class="highlighter-rouge">resolveInstanceMethod:</code></p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">@implementation</span> <span class="nc">MyClass</span>
+<span class="k">+</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">resolveInstanceMethod</span><span class="p">:(</span><span class="n">SEL</span><span class="p">)</span><span class="nv">aSEL</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">aSEL</span> <span class="o">==</span> <span class="k">@selector</span><span class="p">(</span><span class="n">resolveThisMethodDynamically</span><span class="p">))</span> <span class="p">{</span>
+          <span class="n">class_addMethod</span><span class="p">([</span><span class="n">self</span> <span class="nf">class</span><span class="p">],</span> <span class="n">aSEL</span><span class="p">,</span> <span class="p">(</span><span class="n">IMP</span><span class="p">)</span> <span class="n">dynamicMethodIMP</span><span class="p">,</span> <span class="s">"v@:"</span><span class="p">);</span>
+          <span class="k">return</span> <span class="nb">YES</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">super</span> <span class="nf">resolveInstanceMethod</span><span class="p">:</span><span class="n">aSEL</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="k">@end</span>
+</code></pre>
+</div>
+
+<p>转发方法（如消息转发中所述）和动态方法解决方案在很大程度上是正交的。 一个类有机会在转发机制启动之前动态地解析一个方法。如果调用了<code class="highlighter-rouge">respondsToSelector：</code>或<code class="highlighter-rouge">instancesRespondToSelector：</code>，那么动态方法解析器就有机会为选择器提供一个IMP。 如果您实现<code class="highlighter-rouge">resolveInstanceMethod：</code>但希望特定的选择器实际上通过转发机制转发，则您为这些选择器返回NO。</p>
+
+<h4 id="动态加载">动态加载</h4>
+
+<p>Objective-C程序可以在运行时加载和链接新的class和category。新的代码被合并到程序中，并在开始时加载class和category。</p>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2015/10/10/network/" data-toggle="tooltip" data-placement="top" title="网络">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2016/03/05/runtime/" data-toggle="tooltip" data-placement="top" title="神奇的Runtime">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

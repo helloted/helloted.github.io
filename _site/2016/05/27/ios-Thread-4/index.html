@@ -243,6 +243,8 @@
   <p>3、NSCondition</p>
 </blockquote>
 
+<p>条件不是锁，但是与锁一样是同步工具</p>
+
 <div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">wait</span><span class="p">;</span>
 <span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">waitUntilDate</span><span class="p">:(</span><span class="n">NSDate</span> <span class="o">*</span><span class="p">)</span><span class="nv">limit</span><span class="p">;</span>
 <span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">signal</span><span class="p">;</span>
@@ -250,21 +252,11 @@
 </code></pre>
 </div>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code>        <span class="c1">// NSCondition
-</span>        <span class="n">NSCondition</span> <span class="o">*</span><span class="n">condition</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSCondition</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
-        <span class="n">lastTime</span> <span class="o">=</span> <span class="n">CFAbsoluteTimeGetCurrent</span><span class="p">();</span>
-        <span class="k">for</span> <span class="p">(</span><span class="n">NSInteger</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">KRunCount</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-            <span class="p">[</span><span class="n">condition</span> <span class="nf">lock</span><span class="p">];</span>
-            <span class="p">[</span><span class="n">condition</span> <span class="nf">unlock</span><span class="p">];</span>
-        <span class="p">}</span>
-        <span class="n">current</span> <span class="o">=</span> <span class="n">CFAbsoluteTimeGetCurrent</span><span class="p">();</span>
-        <span class="n">NSLog</span><span class="p">(</span><span class="s">@"NSCondition: %f ms"</span><span class="p">,</span> <span class="p">(</span><span class="n">current</span> <span class="o">-</span> <span class="n">lastTime</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">);</span>
-</code></pre>
-</div>
-
 <blockquote>
   <p>4、NSConditionLock</p>
 </blockquote>
+
+<p>通常，当多线程需要以特定的顺序来执行任务的时候，你可以使用一个 NSConditionLock 对象，比如当一个线程生产数据，而另外一个线程消费数据。生产者执行时，消费者使用由你程序指定的条件来获取锁(条件本身是一个你定义的整形 值)。当生产者完成时，它会解锁该锁并设置锁的条件为合适的整形值来唤醒消费者 线程，之后消费线程继续处理数据。</p>
 
 <div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">lockWhenCondition</span><span class="p">:(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">condition</span><span class="p">;</span>
 <span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="n">tryLock</span><span class="p">;</span>
@@ -291,7 +283,7 @@
   <p>5、NSRecursiveLock</p>
 </blockquote>
 
-<p>递归锁，当我们线程中方法需要递归时用这个锁可以避免死锁</p>
+<p>NSRecursiveLock 类定义的锁可以在同一线程多次获得，而不会造成死锁。一个递归锁会跟踪它被多少次成功获得了。每次成功的获得该锁都必须平衡调用锁住和解 锁的操作。只有所有的锁住和解锁操作都平衡的时候，锁才真正被释放给其他线程获 得。正如它名字所言，这种类型的锁通常被用在一个递归函数里面来防止递归造成阻 塞线程。你可以类似的在非递归的情况下使用他来调用函数，这些函数的语义要求它 们使用锁。以下是一个简单递归函数，它在递归中获取锁。如果你不在该代码里使用 NSRecursiveLock 对象，当函数被再次调用的时候线程将会出现死锁。</p>
 
 <div class="language-objc highlighter-rouge"><pre class="highlight"><code>        <span class="c1">// NSRecursiveLock
 </span>        <span class="n">NSRecursiveLock</span> <span class="o">*</span><span class="n">recursiveLock</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSRecursiveLock</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>

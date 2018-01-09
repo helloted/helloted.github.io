@@ -157,6 +157,14 @@
 <p>为了配置 run loop,你所需要做的是启动你的线程，获取 run loop 的对象引用， 设置你的事件处理程序，并告诉 run loop 运行。Cocoa 和 Carbon 提供的基础设施会 自动为你的主线程配置相应的 run loop。如果你打算创建长时间运行的辅助线程， 那么你必须为你的线程配置相应的 run loop。</p>
 
 <blockquote>
+  <p>与autoreleasepool的关系</p>
+</blockquote>
+
+<p>每个Cocoa应用程序的线程都会维护一个它自己的autorelease pool栈，如果你显式地重新建立一个线程，你必须自己建立你自己的autorelease pool block。而GCD和NSOpearetion则会自动维护autoreleasepool，除非是大量的对象需要自己控制pool的释放时间。</p>
+
+<p>因为自动释放池不会释放它的对象直到线程退出。长时运行的线程需求新建额外的自动释放池来更频繁的释放它的对象。比如，一个使用 run loop 的线程可能在每次运行完一次循环的时候创建并释放该自动释放池。更频繁的释放对象可以防止你的应用程序内存占用太大造成性能问题。也就是说一个普通线程的自动释放池在线程结束时才会把drain pool，而开启了run loop的线程会每次循环后释放并且重新建立。</p>
+
+<blockquote>
   <p>线程同步</p>
 </blockquote>
 
@@ -186,6 +194,8 @@
 </div>
 
 <h3 id="三nsthread">三、NSThread</h3>
+
+<p>我们应该避免显式地创建线程，你可以考虑使用异步 API，GCD 方式，或操作对象来实现并发，而不是自己创建一个线程。这些技术背后为你做了线程相关的工作，并保证是无误的。此外，比如 GCD 和操作对象技术被设计用来管理线程，比通过自己的代码根据当前的负载调整活动线程的数量更高效</p>
 
 <h4 id="1创建线程的方式">1、创建线程的方式</h4>
 
@@ -265,7 +275,7 @@
 
 <p>可以看到，使用NSMachPort的结果为调用了其它线程的1个函数，而这正是performSelector所做的事情，所以，NSMachPort是个鸡肋。线程间通信应该都通过performSelector来搞定。</p>
 
-<h3 id="四使用nsobject来创建一个线程">四、使用NSObject来创建一个线程</h3>
+<h3 id="四使用nsobject来异步编程">四、使用NSObject来异步编程</h3>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>[obj performSelectorInBackground:@selector(backMethod) withObject:nil];
 </code></pre>
