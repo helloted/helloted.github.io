@@ -86,7 +86,7 @@
 
 
     <!-- Post Header -->
-<header class="intro-header" style="background-image: url('/img/Runtime/bg.png')">
+<header class="intro-header" style="background-image: url('/img/bg/01.png')">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
@@ -271,9 +271,9 @@
 
 <p>7、首先runtime发送<code class="highlighter-rouge">methodSignatureForSelector:</code>消息查看Selector对应的方法签名，即参数与返回值的类型信息。如果有方法签名返回，runtime则根据方法签名创建描述该消息的NSInvocation，向当前对象发送<code class="highlighter-rouge">forwardInvocation:</code>消息，以创建的NSInvocation对象作为参数；若<code class="highlighter-rouge">methodSignatureForSelector:</code>无方法签名返回，则向当前对象发送<code class="highlighter-rouge">doesNotRecognizeSelector:</code>消息,程序抛出异常退出。</p>
 
-<p><img src="/img/Runtime/runtime_01.png" alt="" /></p>
+<p><img src="/img/Simple_4/01.png" alt="" /></p>
 
-<p><img src="/img/Runtime/runtime_02.jpg" alt="" /></p>
+<p><img src="/img/Simple_4/02.jpg" alt="" /></p>
 
 <h3 id="五动态添加属性">五、动态添加属性</h3>
 
@@ -281,9 +281,9 @@
 
 <p>1、不能添加成员变量，会报错</p>
 
-<p><img src="/img/Runtime/runtime_03.png" alt="" /></p>
+<p><img src="/img/Simple_4/03.png" alt="" /></p>
 
-<p><img src="/img/Runtime/runtime_04.png" alt="" /></p>
+<p><img src="/img/Simple_4/04.png" alt="" /></p>
 
 <p>这个函数只能在“构建一个类的过程中”调用。一旦完成类定义，就不能再添加成员变量了</p>
 
@@ -331,7 +331,21 @@ IMP数据类型：他其实就是一个编译器内部实现时候的函数指�
 
 <p>5、当没有observer观察任何一个property时，删除动态创建的子类</p>
 
-<h3 id="七利用runtime可以作用的一些方法">七、利用Runtime可以作用的一些方法：</h3>
+<h3 id="七method-swizzling原理">七、Method Swizzling原理</h3>
+
+<p>在Objective-C中调用一个方法，其实是向一个对象发送消息，查找消息的唯一依据是selector的名字。利用Objective-C的动态特性，可以实现在运行时偷换selector对应的方法实现，达到给方法(Hook)挂钩的目的。</p>
+
+<p>每个类都有一个方法列表，存放着selector的名字和IMP方法实现的映射关系。IMP有点类似函数指针，指向具体的Method实现。</p>
+
+<p><img src="/img/Simple_4/05.png" alt="" /></p>
+
+<p>我们可以利用 method_exchangeImplementations 来交换2个方法中的IMP，</p>
+
+<p>我们可以利用 method_setImplementation 来直接设置某个方法的IMP</p>
+
+<p><img src="/img/Simple_4/06.png" alt="" /></p>
+
+<h3 id="八利用runtime可以作用的一些方法">八、利用Runtime可以作用的一些方法：</h3>
 
 <p>class_getName：获取类名</p>
 

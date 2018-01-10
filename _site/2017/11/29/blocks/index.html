@@ -206,7 +206,10 @@
 
 <p>打印结果</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">BlockDemo</span><span class="p">[</span><span class="mi">59851</span><span class="o">:</span><span class="mi">10455160</span><span class="p">]</span> <span class="o">&lt;</span><span class="n">__NSStackBlock__</span><span class="o">:</span> <span class="mh">0x7fff5fbff6a8</span><span class="o">&gt;</span>
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="c1">// MRC
+</span><span class="n">BlockDemo</span><span class="p">[</span><span class="mi">59851</span><span class="o">:</span><span class="mi">10455160</span><span class="p">]</span> <span class="o">&lt;</span><span class="n">__NSStackBlock__</span><span class="o">:</span> <span class="mh">0x7fff5fbff6a8</span><span class="o">&gt;</span>
+<span class="c1">// ARC
+</span><span class="n">BlockDemo</span><span class="p">[</span><span class="mi">60278</span><span class="o">:</span><span class="mi">10523410</span><span class="p">]</span> <span class="o">&lt;</span><span class="n">__NSMallocBlock__</span><span class="o">:</span> <span class="mh">0x10055e4b0</span><span class="o">&gt;</span>
 </code></pre>
 </div>
 
@@ -272,7 +275,10 @@
 
 <p>打印结果</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>BlockDemo[59873:10462816] &lt;__NSStackBlock__: 0x7fff5fbff688&gt;
+<div class="highlighter-rouge"><pre class="highlight"><code>// MRC
+BlockDemo[59851:10455160] &lt;__NSStackBlock__: 0x7fff5fbff6a8&gt;
+// ARC
+BlockDemo[60278:10523410] &lt;__NSMallocBlock__: 0x10055e4b0&gt;
 </code></pre>
 </div>
 
@@ -330,7 +336,11 @@
 
 <p>这样，就成功地修改变量的值。</p>
 
+<h4 id="arc与mrc">ARC与MRC</h4>
+
 <p>因此在ARC情况下,创建的block仍然是NSConcreteStackBlock类型,只不过当block被引用或返回时,ARC帮助我们完成了copy和内存管理的工作变成NSConcreteMallocBlock放在堆上。</p>
+
+<p>在 ARC 开启的情况下，将只会有 NSConcreteGlobalBlock 和 NSConcreteMallocBlock 类型的 block。</p>
 
 
                 <hr>

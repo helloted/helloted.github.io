@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-01-09T20:10:57+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">【译】Flexbox布局指南</title><link href="http://www.helloted.com/2017/12/20/flexbox/" rel="alternate" type="text/html" title="【译】Flexbox布局指南" /><published>2017-12-20T20:00:00+08:00</published><updated>2017-12-20T20:00:00+08:00</updated><id>http://www.helloted.com/2017/12/20/flexbox</id><content type="html" xml:base="http://www.helloted.com/2017/12/20/flexbox/">&lt;p&gt;本文翻译来自&lt;a href=&quot;https://css-tricks.com/snippets/css/a-guide-to-flexbox/&quot;&gt;https://css-tricks.com/snippets/css/a-guide-to-flexbox/&lt;/a&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-01-10T10:38:11+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">【译】Flexbox布局指南</title><link href="http://www.helloted.com/2017/12/20/flexbox/" rel="alternate" type="text/html" title="【译】Flexbox布局指南" /><published>2017-12-20T20:00:00+08:00</published><updated>2017-12-20T20:00:00+08:00</updated><id>http://www.helloted.com/2017/12/20/flexbox</id><content type="html" xml:base="http://www.helloted.com/2017/12/20/flexbox/">&lt;p&gt;本文翻译来自&lt;a href=&quot;https://css-tricks.com/snippets/css/a-guide-to-flexbox/&quot;&gt;https://css-tricks.com/snippets/css/a-guide-to-flexbox/&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;一背景&quot;&gt;一、背景&lt;/h3&gt;
 
@@ -952,7 +952,10 @@ ssserver -c /etc/shadowsocks.json -d stop  //停止
 
 &lt;p&gt;打印结果&lt;/p&gt;
 
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;BlockDemo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;59851&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10455160&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__NSStackBlock__&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x7fff5fbff6a8&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// MRC
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BlockDemo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;59851&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10455160&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__NSStackBlock__&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x7fff5fbff6a8&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// ARC
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BlockDemo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;60278&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10523410&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__NSMallocBlock__&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x10055e4b0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
@@ -1018,7 +1021,10 @@ ssserver -c /etc/shadowsocks.json -d stop  //停止
 
 &lt;p&gt;打印结果&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;BlockDemo[59873:10462816] &amp;lt;__NSStackBlock__: 0x7fff5fbff688&amp;gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// MRC
+BlockDemo[59851:10455160] &amp;lt;__NSStackBlock__: 0x7fff5fbff6a8&amp;gt;
+// ARC
+BlockDemo[60278:10523410] &amp;lt;__NSMallocBlock__: 0x10055e4b0&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
@@ -1076,7 +1082,11 @@ ssserver -c /etc/shadowsocks.json -d stop  //停止
 
 &lt;p&gt;这样，就成功地修改变量的值。&lt;/p&gt;
 
-&lt;p&gt;因此在ARC情况下,创建的block仍然是NSConcreteStackBlock类型,只不过当block被引用或返回时,ARC帮助我们完成了copy和内存管理的工作变成NSConcreteMallocBlock放在堆上。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">查看LLVM官方文档Block-ABI-Apple</summary></entry><entry><title type="html">【译】iOS内存管理指南</title><link href="http://www.helloted.com/2017/11/29/MemoryManagement/" rel="alternate" type="text/html" title="【译】iOS内存管理指南" /><published>2017-11-29T20:00:00+08:00</published><updated>2017-11-29T20:00:00+08:00</updated><id>http://www.helloted.com/2017/11/29/MemoryManagement</id><content type="html" xml:base="http://www.helloted.com/2017/11/29/MemoryManagement/">&lt;p&gt;本文翻译自&lt;a href=&quot;https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/MemoryMgmt.html#//apple_ref/doc/uid/10000011i&quot;&gt;Advanced Memory Management Programming Guide&lt;/a&gt;&lt;/p&gt;
+&lt;h4 id=&quot;arc与mrc&quot;&gt;ARC与MRC&lt;/h4&gt;
+
+&lt;p&gt;因此在ARC情况下,创建的block仍然是NSConcreteStackBlock类型,只不过当block被引用或返回时,ARC帮助我们完成了copy和内存管理的工作变成NSConcreteMallocBlock放在堆上。&lt;/p&gt;
+
+&lt;p&gt;在 ARC 开启的情况下，将只会有 NSConcreteGlobalBlock 和 NSConcreteMallocBlock 类型的 block。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">查看LLVM官方文档Block-ABI-Apple</summary></entry><entry><title type="html">【译】iOS内存管理指南</title><link href="http://www.helloted.com/2017/11/29/MemoryManagement/" rel="alternate" type="text/html" title="【译】iOS内存管理指南" /><published>2017-11-29T20:00:00+08:00</published><updated>2017-11-29T20:00:00+08:00</updated><id>http://www.helloted.com/2017/11/29/MemoryManagement</id><content type="html" xml:base="http://www.helloted.com/2017/11/29/MemoryManagement/">&lt;p&gt;本文翻译自&lt;a href=&quot;https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/MemoryMgmt.html#//apple_ref/doc/uid/10000011i&quot;&gt;Advanced Memory Management Programming Guide&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;一关于内存管理&quot;&gt;一、关于内存管理&lt;/h3&gt;
 

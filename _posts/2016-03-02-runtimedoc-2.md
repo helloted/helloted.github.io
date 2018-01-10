@@ -4,7 +4,7 @@ title:      "【译】Objective-C Runtime编程指南(2)"
 subtitle:   "Objective-C中Runtime的官方文档：属性"
 date:       2016-03-02 12:00:00
 author:     "Ted"
-header-img: "img/Runtime/bg.png"
+header-img: "img/bg/01.png"
 ---
 
 苹果官方文档[Objective-C Runtime Programming Guide](https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008048-CH1-SW1)
