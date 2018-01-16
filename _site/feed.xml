@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-01-16T10:52:31+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">【译】View编程指南(二)</title><link href="http://www.helloted.com/2018/01/15/View_3/" rel="alternate" type="text/html" title="【译】View编程指南(二)" /><published>2018-01-15T20:00:00+08:00</published><updated>2018-01-15T20:00:00+08:00</updated><id>http://www.helloted.com/2018/01/15/View_3</id><content type="html" xml:base="http://www.helloted.com/2018/01/15/View_3/">&lt;p&gt;苹果官方文档&lt;a href=&quot;https://developer.apple.com/library/content/documentation/WindowsViews/Conceptual/ViewPG_iPhoneOS/Introduction/Introduction.html#//apple_ref/doc/uid/TP40009503-CH1-SW2&quot;&gt;View Programming Guide for iOS&lt;/a&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-01-16T14:30:59+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">【译】View编程指南(三)</title><link href="http://www.helloted.com/2018/01/15/View_3/" rel="alternate" type="text/html" title="【译】View编程指南(三)" /><published>2018-01-15T20:00:00+08:00</published><updated>2018-01-15T20:00:00+08:00</updated><id>http://www.helloted.com/2018/01/15/View_3</id><content type="html" xml:base="http://www.helloted.com/2018/01/15/View_3/">&lt;p&gt;苹果官方文档&lt;a href=&quot;https://developer.apple.com/library/content/documentation/WindowsViews/Conceptual/ViewPG_iPhoneOS/Introduction/Introduction.html#//apple_ref/doc/uid/TP40009503-CH1-SW2&quot;&gt;View Programming Guide for iOS&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;四views&quot;&gt;四、Views&lt;/h3&gt;
 
@@ -87,9 +87,129 @@
 
 &lt;h4 id=&quot;创建和管理一个view-hierarchy&quot;&gt;创建和管理一个View Hierarchy&lt;/h4&gt;
 
-&lt;p&gt;管理view层次结构是开发应用程序用户界面的关键部分。 您的view的组织影响您的应用程序的外观，以及您的应用程序如何响应更改和事件。 例如，view层次结构中的父子关系确定哪些对象可能处理特定的触摸事件。 同样，父子关系定义每个视图如何响应界面方向的变化。&lt;/p&gt;
+&lt;p&gt;管理view层次结构是开发应用程序用户界面的关键部分。 您的view的组织影响您的应用程序的外观，以及您的应用程序如何响应更改和事件。 例如，view层次结构中的父子关系确定哪些对象可能处理特定的触摸事件。 同样，父子关系定义每个view如何响应界面方向的变化。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/16.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">苹果官方文档View Programming Guide for iOS</summary></entry><entry><title type="html">【译】View编程指南(二)</title><link href="http://www.helloted.com/2018/01/15/View_2/" rel="alternate" type="text/html" title="【译】View编程指南(二)" /><published>2018-01-15T20:00:00+08:00</published><updated>2018-01-15T20:00:00+08:00</updated><id>http://www.helloted.com/2018/01/15/View_2</id><content type="html" xml:base="http://www.helloted.com/2018/01/15/View_2/">&lt;p&gt;苹果官方文档&lt;a href=&quot;https://developer.apple.com/library/content/documentation/WindowsViews/Conceptual/ViewPG_iPhoneOS/Introduction/Introduction.html#//apple_ref/doc/uid/TP40009503-CH1-SW2&quot;&gt;View Programming Guide for iOS&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/img/Simple_3/16.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;添加和删除子view&quot;&gt;添加和删除子view&lt;/h4&gt;
+
+&lt;p&gt;Interface Builder是构建view层次结构最方便的方式，因为您可以用图形方式组装view，查看view之间的关系，并确切了解在运行时将如何显示这些view。使用Interface Builder时，将结果view层次结构保存在一个nib文件中，在运行时加载，因为需要相应的view。&lt;/p&gt;
+
+&lt;p&gt;如果您希望以编程方式创建view，请创建并初始化它们，然后使用以下方法将它们排列为层次结构：&lt;/p&gt;
+
+&lt;p&gt;要将subview添加到superview，请调用superview的&lt;code class=&quot;highlighter-rouge&quot;&gt;addSubview：&lt;/code&gt;方法。此方法将subview添加到父级View的subviews列表的末尾。
+要在superview的subviews中间插入subview，请调用superview的任何&lt;code class=&quot;highlighter-rouge&quot;&gt;insertSubview：...&lt;/code&gt;方法。在list中间插入一个subview可视化地将该view放置在列表中稍后的任何view的后面。
+要对其superview的现有subviews进行重新排序，请调用superview的&lt;code class=&quot;highlighter-rouge&quot;&gt;bringSubviewToFront：&lt;/code&gt;，&lt;code class=&quot;highlighter-rouge&quot;&gt;sendSubviewToBack：&lt;/code&gt;或&lt;code class=&quot;highlighter-rouge&quot;&gt;exchangeSubviewAtIndex：&lt;/code&gt;,&lt;code class=&quot;highlighter-rouge&quot;&gt;withSubviewAtIndex：&lt;/code&gt;方法。使用这些方法比删除subview并重新插入它们要快。
+要从其superview移除subview，请调用subview的removeFromSuperview方法（而不是superview）。
+当subview添加到其父项时，subview的当前frame矩形表示它在superview内的初始位置。frame位于其superview的可见边界之外的subview在默认情况下不会被剪切。如果您希望将subview剪裁到superview的边界，则必须明确地将superview的clipsToBounds属性设置为YES。&lt;/p&gt;
+
+&lt;p&gt;一个地方你可以添加subview到view层次结构是在VC的loadView或viewDidLoad方法。如果以编程方式构建view，则将view创建代码放置在view控制器的loadView方法中。无论是以编程方式创建view还是从nib文件加载view，都可以在viewDidLoad方法中包含其他view配置代码。&lt;/p&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;viewDidLoad&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;super&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;viewDidLoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+ 
+    &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;title&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NSLocalizedString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;TransitionsTitle&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;@&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+ 
+    &lt;span class=&quot;c1&quot;&gt;// create the container view which we will use for transition animation (centered horizontally)
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;CGRect&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CGRectMake&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;round&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bounds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;width&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;kImageWidth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+                                                        &lt;span class=&quot;n&quot;&gt;kTopPlacement&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;kImageWidth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;kImageHeight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;containerView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UIView&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initWithFrame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;autorelease&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;addSubview&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;containerView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+ 
+    &lt;span class=&quot;c1&quot;&gt;// The container view can represent the images for accessibility.
+&lt;/span&gt;    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;containerView&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;setIsAccessibilityElement&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;YES&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;containerView&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;setAccessibilityLabel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSLocalizedString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;ImagesTitle&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;@&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)];&lt;/span&gt;
+ 
+    &lt;span class=&quot;c1&quot;&gt;// create the initial image view
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CGRectMake&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;kImageWidth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;kImageHeight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mainView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UIImageView&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initWithFrame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;autorelease&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mainView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;image&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UIImage&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;imageNamed&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;scene1.jpg&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;containerView&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;addSubview&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mainView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+ 
+    &lt;span class=&quot;c1&quot;&gt;// create the alternate image view (to transition between)
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;CGRect&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;imageFrame&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CGRectMake&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;kImageWidth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;kImageHeight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flipToView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UIImageView&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initWithFrame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;imageFrame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;autorelease&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flipToView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;image&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UIImage&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;imageNamed&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;scene2.jpg&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;重要提示：Superviews自动retain subviews，所以在嵌入subview之后，释放该subview是安全的。 实际上，建议这样做是因为它会阻止您的应用程序保留一次太多的view，并在稍后导致内存泄漏。 请记住，如果您从其supview中删除subview并打算重用它，则必须再次保留该subview。 &lt;code class=&quot;highlighter-rouge&quot;&gt;removeFromSuperview&lt;/code&gt;方法在移除之前autorelease一个subview。 如果在下一个事件循环周期之前不retain view，view将被released。&lt;/p&gt;
+
+&lt;p&gt;将subview添加到另一个View时，UIKit会通知superview和subview。 如果实现自定义view，则可以通过重写&lt;code class=&quot;highlighter-rouge&quot;&gt;willMoveToSuperview：&lt;/code&gt;，&lt;code class=&quot;highlighter-rouge&quot;&gt;willMoveToWindow：&lt;/code&gt;，&lt;code class=&quot;highlighter-rouge&quot;&gt;willRemoveSubview：&lt;/code&gt;，&lt;code class=&quot;highlighter-rouge&quot;&gt;didAddSubview：&lt;/code&gt;，&lt;code class=&quot;highlighter-rouge&quot;&gt;didMoveToSuperview&lt;/code&gt;或&lt;code class=&quot;highlighter-rouge&quot;&gt;didMoveToWindow&lt;/code&gt;方法中的一个或多个拦截这些通知。 您可以使用这些通知来更新与您的view层次结构相关的任何状态信息或执行其他任务。&lt;/p&gt;
+
+&lt;p&gt;创建view层次结构后，可以使用superivew和subview属性以编程方式导航它。 每个view的window属性包含当前显示view的window（如果有的话）。 由于view层次结构中的root view没有父view，因此其superview属性设置为nil。 对于当前在屏幕上的view，window对象是view层次结构的root view。&lt;/p&gt;
+
+&lt;h4 id=&quot;隐藏view&quot;&gt;隐藏View&lt;/h4&gt;
+
+&lt;p&gt;要以可视方式隐藏view，可以将其hidden属性设置为YES，也可以将其alpha属性更改为0.0。隐藏的view不会从系统接收触摸事件。但是，隐藏的view会参与与view层次关联的自动调整和其他布局操作。因此，隐藏view通常是从view层次结构中删除view的一种方便的替代方法，特别是如果您计划在不久的将来再次显示view时。&lt;/p&gt;
+
+&lt;p&gt;重要提示：如果您隐藏当前是第一响应者的view，则该view不会自动退出其第一响应者状态。针对第一响应者的事件仍然传递到隐藏的view。为了防止这种情况发生，当您隐藏它时，您应该强制您的view退出第一个响应者状态。&lt;/p&gt;
+
+&lt;p&gt;如果要为view的可视化转换为隐藏（或相反），您必须使用view的alpha属性进行动画处理。隐藏的属性不是一个动画属性，所以你对它做出的任何改变立即生效。&lt;/p&gt;
+
+&lt;h4 id=&quot;定位view-hierarchy中的view&quot;&gt;定位View Hierarchy中的view&lt;/h4&gt;
+
+&lt;p&gt;在view层次结构中定位view有两种方法：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;将指针存储在适当位置的任何相关view中，例如拥有view的VC中。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;为每个view的tag属性分配一个唯一的整数，并使用viewWithTag：方法来定位它。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;存储对相关view的引用是定位view的最常见方法，并使访问这些view非常方便。如果使用Interface Builder创建view，则可以使用outlet将nib文件中的对象连接到另一个对象。对于以编程方式创建的view，可以在私有成员变量中存储对这些view的引用。无论您使用outlets还是私有成员变量，您都有责任根据需要保留view，然后将其释放。确保对象被保留和正确释放的最好方法是使用声明的属性。&lt;/p&gt;
+
+&lt;p&gt;tag是减少硬编码依赖性并支持更加动态和灵活的解决方案的有用方法。你可以使用它的tag来定位它而不是存储一个指向view的指针。tag也是引用view的更持久的方式。例如，如果要保存应用程序中当前可见的view列表，则应将每个可见view的tag写入文件。这比归档实际的view对象更简单，特别是在只跟踪当前可见view的情况下。当您的应用程序随后被加载时，您将重新创建您的view并使用保存的tag列表来设置每个view的可见性，从而将您的view层次结构返回到之前的状态。&lt;/p&gt;
+
+&lt;h4 id=&quot;移动缩放旋转view&quot;&gt;移动、缩放、旋转View&lt;/h4&gt;
+
+&lt;p&gt;每个视图都有一个关联的affine transform，可以用来移动，缩放或旋转view的内容。 view transform会改变view的最终渲染外观，通常用于实现滚动，动画或其他视觉效果。&lt;/p&gt;
+
+&lt;p&gt;UIView的transform属性包含一个应用了转换的CGAffineTransform结构。 默认情况下，此属性设置为标记转换，不会修改视图的外观。 您可以随时为此属性分配一个新的转换。 例如，要将视图旋转45度，可以使用以下代码：&lt;/p&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;CGAffineTransform&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;xform&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CGAffineTransformMakeRotation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;M_PI&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;transform&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;xform&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;将上述代码中的变换应用于view将围绕其中心点顺时针旋转。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_3/17.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;将多个transform应用于视图时，将这些transform添加到CGAffineTransform结构的顺序非常重要。 旋转view然后移动与先移动后旋转是不一样的。 即使在每种情况下旋转和平移的数量是相同的，但是变换的顺序影响最终的结果。 此外，您添加的任何转换都将应用于相对于view的center。 因此，应用旋转因子围绕其中心点旋转view。 缩放view会更改view的宽度和高度，但不会更改其center.&lt;/p&gt;
+
+&lt;h4 id=&quot;view-hierarchy中转换坐标&quot;&gt;View Hierarchy中转换坐标&lt;/h4&gt;
+
+&lt;p&gt;在许多情况下，特别是在处理事件时，应用程序可能需要将坐标值从一个参照系转换为另一个参照系。 例如，触摸事件报告每个触摸在windows坐标系中的位置，但view对象通常需要view的本地坐标系中的信息。 UIView类定义了以下用于将坐标转换为view本地坐标系的方法：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;convertPoint:fromView:&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;convertRect:fromView:&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;convertPoint:toView:&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;convertRect:toView:&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;convert ...：fromView：&lt;/code&gt;方法将坐标从其他view的坐标系转换为当前view的局部坐标系（bounds矩形）。 相反，&lt;code class=&quot;highlighter-rouge&quot;&gt;convert ...：toView：&lt;/code&gt;方法将坐标从当前view的本地坐标系（bounds矩形）转换为指定view的坐标系。 如果您将nil指定为任何方法的参考view，则将转换到包含view的window的坐标系并从该view的坐标系转换。&lt;/p&gt;
+
+&lt;p&gt;除了UIView转换方法之外，UIWindow类还定义了几种转换方法。 这些方法类似于UIView版本，除了不是从view的局部坐标系转换而是从window的坐标系转换而来。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;convertPoint:fromWindow:&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;convertRect:fromWindow:&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;convertPoint:toWindow:&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;convertRect:toWindow:&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;在旋转view中转换坐标时，UIKit会在假定要返回的矩形反映源矩形所覆盖的屏幕区域的情况下转换矩形。&lt;/p&gt;
+
+&lt;p&gt;图显示了一个转换过程中如何导致矩形大小改变的例子。 在图中，外部父view包含旋转的subview。 将subview坐标系中的矩形转换为父坐标系，得到一个物理上较大的矩形。 这个较大的矩形实际上是outerView bounds中最小的矩形，它完全包围了旋转的矩形。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_3/18.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">苹果官方文档View Programming Guide for iOS</summary></entry><entry><title type="html">【译】View编程指南(二)</title><link href="http://www.helloted.com/2018/01/15/View_2/" rel="alternate" type="text/html" title="【译】View编程指南(二)" /><published>2018-01-15T20:00:00+08:00</published><updated>2018-01-15T20:00:00+08:00</updated><id>http://www.helloted.com/2018/01/15/View_2</id><content type="html" xml:base="http://www.helloted.com/2018/01/15/View_2/">&lt;p&gt;苹果官方文档&lt;a href=&quot;https://developer.apple.com/library/content/documentation/WindowsViews/Conceptual/ViewPG_iPhoneOS/Introduction/Introduction.html#//apple_ref/doc/uid/TP40009503-CH1-SW2&quot;&gt;View Programming Guide for iOS&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;三windows&quot;&gt;三、Windows&lt;/h3&gt;
 
