@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>【译】View编程指南(四) - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/2018/01/15/View_4/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/bg_01.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>【译】View编程指南(四)</h1>
+                    
+                    <h2 class="subheading">《View Programming Guide for iOS》文档翻译</h2>
+                    
+                    <span class="meta">Posted by Ted on January 15, 2018</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<p>苹果官方文档<a href="https://developer.apple.com/library/content/documentation/WindowsViews/Conceptual/ViewPG_iPhoneOS/Introduction/Introduction.html#//apple_ref/doc/uid/TP40009503-CH1-SW2">View Programming Guide for iOS</a></p>
+
+<h3 id="五动画">五、动画</h3>
+
+<p>动画在用户界面的不同状态之间提供流畅的视觉转换。 在iOS中，动画广泛用于重新定位view，更改大小，将其从view层次结构中移除，并将其隐藏起来。 您可以使用动画将反馈传达给用户或实现有趣的视觉效果。</p>
+
+<p>在iOS中，创建复杂的动画不需要您编写任何绘图代码。 本章介绍的所有动画技术都使用Core Animation提供的内置支持。 您只需触发动画并让Core Animation处理单个帧的渲染。 这使得创建复杂的动画非常容易，只需要几行代码。</p>
+
+<h4 id="哪些可以有动画">哪些可以有动画？</h4>
+
+<p>UIKit和Core Animation都支持动画，但每种技术提供的支持水平都不相同。 在UIKit中，动画是使用UIView对象执行的。 view支持一组涵盖许多常见任务的基本动画。 例如，您可以对view的属性进行动画更改，或使用过渡动画将一组view替换为另一组view</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Changes you can make</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">frame</code></td>
+      <td>修改这个属性来修改View的位置和大小 (如果View的 <code class="highlighter-rouge">transform</code> 没有包含identity transform, 那么取而代之，修改 <code class="highlighter-rouge">bounds</code> or <code class="highlighter-rouge">center</code> .)</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">bounds</code></td>
+      <td>修改这个属性来修改 view’s size.</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">center</code></td>
+      <td>修改这个属性来修改相对于父View坐标系统的中心点</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">transform</code></td>
+      <td>修改这个属性来修改相对于其中心点的移动缩放旋转. 这是2D层面的 (如果要3D层面需要使用 Core Animation.)</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">alpha</code></td>
+      <td>修改这个属性来修改 view的透明度.</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">backgroundColor</code></td>
+      <td>修改这个属性来修改View的背景颜色</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">contentStretch</code></td>
+      <td>修改这个属性来使内容更好地适应填充</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>动画view转换是一种让您对view hierarchy进行更改的方式，而不是view controller提供的view hierarchy。虽然您应该使用view controller来管理简洁的view hierarchy，但有时您可能需要替换全部或部分view hierarchy。在这些情况下，您可以使用基于view的转换来动画添加和删除view。
+在你想要执行更复杂的动画的时候，或者UIView类不支持的动画中，你可以使用Core Animation和view的底层layer来创建动画。由于view和layer对象错综复杂地链接在一起，因此对view layer的更改会影响view本身。使用核心动画，您可以为您的view的layer设置以下类型的更改：</p>
+
+<ul>
+  <li>layer的大小和位置</li>
+  <li>执行转换时使用的中心点</li>
+  <li>转换到三维空间中的layer或其sublayer</li>
+  <li>从layer分层结构中添加或删除layer</li>
+  <li>相对于其他兄弟layer的Z层顺序</li>
+  <li>layer的shadow</li>
+  <li>layer的border（包括layer的边角是否圆整）</li>
+  <li>在调整大小操作期间延伸的layer部分</li>
+  <li>layer的不透明度</li>
+  <li>位于layer边界之外的子layer的剪切行为</li>
+  <li>layer的当前内容</li>
+  <li>layer的栅格化行为</li>
+</ul>
+
+<p>注意，如果你的View用了一个自定义的layer对象，也就是这个对象没有与View相关联，你必须用Core Animation来修改它</p>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2018/01/15/View_3/" data-toggle="tooltip" data-placement="top" title="【译】View编程指南(三)">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>
