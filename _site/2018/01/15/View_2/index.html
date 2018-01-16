@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>【译】View编程指南(二) - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/2018/01/15/View_2/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/bg_01.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>【译】View编程指南(二)</h1>
+                    
+                    <h2 class="subheading">《View Programming Guide for iOS》文档翻译</h2>
+                    
+                    <span class="meta">Posted by Ted on January 15, 2018</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<p>苹果官方文档<a href="https://developer.apple.com/library/content/documentation/WindowsViews/Conceptual/ViewPG_iPhoneOS/Introduction/Introduction.html#//apple_ref/doc/uid/TP40009503-CH1-SW2">View Programming Guide for iOS</a></p>
+
+<h3 id="三windows">三、Windows</h3>
+
+<p>每个iOS应用程序至少需要一个window- 一个UIWindow类的实例 - 有些可能包含多个window。一个window对象有几个职责：</p>
+
+<ul>
+  <li>
+    <p>它包含您的应用程序的可见内容。</p>
+  </li>
+  <li>它在将触摸事件传递到View和其他应用程序对象中起着关键作用。</li>
+  <li>它与您的应用程序的View controller协同工作，以方便更改。</li>
+</ul>
+
+<p>在iOS中，Windows没有标题栏，关闭框或其他视觉装饰。一个window始终只是一个或多个view的空白容器。此外，应用程序不会通过显示新window来更改其内容。如果要更改显示的内容，请改为改变window的最前面的view。</p>
+
+<p>大多数iOS应用程序在其生命周期中只创建并使用一个window。该window横跨设备的整个主屏幕，并在应用程序生命周期的早期从应用程序的主要nib文件（或以编程方式创建）加载。但是，如果应用程序支持使用外部显示器进行视频输出，则可以创建一个额外的window来在该外部显示器上显示内容。所有其他window通常由系统创建，通常是为了响应特定事件（例如来电）创建的。</p>
+
+<h4 id="涉及windows的任务">涉及Windows的任务</h4>
+
+<p>对于许多应用程序，应用程序与window交互的唯一时间是在启动时创建windws时。 但是，您可以使用应用程序的window对象来执行几个与应用程序相关的任务：</p>
+
+<ul>
+  <li>使用window对象将点和矩形转换为window的本地坐标系或从window的本地坐标系进行转换。 例如，如果在window坐标中提供了一个值，那么在尝试使用它之前，可能需要将其转换为特定view的坐标系。</li>
+  <li>使用window通知来跟踪与window相关的更改。 Windows会在显示或隐藏通知或者接受或退出密钥状态时生成通知。 您可以使用这些通知在应用程序的其他部分执行操作。</li>
+</ul>
+
+<h4 id="创建和配置一个window">创建和配置一个window</h4>
+
+<p>您可以通过编程方式或使用Interface Builder来创建和配置应用程序的主window。 无论哪种情况，您都可以在启动时创建window，并保留该window并将其引用存储在您的应用程序delegate对象中。 如果你的应用程序创建了额外的window，让应用程序在需要时创建它们。 例如，如果您的应用程序支持在外部显示器上显示内容，则应在创建相应window之前等待显示器连接。</p>
+
+<p>无论您的应用程序是启动到前台还是后台，您都应始终在启动时创建应用程序的主window。 创建和配置window本身并不是一个昂贵的操作。 但是，如果您的应用程序直接进入后台，则应避免在应用程序进入前台之前使window可见。</p>
+
+<h4 id="在interface-builder中创建windows">在Interface Builder中创建Windows</h4>
+
+<p>使用Interface Builder创建应用程序的main window非常简单，因为Xcode项目模板可以帮你实现。每个新的Xcode应用程序项目都包含一个包含应用程序main window的主要nib文件（通常名称为MainWindow.xib或其某些变体）。另外，这些模板还为应用程序delegate对象中的该window定义了一个出口。您可以使用此outlet访问代码中的window对象。</p>
+
+<p>重要提示：在Interface Builder中创建window时，建议您在属性检查器中启用“全屏启动”选项。如果此选项未启用且您的window小于目标设备的屏幕，则某些view不会接收触摸事件。这是因为window（如所有view）不会在边界矩形外接收触摸事件。由于默认情况下，view不会被剪切到window边界，所以view仍然可见，但是事件不能到达它们。在启动时启用全屏选项可确保window适合当前屏幕。</p>
+
+<p>如果您正在改造一个项目以使用Interface Builder，那么使用Interface Builder创建一个window就是将window对象拖到您的nib文件中的简单方法。当然，你也应该做到以下几点：</p>
+
+<p>要在运行时访问window，应该将window连接到outlet，通常是在应用程序delegate或者nib文件的文件所有者中定义的window。
+如果改造计划包括将新的nib文件作为应用程序的主要nib文件，则还必须将应用程序的Info.plist文件中的NSMainNibFile键设置为nib文件的名称。更改此键的值可确保在调用应用程序delegate的应用程序：didFinishLaunchingWithOptions：方法时，nib文件已加载并可供使用。</p>
+
+<h4 id="以编程方式创建window">以编程方式创建window</h4>
+
+<p>如果您希望以编程方式创建应用程序的main window，则应在应用程序中包含与以下代码相似的代码：didFinishLaunchingWithOptions：应用程序delegate的方法：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>self.window = [[[UIWindow alloc] initWithFrame：[[UIScreen mainScreen] bounds]]
+</code></pre>
+</div>
+
+<p>在前面的示例中，self.window被假定为您的应用程序delegate的声明属性，该属性被配置为保留window对象。如果您是为外部显示创建window，则应将其分配给其他变量，并且需要指定代表该显示的非主UIScreen对象的边界。</p>
+
+<p>创建window时，应始终将window的大小设置为屏幕的全部范围。您不应该减小window的大小来容纳状态栏或任何其他项目。状态栏总是浮在window的顶部，所以你应该缩小以容纳状态栏的唯一的东西就是你放入window的view。如果你使用view contoller，VC应该自动处理你的view的大小。</p>
+
+<h4 id="将内容添加到window">将内容添加到Window</h4>
+
+<p>每个window通常都有一个root view对象（由相应的view controller管理），其中包含代表您的内容的所有其他view。使用单个root view简化了更改界面的过程;要显示新的内容，你所要做的就是替换root view。要在window中安装view，请使用<code class="highlighter-rouge">addSubview：</code>方法。例如，要安装由VC管理的view，可以使用类似于以下内容的代码：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[window addSubview:viewController.view];
+</code></pre>
+</div>
+
+<p>代替上述代码，您可以在您的nib文件中配置window的rootViewController属性。此属性提供了一种使用nib文件而非编程方式配置window的root view的便捷方法。如果在从其nib文件加载window时设置此属性，则UIKit会自动将相关VC的view安装为window的root view。此属性仅用于安装root view，不用于window与VC进行通信。
+您可以使用任何您想要的view作为window的root view。取决于你的界面设计，root view可以是一个通用的UIView对象，充当一个或多个子view的容器，root view可以是标准的系统view，或者rootview可以是你定义的自定义view。通常用作roo tview的一些标准系统view包括滚动view，表view和图像view。
+在配置window的rootview时，您需要负责在window内设置其初始大小和位置。对于不包含状态栏或显示半透明状态栏的应用程序，请将view大小设置为与window大小相匹配。对于显示不透明状态栏的应用程序，请将您的view放置在状态栏下方并相应地缩小其大小。从view的高度减去状态栏的高度可以防止view的顶部被遮挡。
+注意：如果window的rootview由容器view控制器（如选项卡栏控制器，导航控制器或分割view控制器）提供，则不需要自行设置view的初始大小。容器view控制器root据状态栏是否可见，自动调整view大小。</p>
+
+<h4 id="更改window级别">更改Window级别</h4>
+
+<p>每个UIWindow对象都有一个可配置的windowLevel属性，用于确定该window相对于其他window的位置。 大多数情况下，您不需要更改应用程序window的级别。 新建window在创建时自动分配到正常window级别。 正常的window级别表示该window显示与应用程序相关的内容。 对于需要悬浮在应用程序内容之上的信息（比如系统状态栏或警报消息）保留更高的window级别。 虽然你可以自己分配window到这些级别，但是当你使用特定的接口时，系统通常会为你做这些。 例如，当您显示或隐藏状态栏或显示警报视图时，系统会自动创建所需的window来显示这些项目。</p>
+
+<h4 id="监听window改变">监听Window改变</h4>
+
+<ul>
+  <li><code class="highlighter-rouge">UIWindowDidBecomeVisibleNotification</code></li>
+  <li><code class="highlighter-rouge">UIWindowDidBecomeHiddenNotification</code></li>
+  <li><code class="highlighter-rouge">UIWindowDidBecomeKeyNotification</code></li>
+  <li><code class="highlighter-rouge">UIWindowDidResignKeyNotification</code></li>
+</ul>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2018/01/15/View_1/" data-toggle="tooltip" data-placement="top" title="【译】View编程指南">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2018/01/15/View_3/" data-toggle="tooltip" data-placement="top" title="【译】View编程指南(二)">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

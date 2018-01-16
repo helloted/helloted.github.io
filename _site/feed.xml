@@ -1,4 +1,469 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-01-15T19:53:21+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">【译】Flexbox布局指南</title><link href="http://www.helloted.com/2017/12/20/flexbox/" rel="alternate" type="text/html" title="【译】Flexbox布局指南" /><published>2017-12-20T20:00:00+08:00</published><updated>2017-12-20T20:00:00+08:00</updated><id>http://www.helloted.com/2017/12/20/flexbox</id><content type="html" xml:base="http://www.helloted.com/2017/12/20/flexbox/">&lt;p&gt;本文翻译来自&lt;a href=&quot;https://css-tricks.com/snippets/css/a-guide-to-flexbox/&quot;&gt;https://css-tricks.com/snippets/css/a-guide-to-flexbox/&lt;/a&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-01-16T10:52:31+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">【译】View编程指南(二)</title><link href="http://www.helloted.com/2018/01/15/View_3/" rel="alternate" type="text/html" title="【译】View编程指南(二)" /><published>2018-01-15T20:00:00+08:00</published><updated>2018-01-15T20:00:00+08:00</updated><id>http://www.helloted.com/2018/01/15/View_3</id><content type="html" xml:base="http://www.helloted.com/2018/01/15/View_3/">&lt;p&gt;苹果官方文档&lt;a href=&quot;https://developer.apple.com/library/content/documentation/WindowsViews/Conceptual/ViewPG_iPhoneOS/Introduction/Introduction.html#//apple_ref/doc/uid/TP40009503-CH1-SW2&quot;&gt;View Programming Guide for iOS&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;四views&quot;&gt;四、Views&lt;/h3&gt;
+
+&lt;p&gt;由于View对象是应用程序与用户交互的主要方式，因此它们有许多责任。 这里仅仅是少数：&lt;/p&gt;
+
+&lt;p&gt;布局和subview管理&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;view定义了与其父view相关的默认调整大小行为。&lt;/li&gt;
+  &lt;li&gt;一个view可以管理subview列表。&lt;/li&gt;
+  &lt;li&gt;view可以根据需要重写subview的大小和位置。&lt;/li&gt;
+  &lt;li&gt;view可以将其坐标系中的点转换为其他view或window的坐标系。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;绘画和动画&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;view在其矩形区域绘制内容。&lt;/li&gt;
+  &lt;li&gt;一些view属性可以动画变成新的值。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;事件处理&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;view可以接收触摸事件。&lt;/li&gt;
+  &lt;li&gt;view参与响应者链。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;创建view&quot;&gt;创建View&lt;/h4&gt;
+
+&lt;p&gt;创建View最简单的方法是使用Interface Builder以图形方式进行组装。从Interface Builder中，您可以将View添加到界面，将这些view排列到层次结构中，配置每个view的设置，并将与view相关的行为连接到您的代码。由于Interface Builder使用实时view对象（即view类的实际实例），因此您在设计时看到的是运行时获得的内容。然后将这些活动对象保存在一个nib文件中，这是一个资源文件，用于保留对象的状态和配置。&lt;/p&gt;
+
+&lt;p&gt;您通常会创建nib文件，以便为应用程序的一个view控制器存储整个view层次结构。 nib文件的顶层通常包含一个表示view控制器view的view对象。（view控制器本身通常由文件的所有者对象来表示。）顶层view的大小应该适合目标设备，并且包含所有要呈现的其他view。使用nib文件仅存储view控制器view层次结构的一部分是很少见的。&lt;/p&gt;
+
+&lt;p&gt;在view控制器中使用nib文件时，只需使用nib文件信息初始化view控制器即可。view控制器在适当的时候处理view的加载和卸载。但是，如果您的nib文件未与view控制器关联，则可以使用NSBundle或UINib对象手动加载nib文件内容，该对象使用nib文件中的数据来重构view对象。&lt;/p&gt;
+
+&lt;p&gt;或者用代码创建&lt;/p&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;CGRect&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;viewRect&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CGRectMake&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;UIView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;myView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UIView&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initWithFrame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;viewRect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;设置view的属性&quot;&gt;设置View的属性&lt;/h4&gt;
+
+&lt;p&gt;UIView类有几个声明的属性来控制View的外观和行为。 这些属性用于操纵View的大小和位置，View的透明度，背景颜色和渲染行为。 所有这些属性都具有适当的默认值，您可以根据需要稍后进行更改。您还可以使用“Inspector”窗口在Interface Builder中配置其中的许多属性。&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;属性&lt;/th&gt;
+      &lt;th&gt;用处&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;alpha&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;hidden&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;opaque&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;这些属性影响view的不透明度。 alpha和hidden属性直接改变view的不透明度。opaque属性告诉系统如何合成view。 如果view的内容完全不透明，则将此属性设置为YES，因此不会显示任何底层view的内容。 将此属性设置为YES可消除不必要的合成操作，从而提高性能。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;bounds&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;frame&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;center&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;transform&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;这些属性会影响view的大小和位置。 center和frame属性表示view相对于superview的位置。 该frame还包括view的大小。 bounds属性定义了view在其自己的坐标系中的可见内容区域。transform属性用于以复杂的方式动画或移动整个view。 例如，您将使用变换来旋转或缩放view。 如果当前变换不是身份变换，则frame属性是不确定的，应该忽略。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;autoresizingMask&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;autoresizesSubviews&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;这些属性会影响view及其子view的自动调整大小行为。 autoresizingMask属性控制view如何响应其父view bounds中的更改。 autoresizesSubviews属性控制是否调整当前view的subview的大小。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;contentMode&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;contentStretch&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;contentScaleFactor&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;这些属性影响view内部内容的呈现行为。 contentMode和contentStretch属性确定在view的宽度或高度更改时如何处理内容。 contentScaleFactor属性仅在需要为高分辨率屏幕自定义view的绘制行为时使用。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;gestureRecognizers&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;userInteractionEnabled&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;multipleTouchEnabled&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;exclusiveTouch&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;这些属性会影响view处理触摸事件的方式。 gestureRecognizers属性包含附加到view的手势识别器。 其他属性控制view支持的触摸事件。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;backgroundColor&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;subviews&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;drawRect:&lt;/code&gt;method, &lt;code class=&quot;highlighter-rouge&quot;&gt;layer&lt;/code&gt;, (&lt;code class=&quot;highlighter-rouge&quot;&gt;layerClass&lt;/code&gt; method)&lt;/td&gt;
+      &lt;td&gt;这些属性和方法可以帮助您管理view的实际内容。 对于简单的view，您可以设置背景颜色并添加一个或多个subviews。 subviews属性本身包含subview的只读列表，但有几种添加和重新排列subview的方法。 对于具有自定义绘图行为的view，您必须重写drawRect：方法。&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;UIView类包含一个tag属性，您可以使用它来为各个view对象添加一个整数值。 您可以使用tag唯一地标识view层次结构中的view，并在运行时执行对这些view的搜索。（基于tag的搜索比自己迭代view层次更快。）tag属性的默认值为0。&lt;/p&gt;
+
+&lt;p&gt;要搜索带tag的view，请使用UIView的&lt;code class=&quot;highlighter-rouge&quot;&gt;viewWithTag：&lt;/code&gt;方法。 此方法执行接收器及其subview的深度优先搜索。 它不搜索superview或view层次结构的其他部分。 因此，从层次结构的root view调用此方法会搜索层次结构中的所有view，但是从特定的subview调用它只会搜索view的子集。&lt;/p&gt;
+
+&lt;h4 id=&quot;创建和管理一个view-hierarchy&quot;&gt;创建和管理一个View Hierarchy&lt;/h4&gt;
+
+&lt;p&gt;管理view层次结构是开发应用程序用户界面的关键部分。 您的view的组织影响您的应用程序的外观，以及您的应用程序如何响应更改和事件。 例如，view层次结构中的父子关系确定哪些对象可能处理特定的触摸事件。 同样，父子关系定义每个视图如何响应界面方向的变化。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_3/16.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">苹果官方文档View Programming Guide for iOS</summary></entry><entry><title type="html">【译】View编程指南(二)</title><link href="http://www.helloted.com/2018/01/15/View_2/" rel="alternate" type="text/html" title="【译】View编程指南(二)" /><published>2018-01-15T20:00:00+08:00</published><updated>2018-01-15T20:00:00+08:00</updated><id>http://www.helloted.com/2018/01/15/View_2</id><content type="html" xml:base="http://www.helloted.com/2018/01/15/View_2/">&lt;p&gt;苹果官方文档&lt;a href=&quot;https://developer.apple.com/library/content/documentation/WindowsViews/Conceptual/ViewPG_iPhoneOS/Introduction/Introduction.html#//apple_ref/doc/uid/TP40009503-CH1-SW2&quot;&gt;View Programming Guide for iOS&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;三windows&quot;&gt;三、Windows&lt;/h3&gt;
+
+&lt;p&gt;每个iOS应用程序至少需要一个window- 一个UIWindow类的实例 - 有些可能包含多个window。一个window对象有几个职责：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;它包含您的应用程序的可见内容。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;它在将触摸事件传递到View和其他应用程序对象中起着关键作用。&lt;/li&gt;
+  &lt;li&gt;它与您的应用程序的View controller协同工作，以方便更改。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;在iOS中，Windows没有标题栏，关闭框或其他视觉装饰。一个window始终只是一个或多个view的空白容器。此外，应用程序不会通过显示新window来更改其内容。如果要更改显示的内容，请改为改变window的最前面的view。&lt;/p&gt;
+
+&lt;p&gt;大多数iOS应用程序在其生命周期中只创建并使用一个window。该window横跨设备的整个主屏幕，并在应用程序生命周期的早期从应用程序的主要nib文件（或以编程方式创建）加载。但是，如果应用程序支持使用外部显示器进行视频输出，则可以创建一个额外的window来在该外部显示器上显示内容。所有其他window通常由系统创建，通常是为了响应特定事件（例如来电）创建的。&lt;/p&gt;
+
+&lt;h4 id=&quot;涉及windows的任务&quot;&gt;涉及Windows的任务&lt;/h4&gt;
+
+&lt;p&gt;对于许多应用程序，应用程序与window交互的唯一时间是在启动时创建windws时。 但是，您可以使用应用程序的window对象来执行几个与应用程序相关的任务：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;使用window对象将点和矩形转换为window的本地坐标系或从window的本地坐标系进行转换。 例如，如果在window坐标中提供了一个值，那么在尝试使用它之前，可能需要将其转换为特定view的坐标系。&lt;/li&gt;
+  &lt;li&gt;使用window通知来跟踪与window相关的更改。 Windows会在显示或隐藏通知或者接受或退出密钥状态时生成通知。 您可以使用这些通知在应用程序的其他部分执行操作。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;创建和配置一个window&quot;&gt;创建和配置一个window&lt;/h4&gt;
+
+&lt;p&gt;您可以通过编程方式或使用Interface Builder来创建和配置应用程序的主window。 无论哪种情况，您都可以在启动时创建window，并保留该window并将其引用存储在您的应用程序delegate对象中。 如果你的应用程序创建了额外的window，让应用程序在需要时创建它们。 例如，如果您的应用程序支持在外部显示器上显示内容，则应在创建相应window之前等待显示器连接。&lt;/p&gt;
+
+&lt;p&gt;无论您的应用程序是启动到前台还是后台，您都应始终在启动时创建应用程序的主window。 创建和配置window本身并不是一个昂贵的操作。 但是，如果您的应用程序直接进入后台，则应避免在应用程序进入前台之前使window可见。&lt;/p&gt;
+
+&lt;h4 id=&quot;在interface-builder中创建windows&quot;&gt;在Interface Builder中创建Windows&lt;/h4&gt;
+
+&lt;p&gt;使用Interface Builder创建应用程序的main window非常简单，因为Xcode项目模板可以帮你实现。每个新的Xcode应用程序项目都包含一个包含应用程序main window的主要nib文件（通常名称为MainWindow.xib或其某些变体）。另外，这些模板还为应用程序delegate对象中的该window定义了一个出口。您可以使用此outlet访问代码中的window对象。&lt;/p&gt;
+
+&lt;p&gt;重要提示：在Interface Builder中创建window时，建议您在属性检查器中启用“全屏启动”选项。如果此选项未启用且您的window小于目标设备的屏幕，则某些view不会接收触摸事件。这是因为window（如所有view）不会在边界矩形外接收触摸事件。由于默认情况下，view不会被剪切到window边界，所以view仍然可见，但是事件不能到达它们。在启动时启用全屏选项可确保window适合当前屏幕。&lt;/p&gt;
+
+&lt;p&gt;如果您正在改造一个项目以使用Interface Builder，那么使用Interface Builder创建一个window就是将window对象拖到您的nib文件中的简单方法。当然，你也应该做到以下几点：&lt;/p&gt;
+
+&lt;p&gt;要在运行时访问window，应该将window连接到outlet，通常是在应用程序delegate或者nib文件的文件所有者中定义的window。
+如果改造计划包括将新的nib文件作为应用程序的主要nib文件，则还必须将应用程序的Info.plist文件中的NSMainNibFile键设置为nib文件的名称。更改此键的值可确保在调用应用程序delegate的应用程序：didFinishLaunchingWithOptions：方法时，nib文件已加载并可供使用。&lt;/p&gt;
+
+&lt;h4 id=&quot;以编程方式创建window&quot;&gt;以编程方式创建window&lt;/h4&gt;
+
+&lt;p&gt;如果您希望以编程方式创建应用程序的main window，则应在应用程序中包含与以下代码相似的代码：didFinishLaunchingWithOptions：应用程序delegate的方法：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;self.window = [[[UIWindow alloc] initWithFrame：[[UIScreen mainScreen] bounds]]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;在前面的示例中，self.window被假定为您的应用程序delegate的声明属性，该属性被配置为保留window对象。如果您是为外部显示创建window，则应将其分配给其他变量，并且需要指定代表该显示的非主UIScreen对象的边界。&lt;/p&gt;
+
+&lt;p&gt;创建window时，应始终将window的大小设置为屏幕的全部范围。您不应该减小window的大小来容纳状态栏或任何其他项目。状态栏总是浮在window的顶部，所以你应该缩小以容纳状态栏的唯一的东西就是你放入window的view。如果你使用view contoller，VC应该自动处理你的view的大小。&lt;/p&gt;
+
+&lt;h4 id=&quot;将内容添加到window&quot;&gt;将内容添加到Window&lt;/h4&gt;
+
+&lt;p&gt;每个window通常都有一个root view对象（由相应的view controller管理），其中包含代表您的内容的所有其他view。使用单个root view简化了更改界面的过程;要显示新的内容，你所要做的就是替换root view。要在window中安装view，请使用&lt;code class=&quot;highlighter-rouge&quot;&gt;addSubview：&lt;/code&gt;方法。例如，要安装由VC管理的view，可以使用类似于以下内容的代码：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[window addSubview:viewController.view];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;代替上述代码，您可以在您的nib文件中配置window的rootViewController属性。此属性提供了一种使用nib文件而非编程方式配置window的root view的便捷方法。如果在从其nib文件加载window时设置此属性，则UIKit会自动将相关VC的view安装为window的root view。此属性仅用于安装root view，不用于window与VC进行通信。
+您可以使用任何您想要的view作为window的root view。取决于你的界面设计，root view可以是一个通用的UIView对象，充当一个或多个子view的容器，root view可以是标准的系统view，或者rootview可以是你定义的自定义view。通常用作roo tview的一些标准系统view包括滚动view，表view和图像view。
+在配置window的rootview时，您需要负责在window内设置其初始大小和位置。对于不包含状态栏或显示半透明状态栏的应用程序，请将view大小设置为与window大小相匹配。对于显示不透明状态栏的应用程序，请将您的view放置在状态栏下方并相应地缩小其大小。从view的高度减去状态栏的高度可以防止view的顶部被遮挡。
+注意：如果window的rootview由容器view控制器（如选项卡栏控制器，导航控制器或分割view控制器）提供，则不需要自行设置view的初始大小。容器view控制器root据状态栏是否可见，自动调整view大小。&lt;/p&gt;
+
+&lt;h4 id=&quot;更改window级别&quot;&gt;更改Window级别&lt;/h4&gt;
+
+&lt;p&gt;每个UIWindow对象都有一个可配置的windowLevel属性，用于确定该window相对于其他window的位置。 大多数情况下，您不需要更改应用程序window的级别。 新建window在创建时自动分配到正常window级别。 正常的window级别表示该window显示与应用程序相关的内容。 对于需要悬浮在应用程序内容之上的信息（比如系统状态栏或警报消息）保留更高的window级别。 虽然你可以自己分配window到这些级别，但是当你使用特定的接口时，系统通常会为你做这些。 例如，当您显示或隐藏状态栏或显示警报视图时，系统会自动创建所需的window来显示这些项目。&lt;/p&gt;
+
+&lt;h4 id=&quot;监听window改变&quot;&gt;监听Window改变&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;UIWindowDidBecomeVisibleNotification&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;UIWindowDidBecomeHiddenNotification&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;UIWindowDidBecomeKeyNotification&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;UIWindowDidResignKeyNotification&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Ted</name></author><summary type="html">苹果官方文档View Programming Guide for iOS</summary></entry><entry><title type="html">【译】View编程指南</title><link href="http://www.helloted.com/2018/01/15/View_1/" rel="alternate" type="text/html" title="【译】View编程指南" /><published>2018-01-15T20:00:00+08:00</published><updated>2018-01-15T20:00:00+08:00</updated><id>http://www.helloted.com/2018/01/15/View_1</id><content type="html" xml:base="http://www.helloted.com/2018/01/15/View_1/">&lt;p&gt;苹果官方文档&lt;a href=&quot;https://developer.apple.com/library/content/documentation/WindowsViews/Conceptual/ViewPG_iPhoneOS/Introduction/Introduction.html#//apple_ref/doc/uid/TP40009503-CH1-SW2&quot;&gt;View Programming Guide for iOS&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;一简介&quot;&gt;一、简介&lt;/h3&gt;
+
+&lt;p&gt;在iOS中，您可以使用windows和views在屏幕上显示应用程序的内容。 Windows本身没有任何可见的内容，但为应用程序的views提供了一个基本的容器。 views定义了您想要填充某些内容的windows的一部分。 例如，您可能具有显示图像，文本，形状或其组合的views。 您还可以使用views来组织和管理其他views。&lt;/p&gt;
+
+&lt;p&gt;每个应用程序至少有一个windows和一个views来显示其内容。 UIKit和其他系统框架提供了预定义的views，您可以使用它来呈现您的内容。 这些view的范围从简单的按钮和文本标签到更复杂的view，如tableview，pickerview和scroll view。 在预定义views不提供您需要的地方，您还可以定义自定义views并自行管理views和事件处理。&lt;/p&gt;
+
+&lt;h4 id=&quot;view管理应用程序可见内容&quot;&gt;View管理应用程序可见内容&lt;/h4&gt;
+
+&lt;p&gt;view是UIView类（或其子类之一）的一个实例对象，并在应用程序window中管理矩形区域。view负责绘制内容，处理多点触控事件以及管理任何子view的布局。绘图涉及使用图形技术，例如Core Graphics，OpenGL ES或UIKit在view的矩形区域内绘制形状，图像和文本。view通过使用手势识别器或通过直接处理触摸事件来响应其矩形区域中的触摸事件。在view层次结构中，父view负责定位和调整其子view的大小，并且可以动态地执行。这种动态修改子view的功能使您的view能够适应不断变化的条件，如界面旋转和动画。&lt;/p&gt;
+
+&lt;p&gt;您可以将view视为用于构建用户界面的构建块。您不是使用一个view呈现所有内容，而是经常使用多个view来构建view层次结构。层次结构中的每个view呈现用户界面的特定部分，通常针对特定类型的内容进行优化。例如，UIKit具有专门用于呈现图像，文本和其他类型的内容的view。&lt;/p&gt;
+
+&lt;h4 id=&quot;windows协调显示views&quot;&gt;Windows协调显示Views&lt;/h4&gt;
+
+&lt;p&gt;Windows是UIWindow类的一个实例，并处理应用程序用户界面的整体表示。 Windows使用view（及其拥有的view controller）来管理与可见view hierarchy的交互以及对可见view hierarchy的更改。 大多数情况下，您的应用程序的Windows永远不会改变。 Windows创建后，它保持不变，只有它显示的view改变。 每个应用程序至少有一个Window，在应用程序的主屏幕上显示应用程序的用户界面。 如果外部显示器连接到设备，应用程序可以创建另一个Window来在该屏幕上显示内容。&lt;/p&gt;
+
+&lt;h4 id=&quot;animations为ui交互提供可见反馈&quot;&gt;Animations为UI交互提供可见反馈&lt;/h4&gt;
+
+&lt;p&gt;动画为用户提供关于view hierarchy变化的可见反馈。 系统定义了标准动画，用于显示不同的view组之间的presenting model view和过渡。 然而，view的许多属性也可以直接动画。 例如，通过动画，您可以更改view的透明度，其在屏幕上的位置，大小，背景颜色或其他属性。 如果直接使用view的底层Core Animation layer对象，则还可以执行许多其他动画。&lt;/p&gt;
+
+&lt;h4 id=&quot;interface-builder&quot;&gt;Interface Builder&lt;/h4&gt;
+
+&lt;p&gt;Interface Builder是一个应用程序，用于以图形方式构建和配置应用程序的Windows和view。 使用Interface Builder，您可以组装view并将它们放置在一个nib文件中，该文件是存储view和其他对象的冻干版本的资源文件。 当你在运行时加载一个nib文件的时候，它里面的对象被重新编译成实际的对象，你的代码可以通过编程来操作。&lt;/p&gt;
+
+&lt;p&gt;Interface Builder极大地简化了您在创建应用程序的用户界面方面所做的工作。 由于对Interface Builder和nib文件的支持已经整合到iOS中，所以将nib文件合并到您的应用程序的设计中需要一点努力。&lt;/p&gt;
+
+&lt;h4 id=&quot;其他&quot;&gt;其他&lt;/h4&gt;
+
+&lt;p&gt;因为view是非常复杂和灵活的对象，所以不可能在一个文档中覆盖所有的行为。 但是，其他文档可帮助您了解管理view和用户界面的其他方面。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;view控制器是管理应用程序view的重要组成部分。 一个view controller主持所有的view在一个单一的view hierarchy，并方便在屏幕上显示这些view。 有关view controller和他们扮演的角色的更多信息, &lt;a href=&quot;https://developer.apple.com/library/content/featuredarticles/ViewControllerPGforiPhoneOS/index.html#//apple_ref/doc/uid/TP40007457&quot;&gt;&lt;em&gt;View Controller Programming Guide for iOS&lt;/em&gt;&lt;/a&gt;.&lt;/li&gt;
+  &lt;li&gt;view是应用程序中手势和触摸事件的关键接收者， &lt;em&gt;Event Handling Guide for iOS&lt;/em&gt;.&lt;/li&gt;
+  &lt;li&gt;自定义view必须使用可用的绘图技术来呈现其内容。 有关使用这些技术来绘制view的信息，&lt;a href=&quot;https://developer.apple.com/library/content/documentation/2DDrawing/Conceptual/DrawingPrintingiOS/Introduction/Introduction.html#//apple_ref/doc/uid/TP40010156&quot;&gt;&lt;em&gt;Drawing and Printing Guide for iOS&lt;/em&gt;&lt;/a&gt;.&lt;/li&gt;
+  &lt;li&gt;在标准view动画不够用的地方，可以使用Core Animation。 有关使用Core Animation实现动画的信息, &lt;a href=&quot;https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/CoreAnimation_guide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40004514&quot;&gt;&lt;em&gt;Core Animation Programming Guide&lt;/em&gt;&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;二view-and-window-架构&quot;&gt;二、View and Window 架构&lt;/h3&gt;
+
+&lt;p&gt;View和window呈现您的应用程序的用户界面，并处理与该界面的交互。 UIKit和其他系统框架提供了许多views，你可以很少或根本没有修改就直接使用或者根据需要自定义View。&lt;/p&gt;
+
+&lt;p&gt;无论您使用系统View还是创建自己的自定义View，都需要了解UIView和UIWindow类提供的基础结构。 这些课程提供先进的设施来管理View的布局和表示。 了解这些设施的工作方式对于在应用程序发生更改时确保View的行为是非常重要的。&lt;/p&gt;
+
+&lt;h4 id=&quot;view架构基础&quot;&gt;View架构基础&lt;/h4&gt;
+
+&lt;p&gt;大部分你可能想要做的事情都是通过view对象来完成的 - UIView类的实例。view对象在屏幕上定义了一个矩形区域，并处理该区域中的drawing和touch事件。View还可以作为其他view的父项，并协调这些view的布局和大小。 UIView类在管理这些View之间的这些关系方面做了大部分工作，但是您也可以根据需要自定义默认行为。&lt;/p&gt;
+
+&lt;p&gt;View与Core Animation Layer一起工作来处理View内容的渲染和动画。 UIKit中的每个View都由一个layer对象（通常是CALayer类的一个实例）支持，这个layer管理View的后备存储并处理与View相关的动画。你执行的大多数操作应该通过UIView接口。但是，在需要更多地控制view的渲染或动画行为的情况下，您可以通过其layer执行操作。&lt;/p&gt;
+
+&lt;p&gt;要理解View和图层之间的关系，有助于看一个例子。下图显示了ViewTransitions示例应用程序的view hierarchy以及与底层Core Animation layer的关系。每个View都有一个对应的layer对象，可以通过该view的layer属性访问。 （因为bar按钮项不是View，所以不能直接访问它的图层。）在这些layer对象的后面是Core Animation渲染对象，最后是用于管理屏幕上实际位的硬件缓冲区。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_3/10.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Core Animation layer对象的使用对性能有重要的影响。 view对象的实际绘图代码被尽可能少地调用，并且当调用代码时，结果被Core Animation缓存，并在稍后被重用。 重用已经呈现的内容消除了通常需要更新view的昂贵的绘图周期。 在动画中重复使用这些内容是非常重要的，在动画中可以操纵现有的内容。 这种重复使用比创建新内容要便宜得多。&lt;/p&gt;
+
+&lt;h4 id=&quot;view的层次结构和管理子view&quot;&gt;View的层次结构和管理子View&lt;/h4&gt;
+
+&lt;p&gt;除了提供自己的内容之外，view还可以充当其他view的容器。当一个view包含另一个view时，两个view之间会创建一个父子关系。关系中的子view称为subview，父View称为superview。创建这种类型的关系对于应用程序的外观和应用程序的行为都有影响。
+从视觉上来说，子view的内容掩盖了其父view的全部或部分内容。如果子view是完全不透明的，则子view占用的区域完全遮蔽了父view的相应区域。如果子View是部分透明的，则来自两个view的内容在被显示在屏幕上之前被混合在一起。每个superview将其子view存储在有序数组中，并且该数组中的顺序也会影响每个子View的可见性。如果两个兄弟子view彼此重叠，则最后添加的子view（或移动到子view数组的末尾）会出现在另一个之上。
+Superview - subview关系也会影响多个view的行为。更改父view的大小会产生连锁效应，导致任何子view的大小和位置也发生变化。当您更改父view的大小时，可以通过适当地配置view来控制每个子view的大小调整行为。影响子view的其他更改包括隐藏superview，更改superview的透明度，或将数学变换应用于superview的坐标系。
+View层次结构中的排列也决定了应用程序如何响应事件。当在特定view内发生触摸时，系统将带有触摸信息的事件对象直接发送到该view进行处理。但是，如果view不处理特定的触摸事件，它可以将事件对象传递给其superview。如果superview不处理事件，它将事件对象传递给它的superview，等等这样一个响应者链。特定的view也可以将事件对象传递给介入的响应者对象，如viewcontroller。如果没有对象处理事件，它最终会到达application对象，通常会丢弃它。&lt;/p&gt;
+
+&lt;h4 id=&quot;view的绘图周期&quot;&gt;View的绘图周期&lt;/h4&gt;
+
+&lt;p&gt;UIView类使用按需绘制模型来呈现内容。当一个view第一次出现在屏幕上时，系统要求它画出其内容。系统捕获此内容的snapshot，并将该snapshot用作view的视觉表示。如果你永远不改变view的内容，view的绘图代码可能永远不会再被调用。大多数涉及view的操作都会重用snapshot。如果您更改内容，则通知系统view已更改。这个View会重新绘制View并捕获新结果的快照。&lt;/p&gt;
+
+&lt;p&gt;当你的view的内容改变时，你不要直接重绘这些改变。而是使用&lt;code class=&quot;highlighter-rouge&quot;&gt;setNeedsDisplay&lt;/code&gt;或&lt;code class=&quot;highlighter-rouge&quot;&gt;setNeedsDisplayInRect：&lt;/code&gt;方法使view无效。这些方法告诉系统，view的内容改变了，需要在下一个机会重新绘制。在启动任何绘图操作之前，系统等待直到当前run loop的结束。这种延迟使您有机会使多个view失效，从您的层次结构中添加或删除view，隐藏view，调整view大小，并一次重新定位view。然后你所做的所有改变都会同时反映出来。&lt;/p&gt;
+
+&lt;p&gt;注：更改view的(geometry)几何图形不会自动导致系统重新绘制view的内容。view的contentMode属性确定如何解释对geometry的更改。大多数contentMode在View的边界内拉伸或重新定位现有的快照，而不是创建一个新的快照。&lt;/p&gt;
+
+&lt;p&gt;当呈现view的内容时，实际的绘图过程会根据View及其配置而变化。系统view通常实现私有绘图方法来呈现其内容。这些相同的系统View经常公开可用于配置view的实际外观的接口。对于自定义UIView子类，通常会覆盖View的&lt;code class=&quot;highlighter-rouge&quot;&gt;drawRect：&lt;/code&gt;方法，并使用该方法绘制view的内容。还有其他方法可以提供view的内容，比如直接设置layer的内容，但是覆盖&lt;code class=&quot;highlighter-rouge&quot;&gt;drawRect：&lt;/code&gt;方法是最常用的技术。&lt;/p&gt;
+
+&lt;h4 id=&quot;content-modes&quot;&gt;Content Modes&lt;/h4&gt;
+
+&lt;p&gt;每个view都有一个Content Modes，用于控制view如何回应其内容以响应View几何体的变化以及是否回收其内容。当view第一次显示时，它像往常一样渲染其内容，并将结果捕获在底层位图中。之后，对view’s geometry的更改并不总是会导致重新创建位图。相反，contentMode属性中的值决定是否缩放位图以适应新的边界，或者只是固定到View的一个角或边缘。&lt;/p&gt;
+
+&lt;p&gt;view的content modes在您执行以下操作时应用：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;更改view的frame或bounds矩形的宽度或高度。&lt;/li&gt;
+  &lt;li&gt;将包含比例因子的变换分配给view的transform属性。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;默认情况下，大多数view的contentMode属性被设置为UIViewContentModeScaleToFill，这会导致view的内容被缩放以适应新的frame size。下图显示了一些可用的内容模式的结果。从图中可以看出，并不是所有的content mode都会导致view的边界被完全填满，而那些content mode可能会扭曲view的内容。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_3/11.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Content Modes对回收view的内容非常有用，但是当您特别希望自定义view在缩放和调整大小操作期间重新绘制自己的内容时，您还可以将内容模式设置为UIViewContentModeRedraw值。 将view的Content Modes设置为该值会迫使系统调用view的&lt;code class=&quot;highlighter-rouge&quot;&gt;drawRect：&lt;/code&gt;方法来响应几何变化。 一般来说，你应该尽可能的避免使用这个值，你一定不要在标准系统view中使用它.&lt;/p&gt;
+
+&lt;h4 id=&quot;可伸缩view&quot;&gt;可伸缩View&lt;/h4&gt;
+
+&lt;p&gt;您可以指定View的一部分为可拉伸的，以便当view的大小改变时，只有可拉伸部分的内容受到影响。 您通常在按钮或其他View中使用可拉伸区域，其中部分view定义了可重复的图案。 您指定的可拉伸区域可以允许沿View的一个或两个轴伸展。 当然，当沿着两个轴伸展View时，view的边缘也必须定义可重复的图案以避免任何失真。  来自每个view的原始像素的颜色被复制以填充大view中的对应区域。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_3/12.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;您可以使用contentStretch属性指定view的可拉伸区域。该属性接受一个矩形，其值被规范化为0.0到1.0的范围。当拉伸View时，系统将这些归一化值乘以view的当前边界和比例因子，以确定哪些像素或像素需要拉伸。每当View边界发生变化时，使用规范化值就可以减少更新contentStretch属性的必要性。&lt;/p&gt;
+
+&lt;p&gt;view的content mode在确定如何使用view的可拉伸区域方面也起着重要作用。仅当content mode会导致View的内容被缩放时才使用可伸缩区域。这意味着只有UIViewContentModeScaleToFill，UIViewContentModeScaleAspectFit和UIViewContentModeScaleAspectFill内容模式才支持可伸缩view。如果指定将内容固定到边或角的内容模式（因此实际上不会缩放内容），则view将忽略可拉伸区域。&lt;/p&gt;
+
+&lt;p&gt;注意：在可拉伸的UIImage对象为view指定背景时，才建议使用contentStretch属性。 可伸缩View完全在Core Animation layer中处理，通常可以提供更好的性能。&lt;/p&gt;
+
+&lt;h4 id=&quot;内置的动画支持&quot;&gt;内置的动画支持&lt;/h4&gt;
+
+&lt;p&gt;在每个view背后都有一个layer对象的好处之一是可以轻松地动画许多与view相关的更改。动画是向用户传递信息的有效方法，在设计应用程序时应始终考虑动画。 UIView类的许多属性都是可以动画的，也就是说，存在从一个值到另一个值的动画的半自动支持。要为其中一个动画属性执行动画，您只需执行以下操作：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;告诉UIKit你想要执行一个动画。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;更改属性的值。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;你可以在UIView对象上动画的属性如下：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Frame - 使用此动画设置为view更改位置和大小变化。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;bounds - 使用这个动画来改变view的大小。&lt;/li&gt;
+  &lt;li&gt;center - 使用此可以动画显示view的位置。&lt;/li&gt;
+  &lt;li&gt;transform - 使用它来旋转或缩放view。&lt;/li&gt;
+  &lt;li&gt;alpha - 使用这个来改变view的透明度。&lt;/li&gt;
+  &lt;li&gt;backgroundColor - 使用此更改view的背景颜色。&lt;/li&gt;
+  &lt;li&gt;contentStretch - 使用它来改变view内容的拉伸方式。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;动画非常重要的一个地方是从一组views转换到另一个views。通常，您使用view contoller来管理与用户界面各部分之间的重大更改相关联的动画。例如，对于涉及从较高级别信息到较低级别信息的接口，通常使用导航控制器来管理显示每个连续数据级别的view之间的转换。但是，您也可以使用动画而不是view controller在两组View之间创建转换。你可能会在标准的view controller动画没有产生你想要的结果的地方这样做。&lt;/p&gt;
+
+&lt;p&gt;除了使用UIKit类创建的动画外，还可以使用Core Animation layer创建动画。layer可以更好地控制动画的时间和属性。&lt;/p&gt;
+
+&lt;h4 id=&quot;view的几何和坐标系统&quot;&gt;View的几何和坐标系统&lt;/h4&gt;
+
+&lt;p&gt;UIKit中的默认坐标系统的原点位于左上角，并具有从原点向下和向右延伸的轴。 坐标值使用浮点数来表示，无论底层的屏幕分辨率如何，都可以精确地布局和定位内容。 除了屏幕坐标系之外，window和view还定义了自己的局部坐标系，使您可以指定相对于window或view原点的坐标，而不是相对于屏幕。&lt;/p&gt;
+
+&lt;p&gt;重要提示：某些iOS技术定义默认坐标系，其原点和方向与UIKit使用的坐标系不同。 例如，Core Graphics和OpenGL ES使用坐标系统，坐标系统的原点位于View或窗口的左下角，y轴相对于屏幕向上。 绘制或创建内容时，您的代码必须考虑到这些差异，并根据需要调整坐标值（或坐标系的默认方向）。&lt;/p&gt;
+
+&lt;h4 id=&quot;frame-bounds-and-center&quot;&gt;Frame, Bounds, and Center&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;frame&lt;/code&gt; 包含了 &lt;em&gt;frame 矩形&lt;/em&gt;, 在superview中定义View的大小和位置&lt;/li&gt;
+  &lt;li&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;bounds&lt;/code&gt; 包含了 &lt;em&gt;bounds 矩形&lt;/em&gt;, 它在view的本地坐标系统中指定View的大小（及其内容的原点）。&lt;/li&gt;
+  &lt;li&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;center&lt;/code&gt; 包含了在superview坐标系统中view的中点的位置&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;您主要使用center和frame属性来操作当前view的几何图形。例如，在构建view层次结构或在运行时更改view的位置或大小时使用这些属性。如果您只改变view的位置（而不是View的大小），则中心属性是更好的选择。即使缩放或旋转因子已添加到View的变换中，属性中的值始终有效。对于frame属性中的值也是如此，如果view的变换不等于标识变换，则认为该值是无效的。&lt;/p&gt;
+
+&lt;p&gt;绘图时主要使用bounds属性。bounds矩形在View的本地坐标系中表示。此矩形的默认原点是（0，0），其大小与frame矩形的大小相匹配。您在此矩形内绘制的任何东西都是view可见内容的一部分。如果更改bounds矩形的原点，则在新矩形内绘制的内容将成为view可见内容的一部分。&lt;/p&gt;
+
+&lt;p&gt;图显示了图像View的frame和bounds之间的关系。在图中，图像view的左上角位于其superivew坐标系中的点（40,40），矩形的大小是240×380点。对于bounds矩形，原点为（0,0），矩形的大小为240乘380点。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_3/13.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;虽然更改frame，bounds和center的方法是相互独立的，但其中一个属性的更改会影响其他属性，方法如下：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;当您设置frame属性时，bounds属性中的size值将更改为与frame矩形的新大小相匹配。 center属性中的值同样会更改为匹配frame矩形的新中心点。&lt;/li&gt;
+  &lt;li&gt;当您设置center属性时，frame中的origin值会相应更改。&lt;/li&gt;
+  &lt;li&gt;设置bounds属性的大小时，frame属性中的size值会更改为与bounds矩形的size相匹配。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;默认情况下，view的frame不会剪切到其superview的frame。 因此，任何超出superview frame的子view都将被完整地呈现。 不过，您可以通过将superview的clipsToBounds属性设置为YES来更改此行为。 无论子view是否可视化剪切，触摸事件总是尊重目标view的superview的边界矩形。 换句话说，发生在superview bounds矩形之外的view的一部分中的触摸事件不会被传送到该view。&lt;/p&gt;
+
+&lt;h4 id=&quot;坐标系统转换&quot;&gt;坐标系统转换&lt;/h4&gt;
+
+&lt;p&gt;坐标系转换提供了一种快速方便地更改view（或其内容）的方法。 &lt;em&gt;affine transform&lt;/em&gt;是一个数学矩阵，指定一个坐标系中的点如何映射到不同坐标系中的点。 您可以将&lt;em&gt;affine transform&lt;/em&gt;应用于整个view，以相对于其superivew更改View的大小，位置或方向。 您还可以在绘图代码中使用&lt;em&gt;affine transform&lt;/em&gt;对各个渲染内容进行相同类型的操作。 如何应用仿射变换取决于上下文：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;要修改整个view，请在View的transform属性中修改&lt;em&gt;affine transform&lt;/em&gt;。&lt;/li&gt;
+  &lt;li&gt;要修改view的特定内容,用&lt;code class=&quot;highlighter-rouge&quot;&gt;drawRect：&lt;/code&gt;方法，请修改与活动图形上下文关联的transform。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;当您要实现动画时，通常会修改view的transform属性。 例如，您可以使用此属性来创建围绕其中心点旋转view的动画。 您不会使用此属性对您的view进行永久更改，例如在其superview的坐标空间内修改其view的位置或大小。 对于这种类型的更改，您应该修改view的frame矩形。&lt;/p&gt;
+
+&lt;p&gt;注意：修改view的transform属性时，所有的转换都是相对于view的中心点执行的。&lt;/p&gt;
+
+&lt;p&gt;每个子View的坐标系建立在其super的坐标系上。所以当你修改一个View的transform属性时，这个改变会影响view及其所有的subview。但是，这些更改仅影响屏幕上view的最终呈现。由于每个view都是绘制其内容，并将其子view相对于其bounds进行布局，所以在绘制和布局过程中可以忽略其superview的变换。&lt;/p&gt;
+
+&lt;p&gt;图展示了两种不同的旋转因素在渲染时如何组合。在View的&lt;code class=&quot;highlighter-rouge&quot;&gt;drawRect：&lt;/code&gt;方法内部，对shape应用45度旋转因子会使该shape旋转45度。将单独的45度旋转因子应用于view，然后使shape看起来旋转90度。相对于绘制的view，shape仍然只旋转了45度，但view旋转使其看起来被旋转了更多。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_3/14.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;重要提示：如果View的transform属性不是标识transform，那么该View的frame属性的值是未定义的，必须忽略。 将变换应用于view时，必须使用view的bounds和center属性来获取view的size和position。 任何子view的frame矩形仍然有效，因为它们是相对于view的bounds&lt;/p&gt;
+
+&lt;h4 id=&quot;view的运行时交互模型&quot;&gt;View的运行时交互模型&lt;/h4&gt;
+
+&lt;p&gt;每当用户与您的用户界面进行交互时，或者您自己的代码以编程方式更改某些内容时，都会在UIKit内部发生一系列复杂的事件来处理该交互。 在这个序列的特定时间点，UIKit会调用您的Views，并让他们有机会代表您的应用程序进行响应。 理解这些标注点对于理解View适合系统的位置很重要。 图显示了用户触摸屏幕开始的事件的基本顺序，以图形系统作为响应更新屏幕内容结束。 任何由程序启动的动作也会发生相同的事件序列。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_3/15.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;用户触摸屏幕。
+硬件将触摸事件报告给UIKit框架。
+UIKit框架将触摸包装到UIEvent对象中并将其分派到相应的View。
+view的事件处理代码响应事件。例如，您的代码可能会：&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;ul&gt;
+      &lt;li&gt;更改view或其subview的属性（frame，bounds，alpha等）。&lt;/li&gt;
+      &lt;li&gt;调用setNeedsLayout方法将view（或subviews）标记为需要布局更新。&lt;/li&gt;
+      &lt;li&gt;调用setNeedsDisplay或setNeedsDisplayInRect：方法将view（或其subviews）标记为需要重绘。&lt;/li&gt;
+      &lt;li&gt;通知controllers有关对某些数据的更改。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;当然，由你来决定这些view应该做哪些事情以及应该调用哪些方法。
+如果view的几何因任何原因而改变，则UIKit根据以下规则更新其subview：&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;p&gt;如果您为view配置了autoresizing规则，则UIKit会根据这些规则调整每个view。&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;如果view实现了layoutSubviews方法，UIKit会调用它。&lt;/p&gt;
+
+        &lt;p&gt;您可以在自定义view中重写此方法，并使用它来调整任何subview的位置和大小。&lt;/p&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;如果任何view的任何部分被标记为需要重绘，则UIKit会要求view重绘本身。
+对于显式定义&lt;code class=&quot;highlighter-rouge&quot;&gt;drawRect：&lt;/code&gt;方法的自定义view，UIKit调用该方法。这个方法的实现应该尽可能快地重绘view的指定区域，而不是其他的。此时不要进行额外的布局更改，也不要对应用程序的数据模型进行其他更改。此方法的目的是更新view的可视内容。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;标准系统view通常不执行&lt;code class=&quot;highlighter-rouge&quot;&gt;drawRect：&lt;/code&gt;方法，而是在这个时候管理他们的绘图。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;任何更新的view都会与应用程序的其余可见内容合成，并发送到图形硬件进行显示。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;图形硬件将渲染的内容传输到屏幕上。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;注意：上述更新模型主要适用于使用标准系统view和绘图技术的应用程序。 使用OpenGL ES进行绘制的应用程序通常会配置一个全屏View，并直接绘制到关联的OpenGL ES图形上下文中。 在这种情况下，view仍然可以处理触摸事件，但由于它是全屏的，所以不需要布置subviews。&lt;/p&gt;
+
+&lt;p&gt;在前面的一系列步骤中，您自定义View的主要集成点是：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;事件处理方法:
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;touchesBegan:withEvent:&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;touchesMoved:withEvent:&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;touchesEnded:withEvent:&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;touchesCancelled:withEvent:&lt;/code&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;layoutSubviews&lt;/code&gt; 方法&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;drawRect:&lt;/code&gt; 方法&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;这些是view中最常用的重写方法，但您可能不需要重写所有这些方法。 如果使用手势识别器来处理事件，则不需要重写任何事件处理方法。 同样，如果您的view不包含subview或其大小不会更改，则没有理由重写layoutSubviews方法。 最后，只有在view的内容可以在运行时更改并且使用本技术（如UIKit或Core Graphics）进行绘制时，才需要&lt;code class=&quot;highlighter-rouge&quot;&gt;drawRect：&lt;/code&gt;方法。&lt;/p&gt;
+
+&lt;h4 id=&quot;高效地使用view&quot;&gt;高效地使用View&lt;/h4&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;View不总是有一个相应的view controller&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;​	view和viewcontroller之间很少有一对一的关系。 viewcontroller的工作是管理一个View层次结构，通常由多个view组成，用于实现一些独立的功能。 对于iPhone应用程序，每个view层次结构通常填充整个屏幕，但对于iPad应用程序，view层次结构可能只填充屏幕的一部分。&lt;/p&gt;
+
+&lt;p&gt;​	在设计应用程序的用户界面时，重要的是要考虑view controller将扮演的角色。 view controller提供了许多重要的行为，例如协调屏幕上的view显示，协调从屏幕上删除这些view，响应低内存警告释放内存，以及响应接口方向更改而旋转view。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;最小化自定义绘图&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;虽然自定义view有时是必要的，但它也是你应该尽可能避免的东西。 只有当现有系统View类不提供所需的外观或功能时，才能真正做到任何自定义绘图。 任何时候，您的内容都可以与现有View的组合进行组合，最好的办法就是将这些view对象组合成一个自定义的view层次结构。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;利用content mode&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;content mode可以减少重绘view的时间。 默认情况下，view使用UIViewContentModeScaleToFill内容模式，该模式缩放view的现有内容以适合view的框架矩形。 您可以根据需要更改此模式，以不同的方式调整您的内容，但是如果可以的话，您应该避免使用UIViewContentModeRedraw内容模式。 无论哪种内容模式生效，都可以通过调用setNeedsDisplay或setNeedsDisplayInRect：来强制view重绘其内容。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;尽可能声明View不透明&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;UIKit使用每个view的opaque属性来确定view是否可以优化合成操作。 将自定义view的此属性值设置为YES会告诉UIKit它不需要在view后面呈现任何内容。 较少的渲染会导致您的绘图代码的性能提高，并且通常会受到鼓励。 当然，如果将opaque属性设置为YES，则View必须完全填充完全不透明的内容。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;滚动时调整view的绘图行为&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;滚动可以在很短的时间内产生大量的view更新。 如果您的view的绘制代码没有适当地调整，则view的滚动性能可能会很低。 在开始滚动操作时，不要试图确保view的内容始终处于原始状态，而应考虑更改view的行为。 例如，您可以暂时降低渲染内容的质量，或在滚动正在进行时更改content mode。 当滚动停止时，您可以将view返回到之前的状态，并根据需要更新内容。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;不要通过嵌入subview来自定义控件&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;虽然在技术上可以将subview添加到标准系统控件（从UIControl继承的对象），但不应该以这种方式定制它们。 支持自定义的控件通过控件类本身的明确的，记录良好的接口来实现。 例如，UIButton类包含设置按钮的标题和背景图像的方法。 使用定义的定制点意味着您的代码将始终正常工作。 通过在按钮内部嵌入自定义图像view或标签来限制这些方法，如果按钮的实现发生更改，则可能会导致应用程序现在或将来某个时刻的行为不正确。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">苹果官方文档View Programming Guide for iOS</summary></entry><entry><title type="html">【译】Flexbox布局指南</title><link href="http://www.helloted.com/2017/12/20/flexbox/" rel="alternate" type="text/html" title="【译】Flexbox布局指南" /><published>2017-12-20T20:00:00+08:00</published><updated>2017-12-20T20:00:00+08:00</updated><id>http://www.helloted.com/2017/12/20/flexbox</id><content type="html" xml:base="http://www.helloted.com/2017/12/20/flexbox/">&lt;p&gt;本文翻译来自&lt;a href=&quot;https://css-tricks.com/snippets/css/a-guide-to-flexbox/&quot;&gt;https://css-tricks.com/snippets/css/a-guide-to-flexbox/&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;一背景&quot;&gt;一、背景&lt;/h3&gt;
 
@@ -1489,633 +1954,4 @@ BlockDemo[60278:10523410] &amp;lt;__NSMallocBlock__: 0x10055e4b0&amp;gt;
 
 &lt;h3 id=&quot;五demo&quot;&gt;五、demo&lt;/h3&gt;
 
-&lt;p&gt;以上代码可以在&lt;a href=&quot;git@github.com:helloted/MonitorMethod.git&quot;&gt;Github-Monitor&lt;/a&gt;下载&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、前言</summary></entry><entry><title type="html">React Native(二)：react-navigation使用</title><link href="http://www.helloted.com/2017/11/21/reactnative_2/" rel="alternate" type="text/html" title="React Native(二)：react-navigation使用" /><published>2017-11-21T20:00:00+08:00</published><updated>2017-11-21T20:00:00+08:00</updated><id>http://www.helloted.com/2017/11/21/reactnative_2</id><content type="html" xml:base="http://www.helloted.com/2017/11/21/reactnative_2/">&lt;h3 id=&quot;四react-navigation使用&quot;&gt;四、react-navigation使用&lt;/h3&gt;
-
-&lt;p&gt;react-navigation是FaceBook推荐使用的一个库，用于导航效果，&lt;a href=&quot;https://reactnavigation.org/docs/intro/basic-app&quot;&gt;官方文档&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;使用之前先在根目录文件内执行命令&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;yarn add react-navigation
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;它有三种类型的&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;StackNavigator&lt;/code&gt; - 与iOS中的UINavigationController类似，也是采用栈类型，将一个新的页面push进栈中进行展示。&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;TabNavigator&lt;/code&gt; - 与UITabbarContrller类似的效果，主要用于一个屏幕内横向切换不同界面&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;DrawerNavigator&lt;/code&gt; - 侧滑栏效果&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;五stacknavigator的使用&quot;&gt;五、StackNavigator的使用&lt;/h3&gt;
-
-&lt;p&gt;首先，先在根目录下生成一个stack.js的js文件，&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_1/14.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;在iOS将文件名替换为stack&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@&quot;stack&quot; fallbackResource:nil];
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;照例，先定义好页面&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-jsx&quot;&gt;AppRegistry.registerComponent('DemoProject', () =&amp;gt; RootPage);
-export default class RootPage extends React.Component {
-  render() {
-    return &amp;lt;CustomStack /&amp;gt;;
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;其中，&lt;code class=&quot;highlighter-rouge&quot;&gt;CustomStack&lt;/code&gt;是我们自定义的导航组件&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-jsx&quot;&gt;export const CustomStack = StackNavigator({
-  HomePage: {
-    screen: HomeVC
-  },
-  SecondPage: {
-    screen: SecondVC
-  },
-});
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;由StackNavigator生成导航主键。HomePage和SecondPage是我们的两个页面，页面里带有screen的参数,里面的组件才是定义页面内容的地方。要注意的是，顺序依次是进栈的顺序。&lt;/p&gt;
-
-&lt;p&gt;分别定义HomeVC组件和SecondVC组件&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-jsx&quot;&gt;class HomeVC extends React.Component {
-  static navigationOptions = {
-    title: 'HomeVC',
-  };
-  render() {
-    const {
-      navigate
-    } = this.props.navigation;
-    return (
-      &amp;lt;View&amp;gt;
-        &amp;lt;Text&amp;gt;Hello, This is HomeVC!&amp;lt;/Text&amp;gt;
-        &amp;lt;Button
-          onPress={() =&amp;gt; navigate('SecondPage')}
-          title=&quot;Jump to SecondVC&quot;
-        /&amp;gt;
-      &amp;lt;/View&amp;gt;
-    );
-  }
-}
-
-
-class SecondVC extends React.Component {
-  static navigationOptions = {
-    title: 'SecondVC',
-  };
-  render() {
-    return (
-      &amp;lt;View&amp;gt;
-        &amp;lt;Text&amp;gt;Now, you are in SecondVC&amp;lt;/Text&amp;gt;
-      &amp;lt;/View&amp;gt;
-    );
-  }
-}
-
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;可以有以下的效果：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_1/17.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;全部代码：&lt;/p&gt;
-
-&lt;p&gt;stack.js&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-jsx&quot;&gt;import React from 'react';
-import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  View,
-  Button
-} from 'react-native';
-import {
-  StackNavigator
-} from 'react-navigation';
-
-AppRegistry.registerComponent('DemoProject', () =&amp;gt; RootPage);
-export default class RootPage extends React.Component {
-  render() {
-    return &amp;lt;CustomStack /&amp;gt;;
-  }
-}
-
-
-
-class HomeVC extends React.Component {
-  static navigationOptions = {
-    title: 'HomeVC',
-  };
-  render() {
-    const {
-      navigate
-    } = this.props.navigation;
-    return (
-      &amp;lt;View&amp;gt;
-        &amp;lt;Text&amp;gt;Hello, This is HomeVC!&amp;lt;/Text&amp;gt;
-        &amp;lt;Button
-          onPress={() =&amp;gt; navigate('SecondPage')}
-          title=&quot;Jump to SecondVC&quot;
-        /&amp;gt;
-      &amp;lt;/View&amp;gt;
-    );
-  }
-}
-
-
-class SecondVC extends React.Component {
-  static navigationOptions = {
-    title: 'SecondVC',
-  };
-  render() {
-    return (
-      &amp;lt;View&amp;gt;
-        &amp;lt;Text&amp;gt;Now, you are in SecondVC&amp;lt;/Text&amp;gt;
-      &amp;lt;/View&amp;gt;
-    );
-  }
-}
-
-export const CustomStack = StackNavigator({
-  HomePage: {
-    screen: HomeVC
-  },
-  SecondPage: {
-    screen: SecondVC
-  },
-});
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&quot;六tabnavigator的使用&quot;&gt;六、TabNavigator的使用&lt;/h3&gt;
-
-&lt;p&gt;声明很简单&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-jsx&quot;&gt;const MainTabController = TabNavigator({
-  TabItem_1: {
-    screen: HomeVc
-  },
-  TabItem_2: {
-    screen: SecondVC
-  },
-  TabItem_3: {
-    screen: ThirdVC
-  },
-}, {
-  tabBarPosition: 'bottom',
-  tabBarOptions: {
-    activeTintColor: '#e91e63',
-  },
-});
-
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;每个VC都对应一个界面，&lt;/p&gt;
-
-&lt;p&gt;tabBarPosition：位置，Tab有顶部top和底部bottom的位置&lt;/p&gt;
-
-&lt;p&gt;activeTintColor：是选中时TabItem的颜色&lt;/p&gt;
-
-&lt;p&gt;页面代码：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-jsx&quot;&gt;class HomeVc extends React.Component {
-  static navigationOptions = {
-    tabBarLabel: 'Home',
-    tabBarIcon: ({
-      tintColor
-    }) =&amp;gt; (
-      &amp;lt;Image
-        source={require('./imgs/01.png')}
-        style={[styles.icon, {tintColor: tintColor}]}
-      /&amp;gt;
-    ),
-  };
-  render() {
-    return (
-      &amp;lt;View style={styles.homecontainer}&amp;gt;
-        &amp;lt;Text&amp;gt;
-          This is HomeVC page
-        &amp;lt;/Text&amp;gt;
-      &amp;lt;/View&amp;gt;
-    );
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;navigationOptions是Tab的一些选项，里面有Tab的名称和图片，依次设置三个页面后可以达到这个效果&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_1/18.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;将StackNavigator作为一个Page插入TabItem&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-jsx&quot;&gt;const HomeNav = StackNavigator({
-  HomePage: {
-    screen: HomeVC,
-    navigationOptions: {
-      title: 'HomePage',
-    }
-  },
-  SecondPage: {
-    screen: SecondVC
-  },
-});
-
-const MainTabController = TabNavigator({
-  TabItem_1: {
-    screen: HomeNav  //Nav作为一个Page插入来
-  },
-  TabItem_2: {
-    screen: MessageVC
-  },
-  TabItem_3: {
-    screen: SettingVC
-  },
-}, {
-  tabBarPosition: 'bottom',
-  tabBarOptions: {
-    activeTintColor: '#e91e63',
-  },
-});
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;下面就是Tab+Nav的效果&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_1/19.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;七drawernavigator&quot;&gt;七、DrawerNavigator&lt;/h3&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class MyHomeScreen extends React.Component {
-  static navigationOptions = {
-    drawerLabel: 'Home',
-    drawerIcon: ({
-      tintColor
-    }) =&amp;gt; (
-      &amp;lt;Image
-        source={require('./imgs/01.png')}
-        style={[styles.icon, {tintColor: tintColor}]}
-      /&amp;gt;
-    ),
-  };
-
-  render() {
-    return (
-      &amp;lt;View style={styles.container}&amp;gt;
-      &amp;lt;Text&amp;gt;This HomePage&amp;lt;/Text&amp;gt;
-      &amp;lt;Button
-        onPress={() =&amp;gt; this.props.navigation.navigate('DrawerOpen')}
-        title=&quot;Show Drawer&quot;
-      /&amp;gt;
-      &amp;lt;/View&amp;gt;
-    );
-  }
-}
-
-class MyNotificationsScreen extends React.Component {
-  static navigationOptions = {
-    drawerLabel: 'Notifications',
-    drawerIcon: ({
-      tintColor
-    }) =&amp;gt; (
-      &amp;lt;Image
-        source={require('./imgs/02.png')}
-        style={[styles.icon, {tintColor: tintColor}]}
-      /&amp;gt;
-    ),
-  };
-
-  render() {
-    return (
-      &amp;lt;View style={styles.container}&amp;gt;
-      &amp;lt;Text&amp;gt;This MyNotificationsScreen&amp;lt;/Text&amp;gt;
-      &amp;lt;Button
-        onPress={() =&amp;gt; this.props.navigation.navigate('DrawerOpen')}
-        title=&quot;Go back home&quot;
-      /&amp;gt;
-      &amp;lt;/View&amp;gt;
-    );
-  }
-}
-
-const styles = StyleSheet.create({
-  icon: {
-    width: 24,
-    height: 24,
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-});
-
-const MyApp = DrawerNavigator({
-  Home: {
-    screen: MyHomeScreen,
-  },
-  Notifications: {
-    screen: MyNotificationsScreen,
-  },
-});
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;其中&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;this.props.navigation.navigate('DrawerOpen')
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;这是打开抽屉&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;this.props.navigation.navigate('DrawerClose')
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;点击空白或者上面这句代码是关闭抽屉，&lt;/p&gt;
-
-&lt;p&gt;navigationOptions里设置的是抽屉的标题或者图片&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_1/20.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/helloted/iOS_Demo/tree/master/DemoProject&quot;&gt;完整代码Github&lt;/a&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">四、react-navigation使用</summary></entry><entry><title type="html">React Native(一)：基础</title><link href="http://www.helloted.com/2017/11/20/reactnative_1/" rel="alternate" type="text/html" title="React Native(一)：基础" /><published>2017-11-20T20:00:00+08:00</published><updated>2017-11-20T20:00:00+08:00</updated><id>http://www.helloted.com/2017/11/20/reactnative_1</id><content type="html" xml:base="http://www.helloted.com/2017/11/20/reactnative_1/">&lt;h3 id=&quot;一react-native简介以及开发环境搭建&quot;&gt;一、React-Native简介以及开发环境搭建&lt;/h3&gt;
-
-&lt;p&gt;React Native (简称RN)是Facebook于2015年4月开源的跨平台移动应用开发框架，是Facebook早先开源的UI框架 React 在原生移动应用平台的衍生产物，目前支持iOS和安卓两大平台。RN使用Javascript语言，类似于HTML的JSX，以及CSS来开发移动应用。(来自百度百科)&lt;/p&gt;
-
-&lt;p&gt;类似的框架还有Vue以及对应的移动框架Weex(已由阿里开源维护)。&lt;/p&gt;
-
-&lt;p&gt;1、利用HomeBrew来安装Node&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;brew install node
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;2、安装React Native&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;npm install react-native-cli
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;3、安装Yarn，Yarn是FaceBook用来替代npm的工具&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;npm install -g yarn
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;4、初始化React Native，第一个Demo，FirstDemo，先cd要某个文件夹&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;react-native init FirstDemo
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;5、运行，直接点Xcode的Run或者用命令行&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cd FirstDemo
-react-native run-ios
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;6、真机运行，手机与mac在同一个网络下面&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;jsCodeLocation =  [NSURL URLWithString:@&quot;http://本机IP:8081/index.bundle?platform=ios&quot;];
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_1/14.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;二常用命令&quot;&gt;二、常用命令&lt;/h3&gt;
-
-&lt;p&gt;本地IP地址&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ifconfig | grep &quot;inet &quot; | grep -v 127.0.0.1
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;添加第三方库，比如react-navigation，cd到根目录，执行&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;yarn add react-navigation
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h3 id=&quot;三基础代码讲解&quot;&gt;三、基础代码讲解&lt;/h3&gt;
-
-&lt;p&gt;iOS端&lt;/p&gt;
-
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;n&quot;&gt;jsCodeLocation&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RCTBundleURLProvider&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;sharedSettings&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;jsBundleURLForBundleRoot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;App&quot;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;fallbackResource&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;RCTRootView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rootView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RCTRootView&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initWithBundleURL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jsCodeLocation&lt;/span&gt;
-                                                      &lt;span class=&quot;nf&quot;&gt;moduleName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;DemoProject&quot;&lt;/span&gt;
-                                               &lt;span class=&quot;n&quot;&gt;initialProperties&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;nil&lt;/span&gt;
-                                                   &lt;span class=&quot;n&quot;&gt;launchOptions&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;launchOptions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;里面有两个关键词，&lt;code class=&quot;highlighter-rouge&quot;&gt;App&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;DemoProject&lt;/code&gt;，其中&lt;code class=&quot;highlighter-rouge&quot;&gt;DemoProject&lt;/code&gt;是项目文件夹目录名称，App则是这个RCTRootView对应的js文件的名称，即对应的文件为App.js。&lt;/p&gt;
-
-&lt;p&gt;App.js&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-jsx&quot;&gt;import React, {
-  Component
-} from 'react';
-import {
-  AppRegistry,
-  Platform,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
-
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' +
-    'Cmd+D or shake for dev menu',
-  android: 'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
-
-//将RootPage注册
-AppRegistry.registerComponent('DemoProject', () =&amp;gt; RootPage);
-
-// 自定义RootPage
-export default class RootPage extends Component &amp;lt; {} &amp;gt; {
-  render() {
-    return (
-      &amp;lt;View style={styles.container}&amp;gt;
-        &amp;lt;Text style={styles.welcome}&amp;gt;
-          Welcome to React Native!
-        &amp;lt;/Text&amp;gt;
-        &amp;lt;Text style={styles.instructions}&amp;gt;
-          To get started, edit App.js
-        &amp;lt;/Text&amp;gt;
-        &amp;lt;Text style={styles.instructions}&amp;gt;
-          {instructions}
-        &amp;lt;/Text&amp;gt;
-      &amp;lt;/View&amp;gt;
-    );
-  }
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;其中Text, View, Button三个标签类似于iOS当中的UITextView,UIView,UIButton。&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、React-Native简介以及开发环境搭建</summary></entry><entry><title type="html">iOS进程/线程间通信</title><link href="http://www.helloted.com/2017/10/20/thread_message/" rel="alternate" type="text/html" title="iOS进程/线程间通信" /><published>2017-10-20T20:00:00+08:00</published><updated>2017-10-20T20:00:00+08:00</updated><id>http://www.helloted.com/2017/10/20/thread_message</id><content type="html" xml:base="http://www.helloted.com/2017/10/20/thread_message/">&lt;h3 id=&quot;一线程间通信&quot;&gt;一、线程间通信&lt;/h3&gt;
-
-&lt;p&gt;因为线程是共享内存空间的，所以线程间通信相比于进程间通信会简单一些，线程间通信的体现&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;1个线程传递数据给另1个线程&lt;/li&gt;
-  &lt;li&gt;在1个线程中执行完特定任务后，转到另1个线程继续执行任务&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;在iOS多线程开发中，有NSObject、NSThread、GCD、NSOpeartion几种方式，对应的线程间通信也有几种&lt;/p&gt;
-
-&lt;h4 id=&quot;1nsobject&quot;&gt;1、NSObject&lt;/h4&gt;
-
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cm&quot;&gt;/*
- *  回到主线程执行，执行self的showImage方法，参数是image
- */&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;performSelectorOnMainThread&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;@selector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;showImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;withObject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;image&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;waitUntilDone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;YES&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// waitUntilDone的含义:
-//    如果传入的是YES: 那么会等到主线程中的方法执行完毕, 才会继续执行下面其他行的代码
-//    如果传入的是NO: 那么不用等到主线程中的方法执行完毕, 就可以继续执行下面其他行的低吗
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cm&quot;&gt;/*
- *  去xx线程执行aSelector方法，参数是arg
- */&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;performSelector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SEL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;aSelector&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;onThread&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSThread&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;thr&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;withObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;arg&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;waitUntilDone&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BOOL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;wait&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h4 id=&quot;2gcd&quot;&gt;2、GCD&lt;/h4&gt;
-
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;dispatch_async&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;queue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-		&lt;span class=&quot;cp&quot;&gt;# do something
-&lt;/span&gt;		
-		
-        &lt;span class=&quot;n&quot;&gt;dispatch_sync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dispatch_get_main_queue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-			&lt;span class=&quot;cp&quot;&gt;#回到主线程
-&lt;/span&gt;        &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h4 id=&quot;3nsoperation&quot;&gt;3、NSOperation&lt;/h4&gt;
-
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;NSOperationQueue&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;queue&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSOperationQueue&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-
-    &lt;span class=&quot;c1&quot;&gt;// 2.添加任务(操作)
-&lt;/span&gt;    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;queue&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;addOperationWithBlock&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-		
-		&lt;span class=&quot;cp&quot;&gt;# 回到主线程
-&lt;/span&gt;        &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSOperationQueue&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;mainQueue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;addOperationWithBlock&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;imageView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;image&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}];&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}];&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h3 id=&quot;二进程间通信app间通信&quot;&gt;二、进程间通信/APP间通信&lt;/h3&gt;
-
-&lt;p&gt;进程是容纳运行一个程序所需要所有信息的容器。在iOS中每个APP里就一个进程，所以进程间的通信实际上是APP之间的通信。iOS是封闭的系统，每个APP都只能访问各自沙盒里的内容&lt;/p&gt;
-
-&lt;h4 id=&quot;1url-scheme&quot;&gt;1、URL Scheme&lt;/h4&gt;
-
-&lt;p&gt;App1通过openURL的方法跳转到App2，并且在URL中带上想要的参数，有点类似http的get请求那样进行参数传递。这种方式是使用最多的最常见的，使用方法也很简单只需要源App1在info.plist中配置LSApplicationQueriesSchemes，指定目标App2的scheme；然后在目标App2的info.plist中配置好URL types，表示该app接受何种URL scheme的唤起。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_1/09.jpeg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;UIApplication&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;application&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UIApplication&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;sharedApplication&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;application&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;openURL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;URL&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:@{}&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;completionHandler&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h4 id=&quot;2keychain&quot;&gt;2、Keychain&lt;/h4&gt;
-
-&lt;p&gt;Keychain是iOS中一个安全存储容器，本质是一个sqlite数据库，位置在/private/var/Keychains/keychain-2.db。它是独立于每个App的沙盒之外的，所以即使App被删除之后，Keychain里面的信息依然存在。基于安全和独立于app沙盒的两个特性，Keychain主要用于给app保存登录和身份凭证等敏感信息，这样只要用户登录过，即使用户删除了app重新安装也不需要重新登录。&lt;/p&gt;
-
-&lt;p&gt;Keychain用于App间通信的一个典型场景也和app的登录相关，就是统一账户登录平台。使用同一个账号平台的多个app，只要其中一个app用户进行了登录，其他app就可以实现自动登录不需要用户多次输入账号和密码。一般开放平台都会提供登录SDK，在这个SDK内部就可以把登录相关的信息都写到keychain中，这样如果多个app都集成了这个SDK，那么就可以实现统一账户登录了。&lt;/p&gt;
-
-&lt;p&gt;可以自封装一个keychain相关的存储&lt;/p&gt;
-
-&lt;h4 id=&quot;3uipasteboard&quot;&gt;3、UIPasteboard&lt;/h4&gt;
-
-&lt;p&gt;UIPasteboard是剪切板功能，因为iOS的原生控件UITextView，UITextField 、UIWebView，我们在使用时如果长按，就会出现复制、剪切、选中、全选、粘贴等功能，这个就是利用了系统剪切板功能来实现的。而每一个App都可以去访问系统剪切板，所以就能够通过系统剪贴板进行App间的数据传输了。&lt;/p&gt;
-
-&lt;p&gt;UIPasteboard典型的使用场景就是淘宝跟微信/QQ的链接分享。淘口令。&lt;/p&gt;
-
-&lt;h4 id=&quot;4uidocumentinteractioncontroller&quot;&gt;4、UIDocumentInteractionController&lt;/h4&gt;
-
-&lt;p&gt;UIDocumentInteractionController主要是用来实现同设备上app之间的共享文档，以及文档预览、打印、发邮件和复制等功能。它的使用非常简单.&lt;/p&gt;
-
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;#import &quot;ViewController.h&quot;
-&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;@interface&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ViewController&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UIDocumentInteractionControllerDelegate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;@end&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;@implementation&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ViewController&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;viewDidLoad&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;super&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;viewDidLoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;navigationItem&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;预览&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-    &lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;urlStr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSBundle&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;mainBundle&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;pathForResource&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;iOS开发指南.pdf&quot;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;ofType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;NSURL&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;url&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSURL&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;fileURLWithPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;urlStr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-
-    &lt;span class=&quot;n&quot;&gt;UIDocumentInteractionController&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;documentVc&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UIDocumentInteractionController&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;interactionControllerWithURL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;documentVc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;delegate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;documentVc&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;presentPreviewAnimated&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;YES&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;cp&quot;&gt;#pragma mark - UIDocumentInteractionController 代理方法
-&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UIViewController&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;documentInteractionControllerViewControllerForPreview&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UIDocumentInteractionController&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;controller&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UIView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;documentInteractionControllerViewForPreview&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UIDocumentInteractionController&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;controller&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CGRect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;documentInteractionControllerRectForPreview&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UIDocumentInteractionController&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;controller&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bounds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_1/10.jpeg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;5local-socket&quot;&gt;5、local socket&lt;/h4&gt;
-
-&lt;p&gt;App1在本地的端口port1234进行TCP的bind和listen，另外一个App2在同一个端口port1234发起TCP的connect连接，这样就可以建立正常的TCP连接，进行TCP通信了，那么就想传什么数据就可以传什么数据了。&lt;/p&gt;
-
-&lt;p&gt;这种方式最大的特点就是灵活，只要连接保持着，随时都可以传任何相传的数据，而且带宽足够大。它的缺点就是因为iOS系统在任意时刻只有一个app在前台运行，那么就要通信的另外一方具备在后台运行的权限，像导航或者音乐类app。&lt;/p&gt;
-
-&lt;p&gt;它是常用使用场景就是某个App1具有特殊的能力，比如能够跟硬件进行通信，在硬件上处理相关数据。而App2则没有这个能力，但是它能给App1提供相关的数据，这样APP2跟App1建立本地socket连接，传输数据到App1，然后App1在把数据传给硬件进行处理。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_1/11.jpeg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、线程间通信</summary></entry></feed>
+&lt;p&gt;以上代码可以在&lt;a href=&quot;git@github.com:helloted/MonitorMethod.git&quot;&gt;Github-Monitor&lt;/a&gt;下载&lt;/p&gt;</content><author><name>Ted</name></author><summary type="html">一、前言</summary></entry></feed>

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>【译】View编程指南(二) - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/2018/01/15/View_3/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/bg_01.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>【译】View编程指南(二)</h1>
+                    
+                    <h2 class="subheading">《View Programming Guide for iOS》文档翻译</h2>
+                    
+                    <span class="meta">Posted by Ted on January 15, 2018</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<p>苹果官方文档<a href="https://developer.apple.com/library/content/documentation/WindowsViews/Conceptual/ViewPG_iPhoneOS/Introduction/Introduction.html#//apple_ref/doc/uid/TP40009503-CH1-SW2">View Programming Guide for iOS</a></p>
+
+<h3 id="四views">四、Views</h3>
+
+<p>由于View对象是应用程序与用户交互的主要方式，因此它们有许多责任。 这里仅仅是少数：</p>
+
+<p>布局和subview管理</p>
+
+<ul>
+  <li>view定义了与其父view相关的默认调整大小行为。</li>
+  <li>一个view可以管理subview列表。</li>
+  <li>view可以根据需要重写subview的大小和位置。</li>
+  <li>view可以将其坐标系中的点转换为其他view或window的坐标系。</li>
+</ul>
+
+<p>绘画和动画</p>
+
+<ul>
+  <li>view在其矩形区域绘制内容。</li>
+  <li>一些view属性可以动画变成新的值。</li>
+</ul>
+
+<p>事件处理</p>
+
+<ul>
+  <li>view可以接收触摸事件。</li>
+  <li>view参与响应者链。</li>
+</ul>
+
+<h4 id="创建view">创建View</h4>
+
+<p>创建View最简单的方法是使用Interface Builder以图形方式进行组装。从Interface Builder中，您可以将View添加到界面，将这些view排列到层次结构中，配置每个view的设置，并将与view相关的行为连接到您的代码。由于Interface Builder使用实时view对象（即view类的实际实例），因此您在设计时看到的是运行时获得的内容。然后将这些活动对象保存在一个nib文件中，这是一个资源文件，用于保留对象的状态和配置。</p>
+
+<p>您通常会创建nib文件，以便为应用程序的一个view控制器存储整个view层次结构。 nib文件的顶层通常包含一个表示view控制器view的view对象。（view控制器本身通常由文件的所有者对象来表示。）顶层view的大小应该适合目标设备，并且包含所有要呈现的其他view。使用nib文件仅存储view控制器view层次结构的一部分是很少见的。</p>
+
+<p>在view控制器中使用nib文件时，只需使用nib文件信息初始化view控制器即可。view控制器在适当的时候处理view的加载和卸载。但是，如果您的nib文件未与view控制器关联，则可以使用NSBundle或UINib对象手动加载nib文件内容，该对象使用nib文件中的数据来重构view对象。</p>
+
+<p>或者用代码创建</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">CGRect</span>  <span class="n">viewRect</span> <span class="o">=</span> <span class="n">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span>
+<span class="n">UIView</span><span class="o">*</span> <span class="n">myView</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIView</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithFrame</span><span class="p">:</span><span class="n">viewRect</span><span class="p">];</span>
+</code></pre>
+</div>
+
+<h4 id="设置view的属性">设置View的属性</h4>
+
+<p>UIView类有几个声明的属性来控制View的外观和行为。 这些属性用于操纵View的大小和位置，View的透明度，背景颜色和渲染行为。 所有这些属性都具有适当的默认值，您可以根据需要稍后进行更改。您还可以使用“Inspector”窗口在Interface Builder中配置其中的许多属性。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>属性</th>
+      <th>用处</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">alpha</code>, <code class="highlighter-rouge">hidden</code>, <code class="highlighter-rouge">opaque</code></td>
+      <td>这些属性影响view的不透明度。 alpha和hidden属性直接改变view的不透明度。opaque属性告诉系统如何合成view。 如果view的内容完全不透明，则将此属性设置为YES，因此不会显示任何底层view的内容。 将此属性设置为YES可消除不必要的合成操作，从而提高性能。</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">bounds</code>, <code class="highlighter-rouge">frame</code>, <code class="highlighter-rouge">center</code>, <code class="highlighter-rouge">transform</code></td>
+      <td>这些属性会影响view的大小和位置。 center和frame属性表示view相对于superview的位置。 该frame还包括view的大小。 bounds属性定义了view在其自己的坐标系中的可见内容区域。transform属性用于以复杂的方式动画或移动整个view。 例如，您将使用变换来旋转或缩放view。 如果当前变换不是身份变换，则frame属性是不确定的，应该忽略。</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">autoresizingMask</code>, <code class="highlighter-rouge">autoresizesSubviews</code></td>
+      <td>这些属性会影响view及其子view的自动调整大小行为。 autoresizingMask属性控制view如何响应其父view bounds中的更改。 autoresizesSubviews属性控制是否调整当前view的subview的大小。</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">contentMode</code>, <code class="highlighter-rouge">contentStretch</code>, <code class="highlighter-rouge">contentScaleFactor</code></td>
+      <td>这些属性影响view内部内容的呈现行为。 contentMode和contentStretch属性确定在view的宽度或高度更改时如何处理内容。 contentScaleFactor属性仅在需要为高分辨率屏幕自定义view的绘制行为时使用。</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">gestureRecognizers</code>, <code class="highlighter-rouge">userInteractionEnabled</code>, <code class="highlighter-rouge">multipleTouchEnabled</code>, <code class="highlighter-rouge">exclusiveTouch</code></td>
+      <td>这些属性会影响view处理触摸事件的方式。 gestureRecognizers属性包含附加到view的手势识别器。 其他属性控制view支持的触摸事件。</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">backgroundColor</code>, <code class="highlighter-rouge">subviews</code>, <code class="highlighter-rouge">drawRect:</code>method, <code class="highlighter-rouge">layer</code>, (<code class="highlighter-rouge">layerClass</code> method)</td>
+      <td>这些属性和方法可以帮助您管理view的实际内容。 对于简单的view，您可以设置背景颜色并添加一个或多个subviews。 subviews属性本身包含subview的只读列表，但有几种添加和重新排列subview的方法。 对于具有自定义绘图行为的view，您必须重写drawRect：方法。</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>UIView类包含一个tag属性，您可以使用它来为各个view对象添加一个整数值。 您可以使用tag唯一地标识view层次结构中的view，并在运行时执行对这些view的搜索。（基于tag的搜索比自己迭代view层次更快。）tag属性的默认值为0。</p>
+
+<p>要搜索带tag的view，请使用UIView的<code class="highlighter-rouge">viewWithTag：</code>方法。 此方法执行接收器及其subview的深度优先搜索。 它不搜索superview或view层次结构的其他部分。 因此，从层次结构的root view调用此方法会搜索层次结构中的所有view，但是从特定的subview调用它只会搜索view的子集。</p>
+
+<h4 id="创建和管理一个view-hierarchy">创建和管理一个View Hierarchy</h4>
+
+<p>管理view层次结构是开发应用程序用户界面的关键部分。 您的view的组织影响您的应用程序的外观，以及您的应用程序如何响应更改和事件。 例如，view层次结构中的父子关系确定哪些对象可能处理特定的触摸事件。 同样，父子关系定义每个视图如何响应界面方向的变化。</p>
+
+<p><img src="/img/Simple_3/16.jpg" alt="img" /></p>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2018/01/15/View_2/" data-toggle="tooltip" data-placement="top" title="【译】View编程指南(二)">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>
