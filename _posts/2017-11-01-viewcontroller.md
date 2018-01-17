@@ -1,7 +1,7 @@
 ---
 layout:     post
-title:      "【译】View Controller Programming Guide for iOS"
-subtitle:   "View Controller Programming Guide for iOS文档翻译"
+title:      "【译】View Controller编程指南"
+subtitle:   "《View Controller Programming Guide for iOS》文档翻译"
 date:       2017-11-01 12:00:00
 author:     "Ted"
 header-img: "img/default.jpg"
@@ -30,3 +30,5 @@ ViewController最重要的作用是管理View的层次结构。 每个ViewContro
 内容ViewController自己管理其所有View。
 
  容器ViewController管理其自己的View以及来自其一个或多个子ViewController的root view。 该容器不管理其子女的内容。 它只管理root view，根据容器的设计大小和放置它。 图说明了分割ViewController及其子项之间的关系。 拆分ViewController管理其subview的整体大小和位置，但子ViewController管理这些view的实际内容。
+
+![img](/img/Simple_3/21.jpg)
