@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>【译】KVO编程指南 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/2017/10/22/KVO/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>【译】KVO编程指南</h1>
+                    
+                    <h2 class="subheading">《Key-Value Observing Programming Guide》翻译</h2>
+                    
+                    <span class="meta">Posted by Ted on October 22, 2017</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<p>苹果官方文档<a href="https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/KeyValueObserving/KeyValueObserving.html#//apple_ref/doc/uid/10000177-BCICJDHA">Key-Value Observing Programming Guide</a></p>
+
+<h3 id="一简介">一、简介</h3>
+
+<p>KVO键值观察是一种当对象指定属性更改时，可以通知其他对象的机制</p>
+
+<p>这对于应用程序中的model层和controller层之间的通信特别有用。 （在OS X中，controller层绑定技术在很大程度上依赖于键值观察。）controller对象通常会观察model对象的属性，view对象通过controller观察model对象的属性。另外，model对象可能会观察到其他model对象（通常用于确定依赖值何时发生变化），甚至是自身（再次确定依赖值何时发生变化）。</p>
+
+<p>您可以观察属性，包括简单属性，一对一关系和多对多关系。</p>
+
+<p>一个简单的例子说明KVO如何在你的应用程序中有用。假设一个Person对象与一个Account对象进行交互，表示该人在银行的储蓄账户。 Person的一个实例可能需要知道Account实例某些方面的变化，例如余额或利率。</p>
+
+<p><img src="/img/Simple_4/08.png" alt="img" /></p>
+
+<p>如果这些属性是Account的公共属性，Person可以定期轮询Account来发现更改，但这当然是低效的，而且往往是不切实际的。 更好的方法是使用KVO，类似于发生更改时Person接收一个通知。</p>
+
+<p>要使用KVO，首先必须确保所观察的对象（本例中的Account）符合KVO标准。 通常情况下，如果您的对象继承自NSObject，并且以常规方式创建属性，那么您的对象及其属性将自动成为KVO兼容的。 也可以手动实施合规性。 KVO合规性描述了自动和手动键值观察之间的区别，以及如何实现这两者。</p>
+
+<p>接下来，你必须注册你的观察者实例Person；被观察实例也就是Account。 Person向Account发送一个<code class="highlighter-rouge">addObserver：forKeyPath：options：context：</code>消息，为每个观察到的关键路径命名自己为观察者。</p>
+
+<p><img src="/img/Simple_4/09.png" alt="img" /></p>
+
+<p>为了接收来自Account的变更通知，Person实现了<code class="highlighter-rouge">obserValueForKeyPath：ofObject：change：context：method</code>，这是所有观察者所必需的。 只要有一个注册的key path发生变化，Account就会将此消息发送给Persono。 然后，Person可以根据更改通知采取适当的措施。</p>
+
+<p><img src="/img/Simple_4/10.png" alt="img" /></p>
+
+<p>最后，当它不再需要通知时，至少在它被释放之前，Person实例必须通过发送消息removeObserver：forKeyPath：到Account来注销。</p>
+
+<p><img src="/img/Simple_4/11.png" alt="img" /></p>
+
+<h3 id="二注册键值观察">二、注册键值观察</h3>
+
+<p>您必须执行以下步骤才能使对象接收KVO，兼容属性的键值观察通知：</p>
+
+<ul>
+  <li>使用方法<code class="highlighter-rouge">addObserver：forKeyPath：options：context：</code>向观察者注册被观察对象。</li>
+  <li>实现<code class="highlighter-rouge">observeValueForKeyPath：ofObject：change：context：</code>在观察者内部接受更改消息。</li>
+  <li>使用方法<code class="highlighter-rouge">removeObserver：forKeyPath</code>注销观察者：不再应该接收消息时。 至少在观察者从内存中释放之前调用这个方法。</li>
+</ul>
+
+<p>重要提示：并非所有的类都符合KVO标准。 您可以按照KVO合规中所述的步骤确保您自己的类符合KVO标准。 通常，苹果提供的框架中的属性只有符合KVO标准才能被KVO。</p>
+
+<h4 id="注册观察者">注册观察者</h4>
+
+<p>观察对象首先通过发送一个<code class="highlighter-rouge">addObserver：forKeyPath：options：context：message</code>，将自己作为观察者传递自己，并将其自身作为要观察的属性的关键路径。 观察者另外指定一个选项参数和一个上下文指针来管理通知的各个方面。</p>
+
+<blockquote>
+  <p>options参数</p>
+</blockquote>
+
+<p>options参数（指定为选项常数的按位或）会影响通知中的内容以及生成通知的方式。</p>
+
+<p>您可以通过指定options为NSKeyValueObservingOptionOld选择从更改前接收观察属性的值。您可以通过options为NSKeyValueObservingOptionNew请求属性的新值。您可以通过这些选项的按位OR来获得旧值和新值。</p>
+
+<p>您指示被观察对象使用options参数NSKeyValueObservingOptionInitial发送立即更改通知（在<code class="highlighter-rouge">addObserver：forKeyPath：options：context：returns</code>之前）。另外，您可以使用此一次性通知来确定观察者中某个属性的初始值。</p>
+
+<p>您可以通过包含options参数NSKeyValueObservingOptionPrior来指示被观察对象在属性更改之前发送通知（除了通常在更改之后的通知之外）。更改字典通过包含key为NSKeyValueChangeNotificationIsPriorKey和YES为值来表示prechange通知。你可以使用prechange通知当观察者自己的KVO要求它调用其中一个属性的<code class="highlighter-rouge">-willChange ...</code>方法之一时，普通的通知会晚点以致于无法及时调用<code class="highlighter-rouge">willChange</code>。</p>
+
+<blockquote>
+  <p>context</p>
+</blockquote>
+
+<p><code class="highlighter-rouge">addObserver：forKeyPath：options：context：message</code>中的context指针包含任意数据，将在相应的更改通知中传回给观察者。您可以指定NULL并完全依赖关键字路径字符串来确定更改通知的来源，但是这种方法可能会导致父类也出于不同原因观察到相同关键路径的对象而出现问题。</p>
+
+<p>更安全和更可扩展的方法是使用context来确保您收到的通知的目的地是您的观察者而不是父类。</p>
+
+<p>你的类中一个唯一命名的静态变量的地址是一个好的context。在父类或者子类中以相似的方式选择的context不会重叠。您可以为整个类选择一个context，并依靠通知消息中的键路径字符串来确定更改的内容。或者，您可以为每个观察到的关键路径创建一个不同的context，从而完全绕过字符串比较的需要，从而实现更高效的通知解析。</p>
+
+<p>下面显示了以这种方式选择的balance和interestRate属性的示例context。</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">static</span> <span class="kt">void</span> <span class="o">*</span><span class="n">PersonAccountBalanceContext</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">PersonAccountBalanceContext</span><span class="p">;</span>
+<span class="k">static</span> <span class="kt">void</span> <span class="o">*</span><span class="n">PersonAccountInterestRateContext</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">PersonAccountInterestRateContext</span><span class="p">;</span>
+</code></pre>
+</div>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">registerAsObserverForAccount</span><span class="p">:(</span><span class="n">Account</span><span class="o">*</span><span class="p">)</span><span class="nv">account</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">account</span> <span class="nf">addObserver</span><span class="p">:</span><span class="n">self</span>
+              <span class="nf">forKeyPath</span><span class="p">:</span><span class="s">@"balance"</span>
+                 <span class="nl">options:</span><span class="p">(</span><span class="n">NSKeyValueObservingOptionNew</span> <span class="o">|</span>
+                          <span class="n">NSKeyValueObservingOptionOld</span><span class="p">)</span>
+                 <span class="nl">context:</span><span class="n">PersonAccountBalanceContext</span><span class="p">];</span>
+ 
+    <span class="p">[</span><span class="n">account</span> <span class="nf">addObserver</span><span class="p">:</span><span class="n">self</span>
+              <span class="nf">forKeyPath</span><span class="p">:</span><span class="s">@"interestRate"</span>
+                 <span class="nl">options:</span><span class="p">(</span><span class="n">NSKeyValueObservingOptionNew</span> <span class="o">|</span>
+                          <span class="n">NSKeyValueObservingOptionOld</span><span class="p">)</span>
+                  <span class="nl">context:</span><span class="n">PersonAccountInterestRateContext</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p><strong>注意:</strong>  <code class="highlighter-rouge">addObserver:forKeyPath:options:context:</code> 没有强引用 observing object, the observed objects, or the context.</p>
+
+<h4 id="接收通知">接收通知</h4>
+
+<p>当对象的观察属性的值发生变化时，观察者会收到一个<code class="highlighter-rouge">observeValueForKeyPath：ofObject：change：context：message</code>。所有的观察者都必须实现这个方法。
+被观察对象提供触发通知的keypath，本身作为相关对象，包含有关更改详细信息的字典以及观察者注册此关键路径时提供的context指针。
+更改通知字典用NSKeyValueChangeKindKey提供有关发生的更改类型的信息。如果被观察对象的值已更改，则NSKeyValueChangeKindKey返回NSKeyValueChangeSetting。根据注册观察者时指定的选项，通知更改的字典中的NSKeyValueChangeOldKey和NSKeyValueChangeNewKey包含更改之前和之后的属性值。如果该属性是一个对象，则直接提供该值。如果该属性是标量或C结构，则该值将包装在一个NSValue对象中（与键值编码一样）。
+如果观察到的属性是一对多的关系，则NSKeyValueChangeKindKey还指示关系中的对象是分别通过返回NSKeyValueChangeInsertion，NSKeyValueChangeRemoval还是NSKeyValueChangeReplacement来插入，移除或替换。
+NSKeyValueChangeIndexesKey的值是一个NSIndexSet对象，用于指定已更改的关系中的索引。如果在注册观察者时将NSKeyValueObservingOptionNew或NSKeyValueObservingOptionOld指定为选项，则更改字典中的NSKeyValueChangeOldKey和NSKeyValueChangeNewKey值是包含相关对象在更改之前和之后的值的数组。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(id)object
+                        change:(NSDictionary *)change
+                       context:(void *)context {
+ 
+    if (context == PersonAccountBalanceContext) {
+        // Do something with the balance…
+ 
+    } else if (context == PersonAccountInterestRateContext) {
+        // Do something with the interest rate…
+ 
+    } else {
+        // Any unrecognized context must belong to super
+        [super observeValueForKeyPath:keyPath
+                             ofObject:object
+                               change:change
+                               context:context];
+    }
+}
+</code></pre>
+</div>
+
+<p>如果在注册观察者时指定了NULL context，则可以将通知的键路径与您正在观察的键路径进行比较，以确定发生了什么变化。 如果您对所有观察到的键路径使用单个context，则首先根据通知的context对其进行测试，并找到匹配项，然后使用键路径字符串比较来确定具体发生了什么变化。 如果您为每个关键路径提供了唯一的上下文，如下所示，一系列简单的指针比较会同时告诉您该通知是否适用于此观察者，如果是，那么哪个关键路径发生了变化。</p>
+
+<p>在任何情况下，观察者都应该总是调用父类的<code class="highlighter-rouge">observeValueForKeyPath：ofObject：change：context</code>的实现：当它不能识别上下文时（或者简单情况下，任何关键路径），因为这意味着父类已经注册了 通知也是如此。</p>
+
+<p>注意：如果通知传播到类层次结构的顶部，NSObject将抛出NSInternalInconsistencyException，因为这是一个编程错误：子类未能使用它注册的通知。</p>
+
+<h4 id="移除观察">移除观察</h4>
+
+<p>移除时，要注意以下几点：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>- (void)unregisterAsObserverForAccount:(Account*)account {
+    [account removeObserver:self
+                 forKeyPath:@"balance"
+                    context:PersonAccountBalanceContext];
+ 
+    [account removeObserver:self
+                 forKeyPath:@"interestRate"
+                    context:PersonAccountInterestRateContext];
+}
+</code></pre>
+</div>
+
+<ul>
+  <li>删除未注册的观察对象将导致NSRangeException。您可以调用<code class="highlighter-rouge">removeObserver：forKeyPath：context：</code>恰好相应调用一次<code class="highlighter-rouge">addObserver：forKeyPath：options：context :</code>,或者如果在您的应用中不可行，则将try / catch块中的<code class="highlighter-rouge">removeObserver：forKeyPath：context：call</code>以处理潜在的例外。</li>
+  <li>观察员在释放时不会自动删除自己。被观察的对象继续发送通知，忘记了观察者的状态。但是，像任何其他消息一样，发送到释放对象的更改通知会触发内存访问异常。因此，您应确保观察者在从内存中消失之前自行消除。</li>
+  <li>该协议没有办法问一个对象，如果它是一个观察者或观察。构建您的代码以避免发布相关的错误。一个典型的模式是在观察者初始化期间注册为观察者（例如在init或viewDidLoad中），并在释放期间取消注册（通常在dealloc中），确保正确配对和有序的添加和移除消息，并且观察者在注册之前是未注册的从记忆中解脱出来。</li>
+</ul>
+
+<h3 id="三kvo合规性">三、KVO合规性</h3>
+
+<p>为了符合KVO标准，一个类必须确保以下内容：</p>
+
+<ul>
+  <li>
+    <p>该类必须符合该属性的键值编码，如确保KVC合规性中所述。
+KVO支持与KVC相同的数据类型，包括Objective-C对象以及标量和结构支持中列出的标量和结构。</p>
+  </li>
+  <li>该类发出该属性的KVO变化通知。</li>
+  <li>从属按键被正确注册（请参阅注册从属按键）</li>
+</ul>
+
+<p>有两种技术可以确保发出更改通知。自动支持由NSObject提供，并且默认情况下可用于符合键值编码的类的所有属性。通常，如果遵循标准的Cocoa编码和命名约定，则可以使用自动更改通知 - 不必编写任何其他代码。</p>
+
+<p>手动更改通知提供了何时发出通知的额外控制，并且需要额外的编码。您可以通过自动实现类方法自动通知您的子类的属性<code class="highlighter-rouge">NotNotifiesObserversForKey :</code>.</p>
+
+<h4 id="自动发出通知">自动发出通知</h4>
+
+<p>NSObject提供了自动键值更改通知的基本实现。 自动键值更改通知通知观察者使用键值兼容访问器所做的更改以及键值编码方法。 自动通知还受由例如<code class="highlighter-rouge">mutableArrayValueForKey：</code>返回的集合代理对象的支持。</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="c1">// Call the accessor method.
+</span><span class="p">[</span><span class="n">account</span> <span class="nf">setName</span><span class="p">:</span><span class="s">@"Savings"</span><span class="p">];</span>
+ 
+<span class="c1">// Use setValue:forKey:.
+</span><span class="p">[</span><span class="n">account</span> <span class="nf">setValue</span><span class="p">:</span><span class="s">@"Savings"</span> <span class="nf">forKey</span><span class="p">:</span><span class="s">@"name"</span><span class="p">];</span>
+ 
+<span class="c1">// Use a key path, where 'account' is a kvc-compliant property of 'document'.
+</span><span class="p">[</span><span class="n">document</span> <span class="nf">setValue</span><span class="p">:</span><span class="s">@"Savings"</span> <span class="nf">forKeyPath</span><span class="p">:</span><span class="s">@"account.name"</span><span class="p">];</span>
+ 
+<span class="c1">// Use mutableArrayValueForKey: to retrieve a relationship proxy object.
+</span><span class="n">Transaction</span> <span class="o">*</span><span class="n">newTransaction</span> <span class="o">=</span> <span class="o">&lt;</span><span class="err">#</span><span class="n">Create</span> <span class="n">a</span> <span class="n">new</span> <span class="n">transaction</span> <span class="k">for</span> <span class="n">the</span> <span class="n">account</span><span class="err">#</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="n">NSMutableArray</span> <span class="o">*</span><span class="n">transactions</span> <span class="o">=</span> <span class="p">[</span><span class="n">account</span> <span class="nf">mutableArrayValueForKey</span><span class="p">:</span><span class="s">@"transactions"</span><span class="p">];</span>
+<span class="p">[</span><span class="n">transactions</span> <span class="nf">addObject</span><span class="p">:</span><span class="n">newTransaction</span><span class="p">];</span>
+</code></pre>
+</div>
+
+<h4 id="手动通知">手动通知</h4>
+
+<p>在某些情况下，您可能需要控制通知过程，例如，最大限度地减少因应用程序特定原因而不必要的触发通知，或将多个更改分组为单个通知。手动更改通知提供了执行此操作的方法。</p>
+
+<p>手动和自动通知不是相互排斥的。除了已有的自动通知外，您还可以自由发布手动通知。更典型的是，你可能想完全控制一个特定属性的通知。在这种情况下，对于要排除其自动通知的属性，您会覆盖自动通知<code class="highlighter-rouge">ObserversForKey</code>的NSObject实现，自动通知观察者关键字的子类实现应返回“NO”。子类的实现应该为任何无法识别的键调用super。</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">automaticallyNotifiesObserversForKey</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">theKey</span> <span class="p">{</span>
+ 
+    <span class="n">BOOL</span> <span class="n">automatic</span> <span class="o">=</span> <span class="nb">NO</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">([</span><span class="n">theKey</span> <span class="nf">isEqualToString</span><span class="p">:</span><span class="s">@"balance"</span><span class="p">])</span> <span class="p">{</span>
+        <span class="n">automatic</span> <span class="o">=</span> <span class="nb">NO</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+        <span class="n">automatic</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nf">automaticallyNotifiesObserversForKey</span><span class="p">:</span><span class="n">theKey</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">automatic</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>要实现手动观察者通知，可以在更改值之前调用<code class="highlighter-rouge">willChangeValueForKey</code>，并在更改值之后调用<code class="highlighter-rouge">didChangeValueForKey</code>。</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setBalance</span><span class="p">:(</span><span class="kt">double</span><span class="p">)</span><span class="nv">theBalance</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">self</span> <span class="nf">willChangeValueForKey</span><span class="p">:</span><span class="s">@"balance"</span><span class="p">];</span>
+    <span class="n">_balance</span> <span class="o">=</span> <span class="n">theBalance</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">self</span> <span class="nf">didChangeValueForKey</span><span class="p">:</span><span class="s">@"balance"</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>你可以减少没必要的通知</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setBalance</span><span class="p">:(</span><span class="kt">double</span><span class="p">)</span><span class="nv">theBalance</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">theBalance</span> <span class="o">!=</span> <span class="n">_balance</span><span class="p">)</span> <span class="p">{</span>
+        <span class="p">[</span><span class="n">self</span> <span class="nf">willChangeValueForKey</span><span class="p">:</span><span class="s">@"balance"</span><span class="p">];</span>
+        <span class="n">_balance</span> <span class="o">=</span> <span class="n">theBalance</span><span class="p">;</span>
+        <span class="p">[</span><span class="n">self</span> <span class="nf">didChangeValueForKey</span><span class="p">:</span><span class="s">@"balance"</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>你可以操作多个key</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setBalance</span><span class="p">:(</span><span class="kt">double</span><span class="p">)</span><span class="nv">theBalance</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">self</span> <span class="nf">willChangeValueForKey</span><span class="p">:</span><span class="s">@"balance"</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">self</span> <span class="nf">willChangeValueForKey</span><span class="p">:</span><span class="s">@"itemChanged"</span><span class="p">];</span>
+    <span class="n">_balance</span> <span class="o">=</span> <span class="n">theBalance</span><span class="p">;</span>
+    <span class="n">_itemChanged</span> <span class="o">=</span> <span class="n">_itemChanged</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">self</span> <span class="nf">didChangeValueForKey</span><span class="p">:</span><span class="s">@"itemChanged"</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">self</span> <span class="nf">didChangeValueForKey</span><span class="p">:</span><span class="s">@"balance"</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>在有序对多关系的情况下，您不仅必须指定已更改的关键字，还必须指定所涉及对象的更改类型和索引。 更改的类型是指定NSKeyValueChangeInsertion，NSKeyValueChangeRemoval或NSKeyValueChangeReplacement的NSKeyValueChange。 受影响对象的索引作为NSIndexSet对象传递。</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">removeTransactionsAtIndexes</span><span class="p">:(</span><span class="n">NSIndexSet</span> <span class="o">*</span><span class="p">)</span><span class="nv">indexes</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">self</span> <span class="nf">willChange</span><span class="p">:</span><span class="n">NSKeyValueChangeRemoval</span>
+        <span class="nf">valuesAtIndexes</span><span class="p">:</span><span class="n">indexes</span> <span class="n">forKey</span><span class="o">:</span><span class="s">@"transactions"</span><span class="p">];</span>
+ 
+    <span class="c1">// Remove the transaction objects at the specified indexes.
+</span> 
+    <span class="p">[</span><span class="n">self</span> <span class="nf">didChange</span><span class="p">:</span><span class="n">NSKeyValueChangeRemoval</span>
+        <span class="nf">valuesAtIndexes</span><span class="p">:</span><span class="n">indexes</span> <span class="n">forKey</span><span class="o">:</span><span class="s">@"transactions"</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<h3 id="四注册依赖keys">四、注册依赖keys</h3>
+
+<p>在许多情况下，一个属性的值取决于另一个对象中一个或多个其他属性的值。 如果一个属性的值发生变化，那么派生属性的值也应该被标记为变化。 如何确保为这些相关属性发布键值观察通知取决于关系的基数。</p>
+
+<h4 id="一对一关系">一对一关系</h4>
+
+<p>要为一对一关系自动触发通知，您应该覆盖<code class="highlighter-rouge">keyPathsForValuesAffectingValueForKey：</code>或者实现一个合适的方法，该方法遵循它为注册相关键而定义的模式。</p>
+
+<p>例如，一个人的fullName取决于firstName和lastName。 返回fullName的方法可以写成如下形式：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>- (NSString *)fullName {
+    return [NSString stringWithFormat:@"%@ %@",firstName, lastName];
+}
+</code></pre>
+</div>
+
+<p>观察fullName属性的应用程序必须在firstName或lastName属性发生更改时通知，因为它们会影响属性的值。</p>
+
+<p>一种解决方案是覆盖keyPathsForValuesAffectingValueForKey：指定一个人的fullName属性依赖于lastName和firstName属性。</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">NSSet</span> <span class="o">*</span><span class="p">)</span><span class="nf">keyPathsForValuesAffectingValueForKey</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">key</span> <span class="p">{</span>
+ 
+    <span class="n">NSSet</span> <span class="o">*</span><span class="n">keyPaths</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nf">keyPathsForValuesAffectingValueForKey</span><span class="p">:</span><span class="n">key</span><span class="p">];</span>
+ 
+    <span class="k">if</span> <span class="p">([</span><span class="n">key</span> <span class="nf">isEqualToString</span><span class="p">:</span><span class="s">@"fullName"</span><span class="p">])</span> <span class="p">{</span>
+        <span class="n">NSArray</span> <span class="o">*</span><span class="n">affectingKeys</span> <span class="o">=</span> <span class="p">@[</span><span class="s">@"lastName"</span><span class="p">,</span> <span class="s">@"firstName"</span><span class="p">];</span>
+        <span class="n">keyPaths</span> <span class="o">=</span> <span class="p">[</span><span class="n">keyPaths</span> <span class="nf">setByAddingObjectsFromArray</span><span class="p">:</span><span class="n">affectingKeys</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">keyPaths</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>你也可以采用 <code class="highlighter-rouge">keyPathsForValuesAffecting&lt;Key&gt;</code> 这种方法</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">NSSet</span> <span class="o">*</span><span class="p">)</span><span class="n">keyPathsForValuesAffectingFullName</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">NSSet</span> <span class="nf">setWithObjects</span><span class="p">:</span><span class="s">@"lastName"</span><span class="p">,</span> <span class="s">@"firstName"</span><span class="p">,</span> <span class="nb">nil</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>一个已经存在的类的属性，不能通过category去重写 <code class="highlighter-rouge">keyPathsForValuesAffectingValueForKey:</code> 方法，这种情况下，就应该用 <code class="highlighter-rouge">keyPathsForValuesAffecting&lt;Key&gt;</code> 这种。</p>
+
+<h4 id="多对多关系">多对多关系</h4>
+
+<p>您可以使用键值观察将所有子项（在此示例中为employees）的相关属性的注册母项（在本例中为Department）注册为观察者。 当子对象添加到关系中并从关系中删除时，您必须添加并删除父项作为观察者（请参阅注册键值观察）。 在<code class="highlighter-rouge">observeValueForKeyPath：ofObject：change：context：</code>方法中，您更新相关值以响应更改，如下面的代码片段所示：</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">observeValueForKeyPath</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">keyPath</span> <span class="nf">ofObject</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">object</span> <span class="nf">change</span><span class="p">:(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="nv">change</span> <span class="nf">context</span><span class="p">:(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span><span class="nv">context</span> <span class="p">{</span>
+ 
+    <span class="k">if</span> <span class="p">(</span><span class="n">context</span> <span class="o">==</span> <span class="n">totalSalaryContext</span><span class="p">)</span> <span class="p">{</span>
+        <span class="p">[</span><span class="n">self</span> <span class="nf">updateTotalSalary</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="c1">// deal with other observations and/or invoke super...
+</span><span class="p">}</span>
+ 
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">updateTotalSalary</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">self</span> <span class="nf">setTotalSalary</span><span class="p">:[</span><span class="n">self</span> <span class="nf">valueForKeyPath</span><span class="p">:</span><span class="s">@"employees.@sum.salary"</span><span class="p">]];</span>
+<span class="p">}</span>
+ 
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">setTotalSalary</span><span class="o">:</span><span class="p">(</span><span class="n">NSNumber</span> <span class="o">*</span><span class="p">)</span><span class="n">newTotalSalary</span> <span class="p">{</span>
+ 
+    <span class="k">if</span> <span class="p">(</span><span class="n">totalSalary</span> <span class="o">!=</span> <span class="n">newTotalSalary</span><span class="p">)</span> <span class="p">{</span>
+        <span class="p">[</span><span class="n">self</span> <span class="nf">willChangeValueForKey</span><span class="p">:</span><span class="s">@"totalSalary"</span><span class="p">];</span>
+        <span class="n">_totalSalary</span> <span class="o">=</span> <span class="n">newTotalSalary</span><span class="p">;</span>
+        <span class="p">[</span><span class="n">self</span> <span class="nf">didChangeValueForKey</span><span class="p">:</span><span class="s">@"totalSalary"</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+ 
+<span class="o">-</span> <span class="p">(</span><span class="n">NSNumber</span> <span class="o">*</span><span class="p">)</span><span class="n">totalSalary</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">_totalSalary</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>如果您使用的是CoreData，则可以将母项的通知中心注册为其管理对象上下文的观察者。 母项应以类似于键值观察的方式来回应子项发布的相关变化通知。</p>
+
+<h3 id="五kvo声明原理">五、KVO声明原理</h3>
+
+<p>自动键值观察是使用称为isa-swizzling的技术实现的。</p>
+
+<p>顾名思义，isa指针指向维护调度表的对象的类。 这个调度表本质上包含指向类实现的方法的指针，以及其他数据。</p>
+
+<p>当一个观察者注册一个对象的属性时，被观察对象的isa指针被修改，指向一个中间类而不是真实类。 因此，isa指针的值不一定反映实例的实际类。</p>
+
+<p>你不应该依靠isa指针来确定类成员关系。 相反，您应该使用类方法来确定对象实例的类。</p>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2017/10/20/thread_message/" data-toggle="tooltip" data-placement="top" title="iOS进程/线程间通信">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2017/11/01/viewcontroller/" data-toggle="tooltip" data-placement="top" title="【译】View Controller编程指南">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>
