@@ -2,7 +2,7 @@
 layout:     post
 title:      "python基础：socket"
 subtitle:   "socket中TCP与UDP连接服务"
-date:       2016-08-20 12:00:00
+date:       2015-08-20 12:00:00
 author:     "Ted"
 header-img: "img/bg_02.jpg"
 ---
