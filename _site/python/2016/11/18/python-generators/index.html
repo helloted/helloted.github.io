@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>Generators生成器 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/python/2016/11/18/python-generators/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/bg_01.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>Generators生成器</h1>
+                    
+                    <h2 class="subheading">Python进阶之Generators生成器的理解和使用</h2>
+                    
+                    <span class="meta">Posted by Ted on November 18, 2016</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<p>首先让我们了解迭代器<code class="highlighter-rouge">iterators</code>。 根据维基百科，迭代器<code class="highlighter-rouge">iterators</code>是一个对象，使得程序员能够遍历一个容器，特别是list。 但是，迭代器执行遍历并访问容器中的数据元素，但不执行迭代。 你可能会感到困惑，所以让我们慢一点。 有三个部分即：</p>
+
+<ul>
+  <li>可迭代<code class="highlighter-rouge">Iterable</code></li>
+  <li>迭代器<code class="highlighter-rouge">Iterator</code></li>
+  <li>迭代<code class="highlighter-rouge">Iteration</code></li>
+</ul>
+
+<p>所有这些部分都是相互关联的。 我们将逐一讨论，稍后再讨论生成器。</p>
+
+<h4 id="可迭代iterable">可迭代<code class="highlighter-rouge">Iterable</code></h4>
+
+<p>可迭代指的是，Python中的任何对象，定义了<code class="highlighter-rouge">__iter__</code>(返回一个迭代器)或者<code class="highlighter-rouge">__getitem__</code>(获取索引)的方法，它或者可以（这两个dunder方法在前面的章节中都有详细介绍）。 简而言之，可迭代是任何可以为我们提供迭代器的对象。</p>
+
+<h4 id="迭代器iterator">迭代器<code class="highlighter-rouge">Iterator</code></h4>
+
+<p>迭代器指的是python中的任何定义了 <code class="highlighter-rouge">next</code> (Python2) or <code class="highlighter-rouge">__next__</code> 方法的对象</p>
+
+<h4 id="迭代iteration">迭代<code class="highlighter-rouge">Iteration</code></h4>
+
+<p>简而言之，就是从某个东西里比如一个列表中取出一个项目的过程。 当我们使用一个循环来循环某些东西时，它被称为迭代。 这是过程本身的名字。</p>
+
+<h4 id="生成器generators">生成器Generators</h4>
+
+<p>生成器是迭代器，但是只能迭代一次。 这是因为他们没有将所有的值存储在内存中，他们在运行中生成值。 你可以通过遍历它们来使用它们，或者用’for’循环，或者把它们传递给迭代的任何函数或者构造。 大多数时候生成器被声明为函数。 但是，他们<code class="highlighter-rouge">不会返回一个值</code>，他们会产生值。 下面是一个简单的生成器函数的例子：</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">generator_function</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">i</span>
+
+<span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">generator_function</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+<span class="c"># Output: 0</span>
+<span class="c"># 1</span>
+<span class="c"># 2</span>
+<span class="c"># 3</span>
+<span class="c"># 4</span>
+<span class="c"># 5</span>
+<span class="c"># 6</span>
+<span class="c"># 7</span>
+<span class="c"># 8</span>
+<span class="c"># 9</span>
+</code></pre>
+</div>
+
+<p>在这种情况下它并不是很有用。 生成器最适合计算大量结果集（特别是涉及循环本身的计算），因为您不希望在同一时间为所有结果分配内存。 在Python 2中返回list的许多标准库函数已被修改为在Python 3中返回生成器，因为生成器需要更少的资源。</p>
+
+<p>这是一个计算斐波纳契数字的例子：</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c"># generator version</span>
+<span class="k">def</span> <span class="nf">fibon</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">a</span>
+        <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+</code></pre>
+</div>
+
+<p>我们会这样使用</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">fibon</span><span class="p">(</span><span class="mi">1000000</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>这种情况下我们就不用担心使用大量的资源，但是如果我们像下面这种声明</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">fibon</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre>
+</div>
+
+<p>在计算大量的输入时，它将用完我们所有的资源。</p>
+
+<p>我们已经讨论过我们只能迭代一次生成器，但是我们没有测试过。 在测试之前，您需要了解Python的另一个内置函数<code class="highlighter-rouge">next()</code>。 它允许我们访问序列的下一个元素。 那么让我们来测试一下我们的想法：</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">generator_function</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">i</span>
+
+<span class="n">gen</span> <span class="o">=</span> <span class="n">generator_function</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">gen</span><span class="p">))</span>
+<span class="c"># Output: 0</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">gen</span><span class="p">))</span>
+<span class="c"># Output: 1</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">gen</span><span class="p">))</span>
+<span class="c"># Output: 2</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">gen</span><span class="p">))</span>
+<span class="c"># Output: Traceback (most recent call last):</span>
+<span class="c">#            File "&lt;stdin&gt;", line 1, in &lt;module&gt;</span>
+<span class="c">#         StopIteration</span>
+</code></pre>
+</div>
+
+<p>正如我们所看到的， <code class="highlighter-rouge">next()</code>的所有值yielding之后，会导致StopIteration错误。 基本上这个错误告诉我们，所有的值已经yieded了。 你可能想知道为什么使用for循环时不会出现这个错误？ 那么答案很简单。 for循环自动捕获这个错误，然后停止调用<code class="highlighter-rouge">next()</code>。 你知道Python中的一些内置数据类型也支持迭代吗？ 让我们来看看：</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">my_string</span> <span class="o">=</span> <span class="s">"Yasoob"</span>
+<span class="nb">next</span><span class="p">(</span><span class="n">my_string</span><span class="p">)</span>
+<span class="c"># Output: Traceback (most recent call last):</span>
+<span class="c">#      File "&lt;stdin&gt;", line 1, in &lt;module&gt;</span>
+<span class="c">#    TypeError: str object is not an iterator</span>
+</code></pre>
+</div>
+
+<p>这不是我们所期望的。 错误说<code class="highlighter-rouge">str</code>不是一个迭代器。 那是对的！ 它可以迭代，但不是迭代器。 这意味着它支持迭代，但是我们不能直接迭代它。 那么我们将如何迭代呢？ 现在是了解更多内置函数的时候了。 它从一个迭代中返回一个迭代器对象。 虽然<code class="highlighter-rouge">int</code>不是可迭代的，但我们可以在字符串上使用它！</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">int_var</span> <span class="o">=</span> <span class="mi">1779</span>
+<span class="nb">iter</span><span class="p">(</span><span class="n">int_var</span><span class="p">)</span>
+<span class="c"># Output: Traceback (most recent call last):</span>
+<span class="c">#   File "&lt;stdin&gt;", line 1, in &lt;module&gt;</span>
+<span class="c"># TypeError: 'int' object is not iterable</span>
+<span class="c"># This is because int is not iterable</span>
+
+<span class="n">my_string</span> <span class="o">=</span> <span class="s">"Yasoob"</span>
+<span class="n">my_iter</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">my_string</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">my_iter</span><span class="p">))</span>
+<span class="c"># Output: 'Y'</span>
+</code></pre>
+</div>
+
+<p>这样就可以了</p>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/python/2016/11/18/python-map-filter/" data-toggle="tooltip" data-placement="top" title="Map,Filetr和Reduce">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/python/2016/11/18/python-Sets/" data-toggle="tooltip" data-placement="top" title="集合Sets">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>
