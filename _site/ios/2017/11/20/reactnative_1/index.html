@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>React Native(一)：基础 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/ios/2017/11/20/reactnative_1/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>React Native(一)：基础</h1>
+                    
+                    <h2 class="subheading">React Natieve的常用命令和第三方使用</h2>
+                    
+                    <span class="meta">Posted by Ted on November 20, 2017</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h3 id="一react-native简介以及开发环境搭建">一、React-Native简介以及开发环境搭建</h3>
+
+<p>React Native (简称RN)是Facebook于2015年4月开源的跨平台移动应用开发框架，是Facebook早先开源的UI框架 React 在原生移动应用平台的衍生产物，目前支持iOS和安卓两大平台。RN使用Javascript语言，类似于HTML的JSX，以及CSS来开发移动应用。(来自百度百科)</p>
+
+<p>类似的框架还有Vue以及对应的移动框架Weex(已由阿里开源维护)。</p>
+
+<p>1、利用HomeBrew来安装Node</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>brew install node
+</code></pre>
+</div>
+
+<p>2、安装React Native</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>npm install react-native-cli
+</code></pre>
+</div>
+
+<p>3、安装Yarn，Yarn是FaceBook用来替代npm的工具</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>npm install -g yarn
+</code></pre>
+</div>
+
+<p>4、初始化React Native，第一个Demo，FirstDemo，先cd要某个文件夹</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>react-native init FirstDemo
+</code></pre>
+</div>
+
+<p>5、运行，直接点Xcode的Run或者用命令行</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>cd FirstDemo
+react-native run-ios
+</code></pre>
+</div>
+
+<p>6、真机运行，手机与mac在同一个网络下面</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>jsCodeLocation =  [NSURL URLWithString:@"http://本机IP:8081/index.bundle?platform=ios"];
+</code></pre>
+</div>
+
+<p><img src="/img/Simple_1/14.png" alt="" /></p>
+
+<h3 id="二常用命令">二、常用命令</h3>
+
+<p>本地IP地址</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>ifconfig | grep "inet " | grep -v 127.0.0.1
+</code></pre>
+</div>
+
+<p>添加第三方库，比如react-navigation，cd到根目录，执行</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>yarn add react-navigation
+</code></pre>
+</div>
+
+<h3 id="三基础代码讲解">三、基础代码讲解</h3>
+
+<p>iOS端</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code>  <span class="n">jsCodeLocation</span> <span class="o">=</span> <span class="p">[[</span><span class="n">RCTBundleURLProvider</span> <span class="nf">sharedSettings</span><span class="p">]</span> <span class="nf">jsBundleURLForBundleRoot</span><span class="p">:</span><span class="s">@"App"</span> <span class="nf">fallbackResource</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span>
+  <span class="n">RCTRootView</span> <span class="o">*</span><span class="n">rootView</span> <span class="o">=</span> <span class="p">[[</span><span class="n">RCTRootView</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithBundleURL</span><span class="p">:</span><span class="n">jsCodeLocation</span>
+                                                      <span class="nf">moduleName</span><span class="p">:</span><span class="s">@"DemoProject"</span>
+                                               <span class="n">initialProperties</span><span class="o">:</span><span class="nb">nil</span>
+                                                   <span class="n">launchOptions</span><span class="o">:</span><span class="n">launchOptions</span><span class="p">];</span>
+</code></pre>
+</div>
+
+<p>里面有两个关键词，<code class="highlighter-rouge">App</code>和<code class="highlighter-rouge">DemoProject</code>，其中<code class="highlighter-rouge">DemoProject</code>是项目文件夹目录名称，App则是这个RCTRootView对应的js文件的名称，即对应的文件为App.js。</p>
+
+<p>App.js</p>
+
+<pre><code class="language-jsx">import React, {
+  Component
+} from 'react';
+import {
+  AppRegistry,
+  Platform,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native';
+
+const instructions = Platform.select({
+  ios: 'Press Cmd+R to reload,\n' +
+    'Cmd+D or shake for dev menu',
+  android: 'Double tap R on your keyboard to reload,\n' +
+    'Shake or press menu button for dev menu',
+});
+
+//将RootPage注册
+AppRegistry.registerComponent('DemoProject', () =&gt; RootPage);
+
+// 自定义RootPage
+export default class RootPage extends Component &lt; {} &gt; {
+  render() {
+    return (
+      &lt;View style={styles.container}&gt;
+        &lt;Text style={styles.welcome}&gt;
+          Welcome to React Native!
+        &lt;/Text&gt;
+        &lt;Text style={styles.instructions}&gt;
+          To get started, edit App.js
+        &lt;/Text&gt;
+        &lt;Text style={styles.instructions}&gt;
+          {instructions}
+        &lt;/Text&gt;
+      &lt;/View&gt;
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
+  welcome: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10,
+  },
+  instructions: {
+    textAlign: 'center',
+    color: '#333333',
+    marginBottom: 5,
+  },
+});
+</code></pre>
+
+<p>其中Text, View, Button三个标签类似于iOS当中的UITextView,UIView,UIButton。</p>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/ios/2017/11/01/viewcontroller/" data-toggle="tooltip" data-placement="top" title="View Controller编程指南">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/ios/2017/11/21/reactnative_2/" data-toggle="tooltip" data-placement="top" title="React Native(二)：react-navigation">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

@@ -1,6 +1,7 @@
 ---
 layout:     post
-title:      "【iOS】监测APP卡顿"
+category:   iOS
+title:      "监测APP卡顿"
 subtitle:   "利用Runloop来监测APP卡顿"
 date:       2016-10-06 12:00:00
 author:     "Ted"

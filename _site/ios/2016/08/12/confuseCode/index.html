@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>Objective-C混淆代码 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/ios/2016/08/12/confuseCode/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/bg_02.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>Objective-C混淆代码</h1>
+                    
+                    <h2 class="subheading">如何将源代码的方法名和属性名混淆</h2>
+                    
+                    <span class="meta">Posted by Ted on August 12, 2016</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h3 id="一利用class-dump来查看源文件">一、利用class-dump来查看源文件</h3>
+
+<p>class-dump是一个逆向工具，可以用来查看未加固的APP的方法名和属性名</p>
+
+<h4 id="安装class-dump">安装class-dump</h4>
+
+<p>从<a href="http://stevenygard.com/projects/class-dump">class-dump下载地址</a>将dmg文件下载下来，将class-dump复制到/usr/bin目录，并在终端执行下面命令赋予权限</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>sudo chmod 777 /usr/bin/class-dump
+</code></pre>
+</div>
+
+<p>如果没有办法复制到根目录，则先要开启系统权限</p>
+
+<blockquote>
+  <p>重启 Mac，按住 Command+R 键直到 Apple logo 出现，进入 Recovery Mode
+点击 Utilities &gt; Terminal
+在 Terminal 中输入 csrutil disable，之后回车
+重启 Mac</p>
+</blockquote>
+
+<p>在终端中输入class-dump看到如下就说明安装成功了</p>
+
+<p><img src="/img/ConfuseCode/confuse_00.png" alt="img" /></p>
+
+<h4 id="查看头文件">查看头文件</h4>
+
+<p>将ipa改名为zip并解压能看到一个.app结尾的文件,执行</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>class-dump -H /Users/imac/Desktop/Payload/test.app -o /Users/imac/Desktop/heads
+</code></pre>
+</div>
+
+<p>其中<font color="gray">/Users/imac/Desktop/Payload/test.app</font>是源文件路径,<font color="gray"> /Users/imac/Desktop/heads</font>是要导出的头文件的路径</p>
+
+<p>可以在head文件夹里看到包含第三方库的头文件，里面可以看到属性名和方法名</p>
+
+<p><img src="/img/ConfuseCode/confuse_01.png" alt="img" /></p>
+
+<h3 id="二混淆代码">二、混淆代码</h3>
+
+<p>在项目里添加两个文件confuse.sh、func.list</p>
+
+<p>在funlist里写上你要混淆的字符串；</p>
+
+<p>在confuse.sh添加以下代码</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#!/usr/bin/env bash</span>
+
+<span class="nv">TABLENAME</span><span class="o">=</span>symbols
+<span class="nv">SYMBOL_DB_FILE</span><span class="o">=</span><span class="s2">"symbols"</span>
+<span class="nv">STRING_SYMBOL_FILE</span><span class="o">=</span><span class="s2">"func.list"</span>
+<span class="nv">HEAD_FILE</span><span class="o">=</span><span class="s2">"</span><span class="nv">$PROJECT_DIR</span><span class="s2">/</span><span class="nv">$PROJECT_NAME</span><span class="s2">/codeObfuscation.h"</span>
+<span class="nb">export </span><span class="nv">LC_CTYPE</span><span class="o">=</span>C
+
+<span class="c">#维护数据库方便日后作排重</span>
+createTable<span class="o">()</span>
+<span class="o">{</span>
+    <span class="nb">echo</span> <span class="s2">"create table </span><span class="nv">$TABLENAME</span><span class="s2">(src text, des text);"</span> | sqlite3 <span class="nv">$SYMBOL_DB_FILE</span>
+<span class="o">}</span>
+
+insertValue<span class="o">()</span>
+<span class="o">{</span>
+    <span class="nb">echo</span> <span class="s2">"insert into </span><span class="nv">$TABLENAME</span><span class="s2"> values('</span><span class="nv">$1</span><span class="s2">' ,'</span><span class="nv">$2</span><span class="s2">');"</span> | sqlite3 <span class="nv">$SYMBOL_DB_FILE</span>
+<span class="o">}</span>
+
+query<span class="o">()</span>
+<span class="o">{</span>
+    <span class="nb">echo</span> <span class="s2">"select * from </span><span class="nv">$TABLENAME</span><span class="s2"> where src='</span><span class="nv">$1</span><span class="s2">';"</span> | sqlite3 <span class="nv">$SYMBOL_DB_FILE</span>
+<span class="o">}</span>
+
+ramdomString<span class="o">()</span>
+<span class="o">{</span>
+    openssl rand -base64 64 | tr -cd <span class="s1">'a-zA-Z'</span> |head -c 16
+<span class="o">}</span>
+
+rm -f <span class="nv">$SYMBOL_DB_FILE</span>
+rm -f <span class="nv">$HEAD_FILE</span>
+createTable
+
+touch <span class="nv">$HEAD_FILE</span>
+<span class="nb">echo</span> <span class="s1">'#ifndef Demo_codeObfuscation_h
+#define Demo_codeObfuscation_h'</span> &gt;&gt; <span class="nv">$HEAD_FILE</span>
+<span class="nb">echo</span> <span class="s2">"//confuse string at </span><span class="sb">`</span>date<span class="sb">`</span><span class="s2">"</span> &gt;&gt; <span class="nv">$HEAD_FILE</span>
+cat <span class="s2">"</span><span class="nv">$STRING_SYMBOL_FILE</span><span class="s2">"</span> | <span class="k">while </span><span class="nb">read</span> -ra line; <span class="k">do
+    if</span> <span class="o">[[</span> ! -z <span class="s2">"</span><span class="nv">$line</span><span class="s2">"</span> <span class="o">]]</span>; <span class="k">then
+        </span><span class="nv">ramdom</span><span class="o">=</span><span class="sb">`</span>ramdomString<span class="sb">`</span>
+        <span class="nb">echo</span> <span class="nv">$line</span> <span class="nv">$ramdom</span>
+        insertValue <span class="nv">$line</span> <span class="nv">$ramdom</span>
+        <span class="nb">echo</span> <span class="s2">"#define </span><span class="nv">$line</span><span class="s2"> </span><span class="nv">$ramdom</span><span class="s2">"</span> &gt;&gt; <span class="nv">$HEAD_FILE</span>
+    <span class="k">fi
+done
+</span><span class="nb">echo</span> <span class="s2">"#endif"</span> &gt;&gt; <span class="nv">$HEAD_FILE</span>
+
+sqlite3 <span class="nv">$SYMBOL_DB_FILE</span> .dump
+</code></pre>
+</div>
+
+<p>用终端给confuse.sh添加权限</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>chmod 755 confuse.sh
+</code></pre>
+</div>
+
+<p>并且在Build Phase里添加运行脚本</p>
+
+<p><img src="/img/ConfuseCode/confuse_03.png" alt="img" /></p>
+
+<p>并且在pch文件中加入</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>#ifdef __OBJC__  
+    #import &lt;UIKit/UIKit.h&gt;  
+    #import &lt;Foundation/Foundation.h&gt;  
+    //添加混淆作用的头文件（这个文件名是脚本confuse.sh中定义的）  
+    #import "codeObfuscation.h"  
+#endif  
+</code></pre>
+</div>
+
+<p>再次打包用class-dump测试一下，会发现代码乱了</p>
+
+<p><img src="/img/ConfuseCode/confuse_04.png" alt="img" /></p>
+
+<p><img src="/img/ConfuseCode/confuse_02.png" alt="img" /></p>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/ios/2016/06/29/SDWebImage_2/" data-toggle="tooltip" data-placement="top" title="源码分析之SDWebImage(二)">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/ios/2016/08/26/voice/" data-toggle="tooltip" data-placement="top" title="开发之声音">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

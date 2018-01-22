@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>Runtime运用：Json转Model - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/ios/2017/05/09/JsonToModel/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>Runtime运用：Json转Model</h1>
+                    
+                    <h2 class="subheading">简易版的JSon转模型</h2>
+                    
+                    <span class="meta">Posted by Ted on May 9, 2017</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<p>完整版代码可以在<a href="https://github.com/helloted/JsonToModel">GitHub-JsonToModel</a>下载</p>
+
+<h3 id="一前言">一、前言</h3>
+
+<p>与后台交互，后台返回的数据一般是Json类型的，然而我们的定义的模型一般是继承自NSObject，Json与Model之间的转换，第三方工具也有很多，比如YYModel,JSONModel,MJExtention.</p>
+
+<p>这三个第三方框架的测试效率为YYModel&gt;MJExtention&gt;JsonModel</p>
+
+<p>其中JSon转Model的核心知识点就在于利用Runtime的特点来获取属性以及KVC进行赋值，尝试了一下，封装了一个简易版的工具，一行代码即可完成转换</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>User *user = [User ht_modelFromJson:jsonStr];
+</code></pre>
+</div>
+
+<h3 id="二流程">二、流程</h3>
+
+<p>首先要引入runtime</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>#import &lt;objc/runtime.h&gt;
+</code></pre>
+</div>
+
+<p>拿到Model里的所有属性</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>//获取当前类中的所有属性
+ unsigned int propertyCount;
+ objc_property_t *allPropertys = class_copyPropertyList([self class], &amp;propertyCount);
+</code></pre>
+</div>
+
+<p>获取属性的name</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  //拿到属性名称
+ NSString *property_name = [NSString stringWithUTF8String:property_getName(property)];
+</code></pre>
+</div>
+
+<p>以name为key从Json字典里获取值</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>// 从Json字典里获取值
+id value = [dict objectForKey:key];
+if (value == nil) {
+continue;
+}
+</code></pre>
+</div>
+
+<p>KVC赋值</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[self setValue:value forKey:key];
+</code></pre>
+</div>
+
+<h3 id="三补充">三、补充</h3>
+
+<blockquote>
+  <p>1、拿到的可能不是Json字典，而是Json字符串或者是二进制类型NSData，那么首先要对将Json字符串转成Json字典</p>
+</blockquote>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>- (NSDictionary *)dictionaryWithJSON:(id)json
+{
+    if (!json) {
+        return nil;
+    }
+    // 若是NSDictionary类型，直接返回
+    if ([json isKindOfClass:[NSDictionary class]]) {
+        return json;
+    }
+    
+    NSDictionary *dict = nil;
+    NSData *jsonData = nil;
+    
+    // 如果是NSString，就先转化为NSData
+    if ([json isKindOfClass:[NSString class]]) {
+        jsonData = [(NSString *)json dataUsingEncoding:NSUTF8StringEncoding];
+    } else if ([json isKindOfClass:[NSData class]]) {
+        jsonData = json;
+    }
+    
+    // 如果时NSData类型，使用NSJSONSerialization
+    if (jsonData &amp;&amp; [jsonData isKindOfClass:[NSData class]]) {
+        NSError *error = nil;
+        dict = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&amp;error];
+        if (error) {
+            NSLog(@"dictionaryWithJSON error:%@", error);
+            return nil;
+        }
+        if (![dict isKindOfClass:[NSDictionary class]]) {
+            return nil;
+        }
+    }
+    
+    return dict;
+}
+</code></pre>
+</div>
+
+<blockquote>
+  <p>2、如果字典属性与模型属性不完全相同，则需要匹配一下</p>
+</blockquote>
+
+<p>解决方案是定义一个Protocol</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">@protocol</span> <span class="nc">JSONModelSpecialAttributesProtocol</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span>
+
+<span class="k">@optional</span>
+<span class="c1">// 属性匹配
+</span><span class="o">+</span> <span class="p">(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="n">attributesMapperDictionary</span><span class="p">;</span>
+
+<span class="c1">// 嵌套模型
+</span><span class="k">+</span> <span class="p">(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="n">attributesNestDictionary</span><span class="p">;</span>
+
+<span class="k">@end</span>
+</code></pre>
+</div>
+
+<p>如果某个Model与字典不一一匹配，则遵循这个协议，将需要配套的属性返回即可，在赋值的时候，将key现行转换一下</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>    <span class="c1">// 某些属性需要重新映射===
+</span>    <span class="n">NSDictionary</span> <span class="o">*</span><span class="n">mapperDict</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">([</span><span class="n">self</span> <span class="nf">conformsToProtocol</span><span class="p">:</span><span class="k">@protocol</span><span class="err">(</span><span class="nc">JSONModelSpecialAttributesProtocol</span><span class="p">)]</span> <span class="o">&amp;&amp;</span> <span class="p">[[</span><span class="n">self</span> <span class="nf">class</span><span class="p">]</span> <span class="nf">respondsToSelector</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="n">attributesMapperDictionary</span><span class="p">)])</span> <span class="p">{</span>
+        <span class="n">mapperDict</span> <span class="o">=</span> <span class="p">[[</span><span class="n">self</span> <span class="nf">class</span><span class="p">]</span> <span class="nf">attributesMapperDictionary</span><span class="p">];</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// 如果有属性需要重新映射===
+</span>    <span class="n">NSString</span> <span class="o">*</span><span class="n">key</span> <span class="o">=</span> <span class="n">property_name</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">mapperDict</span> <span class="o">&amp;&amp;</span> <span class="p">[</span><span class="n">mapperDict</span> <span class="nf">objectForKey</span><span class="p">:</span><span class="n">property_name</span><span class="p">])</span> <span class="p">{</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="p">[</span><span class="n">mapperDict</span> <span class="nf">objectForKey</span><span class="p">:</span><span class="n">property_name</span><span class="p">];</span>
+    <span class="p">}</span>
+</code></pre>
+</div>
+
+<blockquote>
+  <p>3、如果模型里面嵌套了模型，也是需要先自定义下，在赋值时做个区分</p>
+</blockquote>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>      // 如果有属性嵌套其他Model
+        if (nestDict &amp;&amp; [nestDict objectForKey:property_name]) {
+            NSString *className = [nestDict objectForKey:property_name];
+            Class class = NSClassFromString(className);
+            id obj = [[class alloc]init];
+            [obj modelWithJsonDictionary:value];
+            [self setValue:obj forKey:key];
+        }else{
+            [self setValue:value forKey:key];
+        }
+</code></pre>
+</div>
+
+<p>完整版代码可以在<a href="https://github.com/helloted/JsonToModel">GitHub-JsonToModel</a>下载</p>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/ios/2017/04/30/hotfix/" data-toggle="tooltip" data-placement="top" title="热修复=Runtime+Javascriptcore">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/ios/2017/05/26/AFNetWorking_1/" data-toggle="tooltip" data-placement="top" title="源码分析之AFNetworking(一)">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

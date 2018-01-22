@@ -1,6 +1,7 @@
 ---
 layout:     post
-title:      "【React】React Native(二)：react-navigation"
+category:   iOS
+title:      "React Native(二)：react-navigation"
 subtitle:   "第三方导航栏react-navigation的使用"
 date:       2017-11-21 12:00:00
 author:     "Ted"

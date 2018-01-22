@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>KVC Collection Operators - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/ios/2017/07/11/CollectionOperators/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>KVC Collection Operators</h1>
+                    
+                    <h2 class="subheading">通过集合操作运算符来处理数据</h2>
+                    
+                    <span class="meta">Posted by Ted on July 11, 2017</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h3 id="一使用集合运算">一、使用集合运算</h3>
+
+<p><a href="https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/KeyValueCoding/CollectionOperators.html#//apple_ref/doc/uid/20002176-BAJEAIEE">苹果官方文档</a></p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">NSNumber</span> <span class="o">*</span><span class="n">transactionAverage</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">transactions</span> <span class="nf">valueForKeyPath</span><span class="p">:</span><span class="s">@"@avg.amount"</span><span class="p">];</span>
+</code></pre>
+</div>
+
+<p>当你发送符合键值的对象<code class="highlighter-rouge">valueForKeyPath：</code>消息时，可以在key path中嵌入一个集合运算符。 一个集合运算符是一个小的关键字列表之一，前面有一个符号（@），它指定了getter在返回之前以某种方式对数据进行处理。NSObject提供的<code class="highlighter-rouge">valueForKeyPath</code>默认实现实现了这种行为。</p>
+
+<p>当 key path包含了集合运算符时，运算符之前的 key path的部分（称为左键路径）指明了该消息的接收方的集合。 如果将消息直接发送到集合对象（例如<code class="highlighter-rouge">NSArray</code>实例），则可以省略左侧的key path（如上方的例子）。</p>
+
+<p>运算符之后的部分（称为右键路径）指定运算符符应该在集合内操作的属性。 除了@count以外的所有集合运算符都需要一个正确的键路径。</p>
+
+<p><img src="/img/Simple_2/17.jpg" alt="img" /></p>
+
+<p>集合运算有三种类型的运算:</p>
+
+<ul>
+  <li><a href="https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/KeyValueCoding/CollectionOperators.html#//apple_ref/doc/uid/20002176-SW5">Aggregation Operators</a>(聚合运算) 以某种方式合并集合的对象，并返回一个通常与右键路径中指定的属性的数据类型相匹配的对象。 @count运算符是一个例外，它不需要右键路径，总是返回一个NSNumber实例。</li>
+  <li><a href="https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/KeyValueCoding/CollectionOperators.html#//apple_ref/doc/uid/20002176-SW7">Array Operators</a> (数组运算)： 返回一个NSArray实例，该实例包含指定集合中的一些对象子集。</li>
+  <li><a href="https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/KeyValueCoding/CollectionOperators.html#//apple_ref/doc/uid/20002176-SW9">Nesting Operators</a> (嵌套运算)：处理包含其他集合的集合，并根据运算符返回一个NSArray或NSSet实例，这个实例以某种方式组合嵌套集合的对象。</li>
+</ul>
+
+<h3 id="二聚合运算">二、聚合运算</h3>
+
+<p>有一个简单实例</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">Transaction</span> <span class="p">:</span> <span class="nc">NSObject</span>
+ 
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSString</span><span class="o">*</span> <span class="n">payee</span><span class="p">;</span>   <span class="c1">// To whom
+</span><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSNumber</span><span class="o">*</span> <span class="n">amount</span><span class="p">;</span>  <span class="c1">// How much
+</span><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSDate</span><span class="o">*</span> <span class="n">date</span><span class="p">;</span>      <span class="c1">// When
+</span> 
+<span class="k">@end</span>
+
+</code></pre>
+</div>
+
+<p>有一个数组self.transactions包含了一些对象的数据</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>payee values</th>
+      <th>amount values formatted as currency</th>
+      <th>date values formatted as month day, year</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Green Power</td>
+      <td>$120.00</td>
+      <td>Dec 1, 2015</td>
+    </tr>
+    <tr>
+      <td>Green Power</td>
+      <td>$150.00</td>
+      <td>Jan 1, 2016</td>
+    </tr>
+    <tr>
+      <td>Green Power</td>
+      <td>$170.00</td>
+      <td>Feb 1, 2016</td>
+    </tr>
+    <tr>
+      <td>Car Loan</td>
+      <td>$250.00</td>
+      <td>Jan 15, 2016</td>
+    </tr>
+    <tr>
+      <td>Car Loan</td>
+      <td>$250.00</td>
+      <td>Feb 15, 2016</td>
+    </tr>
+    <tr>
+      <td>Car Loan</td>
+      <td>$250.00</td>
+      <td>Mar 15, 2016</td>
+    </tr>
+    <tr>
+      <td>General Cable</td>
+      <td>$120.00</td>
+      <td>Dec 1, 2015</td>
+    </tr>
+    <tr>
+      <td>General Cable</td>
+      <td>$155.00</td>
+      <td>Jan 1, 2016</td>
+    </tr>
+    <tr>
+      <td>General Cable</td>
+      <td>$120.00</td>
+      <td>Feb 1, 2016</td>
+    </tr>
+    <tr>
+      <td>Mortgage</td>
+      <td>$1,250.00</td>
+      <td>Jan 15, 2016</td>
+    </tr>
+    <tr>
+      <td>Mortgage</td>
+      <td>$1,250.00</td>
+      <td>Feb 15, 2016</td>
+    </tr>
+    <tr>
+      <td>Mortgage</td>
+      <td>$1,250.00</td>
+      <td>Mar 15, 2016</td>
+    </tr>
+    <tr>
+      <td>Animal Hospital</td>
+      <td>$600.00</td>
+      <td>Jul 15, 2016</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="avg求某个属性平均值">@avg求某个属性平均值</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>NSNumber *transactionAverage = [self.transactions valueForKeyPath:@"@avg.amount"];
+</code></pre>
+</div>
+
+<p>这个可以求得<code class="highlighter-rouge">amount</code>属性的平均值</p>
+
+<h4 id="count集合里对象的数量">@count集合里对象的数量</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>NSNumber *numberOfTransactions = [self.transactions valueForKeyPath:@"@count"];
+</code></pre>
+</div>
+
+<p>可以求得集合里对象的总数量</p>
+
+<h4 id="max某个属性的最大值">@max某个属性的最大值</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>NSDate *latestDate = [self.transactions valueForKeyPath:@"@max.date"];
+</code></pre>
+</div>
+
+<p>可以得到<code class="highlighter-rouge">date</code>这个属性的最大值</p>
+
+<h4 id="min某个属性的最小值">@min某个属性的最小值</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>NSDate *earliestDate = [self.transactions valueForKeyPath:@"@min.date"];
+</code></pre>
+</div>
+
+<p>可以得到<code class="highlighter-rouge">date</code>这个属性的最小值</p>
+
+<h4 id="sum某个属性的总和">@sum某个属性的总和</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>NSNumber *amountSum = [self.transactions valueForKeyPath:@"@sum.amount"];
+</code></pre>
+</div>
+
+<p>可以得到<code class="highlighter-rouge">amount</code>这个属性的总和</p>
+
+<h3 id="三数组运算">三、数组运算</h3>
+
+<blockquote>
+  <p>The array operators cause <code class="highlighter-rouge">valueForKeyPath:</code> to return an array of objects corresponding to a particular set of the objects indicated by the right key path.</p>
+</blockquote>
+
+<p>会根据键值路径返回一个对应的数组</p>
+
+<h4 id="distinctunionofobjects-某个属性的值的数组去重">@distinctUnionOfObjects 某个属性的值的数组（去重）</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>NSArray *distinctPayees = [self.transactions valueForKeyPath:@"@distinctUnionOfObjects.payee"];
+</code></pre>
+</div>
+
+<p>会得到payee这个属性的的值，里面的值会去重</p>
+
+<h4 id="unionofobjects某个属性的所有值的数组未去重">@unionOfObjects某个属性的所有值的数组（未去重）</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>NSArray *payees = [self.transactions valueForKeyPath:@"@unionOfObjects.payee"];
+</code></pre>
+</div>
+
+<p>会得到payee这个属性的的值，与上面那个不一样，里面的值不会去重</p>
+
+<h3 id="四嵌套运算">四、嵌套运算</h3>
+
+<blockquote>
+  <p>The nesting operators operate on nested collections, where each entry of the collection itself contains a collection.</p>
+</blockquote>
+
+<p>嵌套运算操作在嵌套集合(一个集合里包含了另外的集合)</p>
+
+<blockquote>
+  <p>The <code class="highlighter-rouge">valueForKeyPath:</code> method raises an exception if any of the leaf objects is <code class="highlighter-rouge">nil</code> when using nesting operators.</p>
+</blockquote>
+
+<p>有任何子对象为空，会出错。</p>
+
+<p>我们增加一个数组进行嵌套</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>NSArray* moreTransactions = @[&lt;# transaction data #&gt;];
+NSArray* arrayOfArrays = @[self.transactions, moreTransactions];
+</code></pre>
+</div>
+
+<h4 id="distinctunionofarrays-返回某个属性不同值">@distinctUnionOfArrays 返回某个属性不同值</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>NSArray *collectedDistinctPayees = [arrayOfArrays valueForKeyPath:@"@distinctUnionOfArrays.payee"];
+</code></pre>
+</div>
+
+<p>会返回两个数组里payee属性不同的值，与 <code class="highlighter-rouge">@unionOfArrays</code>类似，但是不会去重。</p>
+
+<h4 id="distinctunionofsets-返回的是nsset类型">@distinctUnionOfSets 返回的是NSSet类型</h4>
+
+<h4 id="unionofarrays-返回某个属性所有的值">@unionOfArrays 返回某个属性所有的值</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>NSArray *collectedPayees = [arrayOfArrays valueForKeyPath:@"@unionOfArrays.payee"];
+</code></pre>
+</div>
+
+<p>返回两个数组里payee属性所有的值，且不去重</p>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/ios/2017/05/26/AFNetWorking_3/" data-toggle="tooltip" data-placement="top" title="源码分析之AFNetworking(三)">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/ios/2017/09/08/designPatten/" data-toggle="tooltip" data-placement="top" title="设计模式">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

@@ -1,6 +1,7 @@
 ---
 layout:     post
-title:      "【Python】debugging"
+category:   Python
+title:      "debugging"
 subtitle:   "Python进阶之debugging的理解和使用"
 date:       2016-11-19 12:00:00
 author:     "Ted"

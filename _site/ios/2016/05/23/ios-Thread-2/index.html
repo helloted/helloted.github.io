@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>多线程(二):GCD - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/ios/2016/05/23/ios-Thread-2/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>多线程(二):GCD</h1>
+                    
+                    <h2 class="subheading">iOS多线程之GCD</h2>
+                    
+                    <span class="meta">Posted by Ted on May 23, 2016</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h4 id="1添加任务到队列同步异步">1、添加任务到队列（同步、异步）：</h4>
+
+<h4 id="dispatch_sync">dispatch_sync:</h4>
+
+<p>同步添加，将指定的任务block同步追加到queue中，在追加的block结束之前，dispatch_sync会一直等待；</p>
+
+<p>如果在主线程上执行同步任务（任务也在主线程执行），会造成死锁：</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="c1">//会造成死锁
+</span><span class="n">dispatch_sync</span><span class="p">(</span><span class="n">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">{</span>
+	<span class="c1">//
+</span><span class="p">});</span>
+</code></pre>
+</div>
+
+<p>但是在异步任务里可以用来切换到主线程</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">dispatch_async</span><span class="p">(</span><span class="n">dispatch_get_global_queue</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="o">^</span><span class="p">{</span>
+	<span class="c1">//耗时操作；
+</span>	<span class="n">dispatch_sync</span><span class="p">(</span><span class="n">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">{</span>
+		<span class="c1">//回到主线程；
+</span>	<span class="p">});</span>
+<span class="p">});</span>
+</code></pre>
+</div>
+
+<p>可以用来阻塞线程：</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">dispatch_sync</span><span class="p">(</span><span class="n">dispatch_get_global_queue</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="o">^</span><span class="p">{</span>
+  <span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+  <span class="n">NSLog</span><span class="p">(</span><span class="s">@"2秒后执行，但是会阻塞线程"</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre>
+</div>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">dispatch_after</span><span class="p">(</span><span class="n">dispatch_time</span><span class="p">(</span><span class="n">DISPATCH_TIME_NOW</span><span class="p">,</span> <span class="p">(</span><span class="kt">int64_t</span><span class="p">)(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">NSEC_PER_SEC</span><span class="p">)),</span> <span class="n">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">{</span>
+   <span class="n">NSLog</span><span class="p">(</span><span class="s">@"2秒后执行，但是不阻塞线程"</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre>
+</div>
+
+<h4 id="dispatch_async">dispatch_async：</h4>
+
+<p>异步添加，将指定的Block”非同步”地追加到指定的Queue中，该线程不做等待，继续往下执行；</p>
+
+<h4 id="2队列">2、队列</h4>
+
+<p>Dispatch Queue：执行处理任务的队列，通过dispatch_async等函数API，在Block语法中记述想要执行的处理任务并将其追加到Dispatch Queue中，Dispatch Queue按照追加的顺序（先进先出FIFO）执行处理。</p>
+
+<h4 id="serial-dispatch-queue串行队列">Serial Dispatch Queue（串行队列）：</h4>
+
+<p>等待现在执行中处理结束，一旦生成Serial Dispatch Queue并追加处理。系统对于一个Serial Dispatch Queue就只生成并使用一个线程，但是如果生成过多的线程，会导致消耗大量的内存，引起大量的上下文切换，大幅度降低系统的响应性能，因此只在为了避免多个线程更新相同的资源导致数据竞争时使用。</p>
+
+<h4 id="concurrent-dispatch-queue并行队列">Concurrent Dispatch Queue（并行队列）：</h4>
+
+<p>不等待现在执行中处理结束，可以并行执行多个处理，并行处理的处理数量取决于当前系统状态，生成所需的线程执行处理，当处理结束，应当执行的处理数减少时，XNU内核会结束不再需要的线程，因此当想并行执行不发生数据竞争等问题处理时使用并行队列，有效管理线程，不会出现太多线程。</p>
+
+<p>系统默认有一个串行队列：主队列（main_queue）和并行队列：全局队列（global_queue），不需要自己手动释放，或者自己创建用户队列（需要手动释放）。</p>
+
+<h4 id="主队列main">主队列（main）:</h4>
+
+<p>dispatch_queue_t mainQ = dispatch_get_main_queue()
+注意：不能sync向主队列提交任务，因为会造成死锁，只能async提交任务</p>
+
+<h4 id="全局队列global_queue并发队列">全局队列（global_queue）：并发队列</h4>
+
+<p>有执行优先级</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">dispatch_queue_t</span> <span class="n">globalQ</span> <span class="o">=</span> <span class="n">dispatch_get_global_queue</span><span class="p">(</span><span class="n">DISPATCH_QUEUE_PRIORITY_DEFAULT</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="n">DISPATCH_QUEUE_PRIORITY_HIGH</span><span class="o">:</span>             <span class="c1">//优先级最高，在default,和low之前执行
+</span><span class="n">DISPATCH_QUEUE_PRIORITY_DEFAULT</span>           <span class="c1">//默认优先级，在low之前，在high之后
+</span><span class="n">DISPATCH_QUEUE_PRIORITY_LOW</span>               <span class="c1">//在high和default后执行
+</span><span class="n">DISPATCH_QUEUE_PRIORITY_BACKGROUND</span>        <span class="c1">//提交到这个队列的任务会在high优先级的任务和已经提交到background队列的执行完后执行。
+</span></code></pre>
+</div>
+<h4 id="获取队列create_queue">获取队列：（create_queue）:</h4>
+
+<p>如果是串行队列：dispatch_queue_create(“createName”, DISPATCH_QUEUE_SERIAL)</p>
+
+<p>如果是并行队列:推荐使用dispatch_get_global_queue</p>
+
+<p>如果需要用到barrier和group，才来dispatch_queue_create(“createName”,DISPATCH_QUEUE_CONCURRENT)</p>
+
+<p>尽管是ARC，使用结束后也要dispatch_release释放</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">dispatch_queue_t</span>  <span class="n">concurrentQ</span> <span class="o">=</span> <span class="n">dispatch_queue_create</span><span class="p">(</span><span class="s">"createName"</span><span class="p">,</span><span class="n">DISPATCH_QUEUE_CONCURRENT</span><span class="p">)</span>
+<span class="n">dispatch_queue_t</span>  <span class="n">serialQ</span> <span class="o">=</span> <span class="n">dispatch_queue_create</span><span class="p">(</span><span class="s">"createName"</span><span class="p">,</span> <span class="n">DISPATCH_QUEUE_SERIAL</span><span class="p">)</span>
+<span class="err">改变队列优先级</span>
+<span class="n">dispatch_set_target_queue</span><span class="p">(</span><span class="n">restQueue</span><span class="p">,</span> <span class="n">targetQueue</span><span class="p">);</span>
+</code></pre>
+</div>
+<h4 id="暂停恢复队列">暂停恢复队列</h4>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">dispatch_queue_t</span> <span class="n">queue</span> <span class="o">=</span> <span class="n">dispatch_get_main_queue</span><span class="p">();</span>
+<span class="n">dispatch_suspend</span><span class="p">(</span><span class="n">queue</span><span class="p">);</span> <span class="c1">//暂停队列queue
+</span><span class="n">dispatch_resume</span><span class="p">(</span><span class="n">queue</span><span class="p">);</span>  <span class="c1">//恢复队列queue
+</span></code></pre>
+</div>
+
+<h4 id="3延迟添加执行dispatch_after">3、延迟添加执行dispatch_after</h4>
+
+<p>并不是在多少秒后执行，而是在3秒后将任务添加到Dispatch Queue中</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">dispatch_after</span><span class="p">(</span><span class="n">dispatch_time</span><span class="p">(</span><span class="n">DISPATCH_TIME_NOW</span><span class="p">,</span> <span class="p">(</span><span class="kt">int64_t</span><span class="p">)(</span><span class="mi">3</span><span class="o">*</span><span class="n">NSEC_PER_SEC</span><span class="p">)),</span><span class="n">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">{</span>
+	<span class="c1">//秒
+</span><span class="p">});</span>
+
+<span class="n">dispatch_after</span><span class="p">(</span><span class="n">dispatch_time</span><span class="p">(</span><span class="n">DISPATCH_TIME_NOW</span><span class="p">,</span><span class="mi">150ull</span> <span class="o">*</span><span class="n">NSEC_PER_MSEC</span><span class="p">),</span><span class="n">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">{</span>
+    <span class="c1">//毫秒
+</span><span class="p">});</span>
+</code></pre>
+</div>
+
+<h4 id="4dispatch_group与dispatch_barrier">4、dispatch_group与dispatch_barrier</h4>
+
+<p>dispatch_group应用于线程依赖：当添加到Queue中的所有任务都完成了，再来执行某个任务。</p>
+
+<p>举例，异步下载两张图片，这在这两张图片下载完毕之后，将两张图片合成</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">dispatch_group_t</span> <span class="n">group</span> <span class="o">=</span> <span class="n">dispatch_group_create</span><span class="p">();</span>
+<span class="n">dispatch_queue_t</span> <span class="n">queue</span> <span class="o">=</span> <span class="n">dispatch_queue_create</span><span class="p">(</span><span class="s">"com.gcd-group.www"</span><span class="p">,</span> <span class="n">DISPATCH_QUEUE_CONCURRENT</span><span class="p">);</span>
+<span class="n">dispatch_group_async</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="o">^</span><span class="p">{</span>
+    <span class="cp">#异步下载第一张图片
+</span> <span class="p">});</span>
+ 
+<span class="n">dispatch_group_async</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="o">^</span><span class="p">{</span>
+    <span class="cp">#异步下载第二张图片
+</span><span class="p">});</span>
+     
+<span class="n">dispatch_group_notify</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="o">^</span><span class="p">{</span>
+    <span class="cp">#两张图片下载完后进行合成
+</span><span class="p">});</span>
+</code></pre>
+</div>
+
+<p>dispatch_barrier：barrier以为栅栏，阻碍。在串行队列中，无区别，但是在并行队列中，用这个函数添加的任务可以保证阻碍线程执行，即这个任务是串行执行的。可用于解决数据竞争问题。有个坑要注意，并行队列必必须是自己dispatch_queue_create创建的，不能用dispatch_get_global_queue</p>
+
+<p>实现原理：queue中的其他block已经开始在各自分配的线程执行，当从queue检出一个barrier时，是等待其他的block都执行完毕再执行barrier，此时不会并发执行其他的block，直到该barrier执行完毕。 这相当于给当前已经运行的bock们加了一个group和notify，在notify里面执行了barrier，然后再执行barrier下面的block</p>
+
+<p>举例。多个操作对数据库进行读写，读的操作可以异步进行，但是为了保证写的线程安全，则必须用dispatch_barrier</p>
+
+<pre><code class="language-Objc">dispatch_async(queue, ^{NSLog(@"read");});
+dispatch_async(queue, ^{NSLog(@"read");});
+dispatch_async(queue, ^{NSLog(@"read");});
+
+#可以保证写的时候只有这一个操作
+dispatch_barrier_sync(queue, ^{NSLog(@"writing");});
+
+dispatch_async(queue, ^{NSLog(@"read");});
+dispatch_async(queue, ^{NSLog(@"read");});
+</code></pre>
+
+<p><img src="/img/Simple_1/03.png" alt="" /></p>
+
+<h4 id="5dispatch_semaphore">5、dispatch_semaphore</h4>
+
+<p>semaphore是信号的意思，dispatch_semaphore有三个函数，分别是dispatch_semaphore_create，dispatch_semaphore_signal，dispatch_semaphore_wait</p>
+
+<p><a href="http://www.helloted.com/2016/09/20/dispatch_semaphore/">dispatch_semaphore信号量控制</a></p>
+
+<h4 id="6dispatch_apply">6、dispatch_apply</h4>
+
+<p>重复执行某段代码</p>
+
+<p>在某些场景下使用dispatch_apply会对性能有很大的提升，比如你的代码需要以每个像素为基准来处理计算image图片。同时dispatch apply能够避免一些线程爆炸的情况发生</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="c1">//危险，可能导致线程爆炸以及死锁
+</span><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">999</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>
+   <span class="n">dispatch_async</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="o">^</span><span class="p">{...});</span>
+<span class="p">}</span>
+<span class="n">dispatch_barrier_sync</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="o">^</span><span class="p">{});</span>
+<span class="c1">// 较优选择， GCD 会管理并发
+</span><span class="n">dispatch_apply</span><span class="p">(</span><span class="mi">999</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="o">^</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="p">){...});</span>
+</code></pre>
+</div>
+
+<h4 id="7dispatch_block_cancel">7、dispatch_block_cancel</h4>
+
+<p>iOS8之后，提交到gcd队列中的dispatch block也可取消了，只需要简单的调用dispatch_block_cancel传入想要取消的block即可:</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">dispatch_queue_t</span> <span class="n">queue</span> <span class="o">=</span> <span class="n">dispatch_queue_create</span><span class="p">(</span><span class="s">"queue"</span><span class="p">,</span> <span class="n">DISPATCH_QUEUE_SERIAL</span><span class="p">);</span>
+<span class="n">dispatch_block_t</span> <span class="n">block1</span> <span class="o">=</span> <span class="n">dispatch_block_create</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">^</span><span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"block1 begin"</span><span class="p">);</span>
+    <span class="p">[</span><span class="n">NSThread</span> <span class="nf">sleepForTimeInterval</span><span class="p">:</span><span class="mi">1</span><span class="p">];</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"block1 done"</span><span class="p">);</span>
+<span class="p">});</span>
+<span class="n">dispatch_block_t</span> <span class="n">block2</span> <span class="o">=</span> <span class="n">dispatch_block_create</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">^</span><span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"block2 "</span><span class="p">);</span>
+<span class="p">});</span>
+<span class="n">dispatch_async</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">block1</span><span class="p">);</span>
+<span class="n">dispatch_async</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">block2</span><span class="p">);</span>
+<span class="n">dispatch_block_cancel</span><span class="p">(</span><span class="n">block2</span><span class="p">);</span>
+</code></pre>
+</div>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/ios/2016/05/22/ios-Thread-1/" data-toggle="tooltip" data-placement="top" title="多线程(一):NSThread">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/ios/2016/05/24/ios-Thread-3/" data-toggle="tooltip" data-placement="top" title="多线程(三):NSOperation">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

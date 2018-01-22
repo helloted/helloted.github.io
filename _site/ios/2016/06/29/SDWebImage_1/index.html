@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>源码分析之SDWebImage(一) - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/ios/2016/06/29/SDWebImage_1/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>源码分析之SDWebImage(一)</h1>
+                    
+                    <h2 class="subheading">对iOS常用第三方SDwebImage的源码解析</h2>
+                    
+                    <span class="meta">Posted by Ted on June 29, 2016</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<p>SDWebImage是iOS开发者最常用的第三方框架之一，用于异步下载网络图片，缓存图片，<a href="https://github.com/rs/SDWebImage">Github源码地址</a></p>
+
+<h3 id="一架构">一、架构</h3>
+
+<p><img src="/img/SDWebImage/01.png" alt="" /></p>
+
+<ol>
+  <li>sd_setImageWithURL：UIimageView/UIButton根据URL设置网络图片</li>
+  <li>sd_internalSetImageWithURL：统一为UIView根据URL设置网络图片</li>
+  <li>loadImageWithURL：加载图片</li>
+  <li>queryDiskCacheForKey：根据URL转成的key从缓存或者硬盘存储中搜寻图片</li>
+  <li>disk result：如果有结果，则返回搜寻结果</li>
+  <li>downloadImage：如果搜寻没有结果，则开始从网络下载图片</li>
+  <li>network result：返回网络下载结果</li>
+  <li>storeImage：存储下载图片</li>
+  <li>image：网络下载的图片</li>
+  <li>set Image：设置图片</li>
+</ol>
+
+<h3 id="二解析">二、解析</h3>
+
+<h4 id="1sd_setimagewithurl">1、sd_setImageWithURL：</h4>
+
+<p><img src="/img/SDWebImage/02.png" alt="" /></p>
+
+<p>UIButton和UIImageView都有WebCache的Category用来设置网络图片，以UIimageView为例，从简单到复杂分别有以下几种设置图片的方式</p>
+
+<p><img src="/img/SDWebImage/03.png" alt="" /></p>
+
+<p>最终下载方式都归为一类</p>
+
+<pre><code class="language-objective-c">sd_setImageWithURL:(nullable NSURL *)url
+          placeholderImage:(nullable UIImage *)placeholder
+                   options:(SDWebImageOptions)options
+                  progress:(nullable SDWebImageDownloaderProgressBlock)progressBlock
+                 completed:(nullable SDExternalCompletionBlock)completedBlock
+</code></pre>
+
+<ul>
+  <li>url：网络图片的URL</li>
+  <li>Placehoder：占位图片</li>
+  <li>options：下载选项，是一个枚举类型</li>
+  <li>progressBlock：下载进度block</li>
+  <li>completedBlock：完成下载后的block</li>
+</ul>
+
+<h5 id="options">options</h5>
+
+<pre><code class="language-objective-c">typedef NS_OPTIONS(NSUInteger, SDWebImageOptions) {
+    SDWebImageRetryFailed = 1 &lt;&lt; 0,
+    SDWebImageLowPriority = 1 &lt;&lt; 1,
+    SDWebImageCacheMemoryOnly = 1 &lt;&lt; 2,
+    SDWebImageProgressiveDownload = 1 &lt;&lt; 3,
+    SDWebImageRefreshCached = 1 &lt;&lt; 4,
+    SDWebImageContinueInBackground = 1 &lt;&lt; 5,
+    SDWebImageHandleCookies = 1 &lt;&lt; 6,
+    SDWebImageAllowInvalidSSLCertificates = 1 &lt;&lt; 7,
+    SDWebImageHighPriority = 1 &lt;&lt; 8,
+    SDWebImageDelayPlaceholder = 1 &lt;&lt; 9,
+    SDWebImageTransformAnimatedImage = 1 &lt;&lt; 10,
+    SDWebImageAvoidAutoSetImage = 1 &lt;&lt; 11
+};
+</code></pre>
+
+<ul>
+  <li>SDWebImageRetryFailed = 1 « 0,:默认情况下,如果一个url在下载的时候失败了,那么这个url会被加入黑名单并且library不会尝试再次下载,这个flag会阻止library把失败的url加入黑名单(简单来说如果选择了这个flag,那么即使某个url下载失败了,sdwebimage还是会尝试再次下载他</li>
+  <li>
+    <p>SDWebImageLowPriority = 1 « 1,:默认情况下,图片会在交互发生的时候下载(例如你滑动tableview的时候),这个flag会禁止这个特性,导致的结果就是在scrollview减速的时候,才会开始下载(也就是你滑动的时候scrollview不下载,你手从屏幕上移走,scrollview开始减速的时候才会开始下载图片</p>
+  </li>
+  <li>
+    <p>SDWebImageCacheMemoryOnly = 1 « 2,:这个flag禁止磁盘缓存,只有内存缓存</p>
+  </li>
+  <li>
+    <p>SDWebImageProgressiveDownload = 1 « 3,:这个flag会在图片下载的时候就显示(就像你用浏览器浏览网页的时候那种图片下载,一截一截的显示(待确认))</p>
+  </li>
+  <li>
+    <p>SDWebImageRefreshCached = 1 « 4,:一个图片缓存了,还是会重新请求.并且缓存侧略依据NSURLCache而不是SDWebImage.URL不变,图片会更新时使用</p>
+  </li>
+  <li>
+    <p>SDWebImageContinueInBackground = 1 « 5,:启动后台下载,加入你进入一个页面,有一张图片正在下载这时候你让app进入后台,图片还是会继续下载(这个估计要开backgroundfetch才有用)</p>
+  </li>
+  <li>
+    <p>SDWebImageHandleCookies = 1 « 6,:可以控制存在NSHTTPCookieStore的cookies.</p>
+  </li>
+  <li>
+    <p>SDWebImageAllowInvalidSSLCertificates = 1 « 7,:允许不安全的SSL证书,在正式环境中慎用</p>
+  </li>
+  <li>
+    <p>SDWebImageHighPriority = 1 « 8,:默认情况下,image在装载的时候是按照他们在队列中的顺序装载的(就是先进先出).这个flag会把他们移动到队列的前端,并且立刻装载,而不是等到当前队列装载的时候再装载.</p>
+  </li>
+  <li>
+    <p>SDWebImageDelayPlaceholder = 1 « 9,:默认情况下,占位图会在图片下载的时候显示.这个flag开启会延迟占位图显示的时间,等到图片下载完成之后才会显示占位图.</p>
+  </li>
+  <li>SDWebImageTransformAnimatedImage = 1 « 10,:是否transform图片</li>
+  <li>SDWebImageAvoidAutoSetImage = 1 « 11:默认是下载完后自动赋值图片，如果设置这个选项，则禁止此操作</li>
+</ul>
+
+<h4 id="2sd_internalsetimagewithurl">2、sd_internalSetImageWithURL：</h4>
+
+<p>在这里，将UIButton和UIImageView的下载统一为UIView的WebCache Category</p>
+
+<p><img src="/img/SDWebImage/04.png" alt="" /></p>
+
+<p>其中</p>
+
+<h5 id="dispatch_main_async_safe">dispatch_main_async_safe</h5>
+
+<pre><code class="language-objective-c">#define dispatch_main_async_safe(block)\
+    if (strcmp(dispatch_queue_get_label(DISPATCH_CURRENT_QUEUE_LABEL), dispatch_queue_get_label(dispatch_get_main_queue())) == 0) {\
+        block();\
+    } else {\
+        dispatch_async(dispatch_get_main_queue(), block);\
+    }
+</code></pre>
+
+<p>如果当前线程已经是主线程了，那么在调用dispatch_async(dispatch_get_main_queue(), block)有可能会出现crash</p>
+
+<p>如果当前线程是主线程，直接调用，如果不是，调用dispatch_async(dispatch_get_main_queue(), block)</p>
+
+<h4 id="3loadimagewithurl加载图片">3、loadImageWithURL：加载图片</h4>
+
+<p><img src="/img/SDWebImage/05.png" alt="" /></p>
+
+<h4 id="4querydiskcacheforkey从缓存中或硬盘中查找图片">4、queryDiskCacheForKey：从缓存中或硬盘中查找图片：</h4>
+
+<p><img src="/img/SDWebImage/06.png" alt="" /></p>
+
+<h4 id="5disk-result如果有结果则返回搜寻结果否则去下载">5、disk result：如果有结果，则返回搜寻结果，否则去下载</h4>
+
+<p><img src="/img/SDWebImage/07.png" alt="" /></p>
+
+<h4 id="6downloadimage从网络下载图片">6、downloadImage：从网络下载图片</h4>
+
+<p><img src="/img/SDWebImage/08.png" alt="" /></p>
+
+<h4 id="7network-result网络结果处理">7、network result：网络结果处理</h4>
+
+<p><img src="/img/SDWebImage/09.png" alt="" /></p>
+
+<h4 id="8storeimage存储下载图片">8、storeImage：存储下载图片</h4>
+
+<p><img src="/img/SDWebImage/10.png" alt="" /></p>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/ios/2016/06/03/properyword/" data-toggle="tooltip" data-placement="top" title="内存管理、属性关键字">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/ios/2016/06/29/SDWebImage_2/" data-toggle="tooltip" data-placement="top" title="源码分析之SDWebImage(二)">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

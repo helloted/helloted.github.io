@@ -1,6 +1,7 @@
 ---
 layout:     post
-title:      "【iOS】源码分析之SDWebImage(一)"
+category:   iOS
+title:      "源码分析之SDWebImage(一)"
 subtitle:   "对iOS常用第三方SDwebImage的源码解析"
 date:       2016-06-29 12:00:00
 author:     "Ted"

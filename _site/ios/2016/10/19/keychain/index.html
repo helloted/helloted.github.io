@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>iOS Keychain编程指南 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/ios/2016/10/19/keychain/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/bg_02.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>iOS Keychain编程指南</h1>
+                    
+                    <h2 class="subheading">Keychain(钥匙串)服务增、删、改、查</h2>
+                    
+                    <span class="meta">Posted by Ted on October 19, 2016</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<p>官方文档地址<a href="https://developer.apple.com/library/content/documentation/Security/Conceptual/keychainServConcepts/iPhoneTasks/iPhoneTasks.html#//apple_ref/doc/uid/TP30000897-CH208-SW1">Keychain Services Programming Guide</a></p>
+
+<h3 id="一关于keychain">一、关于Keychain</h3>
+
+<p>Keychain服务为一个或多个用户提供密码，钥匙，证书和笔记的安全存储。 用户可以用一个密码来解锁Keychain，然后任何Keychain服务感知的应用程序都可以使用该Keychain来存储和检索密码。 本指南包含了Keychain服务的概述，讨论了开发者最常使用的功能和数据结构，并提供了如何在您自己的应用程序中使用Keychain服务的示例。</p>
+
+<h3 id="二ios-keychain服务的目标">二、iOS Keychain服务的目标</h3>
+
+<blockquote>
+  <ul>
+    <li>Add an item to a keychain</li>
+    <li>Find an item in a keychain</li>
+    <li>Get the attributes and data in a keychain item</li>
+    <li>Change the attributes and data in a keychain item</li>
+  </ul>
+</blockquote>
+
+<ul>
+  <li>将项目添加到钥匙串</li>
+  <li>在钥匙串中找到一个项目</li>
+  <li>获取钥匙串项目中的属性和数据</li>
+  <li>更改钥匙串项目中的属性和数据</li>
+</ul>
+
+<p>注意：在iOS中，Keychain权限取决于用于签署应用程序的供应配置文件。 确保在不同版本的应用程序中始终使用相同的配置文件。</p>
+
+<h3 id="三在app中使用keychain">三、在APP中使用Keychain</h3>
+
+<p>钥匙串项目可以具有几个类型之一。 网络密码用于通过网络访问的服务器和网站，普通密码用于任何其他受密码保护的服务（如数据库或调度应用程序）。 同时，用于建立信任的证书，密钥和身份也可以存储在钥匙串中。 但是，对于所有这些项目类别，您使用相同的一组函数来添加，修改和检索钥匙串项目：</p>
+
+<ul>
+  <li><code class="highlighter-rouge">SecItemAdd</code> 将项目添加到钥匙串</li>
+  <li><code class="highlighter-rouge">SecItemUpdate</code> 修改现有的钥匙串项目。</li>
+  <li><code class="highlighter-rouge">SecItemCopyMatching</code> 找到一个keychain项目并从中提取信息。</li>
+</ul>
+
+<p>下表：使用iOS钥匙串服务访问Internet服务器</p>
+
+<p><img src="/img/Simple_3/04.png" alt="img" /></p>
+
+<p>App的用户首先选择文件传输协议（FTP）服务器。App调用<code class="highlighter-rouge">SecItemCopyMatching</code>，向其传递包含标识钥匙串项目的属性的字典。</p>
+
+<p>如果密码在keychain上，则该函数将密码返回给App，App将其发送到FTP服务器以对用户进行身份验证。如果认证成功，则例程结束。如果认证失败，App将显示一个对话框来请求用户名和密码。</p>
+
+<p>如果密码不在keychain上，则<code class="highlighter-rouge">SecItemCopyMatching</code>返回<code class="highlighter-rouge">errSecItemNotFound</code>结果代码。在这种情况下，App显示一个对话框来请求用户名和密码。（该对话框还应该包含一个“取消”按钮，但是该选择从图中省略，以防止流程图变得过于复杂。）</p>
+
+<p>从用户获得密码后，App继续对FTP服务器进行用户身份验证。当认证成功时，应用程序可以认为用户输入的信息是有效的。然后应用程序显示另一个对话框，询问用户是否将密码保存在钥匙串上。如果用户选择否，则例程结束。如果用户选择是，那么应用程序在结束例程之前调用SecItemAdd函数（如果这是一个新的Keychain项目）或<code class="highlighter-rouge">SecItemUpdate</code>函数（更新现有的钥匙串项目）。</p>
+
+<h3 id="四keychain实战">四、KeyChain实战</h3>
+
+<p>首先要在target里设置keychain</p>
+
+<p><img src="/img/Simple_3/05.png" alt="img" /></p>
+
+<p>Xcode会在project里生成一个配置文件</p>
+
+<p><img src="/img/Simple_3/06.png" alt="img" /></p>
+
+<p>.h文件</p>
+
+<pre><code class="language-Objc">#import &lt;Foundation/Foundation.h&gt;
+
+@interface HTKeychainWrapper : NSObject
+
++ (void)ht_SetValue:(id)value forKey:(NSString *)key;
++ (id)ht_valueForKey:(NSString *)key;
++ (void)ht_deleteValueForKey:(NSString *)key;
+
+@end
+</code></pre>
+
+<p>.m文件</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="cp">#import "HTKeychainWrapper.h"
+</span>
+<span class="k">@implementation</span> <span class="nc">HTKeychainWrapper</span>
+
+<span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">ht_SetValue</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">value</span> <span class="nf">forKey</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">key</span><span class="p">{</span>
+    <span class="n">NSMutableDictionary</span> <span class="o">*</span><span class="n">keychainItem</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span> <span class="nf">getKeychainQueryItem</span><span class="p">:</span><span class="n">key</span><span class="p">];</span>
+    <span class="n">SecItemDelete</span><span class="p">((</span><span class="n">CFDictionaryRef</span><span class="p">)</span><span class="n">keychainItem</span><span class="p">);</span>
+    <span class="p">[</span><span class="n">keychainItem</span> <span class="nf">setObject</span><span class="p">:[</span><span class="n">NSKeyedArchiver</span> <span class="nf">archivedDataWithRootObject</span><span class="p">:</span><span class="n">value</span><span class="p">]</span> <span class="nf">forKey</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="n">kSecValueData</span><span class="p">];</span>
+    <span class="n">SecItemAdd</span><span class="p">((</span><span class="n">CFDictionaryRef</span><span class="p">)</span><span class="n">keychainItem</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">+</span> <span class="p">(</span><span class="n">NSMutableDictionary</span> <span class="o">*</span><span class="p">)</span><span class="nf">getKeychainQueryItem</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">key</span><span class="p">{</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">NSMutableDictionary</span> <span class="nf">dictionaryWithObjectsAndKeys</span><span class="p">:</span>
+            <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">kSecClassGenericPassword</span><span class="p">,(</span><span class="n">id</span><span class="p">)</span><span class="n">kSecClass</span><span class="p">,</span>
+            <span class="n">key</span><span class="p">,</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">kSecAttrService</span><span class="p">,</span>
+            <span class="n">key</span><span class="p">,</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">kSecAttrAccount</span><span class="p">,</span>
+            <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">kSecAttrAccessibleAfterFirstUnlock</span><span class="p">,(</span><span class="n">id</span><span class="p">)</span><span class="n">kSecAttrAccessible</span><span class="p">,</span>
+            <span class="nb">nil</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="k">+</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="nf">ht_valueForKey</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">key</span><span class="p">{</span>
+    <span class="n">id</span> <span class="n">ret</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+    <span class="n">NSMutableDictionary</span> <span class="o">*</span><span class="n">keychainItem</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span> <span class="nf">getKeychainQueryItem</span><span class="p">:</span><span class="n">key</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">keychainItem</span> <span class="nf">setObject</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="n">kCFBooleanTrue</span> <span class="nf">forKey</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="n">kSecReturnData</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">keychainItem</span> <span class="nf">setObject</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="n">kSecMatchLimitOne</span> <span class="nf">forKey</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="n">kSecMatchLimit</span><span class="p">];</span>
+    <span class="n">CFDataRef</span> <span class="n">keyData</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">SecItemCopyMatching</span><span class="p">((</span><span class="n">CFDictionaryRef</span><span class="p">)</span><span class="n">keychainItem</span><span class="p">,</span> <span class="p">(</span><span class="n">CFTypeRef</span> <span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">keyData</span><span class="p">)</span> <span class="o">==</span> <span class="n">noErr</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">@try</span> <span class="p">{</span>
+            <span class="n">ret</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSKeyedUnarchiver</span> <span class="nf">unarchiveObjectWithData</span><span class="p">:(</span><span class="n">__bridge</span> <span class="n">NSData</span> <span class="o">*</span><span class="p">)</span><span class="n">keyData</span><span class="p">];</span>
+        <span class="p">}</span> <span class="k">@catch</span> <span class="p">(</span><span class="n">NSException</span> <span class="o">*</span><span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Unarchive of %@ failed: %@"</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">e</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">@finally</span> <span class="p">{</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">keyData</span><span class="p">)</span>
+        <span class="n">CFRelease</span><span class="p">(</span><span class="n">keyData</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">+</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">ht_deleteValueForKey</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">key</span><span class="p">{</span>
+    <span class="n">NSMutableDictionary</span> <span class="o">*</span><span class="n">keychainItem</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span> <span class="nf">getKeychainQueryItem</span><span class="p">:</span><span class="n">key</span><span class="p">];</span>
+    <span class="n">SecItemDelete</span><span class="p">((</span><span class="n">CFDictionaryRef</span><span class="p">)</span><span class="n">keychainItem</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">@end</span>
+</code></pre>
+</div>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/ios/2016/10/15/objectmodel/" data-toggle="tooltip" data-placement="top" title="OC对象模型">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/python/2016/11/18/args-kwargs/" data-toggle="tooltip" data-placement="top" title="*args和**kwargs">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

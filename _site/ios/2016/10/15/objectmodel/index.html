@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>OC对象模型 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/ios/2016/10/15/objectmodel/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/bg_02.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>OC对象模型</h1>
+                    
+                    <h2 class="subheading">对象模型、isKindOfClass与isMemberOfClass、KVO、KVC</h2>
+                    
+                    <span class="meta">Posted by Ted on October 15, 2016</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<p>先看OC关于NSObject的源码</p>
+
+<p><a href="https://opensource.apple.com/source/objc4/objc4-532.2/runtime/NSObject.mm">NSObject源码</a></p>
+
+<h3 id="一alloc与init">一、alloc与init</h3>
+
+<pre><code class="language-objective-c">NSObject *obj = [NSObject alloc]init];
+</code></pre>
+
+<p>alloc与init发生了什么呢？</p>
+
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="o">+</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">alloc</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">_objc_rootAlloc</span><span class="p">(</span><span class="n">self</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">id</span> <span class="n">_objc_rootAlloc</span><span class="p">(</span><span class="n">Class</span> <span class="n">cls</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="c">#if 0  &amp;&amp;  __OBJC2__
+    // Skip over the +allocWithZone: call if the class doesn't override it.
+    // fixme not - this breaks ObjectAlloc
+    if (! ((class_t *)cls)-&gt;isa-&gt;hasCustomAWZ()) {
+        return class_createInstance(cls, 0);
+    }
+#endif
+</span>    <span class="k">return</span> <span class="p">[</span><span class="n">cls</span> <span class="n">allocWithZone</span><span class="o">:</span> <span class="n">nil</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="n">id</span> <span class="n">class_createInstance</span><span class="p">(</span><span class="n">Class</span> <span class="n">cls</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">extraBytes</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">_class_createInstanceFromZone</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">extraBytes</span><span class="p">,</span> <span class="n">nil</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">static</span> <span class="n">id</span> <span class="n">_class_createInstanceFromZone</span><span class="p">(</span><span class="n">Class</span> <span class="n">cls</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">extraBytes</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">zone</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">cxxConstruct</span> <span class="o">=</span> <span class="nb">true</span><span class="p">,</span> <span class="kt">size_t</span> <span class="o">*</span><span class="n">outAllocatedSize</span> <span class="o">=</span> <span class="n">nil</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">size_t</span> <span class="n">size</span> <span class="o">=</span> <span class="n">cls</span><span class="o">-&gt;</span><span class="n">instanceSize</span><span class="p">(</span><span class="n">extraBytes</span><span class="p">);</span>
+
+    <span class="n">id</span> <span class="n">obj</span> <span class="o">=</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">calloc</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">obj</span><span class="p">)</span> <span class="k">return</span> <span class="n">nil</span><span class="p">;</span>
+    <span class="n">obj</span><span class="o">-&gt;</span><span class="n">initInstanceIsa</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">hasCxxDtor</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="n">obj</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>可以看出，alloc类方法是开辟了一块内存，生成了一个实例对象，并且对实例对象进行了初始化</p>
+
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="o">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">init</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">_objc_rootInit</span><span class="p">(</span><span class="n">self</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">id</span> <span class="n">_objc_rootInit</span><span class="p">(</span><span class="n">id</span> <span class="n">obj</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// In practice, it will be hard to rely on this function.
+</span>    <span class="c1">// Many classes do not properly chain -init calls.
+</span>    <span class="k">return</span> <span class="n">obj</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>init方法只是返回了该实例对象</p>
+
+<h3 id="二nsobject与class">二、NSObject与Class</h3>
+
+<h4 id="1对象">1、对象</h4>
+
+<blockquote>
+  <p>NSObject</p>
+</blockquote>
+
+<pre><code class="language-objective-c">@interface NSObject &lt;NSObject&gt;
+{
+    Class isa;
+}
+@end
+</code></pre>
+
+<p>每一个NSObject里都有一个Class（isa指针），表明这个类的类别Class</p>
+
+<blockquote>
+  <p>id类型</p>
+</blockquote>
+
+<pre><code class="language-objective-c">typedef struct objc_object { 
+    Class isa; 
+} *id; 
+</code></pre>
+
+<p>从上面可以看出id类型里面也有一个Class</p>
+
+<h4 id="2class">2、Class</h4>
+
+<p>Class的定义</p>
+
+<pre><code class="language-objective-c">typedef struct objc_class *Class;
+</code></pre>
+
+<blockquote>
+  <p>objc_class</p>
+</blockquote>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>struct objc_class {
+    Class isa;
+
+#if !__OBJC2__
+    Class super_class                                        OBJC2_UNAVAILABLE;
+    const char *name                                         OBJC2_UNAVAILABLE;
+    long version                                             OBJC2_UNAVAILABLE;
+    long info                                                OBJC2_UNAVAILABLE;
+    long instance_size                                       OBJC2_UNAVAILABLE;
+    struct objc_ivar_list *ivars                             OBJC2_UNAVAILABLE;
+    struct objc_method_list **methodLists                    OBJC2_UNAVAILABLE;
+    struct objc_cache *cache                                 OBJC2_UNAVAILABLE;
+    struct objc_protocol_list *protocols                     OBJC2_UNAVAILABLE;
+#endif
+} OBJC2_UNAVAILABLE;
+</code></pre>
+</div>
+
+<p>isa指针指向哪里？</p>
+
+<p><img src="http://ojx0q9o9x.bkt.clouddn.com/Runtime_00.png" alt="img" /></p>
+
+<p>从图上的虚线箭头就能看出，实例对象的isa指向类，类的isa指向元类(meta)，元类的isa指向Root元类</p>
+
+<h3 id="三iskindofclass与ismemberofclass">三、isKindOfClass与isMemberOfClass</h3>
+
+<h4 id="1获取class">1、获取class</h4>
+
+<pre><code class="language-objective-c">+ (Class)class {
+    return self;
+}
+
+- (Class)class {
+    return object_getClass(self);
+}
+</code></pre>
+
+<pre><code class="language-objective-c">static inline Class _object_getClass(id obj)
+{
+#if SUPPORT_TAGGED_POINTERS
+    if (OBJC_IS_TAGGED_PTR(obj)) {
+        uint8_t slotNumber = ((uint8_t) (uint64_t) obj) &amp; 0x0F;
+        Class isa = _objc_tagged_isa_table[slotNumber];
+        return isa;
+    }
+#endif
+    if (obj) return obj-&gt;isa;
+    else return Nil;
+}
+</code></pre>
+
+<p>从上面可以看到，class类方法和实例方法都是获取当前Class也就是isa指针</p>
+
+<ul>
+  <li>实例方法调用时，通过对象的 isa 在类中获取方法的实现</li>
+  <li>类方法调用时，通过类的 isa 在元类中获取方法的实现</li>
+</ul>
+
+<h4 id="2ismemberofclass">2、isMemberOfClass</h4>
+
+<blockquote>
+  <p>isMemberOfClass: Returns a Boolean value that indicates whether the receiver is an instance of a given class.</p>
+</blockquote>
+
+<pre><code class="language-objective-c">+ (BOOL)isMemberOfClass:(Class)cls {
+    return object_getClass((id)self) == cls;
+}
+
+- (BOOL)isMemberOfClass:(Class)cls {
+    return [self class] == cls;
+}
+</code></pre>
+
+<p>可以看出，isMemberOfClass是判断当前实例/类是否是那个类型</p>
+
+<h4 id="3iskindofclass">3、isKindOfClass</h4>
+
+<blockquote>
+  <p>isKindOfClass: Returns a Boolean value that indicates whether the receiver is an instance of given class or an instance of any class that inherits from that class.</p>
+</blockquote>
+
+<pre><code class="language-objective-c">+ (BOOL)isKindOfClass:(Class)cls {
+    for (Class tcls = object_getClass((id)self); tcls; tcls = class_getSuperclass(tcls)) {
+        if (tcls == cls) return YES;
+    }
+    return NO;
+}
+
+- (BOOL)isKindOfClass:(Class)cls {
+    for (Class tcls = [self class]; tcls; tcls = class_getSuperclass(tcls)) {
+        if (tcls == cls) return YES;
+    }
+    return NO;
+}
+</code></pre>
+
+<p>isKindOfClass是用来判断实例/类是否是那个类型，或者继承自那个类。</p>
+
+<p>经典题目</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>BOOL res1 = [(id)[NSObject class] isKindOfClass:[NSObject class]]; //YES
+BOOL res2 = [(id)[NSObject class] isMemberOfClass:[NSObject class]]; //NO
+BOOL res3 = [(id)[Sark class] isKindOfClass:[Sark class]]; //NO
+BOOL res4 = [(id)[Sark class] isMemberOfClass:[Sark class]]; //NO
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>NSObject = [NSObject class]
+[NSObject isMemberOfClass:NSObject]?
+题目变成：
+object_getClass(NSObject)==NSObject?
+metat_NSObject = object_getClass(NSObject) 
+所以最终题目转化为
+metat_NSObject != NSObject?  ==&gt; NO;
+</code></pre>
+</div>
+
+<h3 id="四kvo与kvc">四、KVO与KVC</h3>
+
+<h4 id="1kvokey-value-observing">1、KVO(Key-Value Observing)</h4>
+
+<p>先看看官方文档</p>
+
+<blockquote>
+  <p>Key-Value Observing Implementation Details
+Automatic key-value observing is implemented using a technique called isa-swizzling.
+The isa pointer, as the name suggests, points to the object’s class which maintains a dispatch table. This dispatch table essentially contains pointers to the methods the class implements, among other data.
+When an observer is registered for an attribute of an object the isa pointer of the observed object is modified, pointing to an intermediate class rather than at the true class. As a result the value of the isa pointer does not necessarily reflect the actual class of the instance.
+You should never rely on the isa pointer to determine class membership. Instead, you should use the class method to determine the class of an object instance.</p>
+</blockquote>
+
+<p>KVO运用了一个isa-swizzling的机制，runtime还有一个method-swizzling的机制，称为’黑魔法’。</p>
+
+<p>当某个类的对象第一次被观察时，系统就会在运行期动态地创建该类的一个<em>派生类</em>，在这个<em>派生类</em>中重写基类中任何被观察属性的 setter 方法。然后在派生类的setter方法里实现通知机制。</p>
+
+<p>同时派生类还重写了 class 方法以“欺骗”外部调用者它就是起初的那个类。然后系统将这个对象的 isa 指针指向这个新诞生的派生类，因此这个对象就成为该派生类的对象了，因而在该对象上对 setter 的调用就会调用重写的 setter，从而激活键值通知机制。此外，派生类还重写了 dealloc 方法来释放资源。</p>
+
+<p>当没有observer观察任何一个property时，删除动态创建的子类。</p>
+
+<p>简单而言：实例对象在被观察时，生成派生类，派生类在setter方法中valuewillchange方法和valuesdidchanged方法里发出通知，并且通过isa-swizzling，从而使实例对象成为派生类的对象，所以实例对象在setter属性时可以产生通知。达到观察的目的。</p>
+
+<p><img src="/img/Simple_1/04.png" alt="img" /></p>
+
+<h4 id="2kvckey-value-coding">2、KVC(Key Value Coding)</h4>
+
+<p>KVC是是一种可以通过字符串的名字（key）来访问类属性的机制。</p>
+
+<p><strong>修改值</strong>
+setValue:forKey:
+setValue:forKeyPath:
+setValue:forUnderfinedKey:
+setNilValueForKey: 对非类对象属性设置nil时调用，默认抛出异常。</p>
+
+<p>1、首先搜索setKey:方法。（key指成员变量名，首字母大写）</p>
+
+<p>2、上面的setter方法没找到，如果类方法accessInstanceVariablesDirectly返回YES。那么按 _key，_isKey，key，iskey的顺序搜索成员名。（NSKeyValueCodingCatogery中实现的类方法，默认实现为返回YES）</p>
+
+<p>3、如果没有找到成员变量，调用setValue:forUnderfinedKey:</p>
+
+<p><strong>获取值</strong>
+valueForKey: 传入NSString属性的名字。
+valueForKeyPath: 属性的路径，xx.xx
+valueForUndefinedKey 默认实现是抛出异常，可重写这个函数做错误处理</p>
+
+<p>1、首先按getKey，key，isKey的顺序查找getter方法，找到直接调用。如果是BOOL、int等内建值类型，会做NSNumber的转换。</p>
+
+<p>2、上面的getter没找到，查找countOfKey、objectInKeyAtindex、KeyAtindexes格式的方法。如果countOfKey和另外两个方法中的一个找到，那么就会返回一个可以响应NSArray所有方法的代理集合的NSArray消息方法。</p>
+
+<p>3、还没找到，查找countOfKey、enumeratorOfKey、memberOfKey格式的方法。如果这三个方法都找到，那么就返回一个可以响应NSSet所有方法的代理集合。
+4、还是没找到，如果类方法accessInstanceVariablesDirectly返回YES。那么按 _key，_isKey，key，iskey的顺序搜索成员名。</p>
+
+<p>5、再没找到，调用valueForUndefinedKey。</p>
+
+<p><strong>原理</strong></p>
+
+<p>isa指针（is kind of 的意思）指向维护分发表的对象的类，该分发表实际上包含了指向实现类中的方法的指针和其他数据。比如说如下的一行KVC代码：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[site setValue:@"sitename" forKey:@"name"];
+</code></pre>
+</div>
+
+<p>//会被编译器处理成</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>SEL sel = sel_get_uid(setValue:forKey);
+IMP method = objc_msg_loopup(site-&gt;isa,sel);
+method(site,sel,@"sitename",@"name");
+</code></pre>
+</div>
+
+<p>每个类都有一张方法表，是一个hash表，值是还书指针IMP，SEL的名称就是查表时所用的键。</p>
+
+<p>SEL数据类型：查找方法表时所用的键。定义成char*，实质上可以理解成int值。</p>
+
+<p>IMP数据类型：他其实就是一个编译器内部实现时候的函数指针。当Objective-C编译器去处理实现一个方法的时候，就会指向一个IMP对象，这个对象是C语言表述的类型。</p>
+
+<h3 id="五self与super">五、Self与Super</h3>
+
+<h4 id="1self-class与super-class">1、[self class]与[super class]</h4>
+
+<p>有一个有意思的题目，有一个Son类继承自Father类</p>
+
+<pre><code class="language-objective-c">    @implementation Son : Father
+    - (id)init
+    {
+        self = [super init];
+        if (self) {
+            NSLog(@"%@", NSStringFromClass([self class]));
+            NSLog(@"%@", NSStringFromClass([super class]));
+        }
+        return self;
+    }
+    @end
+</code></pre>
+
+<p>最终结果都是Son，为什么呢？</p>
+
+<blockquote>
+  <p><strong>官方文档中self相关解释</strong>
+Whenever you’re writing a method implementation, you have access to an important hidden value, self. Conceptually, self is a way to refer to “the object that’s received this message.” It’s apointer, just like the greeting value above, and can be used to call a method on the current receiving object.
+<strong>super解释</strong>
+There’s anotherimportant keyword available to you in Objective-C, called super. Sending a message to super is a way to call through to a method implementation defined by a superclass further up the inheritance chain. The most common use of super is when overriding a method.</p>
+</blockquote>
+
+<p>简而言之是self调用自己方法，super调用父类方法</p>
+
+<p>但是底层原理呢？我们知道，OC的消息转发机制，当self时，方法转换成</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>id objc_msgSend(id receiver, SEL theSelector, ...)
+</code></pre>
+</div>
+
+<p>​	objc_msgSend sends a message with a simple return value to an instance of a class</p>
+
+<p>而super关键字调用方法则转换成</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>id objc_msgSendSuper(struct objc_super *super, SEL op, ...)
+
+struct objc_super {
+  id receiver;
+  Class superClass;
+};
+</code></pre>
+</div>
+
+<p>​	objc_msgSendSuper sends a message with a simple return value to the superclass of an instance of a class.</p>
+
+<p>可以看到objc_msgSendSuper的receiver还是son。</p>
+
+<p>objc_msgSend与objc_msgSendSuperd都去查找class的Seletor，一直查到NSObject类才查到class方法</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>- (Class)class {
+    return object_getClass(self);
+}
+</code></pre>
+</div>
+
+<p>也就是说，最终都是调用的receiver也就是son，获取到了Class.</p>
+
+<h4 id="2self--super-init">2、self = [super init]</h4>
+
+<blockquote>
+  <p>If a class does implement an initializer, it should invoke an initializer of its superclass as the first step. This requirement ensures a series of initializations for an object down the inheritance chain, starting with the root object. The <code class="highlighter-rouge">NSObject</code> class declares the <code class="highlighter-rouge">init</code> method as the default object initializer, so it is always invoked last but returns first.</p>
+</blockquote>
+
+<p><img src="/img/Simple_1/05.png" alt="img" /></p>
+
+<p>所以标准的初始化代码</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>- (id)init {
+    if (self = [super init]) { // equivalent to "self does not equal nil"
+        self ...
+    }
+    return self;
+}
+</code></pre>
+</div>
+
+<h3 id="六属性与变量property--instance-variable">六、属性与变量(property &amp; instance variable)</h3>
+
+<p>在ios5以后我们使用@property来声明属性变量，编译器会自动(@syntheszie var = _var)为我们生成对应的一个以下 划线加属性名 命名的实例变量，还有其对应的getter、setter</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">var</span><span class="p">;</span>
+ 
+<span class="o">------------------</span><span class="err">等效分割线</span><span class="o">------------------</span>
+<span class="n">NSString</span> <span class="o">*</span><span class="n">_var</span><span class="p">;</span>
+ 
+<span class="k">-</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">var</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">_var</span><span class="p">;</span>
+<span class="p">}</span>
+ 
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">setVar</span><span class="o">:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">var</span> <span class="p">{</span>
+    <span class="n">_var</span> <span class="o">=</span> <span class="n">var</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>这样一来我们就可以看出通过self.var和_var访问实例变量的区别，在.m文件中可以通过_var来访问实例变量，但是getter、setter不会被调用，而来自外部的访问，需要通过getter、setter。</p>
+
+<p>注意，使用readonly关键字修饰后，编译器只会为我们生成getter。</p>
+
+<p>假如一个属性被关键字@dynamic所修饰，则编译器不会自动生成其对应的getter、setter，然而如果开发者没有自行创造getter、setter，将不会在编译期提醒，运行时触发则会发生crash。
+顺便一提@dynamic还能帮助我们替换掉某类中本来就存在的，而我们又想自己创造的property。</p>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/ios/2016/10/11/safety/" data-toggle="tooltip" data-placement="top" title="漫谈iOS安全">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/ios/2016/10/19/keychain/" data-toggle="tooltip" data-placement="top" title="iOS Keychain编程指南">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

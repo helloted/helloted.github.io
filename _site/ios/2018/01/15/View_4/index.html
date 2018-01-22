@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>View编程指南(四) - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/ios/2018/01/15/View_4/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/bg_01.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>View编程指南(四)</h1>
+                    
+                    <h2 class="subheading">《View Programming Guide for iOS》文档翻译</h2>
+                    
+                    <span class="meta">Posted by Ted on January 15, 2018</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<p>苹果官方文档<a href="https://developer.apple.com/library/content/documentation/WindowsViews/Conceptual/ViewPG_iPhoneOS/Introduction/Introduction.html#//apple_ref/doc/uid/TP40009503-CH1-SW2">View Programming Guide for iOS</a></p>
+
+<h3 id="五动画">五、动画</h3>
+
+<p>动画在用户界面的不同状态之间提供流畅的视觉转换。 在iOS中，动画广泛用于重新定位view，更改大小，将其从view层次结构中移除，并将其隐藏起来。 您可以使用动画将反馈传达给用户或实现有趣的视觉效果。</p>
+
+<p>在iOS中，创建复杂的动画不需要您编写任何绘图代码。 本章介绍的所有动画技术都使用Core Animation提供的内置支持。 您只需触发动画并让Core Animation处理单个帧的渲染。 这使得创建复杂的动画非常容易，只需要几行代码。</p>
+
+<h4 id="哪些可以有动画">哪些可以有动画？</h4>
+
+<p>UIKit和Core Animation都支持动画，但每种技术提供的支持水平都不相同。 在UIKit中，动画是使用UIView对象执行的。 view支持一组涵盖许多常见任务的基本动画。 例如，您可以对view的属性进行动画更改，或使用过渡动画将一组view替换为另一组view</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Changes you can make</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">frame</code></td>
+      <td>修改这个属性来修改View的位置和大小 (如果View的 <code class="highlighter-rouge">transform</code> 没有包含identity transform, 那么取而代之，修改 <code class="highlighter-rouge">bounds</code> or <code class="highlighter-rouge">center</code> .)</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">bounds</code></td>
+      <td>修改这个属性来修改 view’s size.</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">center</code></td>
+      <td>修改这个属性来修改相对于父View坐标系统的中心点</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">transform</code></td>
+      <td>修改这个属性来修改相对于其中心点的移动缩放旋转. 这是2D层面的 (如果要3D层面需要使用 Core Animation.)</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">alpha</code></td>
+      <td>修改这个属性来修改 view的透明度.</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">backgroundColor</code></td>
+      <td>修改这个属性来修改View的背景颜色</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">contentStretch</code></td>
+      <td>修改这个属性来使内容更好地适应填充</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>动画view转换是一种让您对view hierarchy进行更改的方式，而不是view controller提供的view hierarchy。虽然您应该使用view controller来管理简洁的view hierarchy，但有时您可能需要替换全部或部分view hierarchy。在这些情况下，您可以使用基于view的转换来动画添加和删除view。
+在你想要执行更复杂的动画的时候，或者UIView类不支持的动画中，你可以使用Core Animation和view的底层layer来创建动画。由于view和layer对象错综复杂地链接在一起，因此对view layer的更改会影响view本身。使用核心动画，您可以为您的view的layer设置以下类型的更改：</p>
+
+<ul>
+  <li>layer的大小和位置</li>
+  <li>执行转换时使用的中心点</li>
+  <li>转换到三维空间中的layer或其sublayer</li>
+  <li>从layer分层结构中添加或删除layer</li>
+  <li>相对于其他兄弟layer的Z层顺序</li>
+  <li>layer的shadow</li>
+  <li>layer的border（包括layer的边角是否圆整）</li>
+  <li>在调整大小操作期间延伸的layer部分</li>
+  <li>layer的不透明度</li>
+  <li>位于layer边界之外的子layer的剪切行为</li>
+  <li>layer的当前内容</li>
+  <li>layer的栅格化行为</li>
+</ul>
+
+<p>注意，如果你的View用了一个自定义的layer对象，也就是这个对象没有与View相关联，你必须用Core Animation来修改它</p>
+
+<h4 id="用block动画">用Block动画</h4>
+
+<p>有几种基于block的方法为动画block提供不同级别的配置。 这些方法是：</p>
+
+<ul>
+  <li><code class="highlighter-rouge">animateWithDuration:animations:</code></li>
+  <li><code class="highlighter-rouge">animateWithDuration:animations:completion:</code></li>
+  <li><code class="highlighter-rouge">animateWithDuration:delay:options:animations:completion:</code></li>
+</ul>
+
+<p>由于这些是类方法，因此您使用它们创建的动画块不会绑定到单个view。 因此，您可以使用这些方法创建一个包含对多个view进行更改的动画</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="p">[</span><span class="n">UIView</span> <span class="nf">animateWithDuration</span><span class="p">:</span><span class="mi">1</span><span class="p">.</span><span class="mi">0</span> <span class="nf">animations</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
+        <span class="n">firstView</span><span class="p">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">;</span>
+        <span class="n">secondView</span><span class="p">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}];</span>
+</code></pre>
+</div>
+
+<p>前一个例子中的动画只运行一次，使用一个ease-in，ease-out的动画曲线。 如果要更改默认的动画参数，则必须使用<code class="highlighter-rouge">animateWithDuration：delay：options：animations：completion：</code>方法来执行动画。 该方法可以让您自定义以下动画参数：</p>
+
+<ul>
+  <li>开始动画之前使用的延迟</li>
+  <li>在动画中使用的时间曲线的类型</li>
+  <li>动画应该重复的次数</li>
+  <li>当动画到达最后时，动画是否会自动反转</li>
+  <li>触摸事件是否在动画进行过程中传递到view</li>
+  <li>动画是否应该中断任何正在进行的动画，或者在开始之前等到动画完成</li>
+</ul>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">IBAction</span><span class="p">)</span><span class="nf">showHideView</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">sender</span>
+<span class="p">{</span>
+    <span class="c1">// Fade out the view right away
+</span>    <span class="p">[</span><span class="n">UIView</span> <span class="nf">animateWithDuration</span><span class="p">:</span><span class="mi">1</span><span class="p">.</span><span class="mi">0</span>
+        <span class="nf">delay</span><span class="p">:</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span>
+        <span class="nl">options:</span> <span class="n">UIViewAnimationOptionCurveEaseIn</span>
+        <span class="nl">animations:</span><span class="o">^</span><span class="p">{</span>
+             <span class="n">thirdView</span><span class="p">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="nl">completion:</span><span class="o">^</span><span class="p">(</span><span class="n">BOOL</span> <span class="n">finished</span><span class="p">){</span>
+            <span class="c1">// Wait one second and then fade in the view
+</span>            <span class="p">[</span><span class="n">UIView</span> <span class="nf">animateWithDuration</span><span class="p">:</span><span class="mi">1</span><span class="p">.</span><span class="mi">0</span>
+                 <span class="nf">delay</span><span class="p">:</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span>
+                 <span class="nl">options:</span><span class="n">UIViewAnimationOptionCurveEaseOut</span>
+                 <span class="nl">animations:</span><span class="o">^</span><span class="p">{</span>
+                    <span class="n">thirdView</span><span class="p">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="p">;</span>
+                 <span class="p">}</span>
+                 <span class="nl">completion:</span><span class="nb">nil</span><span class="p">];</span>
+        <span class="p">}];</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>重要提示：当涉及该属性的动画已在进行中时，更改属性的值不会停止当前动画。 而是当前的动画继续，新值会有动画。</p>
+
+<p>如果您的应用程序在iOS 3.2及更早版本中运行，则必须使用UIView的<code class="highlighter-rouge">beginAnimations：context：</code>和<code class="highlighter-rouge">commitAnimations</code>类方法来定义您的动画块。iOS4之后则应该用block动画</p>
+
+<h4 id="动画block嵌套">动画block嵌套</h4>
+
+<p>您可以通过嵌套其他动画blcok来为动画block的某些部分分配不同的时序和配置选项。 顾名思义，嵌套动画block是在现有动画block内创建的新动画block。 嵌套动画与任何父动画同时启动，但运行（大部分）与他们自己的配置选项。 默认情况下，嵌套动画会继承父级的持续时间和动画曲线，但即使这些选项可以根据需要被覆盖</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="p">[</span><span class="n">UIView</span> <span class="nf">animateWithDuration</span><span class="p">:</span><span class="mi">1</span><span class="p">.</span><span class="mi">0</span>
+        <span class="nf">delay</span><span class="p">:</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span>
+        <span class="n">options</span><span class="o">:</span><span class="n">UIViewAnimationOptionCurveEaseOut</span>
+        <span class="n">animations</span><span class="o">:^</span><span class="p">{</span>
+            <span class="n">aView</span><span class="p">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">;</span>
+ 
+            <span class="c1">// Create a nested animation that has a different
+</span>            <span class="c1">// duration, timing curve, and configuration.
+</span>            <span class="p">[</span><span class="n">UIView</span> <span class="nf">animateWithDuration</span><span class="p">:</span><span class="mi">0</span><span class="p">.</span><span class="mi">2</span>
+                 <span class="nf">delay</span><span class="p">:</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span>
+                 <span class="n">options</span><span class="o">:</span> <span class="n">UIViewAnimationOptionOverrideInheritedCurve</span> <span class="o">|</span>
+                          <span class="n">UIViewAnimationOptionCurveLinear</span> <span class="o">|</span>
+                          <span class="n">UIViewAnimationOptionOverrideInheritedDuration</span> <span class="o">|</span>
+                          <span class="n">UIViewAnimationOptionRepeat</span> <span class="o">|</span>
+                          <span class="n">UIViewAnimationOptionAutoreverse</span>
+                 <span class="n">animations</span><span class="o">:^</span><span class="p">{</span>
+                      <span class="p">[</span><span class="n">UIView</span> <span class="nf">setAnimationRepeatCount</span><span class="p">:</span><span class="mi">2</span><span class="p">.</span><span class="mi">5</span><span class="p">];</span>
+                      <span class="n">anotherView</span><span class="p">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">;</span>
+                 <span class="p">}</span>
+                 <span class="n">completion</span><span class="o">:</span><span class="nb">nil</span><span class="p">];</span>
+ 
+        <span class="p">}</span>
+        <span class="n">completion</span><span class="o">:</span><span class="nb">nil</span><span class="p">];</span>
+</code></pre>
+</div>
+
+<p>在这种情况下，两个view正在被淡化为完全透明，但是另一个view对象的透明度在最终隐藏之前来回地多次改变。 在嵌套动画块中使用的UIViewAnimationOptionOverrideInheritedCurve和UIViewAnimationOptionOverrideInheritedDuration键允许为第二个动画修改第一个动画的曲线和持续时间值。 如果这些键不存在，则将使用外部动画块的持续时间和曲线。</p>
+
+<h4 id="在view之间创建动画转换">在View之间创建动画转换</h4>
+
+<p>view转换可帮助您隐藏与在view层次结构中添加，删除，隐藏或显示view相关的突然更改。 您使用view transitions来实现以下类型的更改：</p>
+
+<ul>
+  <li>更改现有view的可见subview。 当您想对现有view进行相对较小的更改时，通常会选择此选项。</li>
+  <li>用不同的view替换view层次结构中的一个view。 如果要替换跨越全部或大部分屏幕的view层次结构，通常选择此选项。</li>
+</ul>
+
+<p>重要提示：view转换不应与view controller启动的转换相混淆，例如present view controller的呈现或将新view controller推到navigation堆栈上。 view转换仅影响view层次，而view - controller转换也改变活动view controller。 因此，对于view转换，如果你在初始化转换时保持活动，那么VC在转换结束时也是活动的</p>
+
+<h4 id="修改view的subviews">修改View的subviews</h4>
+
+<p>更改view的subview允许您对view进行适度更改。例如，您可以添加或删除subview以在两种不同状态之间切换superview。在动画完成时，显示相同的view，但其内容现在不同。</p>
+
+<p>在iOS 4和更高版本中，使用<code class="highlighter-rouge">transitionWithView：duration：options：animations：completion：</code>方法为view启动过渡动画。在传递给此方法的动画块中，通常动画的唯一更改是与显示，隐藏，添加或删除子view相关的更改。将动画限制为该集合允许view创建view之前和之后版本的快照图像，并且在两个图像之间创建动画，这更高效。但是，如果您需要动画其他更改，则可以在调用方法时包含<code class="highlighter-rouge">UIViewAnimationOptionAllowAnimatedContent</code>选项。包含该选项可防止view创建快照，并直接动画化所有更改。</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">IBAction</span><span class="p">)</span><span class="nf">displayNewPage</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">sender</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="n">UIView</span> <span class="nf">transitionWithView</span><span class="p">:</span><span class="n">self</span><span class="p">.</span><span class="n">view</span>
+        <span class="nf">duration</span><span class="p">:</span><span class="mi">1</span><span class="p">.</span><span class="mi">0</span>
+        <span class="nl">options:</span><span class="n">UIViewAnimationOptionTransitionCurlUp</span>
+        <span class="nl">animations:</span><span class="o">^</span><span class="p">{</span>
+            <span class="n">currentTextView</span><span class="p">.</span><span class="n">hidden</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span>
+            <span class="n">swapTextView</span><span class="p">.</span><span class="n">hidden</span> <span class="o">=</span> <span class="nb">NO</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="nl">completion:</span><span class="o">^</span><span class="p">(</span><span class="n">BOOL</span> <span class="n">finished</span><span class="p">){</span>
+            <span class="c1">// Save the old text and then swap the views.
+</span>            <span class="p">[</span><span class="n">self</span> <span class="nf">saveNotes</span><span class="p">:</span><span class="n">temp</span><span class="p">];</span>
+ 
+            <span class="n">UIView</span><span class="o">*</span>    <span class="n">temp</span> <span class="o">=</span> <span class="n">currentTextView</span><span class="p">;</span>
+            <span class="n">currentTextView</span> <span class="o">=</span> <span class="n">swapTextView</span><span class="p">;</span>
+            <span class="n">swapTextView</span> <span class="o">=</span> <span class="n">temp</span><span class="p">;</span>
+        <span class="p">}];</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>替换一个View</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">IBAction</span><span class="p">)</span><span class="nf">toggleMainViews</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">sender</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">UIView</span> <span class="nf">transitionFromView</span><span class="p">:(</span><span class="n">displayingPrimary</span> <span class="p">?</span> <span class="n">primaryView</span> <span class="p">:</span> <span class="n">secondaryView</span><span class="p">)</span>
+        <span class="nf">toView</span><span class="p">:(</span><span class="n">displayingPrimary</span> <span class="p">?</span> <span class="n">secondaryView</span> <span class="p">:</span> <span class="n">primaryView</span><span class="p">)</span>
+        <span class="nl">duration:</span><span class="mi">1</span><span class="p">.</span><span class="mi">0</span>
+        <span class="nl">options:</span><span class="p">(</span><span class="n">displayingPrimary</span> <span class="p">?</span> <span class="n">UIViewAnimationOptionTransitionFlipFromRight</span> <span class="p">:</span>
+                    <span class="n">UIViewAnimationOptionTransitionFlipFromLeft</span><span class="p">)</span>
+        <span class="nl">completion:</span><span class="o">^</span><span class="p">(</span><span class="n">BOOL</span> <span class="n">finished</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">finished</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">displayingPrimary</span> <span class="o">=</span> <span class="o">!</span><span class="n">displayingPrimary</span><span class="p">;</span>
+            <span class="p">}</span>
+    <span class="p">}];</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<h4 id="view和layer动画一起">View和layer动画一起</h4>
+
+<p>应用程序可以根据需要自由混合基于view和基于layer的动画代码，但配置动画参数的过程取决于谁拥有layer。 更改view拥有的层与更改view本身相同，并且应用于layer属性的任何动画都尊重当前基于view的动画块的动画参数。 你自己创建的layer也是如此。 自定义layer对象会忽略基于view的动画块参数，而是使用默认的“核心动画”参数。</p>
+
+<p>如果要为所创建的layer自定义动画参数，则必须直接使用Core Animation。 通常，使用Core Animation动画化layer包括创建一个CABasicAnimation对象或CAAnimation的其他具体子类。 然后，您将该动画添加到相应的layer。 您可以从基于view的动画块内部或外部应用动画。</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="p">[</span><span class="n">UIView</span> <span class="nf">animateWithDuration</span><span class="p">:</span><span class="mi">1</span><span class="p">.</span><span class="mi">0</span>
+    <span class="nf">delay</span><span class="p">:</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span>
+    <span class="n">options</span><span class="o">:</span> <span class="n">UIViewAnimationOptionCurveLinear</span>
+    <span class="n">animations</span><span class="o">:^</span><span class="p">{</span>
+        <span class="c1">// Animate the first half of the view rotation.
+</span>        <span class="n">CGAffineTransform</span>  <span class="n">xform</span> <span class="o">=</span> <span class="n">CGAffineTransformMakeRotation</span><span class="p">(</span><span class="n">DEGREES_TO_RADIANS</span><span class="p">(</span><span class="o">-</span><span class="mi">180</span><span class="p">));</span>
+        <span class="n">backingView</span><span class="p">.</span><span class="n">transform</span> <span class="o">=</span> <span class="n">xform</span><span class="p">;</span>
+ 
+        <span class="c1">// Rotate the embedded CALayer in the opposite direction.
+</span>        <span class="n">CABasicAnimation</span><span class="o">*</span>    <span class="n">layerAnimation</span> <span class="o">=</span> <span class="p">[</span><span class="n">CABasicAnimation</span> <span class="nf">animationWithKeyPath</span><span class="p">:</span><span class="s">@"transform"</span><span class="p">];</span>
+        <span class="n">layerAnimation</span><span class="p">.</span><span class="n">duration</span> <span class="o">=</span> <span class="mi">2</span><span class="p">.</span><span class="mi">0</span><span class="p">;</span>
+        <span class="n">layerAnimation</span><span class="p">.</span><span class="n">beginTime</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">//CACurrentMediaTime() + 1;
+</span>        <span class="n">layerAnimation</span><span class="p">.</span><span class="n">valueFunction</span> <span class="o">=</span> <span class="p">[</span><span class="n">CAValueFunction</span> <span class="nf">functionWithName</span><span class="p">:</span><span class="n">kCAValueFunctionRotateZ</span><span class="p">];</span>
+        <span class="n">layerAnimation</span><span class="p">.</span><span class="n">timingFunction</span> <span class="o">=</span> <span class="p">[</span><span class="n">CAMediaTimingFunction</span>
+                        <span class="nf">functionWithName</span><span class="p">:</span><span class="n">kCAMediaTimingFunctionLinear</span><span class="p">];</span>
+        <span class="n">layerAnimation</span><span class="p">.</span><span class="n">fromValue</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSNumber</span> <span class="nf">numberWithFloat</span><span class="p">:</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">];</span>
+        <span class="n">layerAnimation</span><span class="p">.</span><span class="n">toValue</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSNumber</span> <span class="nf">numberWithFloat</span><span class="p">:</span><span class="n">DEGREES_TO_RADIANS</span><span class="p">(</span><span class="mi">360</span><span class="p">.</span><span class="mi">0</span><span class="p">)];</span>
+        <span class="n">layerAnimation</span><span class="p">.</span><span class="n">byValue</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSNumber</span> <span class="nf">numberWithFloat</span><span class="p">:</span><span class="n">DEGREES_TO_RADIANS</span><span class="p">(</span><span class="mi">180</span><span class="p">.</span><span class="mi">0</span><span class="p">)];</span>
+        <span class="p">[</span><span class="n">manLayer</span> <span class="nf">addAnimation</span><span class="p">:</span><span class="n">layerAnimation</span> <span class="nf">forKey</span><span class="p">:</span><span class="s">@"layerAnimation"</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="n">completion</span><span class="o">:^</span><span class="p">(</span><span class="n">BOOL</span> <span class="n">finished</span><span class="p">){</span>
+        <span class="c1">// Now do the second half of the view rotation.
+</span>        <span class="p">[</span><span class="n">UIView</span> <span class="nf">animateWithDuration</span><span class="p">:</span><span class="mi">1</span><span class="p">.</span><span class="mi">0</span>
+             <span class="nf">delay</span><span class="p">:</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span>
+             <span class="n">options</span><span class="o">:</span> <span class="n">UIViewAnimationOptionCurveLinear</span>
+             <span class="n">animations</span><span class="o">:^</span><span class="p">{</span>
+                 <span class="n">CGAffineTransform</span>  <span class="n">xform</span> <span class="o">=</span> <span class="n">CGAffineTransformMakeRotation</span><span class="p">(</span><span class="n">DEGREES_TO_RADIANS</span><span class="p">(</span><span class="o">-</span><span class="mi">359</span><span class="p">));</span>
+                 <span class="n">backingView</span><span class="p">.</span><span class="n">transform</span> <span class="o">=</span> <span class="n">xform</span><span class="p">;</span>
+             <span class="p">}</span>
+             <span class="n">completion</span><span class="o">:^</span><span class="p">(</span><span class="n">BOOL</span> <span class="n">finished</span><span class="p">){</span>
+                 <span class="n">backingView</span><span class="p">.</span><span class="n">transform</span> <span class="o">=</span> <span class="n">CGAffineTransformIdentity</span><span class="p">;</span>
+         <span class="p">}];</span>
+<span class="p">}];</span>
+</code></pre>
+</div>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/ios/2018/01/15/View_3/" data-toggle="tooltip" data-placement="top" title="View编程指南(三)">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

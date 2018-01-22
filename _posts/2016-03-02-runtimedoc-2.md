@@ -1,6 +1,7 @@
 ---
 layout:     post
-title:      "【iOS】Objective-C Runtime编程指南(2)"
+category:   iOS
+title:      "Objective-C Runtime编程指南(2)"
 subtitle:   "Objective-C中Runtime的官方文档：属性"
 date:       2016-03-02 12:00:00
 author:     "Ted"

@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>React Native(二)：react-navigation - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/ios/2017/11/21/reactnative_2/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>React Native(二)：react-navigation</h1>
+                    
+                    <h2 class="subheading">第三方导航栏react-navigation的使用</h2>
+                    
+                    <span class="meta">Posted by Ted on November 21, 2017</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h3 id="四react-navigation使用">四、react-navigation使用</h3>
+
+<p>react-navigation是FaceBook推荐使用的一个库，用于导航效果，<a href="https://reactnavigation.org/docs/intro/basic-app">官方文档</a></p>
+
+<p>使用之前先在根目录文件内执行命令</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>yarn add react-navigation
+</code></pre>
+</div>
+
+<p>它有三种类型的</p>
+
+<ul>
+  <li><code class="highlighter-rouge">StackNavigator</code> - 与iOS中的UINavigationController类似，也是采用栈类型，将一个新的页面push进栈中进行展示。</li>
+  <li><code class="highlighter-rouge">TabNavigator</code> - 与UITabbarContrller类似的效果，主要用于一个屏幕内横向切换不同界面</li>
+  <li><code class="highlighter-rouge">DrawerNavigator</code> - 侧滑栏效果</li>
+</ul>
+
+<h3 id="五stacknavigator的使用">五、StackNavigator的使用</h3>
+
+<p>首先，先在根目录下生成一个stack.js的js文件，</p>
+
+<p><img src="/img/Simple_1/14.png" alt="" /></p>
+
+<p>在iOS将文件名替换为stack</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"stack" fallbackResource:nil];
+</code></pre>
+</div>
+
+<p>照例，先定义好页面</p>
+
+<pre><code class="language-jsx">AppRegistry.registerComponent('DemoProject', () =&gt; RootPage);
+export default class RootPage extends React.Component {
+  render() {
+    return &lt;CustomStack /&gt;;
+  }
+}
+</code></pre>
+
+<p>其中，<code class="highlighter-rouge">CustomStack</code>是我们自定义的导航组件</p>
+
+<pre><code class="language-jsx">export const CustomStack = StackNavigator({
+  HomePage: {
+    screen: HomeVC
+  },
+  SecondPage: {
+    screen: SecondVC
+  },
+});
+</code></pre>
+
+<p>由StackNavigator生成导航主键。HomePage和SecondPage是我们的两个页面，页面里带有screen的参数,里面的组件才是定义页面内容的地方。要注意的是，顺序依次是进栈的顺序。</p>
+
+<p>分别定义HomeVC组件和SecondVC组件</p>
+
+<pre><code class="language-jsx">class HomeVC extends React.Component {
+  static navigationOptions = {
+    title: 'HomeVC',
+  };
+  render() {
+    const {
+      navigate
+    } = this.props.navigation;
+    return (
+      &lt;View&gt;
+        &lt;Text&gt;Hello, This is HomeVC!&lt;/Text&gt;
+        &lt;Button
+          onPress={() =&gt; navigate('SecondPage')}
+          title="Jump to SecondVC"
+        /&gt;
+      &lt;/View&gt;
+    );
+  }
+}
+
+
+class SecondVC extends React.Component {
+  static navigationOptions = {
+    title: 'SecondVC',
+  };
+  render() {
+    return (
+      &lt;View&gt;
+        &lt;Text&gt;Now, you are in SecondVC&lt;/Text&gt;
+      &lt;/View&gt;
+    );
+  }
+}
+
+</code></pre>
+
+<p>可以有以下的效果：</p>
+
+<p><img src="/img/Simple_1/17.gif" alt="" /></p>
+
+<p>全部代码：</p>
+
+<p>stack.js</p>
+
+<pre><code class="language-jsx">import React from 'react';
+import {
+  AppRegistry,
+  StyleSheet,
+  Text,
+  View,
+  Button
+} from 'react-native';
+import {
+  StackNavigator
+} from 'react-navigation';
+
+AppRegistry.registerComponent('DemoProject', () =&gt; RootPage);
+export default class RootPage extends React.Component {
+  render() {
+    return &lt;CustomStack /&gt;;
+  }
+}
+
+
+
+class HomeVC extends React.Component {
+  static navigationOptions = {
+    title: 'HomeVC',
+  };
+  render() {
+    const {
+      navigate
+    } = this.props.navigation;
+    return (
+      &lt;View&gt;
+        &lt;Text&gt;Hello, This is HomeVC!&lt;/Text&gt;
+        &lt;Button
+          onPress={() =&gt; navigate('SecondPage')}
+          title="Jump to SecondVC"
+        /&gt;
+      &lt;/View&gt;
+    );
+  }
+}
+
+
+class SecondVC extends React.Component {
+  static navigationOptions = {
+    title: 'SecondVC',
+  };
+  render() {
+    return (
+      &lt;View&gt;
+        &lt;Text&gt;Now, you are in SecondVC&lt;/Text&gt;
+      &lt;/View&gt;
+    );
+  }
+}
+
+export const CustomStack = StackNavigator({
+  HomePage: {
+    screen: HomeVC
+  },
+  SecondPage: {
+    screen: SecondVC
+  },
+});
+</code></pre>
+
+<h3 id="六tabnavigator的使用">六、TabNavigator的使用</h3>
+
+<p>声明很简单</p>
+
+<pre><code class="language-jsx">const MainTabController = TabNavigator({
+  TabItem_1: {
+    screen: HomeVc
+  },
+  TabItem_2: {
+    screen: SecondVC
+  },
+  TabItem_3: {
+    screen: ThirdVC
+  },
+}, {
+  tabBarPosition: 'bottom',
+  tabBarOptions: {
+    activeTintColor: '#e91e63',
+  },
+});
+
+</code></pre>
+
+<p>每个VC都对应一个界面，</p>
+
+<p>tabBarPosition：位置，Tab有顶部top和底部bottom的位置</p>
+
+<p>activeTintColor：是选中时TabItem的颜色</p>
+
+<p>页面代码：</p>
+
+<pre><code class="language-jsx">class HomeVc extends React.Component {
+  static navigationOptions = {
+    tabBarLabel: 'Home',
+    tabBarIcon: ({
+      tintColor
+    }) =&gt; (
+      &lt;Image
+        source={require('./imgs/01.png')}
+        style={[styles.icon, {tintColor: tintColor}]}
+      /&gt;
+    ),
+  };
+  render() {
+    return (
+      &lt;View style={styles.homecontainer}&gt;
+        &lt;Text&gt;
+          This is HomeVC page
+        &lt;/Text&gt;
+      &lt;/View&gt;
+    );
+  }
+}
+</code></pre>
+
+<p>navigationOptions是Tab的一些选项，里面有Tab的名称和图片，依次设置三个页面后可以达到这个效果</p>
+
+<p><img src="/img/Simple_1/18.gif" alt="" /></p>
+
+<p>将StackNavigator作为一个Page插入TabItem</p>
+
+<pre><code class="language-jsx">const HomeNav = StackNavigator({
+  HomePage: {
+    screen: HomeVC,
+    navigationOptions: {
+      title: 'HomePage',
+    }
+  },
+  SecondPage: {
+    screen: SecondVC
+  },
+});
+
+const MainTabController = TabNavigator({
+  TabItem_1: {
+    screen: HomeNav  //Nav作为一个Page插入来
+  },
+  TabItem_2: {
+    screen: MessageVC
+  },
+  TabItem_3: {
+    screen: SettingVC
+  },
+}, {
+  tabBarPosition: 'bottom',
+  tabBarOptions: {
+    activeTintColor: '#e91e63',
+  },
+});
+</code></pre>
+
+<p>下面就是Tab+Nav的效果</p>
+
+<p><img src="/img/Simple_1/19.gif" alt="" /></p>
+
+<h3 id="七drawernavigator">七、DrawerNavigator</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>class MyHomeScreen extends React.Component {
+  static navigationOptions = {
+    drawerLabel: 'Home',
+    drawerIcon: ({
+      tintColor
+    }) =&gt; (
+      &lt;Image
+        source={require('./imgs/01.png')}
+        style={[styles.icon, {tintColor: tintColor}]}
+      /&gt;
+    ),
+  };
+
+  render() {
+    return (
+      &lt;View style={styles.container}&gt;
+      &lt;Text&gt;This HomePage&lt;/Text&gt;
+      &lt;Button
+        onPress={() =&gt; this.props.navigation.navigate('DrawerOpen')}
+        title="Show Drawer"
+      /&gt;
+      &lt;/View&gt;
+    );
+  }
+}
+
+class MyNotificationsScreen extends React.Component {
+  static navigationOptions = {
+    drawerLabel: 'Notifications',
+    drawerIcon: ({
+      tintColor
+    }) =&gt; (
+      &lt;Image
+        source={require('./imgs/02.png')}
+        style={[styles.icon, {tintColor: tintColor}]}
+      /&gt;
+    ),
+  };
+
+  render() {
+    return (
+      &lt;View style={styles.container}&gt;
+      &lt;Text&gt;This MyNotificationsScreen&lt;/Text&gt;
+      &lt;Button
+        onPress={() =&gt; this.props.navigation.navigate('DrawerOpen')}
+        title="Go back home"
+      /&gt;
+      &lt;/View&gt;
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  icon: {
+    width: 24,
+    height: 24,
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
+});
+
+const MyApp = DrawerNavigator({
+  Home: {
+    screen: MyHomeScreen,
+  },
+  Notifications: {
+    screen: MyNotificationsScreen,
+  },
+});
+</code></pre>
+</div>
+
+<p>其中</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>this.props.navigation.navigate('DrawerOpen')
+</code></pre>
+</div>
+
+<p>这是打开抽屉</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>this.props.navigation.navigate('DrawerClose')
+</code></pre>
+</div>
+
+<p>点击空白或者上面这句代码是关闭抽屉，</p>
+
+<p>navigationOptions里设置的是抽屉的标题或者图片</p>
+
+<p><img src="/img/Simple_1/20.gif" alt="" /></p>
+
+<p><a href="https://github.com/helloted/iOS_Demo/tree/master/DemoProject">完整代码Github</a></p>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/ios/2017/11/20/reactnative_1/" data-toggle="tooltip" data-placement="top" title="React Native(一)：基础">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/ios/2017/11/27/leakmonitor/" data-toggle="tooltip" data-placement="top" title="Runtime运用:埋点统计">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

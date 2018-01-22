@@ -1,6 +1,7 @@
 ---
 layout:     post
-title:      "【Python】*args和**kwargs"
+category:   Python
+title:      "*args和**kwargs"
 subtitle:   "Python之*args和**kwargs的理解和使用"
 date:       2016-11-18 12:00:00
 author:     "Ted"

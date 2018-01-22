@@ -1,6 +1,7 @@
 ---
 layout:     post
-title:      "【iOS】源码分析之AFNetworking(二)"
+category:   iOS
+title:      "源码分析之AFNetworking(二)"
 subtitle:   "AFHTTPSessionManager与AFURLSessionManager"
 date:       2017-05-26 12:00:00
 author:     "Ted"

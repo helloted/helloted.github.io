@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>事件传递、响应者链条 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/ios/2015/01/25/event/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/Http/bg.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>事件传递、响应者链条</h1>
+                    
+                    <h2 class="subheading">事件传递以及处理事件的响应者链条</h2>
+                    
+                    <span class="meta">Posted by Ted on January 25, 2015</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h3 id="一事件">一、事件</h3>
+
+<p><img src="/img/Simple_2/19.png" alt="" /></p>
+
+<p>iOS里有三种事件：触摸(touch)、加速(motion)、远程控制</p>
+
+<p>在UIResponder里，有以下事件处理</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code> <span class="c1">// 触摸事件
+</span><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">touchesBegan</span><span class="p">:(</span><span class="n">NSSet</span> <span class="o">*</span><span class="p">)</span><span class="nv">touches</span> <span class="nf">withEvent</span><span class="p">:(</span><span class="n">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="nv">event</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">touchesMoved</span><span class="p">:(</span><span class="n">NSSet</span> <span class="o">*</span><span class="p">)</span><span class="nv">touches</span> <span class="nf">withEvent</span><span class="p">:(</span><span class="n">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="nv">event</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">touchesEnded</span><span class="p">:(</span><span class="n">NSSet</span> <span class="o">*</span><span class="p">)</span><span class="nv">touches</span> <span class="nf">withEvent</span><span class="p">:(</span><span class="n">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="nv">event</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">touchesCancelled</span><span class="p">:(</span><span class="n">NSSet</span> <span class="o">*</span><span class="p">)</span><span class="nv">touches</span> <span class="nf">withEvent</span><span class="p">:(</span><span class="n">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="nv">event</span><span class="p">;</span>
+<span class="c1">// 加速计事件
+</span><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">motionBegan</span><span class="p">:(</span><span class="n">UIEventSubtype</span><span class="p">)</span><span class="nv">motion</span> <span class="nf">withEvent</span><span class="p">:(</span><span class="n">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="nv">event</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">motionEnded</span><span class="p">:(</span><span class="n">UIEventSubtype</span><span class="p">)</span><span class="nv">motion</span> <span class="nf">withEvent</span><span class="p">:(</span><span class="n">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="nv">event</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">motionCancelled</span><span class="p">:(</span><span class="n">UIEventSubtype</span><span class="p">)</span><span class="nv">motion</span> <span class="nf">withEvent</span><span class="p">:(</span><span class="n">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="nv">event</span><span class="p">;</span>
+<span class="c1">// 远程控制事件
+</span><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">remoteControlReceivedWithEvent</span><span class="p">:(</span><span class="n">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="nv">event</span><span class="p">;</span>
+</code></pre>
+</div>
+
+<h3 id="二寻找响应者uiresponder-事件传递">二、寻找响应者(UIResponder)-事件传递</h3>
+
+<p>响应者:继承UIResponder的对象称之为响应者对象，能够处理touchesBegan等触摸事件</p>
+
+<p>当一个Touch事件产生时，要先找到响应者，iOS通过Hit-Test机制来寻找响应者，每一个UIView(继承自UIResponder)都有以下的方法</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">UIView</span> <span class="o">*</span><span class="p">)</span><span class="nf">hitTest</span><span class="p">:(</span><span class="n">CGPoint</span><span class="p">)</span><span class="nv">point</span> <span class="nf">withEvent</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="nv">event</span><span class="p">;</span> 
+</code></pre>
+</div>
+
+<p>HitTest的顺序</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">UIApplication</span> <span class="o">-&gt;</span> <span class="n">UIWindow</span> <span class="o">-&gt;</span> <span class="n">Root</span> <span class="n">View</span> <span class="o">-&gt;</span> <span class="n">subview</span> <span class="o">-&gt;</span> <span class="err">···</span> <span class="o">-&gt;</span> <span class="n">initalView</span>
+</code></pre>
+</div>
+
+<ol>
+  <li>系统检测到手指触摸(Touch)操作时，将Touch 以UIEvent的方式加入UIApplication事件队列中。</li>
+  <li>UIApplication从事件队列中取出最新的触摸事件进行分发传递到UIWindow进行处理。</li>
+  <li>UIApplication和UIWindow通过<code class="highlighter-rouge">sendEvent:</code>方法传递事件</li>
+  <li>UIWindow 之后会通过<code class="highlighter-rouge">hitTest:withEvent:</code>方法寻找触碰点所在的视图</li>
+</ol>
+
+<p><code class="highlighter-rouge">hitTest:withEvent:</code>原理</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="c1">// point是该视图的坐标系上的点
+</span><span class="k">-</span> <span class="p">(</span><span class="n">UIView</span> <span class="o">*</span><span class="p">)</span><span class="nf">hitTest</span><span class="p">:(</span><span class="n">CGPoint</span><span class="p">)</span><span class="nv">point</span> <span class="nf">withEvent</span><span class="p">:(</span><span class="n">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="nv">event</span>
+<span class="p">{</span>
+    <span class="c1">// 1.判断自己能否接收触摸事件
+</span>    <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">userInteractionEnabled</span> <span class="o">==</span> <span class="nb">NO</span> <span class="o">||</span> <span class="n">self</span><span class="p">.</span><span class="n">hidden</span> <span class="o">==</span> <span class="nb">YES</span> <span class="o">||</span> <span class="n">self</span><span class="p">.</span><span class="n">alpha</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">.</span><span class="mo">01</span><span class="p">)</span> <span class="k">return</span> <span class="nb">nil</span><span class="p">;</span>
+    <span class="c1">// 2.判断触摸点在不在自己范围内
+</span>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">[</span><span class="n">self</span> <span class="nf">pointInside</span><span class="p">:</span><span class="n">point</span> <span class="nf">withEvent</span><span class="p">:</span><span class="n">event</span><span class="p">])</span> <span class="k">return</span> <span class="nb">nil</span><span class="p">;</span>
+    <span class="c1">// 3.从后往前遍历自己的子控件，看是否有子控件更适合响应此事件
+</span>    <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">subviews</span><span class="p">.</span><span class="n">count</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">UIView</span> <span class="o">*</span><span class="n">childView</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">subviews</span><span class="p">[</span><span class="nf">i</span><span class="p">];</span>
+        <span class="n">CGPoint</span> <span class="n">childPoint</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span> <span class="nf">convertPoint</span><span class="p">:</span><span class="n">point</span> <span class="nf">toView</span><span class="p">:</span><span class="n">childView</span><span class="p">];</span>
+        <span class="n">UIView</span> <span class="o">*</span><span class="n">fitView</span> <span class="o">=</span> <span class="p">[</span><span class="n">childView</span> <span class="nf">hitTest</span><span class="p">:</span><span class="n">childPoint</span> <span class="nf">withEvent</span><span class="p">:</span><span class="n">event</span><span class="p">];</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">fitView</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">fitView</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="c1">// 没有找到比自己更合适的view
+</span>    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<h3 id="三响应者链条">三、响应者链条</h3>
+
+<p>当找到最合适的响应者之后, 便会调用控件相应的touches方法来作具体处理. 并将该事件随着响应者链条往回传递, 交给上一个响应者来处理. (即调用super的touches方法)，从之前往下走的路线往上回传，在其中加入了Viewtroller来处理</p>
+
+<p>作用：这样设计是为了让一个事件能够被多个对象处理</p>
+
+<ol>
+  <li>
+    <p>如果view的控制器存在，就传递给控制器；如果控制器不存在，则将其传递给它的父View</p>
+  </li>
+  <li>
+    <p>在视图层次结构的最顶级视图，传递给ViewController</p>
+  </li>
+  <li>
+    <p>ViewController将事件传递给window对象进行处理</p>
+  </li>
+  <li>
+    <p>window对象继续将事件或消息传递给UIApplication对象</p>
+  </li>
+  <li>
+    <p>如果UIApplication也不能处理该事件或消息，响应者链条从头到尾，都未处理，则将其丢弃</p>
+
+    <p><img src="/img/Simple_1/02.png" alt="" /></p>
+  </li>
+</ol>
+
+<h3 id="四实例分析">四、实例分析</h3>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code>    <span class="n">UIButton</span> <span class="o">*</span><span class="n">button</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIButton</span> <span class="nf">buttonWithType</span><span class="p">:</span><span class="n">UIButtonTypeContactAdd</span><span class="p">];</span>
+    <span class="n">button</span><span class="p">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">CGRectMake</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">40</span><span class="p">);</span>
+    <span class="p">[</span><span class="n">button</span> <span class="nf">addTarget</span><span class="p">:</span><span class="n">self</span> <span class="nf">action</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="n">click</span><span class="p">)</span> <span class="n">forControlEvents</span><span class="o">:</span><span class="n">UIControlEventTouchUpInside</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">view</span> <span class="nf">addSubview</span><span class="p">:</span><span class="n">button</span><span class="p">];</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>2015-07-26 13:37:07.961 TouchTest[23440:4763810] 1   TouchTest                           0x000000010e3c0aab -[ViewController click] + 43
+2015-07-26 13:37:07.962 TouchTest[23440:4763810] 2   UIKit                               0x000000010f552d82 -[UIApplication sendAction:to:from:forEvent:] + 83
+2015-07-26 13:37:07.962 TouchTest[23440:4763810] 3   UIKit                               0x000000010f6d75ac -[UIControl sendAction:to:forEvent:] + 67
+2015-07-26 13:37:07.962 TouchTest[23440:4763810] 4   UIKit                               0x000000010f6d78c7 -[UIControl _sendActionsForEvents:withEvent:] + 450
+2015-07-26 13:37:07.962 TouchTest[23440:4763810] 5   UIKit                               0x000000010f6d6802 -[UIControl touchesEnded:withEvent:] + 618
+2015-07-26 13:37:07.962 TouchTest[23440:4763810] 6   UIKit                               0x000000010f5c07ea -[UIWindow _sendTouchesForEvent:] + 2707
+2015-07-26 13:37:07.962 TouchTest[23440:4763810] 7   UIKit                               0x000000010f5c1f00 -[UIWindow sendEvent:] + 4114
+2015-07-26 13:37:07.962 TouchTest[23440:4763810] 8   UIKit                               0x000000010f56ea84 -[UIApplication sendEvent:] + 352
+2015-07-26 13:37:07.963 TouchTest[23440:4763810] 9   UIKit                               0x00000001228dd75c -[UIApplicationAccessibility sendEvent:] + 85
+2015-07-26 13:37:07.963 TouchTest[23440:4763810] 10  UIKit                               0x000000010fd525d4 __dispatchPreprocessedEventFromEventQueue + 2926
+2015-07-26 13:37:07.963 TouchTest[23440:4763810] 11  UIKit                               0x000000010fd4a532 __handleEventQueue + 1122
+2015-07-26 13:37:07.963 TouchTest[23440:4763810] 12  CoreFoundation                      0x000000010f0d3c01 __CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE0_PERFORM_FUNCTION__ + 17
+2015-07-26 13:37:07.963 TouchTest[23440:4763810] 13  CoreFoundation                      0x000000010f0b90cf __CFRunLoopDoSources0 + 527
+2015-07-26 13:37:07.963 TouchTest[23440:4763810] 14  CoreFoundation                      0x000000010f0b85ff __CFRunLoopRun + 911
+2015-07-26 13:37:07.963 TouchTest[23440:4763810] 15  CoreFoundation                      0x000000010f0b8016 CFRunLoopRunSpecific + 406
+2015-07-26 13:37:07.964 TouchTest[23440:4763810] 16  GraphicsServices                    0x0000000112535a24 GSEventRunModal + 62
+2015-07-26 13:37:07.964 TouchTest[23440:4763810] 17  UIKit                               0x000000010f551134 UIApplicationMain + 159
+</code></pre>
+</div>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/ios/2014/10/15/life/" data-toggle="tooltip" data-placement="top" title="UIViewController生命周期">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/%E5%9F%BA%E7%A1%80/2015/02/01/data-1/" data-toggle="tooltip" data-placement="top" title="数据结构与算法(一):数据结构">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

@@ -1,6 +1,7 @@
 ---
 layout:     post
-title:      "【iOS】Objective-C混淆代码"
+category:   iOS
+title:      "Objective-C混淆代码"
 subtitle:   "如何将源代码的方法名和属性名混淆"
 date:       2016-08-12 12:00:00
 author:     "Ted"

@@ -1,6 +1,7 @@
 ---
 layout:     post
-title:      "【iOS】源码分析之AFNetworking(一)"
+category:   iOS
+title:      "源码分析之AFNetworking(一)"
 subtitle:   "AFNetworking整体架构分析"
 date:       2017-05-26 12:00:00
 author:     "Ted"

@@ -1,6 +1,7 @@
 ---
 layout:     post
-title:      "【iOS】Runtime运用:埋点统计"
+category:   iOS
+title:      "Runtime运用:埋点统计"
 subtitle:   "通过Runtime的黑魔法埋点来检测渲染时间和内存泄漏"
 date:       2017-11-27 12:00:00
 author:     "Ted"

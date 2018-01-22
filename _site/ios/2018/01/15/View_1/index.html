@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>View编程指南 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/ios/2018/01/15/View_1/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/bg_01.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>View编程指南</h1>
+                    
+                    <h2 class="subheading">《View Programming Guide for iOS》文档翻译</h2>
+                    
+                    <span class="meta">Posted by Ted on January 15, 2018</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<p>苹果官方文档<a href="https://developer.apple.com/library/content/documentation/WindowsViews/Conceptual/ViewPG_iPhoneOS/Introduction/Introduction.html#//apple_ref/doc/uid/TP40009503-CH1-SW2">View Programming Guide for iOS</a></p>
+
+<h3 id="一简介">一、简介</h3>
+
+<p>在iOS中，您可以使用windows和views在屏幕上显示应用程序的内容。 Windows本身没有任何可见的内容，但为应用程序的views提供了一个基本的容器。 views定义了您想要填充某些内容的windows的一部分。 例如，您可能具有显示图像，文本，形状或其组合的views。 您还可以使用views来组织和管理其他views。</p>
+
+<p>每个应用程序至少有一个windows和一个views来显示其内容。 UIKit和其他系统框架提供了预定义的views，您可以使用它来呈现您的内容。 这些view的范围从简单的按钮和文本标签到更复杂的view，如tableview，pickerview和scroll view。 在预定义views不提供您需要的地方，您还可以定义自定义views并自行管理views和事件处理。</p>
+
+<h4 id="view管理应用程序可见内容">View管理应用程序可见内容</h4>
+
+<p>view是UIView类（或其子类之一）的一个实例对象，并在应用程序window中管理矩形区域。view负责绘制内容，处理多点触控事件以及管理任何子view的布局。绘图涉及使用图形技术，例如Core Graphics，OpenGL ES或UIKit在view的矩形区域内绘制形状，图像和文本。view通过使用手势识别器或通过直接处理触摸事件来响应其矩形区域中的触摸事件。在view层次结构中，父view负责定位和调整其子view的大小，并且可以动态地执行。这种动态修改子view的功能使您的view能够适应不断变化的条件，如界面旋转和动画。</p>
+
+<p>您可以将view视为用于构建用户界面的构建块。您不是使用一个view呈现所有内容，而是经常使用多个view来构建view层次结构。层次结构中的每个view呈现用户界面的特定部分，通常针对特定类型的内容进行优化。例如，UIKit具有专门用于呈现图像，文本和其他类型的内容的view。</p>
+
+<h4 id="windows协调显示views">Windows协调显示Views</h4>
+
+<p>Windows是UIWindow类的一个实例，并处理应用程序用户界面的整体表示。 Windows使用view（及其拥有的view controller）来管理与可见view hierarchy的交互以及对可见view hierarchy的更改。 大多数情况下，您的应用程序的Windows永远不会改变。 Windows创建后，它保持不变，只有它显示的view改变。 每个应用程序至少有一个Window，在应用程序的主屏幕上显示应用程序的用户界面。 如果外部显示器连接到设备，应用程序可以创建另一个Window来在该屏幕上显示内容。</p>
+
+<h4 id="animations为ui交互提供可见反馈">Animations为UI交互提供可见反馈</h4>
+
+<p>动画为用户提供关于view hierarchy变化的可见反馈。 系统定义了标准动画，用于显示不同的view组之间的presenting model view和过渡。 然而，view的许多属性也可以直接动画。 例如，通过动画，您可以更改view的透明度，其在屏幕上的位置，大小，背景颜色或其他属性。 如果直接使用view的底层Core Animation layer对象，则还可以执行许多其他动画。</p>
+
+<h4 id="interface-builder">Interface Builder</h4>
+
+<p>Interface Builder是一个应用程序，用于以图形方式构建和配置应用程序的Windows和view。 使用Interface Builder，您可以组装view并将它们放置在一个nib文件中，该文件是存储view和其他对象的冻干版本的资源文件。 当你在运行时加载一个nib文件的时候，它里面的对象被重新编译成实际的对象，你的代码可以通过编程来操作。</p>
+
+<p>Interface Builder极大地简化了您在创建应用程序的用户界面方面所做的工作。 由于对Interface Builder和nib文件的支持已经整合到iOS中，所以将nib文件合并到您的应用程序的设计中需要一点努力。</p>
+
+<h4 id="其他">其他</h4>
+
+<p>因为view是非常复杂和灵活的对象，所以不可能在一个文档中覆盖所有的行为。 但是，其他文档可帮助您了解管理view和用户界面的其他方面。</p>
+
+<ul>
+  <li>view控制器是管理应用程序view的重要组成部分。 一个view controller主持所有的view在一个单一的view hierarchy，并方便在屏幕上显示这些view。 有关view controller和他们扮演的角色的更多信息, <a href="https://developer.apple.com/library/content/featuredarticles/ViewControllerPGforiPhoneOS/index.html#//apple_ref/doc/uid/TP40007457"><em>View Controller Programming Guide for iOS</em></a>.</li>
+  <li>view是应用程序中手势和触摸事件的关键接收者， <em>Event Handling Guide for iOS</em>.</li>
+  <li>自定义view必须使用可用的绘图技术来呈现其内容。 有关使用这些技术来绘制view的信息，<a href="https://developer.apple.com/library/content/documentation/2DDrawing/Conceptual/DrawingPrintingiOS/Introduction/Introduction.html#//apple_ref/doc/uid/TP40010156"><em>Drawing and Printing Guide for iOS</em></a>.</li>
+  <li>在标准view动画不够用的地方，可以使用Core Animation。 有关使用Core Animation实现动画的信息, <a href="https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/CoreAnimation_guide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40004514"><em>Core Animation Programming Guide</em></a>.</li>
+</ul>
+
+<h3 id="二view-and-window-架构">二、View and Window 架构</h3>
+
+<p>View和window呈现您的应用程序的用户界面，并处理与该界面的交互。 UIKit和其他系统框架提供了许多views，你可以很少或根本没有修改就直接使用或者根据需要自定义View。</p>
+
+<p>无论您使用系统View还是创建自己的自定义View，都需要了解UIView和UIWindow类提供的基础结构。 这些课程提供先进的设施来管理View的布局和表示。 了解这些设施的工作方式对于在应用程序发生更改时确保View的行为是非常重要的。</p>
+
+<h4 id="view架构基础">View架构基础</h4>
+
+<p>大部分你可能想要做的事情都是通过view对象来完成的 - UIView类的实例。view对象在屏幕上定义了一个矩形区域，并处理该区域中的drawing和touch事件。View还可以作为其他view的父项，并协调这些view的布局和大小。 UIView类在管理这些View之间的这些关系方面做了大部分工作，但是您也可以根据需要自定义默认行为。</p>
+
+<p>View与Core Animation Layer一起工作来处理View内容的渲染和动画。 UIKit中的每个View都由一个layer对象（通常是CALayer类的一个实例）支持，这个layer管理View的后备存储并处理与View相关的动画。你执行的大多数操作应该通过UIView接口。但是，在需要更多地控制view的渲染或动画行为的情况下，您可以通过其layer执行操作。</p>
+
+<p>要理解View和图层之间的关系，有助于看一个例子。下图显示了ViewTransitions示例应用程序的view hierarchy以及与底层Core Animation layer的关系。每个View都有一个对应的layer对象，可以通过该view的layer属性访问。 （因为bar按钮项不是View，所以不能直接访问它的图层。）在这些layer对象的后面是Core Animation渲染对象，最后是用于管理屏幕上实际位的硬件缓冲区。</p>
+
+<p><img src="/img/Simple_3/10.jpg" alt="img" /></p>
+
+<p>Core Animation layer对象的使用对性能有重要的影响。 view对象的实际绘图代码被尽可能少地调用，并且当调用代码时，结果被Core Animation缓存，并在稍后被重用。 重用已经呈现的内容消除了通常需要更新view的昂贵的绘图周期。 在动画中重复使用这些内容是非常重要的，在动画中可以操纵现有的内容。 这种重复使用比创建新内容要便宜得多。</p>
+
+<h4 id="view的层次结构和管理子view">View的层次结构和管理子View</h4>
+
+<p>除了提供自己的内容之外，view还可以充当其他view的容器。当一个view包含另一个view时，两个view之间会创建一个父子关系。关系中的子view称为subview，父View称为superview。创建这种类型的关系对于应用程序的外观和应用程序的行为都有影响。
+从视觉上来说，子view的内容掩盖了其父view的全部或部分内容。如果子view是完全不透明的，则子view占用的区域完全遮蔽了父view的相应区域。如果子View是部分透明的，则来自两个view的内容在被显示在屏幕上之前被混合在一起。每个superview将其子view存储在有序数组中，并且该数组中的顺序也会影响每个子View的可见性。如果两个兄弟子view彼此重叠，则最后添加的子view（或移动到子view数组的末尾）会出现在另一个之上。
+Superview - subview关系也会影响多个view的行为。更改父view的大小会产生连锁效应，导致任何子view的大小和位置也发生变化。当您更改父view的大小时，可以通过适当地配置view来控制每个子view的大小调整行为。影响子view的其他更改包括隐藏superview，更改superview的透明度，或将数学变换应用于superview的坐标系。
+View层次结构中的排列也决定了应用程序如何响应事件。当在特定view内发生触摸时，系统将带有触摸信息的事件对象直接发送到该view进行处理。但是，如果view不处理特定的触摸事件，它可以将事件对象传递给其superview。如果superview不处理事件，它将事件对象传递给它的superview，等等这样一个响应者链。特定的view也可以将事件对象传递给介入的响应者对象，如viewcontroller。如果没有对象处理事件，它最终会到达application对象，通常会丢弃它。</p>
+
+<h4 id="view的绘图周期">View的绘图周期</h4>
+
+<p>UIView类使用按需绘制模型来呈现内容。当一个view第一次出现在屏幕上时，系统要求它画出其内容。系统捕获此内容的snapshot，并将该snapshot用作view的视觉表示。如果你永远不改变view的内容，view的绘图代码可能永远不会再被调用。大多数涉及view的操作都会重用snapshot。如果您更改内容，则通知系统view已更改。这个View会重新绘制View并捕获新结果的快照。</p>
+
+<p>当你的view的内容改变时，你不要直接重绘这些改变。而是使用<code class="highlighter-rouge">setNeedsDisplay</code>或<code class="highlighter-rouge">setNeedsDisplayInRect：</code>方法使view无效。这些方法告诉系统，view的内容改变了，需要在下一个机会重新绘制。在启动任何绘图操作之前，系统等待直到当前run loop的结束。这种延迟使您有机会使多个view失效，从您的层次结构中添加或删除view，隐藏view，调整view大小，并一次重新定位view。然后你所做的所有改变都会同时反映出来。</p>
+
+<p>注：更改view的(geometry)几何图形不会自动导致系统重新绘制view的内容。view的contentMode属性确定如何解释对geometry的更改。大多数contentMode在View的边界内拉伸或重新定位现有的快照，而不是创建一个新的快照。</p>
+
+<p>当呈现view的内容时，实际的绘图过程会根据View及其配置而变化。系统view通常实现私有绘图方法来呈现其内容。这些相同的系统View经常公开可用于配置view的实际外观的接口。对于自定义UIView子类，通常会覆盖View的<code class="highlighter-rouge">drawRect：</code>方法，并使用该方法绘制view的内容。还有其他方法可以提供view的内容，比如直接设置layer的内容，但是覆盖<code class="highlighter-rouge">drawRect：</code>方法是最常用的技术。</p>
+
+<h4 id="content-modes">Content Modes</h4>
+
+<p>每个view都有一个Content Modes，用于控制view如何回应其内容以响应View几何体的变化以及是否回收其内容。当view第一次显示时，它像往常一样渲染其内容，并将结果捕获在底层位图中。之后，对view’s geometry的更改并不总是会导致重新创建位图。相反，contentMode属性中的值决定是否缩放位图以适应新的边界，或者只是固定到View的一个角或边缘。</p>
+
+<p>view的content modes在您执行以下操作时应用：</p>
+
+<ul>
+  <li>更改view的frame或bounds矩形的宽度或高度。</li>
+  <li>将包含比例因子的变换分配给view的transform属性。</li>
+</ul>
+
+<p>默认情况下，大多数view的contentMode属性被设置为UIViewContentModeScaleToFill，这会导致view的内容被缩放以适应新的frame size。下图显示了一些可用的内容模式的结果。从图中可以看出，并不是所有的content mode都会导致view的边界被完全填满，而那些content mode可能会扭曲view的内容。</p>
+
+<p><img src="/img/Simple_3/11.jpg" alt="img" /></p>
+
+<p>Content Modes对回收view的内容非常有用，但是当您特别希望自定义view在缩放和调整大小操作期间重新绘制自己的内容时，您还可以将内容模式设置为UIViewContentModeRedraw值。 将view的Content Modes设置为该值会迫使系统调用view的<code class="highlighter-rouge">drawRect：</code>方法来响应几何变化。 一般来说，你应该尽可能的避免使用这个值，你一定不要在标准系统view中使用它.</p>
+
+<h4 id="可伸缩view">可伸缩View</h4>
+
+<p>您可以指定View的一部分为可拉伸的，以便当view的大小改变时，只有可拉伸部分的内容受到影响。 您通常在按钮或其他View中使用可拉伸区域，其中部分view定义了可重复的图案。 您指定的可拉伸区域可以允许沿View的一个或两个轴伸展。 当然，当沿着两个轴伸展View时，view的边缘也必须定义可重复的图案以避免任何失真。  来自每个view的原始像素的颜色被复制以填充大view中的对应区域。</p>
+
+<p><img src="/img/Simple_3/12.jpg" alt="img" /></p>
+
+<p>您可以使用contentStretch属性指定view的可拉伸区域。该属性接受一个矩形，其值被规范化为0.0到1.0的范围。当拉伸View时，系统将这些归一化值乘以view的当前边界和比例因子，以确定哪些像素或像素需要拉伸。每当View边界发生变化时，使用规范化值就可以减少更新contentStretch属性的必要性。</p>
+
+<p>view的content mode在确定如何使用view的可拉伸区域方面也起着重要作用。仅当content mode会导致View的内容被缩放时才使用可伸缩区域。这意味着只有UIViewContentModeScaleToFill，UIViewContentModeScaleAspectFit和UIViewContentModeScaleAspectFill内容模式才支持可伸缩view。如果指定将内容固定到边或角的内容模式（因此实际上不会缩放内容），则view将忽略可拉伸区域。</p>
+
+<p>注意：在可拉伸的UIImage对象为view指定背景时，才建议使用contentStretch属性。 可伸缩View完全在Core Animation layer中处理，通常可以提供更好的性能。</p>
+
+<h4 id="内置的动画支持">内置的动画支持</h4>
+
+<p>在每个view背后都有一个layer对象的好处之一是可以轻松地动画许多与view相关的更改。动画是向用户传递信息的有效方法，在设计应用程序时应始终考虑动画。 UIView类的许多属性都是可以动画的，也就是说，存在从一个值到另一个值的动画的半自动支持。要为其中一个动画属性执行动画，您只需执行以下操作：</p>
+
+<ul>
+  <li>
+    <p>告诉UIKit你想要执行一个动画。</p>
+  </li>
+  <li>
+    <p>更改属性的值。</p>
+  </li>
+</ul>
+
+<p>你可以在UIView对象上动画的属性如下：</p>
+
+<ul>
+  <li>
+    <p>Frame - 使用此动画设置为view更改位置和大小变化。</p>
+  </li>
+  <li>bounds - 使用这个动画来改变view的大小。</li>
+  <li>center - 使用此可以动画显示view的位置。</li>
+  <li>transform - 使用它来旋转或缩放view。</li>
+  <li>alpha - 使用这个来改变view的透明度。</li>
+  <li>backgroundColor - 使用此更改view的背景颜色。</li>
+  <li>contentStretch - 使用它来改变view内容的拉伸方式。</li>
+</ul>
+
+<p>动画非常重要的一个地方是从一组views转换到另一个views。通常，您使用view contoller来管理与用户界面各部分之间的重大更改相关联的动画。例如，对于涉及从较高级别信息到较低级别信息的接口，通常使用导航控制器来管理显示每个连续数据级别的view之间的转换。但是，您也可以使用动画而不是view controller在两组View之间创建转换。你可能会在标准的view controller动画没有产生你想要的结果的地方这样做。</p>
+
+<p>除了使用UIKit类创建的动画外，还可以使用Core Animation layer创建动画。layer可以更好地控制动画的时间和属性。</p>
+
+<h4 id="view的几何和坐标系统">View的几何和坐标系统</h4>
+
+<p>UIKit中的默认坐标系统的原点位于左上角，并具有从原点向下和向右延伸的轴。 坐标值使用浮点数来表示，无论底层的屏幕分辨率如何，都可以精确地布局和定位内容。 除了屏幕坐标系之外，window和view还定义了自己的局部坐标系，使您可以指定相对于window或view原点的坐标，而不是相对于屏幕。</p>
+
+<p>重要提示：某些iOS技术定义默认坐标系，其原点和方向与UIKit使用的坐标系不同。 例如，Core Graphics和OpenGL ES使用坐标系统，坐标系统的原点位于View或窗口的左下角，y轴相对于屏幕向上。 绘制或创建内容时，您的代码必须考虑到这些差异，并根据需要调整坐标值（或坐标系的默认方向）。</p>
+
+<h4 id="frame-bounds-and-center">Frame, Bounds, and Center</h4>
+
+<ul>
+  <li>The <code class="highlighter-rouge">frame</code> 包含了 <em>frame 矩形</em>, 在superview中定义View的大小和位置</li>
+  <li>The <code class="highlighter-rouge">bounds</code> 包含了 <em>bounds 矩形</em>, 它在view的本地坐标系统中指定View的大小（及其内容的原点）。</li>
+  <li>The <code class="highlighter-rouge">center</code> 包含了在superview坐标系统中view的中点的位置</li>
+</ul>
+
+<p>您主要使用center和frame属性来操作当前view的几何图形。例如，在构建view层次结构或在运行时更改view的位置或大小时使用这些属性。如果您只改变view的位置（而不是View的大小），则中心属性是更好的选择。即使缩放或旋转因子已添加到View的变换中，属性中的值始终有效。对于frame属性中的值也是如此，如果view的变换不等于标识变换，则认为该值是无效的。</p>
+
+<p>绘图时主要使用bounds属性。bounds矩形在View的本地坐标系中表示。此矩形的默认原点是（0，0），其大小与frame矩形的大小相匹配。您在此矩形内绘制的任何东西都是view可见内容的一部分。如果更改bounds矩形的原点，则在新矩形内绘制的内容将成为view可见内容的一部分。</p>
+
+<p>图显示了图像View的frame和bounds之间的关系。在图中，图像view的左上角位于其superivew坐标系中的点（40,40），矩形的大小是240×380点。对于bounds矩形，原点为（0,0），矩形的大小为240乘380点。</p>
+
+<p><img src="/img/Simple_3/13.jpg" alt="img" /></p>
+
+<p>虽然更改frame，bounds和center的方法是相互独立的，但其中一个属性的更改会影响其他属性，方法如下：</p>
+
+<ul>
+  <li>当您设置frame属性时，bounds属性中的size值将更改为与frame矩形的新大小相匹配。 center属性中的值同样会更改为匹配frame矩形的新中心点。</li>
+  <li>当您设置center属性时，frame中的origin值会相应更改。</li>
+  <li>设置bounds属性的大小时，frame属性中的size值会更改为与bounds矩形的size相匹配。</li>
+</ul>
+
+<p>默认情况下，view的frame不会剪切到其superview的frame。 因此，任何超出superview frame的子view都将被完整地呈现。 不过，您可以通过将superview的clipsToBounds属性设置为YES来更改此行为。 无论子view是否可视化剪切，触摸事件总是尊重目标view的superview的边界矩形。 换句话说，发生在superview bounds矩形之外的view的一部分中的触摸事件不会被传送到该view。</p>
+
+<h4 id="坐标系统转换">坐标系统转换</h4>
+
+<p>坐标系转换提供了一种快速方便地更改view（或其内容）的方法。 <em>affine transform</em>是一个数学矩阵，指定一个坐标系中的点如何映射到不同坐标系中的点。 您可以将<em>affine transform</em>应用于整个view，以相对于其superivew更改View的大小，位置或方向。 您还可以在绘图代码中使用<em>affine transform</em>对各个渲染内容进行相同类型的操作。 如何应用仿射变换取决于上下文：</p>
+
+<ul>
+  <li>要修改整个view，请在View的transform属性中修改<em>affine transform</em>。</li>
+  <li>要修改view的特定内容,用<code class="highlighter-rouge">drawRect：</code>方法，请修改与活动图形上下文关联的transform。</li>
+</ul>
+
+<p>当您要实现动画时，通常会修改view的transform属性。 例如，您可以使用此属性来创建围绕其中心点旋转view的动画。 您不会使用此属性对您的view进行永久更改，例如在其superview的坐标空间内修改其view的位置或大小。 对于这种类型的更改，您应该修改view的frame矩形。</p>
+
+<p>注意：修改view的transform属性时，所有的转换都是相对于view的中心点执行的。</p>
+
+<p>每个子View的坐标系建立在其super的坐标系上。所以当你修改一个View的transform属性时，这个改变会影响view及其所有的subview。但是，这些更改仅影响屏幕上view的最终呈现。由于每个view都是绘制其内容，并将其子view相对于其bounds进行布局，所以在绘制和布局过程中可以忽略其superview的变换。</p>
+
+<p>图展示了两种不同的旋转因素在渲染时如何组合。在View的<code class="highlighter-rouge">drawRect：</code>方法内部，对shape应用45度旋转因子会使该shape旋转45度。将单独的45度旋转因子应用于view，然后使shape看起来旋转90度。相对于绘制的view，shape仍然只旋转了45度，但view旋转使其看起来被旋转了更多。</p>
+
+<p><img src="/img/Simple_3/14.jpg" alt="img" /></p>
+
+<p>重要提示：如果View的transform属性不是标识transform，那么该View的frame属性的值是未定义的，必须忽略。 将变换应用于view时，必须使用view的bounds和center属性来获取view的size和position。 任何子view的frame矩形仍然有效，因为它们是相对于view的bounds</p>
+
+<h4 id="view的运行时交互模型">View的运行时交互模型</h4>
+
+<p>每当用户与您的用户界面进行交互时，或者您自己的代码以编程方式更改某些内容时，都会在UIKit内部发生一系列复杂的事件来处理该交互。 在这个序列的特定时间点，UIKit会调用您的Views，并让他们有机会代表您的应用程序进行响应。 理解这些标注点对于理解View适合系统的位置很重要。 图显示了用户触摸屏幕开始的事件的基本顺序，以图形系统作为响应更新屏幕内容结束。 任何由程序启动的动作也会发生相同的事件序列。</p>
+
+<p><img src="/img/Simple_3/15.jpg" alt="img" /></p>
+
+<ol>
+  <li>
+    <p>用户触摸屏幕。
+硬件将触摸事件报告给UIKit框架。
+UIKit框架将触摸包装到UIEvent对象中并将其分派到相应的View。
+view的事件处理代码响应事件。例如，您的代码可能会：</p>
+  </li>
+  <li>
+    <ul>
+      <li>更改view或其subview的属性（frame，bounds，alpha等）。</li>
+      <li>调用setNeedsLayout方法将view（或subviews）标记为需要布局更新。</li>
+      <li>调用setNeedsDisplay或setNeedsDisplayInRect：方法将view（或其subviews）标记为需要重绘。</li>
+      <li>通知controllers有关对某些数据的更改。</li>
+    </ul>
+  </li>
+  <li>
+    <p>当然，由你来决定这些view应该做哪些事情以及应该调用哪些方法。
+如果view的几何因任何原因而改变，则UIKit根据以下规则更新其subview：</p>
+  </li>
+  <li>
+    <ul>
+      <li>
+        <p>如果您为view配置了autoresizing规则，则UIKit会根据这些规则调整每个view。</p>
+      </li>
+      <li>
+        <p>如果view实现了layoutSubviews方法，UIKit会调用它。</p>
+
+        <p>您可以在自定义view中重写此方法，并使用它来调整任何subview的位置和大小。</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>如果任何view的任何部分被标记为需要重绘，则UIKit会要求view重绘本身。
+对于显式定义<code class="highlighter-rouge">drawRect：</code>方法的自定义view，UIKit调用该方法。这个方法的实现应该尽可能快地重绘view的指定区域，而不是其他的。此时不要进行额外的布局更改，也不要对应用程序的数据模型进行其他更改。此方法的目的是更新view的可视内容。</p>
+  </li>
+  <li>
+    <p>标准系统view通常不执行<code class="highlighter-rouge">drawRect：</code>方法，而是在这个时候管理他们的绘图。</p>
+  </li>
+  <li>
+    <p>任何更新的view都会与应用程序的其余可见内容合成，并发送到图形硬件进行显示。</p>
+  </li>
+  <li>图形硬件将渲染的内容传输到屏幕上。</li>
+</ol>
+
+<p>注意：上述更新模型主要适用于使用标准系统view和绘图技术的应用程序。 使用OpenGL ES进行绘制的应用程序通常会配置一个全屏View，并直接绘制到关联的OpenGL ES图形上下文中。 在这种情况下，view仍然可以处理触摸事件，但由于它是全屏的，所以不需要布置subviews。</p>
+
+<p>在前面的一系列步骤中，您自定义View的主要集成点是：</p>
+
+<ul>
+  <li>事件处理方法:
+    <ul>
+      <li><code class="highlighter-rouge">touchesBegan:withEvent:</code></li>
+      <li><code class="highlighter-rouge">touchesMoved:withEvent:</code></li>
+      <li><code class="highlighter-rouge">touchesEnded:withEvent:</code></li>
+      <li><code class="highlighter-rouge">touchesCancelled:withEvent:</code></li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">layoutSubviews</code> 方法</li>
+  <li><code class="highlighter-rouge">drawRect:</code> 方法</li>
+</ul>
+
+<p>这些是view中最常用的重写方法，但您可能不需要重写所有这些方法。 如果使用手势识别器来处理事件，则不需要重写任何事件处理方法。 同样，如果您的view不包含subview或其大小不会更改，则没有理由重写layoutSubviews方法。 最后，只有在view的内容可以在运行时更改并且使用本技术（如UIKit或Core Graphics）进行绘制时，才需要<code class="highlighter-rouge">drawRect：</code>方法。</p>
+
+<h4 id="高效地使用view">高效地使用View</h4>
+
+<blockquote>
+  <p>View不总是有一个相应的view controller</p>
+</blockquote>
+
+<p>​	view和viewcontroller之间很少有一对一的关系。 viewcontroller的工作是管理一个View层次结构，通常由多个view组成，用于实现一些独立的功能。 对于iPhone应用程序，每个view层次结构通常填充整个屏幕，但对于iPad应用程序，view层次结构可能只填充屏幕的一部分。</p>
+
+<p>​	在设计应用程序的用户界面时，重要的是要考虑view controller将扮演的角色。 view controller提供了许多重要的行为，例如协调屏幕上的view显示，协调从屏幕上删除这些view，响应低内存警告释放内存，以及响应接口方向更改而旋转view。</p>
+
+<blockquote>
+  <p>最小化自定义绘图</p>
+</blockquote>
+
+<p>虽然自定义view有时是必要的，但它也是你应该尽可能避免的东西。 只有当现有系统View类不提供所需的外观或功能时，才能真正做到任何自定义绘图。 任何时候，您的内容都可以与现有View的组合进行组合，最好的办法就是将这些view对象组合成一个自定义的view层次结构。</p>
+
+<blockquote>
+  <p>利用content mode</p>
+</blockquote>
+
+<p>content mode可以减少重绘view的时间。 默认情况下，view使用UIViewContentModeScaleToFill内容模式，该模式缩放view的现有内容以适合view的框架矩形。 您可以根据需要更改此模式，以不同的方式调整您的内容，但是如果可以的话，您应该避免使用UIViewContentModeRedraw内容模式。 无论哪种内容模式生效，都可以通过调用setNeedsDisplay或setNeedsDisplayInRect：来强制view重绘其内容。</p>
+
+<blockquote>
+  <p>尽可能声明View不透明</p>
+</blockquote>
+
+<p>UIKit使用每个view的opaque属性来确定view是否可以优化合成操作。 将自定义view的此属性值设置为YES会告诉UIKit它不需要在view后面呈现任何内容。 较少的渲染会导致您的绘图代码的性能提高，并且通常会受到鼓励。 当然，如果将opaque属性设置为YES，则View必须完全填充完全不透明的内容。</p>
+
+<blockquote>
+  <p>滚动时调整view的绘图行为</p>
+</blockquote>
+
+<p>滚动可以在很短的时间内产生大量的view更新。 如果您的view的绘制代码没有适当地调整，则view的滚动性能可能会很低。 在开始滚动操作时，不要试图确保view的内容始终处于原始状态，而应考虑更改view的行为。 例如，您可以暂时降低渲染内容的质量，或在滚动正在进行时更改content mode。 当滚动停止时，您可以将view返回到之前的状态，并根据需要更新内容。</p>
+
+<blockquote>
+  <p>不要通过嵌入subview来自定义控件</p>
+</blockquote>
+
+<p>虽然在技术上可以将subview添加到标准系统控件（从UIControl继承的对象），但不应该以这种方式定制它们。 支持自定义的控件通过控件类本身的明确的，记录良好的接口来实现。 例如，UIButton类包含设置按钮的标题和背景图像的方法。 使用定义的定制点意味着您的代码将始终正常工作。 通过在按钮内部嵌入自定义图像view或标签来限制这些方法，如果按钮的实现发生更改，则可能会导致应用程序现在或将来某个时刻的行为不正确。</p>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/css/2017/12/20/flexbox/" data-toggle="tooltip" data-placement="top" title="Flexbox布局指南">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/ios/2018/01/15/View_2/" data-toggle="tooltip" data-placement="top" title="View编程指南(二)">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

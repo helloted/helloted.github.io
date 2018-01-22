@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>多线程(五):通信 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/ios/2016/05/28/ios-Thread-5/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>多线程(五):通信</h1>
+                    
+                    <h2 class="subheading">iOS多线程之线程通信</h2>
+                    
+                    <span class="meta">Posted by Ted on May 28, 2016</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<p>苹果官方文档<a href="https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/Multithreading/AboutThreads/AboutThreads.html#//apple_ref/doc/uid/10000057i-CH6-SW10">通信</a></p>
+
+<p>虽然一个好的设计可以最大限度地减少所需的通信量，但是在某些时候，线程之间的通信变得非常必要 （一个线程的工作是为你的应用程序工作，但是如果这个工作的结果从未被使用过，那么它有什么用处？）线程可能需要处理新的工作请求或者向应用程序的主线程报告进度。 在这些情况下，您需要一种方法来从一个线程获取信息到另一个线程。 幸运的是，线程共享相同的进程空间的事实意味着你有很多选择进行通信。</p>
+
+<p>线程之间有很多交流的方式，每种方式都有自己的优点和缺点。 配置线程本地存储列出了可以在OS X中使用的最常见的通信机制。（除了消息队列和Cocoa分布式对象，这些技术在iOS中也是可用的。）</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>机制</th>
+      <th>描述</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>直接消息传递</td>
+      <td>Cocoa应用程序支持直接在其他线程上 perform selectors的功能。 这个能力意味着一个线程本质上可以在任何其他线程上执行一个方法。 由于它们是在目标线程的上下文中执行的，因此以这种方式发送的消息会自动在该线程上进行序列化</td>
+    </tr>
+    <tr>
+      <td>全局变量，共享内存和对象</td>
+      <td>在两个线程之间传递信息的另一个简单方法是使用全局变量，共享对象或共享内存块。 尽管共享变量快速而简单，但它们比直接消息更脆弱。 共享变量必须用锁或其他同步机制小心保护，以确保代码的正确性。 不这样做可能会导致竞争状况，数据损坏或崩溃。</td>
+    </tr>
+    <tr>
+      <td>条件</td>
+      <td>条件是一个同步工具，您可以用它来控制线程何时执行特定部分的代码。 你可以把条件看成守门员，让线程只有在符合规定的条件时才能运行</td>
+    </tr>
+    <tr>
+      <td>Runloop源</td>
+      <td>自定义运行循环源是您设置为在线程上接收特定于应用程序的消息的源循环源。 因为它们是事件驱动的，运行循环来源会让你的线程在无所事事的时候自动进入休眠状态，从而提高线程的效率。</td>
+    </tr>
+    <tr>
+      <td>Ports and sockets</td>
+      <td>基于端口的通信是两个线程之间通信的更复杂的方式，但它也是一种非常可靠的技术。 更重要的是，端口和套接字可用于与外部实体（如其他进程和服务）进行通信。 为了提高效率，端口是使用运行循环源实现的，所以当没有数据在端口上等待时，线程会休眠。</td>
+    </tr>
+    <tr>
+      <td>消息队列(mac)</td>
+      <td>传统的多处理服务定义了用于管理传入和传出数据的先入先出（FIFO）队列抽象。 尽管消息队列简单方便，但并不像其他通信技术那样高效。</td>
+    </tr>
+    <tr>
+      <td>分布式对象(mac)</td>
+      <td>分布式对象是Cocoa技术，提供基于端口通信的高级实现。 虽然有可能使用这种技术进行线程间通信，但由于会产生大量的开销，所以这样做是非常令人沮丧的。 分布式对象更适合与其他进程通信，其中进程之间的开销已经很高。</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/ios/2016/05/27/ios-Thread-4/" data-toggle="tooltip" data-placement="top" title="多线程(四):同步">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/ios/2016/06/03/properyword/" data-toggle="tooltip" data-placement="top" title="内存管理、属性关键字">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

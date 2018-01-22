@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>进程/线程间通信 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/ios/2017/10/20/thread_message/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>进程/线程间通信</h1>
+                    
+                    <h2 class="subheading">iOS开发中多线程的通信</h2>
+                    
+                    <span class="meta">Posted by Ted on October 20, 2017</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h3 id="一线程间通信">一、线程间通信</h3>
+
+<p>因为线程是共享内存空间的，所以线程间通信相比于进程间通信会简单一些，线程间通信的体现</p>
+
+<ul>
+  <li>1个线程传递数据给另1个线程</li>
+  <li>在1个线程中执行完特定任务后，转到另1个线程继续执行任务</li>
+</ul>
+
+<p>在iOS多线程开发中，有NSObject、NSThread、GCD、NSOpeartion几种方式，对应的线程间通信也有几种</p>
+
+<h4 id="1nsobject">1、NSObject</h4>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="cm">/*
+ *  回到主线程执行，执行self的showImage方法，参数是image
+ */</span>
+<span class="p">[</span><span class="n">self</span> <span class="nf">performSelectorOnMainThread</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nf">showImage</span><span class="p">:)</span> <span class="n">withObject</span><span class="o">:</span><span class="n">image</span> <span class="n">waitUntilDone</span><span class="o">:</span><span class="nb">YES</span><span class="p">];</span>
+
+<span class="c1">// waitUntilDone的含义:
+//    如果传入的是YES: 那么会等到主线程中的方法执行完毕, 才会继续执行下面其他行的代码
+//    如果传入的是NO: 那么不用等到主线程中的方法执行完毕, 就可以继续执行下面其他行的低吗
+</span></code></pre>
+</div>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="cm">/*
+ *  去xx线程执行aSelector方法，参数是arg
+ */</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">performSelector</span><span class="p">:(</span><span class="n">SEL</span><span class="p">)</span><span class="nv">aSelector</span> <span class="nf">onThread</span><span class="p">:(</span><span class="n">NSThread</span> <span class="o">*</span><span class="p">)</span><span class="nv">thr</span> <span class="nf">withObject</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">arg</span> <span class="nf">waitUntilDone</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">wait</span><span class="p">;</span>
+</code></pre>
+</div>
+
+<h4 id="2gcd">2、GCD</h4>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">dispatch_async</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="o">^</span><span class="p">{</span>
+		<span class="cp"># do something
+</span>		
+		
+        <span class="n">dispatch_sync</span><span class="p">(</span><span class="n">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">{</span>
+			<span class="cp">#回到主线程
+</span>        <span class="p">});</span>
+    <span class="p">});</span>
+</code></pre>
+</div>
+
+<h4 id="3nsoperation">3、NSOperation</h4>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">NSOperationQueue</span> <span class="o">*</span><span class="n">queue</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSOperationQueue</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+
+    <span class="c1">// 2.添加任务(操作)
+</span>    <span class="p">[</span><span class="n">queue</span> <span class="nf">addOperationWithBlock</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
+		
+		<span class="cp"># 回到主线程
+</span>        <span class="p">[[</span><span class="n">NSOperationQueue</span> <span class="nf">mainQueue</span><span class="p">]</span> <span class="nf">addOperationWithBlock</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">imageView</span><span class="p">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="p">;</span>
+        <span class="p">}];</span>
+    <span class="p">}];</span>
+</code></pre>
+</div>
+
+<h3 id="二进程间通信app间通信">二、进程间通信/APP间通信</h3>
+
+<p>进程是容纳运行一个程序所需要所有信息的容器。在iOS中每个APP里就一个进程，所以进程间的通信实际上是APP之间的通信。iOS是封闭的系统，每个APP都只能访问各自沙盒里的内容</p>
+
+<h4 id="1url-scheme">1、URL Scheme</h4>
+
+<p>App1通过openURL的方法跳转到App2，并且在URL中带上想要的参数，有点类似http的get请求那样进行参数传递。这种方式是使用最多的最常见的，使用方法也很简单只需要源App1在info.plist中配置LSApplicationQueriesSchemes，指定目标App2的scheme；然后在目标App2的info.plist中配置好URL types，表示该app接受何种URL scheme的唤起。</p>
+
+<p><img src="/img/Simple_1/09.jpeg" alt="img" /></p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">UIApplication</span> <span class="o">*</span><span class="n">application</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIApplication</span> <span class="nf">sharedApplication</span><span class="p">];</span>
+<span class="p">[</span><span class="n">application</span> <span class="nf">openURL</span><span class="p">:</span><span class="n">URL</span> <span class="nf">options</span><span class="p">:@{}</span> <span class="n">completionHandler</span><span class="o">:</span><span class="nb">nil</span><span class="p">];</span>
+</code></pre>
+</div>
+
+<h4 id="2keychain">2、Keychain</h4>
+
+<p>Keychain是iOS中一个安全存储容器，本质是一个sqlite数据库，位置在/private/var/Keychains/keychain-2.db。它是独立于每个App的沙盒之外的，所以即使App被删除之后，Keychain里面的信息依然存在。基于安全和独立于app沙盒的两个特性，Keychain主要用于给app保存登录和身份凭证等敏感信息，这样只要用户登录过，即使用户删除了app重新安装也不需要重新登录。</p>
+
+<p>Keychain用于App间通信的一个典型场景也和app的登录相关，就是统一账户登录平台。使用同一个账号平台的多个app，只要其中一个app用户进行了登录，其他app就可以实现自动登录不需要用户多次输入账号和密码。一般开放平台都会提供登录SDK，在这个SDK内部就可以把登录相关的信息都写到keychain中，这样如果多个app都集成了这个SDK，那么就可以实现统一账户登录了。</p>
+
+<p>可以自封装一个keychain相关的存储</p>
+
+<h4 id="3uipasteboard">3、UIPasteboard</h4>
+
+<p>UIPasteboard是剪切板功能，因为iOS的原生控件UITextView，UITextField 、UIWebView，我们在使用时如果长按，就会出现复制、剪切、选中、全选、粘贴等功能，这个就是利用了系统剪切板功能来实现的。而每一个App都可以去访问系统剪切板，所以就能够通过系统剪贴板进行App间的数据传输了。</p>
+
+<p>UIPasteboard典型的使用场景就是淘宝跟微信/QQ的链接分享。淘口令。</p>
+
+<h4 id="4uidocumentinteractioncontroller">4、UIDocumentInteractionController</h4>
+
+<p>UIDocumentInteractionController主要是用来实现同设备上app之间的共享文档，以及文档预览、打印、发邮件和复制等功能。它的使用非常简单.</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="cp">#import "ViewController.h"
+</span>
+<span class="k">@interface</span> <span class="nc">ViewController</span> <span class="p">()</span><span class="o">&lt;</span><span class="n">UIDocumentInteractionControllerDelegate</span><span class="o">&gt;</span>
+<span class="k">@end</span>
+
+<span class="k">@implementation</span> <span class="nc">ViewController</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">viewDidLoad</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">super</span> <span class="nf">viewDidLoad</span><span class="p">];</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">navigationItem</span><span class="p">.</span><span class="n">title</span><span class="o">=</span><span class="s">@"预览"</span><span class="p">;</span>
+
+    <span class="n">NSString</span> <span class="o">*</span><span class="n">urlStr</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSBundle</span> <span class="nf">mainBundle</span><span class="p">]</span> <span class="nf">pathForResource</span><span class="p">:</span><span class="s">@"iOS开发指南.pdf"</span> <span class="nf">ofType</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span>
+    <span class="n">NSURL</span> <span class="o">*</span><span class="n">url</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSURL</span> <span class="nf">fileURLWithPath</span><span class="p">:</span><span class="n">urlStr</span><span class="p">];</span>
+
+    <span class="n">UIDocumentInteractionController</span> <span class="o">*</span><span class="n">documentVc</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIDocumentInteractionController</span> <span class="nf">interactionControllerWithURL</span><span class="p">:</span><span class="n">url</span><span class="p">];</span>
+    <span class="n">documentVc</span><span class="p">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="n">self</span><span class="p">;</span>
+
+    <span class="p">[</span><span class="n">documentVc</span> <span class="nf">presentPreviewAnimated</span><span class="p">:</span><span class="nb">YES</span><span class="p">];</span>
+
+<span class="p">}</span>
+
+<span class="cp">#pragma mark - UIDocumentInteractionController 代理方法
+</span><span class="o">-</span> <span class="p">(</span><span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="n">documentInteractionControllerViewControllerForPreview</span><span class="o">:</span><span class="p">(</span><span class="n">UIDocumentInteractionController</span> <span class="o">*</span><span class="p">)</span><span class="n">controller</span><span class="p">{</span>
+    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="n">UIView</span> <span class="o">*</span><span class="p">)</span><span class="n">documentInteractionControllerViewForPreview</span><span class="o">:</span><span class="p">(</span><span class="n">UIDocumentInteractionController</span> <span class="o">*</span><span class="p">)</span><span class="n">controller</span><span class="p">{</span>
+    <span class="k">return</span> <span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="n">CGRect</span><span class="p">)</span><span class="n">documentInteractionControllerRectForPreview</span><span class="o">:</span><span class="p">(</span><span class="n">UIDocumentInteractionController</span> <span class="o">*</span><span class="p">)</span><span class="n">controller</span><span class="p">{</span>
+    <span class="k">return</span> <span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="n">bounds</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p><img src="/img/Simple_1/10.jpeg" alt="img" /></p>
+
+<h4 id="5local-socket">5、local socket</h4>
+
+<p>App1在本地的端口port1234进行TCP的bind和listen，另外一个App2在同一个端口port1234发起TCP的connect连接，这样就可以建立正常的TCP连接，进行TCP通信了，那么就想传什么数据就可以传什么数据了。</p>
+
+<p>这种方式最大的特点就是灵活，只要连接保持着，随时都可以传任何相传的数据，而且带宽足够大。它的缺点就是因为iOS系统在任意时刻只有一个app在前台运行，那么就要通信的另外一方具备在后台运行的权限，像导航或者音乐类app。</p>
+
+<p>它是常用使用场景就是某个App1具有特殊的能力，比如能够跟硬件进行通信，在硬件上处理相关数据。而App2则没有这个能力，但是它能给App1提供相关的数据，这样APP2跟App1建立本地socket连接，传输数据到App1，然后App1在把数据传给硬件进行处理。</p>
+
+<p><img src="/img/Simple_1/11.jpeg" alt="img" /></p>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/ios/2017/10/18/CloudKit/" data-toggle="tooltip" data-placement="top" title="CloudKit实践">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/ios/2017/10/22/KVO/" data-toggle="tooltip" data-placement="top" title="KVO编程指南">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

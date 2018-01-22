@@ -1,6 +1,7 @@
 ---
 layout:     post
-title:      "【iOS】GCD之dispatch_semaphore"
+category:   iOS
+title:      "GCD之dispatch_semaphore"
 subtitle:   "dispatch_semaphore信号控制可以达到线程锁、控制线程并发数"
 date:       2016-09-20 12:00:00
 author:     "Ted"

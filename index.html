@@ -6,7 +6,7 @@ description: "曹浩之的博客(原创使人进步)"
 {% for post in paginator.posts %}
 <div class="post-preview">
     <a href="{{ post.url | prepend: site.baseurl }}">
-        <h2 class="post-title"> {{ post.title }}
+        <h2 class="post-title"> {% if post.category %}【{{post.category }}】{% endif %}{{ post.title }}
         </h2>
         {% if post.subtitle %}
         <h3 class="post-subtitle">

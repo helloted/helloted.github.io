@@ -1,6 +1,7 @@
 ---
 layout:     post
-title:      "【iOS】Stackoverflow-iOS"
+category:   iOS
+title:      "Stackoverflow-iOS"
 subtitle:   "Stackoverflow上面iOS相关的高分问题和答案整理"
 date:       2017-12-06 12:00:00
 author:     "Ted"

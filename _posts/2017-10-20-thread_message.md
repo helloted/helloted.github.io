@@ -1,6 +1,7 @@
 ---
 layout:     post
-title:      "【iOS】进程/线程间通信"
+category:   iOS
+title:      "进程/线程间通信"
 subtitle:   "iOS开发中多线程的通信"
 date:       2017-10-20 12:00:00
 author:     "Ted"

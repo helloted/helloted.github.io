@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>数据结构与算法(三):排序算法 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2015/02/01/data-3/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/Http/bg.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>数据结构与算法(三):排序算法</h1>
+                    
+                    <h2 class="subheading">八大常用排序算法</h2>
+                    
+                    <span class="meta">Posted by Ted on February 1, 2015</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h3 id="前言">前言</h3>
+
+<p>排序有内部排序和外部排序之分，内部排序是数据记录在内存中进行排序，而外部排序是因排序的数据很大，一次不能容纳全部的排序记录，在排序过程中需要访问外存。</p>
+
+<p><img src="/img/data/08.jpg" alt="img" /></p>
+
+<p><img src="/img/data/11.png" alt="img" /></p>
+
+<h3 id="一交换排序一冒泡排序">一、交换排序(一)：冒泡排序</h3>
+
+<p>解析：</p>
+
+<p>第1轮，从(0,n)遍历，找出第1小的数，放在第1位</p>
+
+<p>第2轮，从(1,n)遍历，找出第2小的数，放在第2位</p>
+
+<p>核心思想：每一循环，都能找到基准位置对应的数(第1小，第2小)。</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">bubbling_sor</span><span class="p">(</span><span class="n">orgin_list</span><span class="p">):</span>
+    <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">orgin_list</span><span class="p">)</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c"># 从list[0]开始遍历，进行外循环，list[i]作为基准位置比较数</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length</span><span class="p">):</span>
+        <span class="c"># 用之后的数值与基准位置的数进行比较，进行内循环</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">length</span><span class="p">):</span>
+            <span class="c"># 如果基准位置之后的数，比基准位置更小，就进行替换，这样一轮内循环，都能保证基准位置的数比其后面的数值更大</span>
+            <span class="k">if</span> <span class="n">orgin_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">orgin_list</span><span class="p">[</span><span class="n">j</span><span class="p">]:</span>
+                <span class="n">orgin_list</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">orgin_list</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">orgin_list</span><span class="p">[</span><span class="n">j</span><span class="p">],</span><span class="n">orgin_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">orgin_list</span>
+</code></pre>
+</div>
+
+<h3 id="二交换排序二快速排序填坑排序分治排序">二、交换排序(二)：快速排序(填坑排序、分治排序)</h3>
+
+<p>快速排序是冒泡排序的一种优化，先用填坑法将数组进行分割，左边小于基准数，右边全部大于基准数，再用分治法分别递归，</p>
+
+<p>1、将A[0]，作为基准数，挖走到temp中，A[0]现在为坑</p>
+
+<p>2、从右到左扫，找到第一个比基准数小的位置j，将这个位置的数A[j]放到A[0]，此时A[j]留坑</p>
+
+<p>3、从A[1]，开始从左向右扫，找到第一个比基准数的位置i，将这个数A[i]放到A[j]，此时A[i]留坑</p>
+
+<p>4、重复2、3步骤，一直到i,j会合。将temp放入a[i]，这样i左边的数就比A[i]小，右边比A[i]大</p>
+
+<p>5、对左边和右边分别进行递归。</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">quick_sort</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">left</span><span class="p">,</span><span class="n">right</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">left</span> <span class="o">&lt;</span> <span class="n">right</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">left</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="n">right</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">left</span><span class="p">]</span> <span class="c"># 将第一个数作为基准数，存入temp,同时基准位置就留坑了</span>
+            <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">j</span><span class="p">:</span>
+                <span class="c"># 从右向前扫，找到小于基准数的值，将其放入坑中，再次留出一个坑</span>
+                <span class="k">while</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">temp</span> <span class="ow">and</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">j</span><span class="p">):</span>
+                    <span class="n">j</span> <span class="o">-=</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">j</span><span class="p">:</span>
+                    <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="c"># 从前往后扫，找到大于基准数的值，将其放入上一个坑，从而留出一个坑</span>
+                <span class="k">while</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">temp</span> <span class="ow">and</span> <span class="n">i</span><span class="o">&lt;</span> <span class="n">j</span><span class="p">):</span>
+                    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">j</span><span class="p">:</span>
+                    <span class="n">A</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="n">j</span> <span class="o">-=</span> <span class="mi">1</span>
+
+            <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span> <span class="c"># 将最开始挖出来的数填入坑中，至此，i左边的数就小于i,i右边的数都大于i.</span>
+            <span class="c"># 大小分离结束</span>
+
+            <span class="c"># 分治开始，递归排序</span>
+            <span class="n">quick_sort</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">left</span><span class="p">,</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">quick_sort</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">right</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">A</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="n">orgin</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">]</span>
+    <span class="n">quick_sort</span><span class="p">(</span><span class="n">orgin</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">orgin</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<h3 id="三插入排序一直接插入排序">三、插入排序(一)：直接插入排序</h3>
+
+<p><strong>基本思想：</strong>将待排序的无序数列看成是一个仅含有一个元素的有序数列和一个无序数列，将无序数列中的元素逐次插入到有序数列中，从而获得最终的有序数列。</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">insert_sort</span><span class="p">(</span><span class="n">orgin_list</span><span class="p">):</span>
+    <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">orgin_list</span><span class="p">)</span>
+    <span class="c"># 从list[0]开始遍历，进行外循环，list[i]作为基准位置比较数</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="c"># 拿有序的数组之后的一个数，往里面插</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">orgin_list</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">orgin_list</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="k">break</span>
+            <span class="n">orgin_list</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">orgin_list</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">orgin_list</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">orgin_list</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">orgin_list</span>
+</code></pre>
+</div>
+
+<h3 id="四插入排序二希尔排序">四、插入排序(二)：希尔排序</h3>
+
+<p>希尔排序是把记录按下标的一定增量分组，对每组使用直接插入排序算法排序；随着增量逐渐减少，每组包含的关键词越来越多，当增量减至1时，整个文件恰被分成一组，算法便终止。</p>
+
+<pre><code class="language-Python">def shellSort(nums):
+    # 设定步长
+    step = len(nums)/2
+    while step &gt; 0:
+        for i in range(step, len(nums)):
+            # 类似插入排序, 当前值与指定步长之前的值比较, 符合条件则交换位置
+            while i &gt;= step and nums[i-step] &gt; nums[i]:
+                nums[i], nums[i-step] = nums[i-step], nums[i]
+                i -= step
+        step = step/2
+    return nums
+</code></pre>
+
+<h3 id="五选择排序一简单选择排序">五、选择排序(一)：简单选择排序</h3>
+
+<p><strong>基本思想：</strong>在要排序的一组数中，选出最小（或者最大）的一个数与第1个位置的数交换；然后在剩下的数当中再找最小（或者最大）的与第2个位置的数交换，依次类推，直到第n-1个元素（倒数第二个数）和第n个元素（最后一个数）比较为止。</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">select_sort</span><span class="p">(</span><span class="n">orgin_list</span><span class="p">):</span>
+    <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">orgin_list</span><span class="p">)</span>
+    <span class="c"># 从list[0]开始遍历，进行外循环，list[i]作为基准位置比较数</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">mi</span> <span class="o">=</span> <span class="n">i</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">length</span><span class="p">):</span>
+            <span class="c">#找到最小的一个数的位置</span>
+            <span class="k">if</span> <span class="n">orgin_list</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">orgin_list</span><span class="p">[</span><span class="n">mi</span><span class="p">]:</span>
+                <span class="n">mi</span> <span class="o">=</span> <span class="n">j</span>
+        <span class="n">orgin_list</span><span class="p">[</span><span class="n">mi</span><span class="p">],</span><span class="n">orgin_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">orgin_list</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">orgin_list</span><span class="p">[</span><span class="n">mi</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">orgin_list</span>
+</code></pre>
+</div>
+
+<h3 id="六选择排序二堆排序">六、选择排序(二)：堆排序</h3>
+
+<p>堆排序(Heapsort)是指利用堆积树（堆）这种数据结构所设计的一种排序算法，它是选择排序的一种。可以利用数组的特点快速定位指定索引的元素。堆分为大根堆和小根堆，是完全二叉树。大根堆的要求是每个节点的值都不大于其父节点的值，即A[PARENT[i]] &gt;= A[i]。在数组的非降序排序中，需要使用的就是大根堆，因为根据大根堆的要求可知，最大的值一定在堆顶。</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">adjust_heap</span><span class="p">(</span><span class="n">lists</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+    <span class="n">lchild</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">rchild</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">2</span>
+    <span class="nb">max</span> <span class="o">=</span> <span class="n">i</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span> <span class="o">/</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">lchild</span> <span class="o">&lt;</span> <span class="n">size</span> <span class="ow">and</span> <span class="n">lists</span><span class="p">[</span><span class="n">lchild</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">lists</span><span class="p">[</span><span class="nb">max</span><span class="p">]:</span>
+            <span class="nb">max</span> <span class="o">=</span> <span class="n">lchild</span>
+        <span class="k">if</span> <span class="n">rchild</span> <span class="o">&lt;</span> <span class="n">size</span> <span class="ow">and</span> <span class="n">lists</span><span class="p">[</span><span class="n">rchild</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">lists</span><span class="p">[</span><span class="nb">max</span><span class="p">]:</span>
+            <span class="nb">max</span> <span class="o">=</span> <span class="n">rchild</span>
+        <span class="k">if</span> <span class="nb">max</span> <span class="o">!=</span> <span class="n">i</span><span class="p">:</span>
+            <span class="n">lists</span><span class="p">[</span><span class="nb">max</span><span class="p">],</span> <span class="n">lists</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">lists</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">lists</span><span class="p">[</span><span class="nb">max</span><span class="p">]</span>
+            <span class="n">adjust_heap</span><span class="p">(</span><span class="n">lists</span><span class="p">,</span> <span class="nb">max</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">build_heap</span><span class="p">(</span><span class="n">lists</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">size</span><span class="o">/</span><span class="mi">2</span><span class="p">))[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="n">adjust_heap</span><span class="p">(</span><span class="n">lists</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">heap_sort</span><span class="p">(</span><span class="n">lists</span><span class="p">):</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lists</span><span class="p">)</span>
+    <span class="n">build_heap</span><span class="p">(</span><span class="n">lists</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="n">lists</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lists</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">lists</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">lists</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">adjust_heap</span><span class="p">(</span><span class="n">lists</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<h3 id="七归并排序">七、归并排序</h3>
+
+<p>归并（Merge）排序法是将两个（或两个以上）有序表合并成一个新的有序表，即把待排序序列分为若干个子序列，每个子序列是有序的。然后再把有序子序列合并为整体有序序列。</p>
+
+<h3 id="八基数排序桶排序">八、基数排序(桶排序)</h3>
+
+<p>是将数列分到有限数量的桶里。每个桶再个别排序（有可能再使用别的排序算法或是以递回方式继续使用桶排序进行排序）。桶排序是鸽巢排序的一种归纳结果。当要被排序的阵列内的数值是均匀分配的时候，桶排序使用线性时间O(n)。但桶排序并不是比较排序，不受到O(n*log n)下限的影响。</p>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/%E5%9F%BA%E7%A1%80/2015/02/01/data-2/" data-toggle="tooltip" data-placement="top" title="数据结构与算法(二):查找算法">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/ios/2015/07/12/Textkit/" data-toggle="tooltip" data-placement="top" title="图文混排">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>
