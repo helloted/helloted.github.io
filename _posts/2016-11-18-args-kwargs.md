@@ -1,8 +1,8 @@
 ---
 layout:     post
-title:      "Python之*args、**kwargs的理解和使用"
-subtitle:   "Python之*args、**kwargs的理解和使用"
-date:       2017-02-18 12:00:00
+title:      "【Python】*args和**kwargs"
+subtitle:   "Python之*args和**kwargs的理解和使用"
+date:       2016-11-18 12:00:00
 author:     "Ted"
 header-img: "img/bg_01.jpg"
 ---
@@ -93,3 +93,6 @@ def get_info(self, *args):
 
 someclass.get_info = get_info
 ```
+
+
+参考资料：[args_and_kwargs](http://book.pythontips.com/en/latest/args_and_kwargs.html)
