@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "【译】KVC Collection Operators"
+title:      "【iOS】KVC Collection Operators"
 subtitle:   "通过集合操作运算符来处理数据"
 date:       2017-07-11 12:00:00
 author:     "Ted"

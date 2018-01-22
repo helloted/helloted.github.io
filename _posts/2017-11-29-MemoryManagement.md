@@ -1,7 +1,7 @@
 ---
 layout:     post
-title:      "【译】iOS内存管理指南"
-subtitle:   "iOS内存管理指南官方文档翻译"
+title:      "【iOS】Objective-C内存管理指南"
+subtitle:   "Objective-C内存管理指南官方文档翻译"
 date:       2017-11-29 12:00:00
 author:     "Ted"
 header-img: "img/default.jpg"

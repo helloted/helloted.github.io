@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "python基础：socket"
+title:      "【python】socket"
 subtitle:   "socket中TCP与UDP连接服务"
 date:       2015-08-20 12:00:00
 author:     "Ted"

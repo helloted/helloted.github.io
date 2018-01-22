@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "【译】View Controller编程指南"
+title:      "【iOS】View Controller编程指南"
 subtitle:   "《View Controller Programming Guide for iOS》文档翻译"
 date:       2017-11-01 12:00:00
 author:     "Ted"
