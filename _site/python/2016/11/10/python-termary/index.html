@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
 
-    <title>Helloted Blog</title>
+    <title>三元运算符 - Helloted Blog</title>
 
-    <link rel="canonical" href="http://www.helloted.com/page4/">
+    <link rel="canonical" href="http://www.helloted.com/python/2016/11/10/python-termary/">
 
     <link rel="shortcut icon" href="/img/favicon.ico">
    
@@ -85,98 +85,98 @@
 </nav>
 
 
-    <!-- Page Header -->
-<header class="intro-header" style="background-image: url('/img/home-bg.jpg')">
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/bg_01.jpg')">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="site-heading">
-                    <h1>Helloted Blog</h1>
-                    <hr class="small">
-                    <span class="subheading">曹浩之的博客(原创使人进步)</span>
+                <div class="post-heading">
+                    <h1>三元运算符</h1>
+                    
+                    <h2 class="subheading">Python进阶之三元运算符</h2>
+                    
+                    <span class="meta">Posted by Ted on November 10, 2016</span>
                 </div>
             </div>
         </div>
     </div>
 </header>
 
-<!-- Main Content -->
-<div class="container">
-	<div class="row">
-		<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-			
-<div class="post-preview">
-    <a href="/%E5%9F%BA%E7%A1%80/2015/02/01/data-2/">
-        <h2 class="post-title"> 【基础】数据结构与算法(二):查找算法
-        </h2>
-        
-        <h3 class="post-subtitle">
-            七大查找算法
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on  2015/02/01</p>
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<p>三元运算符在Python中通常被称为条件表达式。 这些运算符根据条件是否正确来评估某些事情。</p>
+
+<p>样板:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>condition_is_true if condition else condition_is_false
+</code></pre>
 </div>
-<hr>
 
-<div class="post-preview">
-    <a href="/%E5%9F%BA%E7%A1%80/2015/02/01/data-1/">
-        <h2 class="post-title"> 【基础】数据结构与算法(一):数据结构
-        </h2>
-        
-        <h3 class="post-subtitle">
-            简单地总结一下常用的数据结构
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on  2015/02/01</p>
+<p>例子</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">is_fat</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="n">state</span> <span class="o">=</span> <span class="s">"fat"</span> <span class="k">if</span> <span class="n">is_fat</span> <span class="k">else</span> <span class="s">"not fat"</span>
+</code></pre>
 </div>
-<hr>
 
-<div class="post-preview">
-    <a href="/ios/2015/01/25/event/">
-        <h2 class="post-title"> 【iOS】事件传递、响应者链条
-        </h2>
-        
-        <h3 class="post-subtitle">
-            事件传递以及处理事件的响应者链条
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on  2015/01/25</p>
+<p>它允许快速测试条件而不是使用多行if语句。 通常这会非常有帮助，可以使代码紧凑但仍然可维护。</p>
+
+<p>另一个比较模糊和没有被广泛使用的例子涉及tuples。 这是一些示例代码：</p>
+
+<p>样板</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>(if_test_is_false, if_test_is_true)[test]
+</code></pre>
 </div>
-<hr>
 
-<div class="post-preview">
-    <a href="/ios/2014/10/15/life/">
-        <h2 class="post-title"> 【iOS】UIViewController生命周期
-        </h2>
-        
-        <h3 class="post-subtitle">
-            UIView生命周期、程序的生命周期
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on  2014/10/15</p>
+<p>例子</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">fat</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="n">fitness</span> <span class="o">=</span> <span class="p">(</span><span class="s">"skinny"</span><span class="p">,</span> <span class="s">"fat"</span><span class="p">)[</span><span class="n">fat</span><span class="p">]</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Ali is "</span><span class="p">,</span> <span class="n">fitness</span><span class="p">)</span>
+<span class="c"># Output: Ali is fat</span>
+</code></pre>
 </div>
-<hr>
 
+<p>这只是因为True == 1和False == 0，所以可以用元组和列表来完成。</p>
 
-<!-- Pager -->
+<p>上面的例子并没有被广泛使用，因为这个不Pythonic。 另外一个原因不使用是因为tuples里的每个元素都会被检测，但是if-else的三元运算不会</p>
 
-<ul class="pager">
-    
-    <li class="previous">
-        <a href="/page3">&larr; 最新</a>
-    </li>
-    
-    
-</ul>
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">condition</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="k">print</span><span class="p">(</span><span class="mi">2</span> <span class="k">if</span> <span class="n">condition</span> <span class="k">else</span> <span class="mi">1</span><span class="o">/</span><span class="mi">0</span><span class="p">)</span>
+<span class="c">#Output is 2</span>
 
-
-		</div>
-	</div>
+<span class="k">print</span><span class="p">((</span><span class="mi">1</span><span class="o">/</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)[</span><span class="n">condition</span><span class="p">])</span>
+<span class="c">#ZeroDivisionError is raised</span>
+</code></pre>
 </div>
+
+<p>使用tupled三元技术，首先构建元组，然后找到索引。 对于if-else三元运算符，它遵循正常的if-else逻辑树。 因此，如果有一种情况可以根据条件引发异常，或者两种情况都是计算量大的方法，那么最好避免使用元组。</p>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/ios/2016/10/19/keychain/" data-toggle="tooltip" data-placement="top" title="iOS Keychain编程指南">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/python/2016/11/18/python-map-filter/" data-toggle="tooltip" data-placement="top" title="Map,Filetr和Reduce">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
 
 <hr>
 
