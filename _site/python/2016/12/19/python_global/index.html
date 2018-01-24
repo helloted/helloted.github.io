@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>Global&Return - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/python/2016/12/19/python_global/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/bg_01.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>Global&Return</h1>
+                    
+                    <h2 class="subheading">Python进阶之Global&Return的理解和使用</h2>
+                    
+                    <span class="meta">Posted by Ted on December 19, 2016</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<p>让我们来看看这个小函数：</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">value1</span><span class="p">,</span> <span class="n">value2</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">value1</span> <span class="o">+</span> <span class="n">value2</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">add</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+<span class="c"># Output: 8</span>
+</code></pre>
+</div>
+
+<p>这个函数式两个值相加返回和，我们同样可以这样做</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">value1</span><span class="p">,</span><span class="n">value2</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">result</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">value1</span> <span class="o">+</span> <span class="n">value2</span>
+
+<span class="n">add</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+<span class="c"># Output: 8</span>
+</code></pre>
+</div>
+
+<p>让我们首先谈谈涉及<code class="highlighter-rouge">return</code>关键字的第一段代码。 这个函数做的是把值赋给正在调用该函数的变量，在我们的例子中就是<code class="highlighter-rouge">result</code>。 在大多数情况下，您不需要使用<code class="highlighter-rouge">global</code>关键字。 然而，让我们看看来包含<code class="highlighter-rouge">global</code>关键字的代码做了什么，它是创建了一个全局变量的<code class="highlighter-rouge">result</code>。 全局在这里意味着什么？ 全局变量意味着我们可以在该函数的范围之外访问该变量。 让我用一个例子来演示它：</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c"># first without the global variable</span>
+<span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">value1</span><span class="p">,</span> <span class="n">value2</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">value1</span> <span class="o">+</span> <span class="n">value2</span>
+
+<span class="n">add</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+<span class="c"># Oh crap, we encountered an exception. Why is it so?</span>
+<span class="c"># the python interpreter is telling us that we do not</span>
+<span class="c"># have any variable with the name of result. It is so</span>
+<span class="c"># because the result variable is only accessible inside</span>
+<span class="c"># the function in which it is created if it is not global.</span>
+<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+  <span class="n">File</span> <span class="s">""</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span>
+    <span class="n">result</span>
+<span class="nb">NameError</span><span class="p">:</span> <span class="n">name</span> <span class="s">'result'</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">defined</span>
+
+<span class="c"># Now lets run the same code but after making the result</span>
+<span class="c"># variable global</span>
+<span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">value1</span><span class="p">,</span> <span class="n">value2</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">result</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">value1</span> <span class="o">+</span> <span class="n">value2</span>
+
+<span class="n">add</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">result</span>
+<span class="mi">6</span>
+</code></pre>
+</div>
+
+<p>在实际的编程中，你应该尽量远离<code class="highlighter-rouge">global</code>关键字，因为它只会通过向全局范围引入不需要的变量而变得困难。</p>
+
+<h4 id="多重返回值">多重返回值</h4>
+
+<p>那么如果你想从一个函数返回两个变量呢？ 使用全局关键字。 我们来看一个没什么用的例子：</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">profile</span><span class="p">():</span>
+    <span class="k">global</span> <span class="n">name</span>
+    <span class="k">global</span> <span class="n">age</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s">"Danny"</span>
+    <span class="n">age</span> <span class="o">=</span> <span class="mi">30</span>
+
+<span class="n">profile</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+<span class="c"># Output: Danny</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">age</span><span class="p">)</span>
+<span class="c"># Output: 30</span>
+</code></pre>
+</div>
+
+<p>注意，不要试图用上面这种方法。</p>
+
+<p>也有人试图用 <code class="highlighter-rouge">tuple</code>, <code class="highlighter-rouge">list</code> 或者 <code class="highlighter-rouge">dict</code></p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">profile</span><span class="p">():</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s">"Danny"</span>
+    <span class="n">age</span> <span class="o">=</span> <span class="mi">30</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span>
+
+<span class="n">profile_data</span> <span class="o">=</span> <span class="n">profile</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">profile_data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="c"># Output: Danny</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">profile_data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="c"># Output: 30</span>
+</code></pre>
+</div>
+
+<p>或者用一种更常用的方法</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">profile</span><span class="p">():</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s">"Danny"</span>
+    <span class="n">age</span> <span class="o">=</span> <span class="mi">30</span>
+    <span class="k">return</span> <span class="n">name</span><span class="p">,</span> <span class="n">age</span>
+
+<span class="n">profile_name</span><span class="p">,</span> <span class="n">profile_age</span> <span class="o">=</span> <span class="n">profile</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">profile_name</span><span class="p">)</span>
+<span class="c"># Output: Danny</span>
+<span class="k">print</span><span class="p">(</span><span class="n">profile_age</span><span class="p">)</span>
+<span class="c"># Output: 30</span>
+</code></pre>
+</div>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/ios/2016/12/11/uiapplicationdelegate/" data-toggle="tooltip" data-placement="top" title="UIApplicationDelegate">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/ios/2017/01/10/draw/" data-toggle="tooltip" data-placement="top" title="图形">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>
