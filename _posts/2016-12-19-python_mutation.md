@@ -1,8 +1,8 @@
 ---
 layout:     post
 category:   Python
-title:      "Global&Return"
-subtitle:   "Python进阶之Global&Return的理解和使用"
+title:      "可变与不可变"
+subtitle:   "Python进阶之可变与不可变"
 date:       2016-12-19 12:00:00
 author:     "Ted"
 header-img: "img/bg_01.jpg"
@@ -77,4 +77,3 @@ add_to(42)
 add_to(42)
 # Output: [42]
 ```
-
