@@ -16,9 +16,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
 
-    <title>Helloted Blog</title>
+    <title>Lambdas表达式 - Helloted Blog</title>
 
-    <link rel="canonical" href="http://www.helloted.com/page4/">
+    <link rel="canonical" href="http://www.helloted.com/python/2017/03/02/python_lambdas/">
 
     <link rel="shortcut icon" href="/img/favicon.ico">
    
@@ -93,224 +93,92 @@
 </nav>
 
 
-    <!-- Page Header -->
-<header class="intro-header" style="background-image: url('/img/home-bg.jpg')">
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/bg_01.jpg')">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="site-heading">
-                    <h1>Helloted Blog</h1>
-                    <hr class="small">
-                    <span class="subheading">曹浩之的博客(原创使人进步)</span>
+                <div class="post-heading">
+                    <h1>Lambdas表达式</h1>
+                    
+                    <h2 class="subheading">Python进阶之Lambdas表达式</h2>
+                    
+                    <span class="meta">Posted by Ted on March 2, 2017</span>
                 </div>
             </div>
         </div>
     </div>
 </header>
 
-<!-- Main Content -->
-<div class="container">
-	<div class="row">
-		<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-			
-<div class="post-preview">
-    <a href="/ios/2016/05/23/ios-Thread-2/">
-        <h2 class="post-title"> 【iOS】多线程(二):GCD
-        </h2>
-        
-        <h3 class="post-subtitle">
-            iOS多线程之GCD
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on  2016/05/23</p>
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<p>Lambdas是一行函数。 他们在其他语言也被称为匿名函数。 如果您不想在程序中用某个函数用两次，您可能需要使用lambda表达式。 他们就像普通函数一样表现功能。</p>
+
+<p>样本</p>
+
+<pre><code class="language-Python">lambda argument: manipulate(argument)
+</code></pre>
+
+<p>例子</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">add</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">add</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="c"># Output: 8</span>
+</code></pre>
 </div>
-<hr>
 
-<div class="post-preview">
-    <a href="/ios/2016/05/22/ios-Thread-1/">
-        <h2 class="post-title"> 【iOS】多线程(一):NSThread
-        </h2>
-        
-        <h3 class="post-subtitle">
-            iOS三种多线程之NSThread
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on  2016/05/22</p>
+<p>下面是lambdas的一些有用的用例:</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">a</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">)]</span>
+<span class="n">a</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="c"># Output: [(13, -3), (4, 1), (1, 2), (9, 10)]</span>
+</code></pre>
 </div>
-<hr>
 
-<div class="post-preview">
-    <a href="/ios/2016/03/05/runtime/">
-        <h2 class="post-title"> 【iOS】神奇的Runtime
-        </h2>
-        
-        <h3 class="post-subtitle">
-            Objective-C中Runtime的概括总结
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on  2016/03/05</p>
+<p>这个按照元组第二个元素排序列表</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">data</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">list1</span><span class="p">,</span> <span class="n">list2</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+<span class="n">list1</span><span class="p">,</span> <span class="n">list2</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">data</span><span class="p">))</span>
+</code></pre>
 </div>
-<hr>
 
-<div class="post-preview">
-    <a href="/ios/2016/03/02/runtimedoc-2/">
-        <h2 class="post-title"> 【iOS】Objective-C Runtime编程指南(2)
-        </h2>
-        
-        <h3 class="post-subtitle">
-            Objective-C中Runtime的官方文档：属性
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on  2016/03/02</p>
+<p>列表的并行排序</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">data</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">list1</span><span class="p">,</span> <span class="n">list2</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+<span class="n">list1</span><span class="p">,</span> <span class="n">list2</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">data</span><span class="p">))</span>
+</code></pre>
 </div>
-<hr>
-
-<div class="post-preview">
-    <a href="/ios/2016/03/01/runtimedoc/">
-        <h2 class="post-title"> 【iOS】Objective-C Runtime编程指南(1)
-        </h2>
-        
-        <h3 class="post-subtitle">
-            Objective-C中Runtime的官方文档：消息
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on  2016/03/01</p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/%E5%9F%BA%E7%A1%80/2015/09/13/Http/">
-        <h2 class="post-title"> 【基础】网络、Http与Https
-        </h2>
-        
-        <h3 class="post-subtitle">
-            网络模型、Http与Https的一些知识点总结
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on  2015/09/13</p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/python/2015/08/20/python_socket/">
-        <h2 class="post-title"> 【Python】socket
-        </h2>
-        
-        <h3 class="post-subtitle">
-            socket中TCP与UDP连接服务
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on  2015/08/20</p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/ios/2015/07/12/Textkit/">
-        <h2 class="post-title"> 【iOS】图文混排
-        </h2>
-        
-        <h3 class="post-subtitle">
-            总结一下iOS图文混排以及涉及到的CoreText,TextKit
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on  2015/07/12</p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/%E5%9F%BA%E7%A1%80/2015/02/01/data-3/">
-        <h2 class="post-title"> 【基础】数据结构与算法(三):排序算法
-        </h2>
-        
-        <h3 class="post-subtitle">
-            八大常用排序算法
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on  2015/02/01</p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/%E5%9F%BA%E7%A1%80/2015/02/01/data-2/">
-        <h2 class="post-title"> 【基础】数据结构与算法(二):查找算法
-        </h2>
-        
-        <h3 class="post-subtitle">
-            七大查找算法
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on  2015/02/01</p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/%E5%9F%BA%E7%A1%80/2015/02/01/data-1/">
-        <h2 class="post-title"> 【基础】数据结构与算法(一):数据结构
-        </h2>
-        
-        <h3 class="post-subtitle">
-            简单地总结一下常用的数据结构
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on  2015/02/01</p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/ios/2015/01/25/event/">
-        <h2 class="post-title"> 【iOS】事件传递、响应者链条
-        </h2>
-        
-        <h3 class="post-subtitle">
-            事件传递以及处理事件的响应者链条
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on  2015/01/25</p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/ios/2014/10/15/life/">
-        <h2 class="post-title"> 【iOS】UIViewController生命周期
-        </h2>
-        
-        <h3 class="post-subtitle">
-            UIView生命周期、程序的生命周期
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on  2014/10/15</p>
-</div>
-<hr>
 
 
-<!-- Pager -->
 
-<ul class="pager">
-    
-    <li class="previous">
-        <a href="/page3">&larr; 最新</a>
-    </li>
-    
-    
-</ul>
+                <hr>
 
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/python/2017/03/02/python_exceptions/" data-toggle="tooltip" data-placement="top" title="Exception">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/ios/2017/04/10/Runloop_1/" data-toggle="tooltip" data-placement="top" title="Runloop(1):基础">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
 
-		</div>
-	</div>
-</div>
+            </div>
+        </div>
+    </div>
+</article>
 
 <hr>
 
