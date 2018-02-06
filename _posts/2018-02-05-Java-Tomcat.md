@@ -10,6 +10,8 @@ header-img: "img/bg_01.jpg"
 
 ### 一、安装Tomcat
 
+*Tomcat*是应用(java)服务器,它只是一个servlet容器.
+
 1、先去Tomcat官网下载[官网](https://tomcat.apache.org/)
 
 ![img](/img/Simple_4/12.png)
