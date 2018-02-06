@@ -16,9 +16,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
 
-    <title>小功能 - Helloted Blog</title>
+    <title>For-Else - Helloted Blog</title>
 
-    <link rel="canonical" href="http://www.helloted.com/python/2017/08/02/python_onew_liner/">
+    <link rel="canonical" href="http://www.helloted.com/python/2017/08/02/python_for_else/">
 
     <link rel="shortcut icon" href="/img/favicon.ico">
    
@@ -99,9 +99,9 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <div class="post-heading">
-                    <h1>小功能</h1>
+                    <h1>For-Else</h1>
                     
-                    <h2 class="subheading">Python进阶之小功能</h2>
+                    <h2 class="subheading">Python进阶之For-Else</h2>
                     
                     <span class="meta">Posted by Ted on August 2, 2017</span>
                 </div>
@@ -116,86 +116,61 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
 
-				<p>在这里，给你展示一些Python使用的小功能</p>
+				<p>循环是任何语言的组成部分。 同样，for循环是Python的重要组成部分。</p>
 
-<h4 id="简单web-server">简单Web Server</h4>
+<p>这是我们常用的一种循环：</p>
 
-<p>曾经想要通过网络快速共享文件？ 好吧，你是幸运的。 Python为你提供了一个功能。 转到您要通过网络提供的目录，然后在终端中输入以下代码：</p>
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">fruits</span> <span class="o">=</span> <span class="p">[</span><span class="s">'apple'</span><span class="p">,</span> <span class="s">'banana'</span><span class="p">,</span> <span class="s">'mango'</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">fruit</span> <span class="ow">in</span> <span class="n">fruits</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">fruit</span><span class="o">.</span><span class="n">capitalize</span><span class="p">())</span>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c"># Python 2</span>
-<span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">SimpleHTTPServer</span>
-
-<span class="c"># Python 3</span>
-<span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">http</span><span class="o">.</span><span class="n">server</span>
+<span class="c"># Output: Apple</span>
+<span class="c">#         Banana</span>
+<span class="c">#         Mango</span>
 </code></pre>
 </div>
 
-<p>会建立一个服务器</p>
+<h4 id="else语句">else语句</h4>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>Serving HTTP on 0.0.0.0 port 8000 ...
+<p>For循环也有一个我们大多数人都不熟悉的<code class="highlighter-rouge">else</code>子句。<code class="highlighter-rouge"> else</code>子句在循环正常完成时执行。 这意味着循环没有遇到任何<code class="highlighter-rouge">break</code>。</p>
+
+<p>常见的构造是运行一个循环并搜索一个项目。 如果找到该项目，我们使用<code class="highlighter-rouge">break</code>来断开循环。 有两种情况下，循环可能会结束：第一个是找到该项目并遇到<code class="highlighter-rouge">break</code>，第二种情况是循环结束。 现在我们可能想知道哪一个是循环完成的原因： 一种方法是设置一个标志，然后在循环结束时检查它。 另一个是使用else子句。</p>
+
+<p><code class="highlighter-rouge">for/else</code> 循环的基本结构:</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">container</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">search_something</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+        <span class="c"># Found it!</span>
+        <span class="n">process</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="k">break</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="c"># Didn't find anything..</span>
+    <span class="n">not_found_in_container</span><span class="p">()</span>
 </code></pre>
 </div>
 
-<h4 id="美观打印">美观打印</h4>
+<p>考虑一下我从官方文档中得到的这个简单的例子：</p>
 
-<p>您可以在Python代码中以美观的格式打印list和Dict。 这是相关的代码：</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>from pprint import pprint
-
-my_dict = {'name': 'Yasoob', 'age': 'undefined', 'personality': 'awesome'}
-pprint(my_dict)
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="s">'equals'</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s">'*'</span><span class="p">,</span> <span class="n">n</span><span class="o">/</span><span class="n">x</span><span class="p">)</span>
+            <span class="k">break</span>
 </code></pre>
 </div>
 
-<p>此外，如果你想很快从文件打印JSON，那么你可以简单地做：</p>
+<p>它找到2到10之间的数字的合数。现在是比较有意思的部分。 我们可以添加一个额外的块来捕捉质数并告诉我们：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>cat file.json | python -m json.tool
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span> <span class="n">n</span><span class="p">,</span> <span class="s">'equals'</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s">'*'</span><span class="p">,</span> <span class="n">n</span><span class="o">/</span><span class="n">x</span><span class="p">)</span>
+            <span class="k">break</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c"># loop fell through without finding a factor</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="s">'is a prime number'</span><span class="p">)</span>
 </code></pre>
 </div>
-
-<h4 id="分析脚本">分析脚本</h4>
-
-<p>这对查明脚本中的瓶颈非常有帮助：</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>python -m cProfile my_script.py
-</code></pre>
-</div>
-
-<p>注意： <code class="highlighter-rouge">cProfile</code> 会比 <code class="highlighter-rouge">profile</code> 更快因为是用 c写的</p>
-
-<h4 id="csv转json">CSV转json</h4>
-
-<p>在终端中跑下面的代码:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>python -c "import csv,json;print json.dumps(list(csv.reader(open('csv_file.csv'))))"
-</code></pre>
-</div>
-
-<h4 id="list展开">List展开</h4>
-
-<p>您可以使用itertools包中的<code class="highlighter-rouge">itertools.chain.from_iterable</code>来快速简单地展开列表。 这是一个简单的例子：</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>a_list = [[1, 2], [3, 4], [5, 6]]
-print(list(itertools.chain.from_iterable(a_list)))
-# Output: [1, 2, 3, 4, 5, 6]
-
-# or
-print(list(itertools.chain(*a_list)))
-# Output: [1, 2, 3, 4, 5, 6]
-</code></pre>
-</div>
-
-<h4 id="一行构造">一行构造</h4>
-
-<p>初始化类时避免大量的样板设置</p>
-
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">locals</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s">'self'</span><span class="p">})</span>
-</code></pre>
-</div>
-
-<p>更多可以在这里 <a href="https://wiki.python.org/moin/Powerful%20Python%20One-Liners">Python website</a>.</p>
 
 
                 <hr>
@@ -203,12 +178,12 @@ print(list(itertools.chain(*a_list)))
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/python/2017/08/02/python_comprehensions/" data-toggle="tooltip" data-placement="top" title="推导Comprehensions">&larr; 上一篇</a>
+                        <a href="/python/2017/08/02/python_onew_liner/" data-toggle="tooltip" data-placement="top" title="小功能">&larr; 上一篇</a>
                     </li>
                     
                     
                     <li class="next">
-                        <a href="/python/2017/08/02/python_for_else/" data-toggle="tooltip" data-placement="top" title="For-Else">下一篇 &rarr;</a>
+                        <a href="/ios/2017/09/08/designPatten/" data-toggle="tooltip" data-placement="top" title="设计模式">下一篇 &rarr;</a>
                     </li>
                     
                 </ul>
