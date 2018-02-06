@@ -148,6 +148,92 @@
 </code></pre>
 </div>
 
+<h3 id="二新建网页服务器">二、新建网页服务器</h3>
+
+<p>使用intellij idea这个IDE来搭建</p>
+
+<p>1、新建项目，选择<code class="highlighter-rouge">Java Enterprise</code>和<code class="highlighter-rouge">Web Application</code>然后next</p>
+
+<p><img src="/img/Simple_4/15.png" alt="img" /></p>
+
+<p>2、输入项目名称已经存放目录</p>
+
+<p><img src="/img/Simple_4/16.png" alt="img" /></p>
+
+<p>3、完成进入项目</p>
+
+<p><img src="/img/Simple_4/17.png" alt="img" /></p>
+
+<p>其中index.jsp是默认的首页网页，此时点击右上角的Tomcat开启服务器，会自动打开一个网页</p>
+
+<p><img src="/img/Simple_4/18.png" alt="img" /></p>
+
+<p>看看网页源代码</p>
+
+<div class="language-html highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;title&gt;</span>$Title$<span class="nt">&lt;/title&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+  $END$
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre>
+</div>
+
+<p>其实就是index.jsp的代码，说明此时访问的是index.jsp的页面。下面我们来新建新的页面</p>
+
+<p>4、添加web.xml.</p>
+
+<p>File-&gt;Project Structure</p>
+
+<p><img src="/img/Simple_4/19.png" alt="img" /></p>
+
+<p>在项目中会有一个新的文件夹，里面就有web.xml文件</p>
+
+<p><img src="/img/Simple_4/20.png" alt="img" /></p>
+
+<p>5、新建一个Servlet</p>
+
+<p><img src="/img/Simple_4/21.png" alt="img" /></p>
+
+<p>命名为first</p>
+
+<p><img src="/img/Simple_4/22.png" alt="img" /></p>
+
+<p>此时web.xml会自动配置</p>
+
+<p><img src="/img/Simple_4/23.png" alt="img" /></p>
+
+<p>6、编写Servlet</p>
+
+<p>在fisrt.java的doGet里添加代码如下</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">doGet</span><span class="o">(</span><span class="n">HttpServletRequest</span> <span class="n">request</span><span class="o">,</span> <span class="n">HttpServletResponse</span> <span class="n">response</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ServletException</span><span class="o">,</span> <span class="n">IOException</span> <span class="o">{</span>
+        <span class="n">response</span><span class="o">.</span><span class="na">setContentType</span><span class="o">(</span><span class="s">"text/html"</span><span class="o">);</span>
+        <span class="n">PrintWriter</span> <span class="n">out</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="na">getWriter</span><span class="o">();</span>
+        <span class="n">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"This is First Page"</span><span class="o">);</span>
+    <span class="o">}</span>
+</code></pre>
+</div>
+
+<p>7、配置访问路径</p>
+
+<p>在web.xml里添加以下代码</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;first&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/first&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+</code></pre>
+</div>
+
+<p><img src="/img/Simple_4/24.png" alt="img" /></p>
+
+<p>8、点击右上角的tomcat运行，访问<code class="highlighter-rouge">http://localhost:8080/first</code>可以看到第一个网页</p>
+
+<p><img src="/img/Simple_4/25.png" alt="img" /></p>
+
 
 
                 <hr>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-02-06T15:03:48+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">Tomcat+Servlet</title><link href="http://www.helloted.com/java/2018/02/05/Java-Tomcat/" rel="alternate" type="text/html" title="Tomcat+Servlet" /><published>2018-02-05T20:00:00+08:00</published><updated>2018-02-05T20:00:00+08:00</updated><id>http://www.helloted.com/java/2018/02/05/Java-Tomcat</id><content type="html" xml:base="http://www.helloted.com/java/2018/02/05/Java-Tomcat/">&lt;h3 id=&quot;一安装tomcat&quot;&gt;一、安装Tomcat&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-02-06T15:53:31+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">Tomcat+Servlet</title><link href="http://www.helloted.com/java/2018/02/05/Java-Tomcat/" rel="alternate" type="text/html" title="Tomcat+Servlet" /><published>2018-02-05T20:00:00+08:00</published><updated>2018-02-05T20:00:00+08:00</updated><id>http://www.helloted.com/java/2018/02/05/Java-Tomcat</id><content type="html" xml:base="http://www.helloted.com/java/2018/02/05/Java-Tomcat/">&lt;h3 id=&quot;一安装tomcat&quot;&gt;一、安装Tomcat&lt;/h3&gt;
 
 &lt;p&gt;1、先去Tomcat官网下载&lt;a href=&quot;https://tomcat.apache.org/&quot;&gt;官网&lt;/a&gt;&lt;/p&gt;
 
@@ -28,7 +28,93 @@
 
 &lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sudo sh shutdown.sh
 &lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;</content><author><name>Ted</name></author><category term="Java" /><summary type="html">一、安装Tomcat</summary></entry><entry><title type="html">View编程指南(四)</title><link href="http://www.helloted.com/ios/2018/01/15/View_4/" rel="alternate" type="text/html" title="View编程指南(四)" /><published>2018-01-15T20:00:00+08:00</published><updated>2018-01-15T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2018/01/15/View_4</id><content type="html" xml:base="http://www.helloted.com/ios/2018/01/15/View_4/">&lt;p&gt;苹果官方文档&lt;a href=&quot;https://developer.apple.com/library/content/documentation/WindowsViews/Conceptual/ViewPG_iPhoneOS/Introduction/Introduction.html#//apple_ref/doc/uid/TP40009503-CH1-SW2&quot;&gt;View Programming Guide for iOS&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;二新建网页服务器&quot;&gt;二、新建网页服务器&lt;/h3&gt;
+
+&lt;p&gt;使用intellij idea这个IDE来搭建&lt;/p&gt;
+
+&lt;p&gt;1、新建项目，选择&lt;code class=&quot;highlighter-rouge&quot;&gt;Java Enterprise&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;Web Application&lt;/code&gt;然后next&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_4/15.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;2、输入项目名称已经存放目录&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_4/16.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;3、完成进入项目&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_4/17.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;其中index.jsp是默认的首页网页，此时点击右上角的Tomcat开启服务器，会自动打开一个网页&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_4/18.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;看看网页源代码&lt;/p&gt;
+
+&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;html&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;head&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;title&amp;gt;&lt;/span&gt;$Title$&lt;span class=&quot;nt&quot;&gt;&amp;lt;/title&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/head&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;body&amp;gt;&lt;/span&gt;
+  $END$
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/html&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;其实就是index.jsp的代码，说明此时访问的是index.jsp的页面。下面我们来新建新的页面&lt;/p&gt;
+
+&lt;p&gt;4、添加web.xml.&lt;/p&gt;
+
+&lt;p&gt;File-&amp;gt;Project Structure&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_4/19.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;在项目中会有一个新的文件夹，里面就有web.xml文件&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_4/20.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;5、新建一个Servlet&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_4/21.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;命名为first&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_4/22.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;此时web.xml会自动配置&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_4/23.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;6、编写Servlet&lt;/p&gt;
+
+&lt;p&gt;在fisrt.java的doGet里添加代码如下&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;kd&quot;&gt;protected&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;doGet&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;HttpServletRequest&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;HttpServletResponse&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;throws&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ServletException&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;IOException&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setContentType&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;text/html&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;PrintWriter&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;out&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getWriter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;This is First Page&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;7、配置访问路径&lt;/p&gt;
+
+&lt;p&gt;在web.xml里添加以下代码&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &amp;lt;servlet-mapping&amp;gt;
+        &amp;lt;servlet-name&amp;gt;first&amp;lt;/servlet-name&amp;gt;
+        &amp;lt;url-pattern&amp;gt;/first&amp;lt;/url-pattern&amp;gt;
+    &amp;lt;/servlet-mapping&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_4/24.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;8、点击右上角的tomcat运行，访问&lt;code class=&quot;highlighter-rouge&quot;&gt;http://localhost:8080/first&lt;/code&gt;可以看到第一个网页&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_4/25.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="Java" /><summary type="html">一、安装Tomcat</summary></entry><entry><title type="html">View编程指南(四)</title><link href="http://www.helloted.com/ios/2018/01/15/View_4/" rel="alternate" type="text/html" title="View编程指南(四)" /><published>2018-01-15T20:00:00+08:00</published><updated>2018-01-15T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2018/01/15/View_4</id><content type="html" xml:base="http://www.helloted.com/ios/2018/01/15/View_4/">&lt;p&gt;苹果官方文档&lt;a href=&quot;https://developer.apple.com/library/content/documentation/WindowsViews/Conceptual/ViewPG_iPhoneOS/Introduction/Introduction.html#//apple_ref/doc/uid/TP40009503-CH1-SW2&quot;&gt;View Programming Guide for iOS&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;五动画&quot;&gt;五、动画&lt;/h3&gt;
 
