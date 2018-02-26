@@ -176,7 +176,7 @@
   <li>Desc：block的一些信息</li>
 </ul>
 
-<p>还有一种情况</p>
+<p>上面的情况是将block的定义在函数外，在函数内引用，特别的，当把block的定义放入函数体内，如下</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>int main(int argc, const char * argv[]) {
     void (^blk)(void) = ^{
@@ -188,13 +188,28 @@
 </code></pre>
 </div>
 
-<p>虽然，clang出来的结果isa是_NSConcreteStackBlock，但根据实际打印结果</p>
+<p>clang命令后：</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">struct</span> <span class="n">__main_block_impl_0</span> <span class="p">{</span>
+  <span class="k">struct</span> <span class="n">__block_impl</span> <span class="n">impl</span><span class="p">;</span>
+  <span class="k">struct</span> <span class="n">__main_block_desc_0</span><span class="o">*</span> <span class="n">Desc</span><span class="p">;</span>
+  <span class="n">__main_block_impl_0</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">fp</span><span class="p">,</span> <span class="k">struct</span> <span class="n">__main_block_desc_0</span> <span class="o">*</span><span class="n">desc</span><span class="p">,</span> <span class="kt">int</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">impl</span><span class="p">.</span><span class="n">isa</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">_NSConcreteStackBlock</span><span class="p">;</span>
+    <span class="n">impl</span><span class="p">.</span><span class="n">Flags</span> <span class="o">=</span> <span class="n">flags</span><span class="p">;</span>
+    <span class="n">impl</span><span class="p">.</span><span class="n">FuncPtr</span> <span class="o">=</span> <span class="n">fp</span><span class="p">;</span>
+    <span class="n">Desc</span> <span class="o">=</span> <span class="n">desc</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</code></pre>
+</div>
+
+<p>isa指针由<code class="highlighter-rouge">_NSConcreteGlobalBlock</code>变为<code class="highlighter-rouge">_NSConcreteStackBlock</code>但根据LLVM实际打印结果</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>lockDemo[59807:10443592] &lt;__NSGlobalBlock__: 0x100001040&gt;
 </code></pre>
 </div>
 
-<p>应该是_NSConcreteGlobalBlock，这里clang与LLVM有点不同。以LLVM为准。</p>
+<p>所以应当还是GlobalBlock，这里clang与LLVM有点不同。以LLVM为准。</p>
 
 <h3 id="二含变量的block">二、含变量的Block</h3>
 
@@ -343,6 +358,16 @@ BlockDemo[60278:10523410] &lt;__NSMallocBlock__: 0x10055e4b0&gt;
 <p>当block从栈上被copy到堆上时，会调用<code class="highlighter-rouge">__main_block_copy_0</code>将__block类型的成员变量i从栈上复制到堆上，同时，栈上的<code class="highlighter-rouge">__Block_byref_i_0</code>结构体中的__forwarding指针也会指向堆上的地址。而当block被释放时，相应地会调用<code class="highlighter-rouge">_main_block_dispose_0</code>来释__block类型的成员变量i。</p>
 
 <p>这样，就成功地修改变量的值。</p>
+
+<h4 id="修改外部变量">修改外部变量</h4>
+
+<p>引用外部变量，值进行读操作</p>
+
+<p><img src="/img/Simple_2/21.jpg" alt="img" /></p>
+
+<p>修改外部变量，进行写操作</p>
+
+<p><img src="/img/Simple_2/22.jpg" alt="img" /></p>
 
 <h4 id="arc与mrc">ARC与MRC</h4>
 

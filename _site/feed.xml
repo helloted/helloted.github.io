@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-02-06T16:01:11+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">Tomcat+Servlet</title><link href="http://www.helloted.com/java/2018/02/05/Java-Tomcat/" rel="alternate" type="text/html" title="Tomcat+Servlet" /><published>2018-02-05T20:00:00+08:00</published><updated>2018-02-05T20:00:00+08:00</updated><id>http://www.helloted.com/java/2018/02/05/Java-Tomcat</id><content type="html" xml:base="http://www.helloted.com/java/2018/02/05/Java-Tomcat/">&lt;h3 id=&quot;一安装tomcat&quot;&gt;一、安装Tomcat&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-02-26T15:29:13+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">Tomcat+Servlet</title><link href="http://www.helloted.com/java/2018/02/05/Java-Tomcat/" rel="alternate" type="text/html" title="Tomcat+Servlet" /><published>2018-02-05T20:00:00+08:00</published><updated>2018-02-05T20:00:00+08:00</updated><id>http://www.helloted.com/java/2018/02/05/Java-Tomcat</id><content type="html" xml:base="http://www.helloted.com/java/2018/02/05/Java-Tomcat/">&lt;h3 id=&quot;一安装tomcat&quot;&gt;一、安装Tomcat&lt;/h3&gt;
 
 &lt;p&gt;&lt;em&gt;Tomcat&lt;/em&gt;是应用(java)服务器,它只是一个servlet容器.&lt;/p&gt;
 
@@ -2017,7 +2017,7 @@ ssserver -c /etc/shadowsocks.json -d stop  //停止
   &lt;li&gt;Desc：block的一些信息&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;还有一种情况&lt;/p&gt;
+&lt;p&gt;上面的情况是将block的定义在函数外，在函数内引用，特别的，当把block的定义放入函数体内，如下&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;int main(int argc, const char * argv[]) {
     void (^blk)(void) = ^{
@@ -2029,13 +2029,28 @@ ssserver -c /etc/shadowsocks.json -d stop  //停止
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;虽然，clang出来的结果isa是_NSConcreteStackBlock，但根据实际打印结果&lt;/p&gt;
+&lt;p&gt;clang命令后：&lt;/p&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__main_block_impl_0&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__block_impl&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;impl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__main_block_desc_0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Desc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;__main_block_impl_0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__main_block_desc_0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;desc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;flags&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;impl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;isa&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_NSConcreteStackBlock&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;impl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Flags&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;flags&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;impl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FuncPtr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Desc&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;desc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;isa指针由&lt;code class=&quot;highlighter-rouge&quot;&gt;_NSConcreteGlobalBlock&lt;/code&gt;变为&lt;code class=&quot;highlighter-rouge&quot;&gt;_NSConcreteStackBlock&lt;/code&gt;但根据LLVM实际打印结果&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;lockDemo[59807:10443592] &amp;lt;__NSGlobalBlock__: 0x100001040&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;应该是_NSConcreteGlobalBlock，这里clang与LLVM有点不同。以LLVM为准。&lt;/p&gt;
+&lt;p&gt;所以应当还是GlobalBlock，这里clang与LLVM有点不同。以LLVM为准。&lt;/p&gt;
 
 &lt;h3 id=&quot;二含变量的block&quot;&gt;二、含变量的Block&lt;/h3&gt;
 
@@ -2184,6 +2199,16 @@ BlockDemo[60278:10523410] &amp;lt;__NSMallocBlock__: 0x10055e4b0&amp;gt;
 &lt;p&gt;当block从栈上被copy到堆上时，会调用&lt;code class=&quot;highlighter-rouge&quot;&gt;__main_block_copy_0&lt;/code&gt;将__block类型的成员变量i从栈上复制到堆上，同时，栈上的&lt;code class=&quot;highlighter-rouge&quot;&gt;__Block_byref_i_0&lt;/code&gt;结构体中的__forwarding指针也会指向堆上的地址。而当block被释放时，相应地会调用&lt;code class=&quot;highlighter-rouge&quot;&gt;_main_block_dispose_0&lt;/code&gt;来释__block类型的成员变量i。&lt;/p&gt;
 
 &lt;p&gt;这样，就成功地修改变量的值。&lt;/p&gt;
+
+&lt;h4 id=&quot;修改外部变量&quot;&gt;修改外部变量&lt;/h4&gt;
+
+&lt;p&gt;引用外部变量，值进行读操作&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/21.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;修改外部变量，进行写操作&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/22.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 
 &lt;h4 id=&quot;arc与mrc&quot;&gt;ARC与MRC&lt;/h4&gt;
 
