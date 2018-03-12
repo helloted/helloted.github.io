@@ -16,9 +16,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
 
-    <title>Tomcat+Servlet - Helloted Blog</title>
+    <title>OpenCV学习简介 - Helloted Blog</title>
 
-    <link rel="canonical" href="http://www.helloted.com/java/2018/02/05/Java-Tomcat/">
+    <link rel="canonical" href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/11/OpenCV/">
 
     <link rel="shortcut icon" href="/img/favicon.ico">
    
@@ -99,11 +99,11 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <div class="post-heading">
-                    <h1>Tomcat+Servlet</h1>
+                    <h1>OpenCV学习简介</h1>
                     
-                    <h2 class="subheading">用Tomcat+Servlet搭建一个网页服务器</h2>
+                    <h2 class="subheading">阅读《学习OpenCV》的一些笔记</h2>
                     
-                    <span class="meta">Posted by Ted on February 5, 2018</span>
+                    <span class="meta">Posted by Ted on March 11, 2018</span>
                 </div>
             </div>
         </div>
@@ -116,125 +116,102 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
 
-				<h3 id="一安装tomcat">一、安装Tomcat</h3>
+				<h3 id="一前言">一、前言</h3>
 
-<p><em>Tomcat</em>是应用(java)服务器,它只是一个servlet容器.</p>
+<h4 id="什么是opencv">什么是OpenCV</h4>
 
-<p>1、先去Tomcat官网下载<a href="https://tomcat.apache.org/">官网</a></p>
+<p>OpenCV 是一个开源的计算机视觉库，<a href="https://opencv.org/">项目主页</a>，采用C/C++语言编写，还提供了Python,Ruby，MATLAB等语言的接口。OpenCV的一个目标是构建一个简单易用的计算机视觉框架，以帮助开发人员更便捷地设计更复杂的计算机视觉相关应用程序。因为计算机视觉和机器学习密切相关，所以OpenCV还提供了MLL(Machine Learning Library)机器学习库。</p>
 
-<p><img src="/img/Simple_4/12.png" alt="img" /></p>
+<h4 id="什么是计算机视觉">什么是计算机视觉</h4>
 
-<p>2、将Zip文件解压并且重命名文件夹到一个目录，比如<code class="highlighter-rouge">/Library/Tomcat/</code></p>
+<p>计算机视觉是将来自静止图像或视频的数据转换成一个决策或者一种新的表达方式的过程，所有的这些装换都是为了达到某个目标。</p>
 
-<p>3、使用命令行修改文件夹的权限</p>
+<p>人脑将视觉信号划分如很多个通道，将各种不同的信息输入你的大脑。你的大脑有一个关注系统，会根据任务识别出图像的重要部分，并做重点分析，而其他部分则分析得较少，从而进行识别。</p>
 
-<div class="language-sh highlighter-rouge"><pre class="highlight"><code>sudo chmod 755 /Library/Tomcat/bin/<span class="k">*</span>.sh
+<p>在 计算机视觉系统中，计算机接收到的是来自摄像机或者磁盘文件的一个数值决战。一般来说，没有内置的模式识别系统，没有自动控制的对焦和光圈，没有多年的经验积累，视觉系统通常很低级。</p>
+
+<h3 id="一mac配置opencv">一、Mac配置OpenCV</h3>
+
+<p>1、下载OpenCV源码，<a href="https://opencv.org/releases.html">地址</a>，可以看到有Windows，iOS，Android版本的下载，没有针对MacOS的需要我们自己去编译，下载Sources源码</p>
+
+<p><img src="/img/Simple_5/01.png" alt="img" /></p>
+
+<p>2、安装CMake，用Homebrew安装</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>brew install cmake
 </code></pre>
 </div>
 
-<p>4、cd到<code class="highlighter-rouge">/Library/Tomcat/bin</code>文件夹下，启动Tomcat</p>
+<p>3、用CMake编译OpenCV</p>
 
-<div class="language-sh highlighter-rouge"><pre class="highlight"><code>sudo sh startup.sh
+<p>在解压后的opencv文件夹内，新建一个文件夹release，并且cd进入，分别执行以下的命令行</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>cmake -G "Unix Makefiles" ..
 </code></pre>
 </div>
 
-<p><img src="/img/Simple_4/14.png" alt="img" /></p>
-
-<p>5、打开浏览器,输入<a href="http://localhost:8080/">http://localhost:8080/</a>，出现下面的页面说明启动成功</p>
-
-<p><img src="/img/Simple_4/13.png" alt="img" /></p>
-
-<p>6、关闭命令是</p>
-
-<div class="language-sh highlighter-rouge"><pre class="highlight"><code>sudo sh shutdown.sh
+<div class="highlighter-rouge"><pre class="highlight"><code>make
 </code></pre>
 </div>
 
-<h3 id="二新建网页服务器">二、新建网页服务器</h3>
-
-<p>使用intellij idea这个IDE来搭建</p>
-
-<p>1、新建项目，选择<code class="highlighter-rouge">Java Enterprise</code>和<code class="highlighter-rouge">Web Application</code>然后next</p>
-
-<p><img src="/img/Simple_4/15.png" alt="img" /></p>
-
-<p>2、输入项目名称已经存放目录</p>
-
-<p><img src="/img/Simple_4/16.png" alt="img" /></p>
-
-<p>3、完成进入项目</p>
-
-<p><img src="/img/Simple_4/17.png" alt="img" /></p>
-
-<p>其中index.jsp是默认的首页网页，此时点击右上角的Tomcat开启服务器，会自动打开一个网页</p>
-
-<p><img src="/img/Simple_4/18.png" alt="img" /></p>
-
-<p>看看网页源代码</p>
-
-<div class="language-html highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;html&gt;</span>
-  <span class="nt">&lt;head&gt;</span>
-    <span class="nt">&lt;title&gt;</span>$Title$<span class="nt">&lt;/title&gt;</span>
-  <span class="nt">&lt;/head&gt;</span>
-  <span class="nt">&lt;body&gt;</span>
-  $END$
-  <span class="nt">&lt;/body&gt;</span>
-<span class="nt">&lt;/html&gt;</span>
+<div class="highlighter-rouge"><pre class="highlight"><code>sudo make install
 </code></pre>
 </div>
 
-<p>其实就是index.jsp的代码，说明此时访问的是index.jsp的页面。下面我们来新建新的页面</p>
+<p><img src="/img/Simple_5/02.png" alt="img" /></p>
 
-<p>4、添加web.xml.</p>
+<p>4、测试使用OpenCV</p>
 
-<p>File-&gt;Project Structure</p>
+<p>建立一个文件夹，里面放入三个文件</p>
 
-<p><img src="/img/Simple_4/19.png" alt="img" /></p>
+<p>a.png</p>
 
-<p>在项目中会有一个新的文件夹，里面就有web.xml文件</p>
+<p>DisplayImage.cpp</p>
 
-<p><img src="/img/Simple_4/20.png" alt="img" /></p>
-
-<p>5、新建一个Servlet</p>
-
-<p><img src="/img/Simple_4/21.png" alt="img" /></p>
-
-<p>命名为first</p>
-
-<p><img src="/img/Simple_4/22.png" alt="img" /></p>
-
-<p>此时web.xml会自动配置</p>
-
-<p><img src="/img/Simple_4/23.png" alt="img" /></p>
-
-<p>6、编写Servlet</p>
-
-<p>在fisrt.java的doGet里添加代码如下</p>
-
-<div class="language-java highlighter-rouge"><pre class="highlight"><code>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">doGet</span><span class="o">(</span><span class="n">HttpServletRequest</span> <span class="n">request</span><span class="o">,</span> <span class="n">HttpServletResponse</span> <span class="n">response</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ServletException</span><span class="o">,</span> <span class="n">IOException</span> <span class="o">{</span>
-        <span class="n">response</span><span class="o">.</span><span class="na">setContentType</span><span class="o">(</span><span class="s">"text/html"</span><span class="o">);</span>
-        <span class="n">PrintWriter</span> <span class="n">out</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="na">getWriter</span><span class="o">();</span>
-        <span class="n">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"This is First Page"</span><span class="o">);</span>
-    <span class="o">}</span>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
+#include &lt;opencv2/opencv.hpp&gt;
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">Mat</span> <span class="n">image</span><span class="p">;</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span> <span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="n">image</span><span class="p">.</span><span class="n">data</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"No image data </span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">namedWindow</span><span class="p">(</span><span class="s">"Display Image"</span><span class="p">,</span> <span class="n">WINDOW_AUTOSIZE</span> <span class="p">);</span>
+    <span class="n">imshow</span><span class="p">(</span><span class="s">"Display Image"</span><span class="p">,</span> <span class="n">image</span><span class="p">);</span>
+    <span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
 </code></pre>
 </div>
 
-<p>7、配置访问路径</p>
+<p>CMakeLists.txt</p>
 
-<p>在web.xml里添加以下代码</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>cmake_minimum_required(VERSION 2.8)
 
-<div class="highlighter-rouge"><pre class="highlight"><code>    &lt;servlet-mapping&gt;
-        &lt;servlet-name&gt;first&lt;/servlet-name&gt;
-        &lt;url-pattern&gt;/first&lt;/url-pattern&gt;
-    &lt;/servlet-mapping&gt;
+//show 项目
+project( show )
+find_package( OpenCV REQUIRED )
+include_directories( ${OpenCV_INCLUDE_DIRS} )
+add_executable( show main.cpp )
+target_link_libraries( show ${OpenCV_LIBS} )
 </code></pre>
 </div>
 
-<p><img src="/img/Simple_4/24.png" alt="img" /></p>
+<p>在文件夹内执行命令</p>
 
-<p>8、点击右上角的tomcat运行，访问<code class="highlighter-rouge">http://localhost:8080/first</code>可以看到第一个网页</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>cmake .
+make
+./show a.png
+</code></pre>
+</div>
 
-<p><img src="/img/Simple_4/25.png" alt="img" /></p>
+<p>就可以把图片a打开来</p>
+
+<p><img src="/img/Simple_5/03.png" alt="img" /></p>
 
 
 
@@ -243,13 +220,9 @@
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/ios/2018/01/15/View_4/" data-toggle="tooltip" data-placement="top" title="View编程指南(四)">&larr; 上一篇</a>
+                        <a href="/java/2018/02/05/Java-Tomcat/" data-toggle="tooltip" data-placement="top" title="Tomcat+Servlet">&larr; 上一篇</a>
                     </li>
                     
-                    
-                    <li class="next">
-                        <a href="/%E5%9F%BA%E7%A1%80/2018/03/11/OpenCV/" data-toggle="tooltip" data-placement="top" title="OpenCV学习简介">下一篇 &rarr;</a>
-                    </li>
                     
                 </ul>
 
