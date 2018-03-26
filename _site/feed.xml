@@ -1,10 +1,50 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-03-26T18:39:48+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">OpenGL编程指南（一）</title><link href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL_1/" rel="alternate" type="text/html" title="OpenGL编程指南（一）" /><published>2018-03-24T20:00:00+08:00</published><updated>2018-03-24T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL_1</id><content type="html" xml:base="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL_1/">&lt;p&gt;本文翻译自苹果官方文档&lt;a href=&quot;https://developer.apple.com/library/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008793-CH1-SW1&quot;&gt;OpenGL ES Programming Guide&lt;/a&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-03-26T19:06:22+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">OpenGL编程指南（一）</title><link href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL_1/" rel="alternate" type="text/html" title="OpenGL编程指南（一）" /><published>2018-03-24T20:00:00+08:00</published><updated>2018-03-24T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL_1</id><content type="html" xml:base="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL_1/">&lt;p&gt;本文翻译自苹果官方文档&lt;a href=&quot;https://developer.apple.com/library/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008793-CH1-SW1&quot;&gt;OpenGL ES Programming Guide&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;一关于opengl-es&quot;&gt;一、关于OpenGL ES&lt;/h3&gt;
 
 &lt;p&gt;&lt;em&gt;Open Graphics Library&lt;/em&gt;（OpenGL）用于可视化2D和3D数据。 它是一个多用途的开放标准图形库，支持2D和3D数字内容创建，机械和建筑设计，虚拟样机，飞行模拟，视频游戏等应用。 您可以使用OpenGL来配置3D图形管道并向其提交数据。 顶点被转换并且被点亮，然后组装成图元，并被光栅化用以创建2D图像。 OpenGL旨在将函数调用转换为可发送到底层图形硬件的图形命令。 由于底层硬件专用于处理图形命令，所以OpenGL绘图通常非常快速。&lt;/p&gt;
 
-&lt;p&gt;&lt;em&gt;OpenGL for Embedded Systems (OpenGL ES)&lt;/em&gt; 是OpenGL的简化版本，它消除了冗余功能，提供了一个易于学习和易于在移动图形硬件中实现的库。&lt;/p&gt;</content><author><name>Ted</name></author><category term="基础" /><summary type="html">本文翻译自苹果官方文档OpenGL ES Programming Guide</summary></entry><entry><title type="html">OpenGL初识</title><link href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL/" rel="alternate" type="text/html" title="OpenGL初识" /><published>2018-03-24T20:00:00+08:00</published><updated>2018-03-24T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL</id><content type="html" xml:base="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL/">&lt;h4 id=&quot;什么是opengl&quot;&gt;什么是OpenGL&lt;/h4&gt;
+&lt;p&gt;&lt;em&gt;OpenGL for Embedded Systems (OpenGL ES)&lt;/em&gt; 是OpenGL的简化版本，它消除了冗余功能，提供了一个易于学习和易于在移动图形硬件中实现的库。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_6/04.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;预览&quot;&gt;预览&lt;/h4&gt;
+
+&lt;p&gt;OpenGL ES允许应用程序利用底层图形处理器的强大功能。 iOS设备上的GPU可以执行复杂的2D和3D绘图，以及最终图像中每个像素的复杂阴影计算。 如果您的应用程序的设计要求需要最直接，最全面地访问GPU硬件，则应该使用OpenGL ES。 OpenGL ES的典型客户端包括呈现3D图形的视频游戏和模拟。&lt;/p&gt;
+
+&lt;p&gt;OpenGL ES是一个底层的，以硬件为中心的API。 虽然它提供了最强大和最灵活的图形处理工具，但它的学习曲线陡峭，对应用程序的整体设计也有重大影响。 对于需要高性能图形以进行更多专业用途的应用程序，iOS提供了几个更高层的框架：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Sprite Kit框架提供了一个为创建2D游戏而优化的硬件加速动画系统。&lt;/li&gt;
+  &lt;li&gt;Core Image框架为静止和视频图像提供实时滤镜和分析。&lt;/li&gt;
+  &lt;li&gt;Core Animation为所有iOS应用程序提供了硬件加速的图形渲染和动画基础结构，以及一个简单的声明式编程模型，使得实现复杂的用户界面动画变得非常简单。&lt;/li&gt;
+  &lt;li&gt;您可以使用UIKit框架中的功能为Cocoa Touch用户界面添加动画，基于物理的动态效果和其他特殊效果。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;二构建适用于ios-app的opengl-es清单&quot;&gt;二、构建适用于iOS APP的OpenGL ES清单&lt;/h3&gt;
+
+&lt;p&gt;OpenGL ES规范定义了一系列独立于平台的API，用于使用GPU硬件渲染图形。实现OpenGL ES的平台提供了：一个渲染上下文用于执行OpenGL ES命令、帧缓冲区用于保存渲染结果，以及一个或多个渲染目标用以呈现帧缓冲区内容以供显示。在iOS中，&lt;code class=&quot;highlighter-rouge&quot;&gt;EAGLContext&lt;/code&gt;类实现了渲染上下文。 iOS只提供一种类型的帧缓冲区也就是OpenGL ES framebuffer对象，GLKView和CAEAGLLayer类实现渲染目标。&lt;/p&gt;
+
+&lt;p&gt;在iOS中构建OpenGL ES应用程序需要考虑几个问题，其中一些是OpenGL ES编程通用的，其中一些针对iOS。按照此清单以及下面的详细部分进行使用：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;确定哪些版本的OpenGL ES为有您的应用程序需要的功能，并创建OpenGL ES上下文。&lt;/li&gt;
+  &lt;li&gt;在运行时验证设备是否支持您要使用的OpenGL ES功能。&lt;/li&gt;
+  &lt;li&gt;选择渲染OpenGL ES内容的位置。&lt;/li&gt;
+  &lt;li&gt;确保您的应用在iOS中正常运行。&lt;/li&gt;
+  &lt;li&gt;实现你的渲染引擎。&lt;/li&gt;
+  &lt;li&gt;使用Xcode和Instruments调试您的OpenGL ES应用程序并调整它以获得最佳性能。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;选择版本&quot;&gt;选择版本&lt;/h4&gt;
+
+&lt;p&gt;确定您的应用是否应该支持OpenGL ES 3.0，OpenGL ES 2.0，OpenGL ES 1.1或多个版本。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;OpenGL ES 3.0是iOS 7中的新功能。它增加了许多新功能，可以实现更高性能，通用GPU计算技术以及以前只能在桌面级硬件和游戏控制台上实现的更复杂的视觉效果。&lt;/li&gt;
+  &lt;li&gt;OpenGL ES 2.0是iOS设备的基准配置文件，具有基于可编程着色器的可配置图形管道。&lt;/li&gt;
+  &lt;li&gt;OpenGL ES 1.1只提供了一个基本的固定功能图形管道，并且在iOS中主要用于向后兼容。&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Ted</name></author><category term="基础" /><summary type="html">本文翻译自苹果官方文档OpenGL ES Programming Guide</summary></entry><entry><title type="html">OpenGL初识</title><link href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL/" rel="alternate" type="text/html" title="OpenGL初识" /><published>2018-03-24T20:00:00+08:00</published><updated>2018-03-24T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL</id><content type="html" xml:base="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL/">&lt;h4 id=&quot;什么是opengl&quot;&gt;什么是OpenGL&lt;/h4&gt;
 
 &lt;p&gt;OpenGL（全写Open Graphics Library）是指定义了一个跨编程语言、跨平台的编程接口规格的专业的图形程序接口。它用于三维图像（二维的亦可），是一个功能强大，调用方便的底层图形库。&lt;/p&gt;
 
