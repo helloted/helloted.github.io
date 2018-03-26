@@ -1,4 +1,38 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-03-16T14:44:45+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">OpenCV学习简介</title><link href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/11/OpenCV/" rel="alternate" type="text/html" title="OpenCV学习简介" /><published>2018-03-11T20:00:00+08:00</published><updated>2018-03-11T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/11/OpenCV</id><content type="html" xml:base="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/11/OpenCV/">&lt;h3 id=&quot;一前言&quot;&gt;一、前言&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-03-26T15:50:11+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">OpenGL初识</title><link href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/25/OpenGL/" rel="alternate" type="text/html" title="OpenGL初识" /><published>2018-03-25T20:00:00+08:00</published><updated>2018-03-25T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/25/OpenGL</id><content type="html" xml:base="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/25/OpenGL/">&lt;h4 id=&quot;什么是opengl&quot;&gt;什么是OpenGL&lt;/h4&gt;
+
+&lt;p&gt;OpenGL（全写Open Graphics Library）是指定义了一个跨编程语言、跨平台的编程接口规格的专业的图形程序接口。它用于三维图像（二维的亦可），是一个功能强大，调用方便的底层图形库。&lt;/p&gt;
+
+&lt;p&gt;OpenGL™ 是行业领域中最为广泛接纳的 2D/3D 图形 API，其自诞生至今已催生了各种计算机平台及设备上的数千优秀应用程序。OpenGL™ 是独立于视窗操作系统或其它操作系统的，亦是网络透明的。在包含CAD、内容创作、能源、娱乐、游戏开发、制造业、制药业及虚拟现实等行业领域中，OpenGL™ 帮助程序员实现在 PC、工作站、超级计算机等硬件设备上的高性能、极具冲击力的高视觉表现力图形处理软件的开发。&lt;/p&gt;
+
+&lt;h4 id=&quot;opengl主要功能是什么&quot;&gt;OpenGL主要功能是什么？&lt;/h4&gt;
+
+&lt;p&gt;OpenGL是一个开放的三维图形软件包，它独立于窗口系统和操作系统，以它为基础开发的应用程序可以十分方便地在各种平台间移植；OpenGL可以与Visual C++紧密接口，便于实现机械手的有关计算和图形算法，可保证算法的正确性和可靠性；OpenGL使用简便，效率高。它具有七大功能：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;1、建模：OpenGL图形库除了提供基本的点、线、多边形的绘制函数外，还提供了复杂的三维物体（球、锥、多面体、茶壶等）以及复杂曲线和曲面绘制函数。&lt;/li&gt;
+  &lt;li&gt;2、变换：OpenGL图形库的变换包括基本变换和投影变换。基本变换有平移、旋转、缩放、镜像四种变换，投影变换有平行投影（又称正射投影）和透视投 影两种变换。其变换方法有利于减少算法的运行时间，提高三维图形的显示速度。&lt;/li&gt;
+  &lt;li&gt;3、颜色模式设置：OpenGL颜色模式有两种，即RGBA模式和颜色索引（Color Index）。&lt;/li&gt;
+  &lt;li&gt;4、光照和材质设置：OpenGL光有自发光（Emitted Light）、环境光（Ambient Light）、漫反射光（Diffuse Light）和高光（Specular Light）。材质是用光反射率来表示。场景（Scene）中物体最终反映到人眼的颜色是光的红绿蓝分量与材质红绿蓝分量的反射率相乘后形成的颜色。&lt;/li&gt;
+  &lt;li&gt;5、纹理映射（Texture Mapping）。利用OpenGL纹理映射功能可以十分逼真地表达物体表面细节。&lt;/li&gt;
+  &lt;li&gt;6、位图显示和图象增强图象功能除了基本的拷贝和像素读写外，还提供融合（Blending）、抗锯齿（反走样）（Antialiasing）和雾（fog）的特殊图象效果处理。以上三条可使被仿真物更具真实感，增强图形显示的效果。&lt;/li&gt;
+  &lt;li&gt;7、双缓存动画（Double Buffering）双缓存即前台缓存和后台缓存，简言之，后台缓存计算场景、生成画面，前台缓存显示后台缓存已画好的画面。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;opengl-es是什么&quot;&gt;OpenGL ES是什么？&lt;/h4&gt;
+
+&lt;p&gt;OpenGL ES (OpenGL for Embedded Systems) 是 OpenGL 三维图形 API 的子集，针对手机、PDA和游戏主机等嵌入式设备而设计。该API由Khronos集团定义推广，Khronos是一个图形软硬件行业协会，该协会主要关注图形和多媒体方面的开放标准。&lt;/p&gt;
+
+&lt;h4 id=&quot;opengl-vs-opencv&quot;&gt;OpenGL VS OpenCV&lt;/h4&gt;
+
+&lt;p&gt;Open CV是 Open Source Computer Vision Library
+Open GL是 Open Graphics Library
+Open CV主要是提供图像处理和视频处理的基础算法库，还涉及一些机器学习的算法。比如你想实现视频的降噪、运动物体的跟踪、目标（比如人脸）的识别这些都是CV的领域
+OpenGL则专注在Graphics，3D绘图。
+其实两者的区别就是Computer Vision和Computer Graphics这两个学科之间的区别，前者专注于从采集到的视觉图像中获取信息，是用机器来理解图像；后者是用机器绘制合适的视觉图像给人看。(摘自知乎)&lt;/p&gt;
+
+&lt;h3 id=&quot;二opengl的ios环境&quot;&gt;二、OpenGL的iOS环境&lt;/h3&gt;
+
+&lt;p&gt;GLKit是苹果iOS 5引入的一个为简化OpenGL ES的使用的框架，它为OpenGL ES的使用提供了相关的类和函数，GLKit是Cocoa Touch以及多个其他的框架（包含UIKit）的一部分。而GLKView和GLKViewController类名字中的GLK前缀表明这些类是GLKit框架的一部分&lt;/p&gt;</content><author><name>Ted</name></author><category term="基础" /><summary type="html">什么是OpenGL</summary></entry><entry><title type="html">OpenCV学习简介</title><link href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/11/OpenCV_1/" rel="alternate" type="text/html" title="OpenCV学习简介" /><published>2018-03-11T20:00:00+08:00</published><updated>2018-03-11T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/11/OpenCV_1</id><content type="html" xml:base="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/11/OpenCV_1/">&lt;h3 id=&quot;一前言&quot;&gt;一、前言&lt;/h3&gt;
 
 &lt;h4 id=&quot;什么是opencv&quot;&gt;什么是OpenCV&lt;/h4&gt;
 
@@ -1967,89 +2001,4 @@ ssserver -c /etc/shadowsocks.json -d stop  //停止
 
 &lt;p&gt;​      其中，地址是VPS的IP地址，端口和密码是刚才设置的&lt;/p&gt;
 
-&lt;p&gt;这样就可以翻墙了~&lt;/p&gt;</content><author><name>Ted</name></author><category term="工具" /><summary type="html">Socks与VPN的区别</summary></entry><entry><title type="html">Stackoverflow-iOS</title><link href="http://www.helloted.com/ios/2017/12/06/stackoverflow/" rel="alternate" type="text/html" title="Stackoverflow-iOS" /><published>2017-12-06T20:00:00+08:00</published><updated>2017-12-06T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2017/12/06/stackoverflow</id><content type="html" xml:base="http://www.helloted.com/ios/2017/12/06/stackoverflow/">&lt;p&gt;&lt;img src=&quot;/img/Simple_1/15.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;stackoverflow上Votes数排名靠前的部分问题整理，&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios&quot;&gt;Github地址&lt;/a&gt;，不断更新中……&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/a-skill-one-line.md&quot;&gt;一行代码了事&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/whats-the-difference-between-the-atomic-and-nonatomic-attributes.md&quot;&gt;atomic和nonatomic有什么区别?&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/vertically-align-text-to-top-within-a-uilabel.md&quot;&gt;UILabel的文字如何垂直居上？&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/what-are-the-dangers-of-method-swizzling-in-objective-c.md&quot;&gt;使用Method-swizzling的危害?&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/how-to-check-for-an-active-internet-connection-on-ios-or-osx.md&quot;&gt;如何判断iOS或者OSX的网络连接状况?&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/how-do-i-check-if-a-string-contains-another-string-in-objective-c.md&quot;&gt;如何判断一个字符串包含另外一个字符串?&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/how-do-i-sort-an-nsmutablearray-with-custom-objects-in-it.md&quot;&gt;如何在NSMutableArray里对自定义对象进行排序？&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/constants-in-objective-c.md&quot;&gt;如何声明一个全局常量？&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/class-vs-import.md&quot;&gt;@class VS #import&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/synthesize-vs-dynamic-what-are-the-differences.md&quot;&gt;@synthesize vs @dynamic&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/nsobject-load-and-initialize-what-do-they-do.md&quot;&gt;NSobject的+load +initialize分别做了什么？&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/how-to-scale-a-uiimageview-proportionally.md&quot;&gt;UIImageView的伸缩模式&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/difference-between-objectforkey-and-valueforkey.md&quot;&gt;objectForKey和valueForKey有什么区别？&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/nsstring-property-copy-or-retain.md&quot;&gt;NSString的属性修饰符应该用copy还是strong(retain)？&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/when-to-use-nsinteger-vs-int.md&quot;&gt;什么情况下使用NSInteger或者Int？&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/uiview-frame-bounds-and-center.md&quot;&gt;UIView的frame, bounds, center？&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/what-does-private-mean-in-objective-c.md&quot;&gt;@private在Objective-C里是什么意思？&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/objective-c-declared-property-attributes-nonatomic-copy-strong-weak.md&quot;&gt;Objective-C属性修饰符(nonatomic, copy, strong, weak)？&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/how-to-store-custom-objects-in-nsuserdefaults.md&quot;&gt;如何在NSUserDefaults里保存一个自定义对象？&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/how-do-i-animate-constraint-changes.md&quot;&gt;更改布局时如何用动画？&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/can-i-embed-a-custom-font-in-an-iphone-application.md&quot;&gt;APP里如何使用自定义字体？&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/nsoperation-vs-grand-central-dispatch.md&quot;&gt;NSOperation vs. GCD？&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/can-you-animate-a-height-change-on-a-uitableviewcell-when-selected.md&quot;&gt;选中UITableViewCell时动画更改高度&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/how-to-hide-uinavigationbar-1px-bottom-line.md&quot;&gt;如何隐藏UINavigationBar底部的线？&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/creating-a-blurring-overlay-view.md&quot;&gt;创建一个带模糊效果的View&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/send-post-request-using-nsurlsession.md&quot;&gt;用NSURLSession发送一个POST请求&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/always-pass-weak-reference-of-self-into-block-in-arc.md&quot;&gt;往ARC的Block传值一定要弱引用么&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/best-way-to-remove-from-nsmutablearray-while-iterating.md&quot;&gt;NSMutableArray遍历移除的最好方式？&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/easy-way-to-see-saved-nsuserdefaults.md&quot;&gt;查看存储在NSUserDefaults的值&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/how-does-synchronized-lock-unlock-in-objective-c.md&quot;&gt;@synchronized是如何加锁/解锁？&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/difference-between-nil-nil-and-null-in-objective-c.md&quot;&gt;nil, NIL, NULL, NSNull的区别？&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/applicationwillenterforeground-vs-applicationdidbecomeactive-applicationwillre.md&quot;&gt;application几种状态&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/try-catch-block-in-objective-c.md&quot;&gt;@try - catch block&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/how-to-rotate-a-uiimage-90-degrees.md&quot;&gt;旋转图片&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/what-is-the-best-way-to-create-constants-in-objective-c.md&quot;&gt;Objective-C声明常量的最好方式&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/types-in-objective-c-on-iphone.md&quot;&gt;Objective-C里类型大小&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/check-if-ios-app-is-in-background.md&quot;&gt;检测iOS APP是否在后台&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/how-to-stop-unwanted-uibutton-animation-on-title-change.md&quot;&gt;去除UIButton修改标题时的动画效果&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/uibutton-how-to-center-an-image-and-a-text-using-imageedgeinsets-and-titleedgei.md&quot;&gt;如何使UIButton的图片和文字都居中？&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/number-of-days-between-two-nsdates.md&quot;&gt;计算两个NSDate之间的天数？&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/when-to-use-enumerateobjectsusingblock-vs-for.md&quot;&gt;for循环 vs. enumerateObjectsUsingBlock&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/how-can-i-programmatically-get-the-mac-address-of-an-iphone.md&quot;&gt;设备唯一标识/MAC地址&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/the-best-way-to-remove-duplicate-values-from-nsmutablearray-in-objective-c.md&quot;&gt;数组去重&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/iphone-sdk-what-is-the-difference-between-loadview-and-viewdidload.md&quot;&gt;loadView和viewDidLoad&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/objective-c-pass-block-as-parameter.md&quot;&gt;Block作为参数传递&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/how-to-compare-uicolors.md&quot;&gt;UIColor进行比较&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/how-to-use-nscache.md&quot;&gt;如何使用NSCache?&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/deep-copying-an-nsarray.md&quot;&gt;NSArray的深拷贝&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/how-to-set-the-full-width-of-separator-in-uitableview.md&quot;&gt;UITableView填满分割线&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/using-performselector-vs-just-calling-the-method.md&quot;&gt;performSelector: vs. method&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/cancelling-queued-performselectorafterdelay-calls.md&quot;&gt;取消performSelector:afterDelay&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/get-parts-of-a-nsurl-in-objective-c.md&quot;&gt;获取NSURL里的部分信息&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/ios-app-programmatically-get-build-version.md&quot;&gt;获取APP的版本信息&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/how-to-pass-object-with-nsnotificationcenter.md&quot;&gt;NSNotificationCenter传递对象&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/when-is-it-better-to-use-an-nsset-over-an-nsarray.md&quot;&gt;NSSet vs. NSArray&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/how-to-embed-small-icon-in-uilabel.md&quot;&gt;UILabel嵌入小图片&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/how-can-i-create-a-uicolor-from-a-hex-string.md&quot;&gt;16进制的UIColor&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/how-to-tell-if-uiviewcontrollers-view-is-visible.md&quot;&gt;如何判断UIViewController的View是否可见&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/how-do-i-detect-when-someone-shakes-an-iphone.md&quot;&gt;如何检测手机的摇动？&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/filtering-nsarray-into-a-new-nsarray-in-objective-c.md&quot;&gt;数组过滤&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/how-to-add-a-border-just-on-the-top-side-of-a-uiview.md&quot;&gt;给UIView的一边添加border&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/detect-if-the-device-is-iphone-x.md&quot;&gt;判断设备型号iphone X&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/detecting-taps-on-attributed-text-in-a-uitextview-in-ios.md&quot;&gt;检测UITextView上的点击了字符串&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/detecting-when-the-back-button-is-pressed-on-a-navbar.md&quot;&gt;监测NavBar的返回按钮被点击&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/how-disable-copy-cut-select-select-all-in-uitextview.md&quot;&gt;禁用UITextView的粘贴板功能&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/how-to-check-if-an-nsdate-occurs-between-two-other-nsdates.md&quot;&gt;判断一个时间在另外两个时间之间&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/what-is-nszombie.md&quot;&gt;什么是僵尸对象?&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/does-the-apns-device-token-ever-change-once-created.md&quot;&gt;APNs的Token创建后会更新吗?&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/how-to-create-an-array-of-selectors.md&quot;&gt;创建一个Selectors的数组&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/whats-the-best-way-to-put-a-c-struct-in-an-nsarray.md&quot;&gt;数组存储结构体&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/what-is-the-difference-between-ivars-and-properties-in-objective-c.md&quot;&gt;实例变量(iVar)与属性(property)的区别&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/whats-the-difference-between-a-method-and-a-selector.md&quot;&gt;Method vs. selector vs. IMP&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/checking-a-null-value-in-objective-c-that-has-been-returned-from-a-json-string.md&quot;&gt;JSON字符串里的null处理&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/objective-c-assertion-vs-exception-vs-error.md&quot;&gt;Objective-C: Assertion vs. Exception vs. Error&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/using-a-constant-nsstring-as-the-key-for-nsuserdefaults.md&quot;&gt;字符串常量作为key&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/uialertcontroller-custom-font-size-color.md&quot;&gt;UIAlertController自定义字体&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/how-to-get-uitableview-from-uitableviewcell.md&quot;&gt;获取UITableViewCell的UITableView&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios/blob/master/content/any-way-to-bold-part-of-a-nsstring.md&quot;&gt;字符串部分粗体&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/helloted/stackoverflow_top_ios&quot;&gt;Github地址&lt;/a&gt;，不断更新中……&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html"></summary></entry></feed>
+&lt;p&gt;这样就可以翻墙了~&lt;/p&gt;</content><author><name>Ted</name></author><category term="工具" /><summary type="html">Socks与VPN的区别</summary></entry></feed>
