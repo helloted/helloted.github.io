@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-03-26T19:06:22+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">OpenGL编程指南（一）</title><link href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL_1/" rel="alternate" type="text/html" title="OpenGL编程指南（一）" /><published>2018-03-24T20:00:00+08:00</published><updated>2018-03-24T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL_1</id><content type="html" xml:base="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL_1/">&lt;p&gt;本文翻译自苹果官方文档&lt;a href=&quot;https://developer.apple.com/library/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008793-CH1-SW1&quot;&gt;OpenGL ES Programming Guide&lt;/a&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-03-26T19:32:21+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">OpenGL编程指南（一）</title><link href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL_1/" rel="alternate" type="text/html" title="OpenGL编程指南（一）" /><published>2018-03-24T20:00:00+08:00</published><updated>2018-03-24T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL_1</id><content type="html" xml:base="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL_1/">&lt;p&gt;本文翻译自苹果官方文档&lt;a href=&quot;https://developer.apple.com/library/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008793-CH1-SW1&quot;&gt;OpenGL ES Programming Guide&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;一关于opengl-es&quot;&gt;一、关于OpenGL ES&lt;/h3&gt;
 
@@ -44,7 +44,56 @@
   &lt;li&gt;OpenGL ES 3.0是iOS 7中的新功能。它增加了许多新功能，可以实现更高性能，通用GPU计算技术以及以前只能在桌面级硬件和游戏控制台上实现的更复杂的视觉效果。&lt;/li&gt;
   &lt;li&gt;OpenGL ES 2.0是iOS设备的基准配置文件，具有基于可编程着色器的可配置图形管道。&lt;/li&gt;
   &lt;li&gt;OpenGL ES 1.1只提供了一个基本的固定功能图形管道，并且在iOS中主要用于向后兼容。&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Ted</name></author><category term="基础" /><summary type="html">本文翻译自苹果官方文档OpenGL ES Programming Guide</summary></entry><entry><title type="html">OpenGL初识</title><link href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL/" rel="alternate" type="text/html" title="OpenGL初识" /><published>2018-03-24T20:00:00+08:00</published><updated>2018-03-24T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL</id><content type="html" xml:base="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL/">&lt;h4 id=&quot;什么是opengl&quot;&gt;什么是OpenGL&lt;/h4&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;验证opengl-es功能&quot;&gt;验证OpenGL ES功能&lt;/h4&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://developer.apple.com/library/content/documentation/DeviceInformation/Reference/iOSDeviceCompatibility/Introduction/Introduction.html#//apple_ref/doc/uid/TP40013599&quot;&gt;&lt;em&gt;iOS Device Compatibility Reference&lt;/em&gt; &lt;/a&gt;总结了在iOS设备上可用的功能和拓展，但是为了尽可能多的系统版本和设备能够运行，你的APP应该总是在运行时查询OpenGL ES声明来检测功能。&lt;/p&gt;
+
+&lt;h4 id=&quot;要确定特定实现的限制如最大纹理大小或顶点属性的最大数量请使用适当的glget函数查找其数据查找相应标记的值如gl_h头中的max_texture_size或max_vertex_attribs-类型&quot;&gt;要确定特定实现的限制（如最大纹理大小或顶点属性的最大数量），请使用适当的glGet函数查找其数据，查找相应标记的值（如gl_h头中的MAX_TEXTURE_SIZE或MAX_VERTEX_ATTRIBS） 类型。&lt;/h4&gt;
+
+&lt;p&gt;要检查OpenGL ES 3.0扩展，请使用&lt;code class=&quot;highlighter-rouge&quot;&gt;glGetIntegerv&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;glGetStringi&lt;/code&gt;函数，如下面的代码示例所示：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;BOOL CheckForExtension(NSString *searchName)
+{
+    // Create a set containing all extension names.
+    // (For better performance, create the set only once and cache it for future use.)
+    int max = 0;
+    glGetIntegerv(GL_NUM_EXTENSIONS, &amp;amp;max);
+    NSMutableSet *extensions = [NSMutableSet set];
+    for (int i = 0; i &amp;lt; max; i++) {
+        [extensions addObject: @( (char *)glGetStringi(GL_EXTENSIONS, i) )];
+    }
+    return [extensions containsObject: searchName];
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;要检查OpenGL ES 1.1和2.0扩展，请调用&lt;code class=&quot;highlighter-rouge&quot;&gt;glGetString&lt;/code&gt;（GL_EXTENSIONS）以获取所有扩展名的列表。&lt;/p&gt;
+
+&lt;h4 id=&quot;选择一个渲染目标&quot;&gt;选择一个渲染目标&lt;/h4&gt;
+
+&lt;p&gt;在iOS中，帧缓冲区对象存储绘图命令的结果。 （iOS不实现窗口系统提供的帧缓冲区。）你可以以多种方式使用帧缓冲区对象的内容：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;GLKit框架提供了一个View，该View绘制OpenGL ES内容并管理其自己的帧缓冲区对象，以及支持动画OpenGL ES内容的View Controller。使用这些类创建全屏views或将您的OpenGL ES内容合并到UIKit视图层次结构中。&lt;/li&gt;
+  &lt;li&gt;CAEAGLLayer类提供了一种将OpenGL ES内容绘制为Core Animation Layer组成部分的方法。使用此类时，您必须创建自己的帧缓冲区对象。&lt;/li&gt;
+  &lt;li&gt;与任何OpenGL ES实现一样，您还可以使用帧缓冲器进行离屏图形处理或渲染纹理，以用于图形管道中的其他位置。借助OpenGL ES 3.0，可以在使用多个渲染目标的渲染算法中使用屏幕外缓冲区。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;与ios集成&quot;&gt;与iOS集成&lt;/h4&gt;
+
+&lt;p&gt;iOS应用程序默认支持多任务处理，但在OpenGL ES应用程序中正确处理此功能需要额外考虑。不正确地使用OpenGL ES会导致您的应用在后台被系统杀死。&lt;/p&gt;
+
+&lt;p&gt;许多iOS设备都包含高分辨率显示器，因此您的应用应支持多种显示屏尺寸和分辨率&lt;/p&gt;
+
+&lt;h4 id=&quot;实现渲染引擎&quot;&gt;实现渲染引擎&lt;/h4&gt;
+
+&lt;p&gt;设计OpenGL ES绘图代码有许多可能的策略，其全部细节超出了本文档的范围。渲染引擎设计的许多方面对于OpenGL和OpenGL ES的所有实现都是通用的。&lt;/p&gt;
+
+&lt;h4 id=&quot;调试和分析&quot;&gt;调试和分析&lt;/h4&gt;
+
+&lt;p&gt;Xcode和Instruments提供了许多工具来跟踪渲染问题并分析应用程序中的OpenGL ES性能。&lt;/p&gt;</content><author><name>Ted</name></author><category term="基础" /><summary type="html">本文翻译自苹果官方文档OpenGL ES Programming Guide</summary></entry><entry><title type="html">OpenGL初识</title><link href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL/" rel="alternate" type="text/html" title="OpenGL初识" /><published>2018-03-24T20:00:00+08:00</published><updated>2018-03-24T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL</id><content type="html" xml:base="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL/">&lt;h4 id=&quot;什么是opengl&quot;&gt;什么是OpenGL&lt;/h4&gt;
 
 &lt;p&gt;OpenGL（全写Open Graphics Library）是指定义了一个跨编程语言、跨平台的编程接口规格的专业的图形程序接口。它用于三维图像（二维的亦可），是一个功能强大，调用方便的底层图形库。&lt;/p&gt;
 

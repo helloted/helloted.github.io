@@ -164,6 +164,55 @@
   <li>OpenGL ES 1.1只提供了一个基本的固定功能图形管道，并且在iOS中主要用于向后兼容。</li>
 </ul>
 
+<h4 id="验证opengl-es功能">验证OpenGL ES功能</h4>
+
+<p><a href="https://developer.apple.com/library/content/documentation/DeviceInformation/Reference/iOSDeviceCompatibility/Introduction/Introduction.html#//apple_ref/doc/uid/TP40013599"><em>iOS Device Compatibility Reference</em> </a>总结了在iOS设备上可用的功能和拓展，但是为了尽可能多的系统版本和设备能够运行，你的APP应该总是在运行时查询OpenGL ES声明来检测功能。</p>
+
+<h4 id="要确定特定实现的限制如最大纹理大小或顶点属性的最大数量请使用适当的glget函数查找其数据查找相应标记的值如gl_h头中的max_texture_size或max_vertex_attribs-类型">要确定特定实现的限制（如最大纹理大小或顶点属性的最大数量），请使用适当的glGet函数查找其数据，查找相应标记的值（如gl_h头中的MAX_TEXTURE_SIZE或MAX_VERTEX_ATTRIBS） 类型。</h4>
+
+<p>要检查OpenGL ES 3.0扩展，请使用<code class="highlighter-rouge">glGetIntegerv</code>和<code class="highlighter-rouge">glGetStringi</code>函数，如下面的代码示例所示：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>BOOL CheckForExtension(NSString *searchName)
+{
+    // Create a set containing all extension names.
+    // (For better performance, create the set only once and cache it for future use.)
+    int max = 0;
+    glGetIntegerv(GL_NUM_EXTENSIONS, &amp;max);
+    NSMutableSet *extensions = [NSMutableSet set];
+    for (int i = 0; i &lt; max; i++) {
+        [extensions addObject: @( (char *)glGetStringi(GL_EXTENSIONS, i) )];
+    }
+    return [extensions containsObject: searchName];
+}
+</code></pre>
+</div>
+
+<p>要检查OpenGL ES 1.1和2.0扩展，请调用<code class="highlighter-rouge">glGetString</code>（GL_EXTENSIONS）以获取所有扩展名的列表。</p>
+
+<h4 id="选择一个渲染目标">选择一个渲染目标</h4>
+
+<p>在iOS中，帧缓冲区对象存储绘图命令的结果。 （iOS不实现窗口系统提供的帧缓冲区。）你可以以多种方式使用帧缓冲区对象的内容：</p>
+
+<ul>
+  <li>GLKit框架提供了一个View，该View绘制OpenGL ES内容并管理其自己的帧缓冲区对象，以及支持动画OpenGL ES内容的View Controller。使用这些类创建全屏views或将您的OpenGL ES内容合并到UIKit视图层次结构中。</li>
+  <li>CAEAGLLayer类提供了一种将OpenGL ES内容绘制为Core Animation Layer组成部分的方法。使用此类时，您必须创建自己的帧缓冲区对象。</li>
+  <li>与任何OpenGL ES实现一样，您还可以使用帧缓冲器进行离屏图形处理或渲染纹理，以用于图形管道中的其他位置。借助OpenGL ES 3.0，可以在使用多个渲染目标的渲染算法中使用屏幕外缓冲区。</li>
+</ul>
+
+<h4 id="与ios集成">与iOS集成</h4>
+
+<p>iOS应用程序默认支持多任务处理，但在OpenGL ES应用程序中正确处理此功能需要额外考虑。不正确地使用OpenGL ES会导致您的应用在后台被系统杀死。</p>
+
+<p>许多iOS设备都包含高分辨率显示器，因此您的应用应支持多种显示屏尺寸和分辨率</p>
+
+<h4 id="实现渲染引擎">实现渲染引擎</h4>
+
+<p>设计OpenGL ES绘图代码有许多可能的策略，其全部细节超出了本文档的范围。渲染引擎设计的许多方面对于OpenGL和OpenGL ES的所有实现都是通用的。</p>
+
+<h4 id="调试和分析">调试和分析</h4>
+
+<p>Xcode和Instruments提供了许多工具来跟踪渲染问题并分析应用程序中的OpenGL ES性能。</p>
+
 
                 <hr>
 
