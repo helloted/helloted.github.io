@@ -1,4 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-03-26T17:20:36+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">OpenGL初识</title><link href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL/" rel="alternate" type="text/html" title="OpenGL初识" /><published>2018-03-24T20:00:00+08:00</published><updated>2018-03-24T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL</id><content type="html" xml:base="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL/">&lt;h4 id=&quot;什么是opengl&quot;&gt;什么是OpenGL&lt;/h4&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-03-26T18:39:48+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">OpenGL编程指南（一）</title><link href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL_1/" rel="alternate" type="text/html" title="OpenGL编程指南（一）" /><published>2018-03-24T20:00:00+08:00</published><updated>2018-03-24T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL_1</id><content type="html" xml:base="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL_1/">&lt;p&gt;本文翻译自苹果官方文档&lt;a href=&quot;https://developer.apple.com/library/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008793-CH1-SW1&quot;&gt;OpenGL ES Programming Guide&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;一关于opengl-es&quot;&gt;一、关于OpenGL ES&lt;/h3&gt;
+
+&lt;p&gt;&lt;em&gt;Open Graphics Library&lt;/em&gt;（OpenGL）用于可视化2D和3D数据。 它是一个多用途的开放标准图形库，支持2D和3D数字内容创建，机械和建筑设计，虚拟样机，飞行模拟，视频游戏等应用。 您可以使用OpenGL来配置3D图形管道并向其提交数据。 顶点被转换并且被点亮，然后组装成图元，并被光栅化用以创建2D图像。 OpenGL旨在将函数调用转换为可发送到底层图形硬件的图形命令。 由于底层硬件专用于处理图形命令，所以OpenGL绘图通常非常快速。&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;OpenGL for Embedded Systems (OpenGL ES)&lt;/em&gt; 是OpenGL的简化版本，它消除了冗余功能，提供了一个易于学习和易于在移动图形硬件中实现的库。&lt;/p&gt;</content><author><name>Ted</name></author><category term="基础" /><summary type="html">本文翻译自苹果官方文档OpenGL ES Programming Guide</summary></entry><entry><title type="html">OpenGL初识</title><link href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL/" rel="alternate" type="text/html" title="OpenGL初识" /><published>2018-03-24T20:00:00+08:00</published><updated>2018-03-24T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL</id><content type="html" xml:base="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL/">&lt;h4 id=&quot;什么是opengl&quot;&gt;什么是OpenGL&lt;/h4&gt;
 
 &lt;p&gt;OpenGL（全写Open Graphics Library）是指定义了一个跨编程语言、跨平台的编程接口规格的专业的图形程序接口。它用于三维图像（二维的亦可），是一个功能强大，调用方便的底层图形库。&lt;/p&gt;
 
@@ -1868,137 +1874,4 @@ view的事件处理代码响应事件。例如，您的代码可能会：&lt;/p&
 
 &lt;p&gt;通过内存地址比对，可以发现，所有的对象都进行了深拷贝。&lt;/p&gt;
 
-&lt;p&gt;以上代码都可以在&lt;a href=&quot;https://github.com/helloted/iOS_Demo/tree/master/CopyDemo&quot;&gt;Github&lt;/a&gt;下载&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">一、NSObject的copy实现</summary></entry><entry><title type="html">SS翻墙</title><link href="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2017/12/13/passwall/" rel="alternate" type="text/html" title="SS翻墙" /><published>2017-12-13T20:00:00+08:00</published><updated>2017-12-13T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%B7%A5%E5%85%B7/2017/12/13/passwall</id><content type="html" xml:base="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2017/12/13/passwall/">&lt;h3 id=&quot;socks与vpn的区别&quot;&gt;Socks与VPN的区别&lt;/h3&gt;
-
-&lt;p&gt;&lt;strong&gt;vpn&lt;/strong&gt;–虚拟专用网络，它的功能是：在公用网络上建立专用网络，进行加密通讯。在企业网络和高校的网络中应用很广泛。你接入vpn，其实就是接入了一个专有网络，你的网络访问都从这个出口出去，你和vpn之间的通信是否加密，取决于你连接vpn的方式或者协议。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Socks5&lt;/strong&gt;:代理是把你的网络数据请求通过一条连接你和代理服务器之间的通道，由服务器转发到目的地，这个过程中你是没有通过一条专用通道的，只是数据包的发出，然后被代理服务器收到，整个过程并没有额外的处理。&lt;/p&gt;
-
-&lt;p&gt;vpn走的是专用通道，ss只是转发流量&lt;/p&gt;
-
-&lt;p&gt;ss服务=国外VPS服务+showdosocks转发+本地showdosocks代理&lt;/p&gt;
-
-&lt;h3 id=&quot;一购买vps&quot;&gt;一、购买VPS&lt;/h3&gt;
-
-&lt;p&gt;&lt;em&gt;VPS&lt;/em&gt;:（Virtual Private Server 虚拟专用服务器）技术，将一台服务器分割成多个虚拟专享服务器的优质服务。&lt;/p&gt;
-
-&lt;p&gt;VPS服务商有很多，像阿里云、亚马逊这种知名的互联网公司都有提供这种服务。而如果要建立翻墙作用，当然是要用境外的VPS。流行的境外VPS有&lt;a href=&quot;https://www.vultr.com/&quot;&gt;Vultr&lt;/a&gt;和&lt;a href=&quot;https://www.bwh1.net/&quot;&gt;搬瓦工&lt;/a&gt;等等。&lt;/p&gt;
-
-&lt;p&gt;今天教程用的是Vultr的VPS服务&lt;/p&gt;
-
-&lt;p&gt;1、注册账号&lt;/p&gt;
-
-&lt;p&gt;2、充值。充值支持支付宝充值，每次至少10美金起&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/07.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;3、充值完后，来到个人主页面&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/08.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
- 	所有已建立的服务都会在这里有一个列表的形式展现出来。点击右上角的+号按钮，新部署服务
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/09.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-  	依次选择，国家、服务类型、大小、其他附加的条件。确定后就建立好了
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/10.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;​	按照服务商提供的IP地址和密码就可以登录VPS了&lt;/p&gt;
-
-&lt;h3 id=&quot;二showdosocks转发&quot;&gt;二、showdosocks转发&lt;/h3&gt;
-
-&lt;p&gt;1、Mac用终端登录远程服务器&lt;/p&gt;
-
-&lt;p&gt;2、安装pip&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;yum -y install epel-release
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;yum -y install python-pip
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;yum clean all
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;3、安装shadowsocks&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pip install shadowsocks
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;4、配置shadowsocks&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/etc/shadowsocks.json
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;​	配置的形式有官方样式两种&lt;/p&gt;
-
-&lt;p&gt;​	一种是&lt;a href=&quot;https://github.com/shadowsocks/shadowsocks/wiki/Configuration-via-Config-File&quot;&gt;单人配置&lt;/a&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;server&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;my_server_ip&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;//VPSIP&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;server_port&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;8388&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;//VPS端口，&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;local_address&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;127.0.0.1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;local_port&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1080&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;password&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;mypassword&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;//shadowsocks客户端用密码&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;timeout&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;method&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;aes-256-cfb&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;fast_open&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;​	&lt;a href=&quot;https://github.com/shadowsocks/shadowsocks/wiki/Configure-Multiple-Users&quot;&gt;多人模式&lt;/a&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;server&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;0.0.0.0&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;port_password&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;8381&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;foobar1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;8382&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;foobar2&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;8383&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;foobar3&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;8384&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;foobar4&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;timeout&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;method&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;aes-256-cfb&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;5、开启防火墙端口。&lt;/p&gt;
-
-&lt;p&gt;​     如果要打开防火墙，则应打开上面设置的端口，示例打开8388端口&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;iptables -A INPUT -p tcp --dport 8388 -j ACCEPT 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;​	相关防火墙配置可参考&lt;a href=&quot;http://blog.csdn.net/u011846257/article/details/54707864&quot;&gt;防火墙配置&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;6、开启showdosocks转发&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ssserver -c /etc/shadowsocks.json  //前台运行，可看到日志
-ssserver -c /etc/shadowsocks.json -d start    //后台运行
-ssserver -c /etc/shadowsocks.json -d stop  //停止
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;到这里，服务端的配置就完成了&lt;/p&gt;
-
-&lt;h3 id=&quot;三本地showdosocks代理&quot;&gt;三、本地showdosocks代理&lt;/h3&gt;
-
-&lt;p&gt;1、下载客户端&lt;/p&gt;
-
-&lt;p&gt;​	&lt;a href=&quot;https://github.com/shadowsocks?utf8=%E2%9C%93&amp;amp;q=&amp;amp;type=&amp;amp;language=&quot;&gt;github下载地址&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;2、设置客户端&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/11.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;​      其中，地址是VPS的IP地址，端口和密码是刚才设置的&lt;/p&gt;
-
-&lt;p&gt;这样就可以翻墙了~&lt;/p&gt;</content><author><name>Ted</name></author><category term="工具" /><summary type="html">Socks与VPN的区别</summary></entry></feed>
+&lt;p&gt;以上代码都可以在&lt;a href=&quot;https://github.com/helloted/iOS_Demo/tree/master/CopyDemo&quot;&gt;Github&lt;/a&gt;下载&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">一、NSObject的copy实现</summary></entry></feed>

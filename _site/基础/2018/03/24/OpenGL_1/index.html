@@ -16,9 +16,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
 
-    <title>OpenGL初识 - Helloted Blog</title>
+    <title>OpenGL编程指南（一） - Helloted Blog</title>
 
-    <link rel="canonical" href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL/">
+    <link rel="canonical" href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL_1/">
 
     <link rel="shortcut icon" href="/img/favicon.ico">
    
@@ -99,9 +99,9 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <div class="post-heading">
-                    <h1>OpenGL初识</h1>
+                    <h1>OpenGL编程指南（一）</h1>
                     
-                    <h2 class="subheading">OPenGL的一些基本概念</h2>
+                    <h2 class="subheading">《OpenGL ES Programming Guide》翻译</h2>
                     
                     <span class="meta">Posted by Ted on March 24, 2018</span>
                 </div>
@@ -116,41 +116,13 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
 
-				<h4 id="什么是opengl">什么是OpenGL</h4>
+				<p>本文翻译自苹果官方文档<a href="https://developer.apple.com/library/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008793-CH1-SW1">OpenGL ES Programming Guide</a></p>
 
-<p>OpenGL（全写Open Graphics Library）是指定义了一个跨编程语言、跨平台的编程接口规格的专业的图形程序接口。它用于三维图像（二维的亦可），是一个功能强大，调用方便的底层图形库。</p>
+<h3 id="一关于opengl-es">一、关于OpenGL ES</h3>
 
-<p>OpenGL™ 是行业领域中最为广泛接纳的 2D/3D 图形 API，其自诞生至今已催生了各种计算机平台及设备上的数千优秀应用程序。OpenGL™ 是独立于视窗操作系统或其它操作系统的，亦是网络透明的。在包含CAD、内容创作、能源、娱乐、游戏开发、制造业、制药业及虚拟现实等行业领域中，OpenGL™ 帮助程序员实现在 PC、工作站、超级计算机等硬件设备上的高性能、极具冲击力的高视觉表现力图形处理软件的开发。</p>
+<p><em>Open Graphics Library</em>（OpenGL）用于可视化2D和3D数据。 它是一个多用途的开放标准图形库，支持2D和3D数字内容创建，机械和建筑设计，虚拟样机，飞行模拟，视频游戏等应用。 您可以使用OpenGL来配置3D图形管道并向其提交数据。 顶点被转换并且被点亮，然后组装成图元，并被光栅化用以创建2D图像。 OpenGL旨在将函数调用转换为可发送到底层图形硬件的图形命令。 由于底层硬件专用于处理图形命令，所以OpenGL绘图通常非常快速。</p>
 
-<h4 id="opengl主要功能是什么">OpenGL主要功能是什么？</h4>
-
-<p>OpenGL是一个开放的三维图形软件包，它独立于窗口系统和操作系统，以它为基础开发的应用程序可以十分方便地在各种平台间移植；OpenGL可以与Visual C++紧密接口，便于实现机械手的有关计算和图形算法，可保证算法的正确性和可靠性；OpenGL使用简便，效率高。它具有七大功能：</p>
-
-<ul>
-  <li>1、建模：OpenGL图形库除了提供基本的点、线、多边形的绘制函数外，还提供了复杂的三维物体（球、锥、多面体、茶壶等）以及复杂曲线和曲面绘制函数。</li>
-  <li>2、变换：OpenGL图形库的变换包括基本变换和投影变换。基本变换有平移、旋转、缩放、镜像四种变换，投影变换有平行投影（又称正射投影）和透视投 影两种变换。其变换方法有利于减少算法的运行时间，提高三维图形的显示速度。</li>
-  <li>3、颜色模式设置：OpenGL颜色模式有两种，即RGBA模式和颜色索引（Color Index）。</li>
-  <li>4、光照和材质设置：OpenGL光有自发光（Emitted Light）、环境光（Ambient Light）、漫反射光（Diffuse Light）和高光（Specular Light）。材质是用光反射率来表示。场景（Scene）中物体最终反映到人眼的颜色是光的红绿蓝分量与材质红绿蓝分量的反射率相乘后形成的颜色。</li>
-  <li>5、纹理映射（Texture Mapping）。利用OpenGL纹理映射功能可以十分逼真地表达物体表面细节。</li>
-  <li>6、位图显示和图象增强图象功能除了基本的拷贝和像素读写外，还提供融合（Blending）、抗锯齿（反走样）（Antialiasing）和雾（fog）的特殊图象效果处理。以上三条可使被仿真物更具真实感，增强图形显示的效果。</li>
-  <li>7、双缓存动画（Double Buffering）双缓存即前台缓存和后台缓存，简言之，后台缓存计算场景、生成画面，前台缓存显示后台缓存已画好的画面。</li>
-</ul>
-
-<h4 id="opengl-es是什么">OpenGL ES是什么？</h4>
-
-<p>OpenGL ES (OpenGL for Embedded Systems) 是 OpenGL 三维图形 API 的子集，针对手机、PDA和游戏主机等嵌入式设备而设计。该API由Khronos集团定义推广，Khronos是一个图形软硬件行业协会，该协会主要关注图形和多媒体方面的开放标准。</p>
-
-<h4 id="opengl-vs-opencv">OpenGL VS OpenCV</h4>
-
-<p>Open CV是 Open Source Computer Vision Library
-Open GL是 Open Graphics Library
-Open CV主要是提供图像处理和视频处理的基础算法库，还涉及一些机器学习的算法。比如你想实现视频的降噪、运动物体的跟踪、目标（比如人脸）的识别这些都是CV的领域
-OpenGL则专注在Graphics，3D绘图。
-其实两者的区别就是Computer Vision和Computer Graphics这两个学科之间的区别，前者专注于从采集到的视觉图像中获取信息，是用机器来理解图像；后者是用机器绘制合适的视觉图像给人看。(摘自知乎)</p>
-
-<h3 id="二opengl的ios环境">二、OpenGL的iOS环境</h3>
-
-<p>GLKit是苹果iOS 5引入的一个为简化OpenGL ES的使用的框架，它为OpenGL ES的使用提供了相关的类和函数，GLKit是Cocoa Touch以及多个其他的框架（包含UIKit）的一部分。而GLKView和GLKViewController类名字中的GLK前缀表明这些类是GLKit框架的一部分</p>
+<p><em>OpenGL for Embedded Systems (OpenGL ES)</em> 是OpenGL的简化版本，它消除了冗余功能，提供了一个易于学习和易于在移动图形硬件中实现的库。</p>
 
 
                 <hr>
@@ -158,13 +130,9 @@ OpenGL则专注在Graphics，3D绘图。
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/%E5%9F%BA%E7%A1%80/2018/03/11/OpenCV_1/" data-toggle="tooltip" data-placement="top" title="OpenCV学习简介">&larr; 上一篇</a>
+                        <a href="/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL/" data-toggle="tooltip" data-placement="top" title="OpenGL初识">&larr; 上一篇</a>
                     </li>
                     
-                    
-                    <li class="next">
-                        <a href="/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL_1/" data-toggle="tooltip" data-placement="top" title="OpenGL编程指南（一）">下一篇 &rarr;</a>
-                    </li>
                     
                 </ul>
 
