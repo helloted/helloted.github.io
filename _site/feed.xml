@@ -1,4 +1,98 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-03-26T19:32:21+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">OpenGL编程指南（一）</title><link href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL_1/" rel="alternate" type="text/html" title="OpenGL编程指南（一）" /><published>2018-03-24T20:00:00+08:00</published><updated>2018-03-24T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL_1</id><content type="html" xml:base="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL_1/">&lt;p&gt;本文翻译自苹果官方文档&lt;a href=&quot;https://developer.apple.com/library/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008793-CH1-SW1&quot;&gt;OpenGL ES Programming Guide&lt;/a&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-03-27T17:23:44+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">OpenGL编程指南（二）</title><link href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/25/OpenGL_2/" rel="alternate" type="text/html" title="OpenGL编程指南（二）" /><published>2018-03-25T20:00:00+08:00</published><updated>2018-03-25T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/25/OpenGL_2</id><content type="html" xml:base="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/25/OpenGL_2/">&lt;p&gt;本文翻译自苹果官方文档&lt;a href=&quot;https://developer.apple.com/library/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008793-CH1-SW1&quot;&gt;OpenGL ES Programming Guide&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;三配置opengl-es上下文&quot;&gt;三、配置OpenGL ES上下文&lt;/h3&gt;
+
+&lt;p&gt;OpenGL ES的每个实现都提供了一种方式来创建渲染上下文来管理OpenGL ES规范所需状态。 通过把上述状态放入上下文中，多个应用程序可以轻松共享图形硬件而不会相互干扰&lt;/p&gt;
+
+&lt;h4 id=&quot;先初始化&quot;&gt;先初始化&lt;/h4&gt;
+
+&lt;p&gt;在您的应用程序可以调用任何OpenGL ES函数之前，它必须初始化一个EAGLContext对象。 &lt;code class=&quot;highlighter-rouge&quot;&gt;EAGLContext&lt;/code&gt;类还提供了用于将OpenGL ES内容与Core Animation集成的方法。&lt;/p&gt;
+
+&lt;h4 id=&quot;当前上下文&quot;&gt;当前上下文&lt;/h4&gt;
+
+&lt;p&gt;iOS应用程序中的每个线程都有一个当前上下文; 当您调用OpenGL ES函数时，其实是上下文的状态发生了改变&lt;/p&gt;
+
+&lt;p&gt;要设置线程的当前上下文，请在该线程上执行时调用EAGLContext类方法setCurrentContext：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[EAGLContext setCurrentContext: myContext];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;注意：如果您的应用程序在同一线程中的两个或更多个上下文之间主动切换，请在将新上下文设置为当前上下文之前调用glFlush函数。 这确保以前提交的命令及时传送到图形硬件。&lt;/p&gt;
+
+&lt;p&gt;获取线程的当前上下文可以用这个：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[EAGLContext currentContext];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;OpenGL ES持有与当前上下文对应的&lt;code class=&quot;highlighter-rouge&quot;&gt;EAGLContext&lt;/code&gt;对象的强引用。 （如果您正在使用手动引用计数，则OpenGL ES将保留此对象。）当您调用setCurrentContext：方法更改当前上下文时，OpenGL ES不再引用上一个上下文。 （如果使用手动引用计数，OpenGL ES会释放EAGLContext对象。）为防止EAGLContext对象在不是当前上下文时被释放，您的应用程序必须对这些对象进行强引用（或保留）。&lt;/p&gt;
+
+&lt;h4 id=&quot;每个上下文都针对特定版本的opengl-es&quot;&gt;每个上下文都针对特定版本的OpenGL ES&lt;/h4&gt;
+
+&lt;p&gt;一个&lt;code class=&quot;highlighter-rouge&quot;&gt;EAGLContext&lt;/code&gt;对象只支持一个版本的OpenGL ES。例如，为OpenGL ES 1.1编写的代码与OpenGL ES 2.0或3.0上下文不兼容。使用核心OpenGL ES 2.0功能的代码与OpenGL ES 3.0上下文兼容，并且为OpenGL ES 2.0扩展设计的代码通常可以在OpenGL ES 3.0上下文中使用，只需稍作更改。许多新的OpenGL ES 3.0功能和增强的硬件功能需要OpenGL ES 3.0上下文。&lt;/p&gt;
+
+&lt;p&gt;您的应用在创建并初始化EAGLContext对象时决定支持哪种版本的OpenGL ES。如果设备不支持请求的OpenGL ES版本，则initWithAPI：方法返回nil。在使用它之前，您的应用必须进行测试以确保上下文已成功初始化。&lt;/p&gt;
+
+&lt;p&gt;要在应用中支持多个版本的OpenGL ES作为渲染选项，应首先尝试初始化要定位的最新版本的渲染上下文。如果返回的对象为零，请改为初始化旧版本的上下文。下面的代码表示如何执行此操作&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;EAGLContext* CreateBestEAGLContext()
+{
+   EAGLContext *context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
+   if (context == nil) {
+      context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+   }
+   return context;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;上下文的API属性指定上下文支持哪个版本的OpenGL ES。 您的应用程序应该测试上下文的API属性并使用它来选择正确的呈现路径。 实现此行为的常见模式是为每个呈现路径创建一个类。 您的应用程序在初始化时测试上下文并创建一次渲染器。&lt;/p&gt;
+
+&lt;h4 id=&quot;eagl-sharegroup为上下文管理opengl-es对象&quot;&gt;EAGL Sharegroup为上下文管理OpenGL ES对象&lt;/h4&gt;
+
+&lt;p&gt;尽管上下文保存了OpenGL ES状态，但它不直接管理OpenGL ES对象。相反，OpenGL ES对象由&lt;code class=&quot;highlighter-rouge&quot;&gt;EAGLSharegroup&lt;/code&gt;对象创建和维护。每个上下文都包含一个&lt;code class=&quot;highlighter-rouge&quot;&gt;EAGLSharegroup&lt;/code&gt;对象，它将对象创建委托给它。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_6/05.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;如图所示，当两个或两个以上的上下文引用相同的Sharegroup时，Sharegroup的优点变得明显。当多个上下文连接到一个公共Sharegroup时，任何上下文创建的OpenGL ES对象都可用于所有上下文;如果绑定到与创建它的另一个上下文相同的对象标识符，则引用相同的OpenGL ES对象。移动设备上的资源往往很少;在多个上下文中创建相同内容的多个副本是浪费的。共享公共资源可以更好地利用设备上的可用图形资源。&lt;/p&gt;
+
+&lt;p&gt;Sharegroup是一个不透明的对象;它没有应用程序可以调用的方法或属性。使用共享组对象的上下文保持强烈的引用。&lt;/p&gt;
+
+&lt;p&gt;在两种特定情况下，Sharegroup是最有用的：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;当上下文之间共享的大部分资源不变时。&lt;/li&gt;
+  &lt;li&gt;当您希望您的应用程序能够在渲染器的主线程以外的线程上创建新的OpenGL ES对象时。 在这种情况下，第二个上下文运行在单独的线程上，专门用于获取数据和创建资源。 资源加载后，第一个上下文可以绑定到对象并立即使用它。 &lt;code class=&quot;highlighter-rouge&quot;&gt;GLKTextureLoader&lt;/code&gt;类使用此模式来提供异步纹理加载。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;要创建引用相同Sharegroup的多个上下文，首先通过调用initWithAPI来初始化第一个上下文： 会自动为上下文创建Sharegroup。 通过调用&lt;code class=&quot;highlighter-rouge&quot;&gt;initWithAPI:sharegroup:&lt;/code&gt; 方法，第二个和之后的上下文被初始化为使用第一个上下文的Sharegroup。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;EAGLContext* firstContext = CreateBestEAGLContext();
+EAGLContext* secondContext = [[EAGLContext alloc] initWithAPI:[firstContext API] sharegroup: [firstContext sharegroup]];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;重要提示&lt;/strong&gt;：与同一Sharegroup关联的所有上下文必须使用与初始上下文相同版本的OpenGL ES API。&lt;/p&gt;
+
+&lt;p&gt;当Sharegroup由多个上下文共享时，您的应用程序有责任管理对OpenGL ES对象的状态更改。 下面是规则：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;如果对象未被修改，您的应用程序可能会同时访问多个上下文中的对象。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;当对象被发送到上下文的命令修改时，不得在任何其他上下文中读取或修改该对象。&lt;/li&gt;
+  &lt;li&gt;对象修改后，所有上下文都必须重新绑定对象才能看到更改。 如果上下文在绑定它之前引用它，则该对象的内容是未定义的。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;以下是您的应用程序应该遵循的更新OpenGL ES对象的步骤：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;在每个可能使用该对象的上下文中调用glFlush。&lt;/li&gt;
+  &lt;li&gt;在想要修改对象的上下文中，调用一个或多个OpenGL ES函数来更改对象。&lt;/li&gt;
+  &lt;li&gt;在接收到状态修改命令的上下文中调用glFlush。&lt;/li&gt;
+  &lt;li&gt;在其他任何情况下，重新绑定对象标识符。&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Ted</name></author><category term="基础" /><summary type="html">本文翻译自苹果官方文档OpenGL ES Programming Guide</summary></entry><entry><title type="html">OpenGL编程指南（一）</title><link href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL_1/" rel="alternate" type="text/html" title="OpenGL编程指南（一）" /><published>2018-03-24T20:00:00+08:00</published><updated>2018-03-24T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL_1</id><content type="html" xml:base="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL_1/">&lt;p&gt;本文翻译自苹果官方文档&lt;a href=&quot;https://developer.apple.com/library/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008793-CH1-SW1&quot;&gt;OpenGL ES Programming Guide&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;一关于opengl-es&quot;&gt;一、关于OpenGL ES&lt;/h3&gt;
 
@@ -50,7 +144,7 @@
 
 &lt;p&gt;&lt;a href=&quot;https://developer.apple.com/library/content/documentation/DeviceInformation/Reference/iOSDeviceCompatibility/Introduction/Introduction.html#//apple_ref/doc/uid/TP40013599&quot;&gt;&lt;em&gt;iOS Device Compatibility Reference&lt;/em&gt; &lt;/a&gt;总结了在iOS设备上可用的功能和拓展，但是为了尽可能多的系统版本和设备能够运行，你的APP应该总是在运行时查询OpenGL ES声明来检测功能。&lt;/p&gt;
 
-&lt;h4 id=&quot;要确定特定实现的限制如最大纹理大小或顶点属性的最大数量请使用适当的glget函数查找其数据查找相应标记的值如gl_h头中的max_texture_size或max_vertex_attribs-类型&quot;&gt;要确定特定实现的限制（如最大纹理大小或顶点属性的最大数量），请使用适当的glGet函数查找其数据，查找相应标记的值（如gl_h头中的MAX_TEXTURE_SIZE或MAX_VERTEX_ATTRIBS） 类型。&lt;/h4&gt;
+&lt;p&gt;要确定特定实现的限制（如最大纹理大小或顶点属性的最大数量），请使用适当的glGet函数查找其数据，查找相应标记的值（如gl_h头中的MAX_TEXTURE_SIZE或MAX_VERTEX_ATTRIBS） 类型。&lt;/p&gt;
 
 &lt;p&gt;要检查OpenGL ES 3.0扩展，请使用&lt;code class=&quot;highlighter-rouge&quot;&gt;glGetIntegerv&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;glGetStringi&lt;/code&gt;函数，如下面的代码示例所示：&lt;/p&gt;
 
@@ -1823,144 +1917,4 @@ view的事件处理代码响应事件。例如，您的代码可能会：&lt;/p&
   &lt;span class=&quot;nl&quot;&gt;padding&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;2em&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; 
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;</content><author><name>Ted</name></author><category term="CSS" /><summary type="html">本文翻译来自https://css-tricks.com/snippets/css/a-guide-to-flexbox/</summary></entry><entry><title type="html">Objective-C Copy</title><link href="http://www.helloted.com/ios/2017/12/14/copy/" rel="alternate" type="text/html" title="Objective-C Copy" /><published>2017-12-14T20:00:00+08:00</published><updated>2017-12-14T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2017/12/14/copy</id><content type="html" xml:base="http://www.helloted.com/ios/2017/12/14/copy/">&lt;h3 id=&quot;一nsobject的copy实现&quot;&gt;一、NSObject的copy实现&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://developer.apple.com/documentation/objectivec/nsobject/1418807-copy?language=objc&quot;&gt;苹果官方文档对copy的描述&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;NSObject进行拷贝的方法是调用copy方法&lt;/p&gt;
-
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;newobj&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;copy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;前提是实现&lt;a href=&quot;https://developer.apple.com/documentation/foundation/nscopying?language=objc&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;NSCopying&lt;/code&gt;&lt;/a&gt;协议的&lt;a href=&quot;https://developer.apple.com/documentation/foundation/nscopying/1410311-copywithzone?language=objc&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;copyWithZone:&lt;/code&gt;&lt;/a&gt;方法，否则会导致出现找不到selector的崩溃。&lt;code class=&quot;highlighter-rouge&quot;&gt;**unrecognized selector sent to instance**&lt;/code&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;NSObject&lt;/code&gt; does not itself support the &lt;a href=&quot;https://developer.apple.com/documentation/foundation/nscopying?language=objc&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;NSCopying&lt;/code&gt;&lt;/a&gt; protocol. Subclasses must support the protocol and implement the &lt;a href=&quot;https://developer.apple.com/documentation/foundation/nscopying/1410311-copywithzone?language=objc&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;copyWithZone:&lt;/code&gt;&lt;/a&gt; method. A subclass version of the &lt;a href=&quot;https://developer.apple.com/documentation/foundation/nscopying/1410311-copywithzone?language=objc&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;copyWithZone:&lt;/code&gt;&lt;/a&gt; method should send the message to &lt;code class=&quot;highlighter-rouge&quot;&gt;super&lt;/code&gt; first, to incorporate its implementation, unless the subclass descends directly from &lt;code class=&quot;highlighter-rouge&quot;&gt;NSObject&lt;/code&gt;.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;NSObject&lt;/code&gt; 本身并不支持 &lt;a href=&quot;https://developer.apple.com/documentation/foundation/nscopying?language=objc&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;NSCopying&lt;/code&gt;&lt;/a&gt; 协议. 子类必须遵从协议并且实现 &lt;a href=&quot;https://developer.apple.com/documentation/foundation/nscopying/1410311-copywithzone?language=objc&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;copyWithZone:&lt;/code&gt;&lt;/a&gt; 方法. 除非是直接继承自  &lt;code class=&quot;highlighter-rouge&quot;&gt;NSObject&lt;/code&gt;.子类在实现 &lt;a href=&quot;https://developer.apple.com/documentation/foundation/nscopying/1410311-copywithzone?language=objc&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;copyWithZone:&lt;/code&gt;&lt;/a&gt; 必须先发送消息给 &lt;code class=&quot;highlighter-rouge&quot;&gt;super&lt;/code&gt; 。&lt;/p&gt;
-
-&lt;p&gt;简单例子&lt;/p&gt;
-
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// Person.h
-&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;@interface&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Person&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;NSObject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSCopying&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;@property&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nonatomic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;copy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt;   &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;@property&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nonatomic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;assign&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSUInteger&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;age&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;@end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;//Person.m
-&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;@implementation&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Person&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;copyWithZone&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSZone&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;zone&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;Person&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;copyPerson&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Person&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;allocWithZone&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zone&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;copyPerson&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;age&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_age&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;copyPerson&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;copyPerson&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;@end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/12.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;二深拷贝deep-copy和浅拷贝shallow-copy&quot;&gt;二、深拷贝(Deep Copy)和浅拷贝(Shallow Copy)&lt;/h3&gt;
-
-&lt;p&gt;源自&lt;a href=&quot;https://developer.apple.com/library/content/documentation/General/Conceptual/DevPedia-CocoaCore/ObjectCopying.html&quot;&gt;苹果官方文档&lt;/a&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;An object can be copied if its class adopts the &lt;code class=&quot;highlighter-rouge&quot;&gt;NSCopying&lt;/code&gt; protocol and implements its single method, &lt;code class=&quot;highlighter-rouge&quot;&gt;copyWithZone:&lt;/code&gt;. If a class has mutable and immutable variants, the mutable class should adopt the &lt;code class=&quot;highlighter-rouge&quot;&gt;NSMutableCopying&lt;/code&gt; protocol (instead of &lt;code class=&quot;highlighter-rouge&quot;&gt;NSCopying&lt;/code&gt;) and implement the &lt;code class=&quot;highlighter-rouge&quot;&gt;mutableCopyWithZone:&lt;/code&gt; method to ensure that copied objects remain mutable. You make a duplicate of an object by sending it a &lt;code class=&quot;highlighter-rouge&quot;&gt;copy&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;mutableCopy&lt;/code&gt; message. These messages result in the invocation of the appropriate &lt;code class=&quot;highlighter-rouge&quot;&gt;NSCopying&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;NSMutableCopying&lt;/code&gt; method.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;如果一个对象的类采用了NSCopying协议并且实现了它的copyWithZone:方法，那么这个对象就可以被拷贝。&lt;/p&gt;
-
-&lt;p&gt;如果一个类具有可变和不可变的变体：那么可变类应该采用NSMutableCopying协议（而不是NSCopying）并实现mutableCopyWithZone:方法来确保拷贝的对象保持可变。&lt;/p&gt;
-
-&lt;p&gt;通过发送一个copy或mutableCopy消息来拷贝一个对象。这些消息导致调用适当的NSCopying或NSMutableCopying方法。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Copies of objects can be shallow or deep. Both shallow- and deep-copy approaches directly duplicate scalar properties but differ on how they handle pointer references, particularly references to objects (for example, &lt;code class=&quot;highlighter-rouge&quot;&gt;NSString *str&lt;/code&gt;). A deep copy duplicates the objects referenced while a shallow copy duplicates only the references to those objects. So if object A is shallow-copied to object B, object B refers to the same instance variable (or property) that object A refers to. Deep-copying objects is preferred to shallow-copying, especially with value objects.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;对象的copy可以是浅的或深的。浅拷贝和深拷贝方法都直接copy属性，但不同之处在于它们如何处理指针引用，特别是对对象的引用（例如NSString * str）。深拷贝复制所引用的对象，而浅拷贝仅复制对这些对象的引用。 因此，如果对象A被浅拷贝到对象B，则对象B引用对象A引用的同一个实例变量（或属性）。 深拷贝对象比浅拷贝更受欢迎，尤其是对于值对象。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/13.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;三值对象的深拷贝浅拷贝&quot;&gt;三、值对象的深拷贝，浅拷贝&lt;/h3&gt;
-
-&lt;p&gt;在值对象对象(NSString, NSNumber，NSData, NSDate,NSvalue)中：对immutable对象进行copy操作，是指针复制（浅复制），mutableCopy操作时内容复制（深）；对mutable对象进行copy和mutableCopy都是内容复制。用代码简单表示如下：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;[immutableObject copy] // 浅复制&lt;/li&gt;
-  &lt;li&gt;[immutableObject mutableCopy] //深复制&lt;/li&gt;
-  &lt;li&gt;[mutableObject copy] //深复制&lt;/li&gt;
-  &lt;li&gt;[mutableObject mutableCopy] //深复制&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/14.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;从示例中可以看到，NSString作为不可变对象，copy为浅复制，只是拷贝了一份引用，地址不变，mutableCopy则是深复制。&lt;/p&gt;
-
-&lt;h3 id=&quot;四集合类对象的深拷贝浅拷贝&quot;&gt;四、集合类对象的深拷贝，浅拷贝&lt;/h3&gt;
-
-&lt;p&gt;部分源自&lt;a href=&quot;https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/Collections/Articles/Copying.html&quot;&gt;苹果官方文档&lt;/a&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;1浅拷贝&quot;&gt;1、浅拷贝&lt;/h4&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;When you create a shallow copy, the objects in the original collection are sent a &lt;code class=&quot;highlighter-rouge&quot;&gt;retain&lt;/code&gt; message and the pointers are copied to the new collection.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;只会对集合里的对象的指针进行复制到新的集合里，有两种方法来进行浅拷贝&lt;/p&gt;
-
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;NSArray&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;shallowCopyArray&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;someArray&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;copyWithZone&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;NSDictionary&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;shallowCopyDict&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSDictionary&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initWithDictionary&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;someDictionary&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;copyItems&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;NO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h4 id=&quot;2深拷贝&quot;&gt;2、深拷贝&lt;/h4&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;There are two ways to make deep copies of a collection. You can use the collection’s equivalent of &lt;code class=&quot;highlighter-rouge&quot;&gt;initWithArray:copyItems:&lt;/code&gt; with &lt;code class=&quot;highlighter-rouge&quot;&gt;YES&lt;/code&gt; as the second parameter. If you create a deep copy of a collection in this way, each object in the collection is sent a &lt;code class=&quot;highlighter-rouge&quot;&gt;copyWithZone:&lt;/code&gt; message. If the objects in the collection have adopted the &lt;code class=&quot;highlighter-rouge&quot;&gt;NSCopying&lt;/code&gt; protocol, the objects are deeply copied to the new collection, which is then the sole owner of the copied objects. If the objects do not adopt the &lt;code class=&quot;highlighter-rouge&quot;&gt;NSCopying&lt;/code&gt;protocol, attempting to copy them in such a way results in a runtime error. However, &lt;code class=&quot;highlighter-rouge&quot;&gt;copyWithZone:&lt;/code&gt; produces a shallow copy. This kind of copy is only capable of producing a one-level-deep copy. If you only need a one-level-deep copy, you can explicitly call for one as in Listing 2&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;有两种方式进行深拷贝：&lt;/p&gt;
-
-&lt;p&gt;你可以用&lt;code class=&quot;highlighter-rouge&quot;&gt;initWithArray:copyItems:&lt;/code&gt; 第二个参数传 &lt;code class=&quot;highlighter-rouge&quot;&gt;YES&lt;/code&gt;，如果用这种方法，集合里的每个对象都会被发送一个  &lt;code class=&quot;highlighter-rouge&quot;&gt;copyWithZone:&lt;/code&gt; 消息，如果集合里的对象已经适配了NSCopying协议，那么这些对象的引用就会被拷贝到新的集合里。如果这些对象没有适配NSCopying协议，这种拷贝方式就会报runtime错误。然而，&lt;code class=&quot;highlighter-rouge&quot;&gt;copyWithZone:&lt;/code&gt; 产生的是一个浅拷贝，这种类型的深拷贝，是指对集合对象的进行深拷贝。集合里的对象依旧是浅拷贝。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSArray *deepCopyArray=[[NSArray alloc] initWithArray:someArray copyItems:YES];
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/15.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;通过对比对象地址我们可以发现，NSArray的集合对象是已经进行了深拷贝，但是集合里的每个对象都是进行的浅拷贝。&lt;/p&gt;
-
-&lt;p&gt;在集合类对象(NSArray、NSDictionary、NSSet)中，对immutable对象进行copy，是指针复制，mutableCopy是内容复制；对mutable对象进行copy和mutableCopy都是内容复制。但是：集合对象的内容复制仅限于对象本身，对象元素仍然是指针复制（浅复制）。用代码简单表示如下：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;[immutableObject copy] // 浅复制&lt;/li&gt;
-  &lt;li&gt;[immutableObject mutableCopy] //单层深复制 //NSArray层级的深复制&lt;/li&gt;
-  &lt;li&gt;[mutableObject copy] //单层深复制&lt;/li&gt;
-  &lt;li&gt;[mutableObject mutableCopy] //单层深复制&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;真深拷贝&quot;&gt;真*深拷贝&lt;/h4&gt;
-
-&lt;p&gt;如果你需要一个真正的深拷贝：集合里的对象也要进行深拷贝，那么要NSKeyedArchiver，里面的每个对象都要遵从NSCoding协议&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/16.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;通过内存地址比对，可以发现，所有的对象都进行了深拷贝。&lt;/p&gt;
-
-&lt;p&gt;以上代码都可以在&lt;a href=&quot;https://github.com/helloted/iOS_Demo/tree/master/CopyDemo&quot;&gt;Github&lt;/a&gt;下载&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">一、NSObject的copy实现</summary></entry></feed>
+&lt;/div&gt;</content><author><name>Ted</name></author><category term="CSS" /><summary type="html">本文翻译来自https://css-tricks.com/snippets/css/a-guide-to-flexbox/</summary></entry></feed>

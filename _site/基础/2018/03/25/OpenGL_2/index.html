@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>OpenGL编程指南（二） - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/25/OpenGL_2/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/bg_01.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>OpenGL编程指南（二）</h1>
+                    
+                    <h2 class="subheading">《OpenGL ES Programming Guide》文档翻译</h2>
+                    
+                    <span class="meta">Posted by Ted on March 25, 2018</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<p>本文翻译自苹果官方文档<a href="https://developer.apple.com/library/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008793-CH1-SW1">OpenGL ES Programming Guide</a></p>
+
+<h3 id="三配置opengl-es上下文">三、配置OpenGL ES上下文</h3>
+
+<p>OpenGL ES的每个实现都提供了一种方式来创建渲染上下文来管理OpenGL ES规范所需状态。 通过把上述状态放入上下文中，多个应用程序可以轻松共享图形硬件而不会相互干扰</p>
+
+<h4 id="先初始化">先初始化</h4>
+
+<p>在您的应用程序可以调用任何OpenGL ES函数之前，它必须初始化一个EAGLContext对象。 <code class="highlighter-rouge">EAGLContext</code>类还提供了用于将OpenGL ES内容与Core Animation集成的方法。</p>
+
+<h4 id="当前上下文">当前上下文</h4>
+
+<p>iOS应用程序中的每个线程都有一个当前上下文; 当您调用OpenGL ES函数时，其实是上下文的状态发生了改变</p>
+
+<p>要设置线程的当前上下文，请在该线程上执行时调用EAGLContext类方法setCurrentContext：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[EAGLContext setCurrentContext: myContext];
+</code></pre>
+</div>
+
+<p>注意：如果您的应用程序在同一线程中的两个或更多个上下文之间主动切换，请在将新上下文设置为当前上下文之前调用glFlush函数。 这确保以前提交的命令及时传送到图形硬件。</p>
+
+<p>获取线程的当前上下文可以用这个：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[EAGLContext currentContext];
+</code></pre>
+</div>
+
+<p>OpenGL ES持有与当前上下文对应的<code class="highlighter-rouge">EAGLContext</code>对象的强引用。 （如果您正在使用手动引用计数，则OpenGL ES将保留此对象。）当您调用setCurrentContext：方法更改当前上下文时，OpenGL ES不再引用上一个上下文。 （如果使用手动引用计数，OpenGL ES会释放EAGLContext对象。）为防止EAGLContext对象在不是当前上下文时被释放，您的应用程序必须对这些对象进行强引用（或保留）。</p>
+
+<h4 id="每个上下文都针对特定版本的opengl-es">每个上下文都针对特定版本的OpenGL ES</h4>
+
+<p>一个<code class="highlighter-rouge">EAGLContext</code>对象只支持一个版本的OpenGL ES。例如，为OpenGL ES 1.1编写的代码与OpenGL ES 2.0或3.0上下文不兼容。使用核心OpenGL ES 2.0功能的代码与OpenGL ES 3.0上下文兼容，并且为OpenGL ES 2.0扩展设计的代码通常可以在OpenGL ES 3.0上下文中使用，只需稍作更改。许多新的OpenGL ES 3.0功能和增强的硬件功能需要OpenGL ES 3.0上下文。</p>
+
+<p>您的应用在创建并初始化EAGLContext对象时决定支持哪种版本的OpenGL ES。如果设备不支持请求的OpenGL ES版本，则initWithAPI：方法返回nil。在使用它之前，您的应用必须进行测试以确保上下文已成功初始化。</p>
+
+<p>要在应用中支持多个版本的OpenGL ES作为渲染选项，应首先尝试初始化要定位的最新版本的渲染上下文。如果返回的对象为零，请改为初始化旧版本的上下文。下面的代码表示如何执行此操作</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>EAGLContext* CreateBestEAGLContext()
+{
+   EAGLContext *context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
+   if (context == nil) {
+      context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+   }
+   return context;
+}
+</code></pre>
+</div>
+
+<p>上下文的API属性指定上下文支持哪个版本的OpenGL ES。 您的应用程序应该测试上下文的API属性并使用它来选择正确的呈现路径。 实现此行为的常见模式是为每个呈现路径创建一个类。 您的应用程序在初始化时测试上下文并创建一次渲染器。</p>
+
+<h4 id="eagl-sharegroup为上下文管理opengl-es对象">EAGL Sharegroup为上下文管理OpenGL ES对象</h4>
+
+<p>尽管上下文保存了OpenGL ES状态，但它不直接管理OpenGL ES对象。相反，OpenGL ES对象由<code class="highlighter-rouge">EAGLSharegroup</code>对象创建和维护。每个上下文都包含一个<code class="highlighter-rouge">EAGLSharegroup</code>对象，它将对象创建委托给它。</p>
+
+<p><img src="/img/Simple_6/05.png" alt="img" /></p>
+
+<p>如图所示，当两个或两个以上的上下文引用相同的Sharegroup时，Sharegroup的优点变得明显。当多个上下文连接到一个公共Sharegroup时，任何上下文创建的OpenGL ES对象都可用于所有上下文;如果绑定到与创建它的另一个上下文相同的对象标识符，则引用相同的OpenGL ES对象。移动设备上的资源往往很少;在多个上下文中创建相同内容的多个副本是浪费的。共享公共资源可以更好地利用设备上的可用图形资源。</p>
+
+<p>Sharegroup是一个不透明的对象;它没有应用程序可以调用的方法或属性。使用共享组对象的上下文保持强烈的引用。</p>
+
+<p>在两种特定情况下，Sharegroup是最有用的：</p>
+
+<ul>
+  <li>当上下文之间共享的大部分资源不变时。</li>
+  <li>当您希望您的应用程序能够在渲染器的主线程以外的线程上创建新的OpenGL ES对象时。 在这种情况下，第二个上下文运行在单独的线程上，专门用于获取数据和创建资源。 资源加载后，第一个上下文可以绑定到对象并立即使用它。 <code class="highlighter-rouge">GLKTextureLoader</code>类使用此模式来提供异步纹理加载。</li>
+</ul>
+
+<p>要创建引用相同Sharegroup的多个上下文，首先通过调用initWithAPI来初始化第一个上下文： 会自动为上下文创建Sharegroup。 通过调用<code class="highlighter-rouge">initWithAPI:sharegroup:</code> 方法，第二个和之后的上下文被初始化为使用第一个上下文的Sharegroup。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>EAGLContext* firstContext = CreateBestEAGLContext();
+EAGLContext* secondContext = [[EAGLContext alloc] initWithAPI:[firstContext API] sharegroup: [firstContext sharegroup]];
+</code></pre>
+</div>
+
+<p><strong>重要提示</strong>：与同一Sharegroup关联的所有上下文必须使用与初始上下文相同版本的OpenGL ES API。</p>
+
+<p>当Sharegroup由多个上下文共享时，您的应用程序有责任管理对OpenGL ES对象的状态更改。 下面是规则：</p>
+
+<ul>
+  <li>
+    <p>如果对象未被修改，您的应用程序可能会同时访问多个上下文中的对象。</p>
+  </li>
+  <li>当对象被发送到上下文的命令修改时，不得在任何其他上下文中读取或修改该对象。</li>
+  <li>对象修改后，所有上下文都必须重新绑定对象才能看到更改。 如果上下文在绑定它之前引用它，则该对象的内容是未定义的。</li>
+</ul>
+
+<p>以下是您的应用程序应该遵循的更新OpenGL ES对象的步骤：</p>
+
+<ul>
+  <li>在每个可能使用该对象的上下文中调用glFlush。</li>
+  <li>在想要修改对象的上下文中，调用一个或多个OpenGL ES函数来更改对象。</li>
+  <li>在接收到状态修改命令的上下文中调用glFlush。</li>
+  <li>在其他任何情况下，重新绑定对象标识符。</li>
+</ul>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/%E5%9F%BA%E7%A1%80/2018/03/24/OpenGL_1/" data-toggle="tooltip" data-placement="top" title="OpenGL编程指南（一）">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>
