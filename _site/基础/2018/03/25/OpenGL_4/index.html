@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>OpenGL ES编程指南（四） - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/25/OpenGL_4/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/bg_01.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>OpenGL ES编程指南（四）</h1>
+                    
+                    <h2 class="subheading">《OpenGL ES Programming Guide》文档翻译</h2>
+                    
+                    <span class="meta">Posted by Ted on March 25, 2018</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<p>本文翻译自苹果官方文档<a href="https://developer.apple.com/library/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008793-CH1-SW1">OpenGL ES Programming Guide</a></p>
+
+<h3 id="五绘制到其他渲染目标">五、绘制到其他渲染目标</h3>
+
+<p>帧缓冲区对象是渲染命令的目的地。</p>
+
+<p>当您创建帧缓冲区对象时，您可以精确控制其颜色，深度和模板数据的存储。 您通过将图像附加到帧缓冲区来提供此存储，如下图所示。 最常见的图像附件是一个渲染缓冲区对象。 您还可以将OpenGL ES纹理附加到帧缓冲区的颜色附着点，这意味着任何绘图命令都将渲染到纹理中。 之后，纹理可以作为输入给以后的渲染命令。 您也可以在单个渲染上下文中创建多个帧缓冲区对象。 您可能会这样做，以便您可以在多个帧缓冲区之间共享相同的渲染管线和OpenGL ES资源。</p>
+
+<p><img src="/img/Simple_6/08.png" alt="img" /></p>
+
+<p>所有这些方法都需要手动创建帧缓冲区和渲染缓冲区对象来存储OpenGL ES上下文的渲染结果，以及编写其他代码以将其内容呈现在屏幕上，并在需要时运行动画循环。</p>
+
+<blockquote>
+  <h4 id="创建帧缓冲区对象">创建帧缓冲区对象</h4>
+</blockquote>
+
+<p>根据您的应用打算执行的任务，您的应用配置不同的对象以附加到帧缓冲区对象。 在大多数情况下，配置帧缓冲区的不同之处在于哪个对象连接到帧缓冲区对象的颜色附着点：</p>
+
+<ul>
+  <li>要将帧缓冲区用于离屏图像处理，请附加渲染缓冲区。 请参阅创建离屏帧缓冲区对象。</li>
+  <li>要将帧缓冲区图像用作稍后渲染步骤的输入，请附加纹理。 请参阅使用帧缓冲区对象渲染到纹理。</li>
+  <li>要在核心动画层组合中使用帧缓冲区，请使用特殊的支持Core Animation的渲染缓冲区。 请参阅渲染到核心动画层。</li>
+</ul>
+
+<h4 id="创建离屏帧缓冲区对象">创建离屏帧缓冲区对象</h4>
+
+<p>用于离屏渲染的帧缓冲区将其所有附件分配为OpenGL ES渲染缓冲区。 以下代码使用颜色和深度附件分配framebuffer对象。</p>
+
+<p>1、创建帧缓冲并将其绑定。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>GLuint framebuffer;
+glGenFramebuffers(1, &amp;framebuffer);
+glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+</code></pre>
+</div>
+
+<p>2、创建一个颜色渲染缓冲区，为其分配存储空间，并将其附加到帧缓冲区的颜色附着点。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>GLuint colorRenderbuffer;
+glGenRenderbuffers(1, &amp;colorRenderbuffer);
+glBindRenderbuffer(GL_RENDERBUFFER, colorRenderbuffer);
+glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, width, height);
+glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colorRenderbuffer);
+</code></pre>
+</div>
+
+<p>3、创建深度或深度/模板渲染缓冲区，为其分配存储空间，并将其附加到帧缓冲区的深度附着点。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>GLuint depthRenderbuffer;
+glGenRenderbuffers(1, &amp;depthRenderbuffer);
+glBindRenderbuffer(GL_RENDERBUFFER, depthRenderbuffer);
+glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, width, height);
+glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRenderbuffer);
+</code></pre>
+</div>
+
+<p>4、测试帧缓冲区的完整性。 只有在帧缓冲区的配置发生变化时才需要执行此测试。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER) ;
+if(status != GL_FRAMEBUFFER_COMPLETE) {
+    NSLog(@"failed to make complete framebuffer object %x", status);
+}
+</code></pre>
+</div>
+
+<p>在绘制到离屏渲染缓冲区之后，您可以使用glReadPixels函数将其内容返回给CPU进一步处理。</p>
+
+<h4 id="使用帧缓冲区对象渲染到纹理">使用帧缓冲区对象渲染到纹理</h4>
+
+<p>创建此帧缓冲区的代码与离屏示例几乎相同，但现在纹理已分配并附加到颜色附着点。</p>
+
+<ol>
+  <li>创建帧缓冲区对象（使用与创建离线帧缓冲区对象相同的过程）。</li>
+  <li>创建目标纹理，并将其附加到帧缓冲区的颜色附着点。</li>
+</ol>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>// create the texture
+GLuint texture;
+glGenTextures(1, &amp;texture);
+glBindTexture(GL_TEXTURE_2D, texture);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,  width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+</code></pre>
+</div>
+
+<p>3.分配并附加深度缓冲区（与以前一样）。</p>
+
+<p>4.测试framebuffer的完整性（和以前一样）。</p>
+
+<p>尽管此示例假定您正在渲染为彩色纹理，但其他选项也是可能的。 例如，使用OES_depth_texture扩展名，您可以将纹理附加到深度附着点，以将来自场景的深度信息存储到纹理中。 您可以使用此深度信息来计算最终渲染场景中的阴影。</p>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/%E5%9F%BA%E7%A1%80/2018/03/25/OpenGL_3/" data-toggle="tooltip" data-placement="top" title="OpenGL ES编程指南（三）">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/%E5%9F%BA%E7%A1%80/2018/03/27/OpenGL_5/" data-toggle="tooltip" data-placement="top" title="OpenGL ES编程指南（五）">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

@@ -1,4 +1,199 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-03-27T19:02:44+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">OpenGL ES编程指南（三）</title><link href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/25/OpenGL_3/" rel="alternate" type="text/html" title="OpenGL ES编程指南（三）" /><published>2018-03-25T20:00:00+08:00</published><updated>2018-03-25T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/25/OpenGL_3</id><content type="html" xml:base="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/25/OpenGL_3/">&lt;p&gt;本文翻译自苹果官方文档&lt;a href=&quot;https://developer.apple.com/library/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008793-CH1-SW1&quot;&gt;OpenGL ES Programming Guide&lt;/a&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-03-28T15:03:14+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">OpenGL ES编程指南（五）</title><link href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/27/OpenGL_5/" rel="alternate" type="text/html" title="OpenGL ES编程指南（五）" /><published>2018-03-27T20:00:00+08:00</published><updated>2018-03-27T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/27/OpenGL_5</id><content type="html" xml:base="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/27/OpenGL_5/">&lt;p&gt;本文翻译自苹果官方文档&lt;a href=&quot;https://developer.apple.com/library/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008793-CH1-SW1&quot;&gt;OpenGL ES Programming Guide&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;六多任务高分辨率和其他功能&quot;&gt;六、多任务、高分辨率和其他功能&lt;/h3&gt;
+
+&lt;p&gt;使用OpenGL ES的许多方面都是平台无关的，但在iOS上使用OpenGL ES的一些细节需要特别注意。 尤其是，使用OpenGL ES的iOS应用程序必须正确处理多任务，否则在转到后台时可能会被终止。 在为iOS设备开发OpenGL ES内容时，您还应该考虑显示分辨率和其他设备功能。&lt;/p&gt;
+
+&lt;h4 id=&quot;不能在后台工作&quot;&gt;不能在后台工作&lt;/h4&gt;
+
+&lt;p&gt;OpenGL ES应用程序移到后台时必须做额外的操作。 如果应用程序不正确地处理这些任务，它可能会被iOS终止。 此外，应用程序可能需要释放OpenGL ES资源，以便这些资源可用于前台应用程序。&lt;/p&gt;
+
+&lt;p&gt;iOS会阻止后台应用程序访问图形处理器，以便前台的应用程序始终能够为用户提供出色的体验。 您的应用程序如果在后台进行OpenGL ES调用，或者在后台将先前提交的命令刷新到GPU，应用程序将会被终止。 您的应用程序必须确保移动到后台之前让先前提交的所有命令在都已完成执行。&lt;/p&gt;
+
+&lt;p&gt;如果您使用GLKit view和view controller，并且只在绘图方法中提交OpenGL ES命令，那么当您的应用移动到背景时，您的应用会自动正确运行。 默认情况下，GLKViewController类会在您的应用程序变为非活动状态时暂停其动画计时器，以确保您的绘图方法未被调用。&lt;/p&gt;
+
+&lt;p&gt;如果您不使用GLKit view和view controller，或者如果您在GLKView绘图方法外提交OpenGL ES命令，则必须执行以下步骤以确保您的应用程序不会在后台终止：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;在您的应用程序delegate的&lt;code class=&quot;highlighter-rouge&quot;&gt;applicationWillResignActive：&lt;/code&gt;方法中，您的应用程序应停止其动画计时器（如果有），将自己置于已知良好状态，然后调用&lt;code class=&quot;highlighter-rouge&quot;&gt;glFinish&lt;/code&gt;函数。&lt;/li&gt;
+  &lt;li&gt;在您的应用程序delegate的&lt;code class=&quot;highlighter-rouge&quot;&gt;applicationDidEnterBackground：&lt;/code&gt;方法中，您的应用程序可能希望删除其某些OpenGL ES对象，以使内存和资源可用于前台应用程序。 调用&lt;code class=&quot;highlighter-rouge&quot;&gt;glFinish&lt;/code&gt;函数以确保立即删除资源。&lt;/li&gt;
+  &lt;li&gt;在您的应用退出其&lt;code class=&quot;highlighter-rouge&quot;&gt;applicationDidEnterBackground：&lt;/code&gt;方法后，它不能进行任何新的OpenGL ES调用。 如果它进行OpenGL ES调用，它将被iOS终止。&lt;/li&gt;
+  &lt;li&gt;在您的应用程序delegate的&lt;code class=&quot;highlighter-rouge&quot;&gt;applicationWillEnterForeground：&lt;/code&gt;方法中，重新创建任何对象并重新启动您的动画计时器&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;总之，您的应用程序需要调用&lt;code class=&quot;highlighter-rouge&quot;&gt;glFinish&lt;/code&gt;函数以确保所有先前提交的命令从命令缓冲区中排出并由OpenGL ES执行。 进入后台后，必须避免使用OpenGL ES，直到它移回到前台。&lt;/p&gt;
+
+&lt;h4 id=&quot;在移至后台之前删除易重建资源&quot;&gt;在移至后台之前删除易重建资源&lt;/h4&gt;
+
+&lt;p&gt;在移动到后台时，您的应用永远不需要释放OpenGL ES对象。通常，您的应用应该避免处理其内容。考虑两种情况：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;用户正在玩您的游戏并暂时退出以查看日历。当玩家回到游戏时，游戏的资源仍然在记忆中，游戏可以立即恢复。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;当用户启动另一个OpenGL ES应用程序时，您的OpenGL ES应用程序处于后台。如果该应用程序需要的内存超过设备上的可用内存，系统将自动终止您的应用程序，而无需执行任何其他工作。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;您的目标应该是设计您的应用程序成为一个”好公民”：这意味着尽可能缩短移动到前台所需的时间，同时减少其在后台的内存占用量。&lt;/p&gt;
+
+&lt;p&gt;以下是您应该如何处理这两种情况的方法：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;您的应用应该将纹理，模型和其他资源保留在内存中;花费很长时间重新创建的资源不应该在您的应用移动到后台时处理。&lt;/li&gt;
+  &lt;li&gt;您的应用程序应该处理可以快速轻松地重新创建的对象。寻找消耗大量内存的对象。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;简单的目标是你的应用程序分配的帧缓冲区来保存渲染结果。当您的应用程序位于后台时，它对用户不可见，并且可能不会使用OpenGL ES呈现任何新内容。这意味着您的应用程序的帧缓冲区所消耗的内存已分配，但无用。而且，帧缓冲器的内容是暂时的;大多数应用程序每次渲染新帧时都会重新创建帧缓冲区的内容。这使得渲染缓冲区成为一个可以轻松重新创建的内存密集型资源，成为移动到后台时可以处理的对象的良好候选对象。&lt;/p&gt;
+
+&lt;p&gt;如果您使用GLKit视图和视图控制器，则当您的应用移动到后台时，GLKViewController类会自动处理其关联视图的帧缓冲区。如果您为其他用途手动创建帧缓冲区，则应该在应用移动到背景时将其丢弃。无论哪种情况，您还应该考虑当时您的应用可以处理的其他暂时资源。&lt;/p&gt;
+
+&lt;h4 id=&quot;支持高分辨率显示&quot;&gt;支持高分辨率显示&lt;/h4&gt;
+
+&lt;p&gt;默认情况下，GLKit View的contentScaleFactor属性的值与包含它的屏幕的比例相匹配，因此将其关联的帧缓冲区配置为在显示器的全分辨率下呈现。&lt;/p&gt;
+
+&lt;p&gt;如果您使用Core Animation图层呈现OpenGL ES内容，则默认情况下其比例因子设置为1.0。 要以Retina显示器的全分辨率绘制，您应该更改CAEAGLLayer对象的比例因子以匹配屏幕的比例因子。&lt;/p&gt;
+
+&lt;p&gt;当支持具有高分辨率显示器的设备时，您应该相应地调整应用程序的型号和纹理资源。 在高分辨率设备上运行时，您可能需要选择更详细的模型和纹理以呈现更好的图像。 相反，在标准分辨率设备上，您可以使用较小的模型和纹理。&lt;/p&gt;
+
+&lt;p&gt;重要提示：许多OpenGL ES API调用以屏幕像素表示尺寸。 如果使用大于1.0的比例因子，则应在使用&lt;code class=&quot;highlighter-rouge&quot;&gt;glScissor&lt;/code&gt;，&lt;code class=&quot;highlighter-rouge&quot;&gt;glBlitFramebuffer&lt;/code&gt;，&lt;code class=&quot;highlighter-rouge&quot;&gt;glLineWidth&lt;/code&gt;或&lt;code class=&quot;highlighter-rouge&quot;&gt;glPointSize&lt;/code&gt;函数或&lt;code class=&quot;highlighter-rouge&quot;&gt;gl_PointSize&lt;/code&gt;着色器变量时相应地调整尺寸。&lt;/p&gt;
+
+&lt;p&gt;确定如何支持高分辨率显示器的一个重要因素是性能。 Retina显示屏上缩放倍数的倍增使像素数量增加了四倍，导致GPU处理四倍的碎片。如果您的应用执行许多每片段计算，则像素增加可能会降低帧速率。如果您发现您的应用在较高比例因素下运行速度显着较慢，请考虑以下选项之一：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;使用本文档中的性能调整指导来优化片段着色器的性能。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;在你的片段着色器中实现一个更简单的算法。通过这样做，您可以降低单个像素的质量，从而以更高的分辨率呈现整个图像。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;使用1.0到和屏幕比例因子之间的分数比例因子。比例因子1.5提供比1.0的比例因子更好的质量，但需要填充比缩放为2.0的图像更少的像素。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;为您的GLKView对象的&lt;code class=&quot;highlighter-rouge&quot;&gt;drawableColorFormat&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;drawableDepthFormat&lt;/code&gt;属性使用较低精度的格式。通过这样做，可以减少在底层渲染缓冲区上操作所需的内存带宽。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;使用较低的比例因子并启用多重采样。另一个优点是多重采样还可以在不支持高分辨率显示的设备上提供更高的质量。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;要为GLKView对象启用多重采样，请更改其drawableMultisample属性的值。如果您未渲染到GLKit视图，则必须手动设置多重采样缓冲区并在呈现最终图像之前解决它们（请参阅使用多重采样来提高图像质量）。&lt;/p&gt;
+
+    &lt;p&gt;多重采样不是免费的;需要额外的内存来存储额外的样本，并且将样本解析到解析帧缓冲区需要时间。如果您向应用添加多重采样，请始终测试应用的性能以确保其可接受性。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;多方向交互&quot;&gt;多方向交互&lt;/h4&gt;
+
+&lt;p&gt;与任何应用程序一样，OpenGL ES应用程序应支持适合其内容的用户界面方向。您可以在其信息属性列表中为您的应用程序声明支持的界面方向，或者使用其supportedInterfaceOrientations方法为托管OpenGL ES内容的视图控制器声明支持的界面方向。&lt;/p&gt;
+
+&lt;p&gt;默认情况下，GLKViewController和GLKView类会自动处理方向更改：当用户将设备旋转到支持的方向时，系统会激活方向更改并更改视图控制器视图的大小。当其大小改变时，GLKView对象相应地调整其帧缓冲区和视口的大小。如果您需要响应此更改，请在您的GLKViewController子类中实现viewWillLayoutSubviews或viewDidLayoutSubviews方法，或者在使用自定义GLKView子类时实现layoutSubviews方法。&lt;/p&gt;
+
+&lt;p&gt;如果您使用Core Animation图层绘制OpenGL ES内容，则应用程序仍应包含视图控制器来管理用户界面方向。&lt;/p&gt;
+
+&lt;h4 id=&quot;其他显示屏上展示&quot;&gt;其他显示屏上展示&lt;/h4&gt;
+
+&lt;p&gt;iOS设备可以连接到外部显示器。外部显示器的分辨率及其内容比例因子可能与主屏幕的分辨率和比例因子不同;渲染帧的代码应调整为匹配。&lt;/p&gt;
+
+&lt;p&gt;在外部显示器上绘图的步骤与在主屏幕上运行的步骤几乎完全相同。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;按照多显示器编程指南for iOS中的步骤在外部显示器上创建一个窗口。&lt;/li&gt;
+  &lt;li&gt;为您的渲染策略添加适当的视图或视图控制器对象。&lt;/li&gt;
+  &lt;li&gt;如果使用GLKit进行渲染，请设置GLKViewController和GLKView（或您的自定义子类）的实例，并使用其rootViewController属性将它们添加到窗口中。&lt;/li&gt;
+  &lt;li&gt;如果渲染到Core Animation图层，请将包含图层的视图添加为窗口的子视图。要使用动画循环进行渲染，请通过检索窗口的屏幕属性并调用其displayLinkWithTarget：selector：方法来创建为外部显示器优化的显示链接对象。&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Ted</name></author><category term="基础" /><summary type="html">本文翻译自苹果官方文档OpenGL ES Programming Guide</summary></entry><entry><title type="html">OpenGL ES编程指南（四）</title><link href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/25/OpenGL_4/" rel="alternate" type="text/html" title="OpenGL ES编程指南（四）" /><published>2018-03-25T20:00:00+08:00</published><updated>2018-03-25T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/25/OpenGL_4</id><content type="html" xml:base="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/25/OpenGL_4/">&lt;p&gt;本文翻译自苹果官方文档&lt;a href=&quot;https://developer.apple.com/library/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008793-CH1-SW1&quot;&gt;OpenGL ES Programming Guide&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;五绘制到其他渲染目标&quot;&gt;五、绘制到其他渲染目标&lt;/h3&gt;
+
+&lt;p&gt;帧缓冲区对象是渲染命令的目的地。&lt;/p&gt;
+
+&lt;p&gt;当您创建帧缓冲区对象时，您可以精确控制其颜色，深度和模板数据的存储。 您通过将图像附加到帧缓冲区来提供此存储，如下图所示。 最常见的图像附件是一个渲染缓冲区对象。 您还可以将OpenGL ES纹理附加到帧缓冲区的颜色附着点，这意味着任何绘图命令都将渲染到纹理中。 之后，纹理可以作为输入给以后的渲染命令。 您也可以在单个渲染上下文中创建多个帧缓冲区对象。 您可能会这样做，以便您可以在多个帧缓冲区之间共享相同的渲染管线和OpenGL ES资源。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_6/08.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;所有这些方法都需要手动创建帧缓冲区和渲染缓冲区对象来存储OpenGL ES上下文的渲染结果，以及编写其他代码以将其内容呈现在屏幕上，并在需要时运行动画循环。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;h4 id=&quot;创建帧缓冲区对象&quot;&gt;创建帧缓冲区对象&lt;/h4&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;根据您的应用打算执行的任务，您的应用配置不同的对象以附加到帧缓冲区对象。 在大多数情况下，配置帧缓冲区的不同之处在于哪个对象连接到帧缓冲区对象的颜色附着点：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;要将帧缓冲区用于离屏图像处理，请附加渲染缓冲区。 请参阅创建离屏帧缓冲区对象。&lt;/li&gt;
+  &lt;li&gt;要将帧缓冲区图像用作稍后渲染步骤的输入，请附加纹理。 请参阅使用帧缓冲区对象渲染到纹理。&lt;/li&gt;
+  &lt;li&gt;要在核心动画层组合中使用帧缓冲区，请使用特殊的支持Core Animation的渲染缓冲区。 请参阅渲染到核心动画层。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;创建离屏帧缓冲区对象&quot;&gt;创建离屏帧缓冲区对象&lt;/h4&gt;
+
+&lt;p&gt;用于离屏渲染的帧缓冲区将其所有附件分配为OpenGL ES渲染缓冲区。 以下代码使用颜色和深度附件分配framebuffer对象。&lt;/p&gt;
+
+&lt;p&gt;1、创建帧缓冲并将其绑定。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;GLuint framebuffer;
+glGenFramebuffers(1, &amp;amp;framebuffer);
+glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;2、创建一个颜色渲染缓冲区，为其分配存储空间，并将其附加到帧缓冲区的颜色附着点。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;GLuint colorRenderbuffer;
+glGenRenderbuffers(1, &amp;amp;colorRenderbuffer);
+glBindRenderbuffer(GL_RENDERBUFFER, colorRenderbuffer);
+glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, width, height);
+glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colorRenderbuffer);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;3、创建深度或深度/模板渲染缓冲区，为其分配存储空间，并将其附加到帧缓冲区的深度附着点。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;GLuint depthRenderbuffer;
+glGenRenderbuffers(1, &amp;amp;depthRenderbuffer);
+glBindRenderbuffer(GL_RENDERBUFFER, depthRenderbuffer);
+glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, width, height);
+glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRenderbuffer);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;4、测试帧缓冲区的完整性。 只有在帧缓冲区的配置发生变化时才需要执行此测试。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER) ;
+if(status != GL_FRAMEBUFFER_COMPLETE) {
+    NSLog(@&quot;failed to make complete framebuffer object %x&quot;, status);
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;在绘制到离屏渲染缓冲区之后，您可以使用glReadPixels函数将其内容返回给CPU进一步处理。&lt;/p&gt;
+
+&lt;h4 id=&quot;使用帧缓冲区对象渲染到纹理&quot;&gt;使用帧缓冲区对象渲染到纹理&lt;/h4&gt;
+
+&lt;p&gt;创建此帧缓冲区的代码与离屏示例几乎相同，但现在纹理已分配并附加到颜色附着点。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;创建帧缓冲区对象（使用与创建离线帧缓冲区对象相同的过程）。&lt;/li&gt;
+  &lt;li&gt;创建目标纹理，并将其附加到帧缓冲区的颜色附着点。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// create the texture
+GLuint texture;
+glGenTextures(1, &amp;amp;texture);
+glBindTexture(GL_TEXTURE_2D, texture);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,  width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;3.分配并附加深度缓冲区（与以前一样）。&lt;/p&gt;
+
+&lt;p&gt;4.测试framebuffer的完整性（和以前一样）。&lt;/p&gt;
+
+&lt;p&gt;尽管此示例假定您正在渲染为彩色纹理，但其他选项也是可能的。 例如，使用OES_depth_texture扩展名，您可以将纹理附加到深度附着点，以将来自场景的深度信息存储到纹理中。 您可以使用此深度信息来计算最终渲染场景中的阴影。&lt;/p&gt;</content><author><name>Ted</name></author><category term="基础" /><summary type="html">本文翻译自苹果官方文档OpenGL ES Programming Guide</summary></entry><entry><title type="html">OpenGL ES编程指南（三）</title><link href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/25/OpenGL_3/" rel="alternate" type="text/html" title="OpenGL ES编程指南（三）" /><published>2018-03-25T20:00:00+08:00</published><updated>2018-03-25T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/25/OpenGL_3</id><content type="html" xml:base="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/25/OpenGL_3/">&lt;p&gt;本文翻译自苹果官方文档&lt;a href=&quot;https://developer.apple.com/library/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008793-CH1-SW1&quot;&gt;OpenGL ES Programming Guide&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;四通过opengl-es和glkit来画&quot;&gt;四、通过OpenGL ES和GLKit来画&lt;/h3&gt;
 
@@ -1232,378 +1427,4 @@ view的默认行为是一次只响应一次触摸。如果用户放下第二根�
 
 &lt;p&gt;注意：UIView的动画方法通常在动画进行时禁用触摸事件。您可以通过适当地配置动画来覆盖此行为。有关执行动画的更多信息，请参阅动画。&lt;/p&gt;
 
-&lt;p&gt;当它处理触摸事件时，UIKit使用UIView的&lt;code class=&quot;highlighter-rouge&quot;&gt;hitTest：withEvent：&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;pointInside：withEvent：&lt;/code&gt;方法来确定触摸事件是否发生在给定view的边界内。尽管您很少需要重写这些方法，但您可以这样做，以实现view的自定义触摸行为。例如，您可以重写这些方法来防止子view处理触摸事件。&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">苹果官方文档View Programming Guide for iOS</summary></entry><entry><title type="html">View编程指南(二)</title><link href="http://www.helloted.com/ios/2018/01/15/View_2/" rel="alternate" type="text/html" title="View编程指南(二)" /><published>2018-01-15T20:00:00+08:00</published><updated>2018-01-15T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2018/01/15/View_2</id><content type="html" xml:base="http://www.helloted.com/ios/2018/01/15/View_2/">&lt;p&gt;苹果官方文档&lt;a href=&quot;https://developer.apple.com/library/content/documentation/WindowsViews/Conceptual/ViewPG_iPhoneOS/Introduction/Introduction.html#//apple_ref/doc/uid/TP40009503-CH1-SW2&quot;&gt;View Programming Guide for iOS&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;三windows&quot;&gt;三、Windows&lt;/h3&gt;
-
-&lt;p&gt;每个iOS应用程序至少需要一个window- 一个UIWindow类的实例 - 有些可能包含多个window。一个window对象有几个职责：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;它包含您的应用程序的可见内容。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;它在将触摸事件传递到View和其他应用程序对象中起着关键作用。&lt;/li&gt;
-  &lt;li&gt;它与您的应用程序的View controller协同工作，以方便更改。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;在iOS中，Windows没有标题栏，关闭框或其他视觉装饰。一个window始终只是一个或多个view的空白容器。此外，应用程序不会通过显示新window来更改其内容。如果要更改显示的内容，请改为改变window的最前面的view。&lt;/p&gt;
-
-&lt;p&gt;大多数iOS应用程序在其生命周期中只创建并使用一个window。该window横跨设备的整个主屏幕，并在应用程序生命周期的早期从应用程序的主要nib文件（或以编程方式创建）加载。但是，如果应用程序支持使用外部显示器进行视频输出，则可以创建一个额外的window来在该外部显示器上显示内容。所有其他window通常由系统创建，通常是为了响应特定事件（例如来电）创建的。&lt;/p&gt;
-
-&lt;h4 id=&quot;涉及windows的任务&quot;&gt;涉及Windows的任务&lt;/h4&gt;
-
-&lt;p&gt;对于许多应用程序，应用程序与window交互的唯一时间是在启动时创建windws时。 但是，您可以使用应用程序的window对象来执行几个与应用程序相关的任务：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;使用window对象将点和矩形转换为window的本地坐标系或从window的本地坐标系进行转换。 例如，如果在window坐标中提供了一个值，那么在尝试使用它之前，可能需要将其转换为特定view的坐标系。&lt;/li&gt;
-  &lt;li&gt;使用window通知来跟踪与window相关的更改。 Windows会在显示或隐藏通知或者接受或退出密钥状态时生成通知。 您可以使用这些通知在应用程序的其他部分执行操作。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;创建和配置一个window&quot;&gt;创建和配置一个window&lt;/h4&gt;
-
-&lt;p&gt;您可以通过编程方式或使用Interface Builder来创建和配置应用程序的主window。 无论哪种情况，您都可以在启动时创建window，并保留该window并将其引用存储在您的应用程序delegate对象中。 如果你的应用程序创建了额外的window，让应用程序在需要时创建它们。 例如，如果您的应用程序支持在外部显示器上显示内容，则应在创建相应window之前等待显示器连接。&lt;/p&gt;
-
-&lt;p&gt;无论您的应用程序是启动到前台还是后台，您都应始终在启动时创建应用程序的主window。 创建和配置window本身并不是一个昂贵的操作。 但是，如果您的应用程序直接进入后台，则应避免在应用程序进入前台之前使window可见。&lt;/p&gt;
-
-&lt;h4 id=&quot;在interface-builder中创建windows&quot;&gt;在Interface Builder中创建Windows&lt;/h4&gt;
-
-&lt;p&gt;使用Interface Builder创建应用程序的main window非常简单，因为Xcode项目模板可以帮你实现。每个新的Xcode应用程序项目都包含一个包含应用程序main window的主要nib文件（通常名称为MainWindow.xib或其某些变体）。另外，这些模板还为应用程序delegate对象中的该window定义了一个出口。您可以使用此outlet访问代码中的window对象。&lt;/p&gt;
-
-&lt;p&gt;重要提示：在Interface Builder中创建window时，建议您在属性检查器中启用“全屏启动”选项。如果此选项未启用且您的window小于目标设备的屏幕，则某些view不会接收触摸事件。这是因为window（如所有view）不会在边界矩形外接收触摸事件。由于默认情况下，view不会被剪切到window边界，所以view仍然可见，但是事件不能到达它们。在启动时启用全屏选项可确保window适合当前屏幕。&lt;/p&gt;
-
-&lt;p&gt;如果您正在改造一个项目以使用Interface Builder，那么使用Interface Builder创建一个window就是将window对象拖到您的nib文件中的简单方法。当然，你也应该做到以下几点：&lt;/p&gt;
-
-&lt;p&gt;要在运行时访问window，应该将window连接到outlet，通常是在应用程序delegate或者nib文件的文件所有者中定义的window。
-如果改造计划包括将新的nib文件作为应用程序的主要nib文件，则还必须将应用程序的Info.plist文件中的NSMainNibFile键设置为nib文件的名称。更改此键的值可确保在调用应用程序delegate的应用程序：didFinishLaunchingWithOptions：方法时，nib文件已加载并可供使用。&lt;/p&gt;
-
-&lt;h4 id=&quot;以编程方式创建window&quot;&gt;以编程方式创建window&lt;/h4&gt;
-
-&lt;p&gt;如果您希望以编程方式创建应用程序的main window，则应在应用程序中包含与以下代码相似的代码：didFinishLaunchingWithOptions：应用程序delegate的方法：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;self.window = [[[UIWindow alloc] initWithFrame：[[UIScreen mainScreen] bounds]]
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;在前面的示例中，self.window被假定为您的应用程序delegate的声明属性，该属性被配置为保留window对象。如果您是为外部显示创建window，则应将其分配给其他变量，并且需要指定代表该显示的非主UIScreen对象的边界。&lt;/p&gt;
-
-&lt;p&gt;创建window时，应始终将window的大小设置为屏幕的全部范围。您不应该减小window的大小来容纳状态栏或任何其他项目。状态栏总是浮在window的顶部，所以你应该缩小以容纳状态栏的唯一的东西就是你放入window的view。如果你使用view contoller，VC应该自动处理你的view的大小。&lt;/p&gt;
-
-&lt;h4 id=&quot;将内容添加到window&quot;&gt;将内容添加到Window&lt;/h4&gt;
-
-&lt;p&gt;每个window通常都有一个root view对象（由相应的view controller管理），其中包含代表您的内容的所有其他view。使用单个root view简化了更改界面的过程;要显示新的内容，你所要做的就是替换root view。要在window中安装view，请使用&lt;code class=&quot;highlighter-rouge&quot;&gt;addSubview：&lt;/code&gt;方法。例如，要安装由VC管理的view，可以使用类似于以下内容的代码：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[window addSubview:viewController.view];
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;代替上述代码，您可以在您的nib文件中配置window的rootViewController属性。此属性提供了一种使用nib文件而非编程方式配置window的root view的便捷方法。如果在从其nib文件加载window时设置此属性，则UIKit会自动将相关VC的view安装为window的root view。此属性仅用于安装root view，不用于window与VC进行通信。
-您可以使用任何您想要的view作为window的root view。取决于你的界面设计，root view可以是一个通用的UIView对象，充当一个或多个子view的容器，root view可以是标准的系统view，或者rootview可以是你定义的自定义view。通常用作roo tview的一些标准系统view包括滚动view，表view和图像view。
-在配置window的rootview时，您需要负责在window内设置其初始大小和位置。对于不包含状态栏或显示半透明状态栏的应用程序，请将view大小设置为与window大小相匹配。对于显示不透明状态栏的应用程序，请将您的view放置在状态栏下方并相应地缩小其大小。从view的高度减去状态栏的高度可以防止view的顶部被遮挡。
-注意：如果window的rootview由容器view控制器（如选项卡栏控制器，导航控制器或分割view控制器）提供，则不需要自行设置view的初始大小。容器view控制器root据状态栏是否可见，自动调整view大小。&lt;/p&gt;
-
-&lt;h4 id=&quot;更改window级别&quot;&gt;更改Window级别&lt;/h4&gt;
-
-&lt;p&gt;每个UIWindow对象都有一个可配置的windowLevel属性，用于确定该window相对于其他window的位置。 大多数情况下，您不需要更改应用程序window的级别。 新建window在创建时自动分配到正常window级别。 正常的window级别表示该window显示与应用程序相关的内容。 对于需要悬浮在应用程序内容之上的信息（比如系统状态栏或警报消息）保留更高的window级别。 虽然你可以自己分配window到这些级别，但是当你使用特定的接口时，系统通常会为你做这些。 例如，当您显示或隐藏状态栏或显示警报视图时，系统会自动创建所需的window来显示这些项目。&lt;/p&gt;
-
-&lt;h4 id=&quot;监听window改变&quot;&gt;监听Window改变&lt;/h4&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;UIWindowDidBecomeVisibleNotification&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;UIWindowDidBecomeHiddenNotification&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;UIWindowDidBecomeKeyNotification&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;UIWindowDidResignKeyNotification&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">苹果官方文档View Programming Guide for iOS</summary></entry><entry><title type="html">View编程指南</title><link href="http://www.helloted.com/ios/2018/01/15/View_1/" rel="alternate" type="text/html" title="View编程指南" /><published>2018-01-15T20:00:00+08:00</published><updated>2018-01-15T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2018/01/15/View_1</id><content type="html" xml:base="http://www.helloted.com/ios/2018/01/15/View_1/">&lt;p&gt;苹果官方文档&lt;a href=&quot;https://developer.apple.com/library/content/documentation/WindowsViews/Conceptual/ViewPG_iPhoneOS/Introduction/Introduction.html#//apple_ref/doc/uid/TP40009503-CH1-SW2&quot;&gt;View Programming Guide for iOS&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;一简介&quot;&gt;一、简介&lt;/h3&gt;
-
-&lt;p&gt;在iOS中，您可以使用windows和views在屏幕上显示应用程序的内容。 Windows本身没有任何可见的内容，但为应用程序的views提供了一个基本的容器。 views定义了您想要填充某些内容的windows的一部分。 例如，您可能具有显示图像，文本，形状或其组合的views。 您还可以使用views来组织和管理其他views。&lt;/p&gt;
-
-&lt;p&gt;每个应用程序至少有一个windows和一个views来显示其内容。 UIKit和其他系统框架提供了预定义的views，您可以使用它来呈现您的内容。 这些view的范围从简单的按钮和文本标签到更复杂的view，如tableview，pickerview和scroll view。 在预定义views不提供您需要的地方，您还可以定义自定义views并自行管理views和事件处理。&lt;/p&gt;
-
-&lt;h4 id=&quot;view管理应用程序可见内容&quot;&gt;View管理应用程序可见内容&lt;/h4&gt;
-
-&lt;p&gt;view是UIView类（或其子类之一）的一个实例对象，并在应用程序window中管理矩形区域。view负责绘制内容，处理多点触控事件以及管理任何子view的布局。绘图涉及使用图形技术，例如Core Graphics，OpenGL ES或UIKit在view的矩形区域内绘制形状，图像和文本。view通过使用手势识别器或通过直接处理触摸事件来响应其矩形区域中的触摸事件。在view层次结构中，父view负责定位和调整其子view的大小，并且可以动态地执行。这种动态修改子view的功能使您的view能够适应不断变化的条件，如界面旋转和动画。&lt;/p&gt;
-
-&lt;p&gt;您可以将view视为用于构建用户界面的构建块。您不是使用一个view呈现所有内容，而是经常使用多个view来构建view层次结构。层次结构中的每个view呈现用户界面的特定部分，通常针对特定类型的内容进行优化。例如，UIKit具有专门用于呈现图像，文本和其他类型的内容的view。&lt;/p&gt;
-
-&lt;h4 id=&quot;windows协调显示views&quot;&gt;Windows协调显示Views&lt;/h4&gt;
-
-&lt;p&gt;Windows是UIWindow类的一个实例，并处理应用程序用户界面的整体表示。 Windows使用view（及其拥有的view controller）来管理与可见view hierarchy的交互以及对可见view hierarchy的更改。 大多数情况下，您的应用程序的Windows永远不会改变。 Windows创建后，它保持不变，只有它显示的view改变。 每个应用程序至少有一个Window，在应用程序的主屏幕上显示应用程序的用户界面。 如果外部显示器连接到设备，应用程序可以创建另一个Window来在该屏幕上显示内容。&lt;/p&gt;
-
-&lt;h4 id=&quot;animations为ui交互提供可见反馈&quot;&gt;Animations为UI交互提供可见反馈&lt;/h4&gt;
-
-&lt;p&gt;动画为用户提供关于view hierarchy变化的可见反馈。 系统定义了标准动画，用于显示不同的view组之间的presenting model view和过渡。 然而，view的许多属性也可以直接动画。 例如，通过动画，您可以更改view的透明度，其在屏幕上的位置，大小，背景颜色或其他属性。 如果直接使用view的底层Core Animation layer对象，则还可以执行许多其他动画。&lt;/p&gt;
-
-&lt;h4 id=&quot;interface-builder&quot;&gt;Interface Builder&lt;/h4&gt;
-
-&lt;p&gt;Interface Builder是一个应用程序，用于以图形方式构建和配置应用程序的Windows和view。 使用Interface Builder，您可以组装view并将它们放置在一个nib文件中，该文件是存储view和其他对象的冻干版本的资源文件。 当你在运行时加载一个nib文件的时候，它里面的对象被重新编译成实际的对象，你的代码可以通过编程来操作。&lt;/p&gt;
-
-&lt;p&gt;Interface Builder极大地简化了您在创建应用程序的用户界面方面所做的工作。 由于对Interface Builder和nib文件的支持已经整合到iOS中，所以将nib文件合并到您的应用程序的设计中需要一点努力。&lt;/p&gt;
-
-&lt;h4 id=&quot;其他&quot;&gt;其他&lt;/h4&gt;
-
-&lt;p&gt;因为view是非常复杂和灵活的对象，所以不可能在一个文档中覆盖所有的行为。 但是，其他文档可帮助您了解管理view和用户界面的其他方面。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;view控制器是管理应用程序view的重要组成部分。 一个view controller主持所有的view在一个单一的view hierarchy，并方便在屏幕上显示这些view。 有关view controller和他们扮演的角色的更多信息, &lt;a href=&quot;https://developer.apple.com/library/content/featuredarticles/ViewControllerPGforiPhoneOS/index.html#//apple_ref/doc/uid/TP40007457&quot;&gt;&lt;em&gt;View Controller Programming Guide for iOS&lt;/em&gt;&lt;/a&gt;.&lt;/li&gt;
-  &lt;li&gt;view是应用程序中手势和触摸事件的关键接收者， &lt;em&gt;Event Handling Guide for iOS&lt;/em&gt;.&lt;/li&gt;
-  &lt;li&gt;自定义view必须使用可用的绘图技术来呈现其内容。 有关使用这些技术来绘制view的信息，&lt;a href=&quot;https://developer.apple.com/library/content/documentation/2DDrawing/Conceptual/DrawingPrintingiOS/Introduction/Introduction.html#//apple_ref/doc/uid/TP40010156&quot;&gt;&lt;em&gt;Drawing and Printing Guide for iOS&lt;/em&gt;&lt;/a&gt;.&lt;/li&gt;
-  &lt;li&gt;在标准view动画不够用的地方，可以使用Core Animation。 有关使用Core Animation实现动画的信息, &lt;a href=&quot;https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/CoreAnimation_guide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40004514&quot;&gt;&lt;em&gt;Core Animation Programming Guide&lt;/em&gt;&lt;/a&gt;.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;二view-and-window-架构&quot;&gt;二、View and Window 架构&lt;/h3&gt;
-
-&lt;p&gt;View和window呈现您的应用程序的用户界面，并处理与该界面的交互。 UIKit和其他系统框架提供了许多views，你可以很少或根本没有修改就直接使用或者根据需要自定义View。&lt;/p&gt;
-
-&lt;p&gt;无论您使用系统View还是创建自己的自定义View，都需要了解UIView和UIWindow类提供的基础结构。 这些课程提供先进的设施来管理View的布局和表示。 了解这些设施的工作方式对于在应用程序发生更改时确保View的行为是非常重要的。&lt;/p&gt;
-
-&lt;h4 id=&quot;view架构基础&quot;&gt;View架构基础&lt;/h4&gt;
-
-&lt;p&gt;大部分你可能想要做的事情都是通过view对象来完成的 - UIView类的实例。view对象在屏幕上定义了一个矩形区域，并处理该区域中的drawing和touch事件。View还可以作为其他view的父项，并协调这些view的布局和大小。 UIView类在管理这些View之间的这些关系方面做了大部分工作，但是您也可以根据需要自定义默认行为。&lt;/p&gt;
-
-&lt;p&gt;View与Core Animation Layer一起工作来处理View内容的渲染和动画。 UIKit中的每个View都由一个layer对象（通常是CALayer类的一个实例）支持，这个layer管理View的后备存储并处理与View相关的动画。你执行的大多数操作应该通过UIView接口。但是，在需要更多地控制view的渲染或动画行为的情况下，您可以通过其layer执行操作。&lt;/p&gt;
-
-&lt;p&gt;要理解View和图层之间的关系，有助于看一个例子。下图显示了ViewTransitions示例应用程序的view hierarchy以及与底层Core Animation layer的关系。每个View都有一个对应的layer对象，可以通过该view的layer属性访问。 （因为bar按钮项不是View，所以不能直接访问它的图层。）在这些layer对象的后面是Core Animation渲染对象，最后是用于管理屏幕上实际位的硬件缓冲区。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/10.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Core Animation layer对象的使用对性能有重要的影响。 view对象的实际绘图代码被尽可能少地调用，并且当调用代码时，结果被Core Animation缓存，并在稍后被重用。 重用已经呈现的内容消除了通常需要更新view的昂贵的绘图周期。 在动画中重复使用这些内容是非常重要的，在动画中可以操纵现有的内容。 这种重复使用比创建新内容要便宜得多。&lt;/p&gt;
-
-&lt;h4 id=&quot;view的层次结构和管理子view&quot;&gt;View的层次结构和管理子View&lt;/h4&gt;
-
-&lt;p&gt;除了提供自己的内容之外，view还可以充当其他view的容器。当一个view包含另一个view时，两个view之间会创建一个父子关系。关系中的子view称为subview，父View称为superview。创建这种类型的关系对于应用程序的外观和应用程序的行为都有影响。
-从视觉上来说，子view的内容掩盖了其父view的全部或部分内容。如果子view是完全不透明的，则子view占用的区域完全遮蔽了父view的相应区域。如果子View是部分透明的，则来自两个view的内容在被显示在屏幕上之前被混合在一起。每个superview将其子view存储在有序数组中，并且该数组中的顺序也会影响每个子View的可见性。如果两个兄弟子view彼此重叠，则最后添加的子view（或移动到子view数组的末尾）会出现在另一个之上。
-Superview - subview关系也会影响多个view的行为。更改父view的大小会产生连锁效应，导致任何子view的大小和位置也发生变化。当您更改父view的大小时，可以通过适当地配置view来控制每个子view的大小调整行为。影响子view的其他更改包括隐藏superview，更改superview的透明度，或将数学变换应用于superview的坐标系。
-View层次结构中的排列也决定了应用程序如何响应事件。当在特定view内发生触摸时，系统将带有触摸信息的事件对象直接发送到该view进行处理。但是，如果view不处理特定的触摸事件，它可以将事件对象传递给其superview。如果superview不处理事件，它将事件对象传递给它的superview，等等这样一个响应者链。特定的view也可以将事件对象传递给介入的响应者对象，如viewcontroller。如果没有对象处理事件，它最终会到达application对象，通常会丢弃它。&lt;/p&gt;
-
-&lt;h4 id=&quot;view的绘图周期&quot;&gt;View的绘图周期&lt;/h4&gt;
-
-&lt;p&gt;UIView类使用按需绘制模型来呈现内容。当一个view第一次出现在屏幕上时，系统要求它画出其内容。系统捕获此内容的snapshot，并将该snapshot用作view的视觉表示。如果你永远不改变view的内容，view的绘图代码可能永远不会再被调用。大多数涉及view的操作都会重用snapshot。如果您更改内容，则通知系统view已更改。这个View会重新绘制View并捕获新结果的快照。&lt;/p&gt;
-
-&lt;p&gt;当你的view的内容改变时，你不要直接重绘这些改变。而是使用&lt;code class=&quot;highlighter-rouge&quot;&gt;setNeedsDisplay&lt;/code&gt;或&lt;code class=&quot;highlighter-rouge&quot;&gt;setNeedsDisplayInRect：&lt;/code&gt;方法使view无效。这些方法告诉系统，view的内容改变了，需要在下一个机会重新绘制。在启动任何绘图操作之前，系统等待直到当前run loop的结束。这种延迟使您有机会使多个view失效，从您的层次结构中添加或删除view，隐藏view，调整view大小，并一次重新定位view。然后你所做的所有改变都会同时反映出来。&lt;/p&gt;
-
-&lt;p&gt;注：更改view的(geometry)几何图形不会自动导致系统重新绘制view的内容。view的contentMode属性确定如何解释对geometry的更改。大多数contentMode在View的边界内拉伸或重新定位现有的快照，而不是创建一个新的快照。&lt;/p&gt;
-
-&lt;p&gt;当呈现view的内容时，实际的绘图过程会根据View及其配置而变化。系统view通常实现私有绘图方法来呈现其内容。这些相同的系统View经常公开可用于配置view的实际外观的接口。对于自定义UIView子类，通常会覆盖View的&lt;code class=&quot;highlighter-rouge&quot;&gt;drawRect：&lt;/code&gt;方法，并使用该方法绘制view的内容。还有其他方法可以提供view的内容，比如直接设置layer的内容，但是覆盖&lt;code class=&quot;highlighter-rouge&quot;&gt;drawRect：&lt;/code&gt;方法是最常用的技术。&lt;/p&gt;
-
-&lt;h4 id=&quot;content-modes&quot;&gt;Content Modes&lt;/h4&gt;
-
-&lt;p&gt;每个view都有一个Content Modes，用于控制view如何回应其内容以响应View几何体的变化以及是否回收其内容。当view第一次显示时，它像往常一样渲染其内容，并将结果捕获在底层位图中。之后，对view’s geometry的更改并不总是会导致重新创建位图。相反，contentMode属性中的值决定是否缩放位图以适应新的边界，或者只是固定到View的一个角或边缘。&lt;/p&gt;
-
-&lt;p&gt;view的content modes在您执行以下操作时应用：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;更改view的frame或bounds矩形的宽度或高度。&lt;/li&gt;
-  &lt;li&gt;将包含比例因子的变换分配给view的transform属性。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;默认情况下，大多数view的contentMode属性被设置为UIViewContentModeScaleToFill，这会导致view的内容被缩放以适应新的frame size。下图显示了一些可用的内容模式的结果。从图中可以看出，并不是所有的content mode都会导致view的边界被完全填满，而那些content mode可能会扭曲view的内容。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/11.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Content Modes对回收view的内容非常有用，但是当您特别希望自定义view在缩放和调整大小操作期间重新绘制自己的内容时，您还可以将内容模式设置为UIViewContentModeRedraw值。 将view的Content Modes设置为该值会迫使系统调用view的&lt;code class=&quot;highlighter-rouge&quot;&gt;drawRect：&lt;/code&gt;方法来响应几何变化。 一般来说，你应该尽可能的避免使用这个值，你一定不要在标准系统view中使用它.&lt;/p&gt;
-
-&lt;h4 id=&quot;可伸缩view&quot;&gt;可伸缩View&lt;/h4&gt;
-
-&lt;p&gt;您可以指定View的一部分为可拉伸的，以便当view的大小改变时，只有可拉伸部分的内容受到影响。 您通常在按钮或其他View中使用可拉伸区域，其中部分view定义了可重复的图案。 您指定的可拉伸区域可以允许沿View的一个或两个轴伸展。 当然，当沿着两个轴伸展View时，view的边缘也必须定义可重复的图案以避免任何失真。  来自每个view的原始像素的颜色被复制以填充大view中的对应区域。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/12.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;您可以使用contentStretch属性指定view的可拉伸区域。该属性接受一个矩形，其值被规范化为0.0到1.0的范围。当拉伸View时，系统将这些归一化值乘以view的当前边界和比例因子，以确定哪些像素或像素需要拉伸。每当View边界发生变化时，使用规范化值就可以减少更新contentStretch属性的必要性。&lt;/p&gt;
-
-&lt;p&gt;view的content mode在确定如何使用view的可拉伸区域方面也起着重要作用。仅当content mode会导致View的内容被缩放时才使用可伸缩区域。这意味着只有UIViewContentModeScaleToFill，UIViewContentModeScaleAspectFit和UIViewContentModeScaleAspectFill内容模式才支持可伸缩view。如果指定将内容固定到边或角的内容模式（因此实际上不会缩放内容），则view将忽略可拉伸区域。&lt;/p&gt;
-
-&lt;p&gt;注意：在可拉伸的UIImage对象为view指定背景时，才建议使用contentStretch属性。 可伸缩View完全在Core Animation layer中处理，通常可以提供更好的性能。&lt;/p&gt;
-
-&lt;h4 id=&quot;内置的动画支持&quot;&gt;内置的动画支持&lt;/h4&gt;
-
-&lt;p&gt;在每个view背后都有一个layer对象的好处之一是可以轻松地动画许多与view相关的更改。动画是向用户传递信息的有效方法，在设计应用程序时应始终考虑动画。 UIView类的许多属性都是可以动画的，也就是说，存在从一个值到另一个值的动画的半自动支持。要为其中一个动画属性执行动画，您只需执行以下操作：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;告诉UIKit你想要执行一个动画。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;更改属性的值。&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;你可以在UIView对象上动画的属性如下：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;Frame - 使用此动画设置为view更改位置和大小变化。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;bounds - 使用这个动画来改变view的大小。&lt;/li&gt;
-  &lt;li&gt;center - 使用此可以动画显示view的位置。&lt;/li&gt;
-  &lt;li&gt;transform - 使用它来旋转或缩放view。&lt;/li&gt;
-  &lt;li&gt;alpha - 使用这个来改变view的透明度。&lt;/li&gt;
-  &lt;li&gt;backgroundColor - 使用此更改view的背景颜色。&lt;/li&gt;
-  &lt;li&gt;contentStretch - 使用它来改变view内容的拉伸方式。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;动画非常重要的一个地方是从一组views转换到另一个views。通常，您使用view contoller来管理与用户界面各部分之间的重大更改相关联的动画。例如，对于涉及从较高级别信息到较低级别信息的接口，通常使用导航控制器来管理显示每个连续数据级别的view之间的转换。但是，您也可以使用动画而不是view controller在两组View之间创建转换。你可能会在标准的view controller动画没有产生你想要的结果的地方这样做。&lt;/p&gt;
-
-&lt;p&gt;除了使用UIKit类创建的动画外，还可以使用Core Animation layer创建动画。layer可以更好地控制动画的时间和属性。&lt;/p&gt;
-
-&lt;h4 id=&quot;view的几何和坐标系统&quot;&gt;View的几何和坐标系统&lt;/h4&gt;
-
-&lt;p&gt;UIKit中的默认坐标系统的原点位于左上角，并具有从原点向下和向右延伸的轴。 坐标值使用浮点数来表示，无论底层的屏幕分辨率如何，都可以精确地布局和定位内容。 除了屏幕坐标系之外，window和view还定义了自己的局部坐标系，使您可以指定相对于window或view原点的坐标，而不是相对于屏幕。&lt;/p&gt;
-
-&lt;p&gt;重要提示：某些iOS技术定义默认坐标系，其原点和方向与UIKit使用的坐标系不同。 例如，Core Graphics和OpenGL ES使用坐标系统，坐标系统的原点位于View或窗口的左下角，y轴相对于屏幕向上。 绘制或创建内容时，您的代码必须考虑到这些差异，并根据需要调整坐标值（或坐标系的默认方向）。&lt;/p&gt;
-
-&lt;h4 id=&quot;frame-bounds-and-center&quot;&gt;Frame, Bounds, and Center&lt;/h4&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;frame&lt;/code&gt; 包含了 &lt;em&gt;frame 矩形&lt;/em&gt;, 在superview中定义View的大小和位置&lt;/li&gt;
-  &lt;li&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;bounds&lt;/code&gt; 包含了 &lt;em&gt;bounds 矩形&lt;/em&gt;, 它在view的本地坐标系统中指定View的大小（及其内容的原点）。&lt;/li&gt;
-  &lt;li&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;center&lt;/code&gt; 包含了在superview坐标系统中view的中点的位置&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;您主要使用center和frame属性来操作当前view的几何图形。例如，在构建view层次结构或在运行时更改view的位置或大小时使用这些属性。如果您只改变view的位置（而不是View的大小），则中心属性是更好的选择。即使缩放或旋转因子已添加到View的变换中，属性中的值始终有效。对于frame属性中的值也是如此，如果view的变换不等于标识变换，则认为该值是无效的。&lt;/p&gt;
-
-&lt;p&gt;绘图时主要使用bounds属性。bounds矩形在View的本地坐标系中表示。此矩形的默认原点是（0，0），其大小与frame矩形的大小相匹配。您在此矩形内绘制的任何东西都是view可见内容的一部分。如果更改bounds矩形的原点，则在新矩形内绘制的内容将成为view可见内容的一部分。&lt;/p&gt;
-
-&lt;p&gt;图显示了图像View的frame和bounds之间的关系。在图中，图像view的左上角位于其superivew坐标系中的点（40,40），矩形的大小是240×380点。对于bounds矩形，原点为（0,0），矩形的大小为240乘380点。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/13.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;虽然更改frame，bounds和center的方法是相互独立的，但其中一个属性的更改会影响其他属性，方法如下：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;当您设置frame属性时，bounds属性中的size值将更改为与frame矩形的新大小相匹配。 center属性中的值同样会更改为匹配frame矩形的新中心点。&lt;/li&gt;
-  &lt;li&gt;当您设置center属性时，frame中的origin值会相应更改。&lt;/li&gt;
-  &lt;li&gt;设置bounds属性的大小时，frame属性中的size值会更改为与bounds矩形的size相匹配。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;默认情况下，view的frame不会剪切到其superview的frame。 因此，任何超出superview frame的子view都将被完整地呈现。 不过，您可以通过将superview的clipsToBounds属性设置为YES来更改此行为。 无论子view是否可视化剪切，触摸事件总是尊重目标view的superview的边界矩形。 换句话说，发生在superview bounds矩形之外的view的一部分中的触摸事件不会被传送到该view。&lt;/p&gt;
-
-&lt;h4 id=&quot;坐标系统转换&quot;&gt;坐标系统转换&lt;/h4&gt;
-
-&lt;p&gt;坐标系转换提供了一种快速方便地更改view（或其内容）的方法。 &lt;em&gt;affine transform&lt;/em&gt;是一个数学矩阵，指定一个坐标系中的点如何映射到不同坐标系中的点。 您可以将&lt;em&gt;affine transform&lt;/em&gt;应用于整个view，以相对于其superivew更改View的大小，位置或方向。 您还可以在绘图代码中使用&lt;em&gt;affine transform&lt;/em&gt;对各个渲染内容进行相同类型的操作。 如何应用仿射变换取决于上下文：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;要修改整个view，请在View的transform属性中修改&lt;em&gt;affine transform&lt;/em&gt;。&lt;/li&gt;
-  &lt;li&gt;要修改view的特定内容,用&lt;code class=&quot;highlighter-rouge&quot;&gt;drawRect：&lt;/code&gt;方法，请修改与活动图形上下文关联的transform。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;当您要实现动画时，通常会修改view的transform属性。 例如，您可以使用此属性来创建围绕其中心点旋转view的动画。 您不会使用此属性对您的view进行永久更改，例如在其superview的坐标空间内修改其view的位置或大小。 对于这种类型的更改，您应该修改view的frame矩形。&lt;/p&gt;
-
-&lt;p&gt;注意：修改view的transform属性时，所有的转换都是相对于view的中心点执行的。&lt;/p&gt;
-
-&lt;p&gt;每个子View的坐标系建立在其super的坐标系上。所以当你修改一个View的transform属性时，这个改变会影响view及其所有的subview。但是，这些更改仅影响屏幕上view的最终呈现。由于每个view都是绘制其内容，并将其子view相对于其bounds进行布局，所以在绘制和布局过程中可以忽略其superview的变换。&lt;/p&gt;
-
-&lt;p&gt;图展示了两种不同的旋转因素在渲染时如何组合。在View的&lt;code class=&quot;highlighter-rouge&quot;&gt;drawRect：&lt;/code&gt;方法内部，对shape应用45度旋转因子会使该shape旋转45度。将单独的45度旋转因子应用于view，然后使shape看起来旋转90度。相对于绘制的view，shape仍然只旋转了45度，但view旋转使其看起来被旋转了更多。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/14.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;重要提示：如果View的transform属性不是标识transform，那么该View的frame属性的值是未定义的，必须忽略。 将变换应用于view时，必须使用view的bounds和center属性来获取view的size和position。 任何子view的frame矩形仍然有效，因为它们是相对于view的bounds&lt;/p&gt;
-
-&lt;h4 id=&quot;view的运行时交互模型&quot;&gt;View的运行时交互模型&lt;/h4&gt;
-
-&lt;p&gt;每当用户与您的用户界面进行交互时，或者您自己的代码以编程方式更改某些内容时，都会在UIKit内部发生一系列复杂的事件来处理该交互。 在这个序列的特定时间点，UIKit会调用您的Views，并让他们有机会代表您的应用程序进行响应。 理解这些标注点对于理解View适合系统的位置很重要。 图显示了用户触摸屏幕开始的事件的基本顺序，以图形系统作为响应更新屏幕内容结束。 任何由程序启动的动作也会发生相同的事件序列。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/15.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;用户触摸屏幕。
-硬件将触摸事件报告给UIKit框架。
-UIKit框架将触摸包装到UIEvent对象中并将其分派到相应的View。
-view的事件处理代码响应事件。例如，您的代码可能会：&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;ul&gt;
-      &lt;li&gt;更改view或其subview的属性（frame，bounds，alpha等）。&lt;/li&gt;
-      &lt;li&gt;调用setNeedsLayout方法将view（或subviews）标记为需要布局更新。&lt;/li&gt;
-      &lt;li&gt;调用setNeedsDisplay或setNeedsDisplayInRect：方法将view（或其subviews）标记为需要重绘。&lt;/li&gt;
-      &lt;li&gt;通知controllers有关对某些数据的更改。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;当然，由你来决定这些view应该做哪些事情以及应该调用哪些方法。
-如果view的几何因任何原因而改变，则UIKit根据以下规则更新其subview：&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;ul&gt;
-      &lt;li&gt;
-        &lt;p&gt;如果您为view配置了autoresizing规则，则UIKit会根据这些规则调整每个view。&lt;/p&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;p&gt;如果view实现了layoutSubviews方法，UIKit会调用它。&lt;/p&gt;
-
-        &lt;p&gt;您可以在自定义view中重写此方法，并使用它来调整任何subview的位置和大小。&lt;/p&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;如果任何view的任何部分被标记为需要重绘，则UIKit会要求view重绘本身。
-对于显式定义&lt;code class=&quot;highlighter-rouge&quot;&gt;drawRect：&lt;/code&gt;方法的自定义view，UIKit调用该方法。这个方法的实现应该尽可能快地重绘view的指定区域，而不是其他的。此时不要进行额外的布局更改，也不要对应用程序的数据模型进行其他更改。此方法的目的是更新view的可视内容。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;标准系统view通常不执行&lt;code class=&quot;highlighter-rouge&quot;&gt;drawRect：&lt;/code&gt;方法，而是在这个时候管理他们的绘图。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;任何更新的view都会与应用程序的其余可见内容合成，并发送到图形硬件进行显示。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;图形硬件将渲染的内容传输到屏幕上。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;注意：上述更新模型主要适用于使用标准系统view和绘图技术的应用程序。 使用OpenGL ES进行绘制的应用程序通常会配置一个全屏View，并直接绘制到关联的OpenGL ES图形上下文中。 在这种情况下，view仍然可以处理触摸事件，但由于它是全屏的，所以不需要布置subviews。&lt;/p&gt;
-
-&lt;p&gt;在前面的一系列步骤中，您自定义View的主要集成点是：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;事件处理方法:
-    &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;touchesBegan:withEvent:&lt;/code&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;touchesMoved:withEvent:&lt;/code&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;touchesEnded:withEvent:&lt;/code&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;touchesCancelled:withEvent:&lt;/code&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;layoutSubviews&lt;/code&gt; 方法&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;drawRect:&lt;/code&gt; 方法&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;这些是view中最常用的重写方法，但您可能不需要重写所有这些方法。 如果使用手势识别器来处理事件，则不需要重写任何事件处理方法。 同样，如果您的view不包含subview或其大小不会更改，则没有理由重写layoutSubviews方法。 最后，只有在view的内容可以在运行时更改并且使用本技术（如UIKit或Core Graphics）进行绘制时，才需要&lt;code class=&quot;highlighter-rouge&quot;&gt;drawRect：&lt;/code&gt;方法。&lt;/p&gt;
-
-&lt;h4 id=&quot;高效地使用view&quot;&gt;高效地使用View&lt;/h4&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;View不总是有一个相应的view controller&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;​	view和viewcontroller之间很少有一对一的关系。 viewcontroller的工作是管理一个View层次结构，通常由多个view组成，用于实现一些独立的功能。 对于iPhone应用程序，每个view层次结构通常填充整个屏幕，但对于iPad应用程序，view层次结构可能只填充屏幕的一部分。&lt;/p&gt;
-
-&lt;p&gt;​	在设计应用程序的用户界面时，重要的是要考虑view controller将扮演的角色。 view controller提供了许多重要的行为，例如协调屏幕上的view显示，协调从屏幕上删除这些view，响应低内存警告释放内存，以及响应接口方向更改而旋转view。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;最小化自定义绘图&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;虽然自定义view有时是必要的，但它也是你应该尽可能避免的东西。 只有当现有系统View类不提供所需的外观或功能时，才能真正做到任何自定义绘图。 任何时候，您的内容都可以与现有View的组合进行组合，最好的办法就是将这些view对象组合成一个自定义的view层次结构。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;利用content mode&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;content mode可以减少重绘view的时间。 默认情况下，view使用UIViewContentModeScaleToFill内容模式，该模式缩放view的现有内容以适合view的框架矩形。 您可以根据需要更改此模式，以不同的方式调整您的内容，但是如果可以的话，您应该避免使用UIViewContentModeRedraw内容模式。 无论哪种内容模式生效，都可以通过调用setNeedsDisplay或setNeedsDisplayInRect：来强制view重绘其内容。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;尽可能声明View不透明&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;UIKit使用每个view的opaque属性来确定view是否可以优化合成操作。 将自定义view的此属性值设置为YES会告诉UIKit它不需要在view后面呈现任何内容。 较少的渲染会导致您的绘图代码的性能提高，并且通常会受到鼓励。 当然，如果将opaque属性设置为YES，则View必须完全填充完全不透明的内容。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;滚动时调整view的绘图行为&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;滚动可以在很短的时间内产生大量的view更新。 如果您的view的绘制代码没有适当地调整，则view的滚动性能可能会很低。 在开始滚动操作时，不要试图确保view的内容始终处于原始状态，而应考虑更改view的行为。 例如，您可以暂时降低渲染内容的质量，或在滚动正在进行时更改content mode。 当滚动停止时，您可以将view返回到之前的状态，并根据需要更新内容。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;不要通过嵌入subview来自定义控件&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;虽然在技术上可以将subview添加到标准系统控件（从UIControl继承的对象），但不应该以这种方式定制它们。 支持自定义的控件通过控件类本身的明确的，记录良好的接口来实现。 例如，UIButton类包含设置按钮的标题和背景图像的方法。 使用定义的定制点意味着您的代码将始终正常工作。 通过在按钮内部嵌入自定义图像view或标签来限制这些方法，如果按钮的实现发生更改，则可能会导致应用程序现在或将来某个时刻的行为不正确。&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">苹果官方文档View Programming Guide for iOS</summary></entry></feed>
+&lt;p&gt;当它处理触摸事件时，UIKit使用UIView的&lt;code class=&quot;highlighter-rouge&quot;&gt;hitTest：withEvent：&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;pointInside：withEvent：&lt;/code&gt;方法来确定触摸事件是否发生在给定view的边界内。尽管您很少需要重写这些方法，但您可以这样做，以实现view的自定义触摸行为。例如，您可以重写这些方法来防止子view处理触摸事件。&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">苹果官方文档View Programming Guide for iOS</summary></entry></feed>
