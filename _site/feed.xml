@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-03-28T15:05:16+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">OpenGL ES编程指南（五）</title><link href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/27/OpenGL_5/" rel="alternate" type="text/html" title="OpenGL ES编程指南（五）" /><published>2018-03-27T20:00:00+08:00</published><updated>2018-03-27T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/27/OpenGL_5</id><content type="html" xml:base="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/27/OpenGL_5/">&lt;p&gt;本文翻译自苹果官方文档&lt;a href=&quot;https://developer.apple.com/library/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008793-CH1-SW1&quot;&gt;OpenGL ES Programming Guide&lt;/a&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-03-28T15:52:12+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">OpenGL ES编程指南（五）</title><link href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/27/OpenGL_5/" rel="alternate" type="text/html" title="OpenGL ES编程指南（五）" /><published>2018-03-27T20:00:00+08:00</published><updated>2018-03-27T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/27/OpenGL_5</id><content type="html" xml:base="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/27/OpenGL_5/">&lt;p&gt;本文翻译自苹果官方文档&lt;a href=&quot;https://developer.apple.com/library/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008793-CH1-SW1&quot;&gt;OpenGL ES Programming Guide&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;六多任务高分辨率和其他功能&quot;&gt;六、多任务、高分辨率和其他功能&lt;/h3&gt;
 
@@ -122,9 +122,15 @@
 &lt;p&gt;根据您的应用打算执行的任务，您的应用配置不同的对象以附加到帧缓冲区对象。 在大多数情况下，配置帧缓冲区的不同之处在于哪个对象连接到帧缓冲区对象的颜色附着点：&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;要将帧缓冲区用于离屏图像处理，请附加渲染缓冲区。 请参阅创建离屏帧缓冲区对象。&lt;/li&gt;
-  &lt;li&gt;要将帧缓冲区图像用作稍后渲染步骤的输入，请附加纹理。 请参阅使用帧缓冲区对象渲染到纹理。&lt;/li&gt;
-  &lt;li&gt;要在核心动画层组合中使用帧缓冲区，请使用特殊的支持Core Animation的渲染缓冲区。 请参阅渲染到核心动画层。&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;要将帧缓冲区用于离屏图像处理，请附加渲染缓冲区。 请参阅创建离屏帧缓冲区对象。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;要将帧缓冲区图像用作稍后渲染步骤的输入，请附加纹理。 请参阅使用帧缓冲区对象渲染到纹理。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;h4 id=&quot;要在核心动画层组合中使用帧缓冲区请使用特殊的支持core-animation的渲染缓冲区-请参阅渲染到core-animation-layer&quot;&gt;要在核心动画层组合中使用帧缓冲区，请使用特殊的支持Core Animation的渲染缓冲区。 请参阅渲染到Core Animation Layer&lt;/h4&gt;
+  &lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h4 id=&quot;创建离屏帧缓冲区对象&quot;&gt;创建离屏帧缓冲区对象&lt;/h4&gt;
@@ -193,7 +199,220 @@ glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, text
 
 &lt;p&gt;4.测试framebuffer的完整性（和以前一样）。&lt;/p&gt;
 
-&lt;p&gt;尽管此示例假定您正在渲染为彩色纹理，但其他选项也是可能的。 例如，使用OES_depth_texture扩展名，您可以将纹理附加到深度附着点，以将来自场景的深度信息存储到纹理中。 您可以使用此深度信息来计算最终渲染场景中的阴影。&lt;/p&gt;</content><author><name>Ted</name></author><category term="基础" /><summary type="html">本文翻译自苹果官方文档OpenGL ES Programming Guide</summary></entry><entry><title type="html">OpenGL ES编程指南（三）</title><link href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/25/OpenGL_3/" rel="alternate" type="text/html" title="OpenGL ES编程指南（三）" /><published>2018-03-25T20:00:00+08:00</published><updated>2018-03-25T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/25/OpenGL_3</id><content type="html" xml:base="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/25/OpenGL_3/">&lt;p&gt;本文翻译自苹果官方文档&lt;a href=&quot;https://developer.apple.com/library/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008793-CH1-SW1&quot;&gt;OpenGL ES Programming Guide&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;尽管此示例假定您正在渲染为彩色纹理，但其他选项也是可能的。 例如，使用OES_depth_texture扩展名，您可以将纹理附加到深度附着点，以将来自场景的深度信息存储到纹理中。 您可以使用此深度信息来计算最终渲染场景中的阴影。&lt;/p&gt;
+
+&lt;h4 id=&quot;渲染到core-animation-layer&quot;&gt;渲染到Core Animation Layer&lt;/h4&gt;
+
+&lt;p&gt;Core Animation是iOS上图形渲染和动画的中心基础设施。 您可以使用托管使用不同iOS子系统（例如UIKit，Quartz 2D和OpenGL ES）呈现的内容的图层来组合应用的用户界面或其他可视化显示。 OpenGL ES通过CAEAGLLayer类连接到Core Animation，这是一种特殊类型的Core Animation Layer，其内容来自OpenGL ES渲染缓冲区。 Core Animation将渲染缓冲区的内容与其他图层进行合成，并在屏幕上显示结果图像。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_6/09.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;CAEAGLLayer通过提供两个关键功能为OpenGL ES提供此支持。 首先，它为渲染缓冲区分配共享存储空间。 其次，它将渲染缓冲区呈现给Core Animation，用渲染缓冲区中的数据替换该图层以前的内容。 这种模式的一个优点是核心动画层的内容不需要在每一帧中绘制，只有当渲染的图像改变时。&lt;/p&gt;
+
+&lt;p&gt;注意：GLKView类自动执行以下步骤，所以当您想在视图的内容层中使用OpenGL ES进行绘制时应该使用它。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;创建一个CAEAGLLayer对象并配置其属性。
+为了获得最佳性能，请将图层的不透明属性值设置为YES。请注意核心动画合成性能。&lt;/p&gt;
+
+    &lt;p&gt;（可选）通过为CAEAGLLayer对象的drawableProperties属性分配一个新的字典值来配置渲染表面的表面属性。您可以指定渲染缓冲区的像素格式，并指定渲染缓冲区的内容在发送到Core Animation后是否被丢弃。有关允许的密钥列表，请参阅EAGLDrawable协议参考。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;分配OpenGL ES上下文并将其作为当前上下文。请参阅配置OpenGL ES上下文。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;创建帧缓冲区对象（如上面的创建屏幕外帧缓冲区对象）。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;创建一个颜色渲染缓冲区，通过调用上下文的renderbufferStorage：fromDrawable：方法并传递图层对象作为参数来分配其存储空间。宽度，高度和像素格式取自图层并用于为渲染缓冲区分配存储空间。&lt;/p&gt;
+
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;GLuint colorRenderbuffer;
+glGenRenderbuffers(1, &amp;amp;colorRenderbuffer);
+glBindRenderbuffer(GL_RENDERBUFFER, colorRenderbuffer);
+[myContext renderbufferStorage:GL_RENDERBUFFER fromDrawable:myEAGLLayer];
+glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colorRenderbuffer);
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;检索颜色渲染缓冲区的高度和宽度。&lt;/p&gt;
+
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;GLint width;
+GLint height;
+glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &amp;amp;width);
+glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &amp;amp;height);
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+
+    &lt;p&gt;在前面的例子中，渲染缓冲区的宽度和高度被明确提供来为缓冲区分配存储空间。 这里，代码在分配存储空间后从颜色渲染缓冲区中检索宽度和高度。 你的应用程序这样做是因为颜色渲染缓冲区的实际尺寸是根据图层的边界和比例因子来计算的。 附加到帧缓冲区的其他渲染缓冲区必须具有相同的尺寸。 除了使用高度和宽度分配深度缓冲区外，还可以使用它们分配OpenGL ES视口并帮助确定应用纹理和模型中所需的详细程度。 请参阅支持高分辨率显示。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;分配并附加深度缓冲区（与以前一样）。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;测试framebuffer的完整性（和以前一样）。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;通过将CAEAGLLayer对象传递给可见图层的&lt;code class=&quot;highlighter-rouge&quot;&gt;addSublayer：&lt;/code&gt;方法，将CAEAGLLayer对象添加到Core Animation图层层次结构中。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;blockquote&gt;
+  &lt;h3 id=&quot;绘制到帧缓冲区对象&quot;&gt;绘制到帧缓冲区对象&lt;/h3&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;现在你有一个framebuffer对象，你需要填充它。 本节介绍渲染新帧并将其呈现给用户所需的步骤。 渲染到纹理或离屏帧缓冲区的行为相似，只是在应用程序使用最终帧的方式上有所不同。&lt;/p&gt;
+
+&lt;h4 id=&quot;按需渲染或动画循环渲染&quot;&gt;按需渲染或动画循环渲染&lt;/h4&gt;
+
+&lt;p&gt;在渲染到Core Animation层时，您必须选择何时绘制OpenGL ES内容，就像使用GLKit视图和视图控制器进行绘制时一样。 如果渲染到离屏帧缓冲区或纹理，请在适合使用这些类型的帧缓冲区的情况下进行绘制。&lt;/p&gt;
+
+&lt;p&gt;对于按需绘制，实现您自己的方法来绘制并呈现您的渲染缓冲区，并在您想要显示新内容时调用它。&lt;/p&gt;
+
+&lt;p&gt;要使用动画循环进行绘制，请使用CADisplayLink对象。 Display link是Core Animation提供的一种计时器，可让您将绘图与屏幕的刷新速率同步。&lt;/p&gt;
+
+&lt;p&gt;注意：GLKViewController类自动使用CADisplayLink对象来动画GLKView内容。 只有当您需要超出GLKit框架提供的行为时，才可以直接使用CADisplayLink类。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;displayLink = [myView.window.screen displayLinkWithTarget:self selector:@selector(drawFrame)];
+[displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;在实现drawFrame方法的内部，读取displaylink的timestamp属性以获取要渲染的下一帧的时间戳。 它可以使用该值来计算下一帧中对象的位置。&lt;/p&gt;
+
+&lt;p&gt;通常，每次刷新屏幕时都会触发displaylink对象; 该值通常为60 Hz，但在不同设备上可能会有所不同。 大多数应用程序不需要每秒刷新屏幕60次。 您可以将displaylink的frameInterval属性设置为调用方法之前的实际帧数。 例如，如果帧间隔设置为3，则应用程序每隔三帧调用一次，或每秒大约20帧。&lt;/p&gt;
+
+&lt;p&gt;注意：为获得最佳效果，请选择您的应用可以始终实现的帧速率。 平滑一致的帧速率产生比不规律变化的帧速率更令人愉快的用户体验。&lt;/p&gt;
+
+&lt;h4 id=&quot;渲染一帧&quot;&gt;渲染一帧&lt;/h4&gt;
+
+&lt;p&gt;下图展示了OpenGL ES应用程序在iOS上呈现并呈现帧的步骤。 这些步骤包括许多提示，以提高应用程序的性能。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_6/10.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h5 id=&quot;清缓存&quot;&gt;清缓存&lt;/h5&gt;
+
+&lt;p&gt;在每个帧的开始处，擦除所有帧缓冲区附件的内容，其内容不需要先前的帧来绘制下一帧。 调用glClear函数，将所有缓冲区的位掩码传入以清除&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;对OpenGL ES使用glClear可以放弃渲染缓冲区或纹理的现有内容，从而避免将以前内容加载到内存中的代价高昂的操作。&lt;/p&gt;
+
+&lt;h5 id=&quot;准备资源并执行绘图命令&quot;&gt;准备资源并执行绘图命令&lt;/h5&gt;
+
+&lt;p&gt;这两个步骤涵盖了您在设计应用程序体系结构时所做的大部分关键决策。首先，您决定要向用户显示哪些内容，并配置相应的OpenGL ES对象（例如顶点缓冲区对象，纹理，着色器程序及其输入变量），以便上传到GPU。接下来，您提交绘图命令，告诉GPU如何使用这些资源来渲染帧。&lt;/p&gt;
+
+&lt;p&gt;渲染器设计在OpenGL ES设计指南中有更详细的介绍。现在，要注意的最重要的性能优化是，如果只在渲染新帧时开始修改OpenGL ES对象，则应用运行得更快。虽然您的应用程序可以在修改对象和提交绘图命令（如图4-3中的虚线所示）之间进行切换，但如果每帧仅执行一次每一步，则运行速度会更快。&lt;/p&gt;
+
+&lt;h5 id=&quot;执行绘图命令&quot;&gt;执行绘图命令&lt;/h5&gt;
+
+&lt;p&gt;这一步将获取您在上一步中准备的对象并提交绘图命令以使用它们。在OpenGL ES设计指南中详细介绍了设计这部分渲染代码以便高效运行。目前，要注意的最重要的性能优化是，如果您的应用在渲染新帧时只修改OpenGL ES对象，则运行速度会更快。虽然您的应用程序可以在修改对象和提交绘图命令之间进行切换（如虚线所示），但如果只执行一次每个步骤，则运行速度会更快。&lt;/p&gt;
+
+&lt;h5 id=&quot;解决多重采样&quot;&gt;解决多重采样&lt;/h5&gt;
+
+&lt;p&gt;如果您的应用使用多重采样来提高图像质量，则应用必须在将像素呈现给用户之前先解析这些像素。多重采样在使用多重采样来提高图像质量方面有详细的介绍。&lt;/p&gt;
+
+&lt;h5 id=&quot;放弃不需要的渲染缓冲区&quot;&gt;放弃不需要的渲染缓冲区&lt;/h5&gt;
+
+&lt;p&gt;丢弃操作是一个性能提示，告诉OpenGL ES不再需要一个或多个渲染缓冲区的内容。通过暗示OpenGL ES您不需要渲染缓冲区的内容，缓冲区中的数据可以被丢弃，并且可以避免昂贵的任务来保持这些缓冲区的内容更新。&lt;/p&gt;
+
+&lt;p&gt;在渲染循环的这个阶段，你的应用程序已经提交了该帧的所有绘图命令。虽然您的应用程序需要颜色渲染缓冲区才能显示到屏幕上，但它可能不需要深度缓冲区的内容。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;const GLenum discards[]  = {GL_DEPTH_ATTACHMENT};
+glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+glDiscardFramebufferEXT(GL_FRAMEBUFFER,1,discards);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;注意：glDiscardFramebufferEXT函数由OpenGL ES 1.1和2.0的EXT_discard_framebuffer扩展提供。 在OpenGL ES 3.0上下文中，改用glInvalidateFramebuffer函数。&lt;/p&gt;
+
+&lt;h4 id=&quot;给core-animation展示结果&quot;&gt;给Core Animation展示结果&lt;/h4&gt;
+
+&lt;p&gt;在此步骤中，颜色渲染缓冲区保存完成的帧，因此您只需将其呈现给用户即可。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;glBindRenderbuffer(GL_RENDERBUFFER, colorRenderbuffer);
+[context presentRenderbuffer:GL_RENDERBUFFER];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;默认情况下，您必须假设在您的应用呈现渲染缓冲区后渲染缓冲区的内容将被丢弃。 这意味着每次您的应用呈现一个框架时，它必须在呈现新框架时完全重新创建框架的内容。 出于这个原因，上面的代码总是会擦除颜色缓冲区。&lt;/p&gt;
+
+&lt;p&gt;如果您的应用想要在帧之间保留颜色渲染缓冲区的内容，请将kEAGLDrawablePropertyRetainedBacking键添加到存储在CAEAGLLayer对象的drawableProperties属性中的字典中，并从先前的glClear函数调用中移除GL_COLOR_BUFFER_BIT常量。 保留的支持可能需要iOS分配额外的内存来保存缓冲区的内容，这可能会降低应用程序的性能。&lt;/p&gt;
+
+&lt;h4 id=&quot;使用多重采样提高图像质量&quot;&gt;使用多重采样提高图像质量&lt;/h4&gt;
+
+&lt;p&gt;多重采样是抗锯齿的一种形式，可平滑锯齿边缘并提高大多数3D应用程序的图像质量。 OpenGL ES 3.0包括多重采样作为核心规范的一部分，iOS通过APPLE_framebuffer_multisample扩展在OpenGL ES 1.1和2.0中提供。多重采样使用更多的内存和片段处理时间来渲染图像，但与使用其他方法相比，它可以以更低的性能成本提高图像质量。&lt;/p&gt;
+
+&lt;p&gt;下图显示了多采样如何工作。您的应用程序不会创建一个帧缓冲区对象，而是创建两个。多重采样缓冲区包含呈现您的内容所需的所有附件（通常为颜色和深度缓冲区）。解析缓冲区仅包含向用户显示渲染图像所需的附件（通常是颜色渲染缓冲区，但可能是纹理），它使用创建帧缓冲区对象的相应过程创建。多采样渲染缓冲区使用与解析帧缓冲区相同的尺寸进行分配，但每个渲染缓冲区都包含一个附加参数，该参数指定要为每个像素存储的采样数量。您的应用将其所有渲染执行到多重采样缓冲区，然后通过将这些样本解析到解析缓冲区来生成最终的抗锯齿图像。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_6/11.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;下面显示了创建多重采样缓冲区的代码。 此代码使用先前创建的缓冲区的宽度和高度。 它调用glRenderbufferStorageMultisampleAPPLE函数为渲染缓冲区创建多重采样存储&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;glGenFramebuffers(1, &amp;amp;sampleFramebuffer);
+glBindFramebuffer(GL_FRAMEBUFFER, sampleFramebuffer);
+ 
+glGenRenderbuffers(1, &amp;amp;sampleColorRenderbuffer);
+glBindRenderbuffer(GL_RENDERBUFFER, sampleColorRenderbuffer);
+glRenderbufferStorageMultisampleAPPLE(GL_RENDERBUFFER, 4, GL_RGBA8_OES, width, height);
+glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, sampleColorRenderbuffer);
+ 
+glGenRenderbuffers(1, &amp;amp;sampleDepthRenderbuffer);
+glBindRenderbuffer(GL_RENDERBUFFER, sampleDepthRenderbuffer);
+glRenderbufferStorageMultisampleAPPLE(GL_RENDERBUFFER, 4, GL_DEPTH_COMPONENT16, width, height);
+glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, sampleDepthRenderbuffer);
+ 
+if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+    NSLog(@&quot;Failed to make complete framebuffer object %x&quot;, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;以下是修改您的渲染代码以支持多重采样的步骤：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;在清除缓冲区步骤中，清除多重采样帧缓冲区的内容。&lt;/p&gt;
+
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;glBindFramebuffer(GL_FRAMEBUFFER, sampleFramebuffer);
+glViewport(0, 0, framebufferWidth, framebufferHeight);
+glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;提交绘图命令后，您将内容从多重采样缓冲区解析到解析缓冲区。 为每个像素存储的样本在解析缓冲区中合并为一个样本。&lt;/p&gt;
+
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;glBindFramebuffer(GL_DRAW_FRAMEBUFFER_APPLE, resolveFrameBuffer);
+glBindFramebuffer(GL_READ_FRAMEBUFFER_APPLE, sampleFramebuffer);
+glResolveMultisampleFramebufferAPPLE();
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;在放弃步骤中，您可以放弃连接到多采样帧缓冲区的两个渲染缓冲区。 这是因为您打算呈现的内容存储在解析帧缓冲区中。&lt;/p&gt;
+
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;const GLenum discards[]  = {GL_COLOR_ATTACHMENT0,GL_DEPTH_ATTACHMENT};
+glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE,2,discards);
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;在“当前结果”步骤中，您将呈现附加到解析帧缓冲区的颜色渲染缓冲区。&lt;/p&gt;
+
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;glBindRenderbuffer(GL_RENDERBUFFER, colorRenderbuffer);
+[context presentRenderbuffer:GL_RENDERBUFFER];
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;多重采样不是免费的; 需要额外的内存来存储额外的样本，并且将样本解析到解析帧缓冲区需要时间。 如果您向应用添加多重采样，请始终测试应用的性能以确保其可接受性。&lt;/p&gt;
+
+&lt;p&gt;注意：上面的代码假定有一个OpenGL ES 1.1或2.0上下文。 多重采样是核心OpenGL ES 3.0 API的一部分，但功能不同。&lt;/p&gt;</content><author><name>Ted</name></author><category term="基础" /><summary type="html">本文翻译自苹果官方文档OpenGL ES Programming Guide</summary></entry><entry><title type="html">OpenGL ES编程指南（三）</title><link href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/25/OpenGL_3/" rel="alternate" type="text/html" title="OpenGL ES编程指南（三）" /><published>2018-03-25T20:00:00+08:00</published><updated>2018-03-25T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/25/OpenGL_3</id><content type="html" xml:base="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/25/OpenGL_3/">&lt;p&gt;本文翻译自苹果官方文档&lt;a href=&quot;https://developer.apple.com/library/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008793-CH1-SW1&quot;&gt;OpenGL ES Programming Guide&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;四通过opengl-es和glkit来画&quot;&gt;四、通过OpenGL ES和GLKit来画&lt;/h3&gt;
 
