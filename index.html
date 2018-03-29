@@ -21,6 +21,37 @@ description: "曹浩之的博客(原创使人进步)"
 
 <!-- Pager -->
 {% if paginator.total_pages > 1 %}
+    <ul class="pager">
+    {% if paginator.previous_page %}
+      <a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">&laquo; Prev</a>
+    {% else %}
+      <span>&laquo; Prev</span>
+    {% endif %}
+
+    {% for page in (1..paginator.total_pages) %}
+      {% if page == paginator.page %}
+        <a class="current_page">{{ page }}</a>
+      {% elsif page == 1 %}
+        <a href="{{ '/index.html' | prepend: site.baseurl | replace: '//', '/' }}">
+          {{ page }}
+        </a>
+      {% else %}
+        <a href="{{ site.paginate_path | prepend: '/' | replace: '//', '/' | replace: ':num', page }}">
+          {{ page }}
+        </a>
+      {% endif %}
+    {% endfor %}
+
+    {% if paginator.next_page %}
+      <a href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}">Next &raquo;</a>
+    {% else %}
+      <span>Next &raquo;</span>
+    {% endif %}
+    </ul>
+{% endif %}
+
+
+<!-- {% if paginator.total_pages > 1 %}
 <ul class="pager">
     {% if paginator.previous_page %}
     <li class="previous">
@@ -33,4 +64,5 @@ description: "曹浩之的博客(原创使人进步)"
     </li>
     {% endif %}
 </ul>
-{% endif %}
+{% endif %} -->
+
