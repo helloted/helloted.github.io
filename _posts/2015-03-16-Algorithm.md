@@ -8,6 +8,28 @@ author:     "Ted"
 header-img: "img/Http/bg.jpg"
 ---
 
+1、实现单例模式
+
+2、数组中的重复数字
+
+3、蛇形矩阵/顺时针矩阵
+
+4、二维数组中的查找
+
+5、替换字符串
+
+6、链表的一些操作
+
+7、反向打印链表
+
+8、树的一些操作
+
+9、重建树
+
+10、用两个栈来实现队列
+
+
+
 #### 1、实现单例模式
 
 OC中的单例模式
@@ -128,7 +150,7 @@ int method_3(int data[],int length){
 }
 ```
 
-#### 3、蛇形矩阵
+#### 3、蛇形矩阵/顺时针矩阵
 
 ![img](/img/Simple_1/25.png)
 
@@ -354,6 +376,251 @@ void reverse_List(ListNode *pHead){
         }
         cout << pHead->value << endl;
     }
+}
+```
+
+#### 8、树的一些操作
+
+```c++
+#include <iostream>
+using namespace std;
+
+
+//树结点结构体
+struct BinaryTreeNode
+{
+    int                    nValue;
+    BinaryTreeNode*        pLeft;
+    BinaryTreeNode*        pRight;
+};
+
+
+//打印树结点
+void PrintTreeNode(BinaryTreeNode *pNode)
+{
+    if (pNode != NULL) {
+        
+        // 先序遍历
+        printf("value of this node is : %d\n", pNode->nValue);
+
+        if (pNode->pLeft != NULL)
+            printf("value of its left child is: %d.\n", pNode->pLeft->nValue);
+        else
+            printf("left child is null.\n");
+
+        // 中序遍历
+        // printf("value of this node is : %d\n", pNode->nValue);
+
+        if (pNode->pRight != NULL)
+            printf("value of its right childe is : %d.\n", pNode->pRight->nValue);
+        else
+            printf("right child is null.\n");
+
+        // 后序遍历
+        // printf("value of this node is : %d\n", pNode->nValue);
+        
+    }else{
+        printf("this node is null.\n");
+    }
+    printf("\n");
+}
+
+// 打印树
+void PrintTree(BinaryTreeNode *pRoot)
+{
+    PrintTreeNode(pRoot);
+    if (pRoot != NULL)
+    {
+        if (pRoot->pLeft != NULL)
+            PrintTree(pRoot->pLeft);
+        if (pRoot->pRight != NULL)
+            PrintTree(pRoot->pRight);
+    }
+}
+```
+
+#### 9、重建树
+
+题目：输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。例如输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}，则重建二叉树并返回。
+
+```c++
+// startPreorder 前序遍历的第一个节点  
+// endPreorder   前序遍历的最后后一个节点  
+// startInorder  中序遍历的第一个节点  
+// startInorder  中序遍历的最后一个节点  
+
+BinaryTreeNode* ConstructCore(int* startPreorder, int* endPreorder, int* startInorder, int* endInorder)
+{
+    // 先生成根结点
+    int rootValue = startPreorder[0];
+    BinaryTreeNode *root = new BinaryTreeNode();
+    root->nValue = rootValue;
+    root->pLeft = root->pRight = NULL;
+
+    // 只有一个结点
+    if (startPreorder == endPreorder)
+    {
+        if (startInorder == endInorder && *startPreorder == *startInorder)
+            return root;
+        else
+            throw std::exception();
+    }
+
+    // 在中序遍历中找到根结点的值  
+    int *rootInorder = startInorder;
+    while (rootInorder <= endInorder && *rootInorder != rootValue)
+        ++rootInorder;
+    if (rootInorder == endInorder && *rootInorder != rootValue)
+        throw std::exception();
+
+
+    int leftLength = rootInorder - startInorder;    //中序序列的左子树序列长度
+    int *leftPreorderEnd = startPreorder + leftLength;    //左子树前序序列的最后一个结点
+    if (leftLength > 0) { // 构建左子树
+        root->pLeft = ConstructCore(startPreorder + 1, leftPreorderEnd, startInorder, rootInorder - 1);
+    }
+    if (leftLength < endPreorder - startPreorder){ //构建右子树
+        root->pRight = ConstructCore(leftPreorderEnd + 1, endPreorder, rootInorder + 1, endInorder);
+    }
+    return root;
+}
+
+BinaryTreeNode *Construct(int *preorder, int *inorder, int length)//输入前序序列，中序序列和序列长度
+{
+    if (preorder == NULL || inorder == NULL || length <= 0)
+        return NULL;
+    return ConstructCore(preorder, preorder + length - 1, inorder, inorder + length - 1);
+}
+
+
+// 普通二叉树  
+//              1  
+//           /     \  
+//          2       3    
+//         /       / \  
+//        4       5   6  
+//         \         /  
+//          7       8
+
+int main()
+{
+    const int length = 8;
+    int preorder[length] = { 1, 2, 4, 7, 3, 5, 6, 8 };
+    int inorder[length] = { 4, 7, 2, 1, 5, 3, 8, 6 };
+
+    BinaryTreeNode *root = Construct(preorder, inorder, length);
+    PrintTree(root);
+    return 0;
+}
+```
+
+#### 10、用两个栈来实现队列
+
+题目：只能使用栈的pop(),top()和push()，以及测试栈是否为空empty()四个操作. 来实现队列的empty(), push(),pop(),back(),front()等操作。
+
+![img](/img/Simple_1/28.jpeg)
+
+思路：所有值放到栈一中，栈二作为临时过渡。
+
+栈一的push()对应队列的push(),top()对应队列的back(),empty()对应empty()
+
+将栈一的值放入到栈二中，正好可以将顺序对调，所以此时栈二的pop()对应队列的pop()，栈二的top()对应队列的front()
+
+```c++
+#include <iostream>
+#include <stack>
+
+using namespace std;
+
+template <class T>
+class MyQueue
+{
+private:
+    stack<int> head;
+    stack<int> tail;
+
+public:
+    bool empty()const
+    {
+        return head.empty()&&tail.empty();
+    }
+
+    void push(T t)
+    {
+        head.push(t);
+    }
+
+    //删除对头元素
+    //因为queue是一种先进先出，而stack是先进后出，所以需要把head里的数据拷贝到tail中然后再从tail中pop头元素
+    void pop()
+    {
+        if(this->empty())
+        {
+            //throw exception("队列为NULL");
+        }
+        while(!head.empty())
+        {
+            tail.push(head.top());
+            head.pop();
+        }
+        //删除头元素
+        tail.pop();
+
+        //再将队尾栈容器元素拷贝到队头栈容器中
+        while(!tail.empty())
+        {
+            head.push(tail.top());
+            tail.pop();
+        }
+    }
+
+    T& back()
+    {
+        if(this->empty())
+        {
+            // throw exception("head is NULL");
+        }
+        return head.top();
+    }
+
+    //返回第一个元素
+    T& front()
+    {
+        if(this->empty())
+        {
+            //throw exception("队列为NULL");
+        }
+        while(!head.empty())
+        {
+            tail.push(head.top());
+            head.pop();
+        }
+
+        int tmp =  tail.top();
+
+        //再将队尾栈容器元素拷贝到队头栈容器中
+        while(!tail.empty())
+        {
+            head.push(tail.top());
+            tail.pop();
+        }
+
+        return tmp;
+    }
+};
+
+int main()
+{
+    MyQueue<int> q;
+    for(int i=1;i<5;i++)
+    {
+        q.push(i);
+    }
+
+    cout<<"front:"<<q.front()<<endl;
+    cout<<"back:"<<q.back()<<endl;
+
+    return 0;
 }
 ```
 

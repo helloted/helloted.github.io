@@ -116,7 +116,27 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
 
-				<h4 id="1实现单例模式">1、实现单例模式</h4>
+				<p>1、实现单例模式</p>
+
+<p>2、数组中的重复数字</p>
+
+<p>3、蛇形矩阵/顺时针矩阵</p>
+
+<p>4、二维数组中的查找</p>
+
+<p>5、替换字符串</p>
+
+<p>6、链表的一些操作</p>
+
+<p>7、反向打印链表</p>
+
+<p>8、树的一些操作</p>
+
+<p>9、重建树</p>
+
+<p>10、用两个栈来实现队列</p>
+
+<h4 id="1实现单例模式">1、实现单例模式</h4>
 
 <p>OC中的单例模式</p>
 
@@ -238,7 +258,7 @@
 </code></pre>
 </div>
 
-<h4 id="3蛇形矩阵">3、蛇形矩阵</h4>
+<h4 id="3蛇形矩阵顺时针矩阵">3、蛇形矩阵/顺时针矩阵</h4>
 
 <p><img src="/img/Simple_1/25.png" alt="img" /></p>
 
@@ -469,6 +489,251 @@
         <span class="p">}</span>
         <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">pHead</span><span class="o">-&gt;</span><span class="n">value</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
     <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<h4 id="8树的一些操作">8、树的一些操作</h4>
+
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+
+<span class="c1">//树结点结构体
+</span><span class="k">struct</span> <span class="n">BinaryTreeNode</span>
+<span class="p">{</span>
+    <span class="kt">int</span>                    <span class="n">nValue</span><span class="p">;</span>
+    <span class="n">BinaryTreeNode</span><span class="o">*</span>        <span class="n">pLeft</span><span class="p">;</span>
+    <span class="n">BinaryTreeNode</span><span class="o">*</span>        <span class="n">pRight</span><span class="p">;</span>
+<span class="p">};</span>
+
+
+<span class="c1">//打印树结点
+</span><span class="kt">void</span> <span class="nf">PrintTreeNode</span><span class="p">(</span><span class="n">BinaryTreeNode</span> <span class="o">*</span><span class="n">pNode</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">pNode</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+        
+        <span class="c1">// 先序遍历
+</span>        <span class="n">printf</span><span class="p">(</span><span class="s">"value of this node is : %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">pNode</span><span class="o">-&gt;</span><span class="n">nValue</span><span class="p">);</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">pNode</span><span class="o">-&gt;</span><span class="n">pLeft</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+            <span class="n">printf</span><span class="p">(</span><span class="s">"value of its left child is: %d.</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">pNode</span><span class="o">-&gt;</span><span class="n">pLeft</span><span class="o">-&gt;</span><span class="n">nValue</span><span class="p">);</span>
+        <span class="k">else</span>
+            <span class="n">printf</span><span class="p">(</span><span class="s">"left child is null.</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+
+        <span class="c1">// 中序遍历
+</span>        <span class="c1">// printf("value of this node is : %d\n", pNode-&gt;nValue);
+</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">pNode</span><span class="o">-&gt;</span><span class="n">pRight</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+            <span class="n">printf</span><span class="p">(</span><span class="s">"value of its right childe is : %d.</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">pNode</span><span class="o">-&gt;</span><span class="n">pRight</span><span class="o">-&gt;</span><span class="n">nValue</span><span class="p">);</span>
+        <span class="k">else</span>
+            <span class="n">printf</span><span class="p">(</span><span class="s">"right child is null.</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+
+        <span class="c1">// 后序遍历
+</span>        <span class="c1">// printf("value of this node is : %d\n", pNode-&gt;nValue);
+</span>        
+    <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"this node is null.</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// 打印树
+</span><span class="kt">void</span> <span class="nf">PrintTree</span><span class="p">(</span><span class="n">BinaryTreeNode</span> <span class="o">*</span><span class="n">pRoot</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">PrintTreeNode</span><span class="p">(</span><span class="n">pRoot</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">pRoot</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">pRoot</span><span class="o">-&gt;</span><span class="n">pLeft</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+            <span class="n">PrintTree</span><span class="p">(</span><span class="n">pRoot</span><span class="o">-&gt;</span><span class="n">pLeft</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">pRoot</span><span class="o">-&gt;</span><span class="n">pRight</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+            <span class="n">PrintTree</span><span class="p">(</span><span class="n">pRoot</span><span class="o">-&gt;</span><span class="n">pRight</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<h4 id="9重建树">9、重建树</h4>
+
+<p>题目：输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。例如输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}，则重建二叉树并返回。</p>
+
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="c1">// startPreorder 前序遍历的第一个节点  
+// endPreorder   前序遍历的最后后一个节点  
+// startInorder  中序遍历的第一个节点  
+// startInorder  中序遍历的最后一个节点  
+</span>
+<span class="n">BinaryTreeNode</span><span class="o">*</span> <span class="nf">ConstructCore</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span> <span class="n">startPreorder</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">endPreorder</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">startInorder</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">endInorder</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// 先生成根结点
+</span>    <span class="kt">int</span> <span class="n">rootValue</span> <span class="o">=</span> <span class="n">startPreorder</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="n">BinaryTreeNode</span> <span class="o">*</span><span class="n">root</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BinaryTreeNode</span><span class="p">();</span>
+    <span class="n">root</span><span class="o">-&gt;</span><span class="n">nValue</span> <span class="o">=</span> <span class="n">rootValue</span><span class="p">;</span>
+    <span class="n">root</span><span class="o">-&gt;</span><span class="n">pLeft</span> <span class="o">=</span> <span class="n">root</span><span class="o">-&gt;</span><span class="n">pRight</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+
+    <span class="c1">// 只有一个结点
+</span>    <span class="k">if</span> <span class="p">(</span><span class="n">startPreorder</span> <span class="o">==</span> <span class="n">endPreorder</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">startInorder</span> <span class="o">==</span> <span class="n">endInorder</span> <span class="o">&amp;&amp;</span> <span class="o">*</span><span class="n">startPreorder</span> <span class="o">==</span> <span class="o">*</span><span class="n">startInorder</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">root</span><span class="p">;</span>
+        <span class="k">else</span>
+            <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">exception</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 在中序遍历中找到根结点的值  
+</span>    <span class="kt">int</span> <span class="o">*</span><span class="n">rootInorder</span> <span class="o">=</span> <span class="n">startInorder</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">rootInorder</span> <span class="o">&lt;=</span> <span class="n">endInorder</span> <span class="o">&amp;&amp;</span> <span class="o">*</span><span class="n">rootInorder</span> <span class="o">!=</span> <span class="n">rootValue</span><span class="p">)</span>
+        <span class="o">++</span><span class="n">rootInorder</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">rootInorder</span> <span class="o">==</span> <span class="n">endInorder</span> <span class="o">&amp;&amp;</span> <span class="o">*</span><span class="n">rootInorder</span> <span class="o">!=</span> <span class="n">rootValue</span><span class="p">)</span>
+        <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">exception</span><span class="p">();</span>
+
+
+    <span class="kt">int</span> <span class="n">leftLength</span> <span class="o">=</span> <span class="n">rootInorder</span> <span class="o">-</span> <span class="n">startInorder</span><span class="p">;</span>    <span class="c1">//中序序列的左子树序列长度
+</span>    <span class="kt">int</span> <span class="o">*</span><span class="n">leftPreorderEnd</span> <span class="o">=</span> <span class="n">startPreorder</span> <span class="o">+</span> <span class="n">leftLength</span><span class="p">;</span>    <span class="c1">//左子树前序序列的最后一个结点
+</span>    <span class="k">if</span> <span class="p">(</span><span class="n">leftLength</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 构建左子树
+</span>        <span class="n">root</span><span class="o">-&gt;</span><span class="n">pLeft</span> <span class="o">=</span> <span class="n">ConstructCore</span><span class="p">(</span><span class="n">startPreorder</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">leftPreorderEnd</span><span class="p">,</span> <span class="n">startInorder</span><span class="p">,</span> <span class="n">rootInorder</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">leftLength</span> <span class="o">&lt;</span> <span class="n">endPreorder</span> <span class="o">-</span> <span class="n">startPreorder</span><span class="p">){</span> <span class="c1">//构建右子树
+</span>        <span class="n">root</span><span class="o">-&gt;</span><span class="n">pRight</span> <span class="o">=</span> <span class="n">ConstructCore</span><span class="p">(</span><span class="n">leftPreorderEnd</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">endPreorder</span><span class="p">,</span> <span class="n">rootInorder</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">endInorder</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">root</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">BinaryTreeNode</span> <span class="o">*</span><span class="nf">Construct</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">preorder</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">inorder</span><span class="p">,</span> <span class="kt">int</span> <span class="n">length</span><span class="p">)</span><span class="c1">//输入前序序列，中序序列和序列长度
+</span><span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">preorder</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="o">||</span> <span class="n">inorder</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="o">||</span> <span class="n">length</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">ConstructCore</span><span class="p">(</span><span class="n">preorder</span><span class="p">,</span> <span class="n">preorder</span> <span class="o">+</span> <span class="n">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">inorder</span><span class="p">,</span> <span class="n">inorder</span> <span class="o">+</span> <span class="n">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+
+
+<span class="c1">// 普通二叉树  
+//              1  
+//           /     \  
+//          2       3    
+//         /       / \  
+//        4       5   6  
+//         \         /  
+//          7       8
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">const</span> <span class="kt">int</span> <span class="n">length</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">preorder</span><span class="p">[</span><span class="n">length</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span> <span class="p">};</span>
+    <span class="kt">int</span> <span class="n">inorder</span><span class="p">[</span><span class="n">length</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">6</span> <span class="p">};</span>
+
+    <span class="n">BinaryTreeNode</span> <span class="o">*</span><span class="n">root</span> <span class="o">=</span> <span class="n">Construct</span><span class="p">(</span><span class="n">preorder</span><span class="p">,</span> <span class="n">inorder</span><span class="p">,</span> <span class="n">length</span><span class="p">);</span>
+    <span class="n">PrintTree</span><span class="p">(</span><span class="n">root</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<h4 id="10用两个栈来实现队列">10、用两个栈来实现队列</h4>
+
+<p>题目：只能使用栈的pop(),top()和push()，以及测试栈是否为空empty()四个操作. 来实现队列的empty(), push(),pop(),back(),front()等操作。</p>
+
+<p><img src="/img/Simple_1/28.jpeg" alt="img" /></p>
+
+<p>思路：所有值放到栈一中，栈二作为临时过渡。</p>
+
+<p>栈一的push()对应队列的push(),top()对应队列的back(),empty()对应empty()</p>
+
+<p>将栈一的值放入到栈二中，正好可以将顺序对调，所以此时栈二的pop()对应队列的pop()，栈二的top()对应队列的front()</p>
+
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+#include &lt;stack&gt;
+</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">MyQueue</span>
+<span class="p">{</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">stack</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">head</span><span class="p">;</span>
+    <span class="n">stack</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">tail</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">bool</span> <span class="n">empty</span><span class="p">()</span><span class="k">const</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">head</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span><span class="o">&amp;&amp;</span><span class="n">tail</span><span class="p">.</span><span class="n">empty</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="n">push</span><span class="p">(</span><span class="n">T</span> <span class="n">t</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">head</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">t</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">//删除对头元素
+</span>    <span class="c1">//因为queue是一种先进先出，而stack是先进后出，所以需要把head里的数据拷贝到tail中然后再从tail中pop头元素
+</span>    <span class="kt">void</span> <span class="n">pop</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">empty</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="c1">//throw exception("队列为NULL");
+</span>        <span class="p">}</span>
+        <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">head</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="n">tail</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">head</span><span class="p">.</span><span class="n">top</span><span class="p">());</span>
+            <span class="n">head</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="c1">//删除头元素
+</span>        <span class="n">tail</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+
+        <span class="c1">//再将队尾栈容器元素拷贝到队头栈容器中
+</span>        <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">tail</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="n">head</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">tail</span><span class="p">.</span><span class="n">top</span><span class="p">());</span>
+            <span class="n">tail</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="n">T</span><span class="o">&amp;</span> <span class="n">back</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">empty</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="c1">// throw exception("head is NULL");
+</span>        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">head</span><span class="p">.</span><span class="n">top</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="c1">//返回第一个元素
+</span>    <span class="n">T</span><span class="o">&amp;</span> <span class="n">front</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">empty</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="c1">//throw exception("队列为NULL");
+</span>        <span class="p">}</span>
+        <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">head</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="n">tail</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">head</span><span class="p">.</span><span class="n">top</span><span class="p">());</span>
+            <span class="n">head</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="kt">int</span> <span class="n">tmp</span> <span class="o">=</span>  <span class="n">tail</span><span class="p">.</span><span class="n">top</span><span class="p">();</span>
+
+        <span class="c1">//再将队尾栈容器元素拷贝到队头栈容器中
+</span>        <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">tail</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="n">head</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">tail</span><span class="p">.</span><span class="n">top</span><span class="p">());</span>
+            <span class="n">tail</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">tmp</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">MyQueue</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">q</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">5</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">q</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">"front:"</span><span class="o">&lt;&lt;</span><span class="n">q</span><span class="p">.</span><span class="n">front</span><span class="p">()</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+    <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">"back:"</span><span class="o">&lt;&lt;</span><span class="n">q</span><span class="p">.</span><span class="n">back</span><span class="p">()</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre>
 </div>
