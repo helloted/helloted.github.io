@@ -1,0 +1,21 @@
+---
+layout: page
+title : Categorys
+header : Post Archive
+group: navigation
+---
+
+{% for category in site.categories %}
+	<a href="#{{ category | first }}">{{ category | first }} ({{ category | last | size }})</a>
+{% endfor %}
+
+
+{% for category in site.categories %}
+<a name="{{ category | first }}"></a>
+<h2>{{ category | first }} ({{ category | last | size }})</h2> 
+<ul class="arc-list">
+{% for post in category.last %} 
+<li>{{ post.date | date:"%d/%m/%Y"}}<a href="{{ post.url }}">   {{ post.title }}</a></li>
+{% endfor %}
+</ul> 
+{% endfor %}
