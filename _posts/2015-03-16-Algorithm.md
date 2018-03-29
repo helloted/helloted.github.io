@@ -270,7 +270,7 @@ using namespace std;
 struct ListNode
 {
     int        value;
-    ListNode*  pNext;
+    ListNode*  next;
 };
 
 
@@ -279,13 +279,13 @@ ListNode* CreateListNode(int value)
 {
     ListNode* pNode = new ListNode();
     pNode->value = value;
-    pNode->pNext = NULL;
+    pNode->next = NULL;
 
     return pNode;
 }
 
 // 链接链表节点
-void ConnectListNodes(ListNode* pCurrent, ListNode* pNext)
+void ConnectListNodes(ListNode* pCurrent, ListNode* next)
 {
     if (pCurrent == NULL)
     {
@@ -293,7 +293,7 @@ void ConnectListNodes(ListNode* pCurrent, ListNode* pNext)
         exit(1);
     }
 
-    pCurrent->pNext = pNext;
+    pCurrent->next = next;
 }
 
 //打印链表
@@ -304,10 +304,56 @@ void PrintList(ListNode* pHead)
     while (pNode!=NULL)
     {
         cout << pNode->value << "   ";
-        pNode = pNode->pNext;
+        pNode = pNode->next;
     }
 
     cout << endl << "PrintList end." << endl;
+}
+```
+
+#### 7、反向打印链表
+
+题目：输入一个链表的头结点，从尾到头反过来打印出每个结点的值。
+
+> 解法一
+
+利用栈先进后出的特点
+
+```c++
+#include <stack>
+
+void reverse_List(ListNode *head){
+    std::stack<ListNode*> nodeStack;
+    ListNode *pnode = head;
+    while(pnode != NULL){
+        nodeStack.push(pnode);
+        pnode = pnode->next;
+    }
+
+
+    while (!nodeStack.empty()){
+        ListNode *top = nodeStack.top();
+        cout << top->value << endl;
+        nodeStack.pop();
+    }
+
+}
+```
+
+> 解法二
+
+利用递归：代码简洁，但是当链表非常长的时候，就会导致函数递归很深，从而有可能导致函数调用栈溢出。
+
+```c++
+void reverse_List(ListNode *pHead){
+    if (pHead != NULL)
+    {
+        if (pHead->next != NULL)
+        {
+            reverse_List(pHead->next);
+        }
+        cout << pHead->value << endl;
+    }
 }
 ```
 
