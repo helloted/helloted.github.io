@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-03-29T17:48:53+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">OpenGL ES编程指南（四）</title><link href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/28/OpenGL_4/" rel="alternate" type="text/html" title="OpenGL ES编程指南（四）" /><published>2018-03-28T20:00:00+08:00</published><updated>2018-03-28T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/28/OpenGL_4</id><content type="html" xml:base="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/28/OpenGL_4/">&lt;p&gt;本文翻译自苹果官方文档&lt;a href=&quot;https://developer.apple.com/library/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008793-CH1-SW1&quot;&gt;OpenGL ES Programming Guide&lt;/a&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-03-29T19:32:29+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">OpenGL ES编程指南（四）</title><link href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/28/OpenGL_4/" rel="alternate" type="text/html" title="OpenGL ES编程指南（四）" /><published>2018-03-28T20:00:00+08:00</published><updated>2018-03-28T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/28/OpenGL_4</id><content type="html" xml:base="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/28/OpenGL_4/">&lt;p&gt;本文翻译自苹果官方文档&lt;a href=&quot;https://developer.apple.com/library/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008793-CH1-SW1&quot;&gt;OpenGL ES Programming Guide&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;七可视化opengl-es&quot;&gt;七、可视化OpenGL ES&lt;/h3&gt;
 
@@ -14,7 +14,15 @@
 
 &lt;h4 id=&quot;opengl-es作为图形管道&quot;&gt;OpenGL ES作为图形管道&lt;/h4&gt;
 
-&lt;p&gt;下图将OpenGL ES形象化为图形管道。 您的应用程序配置图形管道，然后执行绘图命令将顶点数据发送到管道。 管道的连续阶段运行顶点着色器来处理顶点数据，将顶点组装成基元，将基元划分为片段，运行片段着色器以计算每个片段的颜色和深度值，并将片段混合到帧缓冲区中以进行显示。&lt;/p&gt;
+&lt;p&gt;下图将OpenGL ES形象化为图形管道。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;您的应用程序配置图形管道，&lt;/li&gt;
+  &lt;li&gt;然后执行绘图命令将顶点数据(vertex)发送到管道，&lt;/li&gt;
+  &lt;li&gt;管道的连续阶段运行顶点着色器(shader)来处理顶点数据，将顶点组装成基元(primitives)，&lt;/li&gt;
+  &lt;li&gt;将基元划分为片段(fragments)，&lt;/li&gt;
+  &lt;li&gt;运行片段着色器( fragment shader)以计算每个片段的颜色和深度值，并将片段混合到帧缓冲区中以进行显示。&lt;/li&gt;
+&lt;/ol&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/Simple_6/13.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 
