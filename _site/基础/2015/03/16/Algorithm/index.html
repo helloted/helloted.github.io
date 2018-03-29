@@ -16,9 +16,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
 
-    <title>数据结构与算法(四):算法题 - Helloted Blog</title>
+    <title>算法题目 - Helloted Blog</title>
 
-    <link rel="canonical" href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2015/02/01/data-4/">
+    <link rel="canonical" href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2015/03/16/Algorithm/">
 
     <link rel="shortcut icon" href="/img/favicon.ico">
    
@@ -99,11 +99,11 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <div class="post-heading">
-                    <h1>数据结构与算法(四):算法题</h1>
+                    <h1>算法题目</h1>
                     
                     <h2 class="subheading">一些算法题的解法</h2>
                     
-                    <span class="meta">Posted by Ted on February 1, 2015</span>
+                    <span class="meta">Posted by Ted on March 16, 2015</span>
                 </div>
             </div>
         </div>
@@ -369,6 +369,57 @@
     <span class="n">printf</span><span class="p">(</span><span class="s">"%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">des</span><span class="p">);</span>
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 
+</code></pre>
+</div>
+
+<h4 id="6链表的一些操作">6、链表的一些操作</h4>
+
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="c1">//链表节点定义
+</span><span class="k">struct</span> <span class="n">ListNode</span>
+<span class="p">{</span>
+    <span class="kt">int</span>        <span class="n">value</span><span class="p">;</span>
+    <span class="n">ListNode</span><span class="o">*</span>  <span class="n">pNext</span><span class="p">;</span>
+<span class="p">};</span>
+
+
+<span class="c1">//创建链表节点
+</span><span class="n">ListNode</span><span class="o">*</span> <span class="nf">CreateListNode</span><span class="p">(</span><span class="kt">int</span> <span class="n">value</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">ListNode</span><span class="o">*</span> <span class="n">pNode</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="p">();</span>
+    <span class="n">pNode</span><span class="o">-&gt;</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
+    <span class="n">pNode</span><span class="o">-&gt;</span><span class="n">pNext</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="n">pNode</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// 链接链表节点
+</span><span class="kt">void</span> <span class="nf">ConnectListNodes</span><span class="p">(</span><span class="n">ListNode</span><span class="o">*</span> <span class="n">pCurrent</span><span class="p">,</span> <span class="n">ListNode</span><span class="o">*</span> <span class="n">pNext</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">pCurrent</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Error to connect two nodes."</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">pCurrent</span><span class="o">-&gt;</span><span class="n">pNext</span> <span class="o">=</span> <span class="n">pNext</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">//打印链表
+</span><span class="kt">void</span> <span class="nf">PrintList</span><span class="p">(</span><span class="n">ListNode</span><span class="o">*</span> <span class="n">pHead</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"PrintList start:"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="n">ListNode</span><span class="o">*</span> <span class="n">pNode</span> <span class="o">=</span> <span class="n">pHead</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">pNode</span><span class="o">!=</span><span class="nb">NULL</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">pNode</span><span class="o">-&gt;</span><span class="n">value</span> <span class="o">&lt;&lt;</span> <span class="s">"   "</span><span class="p">;</span>
+        <span class="n">pNode</span> <span class="o">=</span> <span class="n">pNode</span><span class="o">-&gt;</span><span class="n">pNext</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="s">"PrintList end."</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
 </code></pre>
 </div>
 

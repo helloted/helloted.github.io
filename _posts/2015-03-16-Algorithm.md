@@ -1,9 +1,9 @@
 ---
 layout:     post
 category:   基础
-title:      "数据结构与算法(四):算法题"
+title:      "算法题目"
 subtitle:   "一些算法题的解法"
-date:       2015-02-01 12:00:00
+date:       2015-03-16 12:00:00
 author:     "Ted"
 header-img: "img/Http/bg.jpg"
 ---
@@ -258,5 +258,56 @@ int main() {
     printf("%s\n", des);
     return 0;
 
+```
+
+#### 6、链表的一些操作
+
+```c++
+#include <iostream>
+using namespace std;
+
+//链表节点定义
+struct ListNode
+{
+    int        value;
+    ListNode*  pNext;
+};
+
+
+//创建链表节点
+ListNode* CreateListNode(int value)
+{
+    ListNode* pNode = new ListNode();
+    pNode->value = value;
+    pNode->pNext = NULL;
+
+    return pNode;
+}
+
+// 链接链表节点
+void ConnectListNodes(ListNode* pCurrent, ListNode* pNext)
+{
+    if (pCurrent == NULL)
+    {
+        cout << "Error to connect two nodes." << endl;
+        exit(1);
+    }
+
+    pCurrent->pNext = pNext;
+}
+
+//打印链表
+void PrintList(ListNode* pHead)
+{
+    cout << "PrintList start:" << endl;
+    ListNode* pNode = pHead;
+    while (pNode!=NULL)
+    {
+        cout << pNode->value << "   ";
+        pNode = pNode->pNext;
+    }
+
+    cout << endl << "PrintList end." << endl;
+}
 ```
 
