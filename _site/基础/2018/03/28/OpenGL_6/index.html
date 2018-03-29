@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>OpenGL ES编程指南（六） - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/28/OpenGL_6/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/bg_01.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>OpenGL ES编程指南（六）</h1>
+                    
+                    <h2 class="subheading">《OpenGL ES Programming Guide》文档翻译：OpenGL ES 设计指南</h2>
+                    
+                    <span class="meta">Posted by Ted on March 28, 2018</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<p>本文翻译自苹果官方文档<a href="https://developer.apple.com/library/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008793-CH1-SW1">OpenGL ES Programming Guide</a></p>
+
+<h3 id="七可视化opengl-es">七、可视化OpenGL ES</h3>
+
+<p>用于可视化OpenGL ES设计的两个方面：作为客户端 - 服务器体系结构和作为管道。 这两种观点都可以用于规划和评估应用程序的体系结构。</p>
+
+<h4 id="opengl-es作为客户端---服务器体系结构">OpenGL ES作为客户端 - 服务器体系结构</h4>
+
+<p>下图将OpenGL ES形象化为客户端 - 服务器体系结构。 您的应用程序将状态更改，纹理和顶点数据以及渲染命令传递给OpenGL ES客户端。 客户端将这些数据转换为图形硬件可以理解的格式，并将其转发给GPU。 这些进程会增加应用程序图形性能的开销。</p>
+
+<p><img src="/img/Simple_6/12.png" alt="img" /></p>
+
+<p>实现良好的性能需要仔细管理这些开销。 一个设计良好的应用程序可以减少对OpenGL ES的调用频率，使用适合硬件的数据格式来最大限度地降低翻译成本，并小心管理其本身和OpenGL ES之间的数据流。</p>
+
+<h4 id="opengl-es作为图形管道">OpenGL ES作为图形管道</h4>
+
+<p>下图将OpenGL ES形象化为图形管道。 您的应用程序配置图形管道，然后执行绘图命令将顶点数据发送到管道。 管道的连续阶段运行顶点着色器来处理顶点数据，将顶点组装成基元，将基元划分为片段，运行片段着色器以计算每个片段的颜色和深度值，并将片段混合到帧缓冲区中以进行显示。</p>
+
+<p><img src="/img/Simple_6/13.png" alt="img" /></p>
+
+<p>使用管道作为模型来确定您的应用执行哪些工作来生成新框架。 您的渲染器设计包括编写着色器程序以处理管道的顶点和片段阶段，组织提供给这些程序的顶点和纹理数据，以及配置驱动流水线固定功能阶段的OpenGL ES状态机。</p>
+
+<p>图形管道中的各个阶段可以同时计算其结果 - 例如，您的应用程序可能会准备新的基元，而图形硬件的不同部分将对先前提交的几何图形执行顶点和片段计算。 然而，后期阶段取决于早期阶段的产出。 如果任何流水线阶段执行太多工作或执行得太慢，则其他流水线阶段处于闲置状态，直到最慢阶段完成其工作。 根据图形硬件功能，精心设计的应用程序会平衡每个流水线阶段执行的工作。</p>
+
+<h3 id="八opengl-es版本和渲染器架构">八、OpenGL ES版本和渲染器架构</h3>
+
+<p>iOS支持三种版本的OpenGL ES。 较新的版本提供了更多的灵活性，使您可以实现包含高质量视觉效果而不影响性能的渲染算法。</p>
+
+<h4 id="opengl-es-30">OpenGL ES 3.0</h4>
+
+<p>OpenGL ES 3.0是iOS 7中的新功能。您的应用程序可以使用OpenGL ES 3.0中引入的功能来实现先前的图形编程技术（以前仅在桌面级硬件和游戏控制台上提供），以获得更快的图形性能和引人注目的视觉效果。</p>
+
+<p>下面突出显示了OpenGL ES 3.0的一些关键特性。有关完整的概述，请参阅OpenGL ES API注册表中的OpenGL ES 3.0规范。</p>
+
+<h4 id="1opengl-es着色语言版本30">1、OpenGL ES着色语言版本3.0</h4>
+
+<p>GLSL ES 3.0增加了统一块，32位整数和附加整数运算等新功能，用于在顶点和片段着色器程序中执行更通用的计算任务。要在着色器程序中使用新语言，着色器源代码必须以#version 330 es指令开始。 OpenGL ES 3.0上下文与为OpenGL ES 2.0编写的着色器保持兼容。</p>
+
+<h4 id="2多个渲染目标">2、多个渲染目标</h4>
+
+<p>通过启用多个渲染目标，您可以创建片段着色器，以同时写入多个帧缓冲区附件。</p>
+
+<p>此功能允许使用高级渲染算法，如延迟着色，其中您的应用首先渲染一组纹理以存储几何数据，然后执行一次或多次从这些纹理读取的着色过程，并执行光照计算以输出最终图片。由于此方法会预先计算照明计算的输入，因此将大量灯光添加到场景的增量性能成本要小得多。延迟着色算法需要多个渲染目标支持，如下图所示，以实现合理的性能。否则，渲染到多个纹理需要为每个纹理单独绘制通过。</p>
+
+<p><img src="/img/Simple_6/14.png" alt="img" /></p>
+
+<p>除了创建帧缓冲区对象中描述的过程外，您还可以设置多个渲染目标。 您可以创建多个，而不是为帧缓冲区创建单个颜色附件。 然后，调用glDrawBuffers函数来指定在渲染中使用哪些帧缓冲区附件，如所示。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>// Attach (previously created) textures to the framebuffer.
+glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _colorTexture, 0);
+glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, _positionTexture, 0);
+glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, _normalTexture, 0);
+glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, _depthTexture, 0);
+ 
+// Specify the framebuffer attachments for rendering.
+GLenum targets[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2};
+glDrawBuffers(3, targets);
+</code></pre>
+</div>
+
+<p>当您的应用程序发出绘图命令时，片段着色器将确定为每个渲染目标中的每个像素输出的颜色（或非颜色数据）。 下面代码显示了一个基本的片段着色器，该片段着色器通过分配位置与上面设置的位置匹配的片段输出变量来呈现给多个目标</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>#version 300 es
+ 
+uniform lowp sampler2D myTexture;
+in mediump vec2 texCoord;
+in mediump vec4 position;
+in mediump vec3 normal;
+ 
+layout(location = 0) out lowp vec4 colorData;
+layout(location = 1) out mediump vec4 positionData;
+layout(location = 2) out mediump vec4 normalData;
+ 
+void main()
+{
+    colorData = texture(myTexture, texCoord);
+    positionData = position;
+    normalData = vec4(normalize(normal), 1.0);
+}
+</code></pre>
+</div>
+
+<p>多个渲染目标对于其他高级图形技术也很有用，例如实时反射，屏幕空间环境遮挡和体积照明。</p>
+
+<h4 id="3变换反馈">3、变换反馈</h4>
+
+<p>图形硬件使用针对矢量处理进行了优化的高度并行化架构。 您可以利用新的变换反馈功能更好地使用此硬件，该功能可以将顶点着色器的输出捕捉到GPU内存中的缓冲区对象中。 您可以捕获一个渲染过程中的数据以用于另一个过程，或者禁用图形管道的某些部分，并使用变换反馈进行通用计算。</p>
+
+<p>从变换反馈中受益的一种技术是动画粒子效应。 下图说明了渲染粒子系统的一般体系结构。 首先，应用程序设置粒子模拟的初始状态。 然后，对于每个渲染帧，应用程序运行一个模拟步骤，更新每个模拟粒子的位置，方向和速度，然后绘制代表粒子当前状态的可视化资源。</p>
+
+<p><img src="/img/Simple_6/15.png" alt="img" /></p>
+
+<p>传统上，实现粒子系统的应用程序在CPU上运行其模拟，将模拟结果存储在顶点缓冲区中以用于渲染粒子艺术。 但是，将顶点缓冲区的内容传输到GPU内存是非常耗时的。 通过优化现代GPU硬件中可用的并行架构的功能来转换反馈，可更有效地解决问题。</p>
+
+<p>借助变换反馈，您可以设计渲染引擎以更有效地解决此问题。 图6-5显示了应用程序如何配置OpenGL ES图形管道来实现粒子系统动画。 由于OpenGL ES将每个粒子及其状态表示为顶点，因此GPU的顶点着色器阶段可以同时运行多个粒子的模拟。 由于包含粒子状态数据的顶点缓冲区在帧之间被重用，因此在初始化时，将数据传输到GPU内存的昂贵过程只发生一次。</p>
+
+<p><img src="/img/Simple_6/16.png" alt="img" /></p>
+
+<ol>
+  <li>
+    <p>在初始化时，创建一个顶点缓冲区，并在其中填充包含模拟中所有粒子初始状态的数据。</p>
+  </li>
+  <li>
+    <p>在GLSL顶点着色器程序中实现您的粒子模拟，并通过绘制包含粒子位置数据的顶点缓冲区的内容来运行它。</p>
+
+    <p>要在启用变换反馈的情况下进行渲染，请调用glBeginTransformFeedback函数。 （在恢复正常绘图之前调用glEndTransformFeedback（）。）</p>
+
+    <p>使用glTransformFeedbackVaryings函数来指定哪些着色器输出应该被变换反馈捕获，并使用glBindBufferBase或glBindBufferRange函数和GL_TRANSFORM_FEEDBACK_BUFFER缓冲区类型来指定它们将被捕获到的缓冲区。</p>
+
+    <p>通过调用glEnable（GL_RASTERIZER_DISCARD）禁用栅格化（以及管道的后续阶段）。</p>
+  </li>
+  <li>
+    <p>要渲染模拟结果以供显示，请使用包含粒子位置的顶点缓冲区作为第二个绘制阶段的输入，并再次启用光栅化（以及管道的其余部分），并使用适合渲染应用视觉内容的顶点和片段着色器。</p>
+  </li>
+  <li>
+    <p>在下一帧中，使用上一帧模拟步骤输出的顶点缓冲区作为下一个模拟步骤的输入</p>
+  </li>
+</ol>
+
+<h4 id="opengl-es-20">OpenGL ES 2.0</h4>
+
+<p>OpenGL ES 2.0提供了可编程着色器的灵活图形管道，并可在所有当前的iOS设备上使用。 OpenGL ES 3.0规范中正式引入的许多功能通过OpenGL ES 2.0扩展可用于iOS设备，因此您可以在保持与大多数设备兼容的同时实现许多高级图形编程技术。</p>
+
+<h4 id="opengl-es-11">OpenGL ES 1.1</h4>
+
+<p>OpenGL ES 1.1只提供了一个基本的固定功能图形管道。 iOS支持OpenGL ES 1.1主要用于向后兼容。 如果您正在维护OpenGL ES 1.1应用程序，请考虑更新您的代码以获取更新的OpenGL ES版本。</p>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/%E5%9F%BA%E7%A1%80/2018/03/27/OpenGL_5/" data-toggle="tooltip" data-placement="top" title="OpenGL ES编程指南（五）">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

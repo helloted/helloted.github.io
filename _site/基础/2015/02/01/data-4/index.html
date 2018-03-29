@@ -324,6 +324,54 @@
 </code></pre>
 </div>
 
+<h4 id="5替换字符串">5、替换字符串</h4>
+
+<p>题目：请实现一个函数，把字符串中的每个空格替换成”%20”，例如“We are happy.”，则输出“We%20are%20happy.”</p>
+
+<div class="language-c highlighter-rouge"><pre class="highlight"><code><span class="cm">/*  请实现一个函数，把字符串中的每个空格替换成"%20"，例如“We are happy.”，则输出“We%20are%20happy” */</span>
+
+<span class="cp">#include &lt;stdio.h&gt;
+#include&lt;string.h&gt;
+</span>
+<span class="kt">void</span> <span class="n">replace</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">ori</span><span class="p">,</span><span class="kt">char</span> <span class="o">*</span><span class="n">des</span><span class="p">){</span>
+    <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">ori</span><span class="p">);</span>
+    <span class="kt">int</span> <span class="n">temp</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">len</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">ori</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="sc">' '</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">temp</span> <span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">len</span><span class="p">);</span>
+    <span class="kt">char</span> <span class="n">tar</span><span class="p">[</span><span class="n">len</span><span class="o">+</span><span class="n">temp</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">len</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">ori</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="sc">' '</span><span class="p">){</span>
+            <span class="n">tar</span><span class="p">[</span><span class="n">temp</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'%'</span><span class="p">;</span>
+            <span class="n">tar</span><span class="p">[</span><span class="n">temp</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'2'</span><span class="p">;</span>
+            <span class="n">tar</span><span class="p">[</span><span class="n">temp</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'0'</span><span class="p">;</span>
+            <span class="n">temp</span> <span class="o">+=</span> <span class="mi">3</span><span class="p">;</span>
+        <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+            <span class="n">tar</span><span class="p">[</span><span class="n">temp</span><span class="p">]</span> <span class="o">=</span> <span class="n">ori</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+            <span class="n">temp</span> <span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">tar</span><span class="p">[</span><span class="n">temp</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'\0'</span><span class="p">;</span>
+    <span class="n">stpcpy</span><span class="p">(</span><span class="n">des</span><span class="p">,</span><span class="n">tar</span><span class="p">);</span>
+<span class="p">}</span>
+
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">des</span><span class="p">;</span>
+    <span class="n">replace</span><span class="p">(</span><span class="s">"We are happy."</span><span class="p">,</span><span class="n">des</span><span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">des</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+
+</code></pre>
+</div>
+
 
 
                 <hr>
