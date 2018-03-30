@@ -16,9 +16,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
 
-    <title>Helloted Blog</title>
+    <title>位运算 - Helloted Blog</title>
 
-    <link rel="canonical" href="http://www.helloted.com/page5/">
+    <link rel="canonical" href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2015/10/13/bit/">
 
     <link rel="shortcut icon" href="/img/favicon.ico">
    
@@ -105,164 +105,128 @@
 </nav>
 
 
-    <!-- Page Header -->
-<header class="intro-header" style="background-image: url('/img/home-bg.jpg')">
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/Http/bg.jpg')">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="site-heading">
-                    <h1>Helloted Blog</h1>
-                    <hr class="small">
-                    <span class="subheading">曹浩之的博客(原创使人进步)</span>
+                <div class="post-heading">
+                    <h1>位运算</h1>
+                    
+                    <h2 class="subheading">位运算符和移位</h2>
+                    
+                    <span class="meta">Posted by Ted on October 13, 2015</span>
                 </div>
             </div>
         </div>
     </div>
 </header>
 
-<!-- Main Content -->
-<div class="container">
-	<div class="row">
-		<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-			
-<div class="post-preview">
-    <a href="/%E5%9F%BA%E7%A1%80/2015/03/16/Algorithm_1/">
-        <h2 class="post-title"> 【基础】算法题目
-        </h2>
-        
-        <h3 class="post-subtitle">
-            一些算法题的解法
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on  2015/03/16</p>
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h3 id="一位运算符">一、位运算符</h3>
+
+<h4 id="位取反not">位取反（NOT）<code class="highlighter-rouge">~</code></h4>
+
+<p><strong>取反</strong>是一元运算符，对一个二进制数的每一位执行逻辑反操作。使数字1成为0，0成为1。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>NOT 0111（十进制7）
+  = 1000（十进制8）
+</code></pre>
 </div>
-<hr>
 
-<div class="post-preview">
-    <a href="/%E5%9F%BA%E7%A1%80/2015/02/01/data-3/">
-        <h2 class="post-title"> 【基础】数据结构与算法(三):排序算法
-        </h2>
-        
-        <h3 class="post-subtitle">
-            八大常用排序算法
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on  2015/02/01</p>
+<p>值得注意的是此操作符与”逻辑非（!）”操作符不同</p>
+
+<h4 id="按位或or">按位或（OR）<code class="highlighter-rouge">|</code></h4>
+
+<p><strong>按位或</strong>处理两个长度相同的二进制数，两个相应的二进位中只要有一个为1，该位的结果值为1。例如</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>        0101（十进制5）
+     OR 0011（十进制3）
+      = 0111（十进制7）
+</code></pre>
 </div>
-<hr>
 
-<div class="post-preview">
-    <a href="/%E5%9F%BA%E7%A1%80/2015/02/01/data-2/">
-        <h2 class="post-title"> 【基础】数据结构与算法(二):查找算法
-        </h2>
-        
-        <h3 class="post-subtitle">
-            七大查找算法
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on  2015/02/01</p>
+<table>
+  <tbody>
+    <tr>
+      <td>这一操作符需要与逻辑或运算符（</td>
+      <td> </td>
+      <td>）区别开来</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="按位与and">按位与（AND）<code class="highlighter-rouge">&amp;</code></h3>
+
+<p>按位与处理两个长度相同的二进制数，两个相应的二进位都为1，该位的结果值才为1，否则为0。例如：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>         0101
+     AND 0011
+       = 0001
+</code></pre>
 </div>
-<hr>
 
-<div class="post-preview">
-    <a href="/%E5%9F%BA%E7%A1%80/2015/02/01/data-1/">
-        <h2 class="post-title"> 【基础】数据结构与算法(一):数据结构
-        </h2>
-        
-        <h3 class="post-subtitle">
-            简单地总结一下常用的数据结构
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on  2015/02/01</p>
+<h3 id="按位异或xor">按位异或（XOR）<code class="highlighter-rouge">^</code></h3>
+
+<p><strong>按位异或</strong>运算，对等长二进制模式按位或二进制数的每一位执行逻辑异按位或操作。操作的结果是如果某位不同则该位为1，否则该位为0。例如</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>     	 0101
+     XOR 0011
+       = 0110
+</code></pre>
 </div>
-<hr>
 
-<div class="post-preview">
-    <a href="/ios/2015/01/25/event/">
-        <h2 class="post-title"> 【iOS】事件传递、响应者链条
-        </h2>
-        
-        <h3 class="post-subtitle">
-            事件传递以及处理事件的响应者链条
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on  2015/01/25</p>
+<h3 id="二移位">二、移位</h3>
+
+<p><strong>移位</strong>是一个二元运算符，用来将一个二进制数中的每一位全部都向一个方向移动指定位，溢出的部分将被舍弃，而空缺的部分填入一定的值。在类C语言中，左移使用两个小于符号”«“表示，右移使用两个大于符号”»“表示。</p>
+
+<h4 id="逻辑移位">逻辑移位</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>       0001（十进制1）
+ &lt;&lt;       3（左移3位）
+     = 1000（十进制8）
+</code></pre>
 </div>
-<hr>
 
-<div class="post-preview">
-    <a href="/ios/2014/10/15/life/">
-        <h2 class="post-title"> 【iOS】UIViewController生命周期
-        </h2>
-        
-        <h3 class="post-subtitle">
-            UIView生命周期、程序的生命周期
-        </h3>
-        
-    </a>
-    <p class="post-meta">Posted by Ted on  2014/10/15</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>       1010（十进制10）
+ &gt;&gt;       2（右移2位）
+	 = 0010（十进制2）
+</code></pre>
 </div>
-<hr>
+
+<h4 id="算术移位">算术移位</h4>
+
+<p>算术移位要保证符号位的不改变（逻辑左移位补0,   逻辑右移位看符号位），算术移位和逻辑移位最大的区别，是算术移位在右移时不改变原来的数的符号而逻辑移位在右移时有可能改变原来的数的符号</p>
+
+<p><img src="/img/Simple_1/32.png" alt="img" /></p>
+
+<p><img src="/img/Simple_1/33.png" alt="img" /></p>
 
 
-<!-- Pager -->
+                <hr>
 
-    <ul class="pager">
-    
-      <a href="/page4">&laquo; Prev</a>
-    
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/%E5%9F%BA%E7%A1%80/2015/10/11/TCP/" data-toggle="tooltip" data-placement="top" title="深入理解TCP">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/ios/2016/03/01/runtimedoc/" data-toggle="tooltip" data-placement="top" title="Objective-C Runtime编程指南(1)">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
 
-    
-      
-        <a href="/index.html">
-          1
-        </a>
-      
-    
-      
-        <a href="/page2">
-          2
-        </a>
-      
-    
-      
-        <a href="/page3">
-          3
-        </a>
-      
-    
-      
-        <a href="/page4">
-          4
-        </a>
-      
-    
-      
-        <a class="current_page">5</a>
-      
-    
-
-    
-      <span>Next &raquo;</span>
-    
-    </ul>
-
-
-
-
-
-
-
-
-
-		</div>
-	</div>
-</div>
+            </div>
+        </div>
+    </div>
+</article>
 
 <hr>
 

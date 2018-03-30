@@ -306,6 +306,50 @@
 
 <p>题目：请实现一个函数，输入一个整数，输出该数二进制表示中1的个数，例如把9表示成二进制是1001，有2个1，因此如果输入9，则输出2。</p>
 
+<blockquote>
+  <p>解法一</p>
+</blockquote>
+
+<div class="language-c highlighter-rouge"><pre class="highlight"><code><span class="kt">int</span> <span class="n">bit_count</span><span class="p">(</span><span class="kt">int</span> <span class="n">value</span><span class="p">){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">){</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">value</span><span class="p">){</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="p">){</span>
+            <span class="n">count</span> <span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">count</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<blockquote>
+  <p>解法二</p>
+</blockquote>
+
+<p>用位操作</p>
+
+<div class="language-c highlighter-rouge"><pre class="highlight"><code><span class="kt">int</span> <span class="n">bit_count</span><span class="p">(</span><span class="kt">int</span> <span class="n">value</span><span class="p">){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">){</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">count</span> <span class="o">+=</span> <span class="n">value</span> <span class="o">&amp;</span> <span class="mh">0x01</span><span class="p">;</span>
+        <span class="n">value</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">count</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>还有更多的位运算，<a href="https://ask.julyedu.com/article/34">求1</a>.</p>
+
 
                 <hr>
 
