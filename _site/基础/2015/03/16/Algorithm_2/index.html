@@ -186,6 +186,125 @@
 </code></pre>
 </div>
 
+<h4 id="12斐波那契数列">12、斐波那契数列</h4>
+
+<p>题目：写一个函数，输入n，求斐波那契数列的第n项。斐波那契数列的定义：F(0)=1，F(1)=1, F(n)=F(n-1)+F(n-2)（n&gt;=2，n∈N*）</p>
+
+<blockquote>
+  <p>解法一</p>
+</blockquote>
+
+<p>矩阵法，时间复杂度O(log2^n)， 斐波那契的递推公式可以表示成如下矩阵形式，利用矩阵的分治法</p>
+
+<p><img src="/img/Simple_1/29.png" alt="img" /></p>
+
+<div class="language-c highlighter-rouge"><pre class="highlight"><code><span class="k">typedef</span> <span class="k">struct</span> <span class="n">MTX</span><span class="p">{</span>
+    <span class="kt">int</span> <span class="n">m00</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">m01</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">m10</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">m11</span><span class="p">;</span>
+<span class="p">}</span><span class="n">mtx</span><span class="p">;</span>
+<span class="n">mtx</span> <span class="n">mtx0</span><span class="p">;</span>
+
+
+<span class="n">mtx</span> <span class="nf">m_multiply</span><span class="p">(</span><span class="n">mtx</span> <span class="n">a</span><span class="p">,</span> <span class="n">mtx</span> <span class="n">b</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">mtx</span> <span class="n">c</span><span class="p">;</span>
+    <span class="n">c</span><span class="p">.</span><span class="n">m00</span><span class="o">=</span><span class="n">a</span><span class="p">.</span><span class="n">m00</span><span class="o">*</span><span class="n">b</span><span class="p">.</span><span class="n">m00</span><span class="o">+</span><span class="n">a</span><span class="p">.</span><span class="n">m01</span><span class="o">*</span><span class="n">b</span><span class="p">.</span><span class="n">m10</span><span class="p">;</span>
+    <span class="n">c</span><span class="p">.</span><span class="n">m01</span><span class="o">=</span><span class="n">a</span><span class="p">.</span><span class="n">m00</span><span class="o">*</span><span class="n">b</span><span class="p">.</span><span class="n">m01</span><span class="o">+</span><span class="n">a</span><span class="p">.</span><span class="n">m01</span><span class="o">*</span><span class="n">b</span><span class="p">.</span><span class="n">m11</span><span class="p">;</span>
+    <span class="n">c</span><span class="p">.</span><span class="n">m10</span><span class="o">=</span><span class="n">a</span><span class="p">.</span><span class="n">m10</span><span class="o">*</span><span class="n">b</span><span class="p">.</span><span class="n">m00</span><span class="o">+</span><span class="n">a</span><span class="p">.</span><span class="n">m11</span><span class="o">*</span><span class="n">b</span><span class="p">.</span><span class="n">m10</span><span class="p">;</span>
+    <span class="n">c</span><span class="p">.</span><span class="n">m11</span><span class="o">=</span><span class="n">a</span><span class="p">.</span><span class="n">m10</span><span class="o">*</span><span class="n">b</span><span class="p">.</span><span class="n">m01</span><span class="o">+</span><span class="n">a</span><span class="p">.</span><span class="n">m11</span><span class="o">*</span><span class="n">b</span><span class="p">.</span><span class="n">m11</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">c</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">mtx</span> <span class="nf">m_power</span><span class="p">(</span><span class="kt">int</span> <span class="n">k</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">mtx</span> <span class="n">m</span><span class="p">;</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="mi">1</span><span class="o">==</span><span class="n">k</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">m</span><span class="o">=</span><span class="n">mtx0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">m</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="mi">0</span><span class="o">==</span><span class="n">k</span><span class="o">%</span><span class="mi">2</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">m</span><span class="o">=</span><span class="n">m_multiply</span><span class="p">(</span><span class="n">m_power</span><span class="p">(</span><span class="n">k</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span><span class="n">m_power</span><span class="p">(</span><span class="n">k</span><span class="o">/</span><span class="mi">2</span><span class="p">));</span>
+        <span class="k">return</span> <span class="n">m</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="n">m</span><span class="o">=</span><span class="n">m_multiply</span><span class="p">(</span><span class="n">m_power</span><span class="p">((</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span><span class="n">m_power</span><span class="p">((</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">));</span>
+        <span class="n">m</span><span class="o">=</span><span class="n">m_multiply</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="n">mtx0</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">m</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="kt">int</span> <span class="nf">fibonacci</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">m</span><span class="p">;</span>
+    <span class="n">mtx</span> <span class="n">mtx1</span><span class="p">;</span>
+
+    <span class="kt">int</span> <span class="n">t</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">};</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">t</span><span class="p">[</span><span class="n">n</span><span class="p">];</span>
+    <span class="k">else</span>
+        <span class="n">mtx1</span><span class="o">=</span><span class="n">m_power</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">mtx1</span><span class="p">.</span><span class="n">m00</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">mtx0</span><span class="p">.</span><span class="n">m00</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">mtx0</span><span class="p">.</span><span class="n">m01</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">mtx0</span><span class="p">.</span><span class="n">m10</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">mtx0</span><span class="p">.</span><span class="n">m11</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">m</span> <span class="o">=</span> <span class="n">fibonacci</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"Fibonacci(%d)=%d"</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<blockquote>
+  <p>解法二</p>
+</blockquote>
+
+<p>递归，时间复杂度O(2^N)</p>
+
+<div class="language-c highlighter-rouge"><pre class="highlight"><code><span class="kt">long</span> <span class="n">fibonacci</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">n</span><span class="o">==</span><span class="mi">1</span><span class="o">||</span><span class="n">n</span><span class="o">==</span><span class="mi">2</span><span class="p">){</span>
+        <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">fibonacci</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">fibonacci</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<blockquote>
+  <p>解法三</p>
+</blockquote>
+
+<p>循环，时间复杂度O(N)</p>
+
+<pre><code class="language-C">long fibonacci(int n){
+    if (n==1||n==2){
+        return 1;
+    }
+
+    long prePre = 1;
+    long pre = 1;
+    long current = 2;
+    for (int i = 3; i &lt;= n ; i++) {
+        current = prePre + pre;
+        prePre = pre;
+        pre = current;
+    }
+    return current;
+}
+</code></pre>
+
+<h4 id="13二进制中1的个数">13、二进制中1的个数</h4>
+
+<p>题目：请实现一个函数，输入一个整数，输出该数二进制表示中1的个数，例如把9表示成二进制是1001，有2个1，因此如果输入9，则输出2。</p>
 
 
                 <hr>
