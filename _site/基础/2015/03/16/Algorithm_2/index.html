@@ -755,42 +755,42 @@
 
 <p>题目：输入两个递增排序的链表，合并这两个链表并使新链表中的结点仍然是按照递增排序的</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>ListNode* Merge(ListNode* pHead1, ListNode* pHead2)
-{
-    if(pHead1==NULL||pHead2==NULL)
-        return pHead1==NULL?pHead2:pHead1;
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="n">ListNode</span><span class="o">*</span> <span class="nf">Merge</span><span class="p">(</span><span class="n">ListNode</span><span class="o">*</span> <span class="n">pHead1</span><span class="p">,</span> <span class="n">ListNode</span><span class="o">*</span> <span class="n">pHead2</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">pHead1</span><span class="o">==</span><span class="nb">NULL</span><span class="o">||</span><span class="n">pHead2</span><span class="o">==</span><span class="nb">NULL</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pHead1</span><span class="o">==</span><span class="nb">NULL</span><span class="o">?</span><span class="n">pHead2</span><span class="o">:</span><span class="n">pHead1</span><span class="p">;</span>
     
-    ListNode *pHead=NULL; // 新链表
-    ListNode *p1=pHead1;  // 定位链表1的结点
-    ListNode *p2=pHead2;  // 定位链表2的结点
-    ListNode *p=pHead;    // 
-    
-    while(p1!=NULL&amp;&amp;p2!=NULL)
-    {
-        ListNode *q= NULL;  // 
-        if(p1-&gt;value &lt;=p2-&gt;value) // 看看插哪个点
-            q=p1;
-        else
-            q=p2;
-        if(pHead ==NULL)//初次插入结点
-        {
-            p=q;
-            (q==p1)?(p1=p1-&gt;next):(p2=p2-&gt;next);
-            p-&gt;next = NULL;
-            pHead=p;//这里很重要啊！！！
-        }
-        else
-        {
-            p-&gt;next=q;
-            (q==p1)?(p1=p1-&gt;next):(p2=p2-&gt;next);
-            p=p-&gt;next;
-            p-&gt;next=NULL;
-        }
-    } // 有一边已经被选完了
-    
-    p-&gt;next= (p1==NULL)?p2:p1;
-    return pHead;
-}
+    <span class="n">ListNode</span> <span class="o">*</span><span class="n">pHead</span><span class="o">=</span><span class="nb">NULL</span><span class="p">;</span> <span class="c1">// 新链表
+</span>    <span class="n">ListNode</span> <span class="o">*</span><span class="n">p1</span><span class="o">=</span><span class="n">pHead1</span><span class="p">;</span>  <span class="c1">// 定位链表1的结点
+</span>    <span class="n">ListNode</span> <span class="o">*</span><span class="n">p2</span><span class="o">=</span><span class="n">pHead2</span><span class="p">;</span>  <span class="c1">// 定位链表2的结点
+</span>    <span class="n">ListNode</span> <span class="o">*</span><span class="n">p</span><span class="o">=</span><span class="n">pHead</span><span class="p">;</span>    <span class="c1">// 
+</span>    
+    <span class="k">while</span><span class="p">(</span><span class="n">p1</span><span class="o">!=</span><span class="nb">NULL</span><span class="o">&amp;&amp;</span><span class="n">p2</span><span class="o">!=</span><span class="nb">NULL</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">ListNode</span> <span class="o">*</span><span class="n">q</span><span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>  <span class="c1">// 
+</span>        <span class="k">if</span><span class="p">(</span><span class="n">p1</span><span class="o">-&gt;</span><span class="n">value</span> <span class="o">&lt;=</span><span class="n">p2</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">)</span> <span class="c1">// 看看插哪个点
+</span>            <span class="n">q</span><span class="o">=</span><span class="n">p1</span><span class="p">;</span>
+        <span class="k">else</span>
+            <span class="n">q</span><span class="o">=</span><span class="n">p2</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">pHead</span> <span class="o">==</span><span class="nb">NULL</span><span class="p">)</span><span class="c1">//初次插入结点
+</span>        <span class="p">{</span>
+            <span class="n">p</span><span class="o">=</span><span class="n">q</span><span class="p">;</span>
+            <span class="p">(</span><span class="n">q</span><span class="o">==</span><span class="n">p1</span><span class="p">)</span><span class="o">?</span><span class="p">(</span><span class="n">p1</span><span class="o">=</span><span class="n">p1</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">)</span><span class="o">:</span><span class="p">(</span><span class="n">p2</span><span class="o">=</span><span class="n">p2</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">);</span>
+            <span class="n">p</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+            <span class="n">pHead</span><span class="o">=</span><span class="n">p</span><span class="p">;</span><span class="c1">//这里很重要啊！！！
+</span>        <span class="p">}</span>
+        <span class="k">else</span>
+        <span class="p">{</span>
+            <span class="n">p</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">=</span><span class="n">q</span><span class="p">;</span>
+            <span class="p">(</span><span class="n">q</span><span class="o">==</span><span class="n">p1</span><span class="p">)</span><span class="o">?</span><span class="p">(</span><span class="n">p1</span><span class="o">=</span><span class="n">p1</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">)</span><span class="o">:</span><span class="p">(</span><span class="n">p2</span><span class="o">=</span><span class="n">p2</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">);</span>
+            <span class="n">p</span><span class="o">=</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+            <span class="n">p</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">=</span><span class="nb">NULL</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span> <span class="c1">// 有一边已经被选完了
+</span>    
+    <span class="n">p</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">=</span> <span class="p">(</span><span class="n">p1</span><span class="o">==</span><span class="nb">NULL</span><span class="p">)</span><span class="o">?</span><span class="n">p2</span><span class="o">:</span><span class="n">p1</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">pHead</span><span class="p">;</span>
+<span class="p">}</span>
 </code></pre>
 </div>
 

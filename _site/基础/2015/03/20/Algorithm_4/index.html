@@ -156,51 +156,51 @@
 
 <p>思路：只计算丑数，而不在非丑数的整数上花费时间。根据丑数的定义，丑数应该是另一个丑数乘以2、3或者5的结果（1除外）。因此我们可以创建一个数组，里面的数字是排好序的丑数。里面的每一个丑数是前面的丑数乘以2、3或者5得到的。这种思路的关键在于怎样确保数组里面的丑数是排好序的。我们假设数组中已经有若干个丑数，排好序后存在数组中。我们把现有的最大丑数记做M。现在我们来生成下一个丑数，该丑数肯定是前面某一个丑数乘以2、3或者5的结果。我们首先考虑把已有的每个丑数乘以2。在乘以2的时候，能得到若干个结果小于或等于M的。由于我们是按照顺序生成的，小于或者等于M肯定已经在数组中了，我们不需再次考虑；我们还会得到若干个大于M的结果，但我们只需要第一个大于M的结果，因为我们希望丑数是按从小到大顺序生成的，其他更大的结果我们以后再说。我们把得到的第一个乘以2后大于M的结果，记为M2。同样我们把已有的每一个丑数乘以3和5，能得到第一个大于M的结果M3和M5。那么下一个丑数应该是M2、M3和M5三个数的最小者。前面我们分析的时候，提到把已有的每个丑数分别都乘以2、3和5，事实上是不需要的，因为已有的丑数是按顺序存在数组中的。对乘以2而言，肯定存在某一个丑数T2，排在它之前的每一个丑数乘以2得到的结果都会小于已有最大的丑数，在它之后的每一个丑数乘以2得到的结果都会太大。我们只需要记下这个丑数的位置，同时每次生成新的丑数的时候，去更新这个T2。对乘以3和5而言，存在着同样的T3和T5。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>int Min(int number1, int number2, int number3)
-{
-    int min = (number1 &lt; number2) ? number1 : number2;
-    min = (min &lt; number3) ? min : number3;
-    return min;
-}
-int findUglyNum2(int index)
-{
-	int *pUglyNumbers = new int[index];
-	pUglyNumbers[0] = 1;
-	int nextUglyIndex = 1;
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">Min</span><span class="p">(</span><span class="kt">int</span> <span class="n">number1</span><span class="p">,</span> <span class="kt">int</span> <span class="n">number2</span><span class="p">,</span> <span class="kt">int</span> <span class="n">number3</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">min</span> <span class="o">=</span> <span class="p">(</span><span class="n">number1</span> <span class="o">&lt;</span> <span class="n">number2</span><span class="p">)</span> <span class="o">?</span> <span class="n">number1</span> <span class="o">:</span> <span class="n">number2</span><span class="p">;</span>
+    <span class="n">min</span> <span class="o">=</span> <span class="p">(</span><span class="n">min</span> <span class="o">&lt;</span> <span class="n">number3</span><span class="p">)</span> <span class="o">?</span> <span class="n">min</span> <span class="o">:</span> <span class="n">number3</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">min</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">int</span> <span class="nf">findUglyNum2</span><span class="p">(</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="kt">int</span> <span class="o">*</span><span class="n">pUglyNumbers</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">[</span><span class="n">index</span><span class="p">];</span>
+	<span class="n">pUglyNumbers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">nextUglyIndex</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
 
-	int *pMultiply2 = pUglyNumbers;
-    int *pMultiply3 = pUglyNumbers;
-    int *pMultiply5 = pUglyNumbers;
+	<span class="kt">int</span> <span class="o">*</span><span class="n">pMultiply2</span> <span class="o">=</span> <span class="n">pUglyNumbers</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="o">*</span><span class="n">pMultiply3</span> <span class="o">=</span> <span class="n">pUglyNumbers</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="o">*</span><span class="n">pMultiply5</span> <span class="o">=</span> <span class="n">pUglyNumbers</span><span class="p">;</span>
 
-	while(nextUglyIndex &lt; index)
-	{
-		int min = Min(*pMultiply2*2, *pMultiply3*3,*pMultiply5*5);
-		pUglyNumbers[nextUglyIndex] = min;
-		while(*pMultiply2*2 &lt;= pUglyNumbers[nextUglyIndex])
-			++pMultiply2;
-		while(*pMultiply3*3 &lt;= pUglyNumbers[nextUglyIndex])
-			++pMultiply3;
-		while(*pMultiply5*5 &lt;= pUglyNumbers[nextUglyIndex])
-			++pMultiply5;
-		++nextUglyIndex;
-	}
-	int ugly = pUglyNumbers[nextUglyIndex - 1];
-    delete[] pUglyNumbers;
-    return ugly;
-}
+	<span class="k">while</span><span class="p">(</span><span class="n">nextUglyIndex</span> <span class="o">&lt;</span> <span class="n">index</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="kt">int</span> <span class="n">min</span> <span class="o">=</span> <span class="n">Min</span><span class="p">(</span><span class="o">*</span><span class="n">pMultiply2</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="o">*</span><span class="n">pMultiply3</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span><span class="o">*</span><span class="n">pMultiply5</span><span class="o">*</span><span class="mi">5</span><span class="p">);</span>
+		<span class="n">pUglyNumbers</span><span class="p">[</span><span class="n">nextUglyIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">min</span><span class="p">;</span>
+		<span class="k">while</span><span class="p">(</span><span class="o">*</span><span class="n">pMultiply2</span><span class="o">*</span><span class="mi">2</span> <span class="o">&lt;=</span> <span class="n">pUglyNumbers</span><span class="p">[</span><span class="n">nextUglyIndex</span><span class="p">])</span>
+			<span class="o">++</span><span class="n">pMultiply2</span><span class="p">;</span>
+		<span class="k">while</span><span class="p">(</span><span class="o">*</span><span class="n">pMultiply3</span><span class="o">*</span><span class="mi">3</span> <span class="o">&lt;=</span> <span class="n">pUglyNumbers</span><span class="p">[</span><span class="n">nextUglyIndex</span><span class="p">])</span>
+			<span class="o">++</span><span class="n">pMultiply3</span><span class="p">;</span>
+		<span class="k">while</span><span class="p">(</span><span class="o">*</span><span class="n">pMultiply5</span><span class="o">*</span><span class="mi">5</span> <span class="o">&lt;=</span> <span class="n">pUglyNumbers</span><span class="p">[</span><span class="n">nextUglyIndex</span><span class="p">])</span>
+			<span class="o">++</span><span class="n">pMultiply5</span><span class="p">;</span>
+		<span class="o">++</span><span class="n">nextUglyIndex</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="kt">int</span> <span class="n">ugly</span> <span class="o">=</span> <span class="n">pUglyNumbers</span><span class="p">[</span><span class="n">nextUglyIndex</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
+    <span class="k">delete</span><span class="p">[]</span> <span class="n">pUglyNumbers</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">ugly</span><span class="p">;</span>
+<span class="p">}</span>
 
 
-int main()
-{
-	time_t   begin2,end2;   	
-	begin2=clock(); 
-	cout&lt;&lt;findUglyNum2(1500)&lt;&lt;endl;
-	end2=clock();   
-	cout&lt;&lt;"runtime:   "&lt;&lt;double(end2-begin2)/CLOCKS_PER_SEC&lt;&lt;endl;
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="kt">time_t</span>   <span class="n">begin2</span><span class="p">,</span><span class="n">end2</span><span class="p">;</span>   	
+	<span class="n">begin2</span><span class="o">=</span><span class="n">clock</span><span class="p">();</span> 
+	<span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">findUglyNum2</span><span class="p">(</span><span class="mi">1500</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+	<span class="n">end2</span><span class="o">=</span><span class="n">clock</span><span class="p">();</span>   
+	<span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">"runtime:   "</span><span class="o">&lt;&lt;</span><span class="kt">double</span><span class="p">(</span><span class="n">end2</span><span class="o">-</span><span class="n">begin2</span><span class="p">)</span><span class="o">/</span><span class="n">CLOCKS_PER_SEC</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
 	
 
-	return 0;
-}
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
 </code></pre>
 </div>
 
@@ -538,39 +538,39 @@ inversions+=InversePairsCore(arry,mid+1,end,temp);//找右半段的逆序对数�
 
 <p>现在我们已经把原数组分成了两个子数组，每个子数组都包含一个只出现一次的数字，而其他数字都出现了两次。因此到此为止，所有的问题我们都已经解决。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>void FindNumsAppearOnce(vector&lt;int&gt; data,int* num1,int *num2) {  
-        if(data.size()&lt;2)   return ;  
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">FindNumsAppearOnce</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">data</span><span class="p">,</span><span class="kt">int</span><span class="o">*</span> <span class="n">num1</span><span class="p">,</span><span class="kt">int</span> <span class="o">*</span><span class="n">num2</span><span class="p">)</span> <span class="p">{</span>  
+        <span class="k">if</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">&lt;</span><span class="mi">2</span><span class="p">)</span>   <span class="k">return</span> <span class="p">;</span>  
           
-        int size=data.size();  
-        int temp=0;  
-        for(int i=0;i&lt;size;i++)//对数组中每个数字做异或  
-            temp=temp^data[i];  
-        if(temp==0)    return ;  
+        <span class="kt">int</span> <span class="n">size</span><span class="o">=</span><span class="n">data</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>  
+        <span class="kt">int</span> <span class="n">temp</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>  
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">size</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="c1">//对数组中每个数字做异或  
+</span>            <span class="n">temp</span><span class="o">=</span><span class="n">temp</span><span class="o">^</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>  
+        <span class="k">if</span><span class="p">(</span><span class="n">temp</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span>    <span class="k">return</span> <span class="p">;</span>  
           
-        int index=0;  
-        while((temp&amp;1)==0)//在整数temp的二进制表示中找到最右边是1的位  
-        {  
-            temp=temp&gt;&gt;1;  
-            ++index;  
-        }  
+        <span class="kt">int</span> <span class="n">index</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>  
+        <span class="k">while</span><span class="p">((</span><span class="n">temp</span><span class="o">&amp;</span><span class="mi">1</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span><span class="c1">//在整数temp的二进制表示中找到最右边是1的位  
+</span>        <span class="p">{</span>  
+            <span class="n">temp</span><span class="o">=</span><span class="n">temp</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">;</span>  
+            <span class="o">++</span><span class="n">index</span><span class="p">;</span>  
+        <span class="p">}</span>  
           
-        //根据数组的倒数第index位是否为1，将数组划分为两个子数组，并分别对两个子数组进行求异或，得到num1			和num2  
-        *num1=*num2=0;  
-        for(int i=0;i&lt;size;i++)  
-        {  
-            if(IsBit(data[i],index))  
-                *num1^=data[i];  
-            else  
-                *num2^=data[i];  
-        }  
- }  
+        <span class="c1">//根据数组的倒数第index位是否为1，将数组划分为两个子数组，并分别对两个子数组进行求异或，得到num1			和num2  
+</span>        <span class="o">*</span><span class="n">num1</span><span class="o">=*</span><span class="n">num2</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>  
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">size</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>  
+        <span class="p">{</span>  
+            <span class="k">if</span><span class="p">(</span><span class="n">IsBit</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">index</span><span class="p">))</span>  
+                <span class="o">*</span><span class="n">num1</span><span class="o">^=</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>  
+            <span class="k">else</span>  
+                <span class="o">*</span><span class="n">num2</span><span class="o">^=</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>  
+        <span class="p">}</span>  
+ <span class="p">}</span>  
       
-    //判断在num的二进制表示中从右边起的index位是不是1  
-bool IsBit(int num,int index)  
-{  
-    num=num&gt;&gt;index;  
-    return (num&amp;1);  
-}  
+    <span class="c1">//判断在num的二进制表示中从右边起的index位是不是1  
+</span><span class="kt">bool</span> <span class="nf">IsBit</span><span class="p">(</span><span class="kt">int</span> <span class="n">num</span><span class="p">,</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span>  
+<span class="p">{</span>  
+    <span class="n">num</span><span class="o">=</span><span class="n">num</span><span class="o">&gt;&gt;</span><span class="n">index</span><span class="p">;</span>  
+    <span class="k">return</span> <span class="p">(</span><span class="n">num</span><span class="o">&amp;</span><span class="mi">1</span><span class="p">);</span>  
+<span class="p">}</span>  
 </code></pre>
 </div>
 

@@ -210,16 +210,16 @@
 
 <p>思路：对于树根，不变，交换左右两个子树，然后在对左右子树作为树根进行递归交换他们的子树。注意处理子树为空的情况。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>    void Mirror(TreeNode *pRoot) {
-        if(pRoot==NULL){
-            return;
-        }
-        TreeNode *tmp = pRoot-&gt;left;
-        pRoot-&gt;left = pRoot-&gt;right;
-        pRoot-&gt;right = tmp;
-        Mirror(pRoot-&gt;left);
-        Mirror(pRoot-&gt;right);
-    }
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code>    <span class="kt">void</span> <span class="nf">Mirror</span><span class="p">(</span><span class="n">TreeNode</span> <span class="o">*</span><span class="n">pRoot</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">pRoot</span><span class="o">==</span><span class="nb">NULL</span><span class="p">){</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">TreeNode</span> <span class="o">*</span><span class="n">tmp</span> <span class="o">=</span> <span class="n">pRoot</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">;</span>
+        <span class="n">pRoot</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">=</span> <span class="n">pRoot</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">;</span>
+        <span class="n">pRoot</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">;</span>
+        <span class="n">Mirror</span><span class="p">(</span><span class="n">pRoot</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">);</span>
+        <span class="n">Mirror</span><span class="p">(</span><span class="n">pRoot</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">);</span>
+    <span class="p">}</span>
 </code></pre>
 </div>
 
