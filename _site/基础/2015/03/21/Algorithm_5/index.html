@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>算法题目（五） - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2015/03/21/Algorithm_5/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/Http/bg.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>算法题目（五）</h1>
+                    
+                    <h2 class="subheading">一些算法题的解法</h2>
+                    
+                    <span class="meta">Posted by Ted on March 21, 2015</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<p>####41、扑克牌的顺子</p>
+
+<p>题目: 从扑克牌中随机抽取5张牌, 判断是不是一个顺子, 即这5张牌是不是连续的.2~10为数字本身, A为1, J为11, Q为12, K为13, 而大小王可以看成任意数字.</p>
+
+<p>思路：把大小王视为0，首先把数组排序，再统计数组中0 的个数，最后统计排序之后的数组中相邻数字之间的空缺总数。如果空缺的总数小于或者等于0 的个数，那么这个数组就是连续的：反之则不连续。</p>
+
+<p>最后，我们还需要注意一点： 如果数组中的非0 数字重复出现，则该数组不是连续的。换成扑克牌的描述方式就是如果一副牌里含有对子，则不可能是顺子。</p>
+
+<pre><code class="language-C">bool IsContinuous(int *arr,int len)
+{
+    if(arr==NULL || len&lt;1)
+        return false;
+
+    quick_sort();
+
+    int NumOf0 = 0;	    //0的个数
+    int NumOfGap = 0;  //空缺的个数
+    int i;
+    for(i=0;i&lt;len-1;i++)
+    {
+        if(arr[i] == 0)
+            NumOf0++;
+        else
+        {
+            if(arr[i] == arr[i+1])
+                return false;
+            else
+                NumOfGap += arr[i+1]-arr[i]-1;
+        }
+    }
+    return (NumOfGap&gt;NumOf0)?false:true;
+}
+</code></pre>
+
+<h4 id="42最后剩下的数字">42、最后剩下的数字</h4>
+
+<p>0, 1, … , n-1 这n个数字排成一个圈圈，从数字0开始每次从圆圏里删除第m个数字。求出这个圈圈里剩下的最后一个数字。</p>
+
+<blockquote>
+  <p>解法一</p>
+</blockquote>
+
+<p>可转换为带环单链表删除结点的问题：创建一个总共有n个结点的环形链表，然后每次在这个链表中删除第m个结点。时间复杂度为O(n*m)，空间复杂度为O(n).</p>
+
+<blockquote>
+  <p>解法二</p>
+</blockquote>
+
+<p>我们知道第一个人(编号一定是m%n-1) 出列之后，剩下的n-1个人组成了一个新的约瑟夫环（以编号为k=m%n的人开始）:
+​        k  k+1  k+2  … n-2, n-1, 0, 1, 2, … k-2并且从k开始报0。
+现在我们把他们的编号做一下转换：
+k       –&gt; 0
+k+1   –&gt; 1
+k+2   –&gt; 2
+…
+k-2   –&gt; n-2
+k-1   –&gt; n-1
+变换后就完完全全成为了(n-1)个人报数的子问题，假如我们知道这个子问题的解： 例如x是最终的胜利者，那么根据上面这个表把这个x变回去不刚好就是n个人情况的解吗？！！变回去的公式很简单，不难推导出：x’=(x+k)%n。
+令f[i]表示i个人玩游戏报m退出最后胜利者的编号，最后的结果自然是f[n]。</p>
+
+<p>相应的递推关系为：</p>
+
+<p>f(1)=0;</p>
+
+<p>f(n)=(f(n-1)+m)%n;  (n&gt;1, n∈N)</p>
+
+<p>有了这个公式，我们要做的就是从1-n顺序算出f(i)的数值，最后结果是f(n)。 因为实际生活中编号总是从1开始，我们输出f(n)+1。</p>
+
+<p><strong>注意：</strong>此题中m是不变的量，从刚开始输入后就一直不变，而n逐一减小…</p>
+
+<div class="language-c highlighter-rouge"><pre class="highlight"><code><span class="n">class</span> <span class="n">Solution</span> <span class="p">{</span>
+<span class="n">public</span><span class="o">:</span>
+    <span class="kt">int</span> <span class="n">LastRemaining_Solution</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="n">m</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="o">&lt;</span><span class="mi">1</span> <span class="o">||</span> <span class="n">m</span><span class="o">&lt;</span><span class="mi">1</span><span class="p">)</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">LastRemaining_Solution</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">m</span><span class="p">)</span><span class="o">+</span><span class="n">m</span><span class="p">)</span><span class="o">%</span><span class="n">n</span><span class="p">;</span>        
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre>
+</div>
+
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">int</span> <span class="n">LastRemaining_Solution</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">m</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="o">==</span><span class="mi">0</span> <span class="o">||</span> <span class="n">m</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">last</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>  <span class="c1">// f(1,x)=0
+</span>        
+        <span class="k">for</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">2</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;=</span><span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">last</span><span class="o">=</span><span class="p">(</span><span class="n">last</span><span class="o">+</span><span class="n">m</span><span class="p">)</span><span class="o">%</span><span class="n">i</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">last</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre>
+</div>
+
+<h4 id="43不用算数运算符实现加法">43、不用算数运算符实现加法</h4>
+
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Solution</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">int</span> <span class="n">Add</span><span class="p">(</span><span class="kt">int</span> <span class="n">left</span><span class="p">,</span> <span class="kt">int</span> <span class="n">right</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">temp</span><span class="p">;</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">right</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="n">left</span> <span class="o">^</span> <span class="n">right</span><span class="p">;</span>                <span class="c1">//  计算不带进位的情况
+</span>            <span class="n">right</span> <span class="o">=</span> <span class="p">(</span><span class="n">left</span> <span class="o">&amp;</span> <span class="n">right</span><span class="p">)</span> <span class="o">&lt;&lt;</span><span class="mi">1</span><span class="p">;</span>         <span class="c1">//  计算带进位的情况
+</span>            <span class="n">left</span> <span class="o">=</span> <span class="n">temp</span><span class="p">;</span>
+            <span class="c1">//  now left = 不带进位的情况, right = 带进位的情况
+</span>        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">left</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre>
+</div>
+
+<h4 id="44链表中环的结点">44、链表中环的结点</h4>
+
+<p>题目：如果一个链表中包含环，请找出该链表的环的入口结点。如：在1-&gt;2-&gt;3-&gt;4-&gt;5-&gt;6-&gt;3的链表中，包含一个环，环的入口节点是3。</p>
+
+<p>思路：</p>
+
+<ul>
+  <li>(1) 确定链表中是否包含环：双指针，一个每次移动一步，一个每次移动两步，如果两个指针最后相遇，那么就包含环。且相遇点一定在环中（注意，移动两步的指针要判断判断其第一步不为空，才能移动第二步）</li>
+  <li>(2) 确定环中点节点数目：在上面相遇的节点的基础上，移动一个指针，并计数，当指针回到该节点时，确定环中节点数目。</li>
+  <li>(3) 找到环的入口节点：从头开始，使用两个指针，第一个指针先移动n步（其中n为确定的环中的节点数目），第二个指针再开始同时移动，两个指针相遇的节点即为入口节点。</li>
+</ul>
+
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="c1">// 相遇点
+</span><span class="n">ListNode</span><span class="o">*</span> <span class="n">MeetingNode</span><span class="p">(</span><span class="n">ListNode</span><span class="o">*</span> <span class="n">pHead</span><span class="p">){</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">pHead</span> <span class="o">==</span> <span class="nb">nullptr</span><span class="p">)</span> <span class="k">return</span> <span class="nb">nullptr</span><span class="p">;</span>
+
+    <span class="n">ListNode</span><span class="o">*</span> <span class="n">pSlow</span> <span class="o">=</span> <span class="n">pHead</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">pSlow</span> <span class="o">==</span> <span class="nb">nullptr</span><span class="p">)</span> <span class="k">return</span> <span class="nb">nullptr</span><span class="p">;</span>
+
+    <span class="n">ListNode</span><span class="o">*</span> <span class="n">pFast</span> <span class="o">=</span> <span class="n">pSlow</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">pSlow</span> <span class="o">!=</span> <span class="nb">nullptr</span> <span class="o">&amp;&amp;</span> <span class="n">pFast</span> <span class="o">!=</span> <span class="nb">nullptr</span><span class="p">){</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">pSlow</span> <span class="o">==</span> <span class="n">pFast</span><span class="p">)</span> <span class="k">return</span> <span class="n">pFast</span><span class="p">;</span>
+
+        <span class="c1">// 慢指针一步
+</span>        <span class="n">pSlow</span> <span class="o">=</span> <span class="n">pSlow</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+        
+        <span class="c1">// 快指针两步
+</span>        <span class="n">pFast</span> <span class="o">=</span> <span class="n">pFast</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">pFast</span> <span class="o">!=</span> <span class="nb">nullptr</span><span class="p">)</span>
+            <span class="n">pFast</span> <span class="o">=</span> <span class="n">pFast</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nb">nullptr</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">ListNode</span><span class="o">*</span> <span class="n">EntryNodeOfLoop</span><span class="p">(</span><span class="n">ListNode</span><span class="o">*</span> <span class="n">pHead</span><span class="p">)</span>
+<span class="p">{</span>
+    
+    <span class="c1">// 找到相遇点
+</span>    <span class="n">ListNode</span><span class="o">*</span> <span class="n">meetingNode</span> <span class="o">=</span> <span class="n">MeetingNode</span><span class="p">(</span><span class="n">pHead</span><span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">meetingNode</span> <span class="o">==</span> <span class="nb">nullptr</span><span class="p">)</span> <span class="k">return</span> <span class="nb">nullptr</span><span class="p">;</span>
+
+    <span class="c1">// 找到环的长度
+</span>    <span class="kt">int</span> <span class="n">nodesNumInLoop</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">ListNode</span><span class="o">*</span> <span class="n">pNode1</span> <span class="o">=</span> <span class="n">meetingNode</span><span class="p">;</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">pNode1</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">!=</span> <span class="n">meetingNode</span><span class="p">){</span>
+        <span class="n">pNode1</span> <span class="o">=</span> <span class="n">pNode1</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+        <span class="o">++</span><span class="n">nodesNumInLoop</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 找到入口
+</span>    <span class="n">pNode1</span> <span class="o">=</span> <span class="n">pHead</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nodesNumInLoop</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">pNode1</span> <span class="o">=</span> <span class="n">pNode1</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+
+    <span class="n">ListNode</span><span class="o">*</span> <span class="n">pNode2</span> <span class="o">=</span> <span class="n">pHead</span><span class="p">;</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">pNode1</span> <span class="o">!=</span> <span class="n">pNode2</span><span class="p">){</span>
+        <span class="n">pNode1</span> <span class="o">=</span> <span class="n">pNode1</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+        <span class="n">pNode2</span> <span class="o">=</span> <span class="n">pNode2</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">pNode1</span><span class="p">;</span>
+<span class="p">}</span>
+
+</code></pre>
+</div>
+
+<h4 id="45删除重复结点">45、删除重复结点</h4>
+
+<p>题目：删除链表中的重复结点</p>
+
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="n">ListNode</span><span class="o">*</span> <span class="nf">deleteDuplication</span><span class="p">(</span><span class="n">ListNode</span><span class="o">*</span> <span class="n">pHead</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">//设置一个trick, 作为头指针, 这样我们无需单独考虑第一个元素
+</span>    <span class="n">ListNode</span> <span class="o">*</span><span class="n">first</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="p">();</span>
+
+    <span class="n">first</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">pHead</span><span class="p">;</span>
+
+    <span class="n">ListNode</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="n">pHead</span><span class="p">;</span>
+    <span class="n">ListNode</span> <span class="o">*</span><span class="n">last</span> <span class="o">=</span> <span class="n">first</span><span class="p">;</span>
+
+    <span class="k">while</span> <span class="p">(</span><span class="n">p</span> <span class="o">!=</span> <span class="nb">NULL</span> <span class="o">&amp;&amp;</span> <span class="n">p</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">//  如果有元素重复
+</span>        <span class="k">if</span> <span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">val</span> <span class="o">==</span> <span class="n">p</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="c1">//  就跳过所有重复的数字
+</span>            <span class="kt">int</span> <span class="n">val</span> <span class="o">=</span> <span class="n">p</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">;</span>
+            <span class="k">while</span> <span class="p">(</span><span class="n">p</span> <span class="o">!=</span> <span class="nb">NULL</span> <span class="o">&amp;&amp;</span> <span class="n">p</span><span class="o">-&gt;</span><span class="n">val</span> <span class="o">==</span> <span class="n">val</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+            <span class="p">}</span>
+
+            <span class="c1">//  此时p指向了非重复的第一个元素
+</span>            <span class="c1">//  我们设置last-&gt;next = p
+</span>            <span class="c1">//  但是此时p-val也可能是重复的,
+</span>            <span class="c1">//  因此我们不可以设置last = p
+</span>            <span class="c1">//  而是重新进入循环
+</span>            <span class="n">last</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">p</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">else</span>
+        <span class="p">{</span>
+            <span class="n">last</span> <span class="o">=</span> <span class="n">p</span><span class="p">;</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">first</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre>
+</div>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/%E5%9F%BA%E7%A1%80/2015/03/20/Algorithm_4/" data-toggle="tooltip" data-placement="top" title="算法题目（四）">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/ios/2015/07/12/Textkit/" data-toggle="tooltip" data-placement="top" title="图文混排">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>
