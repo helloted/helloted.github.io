@@ -1,4 +1,153 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-03-31T18:21:51+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">APP生成与运行(一)</title><link href="http://www.helloted.com/ios/2018/03/29/app-1/" rel="alternate" type="text/html" title="APP生成与运行(一)" /><published>2018-03-29T20:00:00+08:00</published><updated>2018-03-29T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2018/03/29/app-1</id><content type="html" xml:base="http://www.helloted.com/ios/2018/03/29/app-1/">&lt;h3 id=&quot;一编译&quot;&gt;一、编译&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-04-02T15:28:06+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">APP生成与运行(二)</title><link href="http://www.helloted.com/ios/2018/03/31/app-2/" rel="alternate" type="text/html" title="APP生成与运行(二)" /><published>2018-03-31T20:00:00+08:00</published><updated>2018-03-31T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2018/03/31/app-2</id><content type="html" xml:base="http://www.helloted.com/ios/2018/03/31/app-2/">&lt;h3 id=&quot;一启动过程&quot;&gt;一、启动过程&lt;/h3&gt;
+
+&lt;p&gt;iOS开发中，main函数是我们熟知的程序启动入口，但实际上并非真正意义上的入口，因为在我们运行程序，再到main方法被调用之间，程序已经做了许许多多的事情，比如我们熟知的runtime的初始化就发生在main函数调用前，还有程序动态库的加载链接也发生在这阶段。&lt;/p&gt;
+
+&lt;p&gt;整个过程为：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;系统先读取App的可执行文件（Mach-O文件），从里面获得dyld的路径&lt;/li&gt;
+  &lt;li&gt;加载dyld，dyld去初始化运行环境，开启缓存策略，加载程序相关依赖库(其中也包含我们的可执行文件)，并对这些库进行链接&lt;/li&gt;
+  &lt;li&gt;调用每个依赖库的初始化方法&lt;/li&gt;
+  &lt;li&gt;runtime被初始化&lt;/li&gt;
+  &lt;li&gt;runtime对项目中所有类进行类结构初始化&lt;/li&gt;
+  &lt;li&gt;调用所有的load方法&lt;/li&gt;
+  &lt;li&gt;dyld返回main函数地址，main函数被调用&lt;/li&gt;
+  &lt;li&gt;main函数调用&lt;/li&gt;
+  &lt;li&gt;执行AppDelegate的代理方法，主要是&lt;code class=&quot;highlighter-rouge&quot;&gt;didFinishLaunchingWithOptions&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;初始化Window，初始化基础的ViewController结构&lt;/li&gt;
+  &lt;li&gt;获取数据(Local DB／Network)，展示给用户&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;总体可以分为main函数调用之前和main函数调用之后。&lt;/p&gt;
+
+&lt;h3 id=&quot;二main函数启动之前&quot;&gt;二、main函数启动之前&lt;/h3&gt;
+
+&lt;h4 id=&quot;mach-o可执行文件&quot;&gt;Mach-O可执行文件&lt;/h4&gt;
+
+&lt;p&gt;Mach-O文件格式是 OS X 与 iOS 系统上的可执行文件格式，像我们编译过程产生的.O文件，以及程序的可执行文件，动态库等都是Mach-O文件。有以下几种Mach-O&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Executable 可执行文件&lt;/li&gt;
+  &lt;li&gt;Dylib 动态库&lt;/li&gt;
+  &lt;li&gt;Bundle 库：无法被连接的动态库，只能通过dlopen()加载&lt;/li&gt;
+  &lt;li&gt;Image ：指的是Executable，Dylib或者Bundle的一种，文中会多次使用Image这个名词。&lt;/li&gt;
+  &lt;li&gt;Framework 库：动态库和对应的头文件和资源文件的集合&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Mach-O的结构如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_7/11.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Header 头部，包含可以执行的CPU架构，比如x86,arm64&lt;/li&gt;
+  &lt;li&gt;Load commands 加载命令，包含文件的组织架构和在虚拟内存中的布局方式&lt;/li&gt;
+  &lt;li&gt;Data，数据，包含load commands中需要的各个段(segment)的数据，每一个Segment都得大小是Page的整数倍。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;更多Mach-O可查看《&lt;a href=&quot;https://github.com/LeoMobileDeveloper/React-Native-Files/blob/master/Mac%20OS%20X%20ABI%20Mach-O%20File%20Format%20Reference.pdf&quot;&gt;Mac OS X ABI Mach-O File Format Reference&lt;/a&gt;》&lt;/p&gt;
+
+&lt;p&gt;有两种方式可以查看一个APP动态调用的系统可执行文件&lt;/p&gt;
+
+&lt;p&gt;1、通过&lt;a href=&quot;https://sourceforge.net/projects/machoview/?source=navbar&quot;&gt;machoview&lt;/a&gt;,选择APP的可执行文件，可以看到&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_7/12.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;2、通过&lt;code class=&quot;highlighter-rouge&quot;&gt;otool -L&lt;/code&gt;命令行查看&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_7/13.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;dyld&quot;&gt;dyld&lt;/h4&gt;
+
+&lt;p&gt;全程the dynamic loade，Apple 的动态链接器，系统 kernel 做好启动程序的初始准备后，交给 dyld 负责。&lt;/p&gt;
+
+&lt;p&gt;2017年，苹果引入了Dyld 3.0，但是只有系统APP采用这个，第三方APP都是采用Dyld 2.0。&lt;/p&gt;
+
+&lt;p&gt;Dyld 2.0的加载过程是：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_7/14.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;解析 mach-o 文件，找到其依赖的库，并且递归的找到所有依赖的库，形成一张动态库的依赖图。iOS 上的大部分 app 都依赖 300 到 600 个动态链接库，所以这个步骤包含了较大的工作量。&lt;/li&gt;
+  &lt;li&gt;匹配 mach-o 文件到自身的地址空间；&lt;/li&gt;
+  &lt;li&gt;进行符号查找：比如 app 中调用了 printf 方法，就需要去系统库中查找到 printf 的地址，然后将地址拷贝到 app 中的函数指针中；&lt;/li&gt;
+  &lt;li&gt;绑定和变基：由于 app 需要让地址空间配置随机加载，所以所有的指针都需要加上一个基地址；&lt;/li&gt;
+  &lt;li&gt;运行初始化程序（Runtime、+load、+initialize），之后运行 main() 函数。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;三优化启动时间&quot;&gt;三、优化启动时间&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;main函数之后&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;这部分是主要的优化部分&lt;/p&gt;
+
+&lt;h4 id=&quot;appdelegate&quot;&gt;Appdelegate&lt;/h4&gt;
+
+&lt;p&gt;能延迟初始化的尽量延迟初始化，不能延迟初始化的尽量放到后台初始化。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;三方SDK初始化，比如Crash统计; 像分享之类的，可以等到第一次调用再出初始化。&lt;/li&gt;
+  &lt;li&gt;初始化某些基础服务，比如WatchDog，远程参数。&lt;/li&gt;
+  &lt;li&gt;启动相关日志，日志往往涉及到DB操作，一定要放到后台去做&lt;/li&gt;
+  &lt;li&gt;业务方初始化，这个交由每个业务自己去控制初始化时间。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;viewcontroller&quot;&gt;ViewController&lt;/h4&gt;
+
+&lt;p&gt;延迟初始化那些不必要的&lt;code class=&quot;highlighter-rouge&quot;&gt;UIViewController&lt;/code&gt;。&lt;/p&gt;
+
+&lt;h4 id=&quot;用time-profiler找到元凶&quot;&gt;用Time Profiler找到元凶&lt;/h4&gt;
+
+&lt;p&gt;Time Profiler在分析时间占用上非常强大。实用的时候注意三点&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;在打包模式下分析（一般是Release）,这样和线上环境一样。&lt;/li&gt;
+  &lt;li&gt;记得开启dsym，不然无法查看到具体的函数调用堆栈&lt;/li&gt;
+  &lt;li&gt;分析性能差的设备，对于支持iOS 8的，一般分析iphone 4s或者iphone 5。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Main函数之前&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Main函数之前是iOS系统的工作，所以这部分的优化往往更具有通用性。&lt;/p&gt;
+
+&lt;h4 id=&quot;dylibs&quot;&gt;dylibs&lt;/h4&gt;
+
+&lt;p&gt;启动的第一步是加载动态库，加载系统的动态库使很快的，因为可以缓存，而加载内嵌的动态库速度较慢。所以，提高这一步的效率的关键是：&lt;strong&gt;减少动态库的数量&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;合并动态库，比如公司内部由私有Pod建立了如下动态库：XXTableView, XXHUD, XXLabel，强烈建议合并成一个XXUIKit来提高加载速度。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;rebase--bind--objective-c-runtime&quot;&gt;Rebase &amp;amp; Bind &amp;amp; Objective C Runtime&lt;/h4&gt;
+
+&lt;p&gt;Rebase和Bind都是为了解决指针引用的问题。对于Objective C开发来说，主要的时间消耗在Class/Method的符号加载上，所以常见的优化方案是：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;减少&lt;code class=&quot;highlighter-rouge&quot;&gt;__DATA&lt;/code&gt;段中的指针数量。&lt;/li&gt;
+  &lt;li&gt;合并Category和功能类似的类。比如：UIView+Frame,UIView+AutoLayout…合并为一个&lt;/li&gt;
+  &lt;li&gt;删除无用的方法和类。&lt;/li&gt;
+  &lt;li&gt;多用Swift Structs，因为Swfit Structs是静态分发的。感兴趣的同学可以看看我之前这篇文章：《&lt;a href=&quot;http://blog.csdn.net/hello_hwc/article/details/53147910&quot;&gt;Swift进阶之内存模型和方法调度&lt;/a&gt;》&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;initializers&quot;&gt;Initializers&lt;/h4&gt;
+
+&lt;p&gt;通常，我们会在&lt;code class=&quot;highlighter-rouge&quot;&gt;+load&lt;/code&gt;方法中进行method-swizzling，这也是&lt;a href=&quot;http://nshipster.com/method-swizzling/&quot;&gt;Nshipster&lt;/a&gt;推荐的方式。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;用initialize替代load。不少同学喜欢用method-swizzling来实现AOP去做日志统计等内容，强烈建议改为在initialize进行初始化。&lt;/li&gt;
+  &lt;li&gt;减少&lt;code class=&quot;highlighter-rouge&quot;&gt;__atribute__((constructor))&lt;/code&gt;的使用，而是在第一次访问的时候才用dispatch_once等方式初始化。&lt;/li&gt;
+  &lt;li&gt;不要创建线程&lt;/li&gt;
+  &lt;li&gt;使用Swfit重写代码。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;引用：&lt;/p&gt;
+
+&lt;p&gt;https://blog.csdn.net/hello_hwc/article/details/78317863&lt;/p&gt;
+
+&lt;p&gt;WWDC 2017: &lt;a href=&quot;https://developer.apple.com/videos/play/wwdc2017/413/&quot;&gt;App Startup Time: Past, Present, and Future&lt;/a&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">一、启动过程</summary></entry><entry><title type="html">APP生成与运行(一)</title><link href="http://www.helloted.com/ios/2018/03/29/app-1/" rel="alternate" type="text/html" title="APP生成与运行(一)" /><published>2018-03-29T20:00:00+08:00</published><updated>2018-03-29T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2018/03/29/app-1</id><content type="html" xml:base="http://www.helloted.com/ios/2018/03/29/app-1/">&lt;h3 id=&quot;一编译&quot;&gt;一、编译&lt;/h3&gt;
 
 &lt;h4 id=&quot;汇编&quot;&gt;汇编&lt;/h4&gt;
 
@@ -2082,84 +2231,4 @@ view的默认行为是一次只响应一次触摸。如果用户放下第二根�
 
 &lt;p&gt;注意：UIView的动画方法通常在动画进行时禁用触摸事件。您可以通过适当地配置动画来覆盖此行为。有关执行动画的更多信息，请参阅动画。&lt;/p&gt;
 
-&lt;p&gt;当它处理触摸事件时，UIKit使用UIView的&lt;code class=&quot;highlighter-rouge&quot;&gt;hitTest：withEvent：&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;pointInside：withEvent：&lt;/code&gt;方法来确定触摸事件是否发生在给定view的边界内。尽管您很少需要重写这些方法，但您可以这样做，以实现view的自定义触摸行为。例如，您可以重写这些方法来防止子view处理触摸事件。&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">苹果官方文档View Programming Guide for iOS</summary></entry><entry><title type="html">View编程指南(二)</title><link href="http://www.helloted.com/ios/2018/01/15/View_2/" rel="alternate" type="text/html" title="View编程指南(二)" /><published>2018-01-15T20:00:00+08:00</published><updated>2018-01-15T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2018/01/15/View_2</id><content type="html" xml:base="http://www.helloted.com/ios/2018/01/15/View_2/">&lt;p&gt;苹果官方文档&lt;a href=&quot;https://developer.apple.com/library/content/documentation/WindowsViews/Conceptual/ViewPG_iPhoneOS/Introduction/Introduction.html#//apple_ref/doc/uid/TP40009503-CH1-SW2&quot;&gt;View Programming Guide for iOS&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;三windows&quot;&gt;三、Windows&lt;/h3&gt;
-
-&lt;p&gt;每个iOS应用程序至少需要一个window- 一个UIWindow类的实例 - 有些可能包含多个window。一个window对象有几个职责：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;它包含您的应用程序的可见内容。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;它在将触摸事件传递到View和其他应用程序对象中起着关键作用。&lt;/li&gt;
-  &lt;li&gt;它与您的应用程序的View controller协同工作，以方便更改。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;在iOS中，Windows没有标题栏，关闭框或其他视觉装饰。一个window始终只是一个或多个view的空白容器。此外，应用程序不会通过显示新window来更改其内容。如果要更改显示的内容，请改为改变window的最前面的view。&lt;/p&gt;
-
-&lt;p&gt;大多数iOS应用程序在其生命周期中只创建并使用一个window。该window横跨设备的整个主屏幕，并在应用程序生命周期的早期从应用程序的主要nib文件（或以编程方式创建）加载。但是，如果应用程序支持使用外部显示器进行视频输出，则可以创建一个额外的window来在该外部显示器上显示内容。所有其他window通常由系统创建，通常是为了响应特定事件（例如来电）创建的。&lt;/p&gt;
-
-&lt;h4 id=&quot;涉及windows的任务&quot;&gt;涉及Windows的任务&lt;/h4&gt;
-
-&lt;p&gt;对于许多应用程序，应用程序与window交互的唯一时间是在启动时创建windws时。 但是，您可以使用应用程序的window对象来执行几个与应用程序相关的任务：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;使用window对象将点和矩形转换为window的本地坐标系或从window的本地坐标系进行转换。 例如，如果在window坐标中提供了一个值，那么在尝试使用它之前，可能需要将其转换为特定view的坐标系。&lt;/li&gt;
-  &lt;li&gt;使用window通知来跟踪与window相关的更改。 Windows会在显示或隐藏通知或者接受或退出密钥状态时生成通知。 您可以使用这些通知在应用程序的其他部分执行操作。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;创建和配置一个window&quot;&gt;创建和配置一个window&lt;/h4&gt;
-
-&lt;p&gt;您可以通过编程方式或使用Interface Builder来创建和配置应用程序的主window。 无论哪种情况，您都可以在启动时创建window，并保留该window并将其引用存储在您的应用程序delegate对象中。 如果你的应用程序创建了额外的window，让应用程序在需要时创建它们。 例如，如果您的应用程序支持在外部显示器上显示内容，则应在创建相应window之前等待显示器连接。&lt;/p&gt;
-
-&lt;p&gt;无论您的应用程序是启动到前台还是后台，您都应始终在启动时创建应用程序的主window。 创建和配置window本身并不是一个昂贵的操作。 但是，如果您的应用程序直接进入后台，则应避免在应用程序进入前台之前使window可见。&lt;/p&gt;
-
-&lt;h4 id=&quot;在interface-builder中创建windows&quot;&gt;在Interface Builder中创建Windows&lt;/h4&gt;
-
-&lt;p&gt;使用Interface Builder创建应用程序的main window非常简单，因为Xcode项目模板可以帮你实现。每个新的Xcode应用程序项目都包含一个包含应用程序main window的主要nib文件（通常名称为MainWindow.xib或其某些变体）。另外，这些模板还为应用程序delegate对象中的该window定义了一个出口。您可以使用此outlet访问代码中的window对象。&lt;/p&gt;
-
-&lt;p&gt;重要提示：在Interface Builder中创建window时，建议您在属性检查器中启用“全屏启动”选项。如果此选项未启用且您的window小于目标设备的屏幕，则某些view不会接收触摸事件。这是因为window（如所有view）不会在边界矩形外接收触摸事件。由于默认情况下，view不会被剪切到window边界，所以view仍然可见，但是事件不能到达它们。在启动时启用全屏选项可确保window适合当前屏幕。&lt;/p&gt;
-
-&lt;p&gt;如果您正在改造一个项目以使用Interface Builder，那么使用Interface Builder创建一个window就是将window对象拖到您的nib文件中的简单方法。当然，你也应该做到以下几点：&lt;/p&gt;
-
-&lt;p&gt;要在运行时访问window，应该将window连接到outlet，通常是在应用程序delegate或者nib文件的文件所有者中定义的window。
-如果改造计划包括将新的nib文件作为应用程序的主要nib文件，则还必须将应用程序的Info.plist文件中的NSMainNibFile键设置为nib文件的名称。更改此键的值可确保在调用应用程序delegate的应用程序：didFinishLaunchingWithOptions：方法时，nib文件已加载并可供使用。&lt;/p&gt;
-
-&lt;h4 id=&quot;以编程方式创建window&quot;&gt;以编程方式创建window&lt;/h4&gt;
-
-&lt;p&gt;如果您希望以编程方式创建应用程序的main window，则应在应用程序中包含与以下代码相似的代码：didFinishLaunchingWithOptions：应用程序delegate的方法：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;self.window = [[[UIWindow alloc] initWithFrame：[[UIScreen mainScreen] bounds]]
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;在前面的示例中，self.window被假定为您的应用程序delegate的声明属性，该属性被配置为保留window对象。如果您是为外部显示创建window，则应将其分配给其他变量，并且需要指定代表该显示的非主UIScreen对象的边界。&lt;/p&gt;
-
-&lt;p&gt;创建window时，应始终将window的大小设置为屏幕的全部范围。您不应该减小window的大小来容纳状态栏或任何其他项目。状态栏总是浮在window的顶部，所以你应该缩小以容纳状态栏的唯一的东西就是你放入window的view。如果你使用view contoller，VC应该自动处理你的view的大小。&lt;/p&gt;
-
-&lt;h4 id=&quot;将内容添加到window&quot;&gt;将内容添加到Window&lt;/h4&gt;
-
-&lt;p&gt;每个window通常都有一个root view对象（由相应的view controller管理），其中包含代表您的内容的所有其他view。使用单个root view简化了更改界面的过程;要显示新的内容，你所要做的就是替换root view。要在window中安装view，请使用&lt;code class=&quot;highlighter-rouge&quot;&gt;addSubview：&lt;/code&gt;方法。例如，要安装由VC管理的view，可以使用类似于以下内容的代码：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[window addSubview:viewController.view];
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;代替上述代码，您可以在您的nib文件中配置window的rootViewController属性。此属性提供了一种使用nib文件而非编程方式配置window的root view的便捷方法。如果在从其nib文件加载window时设置此属性，则UIKit会自动将相关VC的view安装为window的root view。此属性仅用于安装root view，不用于window与VC进行通信。
-您可以使用任何您想要的view作为window的root view。取决于你的界面设计，root view可以是一个通用的UIView对象，充当一个或多个子view的容器，root view可以是标准的系统view，或者rootview可以是你定义的自定义view。通常用作roo tview的一些标准系统view包括滚动view，表view和图像view。
-在配置window的rootview时，您需要负责在window内设置其初始大小和位置。对于不包含状态栏或显示半透明状态栏的应用程序，请将view大小设置为与window大小相匹配。对于显示不透明状态栏的应用程序，请将您的view放置在状态栏下方并相应地缩小其大小。从view的高度减去状态栏的高度可以防止view的顶部被遮挡。
-注意：如果window的rootview由容器view控制器（如选项卡栏控制器，导航控制器或分割view控制器）提供，则不需要自行设置view的初始大小。容器view控制器root据状态栏是否可见，自动调整view大小。&lt;/p&gt;
-
-&lt;h4 id=&quot;更改window级别&quot;&gt;更改Window级别&lt;/h4&gt;
-
-&lt;p&gt;每个UIWindow对象都有一个可配置的windowLevel属性，用于确定该window相对于其他window的位置。 大多数情况下，您不需要更改应用程序window的级别。 新建window在创建时自动分配到正常window级别。 正常的window级别表示该window显示与应用程序相关的内容。 对于需要悬浮在应用程序内容之上的信息（比如系统状态栏或警报消息）保留更高的window级别。 虽然你可以自己分配window到这些级别，但是当你使用特定的接口时，系统通常会为你做这些。 例如，当您显示或隐藏状态栏或显示警报视图时，系统会自动创建所需的window来显示这些项目。&lt;/p&gt;
-
-&lt;h4 id=&quot;监听window改变&quot;&gt;监听Window改变&lt;/h4&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;UIWindowDidBecomeVisibleNotification&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;UIWindowDidBecomeHiddenNotification&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;UIWindowDidBecomeKeyNotification&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;UIWindowDidResignKeyNotification&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">苹果官方文档View Programming Guide for iOS</summary></entry></feed>
+&lt;p&gt;当它处理触摸事件时，UIKit使用UIView的&lt;code class=&quot;highlighter-rouge&quot;&gt;hitTest：withEvent：&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;pointInside：withEvent：&lt;/code&gt;方法来确定触摸事件是否发生在给定view的边界内。尽管您很少需要重写这些方法，但您可以这样做，以实现view的自定义触摸行为。例如，您可以重写这些方法来防止子view处理触摸事件。&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">苹果官方文档View Programming Guide for iOS</summary></entry></feed>

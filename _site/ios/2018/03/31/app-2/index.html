@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>APP生成与运行(二) - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/ios/2018/03/31/app-2/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/bg_01.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>APP生成与运行(二)</h1>
+                    
+                    <h2 class="subheading">APP启动过程</h2>
+                    
+                    <span class="meta">Posted by Ted on March 31, 2018</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h3 id="一启动过程">一、启动过程</h3>
+
+<p>iOS开发中，main函数是我们熟知的程序启动入口，但实际上并非真正意义上的入口，因为在我们运行程序，再到main方法被调用之间，程序已经做了许许多多的事情，比如我们熟知的runtime的初始化就发生在main函数调用前，还有程序动态库的加载链接也发生在这阶段。</p>
+
+<p>整个过程为：</p>
+
+<ol>
+  <li>系统先读取App的可执行文件（Mach-O文件），从里面获得dyld的路径</li>
+  <li>加载dyld，dyld去初始化运行环境，开启缓存策略，加载程序相关依赖库(其中也包含我们的可执行文件)，并对这些库进行链接</li>
+  <li>调用每个依赖库的初始化方法</li>
+  <li>runtime被初始化</li>
+  <li>runtime对项目中所有类进行类结构初始化</li>
+  <li>调用所有的load方法</li>
+  <li>dyld返回main函数地址，main函数被调用</li>
+  <li>main函数调用</li>
+  <li>执行AppDelegate的代理方法，主要是<code class="highlighter-rouge">didFinishLaunchingWithOptions</code></li>
+  <li>初始化Window，初始化基础的ViewController结构</li>
+  <li>获取数据(Local DB／Network)，展示给用户</li>
+</ol>
+
+<p>总体可以分为main函数调用之前和main函数调用之后。</p>
+
+<h3 id="二main函数启动之前">二、main函数启动之前</h3>
+
+<h4 id="mach-o可执行文件">Mach-O可执行文件</h4>
+
+<p>Mach-O文件格式是 OS X 与 iOS 系统上的可执行文件格式，像我们编译过程产生的.O文件，以及程序的可执行文件，动态库等都是Mach-O文件。有以下几种Mach-O</p>
+
+<ul>
+  <li>Executable 可执行文件</li>
+  <li>Dylib 动态库</li>
+  <li>Bundle 库：无法被连接的动态库，只能通过dlopen()加载</li>
+  <li>Image ：指的是Executable，Dylib或者Bundle的一种，文中会多次使用Image这个名词。</li>
+  <li>Framework 库：动态库和对应的头文件和资源文件的集合</li>
+</ul>
+
+<p>Mach-O的结构如下：</p>
+
+<p><img src="/img/Simple_7/11.png" alt="img" /></p>
+
+<ul>
+  <li>Header 头部，包含可以执行的CPU架构，比如x86,arm64</li>
+  <li>Load commands 加载命令，包含文件的组织架构和在虚拟内存中的布局方式</li>
+  <li>Data，数据，包含load commands中需要的各个段(segment)的数据，每一个Segment都得大小是Page的整数倍。</li>
+</ul>
+
+<p>更多Mach-O可查看《<a href="https://github.com/LeoMobileDeveloper/React-Native-Files/blob/master/Mac%20OS%20X%20ABI%20Mach-O%20File%20Format%20Reference.pdf">Mac OS X ABI Mach-O File Format Reference</a>》</p>
+
+<p>有两种方式可以查看一个APP动态调用的系统可执行文件</p>
+
+<p>1、通过<a href="https://sourceforge.net/projects/machoview/?source=navbar">machoview</a>,选择APP的可执行文件，可以看到</p>
+
+<p><img src="/img/Simple_7/12.png" alt="img" /></p>
+
+<p>2、通过<code class="highlighter-rouge">otool -L</code>命令行查看</p>
+
+<p><img src="/img/Simple_7/13.png" alt="img" /></p>
+
+<h4 id="dyld">dyld</h4>
+
+<p>全程the dynamic loade，Apple 的动态链接器，系统 kernel 做好启动程序的初始准备后，交给 dyld 负责。</p>
+
+<p>2017年，苹果引入了Dyld 3.0，但是只有系统APP采用这个，第三方APP都是采用Dyld 2.0。</p>
+
+<p>Dyld 2.0的加载过程是：</p>
+
+<p><img src="/img/Simple_7/14.png" alt="img" /></p>
+
+<ol>
+  <li>解析 mach-o 文件，找到其依赖的库，并且递归的找到所有依赖的库，形成一张动态库的依赖图。iOS 上的大部分 app 都依赖 300 到 600 个动态链接库，所以这个步骤包含了较大的工作量。</li>
+  <li>匹配 mach-o 文件到自身的地址空间；</li>
+  <li>进行符号查找：比如 app 中调用了 printf 方法，就需要去系统库中查找到 printf 的地址，然后将地址拷贝到 app 中的函数指针中；</li>
+  <li>绑定和变基：由于 app 需要让地址空间配置随机加载，所以所有的指针都需要加上一个基地址；</li>
+  <li>运行初始化程序（Runtime、+load、+initialize），之后运行 main() 函数。</li>
+</ol>
+
+<h3 id="三优化启动时间">三、优化启动时间</h3>
+
+<blockquote>
+  <p>main函数之后</p>
+</blockquote>
+
+<p>这部分是主要的优化部分</p>
+
+<h4 id="appdelegate">Appdelegate</h4>
+
+<p>能延迟初始化的尽量延迟初始化，不能延迟初始化的尽量放到后台初始化。</p>
+
+<ul>
+  <li>三方SDK初始化，比如Crash统计; 像分享之类的，可以等到第一次调用再出初始化。</li>
+  <li>初始化某些基础服务，比如WatchDog，远程参数。</li>
+  <li>启动相关日志，日志往往涉及到DB操作，一定要放到后台去做</li>
+  <li>业务方初始化，这个交由每个业务自己去控制初始化时间。</li>
+</ul>
+
+<h4 id="viewcontroller">ViewController</h4>
+
+<p>延迟初始化那些不必要的<code class="highlighter-rouge">UIViewController</code>。</p>
+
+<h4 id="用time-profiler找到元凶">用Time Profiler找到元凶</h4>
+
+<p>Time Profiler在分析时间占用上非常强大。实用的时候注意三点</p>
+
+<ul>
+  <li>在打包模式下分析（一般是Release）,这样和线上环境一样。</li>
+  <li>记得开启dsym，不然无法查看到具体的函数调用堆栈</li>
+  <li>分析性能差的设备，对于支持iOS 8的，一般分析iphone 4s或者iphone 5。</li>
+</ul>
+
+<blockquote>
+  <p>Main函数之前</p>
+</blockquote>
+
+<p>Main函数之前是iOS系统的工作，所以这部分的优化往往更具有通用性。</p>
+
+<h4 id="dylibs">dylibs</h4>
+
+<p>启动的第一步是加载动态库，加载系统的动态库使很快的，因为可以缓存，而加载内嵌的动态库速度较慢。所以，提高这一步的效率的关键是：<strong>减少动态库的数量</strong>。</p>
+
+<ul>
+  <li>合并动态库，比如公司内部由私有Pod建立了如下动态库：XXTableView, XXHUD, XXLabel，强烈建议合并成一个XXUIKit来提高加载速度。</li>
+</ul>
+
+<h4 id="rebase--bind--objective-c-runtime">Rebase &amp; Bind &amp; Objective C Runtime</h4>
+
+<p>Rebase和Bind都是为了解决指针引用的问题。对于Objective C开发来说，主要的时间消耗在Class/Method的符号加载上，所以常见的优化方案是：</p>
+
+<ul>
+  <li>减少<code class="highlighter-rouge">__DATA</code>段中的指针数量。</li>
+  <li>合并Category和功能类似的类。比如：UIView+Frame,UIView+AutoLayout…合并为一个</li>
+  <li>删除无用的方法和类。</li>
+  <li>多用Swift Structs，因为Swfit Structs是静态分发的。感兴趣的同学可以看看我之前这篇文章：《<a href="http://blog.csdn.net/hello_hwc/article/details/53147910">Swift进阶之内存模型和方法调度</a>》</li>
+</ul>
+
+<h4 id="initializers">Initializers</h4>
+
+<p>通常，我们会在<code class="highlighter-rouge">+load</code>方法中进行method-swizzling，这也是<a href="http://nshipster.com/method-swizzling/">Nshipster</a>推荐的方式。</p>
+
+<ul>
+  <li>用initialize替代load。不少同学喜欢用method-swizzling来实现AOP去做日志统计等内容，强烈建议改为在initialize进行初始化。</li>
+  <li>减少<code class="highlighter-rouge">__atribute__((constructor))</code>的使用，而是在第一次访问的时候才用dispatch_once等方式初始化。</li>
+  <li>不要创建线程</li>
+  <li>使用Swfit重写代码。</li>
+</ul>
+
+<p>引用：</p>
+
+<p>https://blog.csdn.net/hello_hwc/article/details/78317863</p>
+
+<p>WWDC 2017: <a href="https://developer.apple.com/videos/play/wwdc2017/413/">App Startup Time: Past, Present, and Future</a></p>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/ios/2018/03/29/app-1/" data-toggle="tooltip" data-placement="top" title="APP生成与运行(一)">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>
