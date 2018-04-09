@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>OpenGL ES实践 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/ios/2018/04/02/opengles_1/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/temp_post/2018-04-01-mvc/">架构设计模式</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/temp_post/2018-04-01-tableView/">UITableView优化实践</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/bg_01.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>OpenGL ES实践</h1>
+                    
+                    <h2 class="subheading">OpenGL ES在iOS上的应用</h2>
+                    
+                    <span class="meta">Posted by Ted on April 2, 2018</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h3 id="一概念简介">一、概念简介</h3>
+
+<p><strong>GPU</strong>：能够结合几何、颜色、灯光和其他数据而产生一个屏幕图像的硬件组件</p>
+
+<p><strong>渲染</strong>：把程序提供的几何数据转换成屏幕上的图像的过程叫做渲染，渲染的结果保存在帧缓存中</p>
+
+<p><strong>像素</strong>：计算机上显示的图片都是由矩形的颜色点组成，这些颜色点叫做像素，每个像素都是由3个颜色元素组成的，一个红点、一个绿点和一个蓝点、RGB</p>
+
+<h4 id="缓存">缓存</h4>
+
+<p>OpenGL ES部分运行在CPU上，部分运行在GPU上，协调两个内存区域之间的数据交换，而OpenGL ES为两个内存区域间的数据交换定义了缓存(buffers)的概念，缓存是指图形处理器能够控制和管理的连续RAM。</p>
+
+<p><strong>OpenGL ES为缓存提供数据的7个步骤：</strong></p>
+
+<p>1、生成glGenBuffers()——请求OpenGL ES为图形处理器控制的缓存生成一个独一无二的标识符。</p>
+
+<p>2、绑定glBindBuffer()——告诉OpenGL ES为接下来的运算使用一个缓存。</p>
+
+<p>3、缓冲数据glBufferData()或glBufferSubData()——让OpenGL ES为当前绑定的缓存分配病初始化足够的连续内存（通常是从CPU控制的内存复制数据到分配的内存）。</p>
+
+<p>4、启用或者禁止glEnableVertexAttribArray()或glDisVertexAttribArray()——告诉OpenGL ES在接下来的渲染中是否使用缓存中的数据。</p>
+
+<p>5、设置指针glVertexAttribPointer()——告诉OpenGL ES在缓存中的数据的类型和所有需要访问的数据的内存偏移值。</p>
+
+<p>6、绘制glDrawArrays()或glDrawElements()——告诉OpenGL ES使用当前绑定并启用的缓冲中的数据渲染整个场景或者某个场景的一部分。</p>
+
+<p>7、删除glDeleteBuffers()——告诉OpenGL ES删除以前生成的缓存病释放相关的资源。</p>
+
+<h4 id="帧缓存">帧缓存</h4>
+
+<p>GPU需要知道应该在内存中那个位置存储渲染出来的2D图像像素数据，接受渲染结果的缓存区叫做帧缓存。</p>
+
+<p>屏幕显示像素受到保存在前帧缓存中的像素颜色元素控制，所以程序和操作系统不会直接渲染到前帧缓存中，因为那样会让用户看到还没渲染完成的图像。而是，把渲染结果保存到后帧缓存中，当后帧缓存包含一个<strong>完成</strong>的图像，前后帧缓存瞬间切换，这样就呈现了新的图像。在iOS系统中，这些操作由系统之家完成，应用不能插手。Core Animation会把多个层（应用的层，系统的层比如状态栏）混合起来并在后帧缓存中产生最终的颜色，然后切换缓存。</p>
+
+<h3 id="二ios的图像架构">二、iOS的图像架构</h3>
+
+<p><img src="/img/Simple_6/20.png" alt="img" /></p>
+
+<p>而在iOS 8之后，苹果推出了metal框架用来取代OpenGL</p>
+
+<p><img src="/img/Simple_6/21.png" alt="img" /></p>
+
+<p>关于Core Graphics和OpenGL ES之间的关系：</p>
+
+<ul>
+  <li>当图像是要显示到屏幕上的时候，OpenGL ES是Core Graphics的底层，用于连接硬件</li>
+  <li>而如果是离屏渲染，用于生成PDF和图片文件，Core Graphics则是与OpenGL ES处于并列关系</li>
+</ul>
+
+<blockquote>
+  <p>Yes, on iOS Core Graphics (Quartz) appears to be layered on top of OpenGL ES for drawing that targets the screen, although not in an explicit way that we have access to.</p>
+
+  <p>Core Graphics takes vector elements (lines, arcs, etc.) and some raster ones (images) and processes them for display to the screen or for other forms of output (PDF files, printing, etc.). If the target is the screen on iOS, those vector elements will be hosted in a CALayer, either directly or through the backing layer of a UIView.</p>
+
+  <p>These Core Animation layers are effectively wrappers around rectangular textures on the GPU, which is how Core Animation can provide the smooth translation, scaling, and rotation of layers on even the original iPhone hardware. I can’t find a reference for it right now, but at least one WWDC presentation states that OpenGL ES is used by Core Animation to communicate with the GPU to perform this hardware acceleration. Something similar can be observed on the new dual-GPU MacBook Pros, where the more powerful GPU kicks in when interacting with an application using Core Animation.</p>
+
+  <p>Because Core Graphics rasterizes the vector and raster elements into a CALayer when drawing to the screen, and a CALayer effectively wraps around an OpenGL ES texture, I would place OpenGL ES below Core Graphics on iOS, but only for the case where Core Graphics is rendering to the screen. The reason for the side-by-side placement in the hierarchy you saw may be due to three factors: on the Mac, not all views are layer-backed, so they may not be hardware accelerated in the same way; we can’t really interact with the OpenGL ES backing of standard UI elements, so from a developer’s point of view they are distinct concepts; and Core Graphics can be used to render to offscreen contexts, like PDF files or images.</p>
+</blockquote>
+
+<p>引自<a href="https://stackoverflow.com/questions/7558636/ios-is-core-graphics-implemented-on-top-of-opengl">iOS: is Core Graphics implemented on top of OpenGL?</a></p>
+
+<h3 id="三helloworld">三、HelloWorld</h3>
+
+<h4 id="1渲染整个context的背景色">1、渲染整个context的背景色</h4>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">viewDidLoad</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">super</span> <span class="nf">viewDidLoad</span><span class="p">];</span>
+    <span class="n">GLKView</span> <span class="o">*</span><span class="n">glkView</span> <span class="o">=</span> <span class="p">(</span><span class="n">GLKView</span> <span class="o">*</span><span class="p">)</span><span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">;</span>
+    <span class="n">glkView</span><span class="p">.</span><span class="n">context</span> <span class="o">=</span> <span class="p">[[</span><span class="n">EAGLContext</span> <span class="nf">alloc</span><span class="p">]</span><span class="nf">initWithAPI</span><span class="p">:</span><span class="n">kEAGLRenderingAPIOpenGLES2</span><span class="p">];</span>
+    <span class="n">glkView</span><span class="p">.</span><span class="n">drawableColorFormat</span> <span class="o">=</span> <span class="n">GLKViewDrawableColorFormatRGBA8888</span><span class="p">;</span>
+    <span class="n">glkView</span><span class="p">.</span><span class="n">drawableDepthFormat</span> <span class="o">=</span> <span class="n">GLKViewDrawableDepthFormat24</span><span class="p">;</span>
+   <span class="c1">//将此“EAGLContext”实例设置为OpenGL的“当前激活”的“Context”。这样，以后所有“GL”的指令均作用在这个“Context”上。
+</span>    <span class="p">[</span><span class="n">EAGLContext</span> <span class="nf">setCurrentContext</span><span class="p">:</span><span class="n">glkView</span><span class="p">.</span><span class="n">context</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">glkView</span><span class="o">:</span><span class="p">(</span><span class="n">GLKView</span> <span class="o">*</span><span class="p">)</span><span class="n">view</span> <span class="n">drawInRect</span><span class="o">:</span><span class="p">(</span><span class="n">CGRect</span><span class="p">)</span><span class="n">rect</span> <span class="p">{</span>
+    <span class="c1">// 指定刷新整个context颜色缓冲区时所用的颜色，RGBA
+</span>    <span class="n">glClearColor</span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">3</span><span class="n">f</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">6</span><span class="n">f</span><span class="p">,</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">,</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">);</span>
+    
+    <span class="c1">// 刷新缓存区
+</span>    <span class="c1">// GL_COLOR_BUFFER_BIT:    当前可写的颜色缓冲
+</span>    <span class="c1">// GL_DEPTH_BUFFER_BIT:    深度缓冲
+</span>    <span class="c1">// GL_ACCUM_BUFFER_BIT:    累积缓冲
+</span>    <span class="c1">// GL_STENCIL_BUFFER_BIT:  模板缓冲
+</span>    <span class="n">glClear</span><span class="p">(</span><span class="n">GL_COLOR_BUFFER_BIT</span> <span class="o">|</span> <span class="n">GL_DEPTH_BUFFER_BIT</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>如图所示，可以将整个背景渲染成蓝色</p>
+
+<p><img src="/img/Simple_6/23.png" alt="img" /></p>
+
+<blockquote>
+  <p>解释</p>
+</blockquote>
+
+<p><strong>drawableColorFormat</strong></p>
+
+<p>你的OpenGL上下文有一个缓冲区，它用以存储将在屏幕中显示的颜色。你可以使用其属性来设置缓冲区中每个像素的颜色格式。缺省值是GLKViewDrawableColorFormatRGBA8888，即缓冲区的每个像素的最小组成部分(-个像素有四个元素组成 RGBA)使用8个bit(如R使用8个bit)（所以每个像素4个字节 既 4*8 个bit）。这非常好，因为它给了你提供了最广泛的颜色范围，让你的app看起来更好。但是如果你的app允许更小范围的颜色，你可以设置为GLKViewDrawableColorFormatRGB565，从而使你的app消耗更少的资源（内存和处理时间）。</p>
+
+<p><strong>drawableDepthFormat</strong></p>
+
+<p>你的OpenGL上下文还可以（可选地）有另一个缓冲区，称为深度缓冲区。这帮助我们确保更接近观察者的对象显示在远一些的对象的前面（意思就是离观察者近一些的对象会挡住在它后面的对象）。其缺省的工作方式是：OpenGL把接近观察者的对象的所有像素存储到深度缓冲区，当开始绘制一个像素时，它（OpenGL）首先检查深度缓冲区，看是否已经绘制了更接近观察者的什么东西，如果是则忽略它（要绘制的像素，就是说，在绘制一个像素之前，看看前面有没有挡着它的东西，如果有那就不用绘制了）。否则，把它增加到深度缓冲区和颜色缓冲区。你可以设置这个属性，以选择深度缓冲区的格式。缺省值是GLKViewDrawableDepthFormatNone，意味着完全没有深度缓冲区。但是如果你要使用这个属性（一般用于3D游戏），你应该选择GLKViewDrawableDepthFormat16或GLKViewDrawableDepthFormat24。这里的差别是使用GLKViewDrawableDepthFormat16将消耗更少的资源，但是当对象非常接近彼此时，你可能存在渲染问题。</p>
+
+<h4 id="2渲染某个色块">2、渲染某个色块</h4>
+
+<p>OpenGL ES的坐标系与Core Graphics的坐标系不一样，起点是在屏幕的中点，到两边是1</p>
+
+<p><img src="/img/Simple_6/22.png" alt="img" /></p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code>    <span class="c1">// 声明顶点数据
+</span>    <span class="n">GLfloat</span> <span class="n">vertexData</span><span class="p">[]</span> <span class="o">=</span>
+    <span class="p">{</span>
+        <span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">,</span>
+        <span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">,</span>
+        <span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">,</span>
+    <span class="p">};</span>
+    <span class="c1">//顶点数据缓存
+</span>    <span class="c1">//这几行代码表示的含义是：声明一个缓冲区的标识（GLuint类型）让OpenGL自动分配一个缓冲区并且返回这个标识的值绑定这个缓冲区到当前“Context”最后，将我们前面预先定义的顶点数据“vertexData”复制进这个缓冲区中。参数“GL_STATIC_DRAW”，它表示此缓冲区内容只能被修改一次，但可以无限次读取。
+</span>    <span class="n">GLuint</span> <span class="n">buffer</span><span class="p">;</span>
+    <span class="n">glGenBuffers</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">buffer</span><span class="p">);</span>
+    <span class="n">glBindBuffer</span><span class="p">(</span><span class="n">GL_ARRAY_BUFFER</span><span class="p">,</span> <span class="n">buffer</span><span class="p">);</span>
+    <span class="n">glBufferData</span><span class="p">(</span><span class="n">GL_ARRAY_BUFFER</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">vertexData</span><span class="p">),</span> <span class="n">vertexData</span><span class="p">,</span> <span class="n">GL_STATIC_DRAW</span><span class="p">);</span>
+    
+    <span class="c1">// 激活顶点属性（默认它的关闭的）
+</span>    <span class="n">glEnableVertexAttribArray</span><span class="p">(</span><span class="n">GLKVertexAttribPosition</span><span class="p">);</span>
+    <span class="c1">// 填充顶点数据，顶点属性索引（这里是位置）、3个分量的矢量、类型是浮点（GL_FLOAT）、填充时不需要单位化（GL_FALSE）、在数据数组中每行的跨度是12个字节（4*3=12。从预定义的数组中可看出，每行有3个GL_FLOAT浮点值，而GL_FLOAT占4个字节，因此每一行的跨度是4*3），最后一个参数是一个偏移量的指针，用来确定“第一个数据”将从内存数据块的什么地方开始。
+</span>    <span class="n">glVertexAttribPointer</span><span class="p">(</span><span class="n">GLKVertexAttribPosition</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">GL_FLOAT</span><span class="p">,</span> <span class="n">GL_FALSE</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">GLfloat</span><span class="p">)</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="p">(</span><span class="n">GLfloat</span> <span class="o">*</span><span class="p">)</span><span class="nb">NULL</span> <span class="o">+</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="c1">// 着色器
+</span>    <span class="n">self</span><span class="p">.</span><span class="n">mEffect</span> <span class="o">=</span> <span class="p">[[</span><span class="n">GLKBaseEffect</span> <span class="nf">alloc</span><span class="p">]</span><span class="nf">init</span><span class="p">];</span>
+    <span class="c1">// 着色器的颜色
+</span>    <span class="n">self</span><span class="p">.</span><span class="n">mEffect</span><span class="p">.</span><span class="n">constantColor</span> <span class="o">=</span> <span class="n">GLKVector4Make</span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="n">f</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="p">,</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">,</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">);</span>
+    
+ <span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">glkView</span><span class="p">:(</span><span class="n">GLKView</span> <span class="o">*</span><span class="p">)</span><span class="nv">view</span> <span class="nf">drawInRect</span><span class="p">:(</span><span class="n">CGRect</span><span class="p">)</span><span class="nv">rect</span> <span class="p">{</span>
+    <span class="c1">// 指定刷新整个context颜色缓冲区时所用的颜色，RGBA
+</span>    <span class="n">glClearColor</span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">3</span><span class="n">f</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">6</span><span class="n">f</span><span class="p">,</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">,</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">);</span>
+    
+    <span class="c1">// 刷新缓存区
+</span>    <span class="c1">// GL_COLOR_BUFFER_BIT:    当前可写的颜色缓冲
+</span>    <span class="c1">// GL_DEPTH_BUFFER_BIT:    深度缓冲
+</span>    <span class="c1">// GL_ACCUM_BUFFER_BIT:    累积缓冲
+</span>    <span class="c1">// GL_STENCIL_BUFFER_BIT:  模板缓冲
+</span>    <span class="n">glClear</span><span class="p">(</span><span class="n">GL_COLOR_BUFFER_BIT</span> <span class="o">|</span> <span class="n">GL_DEPTH_BUFFER_BIT</span><span class="p">);</span>
+    
+   <span class="c1">//启动着色器
+</span>    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">mEffect</span> <span class="nf">prepareToDraw</span><span class="p">];</span>
+   <span class="c1">// 画出三角形
+</span>    <span class="n">glDrawArrays</span><span class="p">(</span><span class="n">GL_TRIANGLES</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p><img src="/img/Simple_6/24.png" alt="img" /></p>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/ios/2018/03/31/app-2/" data-toggle="tooltip" data-placement="top" title="APP生成与运行(二)">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

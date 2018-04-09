@@ -1,4 +1,158 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-04-02T15:45:26+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">APP生成与运行(二)</title><link href="http://www.helloted.com/ios/2018/03/31/app-2/" rel="alternate" type="text/html" title="APP生成与运行(二)" /><published>2018-03-31T20:00:00+08:00</published><updated>2018-03-31T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2018/03/31/app-2</id><content type="html" xml:base="http://www.helloted.com/ios/2018/03/31/app-2/">&lt;h3 id=&quot;一启动过程&quot;&gt;一、启动过程&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-04-09T11:06:52+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">OpenGL ES实践</title><link href="http://www.helloted.com/ios/2018/04/02/opengles_1/" rel="alternate" type="text/html" title="OpenGL ES实践" /><published>2018-04-02T20:00:00+08:00</published><updated>2018-04-02T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2018/04/02/opengles_1</id><content type="html" xml:base="http://www.helloted.com/ios/2018/04/02/opengles_1/">&lt;h3 id=&quot;一概念简介&quot;&gt;一、概念简介&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;GPU&lt;/strong&gt;：能够结合几何、颜色、灯光和其他数据而产生一个屏幕图像的硬件组件&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;渲染&lt;/strong&gt;：把程序提供的几何数据转换成屏幕上的图像的过程叫做渲染，渲染的结果保存在帧缓存中&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;像素&lt;/strong&gt;：计算机上显示的图片都是由矩形的颜色点组成，这些颜色点叫做像素，每个像素都是由3个颜色元素组成的，一个红点、一个绿点和一个蓝点、RGB&lt;/p&gt;
+
+&lt;h4 id=&quot;缓存&quot;&gt;缓存&lt;/h4&gt;
+
+&lt;p&gt;OpenGL ES部分运行在CPU上，部分运行在GPU上，协调两个内存区域之间的数据交换，而OpenGL ES为两个内存区域间的数据交换定义了缓存(buffers)的概念，缓存是指图形处理器能够控制和管理的连续RAM。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;OpenGL ES为缓存提供数据的7个步骤：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;1、生成glGenBuffers()——请求OpenGL ES为图形处理器控制的缓存生成一个独一无二的标识符。&lt;/p&gt;
+
+&lt;p&gt;2、绑定glBindBuffer()——告诉OpenGL ES为接下来的运算使用一个缓存。&lt;/p&gt;
+
+&lt;p&gt;3、缓冲数据glBufferData()或glBufferSubData()——让OpenGL ES为当前绑定的缓存分配病初始化足够的连续内存（通常是从CPU控制的内存复制数据到分配的内存）。&lt;/p&gt;
+
+&lt;p&gt;4、启用或者禁止glEnableVertexAttribArray()或glDisVertexAttribArray()——告诉OpenGL ES在接下来的渲染中是否使用缓存中的数据。&lt;/p&gt;
+
+&lt;p&gt;5、设置指针glVertexAttribPointer()——告诉OpenGL ES在缓存中的数据的类型和所有需要访问的数据的内存偏移值。&lt;/p&gt;
+
+&lt;p&gt;6、绘制glDrawArrays()或glDrawElements()——告诉OpenGL ES使用当前绑定并启用的缓冲中的数据渲染整个场景或者某个场景的一部分。&lt;/p&gt;
+
+&lt;p&gt;7、删除glDeleteBuffers()——告诉OpenGL ES删除以前生成的缓存病释放相关的资源。&lt;/p&gt;
+
+&lt;h4 id=&quot;帧缓存&quot;&gt;帧缓存&lt;/h4&gt;
+
+&lt;p&gt;GPU需要知道应该在内存中那个位置存储渲染出来的2D图像像素数据，接受渲染结果的缓存区叫做帧缓存。&lt;/p&gt;
+
+&lt;p&gt;屏幕显示像素受到保存在前帧缓存中的像素颜色元素控制，所以程序和操作系统不会直接渲染到前帧缓存中，因为那样会让用户看到还没渲染完成的图像。而是，把渲染结果保存到后帧缓存中，当后帧缓存包含一个&lt;strong&gt;完成&lt;/strong&gt;的图像，前后帧缓存瞬间切换，这样就呈现了新的图像。在iOS系统中，这些操作由系统之家完成，应用不能插手。Core Animation会把多个层（应用的层，系统的层比如状态栏）混合起来并在后帧缓存中产生最终的颜色，然后切换缓存。&lt;/p&gt;
+
+&lt;h3 id=&quot;二ios的图像架构&quot;&gt;二、iOS的图像架构&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_6/20.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;而在iOS 8之后，苹果推出了metal框架用来取代OpenGL&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_6/21.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;关于Core Graphics和OpenGL ES之间的关系：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;当图像是要显示到屏幕上的时候，OpenGL ES是Core Graphics的底层，用于连接硬件&lt;/li&gt;
+  &lt;li&gt;而如果是离屏渲染，用于生成PDF和图片文件，Core Graphics则是与OpenGL ES处于并列关系&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Yes, on iOS Core Graphics (Quartz) appears to be layered on top of OpenGL ES for drawing that targets the screen, although not in an explicit way that we have access to.&lt;/p&gt;
+
+  &lt;p&gt;Core Graphics takes vector elements (lines, arcs, etc.) and some raster ones (images) and processes them for display to the screen or for other forms of output (PDF files, printing, etc.). If the target is the screen on iOS, those vector elements will be hosted in a CALayer, either directly or through the backing layer of a UIView.&lt;/p&gt;
+
+  &lt;p&gt;These Core Animation layers are effectively wrappers around rectangular textures on the GPU, which is how Core Animation can provide the smooth translation, scaling, and rotation of layers on even the original iPhone hardware. I can’t find a reference for it right now, but at least one WWDC presentation states that OpenGL ES is used by Core Animation to communicate with the GPU to perform this hardware acceleration. Something similar can be observed on the new dual-GPU MacBook Pros, where the more powerful GPU kicks in when interacting with an application using Core Animation.&lt;/p&gt;
+
+  &lt;p&gt;Because Core Graphics rasterizes the vector and raster elements into a CALayer when drawing to the screen, and a CALayer effectively wraps around an OpenGL ES texture, I would place OpenGL ES below Core Graphics on iOS, but only for the case where Core Graphics is rendering to the screen. The reason for the side-by-side placement in the hierarchy you saw may be due to three factors: on the Mac, not all views are layer-backed, so they may not be hardware accelerated in the same way; we can’t really interact with the OpenGL ES backing of standard UI elements, so from a developer’s point of view they are distinct concepts; and Core Graphics can be used to render to offscreen contexts, like PDF files or images.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;引自&lt;a href=&quot;https://stackoverflow.com/questions/7558636/ios-is-core-graphics-implemented-on-top-of-opengl&quot;&gt;iOS: is Core Graphics implemented on top of OpenGL?&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;三helloworld&quot;&gt;三、HelloWorld&lt;/h3&gt;
+
+&lt;h4 id=&quot;1渲染整个context的背景色&quot;&gt;1、渲染整个context的背景色&lt;/h4&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;viewDidLoad&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;super&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;viewDidLoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;GLKView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;glkView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GLKView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;glkView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;EAGLContext&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;initWithAPI&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;kEAGLRenderingAPIOpenGLES2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;glkView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;drawableColorFormat&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GLKViewDrawableColorFormatRGBA8888&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;glkView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;drawableDepthFormat&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GLKViewDrawableDepthFormat24&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+   &lt;span class=&quot;c1&quot;&gt;//将此“EAGLContext”实例设置为OpenGL的“当前激活”的“Context”。这样，以后所有“GL”的指令均作用在这个“Context”上。
+&lt;/span&gt;    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;EAGLContext&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;setCurrentContext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;glkView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;glkView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GLKView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;drawInRect&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CGRect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rect&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// 指定刷新整个context颜色缓冲区时所用的颜色，RGBA
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;glClearColor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    
+    &lt;span class=&quot;c1&quot;&gt;// 刷新缓存区
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;// GL_COLOR_BUFFER_BIT:    当前可写的颜色缓冲
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;// GL_DEPTH_BUFFER_BIT:    深度缓冲
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;// GL_ACCUM_BUFFER_BIT:    累积缓冲
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;// GL_STENCIL_BUFFER_BIT:  模板缓冲
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;glClear&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GL_COLOR_BUFFER_BIT&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GL_DEPTH_BUFFER_BIT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;如图所示，可以将整个背景渲染成蓝色&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_6/23.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;解释&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;strong&gt;drawableColorFormat&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;你的OpenGL上下文有一个缓冲区，它用以存储将在屏幕中显示的颜色。你可以使用其属性来设置缓冲区中每个像素的颜色格式。缺省值是GLKViewDrawableColorFormatRGBA8888，即缓冲区的每个像素的最小组成部分(-个像素有四个元素组成 RGBA)使用8个bit(如R使用8个bit)（所以每个像素4个字节 既 4*8 个bit）。这非常好，因为它给了你提供了最广泛的颜色范围，让你的app看起来更好。但是如果你的app允许更小范围的颜色，你可以设置为GLKViewDrawableColorFormatRGB565，从而使你的app消耗更少的资源（内存和处理时间）。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;drawableDepthFormat&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;你的OpenGL上下文还可以（可选地）有另一个缓冲区，称为深度缓冲区。这帮助我们确保更接近观察者的对象显示在远一些的对象的前面（意思就是离观察者近一些的对象会挡住在它后面的对象）。其缺省的工作方式是：OpenGL把接近观察者的对象的所有像素存储到深度缓冲区，当开始绘制一个像素时，它（OpenGL）首先检查深度缓冲区，看是否已经绘制了更接近观察者的什么东西，如果是则忽略它（要绘制的像素，就是说，在绘制一个像素之前，看看前面有没有挡着它的东西，如果有那就不用绘制了）。否则，把它增加到深度缓冲区和颜色缓冲区。你可以设置这个属性，以选择深度缓冲区的格式。缺省值是GLKViewDrawableDepthFormatNone，意味着完全没有深度缓冲区。但是如果你要使用这个属性（一般用于3D游戏），你应该选择GLKViewDrawableDepthFormat16或GLKViewDrawableDepthFormat24。这里的差别是使用GLKViewDrawableDepthFormat16将消耗更少的资源，但是当对象非常接近彼此时，你可能存在渲染问题。&lt;/p&gt;
+
+&lt;h4 id=&quot;2渲染某个色块&quot;&gt;2、渲染某个色块&lt;/h4&gt;
+
+&lt;p&gt;OpenGL ES的坐标系与Core Graphics的坐标系不一样，起点是在屏幕的中点，到两边是1&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_6/22.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;c1&quot;&gt;// 声明顶点数据
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;GLfloat&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vertexData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;//顶点数据缓存
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;//这几行代码表示的含义是：声明一个缓冲区的标识（GLuint类型）让OpenGL自动分配一个缓冲区并且返回这个标识的值绑定这个缓冲区到当前“Context”最后，将我们前面预先定义的顶点数据“vertexData”复制进这个缓冲区中。参数“GL_STATIC_DRAW”，它表示此缓冲区内容只能被修改一次，但可以无限次读取。
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;GLuint&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;glGenBuffers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;glBindBuffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GL_ARRAY_BUFFER&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;glBufferData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GL_ARRAY_BUFFER&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vertexData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vertexData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GL_STATIC_DRAW&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    
+    &lt;span class=&quot;c1&quot;&gt;// 激活顶点属性（默认它的关闭的）
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;glEnableVertexAttribArray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GLKVertexAttribPosition&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// 填充顶点数据，顶点属性索引（这里是位置）、3个分量的矢量、类型是浮点（GL_FLOAT）、填充时不需要单位化（GL_FALSE）、在数据数组中每行的跨度是12个字节（4*3=12。从预定义的数组中可看出，每行有3个GL_FLOAT浮点值，而GL_FLOAT占4个字节，因此每一行的跨度是4*3），最后一个参数是一个偏移量的指针，用来确定“第一个数据”将从内存数据块的什么地方开始。
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;glVertexAttribPointer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GLKVertexAttribPosition&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GL_FLOAT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GL_FALSE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GLfloat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GLfloat&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;// 着色器
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mEffect&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GLKBaseEffect&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// 着色器的颜色
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mEffect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;constantColor&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GLKVector4Make&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    
+ &lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;glkView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GLKView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;view&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;drawInRect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CGRect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;rect&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// 指定刷新整个context颜色缓冲区时所用的颜色，RGBA
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;glClearColor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    
+    &lt;span class=&quot;c1&quot;&gt;// 刷新缓存区
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;// GL_COLOR_BUFFER_BIT:    当前可写的颜色缓冲
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;// GL_DEPTH_BUFFER_BIT:    深度缓冲
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;// GL_ACCUM_BUFFER_BIT:    累积缓冲
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;// GL_STENCIL_BUFFER_BIT:  模板缓冲
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;glClear&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GL_COLOR_BUFFER_BIT&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GL_DEPTH_BUFFER_BIT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    
+   &lt;span class=&quot;c1&quot;&gt;//启动着色器
+&lt;/span&gt;    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mEffect&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;prepareToDraw&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+   &lt;span class=&quot;c1&quot;&gt;// 画出三角形
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;glDrawArrays&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GL_TRIANGLES&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_6/24.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">一、概念简介</summary></entry><entry><title type="html">APP生成与运行(二)</title><link href="http://www.helloted.com/ios/2018/03/31/app-2/" rel="alternate" type="text/html" title="APP生成与运行(二)" /><published>2018-03-31T20:00:00+08:00</published><updated>2018-03-31T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2018/03/31/app-2</id><content type="html" xml:base="http://www.helloted.com/ios/2018/03/31/app-2/">&lt;h3 id=&quot;一启动过程&quot;&gt;一、启动过程&lt;/h3&gt;
 
 &lt;p&gt;iOS开发中，main函数是我们熟知的程序启动入口，但实际上并非真正意义上的入口，因为在我们运行程序，再到main方法被调用之间，程序已经做了许许多多的事情，比如我们熟知的runtime的初始化就发生在main函数调用前，还有程序动态库的加载链接也发生在这阶段。&lt;/p&gt;
 
@@ -107,6 +261,8 @@
   &lt;li&gt;分析性能差的设备，对于支持iOS 8的，一般分析iphone 4s或者iphone 5。&lt;/li&gt;
 &lt;/ul&gt;
 
+&lt;p&gt;&lt;img src=&quot;/img/Simple_7/15.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
 &lt;blockquote&gt;
   &lt;p&gt;Main函数之前&lt;/p&gt;
 &lt;/blockquote&gt;
@@ -142,6 +298,52 @@
   &lt;li&gt;不要创建线程&lt;/li&gt;
   &lt;li&gt;使用Swfit重写代码。&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;h3 id=&quot;四ios-静态库动态库与-framework&quot;&gt;四、iOS 静态库，动态库与 Framework&lt;/h3&gt;
+
+&lt;h4 id=&quot;静态库与动态库的区别&quot;&gt;静态库与动态库的区别&lt;/h4&gt;
+
+&lt;p&gt;首先来看什么是库，库(Library)说白了就是一段编译好的二进制代码，加上头文件就可以供别人使用。&lt;/p&gt;
+
+&lt;p&gt;什么时候我们会用到库呢？一种情况是某些代码需要给别人使用，但是我们不希望别人看到源码，就需要以库的形式进行封装，只暴露出头文件。另外一种情况是，对于某些不会进行大的改动的代码，我们想减少编译的时间，就可以把它打包成库，因为库是已经编译好的二进制了，编译的时候只需要 Link 一下，不会浪费编译时间。&lt;/p&gt;
+
+&lt;p&gt;上面提到库在使用的时候需要 Link，Link 的方式有两种，静态和动态，于是便产生了静态库和动态库。&lt;/p&gt;
+
+&lt;h4 id=&quot;静态库&quot;&gt;静态库&lt;/h4&gt;
+
+&lt;p&gt;静态库即静态链接库（Windows 下的 .lib，Linux 和 Mac 下的 .a）。之所以叫做静态，是因为静态库在编译的时候会被直接拷贝一份，复制到目标程序里，这段代码在目标程序里就不会再改变了。&lt;/p&gt;
+
+&lt;p&gt;静态库的好处很明显，编译完成之后，库文件实际上就没有作用了。目标程序没有外部依赖，直接就可以运行。当然其缺点也很明显，就是会使用目标程序的体积增大。&lt;/p&gt;
+
+&lt;h4 id=&quot;动态库&quot;&gt;动态库&lt;/h4&gt;
+
+&lt;p&gt;动态库即动态链接库（Windows 下的 .dll，Linux 下的 .so，Mac 下的 .dylib/.tbd）。与静态库相反，动态库在编译时并不会被拷贝到目标程序中，目标程序中只会存储指向动态库的引用。等到程序运行时，动态库才会被真正加载进来。&lt;/p&gt;
+
+&lt;p&gt;动态库的优点是，不需要拷贝到目标程序中，不会影响目标程序的体积，而且同一份库可以被多个程序使用（因为这个原因，动态库也被称作&lt;strong&gt;共享库&lt;/strong&gt;）。同时，编译时才载入的特性，也可以让我们随时对库进行替换，而不需要重新编译代码。动态库带来的问题主要是，动态载入会带来一部分性能损失，使用动态库也会使得程序依赖于外部环境。如果环境缺少动态库或者库的版本不正确，就会导致程序无法运行（Linux 下喜闻乐见的 lib not found 错误）。&lt;/p&gt;
+
+&lt;h4 id=&quot;ios-framework&quot;&gt;iOS Framework&lt;/h4&gt;
+
+&lt;p&gt;除了上面提到的 .a 和 .dylib/.tbd 之外，Mac OS/iOS 平台还可以使用 Framework。Framework 实际上是一种打包方式，将库的二进制文件，头文件和有关的资源文件打包到一起，方便管理和分发。&lt;/p&gt;
+
+&lt;p&gt;在 iOS 8 之前，iOS 平台不支持使用动态 Framework，开发者可以使用的 Framework 只有苹果自家的 UIKit.Framework，Foundation.Framework 等。这种限制可能是出于安全的考虑（见&lt;a href=&quot;https://stackoverflow.com/questions/4733847/can-you-build-dynamic-libraries-for-ios-and-load-them-at-runtime&quot;&gt;这里的讨论&lt;/a&gt;)。换一个角度讲，因为 iOS 应用都是运行在沙盒当中，不同的程序之间不能共享代码，同时动态下载代码又是被苹果明令禁止的，没办法发挥出动态库的优势，实际上动态库也就没有存在的必要了。&lt;/p&gt;
+
+&lt;p&gt;由于上面提到的限制，开发者想要在 iOS 平台共享代码，唯一的选择就是打包成静态库 .a 文件，同时附上头文件（例如&lt;a href=&quot;https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&amp;amp;t=resource/res_list&amp;amp;verify=1&amp;amp;id=open1419319164&amp;amp;token=&amp;amp;lang=zh_CN&quot;&gt;微信的SDK&lt;/a&gt;）。但是这样的打包方式不够方便，使用时也比较麻烦，大家还是希望共享代码都能能像 Framework 一样，直接扔到工程里就可以用。于是人们想出了各种奇技淫巧去让 Xcode Build 出 iOS 可以使用的 Framework，具体做法参考&lt;a href=&quot;https://github.com/kstenerud/iOS-Universal-Framework&quot;&gt;这里&lt;/a&gt;和&lt;a href=&quot;https://github.com/jverkoey/iOS-Framework&quot;&gt;这里&lt;/a&gt;，这种方法产生的 Framework 还有 “伪”(Fake) Framework 和 “真”(Real) Framework 的区别。&lt;/p&gt;
+
+&lt;p&gt;iOS 8/Xcode 6 推出之后，iOS 平台添加了动态库的支持，同时 Xcode 6 也原生自带了 Framework 支持（动态和静态都可以），上面提到的的奇技淫巧也就没有必要了（新的做法参考&lt;a href=&quot;http://www.cocoachina.com/ios/20141126/10322.html&quot;&gt;这里&lt;/a&gt;）。为什么 iOS 8 要添加动态库的支持？唯一的理由大概就是 Extension 的出现。Extension 和 App 是两个分开的可执行文件，同时需要共享代码，这种情况下动态库的支持就是必不可少的了。但是这种动态 Framework 和系统的 UIKit.Framework 还是有很大区别。系统的 Framework 不需要拷贝到目标程序中，我们自己做出来的 Framework 哪怕是动态的，最后也还是要拷贝到 App 中（App 和 Extension 的 Bundle 是共享的），因此苹果又把这种 Framework 称为 &lt;a href=&quot;https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ExtensionScenarios.html&quot;&gt;Embedded Framework&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h4 id=&quot;swift-支持&quot;&gt;Swift 支持&lt;/h4&gt;
+
+&lt;p&gt;跟着 iOS8 / Xcode 6 同时发布的还有 Swift。如果要在项目中使用外部的代码，可选的方式只有两种，一种是把代码拷贝到工程中，另一种是用动态 Framework。使用静态库是不支持的。&lt;/p&gt;
+
+&lt;p&gt;造成这个问题的原因主要是 Swift 的运行库没有被包含在 iOS 系统中，而是会打包进 App 中（这也是造成 Swift App 体积大的原因），静态库会导致最终的目标程序中包含重复的运行库（这是&lt;a href=&quot;https://github.com/ksm/SwiftInFlux#static-libraries&quot;&gt;苹果自家的解释&lt;/a&gt;）。同时拷贝 Runtime 这种做法也会导致在纯 ObjC 的项目中使用 Swift 库出现问题。苹果声称等到 Swift 的 Runtime 稳定之后会被加入到系统当中，到时候这个限制就会被去除了（参考&lt;a href=&quot;https://stackoverflow.com/questions/25020783/how-to-distribute-swift-library-without-exposing-the-source-code&quot;&gt;这个问题&lt;/a&gt; 的问题描述，也是来自苹果自家文档）。&lt;/p&gt;
+
+&lt;h4 id=&quot;cocoapods-的做法&quot;&gt;CocoaPods 的做法&lt;/h4&gt;
+
+&lt;p&gt;在纯 ObjC 的项目中，CocoaPods 使用编译静态库 .a 方法将代码集成到项目中。在 Pods 项目中的每个 target 都对应这一个 Pod 的静态库。不过在编译过程中并不会真的产出 .a 文件。如果需要 .a 文件的话，可以参考&lt;a href=&quot;http://www.cnblogs.com/brycezhang/p/4117180.html&quot;&gt;这里&lt;/a&gt;，或者使用 &lt;a href=&quot;https://github.com/CocoaPods/cocoapods-packager&quot;&gt;CocoasPods-Packager&lt;/a&gt; 这个插件。&lt;/p&gt;
+
+&lt;p&gt;当不想发布代码的时候，也可以使用 Framework 发布 Pod，CocoaPods 提供了 &lt;code class=&quot;highlighter-rouge&quot;&gt;vendored_framework&lt;/code&gt; 选项来使用第三方 Framework，具体的做法可以参考&lt;a href=&quot;http://www.telerik.com/blogs/how-to-use-a-third-party-framework-in-a-private-cocoapod&quot;&gt;这里&lt;/a&gt;和&lt;a href=&quot;https://stackoverflow.com/questions/18219286/podspec-link-binary-library&quot;&gt;这里&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;对于 Swift 项目，CocoaPods 提供了动态 Framework 的支持。通过 &lt;code class=&quot;highlighter-rouge&quot;&gt;use_frameworks!&lt;/code&gt; 选项控制。对于 Swift 写的库来说，想通过 CocoaPods 引入工程，必须加入 &lt;code class=&quot;highlighter-rouge&quot;&gt;use_frameworks!&lt;/code&gt; 选项。具体原因参见上一节对于 Swift 部分的介绍。&lt;/p&gt;
 
 &lt;p&gt;引用：&lt;/p&gt;
 
@@ -1875,360 +2077,4 @@ make
          &lt;span class=&quot;p&quot;&gt;}];&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}];&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">苹果官方文档View Programming Guide for iOS</summary></entry><entry><title type="html">View编程指南(三)</title><link href="http://www.helloted.com/ios/2018/01/15/View_3/" rel="alternate" type="text/html" title="View编程指南(三)" /><published>2018-01-15T20:00:00+08:00</published><updated>2018-01-15T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2018/01/15/View_3</id><content type="html" xml:base="http://www.helloted.com/ios/2018/01/15/View_3/">&lt;p&gt;苹果官方文档&lt;a href=&quot;https://developer.apple.com/library/content/documentation/WindowsViews/Conceptual/ViewPG_iPhoneOS/Introduction/Introduction.html#//apple_ref/doc/uid/TP40009503-CH1-SW2&quot;&gt;View Programming Guide for iOS&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;四views&quot;&gt;四、Views&lt;/h3&gt;
-
-&lt;p&gt;由于View对象是应用程序与用户交互的主要方式，因此它们有许多责任。 这里仅仅是少数：&lt;/p&gt;
-
-&lt;p&gt;布局和subview管理&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;view定义了与其父view相关的默认调整大小行为。&lt;/li&gt;
-  &lt;li&gt;一个view可以管理subview列表。&lt;/li&gt;
-  &lt;li&gt;view可以根据需要重写subview的大小和位置。&lt;/li&gt;
-  &lt;li&gt;view可以将其坐标系中的点转换为其他view或window的坐标系。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;绘画和动画&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;view在其矩形区域绘制内容。&lt;/li&gt;
-  &lt;li&gt;一些view属性可以动画变成新的值。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;事件处理&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;view可以接收触摸事件。&lt;/li&gt;
-  &lt;li&gt;view参与响应者链。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;创建view&quot;&gt;创建View&lt;/h4&gt;
-
-&lt;p&gt;创建View最简单的方法是使用Interface Builder以图形方式进行组装。从Interface Builder中，您可以将View添加到界面，将这些view排列到层次结构中，配置每个view的设置，并将与view相关的行为连接到您的代码。由于Interface Builder使用实时view对象（即view类的实际实例），因此您在设计时看到的是运行时获得的内容。然后将这些活动对象保存在一个nib文件中，这是一个资源文件，用于保留对象的状态和配置。&lt;/p&gt;
-
-&lt;p&gt;您通常会创建nib文件，以便为应用程序的一个view controller存储整个view层次结构。 nib文件的顶层通常包含一个表示view controllerview的view对象。（view controller本身通常由文件的所有者对象来表示。）顶层view的大小应该适合目标设备，并且包含所有要呈现的其他view。使用nib文件仅存储view controllerview层次结构的一部分是很少见的。&lt;/p&gt;
-
-&lt;p&gt;在view controller中使用nib文件时，只需使用nib文件信息初始化view controller即可。view controller在适当的时候处理view的加载和卸载。但是，如果您的nib文件未与view controller关联，则可以使用NSBundle或UINib对象手动加载nib文件内容，该对象使用nib文件中的数据来重构view对象。&lt;/p&gt;
-
-&lt;p&gt;或者用代码创建&lt;/p&gt;
-
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;CGRect&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;viewRect&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CGRectMake&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;UIView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;myView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UIView&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initWithFrame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;viewRect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h4 id=&quot;设置view的属性&quot;&gt;设置View的属性&lt;/h4&gt;
-
-&lt;p&gt;UIView类有几个声明的属性来控制View的外观和行为。 这些属性用于操纵View的大小和位置，View的透明度，背景颜色和渲染行为。 所有这些属性都具有适当的默认值，您可以根据需要稍后进行更改。您还可以使用“Inspector”窗口在Interface Builder中配置其中的许多属性。&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;属性&lt;/th&gt;
-      &lt;th&gt;用处&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;alpha&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;hidden&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;opaque&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;这些属性影响view的不透明度。 alpha和hidden属性直接改变view的不透明度。opaque属性告诉系统如何合成view。 如果view的内容完全不透明，则将此属性设置为YES，因此不会显示任何底层view的内容。 将此属性设置为YES可消除不必要的合成操作，从而提高性能。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;bounds&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;frame&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;center&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;transform&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;这些属性会影响view的大小和位置。 center和frame属性表示view相对于superview的位置。 该frame还包括view的大小。 bounds属性定义了view在其自己的坐标系中的可见内容区域。transform属性用于以复杂的方式动画或移动整个view。 例如，您将使用变换来旋转或缩放view。 如果当前变换不是身份变换，则frame属性是不确定的，应该忽略。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;autoresizingMask&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;autoresizesSubviews&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;这些属性会影响view及其子view的自动调整大小行为。 autoresizingMask属性控制view如何响应其父view bounds中的更改。 autoresizesSubviews属性控制是否调整当前view的subview的大小。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;contentMode&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;contentStretch&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;contentScaleFactor&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;这些属性影响view内部内容的呈现行为。 contentMode和contentStretch属性确定在view的宽度或高度更改时如何处理内容。 contentScaleFactor属性仅在需要为高分辨率屏幕自定义view的绘制行为时使用。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;gestureRecognizers&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;userInteractionEnabled&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;multipleTouchEnabled&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;exclusiveTouch&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;这些属性会影响view处理触摸事件的方式。 gestureRecognizers属性包含附加到view的手势识别器。 其他属性控制view支持的触摸事件。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;backgroundColor&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;subviews&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;drawRect:&lt;/code&gt;method, &lt;code class=&quot;highlighter-rouge&quot;&gt;layer&lt;/code&gt;, (&lt;code class=&quot;highlighter-rouge&quot;&gt;layerClass&lt;/code&gt; method)&lt;/td&gt;
-      &lt;td&gt;这些属性和方法可以帮助您管理view的实际内容。 对于简单的view，您可以设置背景颜色并添加一个或多个subviews。 subviews属性本身包含subview的只读列表，但有几种添加和重新排列subview的方法。 对于具有自定义绘图行为的view，您必须重写drawRect：方法。&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;UIView类包含一个tag属性，您可以使用它来为各个view对象添加一个整数值。 您可以使用tag唯一地标识view层次结构中的view，并在运行时执行对这些view的搜索。（基于tag的搜索比自己迭代view层次更快。）tag属性的默认值为0。&lt;/p&gt;
-
-&lt;p&gt;要搜索带tag的view，请使用UIView的&lt;code class=&quot;highlighter-rouge&quot;&gt;viewWithTag：&lt;/code&gt;方法。 此方法执行接收器及其subview的深度优先搜索。 它不搜索superview或view层次结构的其他部分。 因此，从层次结构的root view调用此方法会搜索层次结构中的所有view，但是从特定的subview调用它只会搜索view的子集。&lt;/p&gt;
-
-&lt;h4 id=&quot;创建和管理一个view-hierarchy&quot;&gt;创建和管理一个View Hierarchy&lt;/h4&gt;
-
-&lt;p&gt;管理view层次结构是开发应用程序用户界面的关键部分。 您的view的组织影响您的应用程序的外观，以及您的应用程序如何响应更改和事件。 例如，view层次结构中的父子关系确定哪些对象可能处理特定的触摸事件。 同样，父子关系定义每个view如何响应界面方向的变化。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/16.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;添加和删除子view&quot;&gt;添加和删除子view&lt;/h4&gt;
-
-&lt;p&gt;Interface Builder是构建view层次结构最方便的方式，因为您可以用图形方式组装view，查看view之间的关系，并确切了解在运行时将如何显示这些view。使用Interface Builder时，将结果view层次结构保存在一个nib文件中，在运行时加载，因为需要相应的view。&lt;/p&gt;
-
-&lt;p&gt;如果您希望以编程方式创建view，请创建并初始化它们，然后使用以下方法将它们排列为层次结构：&lt;/p&gt;
-
-&lt;p&gt;要将subview添加到superview，请调用superview的&lt;code class=&quot;highlighter-rouge&quot;&gt;addSubview：&lt;/code&gt;方法。此方法将subview添加到父级View的subviews列表的末尾。
-要在superview的subviews中间插入subview，请调用superview的任何&lt;code class=&quot;highlighter-rouge&quot;&gt;insertSubview：...&lt;/code&gt;方法。在list中间插入一个subview可视化地将该view放置在列表中稍后的任何view的后面。
-要对其superview的现有subviews进行重新排序，请调用superview的&lt;code class=&quot;highlighter-rouge&quot;&gt;bringSubviewToFront：&lt;/code&gt;，&lt;code class=&quot;highlighter-rouge&quot;&gt;sendSubviewToBack：&lt;/code&gt;或&lt;code class=&quot;highlighter-rouge&quot;&gt;exchangeSubviewAtIndex：&lt;/code&gt;,&lt;code class=&quot;highlighter-rouge&quot;&gt;withSubviewAtIndex：&lt;/code&gt;方法。使用这些方法比删除subview并重新插入它们要快。
-要从其superview移除subview，请调用subview的removeFromSuperview方法（而不是superview）。
-当subview添加到其父项时，subview的当前frame矩形表示它在superview内的初始位置。frame位于其superview的可见边界之外的subview在默认情况下不会被剪切。如果您希望将subview剪裁到superview的边界，则必须明确地将superview的clipsToBounds属性设置为YES。&lt;/p&gt;
-
-&lt;p&gt;一个地方你可以添加subview到view层次结构是在VC的loadView或viewDidLoad方法。如果以编程方式构建view，则将view创建代码放置在view controller的loadView方法中。无论是以编程方式创建view还是从nib文件加载view，都可以在viewDidLoad方法中包含其他view配置代码。&lt;/p&gt;
-
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;viewDidLoad&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;super&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;viewDidLoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
- 
-    &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;title&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NSLocalizedString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;TransitionsTitle&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;@&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
- 
-    &lt;span class=&quot;c1&quot;&gt;// create the container view which we will use for transition animation (centered horizontally)
-&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;CGRect&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CGRectMake&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;round&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bounds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;width&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;kImageWidth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-                                                        &lt;span class=&quot;n&quot;&gt;kTopPlacement&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;kImageWidth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;kImageHeight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;containerView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UIView&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initWithFrame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;autorelease&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;addSubview&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;containerView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
- 
-    &lt;span class=&quot;c1&quot;&gt;// The container view can represent the images for accessibility.
-&lt;/span&gt;    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;containerView&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;setIsAccessibilityElement&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;YES&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;containerView&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;setAccessibilityLabel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSLocalizedString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;ImagesTitle&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;@&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)];&lt;/span&gt;
- 
-    &lt;span class=&quot;c1&quot;&gt;// create the initial image view
-&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CGRectMake&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;kImageWidth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;kImageHeight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mainView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UIImageView&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initWithFrame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;autorelease&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mainView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;image&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UIImage&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;imageNamed&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;scene1.jpg&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;containerView&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;addSubview&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mainView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
- 
-    &lt;span class=&quot;c1&quot;&gt;// create the alternate image view (to transition between)
-&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;CGRect&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;imageFrame&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CGRectMake&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;kImageWidth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;kImageHeight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flipToView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UIImageView&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initWithFrame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;imageFrame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;autorelease&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flipToView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;image&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UIImage&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;imageNamed&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;scene2.jpg&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;重要提示：Superviews自动retain subviews，所以在嵌入subview之后，释放该subview是安全的。 实际上，建议这样做是因为它会阻止您的应用程序保留一次太多的view，并在稍后导致内存泄漏。 请记住，如果您从其supview中删除subview并打算重用它，则必须再次保留该subview。 &lt;code class=&quot;highlighter-rouge&quot;&gt;removeFromSuperview&lt;/code&gt;方法在移除之前autorelease一个subview。 如果在下一个事件循环周期之前不retain view，view将被released。&lt;/p&gt;
-
-&lt;p&gt;将subview添加到另一个View时，UIKit会通知superview和subview。 如果实现自定义view，则可以通过重写&lt;code class=&quot;highlighter-rouge&quot;&gt;willMoveToSuperview：&lt;/code&gt;，&lt;code class=&quot;highlighter-rouge&quot;&gt;willMoveToWindow：&lt;/code&gt;，&lt;code class=&quot;highlighter-rouge&quot;&gt;willRemoveSubview：&lt;/code&gt;，&lt;code class=&quot;highlighter-rouge&quot;&gt;didAddSubview：&lt;/code&gt;，&lt;code class=&quot;highlighter-rouge&quot;&gt;didMoveToSuperview&lt;/code&gt;或&lt;code class=&quot;highlighter-rouge&quot;&gt;didMoveToWindow&lt;/code&gt;方法中的一个或多个拦截这些通知。 您可以使用这些通知来更新与您的view层次结构相关的任何状态信息或执行其他任务。&lt;/p&gt;
-
-&lt;p&gt;创建view层次结构后，可以使用superivew和subview属性以编程方式导航它。 每个view的window属性包含当前显示view的window（如果有的话）。 由于view层次结构中的root view没有父view，因此其superview属性设置为nil。 对于当前在屏幕上的view，window对象是view层次结构的root view。&lt;/p&gt;
-
-&lt;h4 id=&quot;隐藏view&quot;&gt;隐藏View&lt;/h4&gt;
-
-&lt;p&gt;要以可视方式隐藏view，可以将其hidden属性设置为YES，也可以将其alpha属性更改为0.0。隐藏的view不会从系统接收触摸事件。但是，隐藏的view会参与与view层次关联的自动调整和其他布局操作。因此，隐藏view通常是从view层次结构中删除view的一种方便的替代方法，特别是如果您计划在不久的将来再次显示view时。&lt;/p&gt;
-
-&lt;p&gt;重要提示：如果您隐藏当前是第一响应者的view，则该view不会自动退出其第一响应者状态。针对第一响应者的事件仍然传递到隐藏的view。为了防止这种情况发生，当您隐藏它时，您应该强制您的view退出第一个响应者状态。&lt;/p&gt;
-
-&lt;p&gt;如果要为view的可视化转换为隐藏（或相反），您必须使用view的alpha属性进行动画处理。隐藏的属性不是一个动画属性，所以你对它做出的任何改变立即生效。&lt;/p&gt;
-
-&lt;h4 id=&quot;定位view-hierarchy中的view&quot;&gt;定位View Hierarchy中的view&lt;/h4&gt;
-
-&lt;p&gt;在view层次结构中定位view有两种方法：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;将指针存储在适当位置的任何相关view中，例如拥有view的VC中。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;为每个view的tag属性分配一个唯一的整数，并使用viewWithTag：方法来定位它。&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;存储对相关view的引用是定位view的最常见方法，并使访问这些view非常方便。如果使用Interface Builder创建view，则可以使用outlet将nib文件中的对象连接到另一个对象。对于以编程方式创建的view，可以在私有成员变量中存储对这些view的引用。无论您使用outlets还是私有成员变量，您都有责任根据需要保留view，然后将其释放。确保对象被保留和正确释放的最好方法是使用声明的属性。&lt;/p&gt;
-
-&lt;p&gt;tag是减少硬编码依赖性并支持更加动态和灵活的解决方案的有用方法。你可以使用它的tag来定位它而不是存储一个指向view的指针。tag也是引用view的更持久的方式。例如，如果要保存应用程序中当前可见的view列表，则应将每个可见view的tag写入文件。这比归档实际的view对象更简单，特别是在只跟踪当前可见view的情况下。当您的应用程序随后被加载时，您将重新创建您的view并使用保存的tag列表来设置每个view的可见性，从而将您的view层次结构返回到之前的状态。&lt;/p&gt;
-
-&lt;h4 id=&quot;移动缩放旋转view&quot;&gt;移动、缩放、旋转View&lt;/h4&gt;
-
-&lt;p&gt;每个view都有一个关联的affine transform，可以用来移动，缩放或旋转view的内容。 view transform会改变view的最终渲染外观，通常用于实现滚动，动画或其他视觉效果。&lt;/p&gt;
-
-&lt;p&gt;UIView的transform属性包含一个应用了转换的CGAffineTransform结构。 默认情况下，此属性设置为标记转换，不会修改view的外观。 您可以随时为此属性分配一个新的转换。 例如，要将view旋转45度，可以使用以下代码：&lt;/p&gt;
-
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;CGAffineTransform&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;xform&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CGAffineTransformMakeRotation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;M_PI&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;transform&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;xform&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;将上述代码中的变换应用于view将围绕其中心点顺时针旋转。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/17.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;将多个transform应用于view时，将这些transform添加到CGAffineTransform结构的顺序非常重要。 旋转view然后移动与先移动后旋转是不一样的。 即使在每种情况下旋转和平移的数量是相同的，但是变换的顺序影响最终的结果。 此外，您添加的任何转换都将应用于相对于view的center。 因此，应用旋转因子围绕其中心点旋转view。 缩放view会更改view的宽度和高度，但不会更改其center.&lt;/p&gt;
-
-&lt;h4 id=&quot;view-hierarchy中转换坐标&quot;&gt;View Hierarchy中转换坐标&lt;/h4&gt;
-
-&lt;p&gt;在许多情况下，特别是在处理事件时，应用程序可能需要将坐标值从一个参照系转换为另一个参照系。 例如，触摸事件报告每个触摸在windows坐标系中的位置，但view对象通常需要view的本地坐标系中的信息。 UIView类定义了以下用于将坐标转换为view本地坐标系的方法：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;convertPoint:fromView:&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;convertRect:fromView:&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;convertPoint:toView:&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;convertRect:toView:&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;convert ...：fromView：&lt;/code&gt;方法将坐标从其他view的坐标系转换为当前view的局部坐标系（bounds矩形）。 相反，&lt;code class=&quot;highlighter-rouge&quot;&gt;convert ...：toView：&lt;/code&gt;方法将坐标从当前view的本地坐标系（bounds矩形）转换为指定view的坐标系。 如果您将nil指定为任何方法的参考view，则将转换到包含view的window的坐标系并从该view的坐标系转换。&lt;/p&gt;
-
-&lt;p&gt;除了UIView转换方法之外，UIWindow类还定义了几种转换方法。 这些方法类似于UIView版本，除了不是从view的局部坐标系转换而是从window的坐标系转换而来。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;convertPoint:fromWindow:&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;convertRect:fromWindow:&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;convertPoint:toWindow:&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;convertRect:toWindow:&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;在旋转view中转换坐标时，UIKit会在假定要返回的矩形反映源矩形所覆盖的屏幕区域的情况下转换矩形。&lt;/p&gt;
-
-&lt;p&gt;图显示了一个转换过程中如何导致矩形大小改变的例子。 在图中，外部父view包含旋转的subview。 将subview坐标系中的矩形转换为父坐标系，得到一个物理上较大的矩形。 这个较大的矩形实际上是outerView bounds中最小的矩形，它完全包围了旋转的矩形。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/18.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;运行时调整view的大小和位置&quot;&gt;运行时调整View的大小和位置&lt;/h4&gt;
-
-&lt;p&gt;每当view的大小发生变化时，其subview的大小和位置都必须相应地改变。 UIView类支持view hierarchy中的view的自动和手动布局。 通过自动布局，您可以设置每个view在其父view调整大小时应遵循的规则，然后完全忽略调整大小的操作。 通过手动布局，您可以根据需要手动调整view的大小和位置。&lt;/p&gt;
-
-&lt;p&gt;在view中发生以下任何事件时，可能会发生布局更改：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;view bounds矩形的大小发生变化。&lt;/li&gt;
-  &lt;li&gt;发生界面方向更改，通常会触发root view bounds矩形中的更改。&lt;/li&gt;
-  &lt;li&gt;与view图层相关联的核心动画sublayers发生更改并需要布局。&lt;/li&gt;
-  &lt;li&gt;您的应用程序通过调用view的&lt;code class=&quot;highlighter-rouge&quot;&gt;setNeedsLayout&lt;/code&gt;或&lt;code class=&quot;highlighter-rouge&quot;&gt;layoutIfNeeded&lt;/code&gt;方法来强制执行布局。&lt;/li&gt;
-  &lt;li&gt;您的应用程序通过调用view 底层layer的&lt;code class=&quot;highlighter-rouge&quot;&gt;setNeedsLayout&lt;/code&gt;方法来强制布局。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;当您更改view的大小时，通常需要更改嵌入的子view的位置和大小，以考虑其父级的新大小。 superview的autoresizesSubviews属性决定子view是否调整大小。如果此属性设置为YES，则该view使用每个子view的autoresizingMask属性来确定如何调整和定位该子view。对任何子view的大小更改会触发嵌入式子view的类似布局调整。&lt;/p&gt;
-
-&lt;p&gt;对于view层次结构中的每个view，将该view的autoresizingMask属性设置为适当的值是处理自动布局更改的重要部分。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/19.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;配置自动调整规则的最简单方法是使用Interface Builder的“Size”检查器中的“AutoSizing”控件。 上图中灵活的宽度和高度常数与“AutoSizing”控件图中的宽度和大小指示器具有相同的行为。 但是，保证的行为和使用是有效的逆转。 在界面构建器中，边缘指示符的存在意味着边距具有固定大小，并且缺少指示符意味着边距具有灵活的大小。 幸运的是，Interface Builder提供了一个动画来展示自动修改行为对你的view的影响。&lt;/p&gt;
-
-&lt;p&gt;重要提示：如果view的transform属性不包含标识转换，则该view的frame是未定义的，其自动调整行为的结果也是如此。&lt;/p&gt;
-
-&lt;h4 id=&quot;手动调整view的布局&quot;&gt;手动调整view的布局&lt;/h4&gt;
-
-&lt;p&gt;只要view的大小发生变化，UIKit就会应用该view的subview的自动调整行为，然后调用view的layoutSubviews方法以使其进行手动更改。您可以在自定义view中实现layoutSubviews方法，当自动执行行为本身不会产生所需的结果时。此方法的实现可以执行以下任何操作：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;调整任何直接subview的大小和位置。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;添加或删除subview或核心动画layer。&lt;/li&gt;
-  &lt;li&gt;通过调用setNeedsDisplay或setNeedsDisplayInRect：方法强制subview重绘。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;应用程序经常手动布置root view的一个地方是在实现大的可滚动区域时。由于对其可滚动内容拥有一个大view是不切实际的，因此应用程序通常会实现一个root view，其中包含许多较小的view。每个图块代表可滚动内容的一部分。当滚动事件发生时，根view调用其setNeedsLayout方法来启动布局更改。其layoutSubviews方法然后根据发生的滚动量重新定位平铺view。当tile从view的可见区域滚出时，layoutSubviews方法将tile移动到传入边缘，替换进程中的内容。&lt;/p&gt;
-
-&lt;p&gt;在编写布局代码时，请务必以下列方式测试您的代码：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;更改view的方向以确保布局在所有支持的接口方向上正确。&lt;/li&gt;
-  &lt;li&gt;确保你的代码正确响应状态栏高度的变化。当打电话时，状态栏高度会增加，当用户结束通话时，状态栏的大小会减小。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;在运行时修改view&quot;&gt;在运行时修改view&lt;/h4&gt;
-
-&lt;p&gt;随着应用程序从用户接收输入，他们调整其用户界面以响应该输入。应用程序可能会通过重新排列view，更改其大小或位置，隐藏或显示view或加载全新的view来修改view。在iOS应用程序中，有几种地方和方法可以执行这些操作：&lt;/p&gt;
-
-&lt;p&gt;在VC中：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;view controller必须在显示它们之前创建其view。它可以从一个nib文件加载view或以编程方式创建它们。当这些views不再需要时，就把它们处理掉。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;当设备改变方向时，view controller可能会调整view的大小和位置以匹配。作为调整新方向的一部分，可能会隐藏一些views，并显示其他views。&lt;/li&gt;
-  &lt;li&gt;当view controller管理可编辑的内容时，它可能会调整其view层次结构时，编辑模式。例如，它可能会添加额外的按钮和其他控件来方便编辑其内容的各个方面。这可能还需要调整任何现有的view以适应额外的控制。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;在动画块中：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;当您想要在用户界面的不同view集之间切换时，您可以隐藏一些view并在动画块中显示其他view。&lt;/li&gt;
-  &lt;li&gt;实现特殊效果时，可以使用动画块来修改view的各种属性。例如，要动画改变view的大小，你可以改变它的frame矩形的大小。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;其他方法：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;触摸事件或手势发生时，您的界面可能会通过加载一组新的view或更改当前的view来作出响应。有关处理事件的信息，请参阅iOS事件处理指南。&lt;/li&gt;
-  &lt;li&gt;当用户与滚动view交互时，大的可滚动区域可能会隐藏并显示切片子view。有关支持可滚动内容的更多信息，请参阅&lt;a href=&quot;https://developer.apple.com/library/content/documentation/WindowsViews/Conceptual/UIScrollView_pg/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008179&quot;&gt;&lt;em&gt;Scroll View Programming Guide for iOS&lt;/em&gt;&lt;/a&gt;。&lt;/li&gt;
-  &lt;li&gt;当键盘出现时，您可以重新定位或调整view的大小，使其不会位于键盘下方。有关如何与键盘交互的信息，请参阅&lt;a href=&quot;https://developer.apple.com/library/content/documentation/StringsTextFonts/Conceptual/TextAndWebiPhoneOS/Introduction/Introduction.html#//apple_ref/doc/uid/TP40009542&quot;&gt;Text Programming Guide for iOS&lt;/a&gt;。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;view controller是对view进行更改的常用位置。由于view controller管理与正在显示的内容相关联的view分层结构，因此它最终负责这些view发生的所有事情。当加载其view或处理方向更改时，view controller可以添加新view，隐藏或替换现有view，并进行任意数量的更改以使view准备好显示。如果您实现了对编辑view内容的支持，则UIViewController中的&lt;code class=&quot;highlighter-rouge&quot;&gt;setEditing：animated：&lt;/code&gt;方法为您提供了将view转换为可编辑版本的地方。&lt;/p&gt;
-
-&lt;p&gt;动画块是启动view相关更改的另一个常见位置。内置到UIView类中的动画支持可以轻松地将更改设置为查看属性。您也可以使用&lt;code class=&quot;highlighter-rouge&quot;&gt;transitionWithView：duration：options：animations：completion：&lt;/code&gt;或&lt;code class=&quot;highlighter-rouge&quot;&gt;transitionFromView：toView：duration：options：completion：&lt;/code&gt;将新整个view换出的方法&lt;/p&gt;
-
-&lt;h4 id=&quot;与core-animation-layers交互&quot;&gt;与Core Animation Layers交互&lt;/h4&gt;
-
-&lt;p&gt;每个view对象都有一个专用的Core Animation Layer，用于管理屏幕上view内容的显示和动画。 虽然您可以使用view对象做很多事情，但您也可以根据需要直接使用相应的layer对象。 view的layer对象存储在view的layer属性中。&lt;/p&gt;
-
-&lt;p&gt;与view关联的layer类型在创建view后无法更改。 因此，每个view使用layerClass类方法来指定其layer对象的类。 此方法的默认实现返回CALayer类，更改此值的唯一方法是子类，重写该方法，并返回一个不同的值。 您可以更改此值以使用不同类型的图层。 例如，如果view使用平铺来显示大的可滚动区域，则可能需要使用CATiledLayer类来支持view。&lt;/p&gt;
-
-&lt;p&gt;实现layerClass方法应该简单地创建所需的Class对象并返回它。 例如，使用平铺的view将为此方法提供以下实现：&lt;/p&gt;
-
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Class&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;layerClass&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CATiledLayer&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;每个view在其初始化过程中尽早调用其layerClass方法，并使用返回的类来创建其图层对象。 另外，view总是将自己指定为其图层对象的delegate。 在这一点上，view拥有它的层，view和层之间的关系不能改变。 您还必须不分配与任何其他图层对象的delegate相同的view。 更改view的所有权或delegate关系会导致绘图问题和应用程序中的潜在崩溃&lt;/p&gt;
-
-&lt;p&gt;如果您主要使用图层对象而不是view，则可以根据需要将自定义图层对象合并到view层次结构中。 自定义图层对象是不属于view的CALayer的任何实例。 您通常以编程方式创建自定义图层，并使用Core Animation例程将其合并。 自定义图层不接收事件或参与响应者链，但根据核心动画规则绘制自己的图形并响应其父view或图层中的大小更改&lt;/p&gt;
-
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;viewDidLoad&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;super&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;viewDidLoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
- 
-    &lt;span class=&quot;c1&quot;&gt;// Create the layer.
-&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;CALayer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;myLayer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CALayer&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
- 
-    &lt;span class=&quot;c1&quot;&gt;// Set the contents of the layer to a fixed image. And set
-&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;// the size of the layer to match the image size.
-&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;UIImage&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;layerContents&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UIImage&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;imageNamed&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;myImage&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;retain&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;CGSize&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;imageSize&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;layerContents&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
- 
-    &lt;span class=&quot;n&quot;&gt;myLayer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bounds&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CGRectMake&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;imageSize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;width&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;imageSize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;height&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;myLayer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;layerContents&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CGImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
- 
-    &lt;span class=&quot;c1&quot;&gt;// Add the layer to the view.
-&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;CALayer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;viewLayer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;layer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;viewLayer&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;addSublayer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;myLayer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
- 
-    &lt;span class=&quot;c1&quot;&gt;// Center the layer in the view.
-&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;CGRect&lt;/span&gt;        &lt;span class=&quot;n&quot;&gt;viewBounds&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;backingView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bounds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;myLayer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;position&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CGPointMake&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CGRectGetMidX&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;viewBounds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CGRectGetMidY&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;viewBounds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
- 
-    &lt;span class=&quot;c1&quot;&gt;// Release the layer, since it is retained by the view's layer
-&lt;/span&gt;    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;myLayer&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;release&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h4 id=&quot;响应事件&quot;&gt;响应事件&lt;/h4&gt;
-
-&lt;p&gt;view对象是响应者对象（UIResponder类的实例），因此能够接收触摸事件。当触摸事件发生时，window将相应的事件对象分派到发生触摸的view。如果你的view对一个事件不感兴趣，它可以忽略它，或者把它传递给响应者链，由另一个对象处理。&lt;/p&gt;
-
-&lt;p&gt;除了直接处理触摸事件之外，view还可以使用手势识别器来检测轻敲，滑动，捏，以及其他类型的常见触摸相关的手势。手势识别器在追踪触摸事件方面付出了艰辛的努力，并确保他们按照正确的标准将其定位为目标手势。您可以创建手势识别器，为其分配合适的目标对象和操作方法，而不必使用跟踪触摸事件的应用程序，并使用&lt;code class=&quot;highlighter-rouge&quot;&gt;addGestureRecognizer：&lt;/code&gt;方法将其安装在view上。手势识别器然后在相应手势发生时调用您的操作方法。&lt;/p&gt;
-
-&lt;p&gt;如果您希望直接处理触摸事件，则可以针对您的view实现以下方法，这些方法在iOS事件处理指南中有更详细的描述：&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;touchesBegan：withEvent：&lt;/code&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;touchesMoved：withEvent：&lt;/code&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;touchesEnded：withEvent：&lt;/code&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;touchesCancelled：withEvent：&lt;/code&gt;
-view的默认行为是一次只响应一次触摸。如果用户放下第二根手指，系统将忽略触摸事件，并不会将其报告给您的view。如果您打算从view的事件处理程序方法跟踪多手指手势，则需要通过将view的multipleTouchEnabled属性设置为YES来启用多点触控事件。&lt;/p&gt;
-
-&lt;p&gt;一些view（如标签和图像）最初会禁用事件处理。您可以通过更改view的userInteractionEnabled属性的值来控制view是否能够接收触摸事件。您可能会暂时将此属性设置为NO，以防止用户在长时间操作未决时操纵view的内容。为了防止事件到达任何view，还可以使用UIApplication对象的&lt;code class=&quot;highlighter-rouge&quot;&gt;beginIgnoringInteractionEvents&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;endIgnoringInteractionEvents&lt;/code&gt;方法。这些方法影响整个应用程序的事件传递，而不仅仅是一个view。&lt;/p&gt;
-
-&lt;p&gt;注意：UIView的动画方法通常在动画进行时禁用触摸事件。您可以通过适当地配置动画来覆盖此行为。有关执行动画的更多信息，请参阅动画。&lt;/p&gt;
-
-&lt;p&gt;当它处理触摸事件时，UIKit使用UIView的&lt;code class=&quot;highlighter-rouge&quot;&gt;hitTest：withEvent：&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;pointInside：withEvent：&lt;/code&gt;方法来确定触摸事件是否发生在给定view的边界内。尽管您很少需要重写这些方法，但您可以这样做，以实现view的自定义触摸行为。例如，您可以重写这些方法来防止子view处理触摸事件。&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">苹果官方文档View Programming Guide for iOS</summary></entry></feed>
+&lt;/div&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">苹果官方文档View Programming Guide for iOS</summary></entry></feed>
