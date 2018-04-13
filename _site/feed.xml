@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-04-11T10:39:18+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">OpenGL ES实践</title><link href="http://www.helloted.com/ios/2018/04/02/opengles_1/" rel="alternate" type="text/html" title="OpenGL ES实践" /><published>2018-04-02T20:00:00+08:00</published><updated>2018-04-02T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2018/04/02/opengles_1</id><content type="html" xml:base="http://www.helloted.com/ios/2018/04/02/opengles_1/">&lt;h3 id=&quot;一概念简介&quot;&gt;一、概念简介&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-04-13T10:25:37+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">OpenGL ES实践</title><link href="http://www.helloted.com/ios/2018/04/02/opengles_1/" rel="alternate" type="text/html" title="OpenGL ES实践" /><published>2018-04-02T20:00:00+08:00</published><updated>2018-04-02T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2018/04/02/opengles_1</id><content type="html" xml:base="http://www.helloted.com/ios/2018/04/02/opengles_1/">&lt;h3 id=&quot;一概念简介&quot;&gt;一、概念简介&lt;/h3&gt;
 
 &lt;p&gt;&lt;strong&gt;GPU&lt;/strong&gt;：能够结合几何、颜色、灯光和其他数据而产生一个屏幕图像的硬件组件&lt;/p&gt;
 
@@ -246,6 +246,16 @@
   &lt;li&gt;启动相关日志，日志往往涉及到DB操作，一定要放到后台去做&lt;/li&gt;
   &lt;li&gt;业务方初始化，这个交由每个业务自己去控制初始化时间。&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;h4 id=&quot;启动业务的优化&quot;&gt;启动业务的优化&lt;/h4&gt;
+
+&lt;p&gt;建一个类来管理初始化，所有需要初始化的代码都在这里进行，分类初始化：&lt;/p&gt;
+
+&lt;p&gt;1)、日志 / 统计等需要第一时间启动的, 仍然伴随 didFinishLaunchingWithOptions 启动.&lt;/p&gt;
+
+&lt;p&gt;2)、用户数据需要在广告显示完成以后使用, 所以需要伴随广告页启动。&lt;/p&gt;
+
+&lt;p&gt;3)、比如分享业务, 肯定是用户能看到真正的主界面以后才需要启动, 所以推迟到主界面加载完成以后启动, 只需要将代码放到方法里。&lt;/p&gt;
 
 &lt;h4 id=&quot;viewcontroller&quot;&gt;ViewController&lt;/h4&gt;
 
