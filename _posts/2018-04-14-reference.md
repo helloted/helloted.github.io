@@ -34,7 +34,7 @@ header-img: "img/default.jpg"
 
 #### 三、NSTimer引起的循环引用
 
-```
+```objc
 @interface DetailViewController ()
 @property (nonatomic, weak) NSTimer *timer;
 @end
@@ -63,7 +63,7 @@ header-img: "img/default.jpg"
 
 那么换成weakSelf呢？就是我们在block中常用的那种。
 
-```
+```objc
 __weak typeof(self) weakSelf = self;
 _timer = [NSTimer scheduledTimerWithTimeInterval:3.0f
                                           target:weakSelf

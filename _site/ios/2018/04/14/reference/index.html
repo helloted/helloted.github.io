@@ -148,7 +148,7 @@
 
 <h4 id="三nstimer引起的循环引用">三、NSTimer引起的循环引用</h4>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">DetailViewController</span> <span class="p">()</span>
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">DetailViewController</span> <span class="p">()</span>
 <span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">weak</span><span class="p">)</span> <span class="n">NSTimer</span> <span class="o">*</span><span class="n">timer</span><span class="p">;</span>
 <span class="k">@end</span>
 
@@ -177,12 +177,12 @@
 
 <p>那么换成weakSelf呢？就是我们在block中常用的那种。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>__weak typeof(self) weakSelf = self;
-_timer = [NSTimer scheduledTimerWithTimeInterval:3.0f
-                                          target:weakSelf
-                                        selector:@selector(timerFire:)
-                                        userInfo:nil
-                                         repeats:YES];
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">__weak</span> <span class="n">typeof</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="n">weakSelf</span> <span class="o">=</span> <span class="n">self</span><span class="p">;</span>
+<span class="n">_timer</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSTimer</span> <span class="nf">scheduledTimerWithTimeInterval</span><span class="p">:</span><span class="mi">3</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span>
+                                          <span class="nf">target</span><span class="p">:</span><span class="n">weakSelf</span>
+                                        <span class="n">selector</span><span class="o">:</span><span class="k">@selector</span><span class="p">(</span><span class="n">timerFire</span><span class="o">:</span><span class="p">)</span>
+                                        <span class="n">userInfo</span><span class="o">:</span><span class="nb">nil</span>
+                                         <span class="n">repeats</span><span class="o">:</span><span class="nb">YES</span><span class="p">];</span>
 </code></pre>
 </div>
 
