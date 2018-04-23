@@ -28,7 +28,7 @@ header-img: "img/default.jpg"
 
 对象 A 和对象 B，相互引用了对方作为自己的成员变量，只有当自己销毁时，才会将成员变量的引用计数减 1。因为对象 A 的销毁依赖于对象 B 销毁，而对象 B 的销毁与依赖于对象 A 的销毁，这样就造成了我们称之为循环引用（Reference Cycle）。循环引用比较容易出现在Block、Timer引用中。
 
-![img](/img/Simple_7/16.png)
+![img](/img/Simple_7/17.png)
 
 打破循环引用很简单，将其中一个指针改为弱引用
 
