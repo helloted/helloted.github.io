@@ -1,4 +1,129 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-05-02T19:32:52+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">UITableView实践(一):实现原理</title><link href="http://www.helloted.com/ios/2018/04/25/tableView_1/" rel="alternate" type="text/html" title="UITableView实践(一):实现原理" /><published>2018-04-25T20:00:00+08:00</published><updated>2018-04-25T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2018/04/25/tableView_1</id><content type="html" xml:base="http://www.helloted.com/ios/2018/04/25/tableView_1/">&lt;h3 id=&quot;一综述&quot;&gt;一、综述&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-05-02T19:39:47+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">Mac上搭建直播服务器</title><link href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/05/01/vlclive/" rel="alternate" type="text/html" title="Mac上搭建直播服务器" /><published>2018-05-01T20:00:00+08:00</published><updated>2018-05-01T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/05/01/vlclive</id><content type="html" xml:base="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/05/01/vlclive/">&lt;h4 id=&quot;1安装nginx&quot;&gt;1、安装Nginx&lt;/h4&gt;
+
+&lt;p&gt;通过homebrew来安装支持rtmp协议模块的nginx&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;brew install nginx-full --with-rtmp-module
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;通过下面的命令来查看安装位置&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;brew info nginx-full
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_7/22.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;通过浏览器访问&lt;a href=&quot;http://localhost:8080&quot;&gt;http://localhost:8080&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_7/23.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;在nginx.conf里配置&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;rtmp {
+    server {
+        listen 1935;
+        application zbcs {
+            live on;
+            record off;
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;重启&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nginx -s reload
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;2安装ffmpeg来推流本地视频&quot;&gt;2、安装ffmpeg来推流本地视频&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;brew install ffmpeg
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;推流命令为&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ffmpeg -re -i /Users/imac/Documents/demo.mp4 -vcodec copy -f flv rtmp://127.0.0.1:1935/zbcs/room
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ffmpeg -re -i 你的视频文件的绝对路径 -vcodec copy -f flv rtmp://localhost:1935/nginx配置的application名称/room
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;这就开始推流了&lt;/p&gt;
+
+&lt;h4 id=&quot;3vlc直播&quot;&gt;3、VLC直播&lt;/h4&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;mac端&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;下载vlc播放器，在File-&amp;gt;open network输入&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;rtmp://127.0.0.1:1935/zbcs/room
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_7/24.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;iPhone&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;下载VLC播放器，同一局域网，打开网络流，输入&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;rtmp://电脑的本地IP:1935/zbcs/room
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_7/26.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;4推流桌面或者摄像头直播&quot;&gt;4、推流桌面或者摄像头直播&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ffmpeg -f avfoundation -list_devices true -i &quot;&quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_7/25.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;可以看到在视频设备：&lt;/p&gt;
+
+&lt;p&gt;0：摄像头&lt;/p&gt;
+
+&lt;p&gt;1：桌面捕获&lt;/p&gt;
+
+&lt;p&gt;音频设备：&lt;/p&gt;
+
+&lt;p&gt;0：麦克风&lt;/p&gt;
+
+&lt;p&gt;所以如果要直播摄像头&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ffmpeg -f avfoundation -i &quot;0&quot; -vcodec libx264  -f flv rtmp://localhost:1935/zbcs/room
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;加上声音&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ffmpeg -f avfoundation -i &quot;0:0&quot; -vcodec libx264  -acodec libmp3lame -ar 44100 -ac 1 -f flv rtmp://localhost:1935/zbcs/room
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;还可以设置频率和分辨率&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// 设置帧率为30帧，图像大小为320x240
+ffmpeg -f avfoundation -framerate 30 -video_size 320x240 -i &quot;0&quot; -vcodec libx264 -f flv rtmp://localhost:1935/zbcs/room
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;如果要实现电脑屏幕和摄像头一起直播&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ffmpeg -f avfoundation  -framerate 30 -i &quot;1:0&quot; -f avfoundation -framerate 30 -video_size 320x240 -i &quot;0&quot; -vcodec libx264 -filter_complex 'overlay=main_w-overlay_w-10:main_h-overlay_h-10'  -acodec libmp3lame -ar 44100 -ac 1 -f flv rtmp://localhost:1935/zbcs/room
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;</content><author><name>Ted</name></author><category term="基础" /><summary type="html">1、安装Nginx</summary></entry><entry><title type="html">UITableView实践(一):实现原理</title><link href="http://www.helloted.com/ios/2018/04/25/tableView_1/" rel="alternate" type="text/html" title="UITableView实践(一):实现原理" /><published>2018-04-25T20:00:00+08:00</published><updated>2018-04-25T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2018/04/25/tableView_1</id><content type="html" xml:base="http://www.helloted.com/ios/2018/04/25/tableView_1/">&lt;h3 id=&quot;一综述&quot;&gt;一、综述&lt;/h3&gt;
 
 &lt;p&gt;UITableView应该是iOS中最经典也是最常见的一个控件了。使用很普遍&lt;/p&gt;
 
@@ -2081,99 +2206,4 @@ EAGLContext* secondContext = [[EAGLContext alloc] initWithAPI:[firstContext API]
   &lt;li&gt;在想要修改对象的上下文中，调用一个或多个OpenGL ES函数来更改对象。&lt;/li&gt;
   &lt;li&gt;在接收到状态修改命令的上下文中调用glFlush。&lt;/li&gt;
   &lt;li&gt;在其他任何情况下，重新绑定对象标识符。&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Ted</name></author><category term="基础" /><summary type="html">本文翻译自苹果官方文档OpenGL ES Programming Guide</summary></entry><entry><title type="html">OpenCV学习简介</title><link href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/11/OpenCV_1/" rel="alternate" type="text/html" title="OpenCV学习简介" /><published>2018-03-11T20:00:00+08:00</published><updated>2018-03-11T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/11/OpenCV_1</id><content type="html" xml:base="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/11/OpenCV_1/">&lt;h3 id=&quot;一前言&quot;&gt;一、前言&lt;/h3&gt;
-
-&lt;h4 id=&quot;什么是opencv&quot;&gt;什么是OpenCV&lt;/h4&gt;
-
-&lt;p&gt;OpenCV 是一个开源的计算机视觉库，&lt;a href=&quot;https://opencv.org/&quot;&gt;项目主页&lt;/a&gt;，采用C/C++语言编写，还提供了Python,Ruby，MATLAB等语言的接口。OpenCV的一个目标是构建一个简单易用的计算机视觉框架，以帮助开发人员更便捷地设计更复杂的计算机视觉相关应用程序。因为计算机视觉和机器学习密切相关，所以OpenCV还提供了MLL(Machine Learning Library)机器学习库。&lt;/p&gt;
-
-&lt;h4 id=&quot;什么是计算机视觉&quot;&gt;什么是计算机视觉&lt;/h4&gt;
-
-&lt;p&gt;计算机视觉是将来自静止图像或视频的数据转换成一个决策或者一种新的表达方式的过程，所有的这些装换都是为了达到某个目标。&lt;/p&gt;
-
-&lt;p&gt;人脑将视觉信号划分如很多个通道，将各种不同的信息输入你的大脑。你的大脑有一个关注系统，会根据任务识别出图像的重要部分，并做重点分析，而其他部分则分析得较少，从而进行识别。&lt;/p&gt;
-
-&lt;p&gt;在 计算机视觉系统中，计算机接收到的是来自摄像机或者磁盘文件的一个数值决战。一般来说，没有内置的模式识别系统，没有自动控制的对焦和光圈，没有多年的经验积累，视觉系统通常很低级。&lt;/p&gt;
-
-&lt;h3 id=&quot;一mac配置opencv&quot;&gt;一、Mac配置OpenCV&lt;/h3&gt;
-
-&lt;p&gt;1、下载OpenCV源码，&lt;a href=&quot;https://opencv.org/releases.html&quot;&gt;地址&lt;/a&gt;，可以看到有Windows，iOS，Android版本的下载，没有针对MacOS的需要我们自己去编译，下载Sources源码&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_5/01.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;2、安装CMake，用Homebrew安装&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;brew install cmake
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;3、用CMake编译OpenCV&lt;/p&gt;
-
-&lt;p&gt;在解压后的opencv文件夹内，新建一个文件夹release，并且cd进入，分别执行以下的命令行&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cmake -G &quot;Unix Makefiles&quot; ..
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;make
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sudo make install
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_5/02.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;4、测试使用OpenCV&lt;/p&gt;
-
-&lt;p&gt;建立一个文件夹，里面放入三个文件&lt;/p&gt;
-
-&lt;p&gt;a.png&lt;/p&gt;
-
-&lt;p&gt;DisplayImage.cpp&lt;/p&gt;
-
-&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;#include &amp;lt;stdio.h&amp;gt;
-#include &amp;lt;opencv2/opencv.hpp&amp;gt;
-&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;namespace&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;argc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;**&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;argv&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;Mat&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;image&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;imread&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;argv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;No image data &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;namedWindow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Display Image&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;WINDOW_AUTOSIZE&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;imshow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Display Image&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;waitKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;CMakeLists.txt&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cmake_minimum_required(VERSION 2.8)
-
-//show 项目
-project( show )
-find_package( OpenCV REQUIRED )
-include_directories( ${OpenCV_INCLUDE_DIRS} )
-add_executable( show main.cpp )
-target_link_libraries( show ${OpenCV_LIBS} )
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;在文件夹内执行命令&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cmake .
-make
-./show a.png
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;就可以把图片a打开来&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_5/03.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="基础" /><summary type="html">一、前言</summary></entry></feed>
+&lt;/ul&gt;</content><author><name>Ted</name></author><category term="基础" /><summary type="html">本文翻译自苹果官方文档OpenGL ES Programming Guide</summary></entry></feed>
