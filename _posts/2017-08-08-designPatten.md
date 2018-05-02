@@ -3,7 +3,7 @@ layout:     post
 category:   iOS
 title:      "设计模式"
 subtitle:   "iOS开发中常用的一些设计模式以及代码示例"
-date:       2017-09-08 12:00:00
+date:       2017-08-08 12:00:00
 author:     "Ted"
 header-img: "img/default.jpg"
 ---
