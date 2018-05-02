@@ -16,9 +16,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
 
-    <title>Tomcat+Servlet - Helloted Blog</title>
+    <title>Mac上搭建直播服务器 - Helloted Blog</title>
 
-    <link rel="canonical" href="http://www.helloted.com/java/2018/02/05/Java-Tomcat/">
+    <link rel="canonical" href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/01/vlclive/">
 
     <link rel="shortcut icon" href="/img/favicon.ico">
    
@@ -105,11 +105,11 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <div class="post-heading">
-                    <h1>Tomcat+Servlet</h1>
+                    <h1>Mac上搭建直播服务器</h1>
                     
-                    <h2 class="subheading">用Tomcat+Servlet搭建一个网页服务器</h2>
+                    <h2 class="subheading">在Mac上搭建nginx+rtmp进行直播推流</h2>
                     
-                    <span class="meta">Posted by Ted on February 5, 2018</span>
+                    <span class="meta">Posted by Ted on March 1, 2018</span>
                 </div>
             </div>
         </div>
@@ -122,126 +122,75 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
 
-				<h3 id="一安装tomcat">一、安装Tomcat</h3>
+				<h4 id="1安装nginx">1、安装Nginx</h4>
 
-<p><em>Tomcat</em>是应用(java)服务器,它只是一个servlet容器.</p>
+<p>通过homebrew来安装支持rtmp协议模块的nginx</p>
 
-<p>1、先去Tomcat官网下载<a href="https://tomcat.apache.org/">官网</a></p>
-
-<p><img src="/img/Simple_4/12.png" alt="img" /></p>
-
-<p>2、将Zip文件解压并且重命名文件夹到一个目录，比如<code class="highlighter-rouge">/Library/Tomcat/</code></p>
-
-<p>3、使用命令行修改文件夹的权限</p>
-
-<div class="language-sh highlighter-rouge"><pre class="highlight"><code>sudo chmod 755 /Library/Tomcat/bin/<span class="k">*</span>.sh
+<div class="highlighter-rouge"><pre class="highlight"><code>brew install nginx-full --with-rtmp-module
 </code></pre>
 </div>
 
-<p>4、cd到<code class="highlighter-rouge">/Library/Tomcat/bin</code>文件夹下，启动Tomcat</p>
+<p>通过下面的命令来查看安装位置</p>
 
-<div class="language-sh highlighter-rouge"><pre class="highlight"><code>sudo sh startup.sh
+<div class="highlighter-rouge"><pre class="highlight"><code>brew info nginx-full
 </code></pre>
 </div>
 
-<p><img src="/img/Simple_4/14.png" alt="img" /></p>
+<p><img src="/img/Simple_7/22.png" alt="img" /></p>
 
-<p>5、打开浏览器,输入<a href="http://localhost:8080/">http://localhost:8080/</a>，出现下面的页面说明启动成功</p>
+<p>通过浏览器访问<a href="http://localhost:8080">http://localhost:8080</a></p>
 
-<p><img src="/img/Simple_4/13.png" alt="img" /></p>
+<p><img src="/img/Simple_7/23.png" alt="img" /></p>
 
-<p>6、关闭命令是</p>
+<p>在nginx.conf里配置</p>
 
-<div class="language-sh highlighter-rouge"><pre class="highlight"><code>sudo sh shutdown.sh
+<div class="highlighter-rouge"><pre class="highlight"><code>rtmp {
+    server {
+        listen 1935;
+        application zbcs {
+            live on;
+            record off;
+        }
+    }
+}
 </code></pre>
 </div>
 
-<h3 id="二新建网页服务器">二、新建网页服务器</h3>
+<p>重启</p>
 
-<p>使用intellij idea这个IDE来搭建</p>
-
-<p>1、新建项目，选择<code class="highlighter-rouge">Java Enterprise</code>和<code class="highlighter-rouge">Web Application</code>然后next</p>
-
-<p><img src="/img/Simple_4/15.png" alt="img" /></p>
-
-<p>2、输入项目名称已经存放目录</p>
-
-<p><img src="/img/Simple_4/16.png" alt="img" /></p>
-
-<p>3、完成进入项目</p>
-
-<p><img src="/img/Simple_4/17.png" alt="img" /></p>
-
-<p>其中index.jsp是默认的首页网页，此时点击右上角的Tomcat开启服务器，会自动打开一个网页</p>
-
-<p><img src="/img/Simple_4/18.png" alt="img" /></p>
-
-<p>看看网页源代码</p>
-
-<div class="language-html highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;html&gt;</span>
-  <span class="nt">&lt;head&gt;</span>
-    <span class="nt">&lt;title&gt;</span>$Title$<span class="nt">&lt;/title&gt;</span>
-  <span class="nt">&lt;/head&gt;</span>
-  <span class="nt">&lt;body&gt;</span>
-  $END$
-  <span class="nt">&lt;/body&gt;</span>
-<span class="nt">&lt;/html&gt;</span>
+<div class="highlighter-rouge"><pre class="highlight"><code>nginx -s reload
 </code></pre>
 </div>
 
-<p>其实就是index.jsp的代码，说明此时访问的是index.jsp的页面。下面我们来新建新的页面</p>
+<h4 id="2安装ffmpeg来推流">2、安装ffmpeg来推流</h4>
 
-<p>4、添加web.xml.</p>
-
-<p>File-&gt;Project Structure</p>
-
-<p><img src="/img/Simple_4/19.png" alt="img" /></p>
-
-<p>在项目中会有一个新的文件夹，里面就有web.xml文件</p>
-
-<p><img src="/img/Simple_4/20.png" alt="img" /></p>
-
-<p>5、新建一个Servlet</p>
-
-<p><img src="/img/Simple_4/21.png" alt="img" /></p>
-
-<p>命名为first</p>
-
-<p><img src="/img/Simple_4/22.png" alt="img" /></p>
-
-<p>此时web.xml会自动配置</p>
-
-<p><img src="/img/Simple_4/23.png" alt="img" /></p>
-
-<p>6、编写Servlet</p>
-
-<p>在fisrt.java的doGet里添加代码如下</p>
-
-<div class="language-java highlighter-rouge"><pre class="highlight"><code>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">doGet</span><span class="o">(</span><span class="n">HttpServletRequest</span> <span class="n">request</span><span class="o">,</span> <span class="n">HttpServletResponse</span> <span class="n">response</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ServletException</span><span class="o">,</span> <span class="n">IOException</span> <span class="o">{</span>
-        <span class="n">response</span><span class="o">.</span><span class="na">setContentType</span><span class="o">(</span><span class="s">"text/html"</span><span class="o">);</span>
-        <span class="n">PrintWriter</span> <span class="n">out</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="na">getWriter</span><span class="o">();</span>
-        <span class="n">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"This is First Page"</span><span class="o">);</span>
-    <span class="o">}</span>
+<div class="highlighter-rouge"><pre class="highlight"><code>brew install ffmpeg
 </code></pre>
 </div>
 
-<p>7、配置访问路径</p>
+<p>推流命令为</p>
 
-<p>在web.xml里添加以下代码</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>    &lt;servlet-mapping&gt;
-        &lt;servlet-name&gt;first&lt;/servlet-name&gt;
-        &lt;url-pattern&gt;/first&lt;/url-pattern&gt;
-    &lt;/servlet-mapping&gt;
+<div class="highlighter-rouge"><pre class="highlight"><code>ffmpeg -re -i /Users/imac/Documents/demo.mp4 -vcodec copy -f flv rtmp://127.0.0.1:1935/zbcs/room
 </code></pre>
 </div>
 
-<p><img src="/img/Simple_4/24.png" alt="img" /></p>
+<div class="highlighter-rouge"><pre class="highlight"><code>ffmpeg -re -i 你的视频文件的绝对路径 -vcodec copy -f flv rtmp://localhost:1935/nginx配置的application名称/room
+</code></pre>
+</div>
 
-<p>8、点击右上角的tomcat运行，访问<code class="highlighter-rouge">http://localhost:8080/first</code>可以看到第一个网页</p>
+<p>这就开始推流了</p>
 
-<p><img src="/img/Simple_4/25.png" alt="img" /></p>
+<h4 id="3vlc直播">3、VLC直播</h4>
 
+<p>下载vlc播放器，在File-&gt;open network输入</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>rtmp://127.0.0.1:1935/zbcs/room
+</code></pre>
+</div>
+
+<p><img src="/img/Simple_7/24.png" alt="img" /></p>
+
+<p>就可以视频播放了</p>
 
 
                 <hr>
@@ -249,12 +198,12 @@
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/ios/2018/01/15/View_4/" data-toggle="tooltip" data-placement="top" title="View编程指南(四)">&larr; 上一篇</a>
+                        <a href="/java/2018/02/05/Java-Tomcat/" data-toggle="tooltip" data-placement="top" title="Tomcat+Servlet">&larr; 上一篇</a>
                     </li>
                     
                     
                     <li class="next">
-                        <a href="/%E5%9F%BA%E7%A1%80/2018/03/01/vlclive/" data-toggle="tooltip" data-placement="top" title="Mac上搭建直播服务器">下一篇 &rarr;</a>
+                        <a href="/%E5%9F%BA%E7%A1%80/2018/03/11/OpenCV_1/" data-toggle="tooltip" data-placement="top" title="OpenCV学习简介">下一篇 &rarr;</a>
                     </li>
                     
                 </ul>
