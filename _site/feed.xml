@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-04-26T11:28:05+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">UITableView实践(一):实现原理</title><link href="http://www.helloted.com/ios/2018/04/25/tableView_1/" rel="alternate" type="text/html" title="UITableView实践(一):实现原理" /><published>2018-04-25T20:00:00+08:00</published><updated>2018-04-25T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2018/04/25/tableView_1</id><content type="html" xml:base="http://www.helloted.com/ios/2018/04/25/tableView_1/">&lt;h3 id=&quot;一综述&quot;&gt;一、综述&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-05-02T14:03:18+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">UITableView实践(一):实现原理</title><link href="http://www.helloted.com/ios/2018/04/25/tableView_1/" rel="alternate" type="text/html" title="UITableView实践(一):实现原理" /><published>2018-04-25T20:00:00+08:00</published><updated>2018-04-25T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2018/04/25/tableView_1</id><content type="html" xml:base="http://www.helloted.com/ios/2018/04/25/tableView_1/">&lt;h3 id=&quot;一综述&quot;&gt;一、综述&lt;/h3&gt;
 
 &lt;p&gt;UITableView应该是iOS中最经典也是最常见的一个控件了。使用很普遍&lt;/p&gt;
 
@@ -110,6 +110,8 @@
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_7/20.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;reloadData&lt;/p&gt;
@@ -310,7 +312,25 @@
     &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">一、综述</summary></entry><entry><title type="html">Objective-C对象引用</title><link href="http://www.helloted.com/ios/2018/04/14/reference/" rel="alternate" type="text/html" title="Objective-C对象引用" /><published>2018-04-14T20:00:00+08:00</published><updated>2018-04-14T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2018/04/14/reference</id><content type="html" xml:base="http://www.helloted.com/ios/2018/04/14/reference/">&lt;h3 id=&quot;一引用&quot;&gt;一、引用&lt;/h3&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;cell复用的三个容器&quot;&gt;Cell复用的三个容器&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;NSMutableDictionary&lt;/code&gt; 类型 &lt;strong&gt;_cachedCells&lt;/strong&gt;：用来存储当前屏幕上所有 Cell 与其对应的 indexPath。以键值对的关系进行存储。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;NSMutableDictionary&lt;/code&gt; 类型 &lt;strong&gt;availableCells&lt;/strong&gt;：当列表发生滑动的时候，部分 Cell 从屏幕移出，这个容器会对 &lt;code class=&quot;highlighter-rouge&quot;&gt;_cachedCells&lt;/code&gt; 进行拷贝，然后将屏幕上此时的 Cell 全部去除。即最终取出所有退出屏幕的 Cell。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;NSMutableSet&lt;/code&gt; 类型 &lt;strong&gt;_reusableCells&lt;/strong&gt;：用来收集曾经出现过此时未出现在屏幕上的 Cell。当再出滑入主屏幕时，则直接使用其中的对象根据 &lt;code class=&quot;highlighter-rouge&quot;&gt;CGRectIntersectsRect&lt;/code&gt; Rect 碰撞试验进行复用。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_7/21.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;当到状态 ② 的时候，我们发现 &lt;code class=&quot;highlighter-rouge&quot;&gt;_reusableCells&lt;/code&gt; 容器中，已经出现了状态 ① 中已经退出屏幕的 Cell 0。而当我们重新将 Cell 0 滑入界面的时候，在系统 &lt;code class=&quot;highlighter-rouge&quot;&gt;addView&lt;/code&gt; 渲染阶段，会直接将 &lt;code class=&quot;highlighter-rouge&quot;&gt;_reusableCells&lt;/code&gt; 中的 Cell 0 立即取出进行渲染，从而代替创建新的实例再进行渲染，简化了时间与性能上的开销。&lt;/p&gt;
+
+&lt;p&gt;参考：&lt;/p&gt;
+
+&lt;p&gt;https://github.com/BigZaphod/Chameleon&lt;/p&gt;
+
+&lt;p&gt;http://www.desgard.com/TableView-Reuse/&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">一、综述</summary></entry><entry><title type="html">Objective-C对象引用</title><link href="http://www.helloted.com/ios/2018/04/14/reference/" rel="alternate" type="text/html" title="Objective-C对象引用" /><published>2018-04-14T20:00:00+08:00</published><updated>2018-04-14T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2018/04/14/reference</id><content type="html" xml:base="http://www.helloted.com/ios/2018/04/14/reference/">&lt;h3 id=&quot;一引用&quot;&gt;一、引用&lt;/h3&gt;
 
 &lt;p&gt;引用是iOS内存管理中的重要知识点，总所周知，iOS对象的内存管理是使用引用计数来表示的。一个对象只有在它的所有强引用都被释放后才能被回收。因此，一个对象的生命周期取决于其强引用的所有者。在某些情况下，这种行为可能并不理想。您可能想要引用一个对象而不妨碍对象本身的回收。对于这种情况，您可以获取一个“弱”引用。弱引用是通过存储一个指向对象的指针创建的，而不是保留对象。&lt;/p&gt;
 
