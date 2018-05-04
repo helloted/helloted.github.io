@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>在iOS上直播推流 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/ios/2018/05/03/librtmp/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/bg_01.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>在iOS上直播推流</h1>
+                    
+                    <h2 class="subheading">利用librtmp在iOS上进行直播推流</h2>
+                    
+                    <span class="meta">Posted by Ted on May 3, 2018</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h3 id="一编译lib库">一、编译lib库</h3>
+
+<h4 id="1编译openssl">1、编译openssl</h4>
+
+<p>编译librtmp需要用到openssl，所以先编译openssl，下载脚本<a href="https://github.com/x2on/OpenSSL-for-iPhone">OpenSSL</a>。</p>
+
+<p>编译目录下的<code class="highlighter-rouge">build-libssl.sh</code>文件，整个编译过程需要一段时间</p>
+
+<p><img src="/img/Simple_7/27.png" alt="img" /></p>
+
+<p>新建文件夹<code class="highlighter-rouge">librtmp</code>，将ssl编译后的两个文件夹<code class="highlighter-rouge">lib</code>与<code class="highlighter-rouge">include</code>拷入</p>
+
+<h4 id="2编译">2、编译</h4>
+
+<p>在librtmp目录下，</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>touch build.sh
+</code></pre>
+</div>
+
+<p>将下面的脚本复制进去，注意要修改的地方，<code class="highlighter-rouge">SDKVERSION</code>为当前mac上最新的iOS SDK的版本，可以通过得到</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>ls /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs
+</code></pre>
+</div>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c">#!/bin/sh</span>
+
+<span class="c">###########################################################################</span>
+<span class="c">#  Change values here                                                                     </span>
+<span class="nv">SDKVERSION</span><span class="o">=</span><span class="s2">"11.2"</span>                                                                         
+<span class="c">###########################################################################</span>
+<span class="c">#                                                                                                              #</span>
+<span class="c"># Don't change anything under this line!                                                  #</span>
+<span class="c">#                                                                                                              #</span>
+<span class="c">###########################################################################</span>
+
+<span class="nv">CURRENTPATH</span><span class="o">=</span><span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span>  
+<span class="nv">ARCHS</span><span class="o">=</span><span class="s2">"i386 x86_64 armv7 armv7s arm64"</span>  
+<span class="nv">LIBRTMPREPO</span><span class="o">=</span><span class="s2">"git://git.ffmpeg.org/rtmpdump"</span>  
+<span class="nv">BUILDPATH</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">CURRENTPATH</span><span class="k">}</span><span class="s2">/build"</span>  
+<span class="nv">LIBPATH</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">CURRENTPATH</span><span class="k">}</span><span class="s2">/lib"</span>  
+<span class="nv">INCLUDEPATH</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">CURRENTPATH</span><span class="k">}</span><span class="s2">/include"</span>  
+<span class="nv">SRCPATH</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">CURRENTPATH</span><span class="k">}</span><span class="s2">/src"</span>  
+<span class="nv">LIBRTMP</span><span class="o">=</span><span class="s2">"librtmp.a"</span>  
+<span class="nv">DEVELOPER</span><span class="o">=</span><span class="sb">`</span>xcode-select -print-path<span class="sb">`</span>
+
+<span class="k">if</span> <span class="o">[</span> ! -d <span class="s2">"</span><span class="nv">$DEVELOPER</span><span class="s2">"</span> <span class="o">]</span>; <span class="k">then  
+  </span><span class="nb">echo</span> <span class="s2">"xcode path is not set correctly </span><span class="nv">$DEVELOPER</span><span class="s2"> does not exist (most likely because of xcode &gt; 4.3)"</span>
+  <span class="nb">echo</span> <span class="s2">"run"</span>
+  <span class="nb">echo</span> <span class="s2">"sudo xcode-select -switch &lt;xcode path&gt;"</span>
+  <span class="nb">echo</span> <span class="s2">"for default installation:"</span>
+  <span class="nb">echo</span> <span class="s2">"sudo xcode-select -switch /Applications/Xcode.app/Contents/Developer"</span>
+  <span class="nb">exit </span>1
+<span class="k">fi</span>
+
+<span class="c"># Check whether openssl has already installed on the machine or not.</span>
+<span class="c"># libcrypt.a / libssl.a</span>
+
+<span class="nb">set</span> -e  
+<span class="nb">echo</span> <span class="s1">'Check openssl installation'</span>  
+<span class="k">if</span> <span class="o">[</span> -f <span class="s2">"</span><span class="k">${</span><span class="nv">LIBPATH</span><span class="k">}</span><span class="s2">/libcrypto.a"</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="o">[</span> -f <span class="s2">"</span><span class="k">${</span><span class="nv">LIBPATH</span><span class="k">}</span><span class="s2">/libssl.a"</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="o">[</span> -d <span class="s2">"</span><span class="k">${</span><span class="nv">INCLUDEPATH</span><span class="k">}</span><span class="s2">/openssl"</span> <span class="o">]</span>; <span class="k">then  
+  </span><span class="nb">echo</span> <span class="s1">'Openssl for iOS has already installed, no need to install openssl'</span>
+<span class="k">else  
+  </span><span class="nb">echo</span> <span class="s1">'Openssl for iOS not found, will install openssl for iOS'</span>
+  ./build-libssl.sh
+  <span class="nb">echo</span> <span class="s1">'Succeeded to install openssl'</span>
+<span class="k">fi</span>
+
+<span class="c"># Download librtmp source code from git repository</span>
+<span class="c"># We assuem the user already installed git client.</span>
+<span class="nb">echo</span> <span class="s1">'Clone librtmp git repository'</span>
+
+<span class="c"># Remove the directory if already exist</span>
+rm -rf <span class="s2">"</span><span class="k">${</span><span class="nv">SRCPATH</span><span class="k">}</span><span class="s2">/rtmpdump"</span>
+
+git clone <span class="k">${</span><span class="nv">LIBRTMPREPO</span><span class="k">}</span> src/rtmpdump  
+<span class="nb">cd</span> <span class="s2">"</span><span class="k">${</span><span class="nv">SRCPATH</span><span class="k">}</span><span class="s2">/rtmpdump/librtmp"</span>
+
+<span class="nv">LIBRTMP_REPO</span><span class="o">=</span><span class="s2">""</span>
+
+<span class="k">for </span>ARCH <span class="k">in</span> <span class="k">${</span><span class="nv">ARCHS</span><span class="k">}</span>  
+<span class="k">do  
+  if</span> <span class="o">[</span> <span class="s2">"</span><span class="k">${</span><span class="nv">ARCH</span><span class="k">}</span><span class="s2">"</span> <span class="o">==</span> <span class="s2">"i386"</span> <span class="o">]</span> <span class="o">||</span> <span class="o">[</span> <span class="s2">"</span><span class="k">${</span><span class="nv">ARCH</span><span class="k">}</span><span class="s2">"</span> <span class="o">==</span> <span class="s2">"x86_64"</span> <span class="o">]</span>;
+  <span class="k">then
+      </span><span class="nv">PLATFORM</span><span class="o">=</span><span class="s2">"iPhoneSimulator"</span>
+  <span class="k">else  
+      </span><span class="nv">PLATFORM</span><span class="o">=</span><span class="s2">"iPhoneOS"</span>
+  <span class="k">fi
+
+  </span><span class="nb">export </span><span class="nv">CROSS_TOP</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">DEVELOPER</span><span class="k">}</span><span class="s2">/Platforms/</span><span class="k">${</span><span class="nv">PLATFORM</span><span class="k">}</span><span class="s2">.platform/Developer"</span>
+  <span class="nb">export </span><span class="nv">CROSS_SDK</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">PLATFORM</span><span class="k">}${</span><span class="nv">SDKVERSION</span><span class="k">}</span><span class="s2">.sdk"</span>
+  <span class="nb">export </span><span class="nv">BUILD_TOOLS</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">DEVELOPER</span><span class="k">}</span><span class="s2">"</span>
+
+  <span class="nb">echo</span> <span class="s2">"Building librtmp for </span><span class="k">${</span><span class="nv">PLATFORM</span><span class="k">}</span><span class="s2"> </span><span class="k">${</span><span class="nv">SDKVERSION</span><span class="k">}</span><span class="s2"> </span><span class="k">${</span><span class="nv">ARCH</span><span class="k">}</span><span class="s2">"</span>
+  <span class="nb">echo</span> <span class="s2">"Please wait..."</span>
+
+  <span class="c"># add arch to CC=</span>
+  sed -ie <span class="s2">"s!AR=</span><span class="se">\$</span><span class="s2">(CROSS_COMPILE)ar!AR=/usr/bin/ar!"</span> <span class="s2">"Makefile"</span>
+  sed -ie <span class="s2">"/CC=</span><span class="se">\$</span><span class="s2">(CROSS_COMPILE)gcc/d"</span> <span class="s2">"Makefile"</span>
+  <span class="nb">echo</span> <span class="s2">"CC=</span><span class="se">\$</span><span class="s2">(CROSS_COMPILE)gcc -arch </span><span class="k">${</span><span class="nv">ARCH</span><span class="k">}</span><span class="s2">"</span> &gt;&gt; <span class="s2">"Makefile"</span>
+
+  <span class="nb">export </span><span class="nv">CROSS_COMPILE</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">DEVELOPER</span><span class="k">}</span><span class="s2">/usr/bin/"</span>  
+  <span class="nb">export </span><span class="nv">XCFLAGS</span><span class="o">=</span><span class="s2">"-isysroot </span><span class="k">${</span><span class="nv">CROSS_TOP</span><span class="k">}</span><span class="s2">/SDKs/</span><span class="k">${</span><span class="nv">CROSS_SDK</span><span class="k">}</span><span class="s2"> -miphoneos-version-min=7.0 -I</span><span class="k">${</span><span class="nv">INCLUDEPATH</span><span class="k">}</span><span class="s2"> -arch </span><span class="k">${</span><span class="nv">ARCH</span><span class="k">}</span><span class="s2">"</span>
+
+  <span class="k">if</span> <span class="o">[</span> <span class="s2">"</span><span class="k">${</span><span class="nv">ARCH</span><span class="k">}</span><span class="s2">"</span> <span class="o">==</span> <span class="s2">"i386"</span> <span class="o">]</span> <span class="o">||</span> <span class="o">[</span> <span class="s2">"</span><span class="k">${</span><span class="nv">ARCH</span><span class="k">}</span><span class="s2">"</span> <span class="o">==</span> <span class="s2">"x86_64"</span> <span class="o">]</span>;
+  <span class="k">then
+      </span><span class="nb">export </span><span class="nv">XLDFLAGS</span><span class="o">=</span><span class="s2">"-isysroot </span><span class="k">${</span><span class="nv">CROSS_TOP</span><span class="k">}</span><span class="s2">/SDKs/</span><span class="k">${</span><span class="nv">CROSS_SDK</span><span class="k">}</span><span class="s2"> -miphoneos-version-min=7.0 -L</span><span class="k">${</span><span class="nv">LIBPATH</span><span class="k">}</span><span class="s2"> -arch </span><span class="k">${</span><span class="nv">ARCH</span><span class="k">}</span><span class="s2">"</span>
+  <span class="k">else
+      </span><span class="nb">export </span><span class="nv">XLDFLAGS</span><span class="o">=</span><span class="s2">"-isysroot </span><span class="k">${</span><span class="nv">CROSS_TOP</span><span class="k">}</span><span class="s2">/SDKs/</span><span class="k">${</span><span class="nv">CROSS_SDK</span><span class="k">}</span><span class="s2"> -miphoneos-version-min=7.0 -L</span><span class="k">${</span><span class="nv">LIBPATH</span><span class="k">}</span><span class="s2"> -arch </span><span class="k">${</span><span class="nv">ARCH</span><span class="k">}</span><span class="s2">"</span>
+  <span class="k">fi
+
+  </span><span class="nv">OUTPATH</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">BUILDPATH</span><span class="k">}</span><span class="s2">/librtmp-</span><span class="k">${</span><span class="nv">PLATFORM</span><span class="k">}${</span><span class="nv">SDKVERSION</span><span class="k">}</span><span class="s2">-</span><span class="k">${</span><span class="nv">ARCH</span><span class="k">}</span><span class="s2">.sdk"</span>
+  mkdir -p <span class="s2">"</span><span class="k">${</span><span class="nv">OUTPATH</span><span class="k">}</span><span class="s2">"</span>
+  <span class="nv">LOG</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">OUTPATH</span><span class="k">}</span><span class="s2">/build-librtmp.log"</span>
+
+  make <span class="nv">SYS</span><span class="o">=</span>darwin &gt;&gt; <span class="s2">"</span><span class="k">${</span><span class="nv">LOG</span><span class="k">}</span><span class="s2">"</span> 2&gt;&amp;1  
+  make <span class="nv">SYS</span><span class="o">=</span>darwin <span class="nv">prefix</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">OUTPATH</span><span class="k">}</span><span class="s2">"</span> install  &gt;&gt; <span class="s2">"</span><span class="k">${</span><span class="nv">LOG</span><span class="k">}</span><span class="s2">"</span> 2&gt;&amp;1
+  make clean &gt;&gt; <span class="s2">"</span><span class="k">${</span><span class="nv">LOG</span><span class="k">}</span><span class="s2">"</span> 2&gt;&amp;1
+
+  LIBRTMP_REPO+<span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">OUTPATH</span><span class="k">}</span><span class="s2">/lib/</span><span class="k">${</span><span class="nv">LIBRTMP</span><span class="k">}</span><span class="s2"> "</span>
+<span class="k">done
+
+</span><span class="nb">echo</span> <span class="s2">"Build universal library..."</span>  
+lipo -create <span class="k">${</span><span class="nv">LIBRTMP_REPO</span><span class="k">}</span>-output <span class="k">${</span><span class="nv">LIBPATH</span><span class="k">}</span>/<span class="k">${</span><span class="nv">LIBRTMP</span><span class="k">}</span>
+
+mkdir -p <span class="k">${</span><span class="nv">INCLUDEPATH</span><span class="k">}</span>  
+cp -R <span class="k">${</span><span class="nv">BUILDPATH</span><span class="k">}</span>/librtmp-iPhoneSimulator<span class="k">${</span><span class="nv">SDKVERSION</span><span class="k">}</span>-i386.sdk/include/ <span class="k">${</span><span class="nv">INCLUDEPATH</span><span class="k">}</span>/
+
+<span class="nb">echo</span> <span class="s2">"Building done."</span>  
+<span class="nb">echo</span> <span class="s2">"Cleaning up..."</span>
+
+rm -rf <span class="k">${</span><span class="nv">SRCPATH</span><span class="k">}</span>/rtmpdump  
+<span class="nb">echo</span> <span class="s2">"Done."</span>  
+</code></pre>
+</div>
+
+<p>保存并且执行</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>./build.sh
+</code></pre>
+</div>
+
+<p>如果报权限错误，则先赋予权限</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>chmod +x build.sh
+</code></pre>
+</div>
+
+<p><img src="/img/Simple_7/28.png" alt="img" /></p>
+
+<p>最终可以得到librtmp.a以及include文件</p>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/%E5%9F%BA%E7%A1%80/2018/05/01/vlclive/" data-toggle="tooltip" data-placement="top" title="Mac上搭建直播服务器">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>
