@@ -291,6 +291,83 @@ rm -rf <span class="k">${</span><span class="nv">SRCPATH</span><span class="k">}
 
 <p><img src="/img/Simple_7/32.png" alt="img" /></p>
 
+<h3 id="三推流">三、推流</h3>
+
+<p>因为librtmp用的是C语言，为了方便调用，我用OC封装了一下一个类RTMPPuser。用来推流的代码是</p>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code>    <span class="n">RTMPPusher</span> <span class="o">*</span><span class="n">pusher</span> <span class="o">=</span> <span class="p">[[</span><span class="n">RTMPPusher</span> <span class="nf">alloc</span><span class="p">]</span><span class="nf">init</span><span class="p">];</span>
+    <span class="n">BOOL</span> <span class="n">success</span> <span class="o">=</span> <span class="p">[</span><span class="n">pusher</span> <span class="nf">connectWithURL</span><span class="p">:</span><span class="s">@"rtmp://192.168.0.16:1935/zbcs/room"</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">success</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">NSString</span> <span class="o">*</span><span class="n">htmlFile</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSBundle</span> <span class="nf">mainBundle</span><span class="p">]</span><span class="nf">pathForResource</span><span class="p">:</span><span class="s">@"demo"</span> <span class="nf">ofType</span><span class="p">:</span><span class="s">@"flv"</span><span class="p">];</span>
+        <span class="n">NSData</span> <span class="o">*</span><span class="n">video</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSData</span> <span class="nf">dataWithContentsOfFile</span><span class="p">:</span><span class="n">htmlFile</span><span class="p">];</span>
+        <span class="p">[</span><span class="n">pusher</span> <span class="nf">pushFullVideoData</span><span class="p">:</span><span class="n">video</span> <span class="nf">chunkSize</span><span class="p">:</span><span class="mi">10</span> <span class="o">*</span> <span class="mi">5120</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="p">[</span><span class="n">pusher</span> <span class="nf">closeRTMP</span><span class="p">];</span>
+</code></pre>
+</div>
+
+<h4 id="1建立连接">1、建立连接</h4>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">connectWithURL</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">url</span><span class="p">{</span>
+    <span class="n">_url</span> <span class="o">=</span> <span class="n">url</span><span class="p">;</span>
+    <span class="k">@synchronized</span> <span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">_rtmp</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span> <span class="nf">newRTMP</span><span class="p">];</span>
+        
+        <span class="kt">char</span> <span class="o">*</span><span class="n">strUrl</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="p">)[</span><span class="n">url</span> <span class="nf">cStringUsingEncoding</span><span class="p">:</span><span class="n">NSASCIIStringEncoding</span><span class="p">];</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">RTMP_SetupURL</span><span class="p">(</span><span class="n">_rtmp</span><span class="p">,</span> <span class="n">strUrl</span><span class="p">))</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nb">NO</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+        <span class="n">RTMP_EnableWrite</span><span class="p">(</span><span class="n">_rtmp</span><span class="p">);</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">RTMP_Connect</span><span class="p">(</span><span class="n">_rtmp</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">)</span> <span class="o">||</span> <span class="o">!</span><span class="n">RTMP_ConnectStream</span><span class="p">(</span><span class="n">_rtmp</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nb">NO</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="n">_connected</span> <span class="o">=</span> <span class="n">RTMP_IsConnected</span><span class="p">(</span><span class="n">_rtmp</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nb">YES</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<h4 id="2切片">2、切片</h4>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">pushFullVideoData</span><span class="p">:(</span><span class="n">NSData</span> <span class="o">*</span><span class="p">)</span><span class="nv">fullVideo</span> <span class="nf">chunkSize</span><span class="p">:(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="nv">size</span><span class="p">{</span>
+    <span class="n">NSUInteger</span> <span class="n">length</span> <span class="o">=</span> <span class="p">[</span><span class="n">fullVideo</span> <span class="nf">length</span><span class="p">];</span>
+    <span class="n">NSUInteger</span> <span class="n">chunkSize</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="mi">5120</span><span class="p">;</span>
+    <span class="n">NSUInteger</span> <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">// 将整视频切片后推送
+</span>    <span class="k">do</span> <span class="p">{</span>
+        <span class="n">NSUInteger</span> <span class="n">thisChunkSize</span> <span class="o">=</span> <span class="n">length</span> <span class="o">-</span> <span class="n">offset</span> <span class="o">&gt;</span> <span class="n">chunkSize</span> <span class="p">?</span> <span class="n">chunkSize</span> <span class="p">:</span> <span class="n">length</span> <span class="o">-</span> <span class="n">offset</span><span class="p">;</span>
+        <span class="n">NSData</span><span class="o">*</span> <span class="n">chunk</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSData</span> <span class="nf">dataWithBytesNoCopy</span><span class="p">:(</span><span class="kt">char</span> <span class="o">*</span><span class="p">)[</span><span class="n">fullVideo</span> <span class="nf">bytes</span><span class="p">]</span> <span class="o">+</span> <span class="n">offset</span>
+                                             <span class="nf">length</span><span class="p">:</span><span class="n">thisChunkSize</span>
+                                       <span class="nl">freeWhenDone:</span><span class="nb">NO</span><span class="p">];</span>
+        <span class="n">offset</span> <span class="o">+=</span> <span class="n">thisChunkSize</span><span class="p">;</span>
+        <span class="p">[</span><span class="n">self</span> <span class="nf">write</span><span class="p">:</span><span class="n">chunk</span><span class="p">];</span>
+        <span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="n">offset</span> <span class="o">&lt;</span> <span class="n">length</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<h4 id="3写入推流">3、写入推流</h4>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="nf">write</span><span class="p">:(</span><span class="n">NSData</span> <span class="o">*</span><span class="p">)</span><span class="nv">data</span><span class="p">{</span>
+    <span class="k">@synchronized</span> <span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">sent</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">_connected</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">sent</span> <span class="o">=</span> <span class="n">RTMP_Write</span><span class="p">(</span><span class="n">_rtmp</span><span class="p">,</span> <span class="p">[</span><span class="n">data</span> <span class="nf">bytes</span><span class="p">],</span> <span class="p">(</span><span class="kt">int</span><span class="p">)[</span><span class="n">data</span> <span class="nf">length</span><span class="p">]);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">sent</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>以上代码可以在<a href="https://github.com/helloted/iOS_Demo/tree/master/RTMPDemo">推流Demo</a>下载</p>
+
 
 
                 <hr>
