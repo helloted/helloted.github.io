@@ -1,4 +1,212 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-05-07T14:28:44+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">在iOS上直播推流</title><link href="http://www.helloted.com/%E7%9B%B4%E6%92%AD/2018/05/03/librtmp/" rel="alternate" type="text/html" title="在iOS上直播推流" /><published>2018-05-03T20:00:00+08:00</published><updated>2018-05-03T20:00:00+08:00</updated><id>http://www.helloted.com/%E7%9B%B4%E6%92%AD/2018/05/03/librtmp</id><content type="html" xml:base="http://www.helloted.com/%E7%9B%B4%E6%92%AD/2018/05/03/librtmp/">&lt;h3 id=&quot;一编译lib库&quot;&gt;一、编译lib库&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-05-10T16:30:31+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">H.264封装成FLV</title><link href="http://www.helloted.com/ios/2018/05/08/h264toflv/" rel="alternate" type="text/html" title="H.264封装成FLV" /><published>2018-05-08T20:00:00+08:00</published><updated>2018-05-08T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2018/05/08/h264toflv</id><content type="html" xml:base="http://www.helloted.com/ios/2018/05/08/h264toflv/">&lt;h3 id=&quot;一h264和flv&quot;&gt;一、H.264和FLV&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;H.264&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;H264是一个个NALU单元组成的，每个单元以00 00 01 或者 00 00 00 01分隔开来，每2个00 00 00 01之间就是一个NALU单元。我们实际上就是将一个个NALU单元封装进FLV文件。&lt;/p&gt;
+
+&lt;p&gt;每个NALU单元开头第一个byte的低5bits表示着该单元的类型，即NAL nal_unit_type：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#define NALU_TYPE_SLICE 1  
+#define NALU_TYPE_DPA 2  
+#define NALU_TYPE_DPB 3  
+#define NALU_TYPE_DPC 4  
+#define NALU_TYPE_IDR 5    /**关键帧***/  
+#define NALU_TYPE_SEI 6    /*****曾强帧******/       
+#define NALU_TYPE_SPS 7  
+#define NALU_TYPE_PPS 8  
+#define NALU_TYPE_AUD 9  
+#define NALU_TYPE_EOSEQ 10  
+#define NALU_TYPE_EOSTREAM 11  
+#define NALU_TYPE_FILL 12  
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;每个NALU第一个byte &amp;amp; 0x1f 就可以得出它的类型，比如上图第一个NALU：67 &amp;amp; 0x1f = 7，则此单元是SPS，第三个：68 &amp;amp; 0x1f = 8，则此单元是PPS。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;FLV&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;FLV（Flash Video）是Adobe公司设计开发的一种流行的流媒体格式，由于其视频文件体积轻巧、封装简单等特点，使其很适合在互联网上进行应用。此外，FLV可以使用Flash Player进行播放，而Flash Player插件已经安装在全世界绝大部分浏览器上，这使得通过网页播放FLV视频十分容易。目前主流的视频网站如优酷网，土豆网，乐视网等网站无一例外地使用了FLV格式。FLV封装格式的文件后缀通常为“.flv”。&lt;/p&gt;
+
+&lt;h3 id=&quot;二flv的结构&quot;&gt;二、FLV的结构&lt;/h3&gt;
+
+&lt;p&gt;总体上看，FLV包括文件头（File Header）和文件体（File Body）两部分，其中文件体由一系列的Tag组成。因此一个FLV文件是如图1结构。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_7/33.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;三封装flv&quot;&gt;三、封装FLV&lt;/h3&gt;
+
+&lt;h4 id=&quot;1h264文件切割&quot;&gt;1、h264文件切割&lt;/h4&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;splitH264FileFrom&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;NSData&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h264file&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSData&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;dataWithContentsOfFile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//H264裸数据
+&lt;/span&gt;    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;count_i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Byte&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;contentByte&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Byte&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h264file&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;bytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Byte&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;//h264是一个个NALU单元组成的，每个单元以00 00 01 或者 00 00 00 01分隔开来，每2个00 00 00 01之间就是一个NALU单元
+&lt;/span&gt;    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h264file&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;contentByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;mh&quot;&gt;0x00&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;contentByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;mh&quot;&gt;0x00&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;contentByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;mh&quot;&gt;0x00&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;contentByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;mh&quot;&gt;0x01&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//分割符
+&lt;/span&gt;            &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h264NALUArray&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;addObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSMutableData&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]];&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;count_i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;contentByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;mh&quot;&gt;0x00&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;contentByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;mh&quot;&gt;0x00&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;contentByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;mh&quot;&gt;0x00&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//分割符
+&lt;/span&gt;            &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h264NALUArray&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;addObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSMutableData&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]];&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;count_i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;count_i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;byte&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;contentByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h264NALUArray&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;objectAtIndex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;count_i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;appendBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;byte&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)];&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;2封装flv-header&quot;&gt;2、封装FLV Header&lt;/h4&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;c1&quot;&gt;// 1~9为FLV Header
+&lt;/span&gt;    
+    &lt;span class=&quot;c1&quot;&gt;// 前三位 0x46 0x4c 0x56为文件标识&quot;FLV&quot;
+&lt;/span&gt;    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flvData&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;appendData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;FLV&quot;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;dataUsingEncoding&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSUTF8StringEncoding&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]];&lt;/span&gt;
+    
+    &lt;span class=&quot;c1&quot;&gt;// 第四位是版本号
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x01&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flvData&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;appendBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)];&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//4
+&lt;/span&gt;    
+    &lt;span class=&quot;c1&quot;&gt;// 流的信息
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x01&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//0x01--代表只有视频，0x04-－只有音频，0x05-－音频和视频混合
+&lt;/span&gt;    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flvData&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;appendBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)];&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//5
+&lt;/span&gt;    
+    &lt;span class=&quot;c1&quot;&gt;// 接下来的四位为Header的长度9Byte
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;writeIntegerToDataWithHex32&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;9&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;flvData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;3封装spspps&quot;&gt;3、封装SPS、PPS&lt;/h4&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;c1&quot;&gt;//H.264码流第一个 NALU是 SPS（序列参数集Sequence Parameter Set）
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;//H.264码流第二个 NALU是 PPS（图像参数集Picture Parameter Set）
+&lt;/span&gt;    
+    &lt;span class=&quot;c1&quot;&gt;//Tag = Tag Header + Tag Data
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;//TAG Head 11
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;NSUInteger&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tagDataLength&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;topTagLen&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h264NALUArray&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;objectAtIndex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h264NALUArray&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;objectAtIndex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;NSData&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;headerTagData&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;creatflvTagHeaderWithType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FLVTagHeaderTypeVideo&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;tagDataSize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tagDataLength&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;timeStamp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flvData&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;appendData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;headerTagData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    
+    &lt;span class=&quot;c1&quot;&gt;//
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x17&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flvData&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;appendBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)];&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//18
+&lt;/span&gt;    
+    &lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x00&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flvData&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;appendBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)];&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//18
+&lt;/span&gt;    
+    &lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x00&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flvData&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;appendBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)];&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//18
+&lt;/span&gt;    
+    &lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x00&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flvData&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;appendBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)];&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//18
+&lt;/span&gt;    
+    &lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x00&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flvData&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;appendBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)];&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//18
+&lt;/span&gt;    
+    &lt;span class=&quot;c1&quot;&gt;// AVC也就是H264的解码配置 configuretion
+&lt;/span&gt;    
+    &lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x01&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flvData&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;appendBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)];&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//18
+&lt;/span&gt;    
+    &lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x42&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flvData&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;appendBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)];&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//18
+&lt;/span&gt;    
+    &lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x80&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flvData&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;appendBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)];&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//18
+&lt;/span&gt;    
+    &lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x0D&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flvData&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;appendBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)];&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//18
+&lt;/span&gt;    
+    &lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0xFF&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flvData&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;appendBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)];&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//18
+&lt;/span&gt;    
+    &lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0xE1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flvData&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;appendBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)];&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//18
+&lt;/span&gt;    
+    
+    &lt;span class=&quot;c1&quot;&gt;// 写入前两个NALU单元，也就是SPS和PPS
+&lt;/span&gt;    
+    &lt;span class=&quot;n&quot;&gt;NSData&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NALU&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h264NALUArray&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;objectAtIndex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;NSUInteger&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NALULength&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NALU&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;writeIntegerToDataWithHex16&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NALULength&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;flvData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flvData&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;appendData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NALU&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    
+    &lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x01&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flvData&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;appendBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)];&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//18
+&lt;/span&gt;    
+    &lt;span class=&quot;n&quot;&gt;NALU&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h264NALUArray&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;objectAtIndex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;NALULength&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NALU&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;writeIntegerToDataWithHex16&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NALULength&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;flvData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flvData&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;appendData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NALU&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;4按顺序封装nalu&quot;&gt;4、按顺序封装NALU&lt;/h4&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;n&quot;&gt;NSInteger&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;naluLength&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;time_h&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//初始时间戳
+&lt;/span&gt;    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h264NALUArray&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;naluLength&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;metaFixLen&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h264NALUArray&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;objectAtIndex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h264NALUArray&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;objectAtIndex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;naluLength&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;videoTagFixLen&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h264NALUArray&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;objectAtIndex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        
+        &lt;span class=&quot;c1&quot;&gt;// Previous Tag Size
+&lt;/span&gt;        &lt;span class=&quot;n&quot;&gt;writeIntegerToDataWithHex32&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;naluLength&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;flvData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        
+        &lt;span class=&quot;c1&quot;&gt;// 本次tag的Header Data长度为5+4长度
+&lt;/span&gt;        &lt;span class=&quot;n&quot;&gt;naluLength&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h264NALUArray&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;objectAtIndex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;9&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;NSData&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tagHeader&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;creatflvTagHeaderWithType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FLVTagHeaderTypeVideo&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;tagDataSize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;naluLength&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;timeStamp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;time_h&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flvData&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;appendData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tagHeader&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+        
+        &lt;span class=&quot;c1&quot;&gt;// Tag Data
+&lt;/span&gt;        &lt;span class=&quot;c1&quot;&gt;// 一个byte的video信息+一个byte的AVCPacket type+3个bytes的无用数据（composition time，当AVC时无用，全是0）+ 4个bytes的NALU单元长度 + N个bytes的NALU数据
+&lt;/span&gt;        &lt;span class=&quot;n&quot;&gt;NALU&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h264NALUArray&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;objectAtIndex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Byte&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;contentByte&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Byte&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NALU&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;bytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+        
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;contentByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x1f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+            &lt;span class=&quot;c1&quot;&gt;// 高4bits：1，keyframe。 低4bits：7，代表AVC
+&lt;/span&gt;            &lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x17&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flvData&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;appendBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)];&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//1
+&lt;/span&gt;            
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;c1&quot;&gt;// 高4bits：2，inter frame ，P frame。 低4bits：7，AVC NALU
+&lt;/span&gt;            &lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x27&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flvData&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;appendBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)];&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//1
+&lt;/span&gt;        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x01&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flvData&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;appendBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)];&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//2
+&lt;/span&gt;        
+        &lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x000000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flvData&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;appendBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempByte&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//3、4、5
+&lt;/span&gt;        
+        &lt;span class=&quot;c1&quot;&gt;// NALU 长度写入
+&lt;/span&gt;        &lt;span class=&quot;n&quot;&gt;NSLog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;len:%ld&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NALU&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;writeIntegerToDataWithHex32&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NALU&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;flvData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//6、7、8、9
+&lt;/span&gt;        &lt;span class=&quot;c1&quot;&gt;// NALU数据写入
+&lt;/span&gt;        &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flvData&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;appendData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h264NALUArray&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;objectAtIndex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]];&lt;/span&gt;
+        
+        &lt;span class=&quot;n&quot;&gt;time_h&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;time_h&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;40&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//对于一个裸h264流，没有时间戳的概念，可以默认以25fps，即40ms一帧数据
+&lt;/span&gt;        
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//for
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;5保存flv文件&quot;&gt;5、保存FLV文件&lt;/h4&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;documentPath&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSSearchPathForDirectoriesInDomains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSDocumentDirectory&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NSUserDomainMask&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;YES&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;objectAtIndex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flvPath&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;documentPath&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;stringByAppendingPathComponent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;a.flv&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flvData&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;writeToFile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flvPath&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;atomically&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;YES&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">一、H.264和FLV</summary></entry><entry><title type="html">在iOS上推流</title><link href="http://www.helloted.com/%E7%9B%B4%E6%92%AD/2018/05/03/librtmp/" rel="alternate" type="text/html" title="在iOS上推流" /><published>2018-05-03T20:00:00+08:00</published><updated>2018-05-03T20:00:00+08:00</updated><id>http://www.helloted.com/%E7%9B%B4%E6%92%AD/2018/05/03/librtmp</id><content type="html" xml:base="http://www.helloted.com/%E7%9B%B4%E6%92%AD/2018/05/03/librtmp/">&lt;h3 id=&quot;一编译lib库&quot;&gt;一、编译lib库&lt;/h3&gt;
 
 &lt;h4 id=&quot;1编译openssl&quot;&gt;1、编译openssl&lt;/h4&gt;
 
@@ -1727,500 +1935,4 @@ void main()
   &lt;li&gt;为您的渲染策略添加适当的视图或视图控制器对象。&lt;/li&gt;
   &lt;li&gt;如果使用GLKit进行渲染，请设置GLKViewController和GLKView（或您的自定义子类）的实例，并使用其rootViewController属性将它们添加到窗口中。&lt;/li&gt;
   &lt;li&gt;如果渲染到Core Animation图层，请将包含图层的视图添加为窗口的子视图。要使用动画循环进行渲染，请通过检索窗口的屏幕属性并调用其displayLinkWithTarget：selector：方法来创建为外部显示器优化的显示链接对象。&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Ted</name></author><category term="基础" /><summary type="html">本文翻译自苹果官方文档OpenGL ES Programming Guide</summary></entry><entry><title type="html">OpenGL ES编程指南（二）</title><link href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/21/OpenGL_2/" rel="alternate" type="text/html" title="OpenGL ES编程指南（二）" /><published>2018-03-21T20:00:00+08:00</published><updated>2018-03-21T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/21/OpenGL_2</id><content type="html" xml:base="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/21/OpenGL_2/">&lt;p&gt;本文翻译自苹果官方文档&lt;a href=&quot;https://developer.apple.com/library/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008793-CH1-SW1&quot;&gt;OpenGL ES Programming Guide&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;四通过opengl-es和glkit来画&quot;&gt;四、通过OpenGL ES和GLKit来画&lt;/h3&gt;
-
-&lt;p&gt;GLKit框架提供了View和ViewController类，它们消除了OpenGL ES内容绘制和动画制作所需的设置和代码维护。 GLKView类管理OpenGL ES基础结构并为绘图代码提供位置，而GLKViewController类则为GLKit视图中的OpenGL ES内容的平滑动画提供渲染循环。 这些类扩展了用于绘制视图内容和管理视图表示的标准UIKit设计模式。 因此，您可以将精力主要放在您的OpenGL ES渲染代码上，并让您的应用程序快速启动并运行。 GLKit框架还提供了其他功能来简化OpenGL ES 2.0和3.0的开发。&lt;/p&gt;
-
-&lt;h4 id=&quot;glkit-view&quot;&gt;GLKit View&lt;/h4&gt;
-
-&lt;p&gt;GLKView类提供了基于OpenGL ES的的绘图，与标准UIView绘图循环等价。 UIView实例自动配置其图形上下文，以便您的drawRect：实现只需执行Quartz 2D绘图命令；而GLKView实例自动配置它自己，绘图只需执行OpenGL ES绘图命令。 GLKView类通过维护一个保存OpenGL ES绘图命令结果的framebuffer对象来提供这种功能，然后在绘图方法返回时自动将它们呈现给Core Animation。&lt;/p&gt;
-
-&lt;p&gt;与标准UIKit视图一样，GLKit视图按需呈现其内容。首次显示视图时，它将调用您的绘图方法 - Core Animation会缓存呈现的输出并在显示视图时显示它。如果要更改视图的内容，请调用setNeedsDisplay方法，视图再次调用绘图方法，缓存结果图像并将其显示在屏幕上。当用于渲染图像的数据不经常更改或仅响应用户操作时，此方法非常有用。通过仅在需要时渲染新的视图内容，您可以节省设备上的电池电量，并为设备执行其他操作留出更多时间。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_6/06.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;创建并配置一个glkit-view&quot;&gt;创建并配置一个GLKit View&lt;/h4&gt;
-
-&lt;p&gt;您可以通过编程或使用Interface Builder来创建和配置GLKView对象。 在将其用于绘制之前，您必须将其与EAGLContext对象关联（请参阅配置OpenGL ES上下文）。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;以编程方式创建视图时，首先创建一个上下文，然后将其传递给视图的 &lt;code class=&quot;highlighter-rouge&quot;&gt;initWithFrame:context:&lt;/code&gt; 方法。&lt;/li&gt;
-  &lt;li&gt;从storyboard加载视图后，创建一个上下文并将其设置为视图的上下文属性的值。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;GLKit视图会自动创建和配置自己的OpenGL ES帧缓冲区对象和渲染缓冲区。 您可以使用视图的可绘制属性来控制这些对象的属性，如下所示。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (void)viewDidLoad
-{
-    [super viewDidLoad];
- 
-    // Create an OpenGL ES context and assign it to the view loaded from storyboard
-    GLKView *view = (GLKView *)self.view;
-    view.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
- 
-    // Configure renderbuffers created by the view
-    view.drawableColorFormat = GLKViewDrawableColorFormatRGBA8888;
-    view.drawableDepthFormat = GLKViewDrawableDepthFormat24;
-    view.drawableStencilFormat = GLKViewDrawableStencilFormat8;
- 
-    // Enable multisampling
-    view.drawableMultisample = GLKViewDrawableMultisample4X;
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;如果您更改GLKit视图的大小，比例因子或可绘制属性，则会在下次绘制内容时自动删除并重新创建适当的帧缓冲区对象和渲染缓冲区.&lt;/p&gt;
-
-&lt;p&gt;您可以使用其drawableMultisample属性为GLKView实例启用多重采样。 多重采样是抗锯齿的一种形式，可平滑锯齿状边缘，以大幅增加内存和碎片处理时间为代价提高大多数3D应用的图像质量 - 如果启用多重采样，则始终测试应用的性能以确保其可接受性。&lt;/p&gt;
-
-&lt;h4 id=&quot;用glkit-view进行绘制&quot;&gt;用GLKit View进行绘制&lt;/h4&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (void)drawRect:(CGRect)rect
-{
-    // Clear the framebuffer
-    glClearColor(0.0f, 0.0f, 0.1f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
- 
-    // Draw using previously configured texture, shader, uniforms, and vertex array
-    glBindTexture(GL_TEXTURE_2D, _planetTexture);
-    glUseProgram(_diffuseShading);
-    glUniformMatrix4fv(_uniformModelViewProjectionMatrix, 1, 0, _modelViewProjectionMatrix.m);
-    glBindVertexArrayOES(_planetMesh);
-    glDrawElements(GL_TRIANGLE_STRIP, 256, GL_UNSIGNED_SHORT);
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;注意：glClear函数提示OpenGL ES可以丢弃任何现有的帧缓冲区内容，避免了将以前的内容加载到内存中的昂贵的内存操作。 为确保最佳性能，在绘制之前应始终调用此函数。&lt;/p&gt;
-
-&lt;p&gt;GLKView类能够为OpenGL ES绘图提供一个简单的接口，因为它管理着OpenGL ES渲染过程的标准部分：&lt;/p&gt;
-
-&lt;p&gt;在调用绘图方法之前，视图：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;使其EAGLContext对象成为当前上下文&lt;/li&gt;
-  &lt;li&gt;根据当前大小，比例因子和可绘制属性（如果需要）创建帧缓冲区对象和渲染缓冲区，&lt;/li&gt;
-  &lt;li&gt;将帧缓冲区对象绑定为绘图命令的当前目标&lt;/li&gt;
-  &lt;li&gt;设置OpenGL ES视口以匹配帧缓冲区大小&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;绘图方法返回后，视图：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;解决多重采样缓冲区（如果启用了多重采样）&lt;/li&gt;
-  &lt;li&gt;放弃其内容不再需要的渲染缓冲区&lt;/li&gt;
-  &lt;li&gt;将渲染缓冲区内容呈现给Core Animation进行缓存和显示&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;用一个代理对象来进行渲染&quot;&gt;用一个代理对象来进行渲染&lt;/h4&gt;
-
-&lt;p&gt;许多OpenGL ES应用程序在自定义类中实现渲染代码。 这种方法的一个优点是它允许您通过为每个渲染算法类定义不同的渲染器类来轻松支持多种渲染算法。 具有共同功能的渲染算法可以从父类继承。 例如，您可能使用不同的渲染器类来支持OpenGL ES 2.0和3.0（请参阅配置OpenGL ES上下文）。 或者您可以使用它们来定制渲染，以便在具有更强大硬件的设备上获得更好的图像质量&lt;/p&gt;
-
-&lt;p&gt;GLKit非常适合这种方法 - 您可以使您的渲染器对象为标准GLKView实例的代理。 您的渲染器类不使用GLKView的子类并实现&lt;code class=&quot;highlighter-rouge&quot;&gt;drawRect：&lt;/code&gt;方法，而是使用GLKViewDelegate协议并实现&lt;code class=&quot;highlighter-rouge&quot;&gt;glkView:drawInRect:&lt;/code&gt;方法。 下面代码在应用启动时基于硬件特性选择渲染器类&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
-    // Create a context so we can test for features
-    EAGLContext *context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-    [EAGLContext setCurrentContext:context];
- 
-    // Choose a rendering class based on device features
-    GLint maxTextureSize;
-    glGetIntegerv(GL_MAX_TEXTURE_SIZE, &amp;amp;maxTextureSize);
-    if (maxTextureSize &amp;gt; 2048)
-        self.renderer = [[MyBigTextureRenderer alloc] initWithContext:context];
-    else
-        self.renderer = [[MyRenderer alloc] initWithContext:context];
- 
-    // Make the renderer the delegate for the view loaded from the main storyboard
-    GLKView *view = (GLKView *)self.window.rootViewController.view;
-    view.delegate = self.renderer;
- 
-    // Give the OpenGL ES context to the view so it can draw
-    view.context = context;
- 
-    return YES;
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h4 id=&quot;glkit-view-controller&quot;&gt;GLKit View Controller&lt;/h4&gt;
-
-&lt;p&gt;默认情况下，GLKView对象根据需要呈现其内容。 也就是说，使用OpenGL ES进行绘图的一个关键优势是它能够使用图形处理硬件来连续动画复杂的场景 - 例如游戏和模拟等应用很少呈现静态图像。 对于这些情况，GLKit框架提供了一个View Controller类，为其管理的GLKView对象维护一个动画循环。 该循环遵循游戏和模拟中常见的设计模式，分为两个阶段：更新和显示。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_6/06.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;对于更新阶段，View Controller调用它自己的更新方法（或其代理的glkViewControllerUpdate方法）。在这种方法里，你应该准备绘制下一帧。例如，游戏可能会使用这种方法根据自上一帧以来接收到的输入事件来确定玩家和敌人角色的位置，科学可视化可能会使用此方法来运行其模拟步骤。如果您需要计时信息来确定下一帧的应用程序状态，请使用视图控制器的计时属性之一，例如timeSinceLastUpdate属性。在上图中，更新阶段增加一个角度变量并使用它来计算变换矩阵。&lt;/p&gt;
-
-&lt;p&gt;对于显示阶段，View Controller调用其视图的显示方法，该方法又调用您的绘图方法。在您的绘图方法中，您将OpenGL ES绘图命令提交给GPU以呈现您的内容。为了获得最佳性能，应用程序应该在渲染新帧时开始修改OpenGL ES对象，然后提交绘制命令。显示阶段将着色器程序中的统一变量设置为更新阶段计算的矩阵，然后提交绘制命令以渲染新内容。&lt;/p&gt;
-
-&lt;p&gt;动画循环以视图控制器的framesPerSecond属性所指示的速率在这两个阶段之间交替。您可以使用preferredFramesPerSecond属性设置所需的帧速率 - 以优化当前显示硬件的性能，视图控制器会自动选择接近您首选值的最佳帧速率。&lt;/p&gt;
-
-&lt;p&gt;重要提示：为获得最佳效果，请选择您的应用可以始终实现的帧速率。平滑一致的帧速率产生比不规律变化的帧速率更令人愉快的用户体验。&lt;/p&gt;
-
-&lt;h4 id=&quot;使用glkit-view-controller&quot;&gt;使用GLKit View Controller&lt;/h4&gt;
-
-&lt;p&gt;下面代码演示了使用GLKViewController子类和GLKView实例呈现动画OpenGL ES内容的典型策略。&lt;/p&gt;
-
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;@implementation&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;PlanetViewController&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// subclass of GLKViewController
-&lt;/span&gt; 
-&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;viewDidLoad&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;super&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;viewDidLoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
- 
-    &lt;span class=&quot;c1&quot;&gt;// Create an OpenGL ES context and assign it to the view loaded from storyboard
-&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;GLKView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GLKView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;view&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;EAGLContext&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initWithAPI&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;kEAGLRenderingAPIOpenGLES2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
- 
-    &lt;span class=&quot;c1&quot;&gt;// Set animation frame rate
-&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;preferredFramesPerSecond&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;60&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
- 
-    &lt;span class=&quot;c1&quot;&gt;// Not shown: load shaders, textures and vertex arrays, set up projection matrix
-&lt;/span&gt;    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;setupGL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
- 
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;update&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;_rotation&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;timeSinceLastUpdate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;M_PI_2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// one quarter rotation per second
-&lt;/span&gt; 
-    &lt;span class=&quot;c1&quot;&gt;// Set up transform matrices for the rotating planet
-&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;GLKMatrix4&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;modelViewMatrix&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GLKMatrix4MakeRotation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_rotation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;_normalMatrix&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GLKMatrix3InvertAndTranspose&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GLKMatrix4GetMatrix3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;modelViewMatrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;_modelViewProjectionMatrix&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GLKMatrix4Multiply&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_projectionMatrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;modelViewMatrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
- 
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;glkView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GLKView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;drawInRect&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CGRect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rect&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// Clear the framebuffer
-&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;glClearColor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;glClear&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GL_COLOR_BUFFER_BIT&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GL_DEPTH_BUFFER_BIT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
- 
-    &lt;span class=&quot;c1&quot;&gt;// Set shader uniforms to values calculated in -update
-&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;glUseProgram&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_diffuseShading&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;glUniformMatrix4fv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_uniformModelViewProjectionMatrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_modelViewProjectionMatrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;glUniformMatrix3fv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_uniformNormalMatrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_normalMatrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
- 
-    &lt;span class=&quot;c1&quot;&gt;// Draw using previously configured texture and vertex array
-&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;glBindTexture&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GL_TEXTURE_2D&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_planetTexture&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;glBindVertexArrayOES&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_planetMesh&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;glDrawElements&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GL_TRIANGLE_STRIP&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;256&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GL_UNSIGNED_SHORT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
- 
-&lt;span class=&quot;k&quot;&gt;@end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;在这个例子中，一个PlanetViewController类的实例（一个自定义的GLKViewController子类）从storyboard加载，以及一个标准的GLKView实例及其可绘制属性。 viewDidLoad方法创建一个OpenGL ES上下文并将其提供给视图，并且还设置动画循环的帧速率。&lt;/p&gt;
-
-&lt;p&gt;视图控制器自动成为其视图的代理，因此它实现了动画循环的更新和显示阶段。 在更新方法中，它会计算显示旋转行星所需的变换矩阵。 在&lt;code class=&quot;highlighter-rouge&quot;&gt;glkView:drawInRect:&lt;/code&gt;方法中，它将这些矩阵提供给着色器程序并提交绘制命令来渲染行星几何。&lt;/p&gt;
-
-&lt;h3 id=&quot;五绘制到其他渲染目标&quot;&gt;五、绘制到其他渲染目标&lt;/h3&gt;
-
-&lt;p&gt;帧缓冲区对象是渲染命令的目的地。&lt;/p&gt;
-
-&lt;p&gt;当您创建帧缓冲区对象时，您可以精确控制其颜色，深度和模板数据的存储。 您通过将图像附加到帧缓冲区来提供此存储，如下图所示。 最常见的图像附件是一个渲染缓冲区对象。 您还可以将OpenGL ES纹理附加到帧缓冲区的颜色附着点，这意味着任何绘图命令都将渲染到纹理中。 之后，纹理可以作为输入给以后的渲染命令。 您也可以在单个渲染上下文中创建多个帧缓冲区对象。 您可能会这样做，以便您可以在多个帧缓冲区之间共享相同的渲染管线和OpenGL ES资源。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_6/08.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;所有这些方法都需要手动创建帧缓冲区和渲染缓冲区对象来存储OpenGL ES上下文的渲染结果，以及编写其他代码以将其内容呈现在屏幕上，并在需要时运行动画循环。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;h4 id=&quot;创建帧缓冲区对象&quot;&gt;创建帧缓冲区对象&lt;/h4&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;根据您的应用打算执行的任务，您的应用配置不同的对象以附加到帧缓冲区对象。 在大多数情况下，配置帧缓冲区的不同之处在于哪个对象连接到帧缓冲区对象的颜色附着点：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;要将帧缓冲区用于离屏图像处理，请附加渲染缓冲区。 请参阅创建离屏帧缓冲区对象。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;要将帧缓冲区图像用作稍后渲染步骤的输入，请附加纹理。 请参阅使用帧缓冲区对象渲染到纹理。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;要在核心动画层组合中使用帧缓冲区，请使用特殊的支持Core Animation的渲染缓冲区。 请参阅渲染到Core Animation Layer&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;创建离屏帧缓冲区对象&quot;&gt;创建离屏帧缓冲区对象&lt;/h4&gt;
-
-&lt;p&gt;用于离屏渲染的帧缓冲区将其所有附件分配为OpenGL ES渲染缓冲区。 以下代码使用颜色和深度附件分配framebuffer对象。&lt;/p&gt;
-
-&lt;p&gt;1、创建帧缓冲并将其绑定。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;GLuint framebuffer;
-glGenFramebuffers(1, &amp;amp;framebuffer);
-glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;2、创建一个颜色渲染缓冲区，为其分配存储空间，并将其附加到帧缓冲区的颜色附着点。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;GLuint colorRenderbuffer;
-glGenRenderbuffers(1, &amp;amp;colorRenderbuffer);
-glBindRenderbuffer(GL_RENDERBUFFER, colorRenderbuffer);
-glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, width, height);
-glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colorRenderbuffer);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;3、创建深度或深度/模板渲染缓冲区，为其分配存储空间，并将其附加到帧缓冲区的深度附着点。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;GLuint depthRenderbuffer;
-glGenRenderbuffers(1, &amp;amp;depthRenderbuffer);
-glBindRenderbuffer(GL_RENDERBUFFER, depthRenderbuffer);
-glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, width, height);
-glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRenderbuffer);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;4、测试帧缓冲区的完整性。 只有在帧缓冲区的配置发生变化时才需要执行此测试。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER) ;
-if(status != GL_FRAMEBUFFER_COMPLETE) {
-    NSLog(@&quot;failed to make complete framebuffer object %x&quot;, status);
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;在绘制到离屏渲染缓冲区之后，您可以使用glReadPixels函数将其内容返回给CPU进一步处理。&lt;/p&gt;
-
-&lt;h4 id=&quot;使用帧缓冲区对象渲染到纹理&quot;&gt;使用帧缓冲区对象渲染到纹理&lt;/h4&gt;
-
-&lt;p&gt;创建此帧缓冲区的代码与离屏示例几乎相同，但现在纹理已分配并附加到颜色附着点。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;创建帧缓冲区对象（使用与创建离线帧缓冲区对象相同的过程）。&lt;/li&gt;
-  &lt;li&gt;创建目标纹理，并将其附加到帧缓冲区的颜色附着点。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// create the texture
-GLuint texture;
-glGenTextures(1, &amp;amp;texture);
-glBindTexture(GL_TEXTURE_2D, texture);
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,  width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;3.分配并附加深度缓冲区（与以前一样）。&lt;/p&gt;
-
-&lt;p&gt;4.测试framebuffer的完整性（和以前一样）。&lt;/p&gt;
-
-&lt;p&gt;尽管此示例假定您正在渲染为彩色纹理，但其他选项也是可能的。 例如，使用OES_depth_texture扩展名，您可以将纹理附加到深度附着点，以将来自场景的深度信息存储到纹理中。 您可以使用此深度信息来计算最终渲染场景中的阴影。&lt;/p&gt;
-
-&lt;h4 id=&quot;渲染到core-animation-layer&quot;&gt;渲染到Core Animation Layer&lt;/h4&gt;
-
-&lt;p&gt;Core Animation是iOS上图形渲染和动画的中心基础设施。 您可以使用托管使用不同iOS子系统（例如UIKit，Quartz 2D和OpenGL ES）呈现的内容的图层来组合应用的用户界面或其他可视化显示。 OpenGL ES通过CAEAGLLayer类连接到Core Animation，这是一种特殊类型的Core Animation Layer，其内容来自OpenGL ES渲染缓冲区。 Core Animation将渲染缓冲区的内容与其他图层进行合成，并在屏幕上显示结果图像。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_6/09.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;CAEAGLLayer通过提供两个关键功能为OpenGL ES提供此支持。 首先，它为渲染缓冲区分配共享存储空间。 其次，它将渲染缓冲区呈现给Core Animation，用渲染缓冲区中的数据替换该图层以前的内容。 这种模式的一个优点是核心动画层的内容不需要在每一帧中绘制，只有当渲染的图像改变时。&lt;/p&gt;
-
-&lt;p&gt;注意：GLKView类自动执行以下步骤，所以当您想在视图的内容层中使用OpenGL ES进行绘制时应该使用它。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;创建一个CAEAGLLayer对象并配置其属性。
-为了获得最佳性能，请将图层的不透明属性值设置为YES。请注意核心动画合成性能。&lt;/p&gt;
-
-    &lt;p&gt;（可选）通过为CAEAGLLayer对象的drawableProperties属性分配一个新的字典值来配置渲染表面的表面属性。您可以指定渲染缓冲区的像素格式，并指定渲染缓冲区的内容在发送到Core Animation后是否被丢弃。有关允许的密钥列表，请参阅EAGLDrawable协议参考。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;分配OpenGL ES上下文并将其作为当前上下文。请参阅配置OpenGL ES上下文。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;创建帧缓冲区对象（如上面的创建屏幕外帧缓冲区对象）。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;创建一个颜色渲染缓冲区，通过调用上下文的renderbufferStorage：fromDrawable：方法并传递图层对象作为参数来分配其存储空间。宽度，高度和像素格式取自图层并用于为渲染缓冲区分配存储空间。&lt;/p&gt;
-
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;GLuint colorRenderbuffer;
-glGenRenderbuffers(1, &amp;amp;colorRenderbuffer);
-glBindRenderbuffer(GL_RENDERBUFFER, colorRenderbuffer);
-[myContext renderbufferStorage:GL_RENDERBUFFER fromDrawable:myEAGLLayer];
-glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colorRenderbuffer);
-&lt;/code&gt;&lt;/pre&gt;
-    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;检索颜色渲染缓冲区的高度和宽度。&lt;/p&gt;
-
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;GLint width;
-GLint height;
-glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &amp;amp;width);
-glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &amp;amp;height);
-&lt;/code&gt;&lt;/pre&gt;
-    &lt;/div&gt;
-
-    &lt;p&gt;在前面的例子中，渲染缓冲区的宽度和高度被明确提供来为缓冲区分配存储空间。 这里，代码在分配存储空间后从颜色渲染缓冲区中检索宽度和高度。 你的应用程序这样做是因为颜色渲染缓冲区的实际尺寸是根据图层的边界和比例因子来计算的。 附加到帧缓冲区的其他渲染缓冲区必须具有相同的尺寸。 除了使用高度和宽度分配深度缓冲区外，还可以使用它们分配OpenGL ES视口并帮助确定应用纹理和模型中所需的详细程度。 请参阅支持高分辨率显示。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;分配并附加深度缓冲区（与以前一样）。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;测试framebuffer的完整性（和以前一样）。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;通过将CAEAGLLayer对象传递给可见图层的&lt;code class=&quot;highlighter-rouge&quot;&gt;addSublayer：&lt;/code&gt;方法，将CAEAGLLayer对象添加到Core Animation图层层次结构中。&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;blockquote&gt;
-  &lt;h3 id=&quot;绘制到帧缓冲区对象&quot;&gt;绘制到帧缓冲区对象&lt;/h3&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;现在你有一个framebuffer对象，你需要填充它。 本节介绍渲染新帧并将其呈现给用户所需的步骤。 渲染到纹理或离屏帧缓冲区的行为相似，只是在应用程序使用最终帧的方式上有所不同。&lt;/p&gt;
-
-&lt;h4 id=&quot;按需渲染或动画循环渲染&quot;&gt;按需渲染或动画循环渲染&lt;/h4&gt;
-
-&lt;p&gt;在渲染到Core Animation层时，您必须选择何时绘制OpenGL ES内容，就像使用GLKit视图和视图控制器进行绘制时一样。 如果渲染到离屏帧缓冲区或纹理，请在适合使用这些类型的帧缓冲区的情况下进行绘制。&lt;/p&gt;
-
-&lt;p&gt;对于按需绘制，实现您自己的方法来绘制并呈现您的渲染缓冲区，并在您想要显示新内容时调用它。&lt;/p&gt;
-
-&lt;p&gt;要使用动画循环进行绘制，请使用CADisplayLink对象。 Display link是Core Animation提供的一种计时器，可让您将绘图与屏幕的刷新速率同步。&lt;/p&gt;
-
-&lt;p&gt;注意：GLKViewController类自动使用CADisplayLink对象来动画GLKView内容。 只有当您需要超出GLKit框架提供的行为时，才可以直接使用CADisplayLink类。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;displayLink = [myView.window.screen displayLinkWithTarget:self selector:@selector(drawFrame)];
-[displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;在实现drawFrame方法的内部，读取displaylink的timestamp属性以获取要渲染的下一帧的时间戳。 它可以使用该值来计算下一帧中对象的位置。&lt;/p&gt;
-
-&lt;p&gt;通常，每次刷新屏幕时都会触发displaylink对象; 该值通常为60 Hz，但在不同设备上可能会有所不同。 大多数应用程序不需要每秒刷新屏幕60次。 您可以将displaylink的frameInterval属性设置为调用方法之前的实际帧数。 例如，如果帧间隔设置为3，则应用程序每隔三帧调用一次，或每秒大约20帧。&lt;/p&gt;
-
-&lt;p&gt;注意：为获得最佳效果，请选择您的应用可以始终实现的帧速率。 平滑一致的帧速率产生比不规律变化的帧速率更令人愉快的用户体验。&lt;/p&gt;
-
-&lt;h4 id=&quot;渲染一帧&quot;&gt;渲染一帧&lt;/h4&gt;
-
-&lt;p&gt;下图展示了OpenGL ES应用程序在iOS上呈现并呈现帧的步骤。 这些步骤包括许多提示，以提高应用程序的性能。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_6/10.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h5 id=&quot;清缓存&quot;&gt;清缓存&lt;/h5&gt;
-
-&lt;p&gt;在每个帧的开始处，擦除所有帧缓冲区附件的内容，其内容不需要先前的帧来绘制下一帧。 调用glClear函数，将所有缓冲区的位掩码传入以清除&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;对OpenGL ES使用glClear可以放弃渲染缓冲区或纹理的现有内容，从而避免将以前内容加载到内存中的代价高昂的操作。&lt;/p&gt;
-
-&lt;h5 id=&quot;准备资源并执行绘图命令&quot;&gt;准备资源并执行绘图命令&lt;/h5&gt;
-
-&lt;p&gt;这两个步骤涵盖了您在设计应用程序体系结构时所做的大部分关键决策。首先，您决定要向用户显示哪些内容，并配置相应的OpenGL ES对象（例如顶点缓冲区对象，纹理，着色器程序及其输入变量），以便上传到GPU。接下来，您提交绘图命令，告诉GPU如何使用这些资源来渲染帧。&lt;/p&gt;
-
-&lt;p&gt;渲染器设计在OpenGL ES设计指南中有更详细的介绍。现在，要注意的最重要的性能优化是，如果只在渲染新帧时开始修改OpenGL ES对象，则应用运行得更快。虽然您的应用程序可以在修改对象和提交绘图命令（如图4-3中的虚线所示）之间进行切换，但如果每帧仅执行一次每一步，则运行速度会更快。&lt;/p&gt;
-
-&lt;h5 id=&quot;执行绘图命令&quot;&gt;执行绘图命令&lt;/h5&gt;
-
-&lt;p&gt;这一步将获取您在上一步中准备的对象并提交绘图命令以使用它们。在OpenGL ES设计指南中详细介绍了设计这部分渲染代码以便高效运行。目前，要注意的最重要的性能优化是，如果您的应用在渲染新帧时只修改OpenGL ES对象，则运行速度会更快。虽然您的应用程序可以在修改对象和提交绘图命令之间进行切换（如虚线所示），但如果只执行一次每个步骤，则运行速度会更快。&lt;/p&gt;
-
-&lt;h5 id=&quot;解决多重采样&quot;&gt;解决多重采样&lt;/h5&gt;
-
-&lt;p&gt;如果您的应用使用多重采样来提高图像质量，则应用必须在将像素呈现给用户之前先解析这些像素。多重采样在使用多重采样来提高图像质量方面有详细的介绍。&lt;/p&gt;
-
-&lt;h5 id=&quot;放弃不需要的渲染缓冲区&quot;&gt;放弃不需要的渲染缓冲区&lt;/h5&gt;
-
-&lt;p&gt;丢弃操作是一个性能提示，告诉OpenGL ES不再需要一个或多个渲染缓冲区的内容。通过暗示OpenGL ES您不需要渲染缓冲区的内容，缓冲区中的数据可以被丢弃，并且可以避免昂贵的任务来保持这些缓冲区的内容更新。&lt;/p&gt;
-
-&lt;p&gt;在渲染循环的这个阶段，你的应用程序已经提交了该帧的所有绘图命令。虽然您的应用程序需要颜色渲染缓冲区才能显示到屏幕上，但它可能不需要深度缓冲区的内容。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;const GLenum discards[]  = {GL_DEPTH_ATTACHMENT};
-glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-glDiscardFramebufferEXT(GL_FRAMEBUFFER,1,discards);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;注意：glDiscardFramebufferEXT函数由OpenGL ES 1.1和2.0的EXT_discard_framebuffer扩展提供。 在OpenGL ES 3.0上下文中，改用glInvalidateFramebuffer函数。&lt;/p&gt;
-
-&lt;h4 id=&quot;给core-animation展示结果&quot;&gt;给Core Animation展示结果&lt;/h4&gt;
-
-&lt;p&gt;在此步骤中，颜色渲染缓冲区保存完成的帧，因此您只需将其呈现给用户即可。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;glBindRenderbuffer(GL_RENDERBUFFER, colorRenderbuffer);
-[context presentRenderbuffer:GL_RENDERBUFFER];
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;默认情况下，您必须假设在您的应用呈现渲染缓冲区后渲染缓冲区的内容将被丢弃。 这意味着每次您的应用呈现一个框架时，它必须在呈现新框架时完全重新创建框架的内容。 出于这个原因，上面的代码总是会擦除颜色缓冲区。&lt;/p&gt;
-
-&lt;p&gt;如果您的应用想要在帧之间保留颜色渲染缓冲区的内容，请将kEAGLDrawablePropertyRetainedBacking键添加到存储在CAEAGLLayer对象的drawableProperties属性中的字典中，并从先前的glClear函数调用中移除GL_COLOR_BUFFER_BIT常量。 保留的支持可能需要iOS分配额外的内存来保存缓冲区的内容，这可能会降低应用程序的性能。&lt;/p&gt;
-
-&lt;h4 id=&quot;使用多重采样提高图像质量&quot;&gt;使用多重采样提高图像质量&lt;/h4&gt;
-
-&lt;p&gt;多重采样是抗锯齿的一种形式，可平滑锯齿边缘并提高大多数3D应用程序的图像质量。 OpenGL ES 3.0包括多重采样作为核心规范的一部分，iOS通过APPLE_framebuffer_multisample扩展在OpenGL ES 1.1和2.0中提供。多重采样使用更多的内存和片段处理时间来渲染图像，但与使用其他方法相比，它可以以更低的性能成本提高图像质量。&lt;/p&gt;
-
-&lt;p&gt;下图显示了多采样如何工作。您的应用程序不会创建一个帧缓冲区对象，而是创建两个。多重采样缓冲区包含呈现您的内容所需的所有附件（通常为颜色和深度缓冲区）。解析缓冲区仅包含向用户显示渲染图像所需的附件（通常是颜色渲染缓冲区，但可能是纹理），它使用创建帧缓冲区对象的相应过程创建。多采样渲染缓冲区使用与解析帧缓冲区相同的尺寸进行分配，但每个渲染缓冲区都包含一个附加参数，该参数指定要为每个像素存储的采样数量。您的应用将其所有渲染执行到多重采样缓冲区，然后通过将这些样本解析到解析缓冲区来生成最终的抗锯齿图像。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_6/11.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;下面显示了创建多重采样缓冲区的代码。 此代码使用先前创建的缓冲区的宽度和高度。 它调用glRenderbufferStorageMultisampleAPPLE函数为渲染缓冲区创建多重采样存储&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;glGenFramebuffers(1, &amp;amp;sampleFramebuffer);
-glBindFramebuffer(GL_FRAMEBUFFER, sampleFramebuffer);
- 
-glGenRenderbuffers(1, &amp;amp;sampleColorRenderbuffer);
-glBindRenderbuffer(GL_RENDERBUFFER, sampleColorRenderbuffer);
-glRenderbufferStorageMultisampleAPPLE(GL_RENDERBUFFER, 4, GL_RGBA8_OES, width, height);
-glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, sampleColorRenderbuffer);
- 
-glGenRenderbuffers(1, &amp;amp;sampleDepthRenderbuffer);
-glBindRenderbuffer(GL_RENDERBUFFER, sampleDepthRenderbuffer);
-glRenderbufferStorageMultisampleAPPLE(GL_RENDERBUFFER, 4, GL_DEPTH_COMPONENT16, width, height);
-glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, sampleDepthRenderbuffer);
- 
-if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-    NSLog(@&quot;Failed to make complete framebuffer object %x&quot;, glCheckFramebufferStatus(GL_FRAMEBUFFER));
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;以下是修改您的渲染代码以支持多重采样的步骤：&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;在清除缓冲区步骤中，清除多重采样帧缓冲区的内容。&lt;/p&gt;
-
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;glBindFramebuffer(GL_FRAMEBUFFER, sampleFramebuffer);
-glViewport(0, 0, framebufferWidth, framebufferHeight);
-glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-&lt;/code&gt;&lt;/pre&gt;
-    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;提交绘图命令后，您将内容从多重采样缓冲区解析到解析缓冲区。 为每个像素存储的样本在解析缓冲区中合并为一个样本。&lt;/p&gt;
-
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;glBindFramebuffer(GL_DRAW_FRAMEBUFFER_APPLE, resolveFrameBuffer);
-glBindFramebuffer(GL_READ_FRAMEBUFFER_APPLE, sampleFramebuffer);
-glResolveMultisampleFramebufferAPPLE();
-&lt;/code&gt;&lt;/pre&gt;
-    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;在放弃步骤中，您可以放弃连接到多采样帧缓冲区的两个渲染缓冲区。 这是因为您打算呈现的内容存储在解析帧缓冲区中。&lt;/p&gt;
-
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;const GLenum discards[]  = {GL_COLOR_ATTACHMENT0,GL_DEPTH_ATTACHMENT};
-glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE,2,discards);
-&lt;/code&gt;&lt;/pre&gt;
-    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;在“当前结果”步骤中，您将呈现附加到解析帧缓冲区的颜色渲染缓冲区。&lt;/p&gt;
-
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;glBindRenderbuffer(GL_RENDERBUFFER, colorRenderbuffer);
-[context presentRenderbuffer:GL_RENDERBUFFER];
-&lt;/code&gt;&lt;/pre&gt;
-    &lt;/div&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;多重采样不是免费的; 需要额外的内存来存储额外的样本，并且将样本解析到解析帧缓冲区需要时间。 如果您向应用添加多重采样，请始终测试应用的性能以确保其可接受性。&lt;/p&gt;
-
-&lt;p&gt;注意：上面的代码假定有一个OpenGL ES 1.1或2.0上下文。 多重采样是核心OpenGL ES 3.0 API的一部分，但功能不同。&lt;/p&gt;</content><author><name>Ted</name></author><category term="基础" /><summary type="html">本文翻译自苹果官方文档OpenGL ES Programming Guide</summary></entry></feed>
+&lt;/ul&gt;</content><author><name>Ted</name></author><category term="基础" /><summary type="html">本文翻译自苹果官方文档OpenGL ES Programming Guide</summary></entry></feed>

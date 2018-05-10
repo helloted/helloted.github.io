@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>H.264封装成FLV - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/ios/2018/05/08/h264toflv/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/bg_01.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>H.264封装成FLV</h1>
+                    
+                    <h2 class="subheading">H.264封装成FLV</h2>
+                    
+                    <span class="meta">Posted by Ted on May 8, 2018</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h3 id="一h264和flv">一、H.264和FLV</h3>
+
+<p><strong>H.264</strong></p>
+
+<p>H264是一个个NALU单元组成的，每个单元以00 00 01 或者 00 00 00 01分隔开来，每2个00 00 00 01之间就是一个NALU单元。我们实际上就是将一个个NALU单元封装进FLV文件。</p>
+
+<p>每个NALU单元开头第一个byte的低5bits表示着该单元的类型，即NAL nal_unit_type：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>#define NALU_TYPE_SLICE 1  
+#define NALU_TYPE_DPA 2  
+#define NALU_TYPE_DPB 3  
+#define NALU_TYPE_DPC 4  
+#define NALU_TYPE_IDR 5    /**关键帧***/  
+#define NALU_TYPE_SEI 6    /*****曾强帧******/       
+#define NALU_TYPE_SPS 7  
+#define NALU_TYPE_PPS 8  
+#define NALU_TYPE_AUD 9  
+#define NALU_TYPE_EOSEQ 10  
+#define NALU_TYPE_EOSTREAM 11  
+#define NALU_TYPE_FILL 12  
+</code></pre>
+</div>
+
+<p>每个NALU第一个byte &amp; 0x1f 就可以得出它的类型，比如上图第一个NALU：67 &amp; 0x1f = 7，则此单元是SPS，第三个：68 &amp; 0x1f = 8，则此单元是PPS。</p>
+
+<p><strong>FLV</strong></p>
+
+<p>FLV（Flash Video）是Adobe公司设计开发的一种流行的流媒体格式，由于其视频文件体积轻巧、封装简单等特点，使其很适合在互联网上进行应用。此外，FLV可以使用Flash Player进行播放，而Flash Player插件已经安装在全世界绝大部分浏览器上，这使得通过网页播放FLV视频十分容易。目前主流的视频网站如优酷网，土豆网，乐视网等网站无一例外地使用了FLV格式。FLV封装格式的文件后缀通常为“.flv”。</p>
+
+<h3 id="二flv的结构">二、FLV的结构</h3>
+
+<p>总体上看，FLV包括文件头（File Header）和文件体（File Body）两部分，其中文件体由一系列的Tag组成。因此一个FLV文件是如图1结构。</p>
+
+<p><img src="/img/Simple_7/33.png" alt="img" /></p>
+
+<h3 id="三封装flv">三、封装FLV</h3>
+
+<h4 id="1h264文件切割">1、h264文件切割</h4>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">splitH264FileFrom</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">path</span><span class="p">{</span>
+    <span class="n">NSData</span> <span class="o">*</span><span class="n">h264file</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSData</span> <span class="nf">dataWithContentsOfFile</span><span class="p">:</span><span class="n">path</span><span class="p">];</span><span class="c1">//H264裸数据
+</span>    <span class="kt">int</span> <span class="n">count_i</span><span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="n">Byte</span> <span class="o">*</span><span class="n">contentByte</span> <span class="o">=</span> <span class="p">(</span><span class="n">Byte</span> <span class="o">*</span><span class="p">)[</span><span class="n">h264file</span> <span class="nf">bytes</span><span class="p">];</span>
+    <span class="n">Byte</span> <span class="n">byte</span><span class="p">;</span>
+    <span class="c1">//h264是一个个NALU单元组成的，每个单元以00 00 01 或者 00 00 00 01分隔开来，每2个00 00 00 01之间就是一个NALU单元
+</span>    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="p">[</span><span class="n">h264file</span> <span class="nf">length</span><span class="p">];</span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">contentByte</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="mh">0x00</span><span class="o">&amp;&amp;</span><span class="n">contentByte</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="mh">0x00</span><span class="o">&amp;&amp;</span><span class="n">contentByte</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span><span class="o">==</span><span class="mh">0x00</span><span class="o">&amp;&amp;</span><span class="n">contentByte</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span><span class="o">==</span><span class="mh">0x01</span><span class="p">){</span> <span class="c1">//分割符
+</span>            <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">h264NALUArray</span> <span class="nf">addObject</span><span class="p">:[[</span><span class="n">NSMutableData</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">]];</span>
+            <span class="n">i</span><span class="o">=</span><span class="n">i</span><span class="o">+</span><span class="mi">3</span><span class="p">;</span>
+            <span class="n">count_i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span><span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">contentByte</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="mh">0x00</span><span class="o">&amp;&amp;</span><span class="n">contentByte</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="mh">0x00</span><span class="o">&amp;&amp;</span><span class="n">contentByte</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span><span class="o">==</span><span class="mh">0x00</span><span class="p">){</span><span class="c1">//分割符
+</span>            <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">h264NALUArray</span> <span class="nf">addObject</span><span class="p">:[[</span><span class="n">NSMutableData</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">]];</span>
+            <span class="n">i</span><span class="o">=</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">;</span>
+            <span class="n">count_i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">count_i</span><span class="o">&gt;-</span><span class="mi">1</span><span class="p">){</span>
+                <span class="n">byte</span> <span class="o">=</span><span class="n">contentByte</span><span class="p">[</span><span class="nf">i</span><span class="p">];</span>
+                <span class="p">[[</span><span class="n">self</span><span class="p">.</span><span class="n">h264NALUArray</span> <span class="nf">objectAtIndex</span><span class="p">:</span><span class="n">count_i</span><span class="p">]</span> <span class="nf">appendBytes</span><span class="p">:</span><span class="o">&amp;</span><span class="n">byte</span> <span class="nf">length</span><span class="p">:</span><span class="k">sizeof</span><span class="p">(</span><span class="n">byte</span><span class="p">)];</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<h4 id="2封装flv-header">2、封装FLV Header</h4>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code>    <span class="c1">// 1~9为FLV Header
+</span>    
+    <span class="c1">// 前三位 0x46 0x4c 0x56为文件标识"FLV"
+</span>    <span class="p">[</span><span class="n">flvData</span> <span class="nf">appendData</span><span class="p">:[</span><span class="s">@"FLV"</span> <span class="nf">dataUsingEncoding</span><span class="p">:</span><span class="n">NSUTF8StringEncoding</span><span class="p">]];</span>
+    
+    <span class="c1">// 第四位是版本号
+</span>    <span class="n">tempByte</span> <span class="o">=</span> <span class="mh">0x01</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">flvData</span> <span class="nf">appendBytes</span><span class="p">:</span><span class="o">&amp;</span><span class="n">tempByte</span> <span class="nf">length</span><span class="p">:</span><span class="k">sizeof</span><span class="p">(</span><span class="n">tempByte</span><span class="p">)];</span><span class="c1">//4
+</span>    
+    <span class="c1">// 流的信息
+</span>    <span class="n">tempByte</span> <span class="o">=</span> <span class="mh">0x01</span><span class="p">;</span><span class="c1">//0x01--代表只有视频，0x04-－只有音频，0x05-－音频和视频混合
+</span>    <span class="p">[</span><span class="n">flvData</span> <span class="nf">appendBytes</span><span class="p">:</span><span class="o">&amp;</span><span class="n">tempByte</span> <span class="nf">length</span><span class="p">:</span><span class="k">sizeof</span><span class="p">(</span><span class="n">tempByte</span><span class="p">)];</span><span class="c1">//5
+</span>    
+    <span class="c1">// 接下来的四位为Header的长度9Byte
+</span>    <span class="n">writeIntegerToDataWithHex32</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="n">flvData</span><span class="p">);</span>
+</code></pre>
+</div>
+
+<h4 id="3封装spspps">3、封装SPS、PPS</h4>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code>    <span class="c1">//H.264码流第一个 NALU是 SPS（序列参数集Sequence Parameter Set）
+</span>    <span class="c1">//H.264码流第二个 NALU是 PPS（图像参数集Picture Parameter Set）
+</span>    
+    <span class="c1">//Tag = Tag Header + Tag Data
+</span>    <span class="c1">//TAG Head 11
+</span>    <span class="n">NSUInteger</span> <span class="n">tagDataLength</span> <span class="o">=</span> <span class="n">topTagLen</span><span class="o">+</span> <span class="p">[[</span><span class="n">self</span><span class="p">.</span><span class="n">h264NALUArray</span> <span class="nf">objectAtIndex</span><span class="p">:</span><span class="mi">0</span><span class="p">]</span> <span class="nf">length</span><span class="p">]</span> <span class="o">+</span> <span class="p">[[</span><span class="n">self</span><span class="p">.</span><span class="n">h264NALUArray</span> <span class="nf">objectAtIndex</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span> <span class="nf">length</span><span class="p">];</span>
+    <span class="n">NSData</span> <span class="o">*</span><span class="n">headerTagData</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span> <span class="nf">creatflvTagHeaderWithType</span><span class="p">:</span><span class="n">FLVTagHeaderTypeVideo</span> <span class="nf">tagDataSize</span><span class="p">:</span><span class="n">tagDataLength</span> <span class="n">timeStamp</span><span class="o">:</span><span class="mi">0</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">flvData</span> <span class="nf">appendData</span><span class="p">:</span><span class="n">headerTagData</span><span class="p">];</span>
+    
+    <span class="c1">//
+</span>    <span class="n">tempByte</span> <span class="o">=</span> <span class="mh">0x17</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">flvData</span> <span class="nf">appendBytes</span><span class="p">:</span><span class="o">&amp;</span><span class="n">tempByte</span> <span class="nf">length</span><span class="p">:</span><span class="k">sizeof</span><span class="p">(</span><span class="n">tempByte</span><span class="p">)];</span><span class="c1">//18
+</span>    
+    <span class="n">tempByte</span> <span class="o">=</span> <span class="mh">0x00</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">flvData</span> <span class="nf">appendBytes</span><span class="p">:</span><span class="o">&amp;</span><span class="n">tempByte</span> <span class="nf">length</span><span class="p">:</span><span class="k">sizeof</span><span class="p">(</span><span class="n">tempByte</span><span class="p">)];</span><span class="c1">//18
+</span>    
+    <span class="n">tempByte</span> <span class="o">=</span> <span class="mh">0x00</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">flvData</span> <span class="nf">appendBytes</span><span class="p">:</span><span class="o">&amp;</span><span class="n">tempByte</span> <span class="nf">length</span><span class="p">:</span><span class="k">sizeof</span><span class="p">(</span><span class="n">tempByte</span><span class="p">)];</span><span class="c1">//18
+</span>    
+    <span class="n">tempByte</span> <span class="o">=</span> <span class="mh">0x00</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">flvData</span> <span class="nf">appendBytes</span><span class="p">:</span><span class="o">&amp;</span><span class="n">tempByte</span> <span class="nf">length</span><span class="p">:</span><span class="k">sizeof</span><span class="p">(</span><span class="n">tempByte</span><span class="p">)];</span><span class="c1">//18
+</span>    
+    <span class="n">tempByte</span> <span class="o">=</span> <span class="mh">0x00</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">flvData</span> <span class="nf">appendBytes</span><span class="p">:</span><span class="o">&amp;</span><span class="n">tempByte</span> <span class="nf">length</span><span class="p">:</span><span class="k">sizeof</span><span class="p">(</span><span class="n">tempByte</span><span class="p">)];</span><span class="c1">//18
+</span>    
+    <span class="c1">// AVC也就是H264的解码配置 configuretion
+</span>    
+    <span class="n">tempByte</span> <span class="o">=</span> <span class="mh">0x01</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">flvData</span> <span class="nf">appendBytes</span><span class="p">:</span><span class="o">&amp;</span><span class="n">tempByte</span> <span class="nf">length</span><span class="p">:</span><span class="k">sizeof</span><span class="p">(</span><span class="n">tempByte</span><span class="p">)];</span><span class="c1">//18
+</span>    
+    <span class="n">tempByte</span> <span class="o">=</span> <span class="mh">0x42</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">flvData</span> <span class="nf">appendBytes</span><span class="p">:</span><span class="o">&amp;</span><span class="n">tempByte</span> <span class="nf">length</span><span class="p">:</span><span class="k">sizeof</span><span class="p">(</span><span class="n">tempByte</span><span class="p">)];</span><span class="c1">//18
+</span>    
+    <span class="n">tempByte</span> <span class="o">=</span> <span class="mh">0x80</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">flvData</span> <span class="nf">appendBytes</span><span class="p">:</span><span class="o">&amp;</span><span class="n">tempByte</span> <span class="nf">length</span><span class="p">:</span><span class="k">sizeof</span><span class="p">(</span><span class="n">tempByte</span><span class="p">)];</span><span class="c1">//18
+</span>    
+    <span class="n">tempByte</span> <span class="o">=</span> <span class="mh">0x0D</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">flvData</span> <span class="nf">appendBytes</span><span class="p">:</span><span class="o">&amp;</span><span class="n">tempByte</span> <span class="nf">length</span><span class="p">:</span><span class="k">sizeof</span><span class="p">(</span><span class="n">tempByte</span><span class="p">)];</span><span class="c1">//18
+</span>    
+    <span class="n">tempByte</span> <span class="o">=</span> <span class="mh">0xFF</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">flvData</span> <span class="nf">appendBytes</span><span class="p">:</span><span class="o">&amp;</span><span class="n">tempByte</span> <span class="nf">length</span><span class="p">:</span><span class="k">sizeof</span><span class="p">(</span><span class="n">tempByte</span><span class="p">)];</span><span class="c1">//18
+</span>    
+    <span class="n">tempByte</span> <span class="o">=</span> <span class="mh">0xE1</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">flvData</span> <span class="nf">appendBytes</span><span class="p">:</span><span class="o">&amp;</span><span class="n">tempByte</span> <span class="nf">length</span><span class="p">:</span><span class="k">sizeof</span><span class="p">(</span><span class="n">tempByte</span><span class="p">)];</span><span class="c1">//18
+</span>    
+    
+    <span class="c1">// 写入前两个NALU单元，也就是SPS和PPS
+</span>    
+    <span class="n">NSData</span> <span class="o">*</span><span class="n">NALU</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">h264NALUArray</span> <span class="nf">objectAtIndex</span><span class="p">:</span><span class="mi">0</span><span class="p">];</span>
+    <span class="n">NSUInteger</span> <span class="n">NALULength</span> <span class="o">=</span> <span class="p">[</span><span class="n">NALU</span> <span class="nf">length</span><span class="p">];</span>
+    <span class="n">writeIntegerToDataWithHex16</span><span class="p">(</span><span class="n">NALULength</span><span class="p">,</span> <span class="n">flvData</span><span class="p">);</span>
+    <span class="p">[</span><span class="n">flvData</span> <span class="nf">appendData</span><span class="p">:</span><span class="n">NALU</span><span class="p">];</span>
+    
+    <span class="n">tempByte</span> <span class="o">=</span> <span class="mh">0x01</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">flvData</span> <span class="nf">appendBytes</span><span class="p">:</span><span class="o">&amp;</span><span class="n">tempByte</span> <span class="nf">length</span><span class="p">:</span><span class="k">sizeof</span><span class="p">(</span><span class="n">tempByte</span><span class="p">)];</span><span class="c1">//18
+</span>    
+    <span class="n">NALU</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">h264NALUArray</span> <span class="nf">objectAtIndex</span><span class="p">:</span><span class="mi">1</span><span class="p">];</span>
+    <span class="n">NALULength</span> <span class="o">=</span> <span class="p">[</span><span class="n">NALU</span> <span class="nf">length</span><span class="p">];</span>
+    <span class="n">writeIntegerToDataWithHex16</span><span class="p">(</span><span class="n">NALULength</span><span class="p">,</span> <span class="n">flvData</span><span class="p">);</span>
+    <span class="p">[</span><span class="n">flvData</span> <span class="nf">appendData</span><span class="p">:</span><span class="n">NALU</span><span class="p">];</span>
+</code></pre>
+</div>
+
+<h4 id="4按顺序封装nalu">4、按顺序封装NALU</h4>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code>    <span class="n">NSInteger</span> <span class="n">naluLength</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">time_h</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="c1">//初始时间戳
+</span>    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">2</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">h264NALUArray</span> <span class="nf">count</span><span class="p">];</span><span class="n">j</span><span class="o">++</span><span class="p">){</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">j</span><span class="o">==</span><span class="mi">2</span><span class="p">){</span>
+            <span class="n">naluLength</span> <span class="o">=</span><span class="n">metaFixLen</span><span class="o">+</span><span class="p">[[</span><span class="n">self</span><span class="p">.</span><span class="n">h264NALUArray</span> <span class="nf">objectAtIndex</span><span class="p">:</span><span class="mi">0</span><span class="p">]</span> <span class="nf">length</span><span class="p">]</span><span class="o">+</span><span class="p">[[</span><span class="n">self</span><span class="p">.</span><span class="n">h264NALUArray</span> <span class="nf">objectAtIndex</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span> <span class="nf">length</span><span class="p">];</span>
+        <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+            <span class="n">naluLength</span> <span class="o">=</span> <span class="n">videoTagFixLen</span><span class="o">+</span><span class="p">[[</span><span class="n">self</span><span class="p">.</span><span class="n">h264NALUArray</span> <span class="nf">objectAtIndex</span><span class="p">:</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="nf">length</span><span class="p">];</span>
+        <span class="p">}</span>
+        
+        <span class="c1">// Previous Tag Size
+</span>        <span class="n">writeIntegerToDataWithHex32</span><span class="p">(</span><span class="n">naluLength</span><span class="p">,</span> <span class="n">flvData</span><span class="p">);</span>
+        
+        <span class="c1">// 本次tag的Header Data长度为5+4长度
+</span>        <span class="n">naluLength</span> <span class="o">=</span> <span class="p">[[</span><span class="n">self</span><span class="p">.</span><span class="n">h264NALUArray</span> <span class="nf">objectAtIndex</span><span class="p">:</span><span class="n">j</span><span class="p">]</span> <span class="nf">length</span><span class="p">]</span><span class="o">+</span><span class="mi">9</span><span class="p">;</span>
+        <span class="n">NSData</span> <span class="o">*</span><span class="n">tagHeader</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span> <span class="nf">creatflvTagHeaderWithType</span><span class="p">:</span><span class="n">FLVTagHeaderTypeVideo</span> <span class="nf">tagDataSize</span><span class="p">:</span><span class="n">naluLength</span> <span class="n">timeStamp</span><span class="o">:</span><span class="n">time_h</span><span class="p">];</span>
+        <span class="p">[</span><span class="n">flvData</span> <span class="nf">appendData</span><span class="p">:</span><span class="n">tagHeader</span><span class="p">];</span>
+        
+        <span class="c1">// Tag Data
+</span>        <span class="c1">// 一个byte的video信息+一个byte的AVCPacket type+3个bytes的无用数据（composition time，当AVC时无用，全是0）+ 4个bytes的NALU单元长度 + N个bytes的NALU数据
+</span>        <span class="n">NALU</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">h264NALUArray</span> <span class="nf">objectAtIndex</span><span class="p">:</span><span class="n">j</span><span class="p">];</span>
+        <span class="n">Byte</span> <span class="o">*</span><span class="n">contentByte</span> <span class="o">=</span> <span class="p">(</span><span class="n">Byte</span> <span class="o">*</span><span class="p">)[</span><span class="n">NALU</span> <span class="nf">bytes</span><span class="p">];</span>
+        
+        <span class="k">if</span><span class="p">((</span><span class="n">contentByte</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">&amp;</span> <span class="mh">0x1f</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span><span class="p">){</span>
+            <span class="c1">// 高4bits：1，keyframe。 低4bits：7，代表AVC
+</span>            <span class="n">tempByte</span> <span class="o">=</span> <span class="mh">0x17</span><span class="p">;</span>
+            <span class="p">[</span><span class="n">flvData</span> <span class="nf">appendBytes</span><span class="p">:</span><span class="o">&amp;</span><span class="n">tempByte</span> <span class="nf">length</span><span class="p">:</span><span class="k">sizeof</span><span class="p">(</span><span class="n">tempByte</span><span class="p">)];</span><span class="c1">//1
+</span>            
+        <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+            <span class="c1">// 高4bits：2，inter frame ，P frame。 低4bits：7，AVC NALU
+</span>            <span class="n">tempByte</span> <span class="o">=</span> <span class="mh">0x27</span><span class="p">;</span>
+            <span class="p">[</span><span class="n">flvData</span> <span class="nf">appendBytes</span><span class="p">:</span><span class="o">&amp;</span><span class="n">tempByte</span> <span class="nf">length</span><span class="p">:</span><span class="k">sizeof</span><span class="p">(</span><span class="n">tempByte</span><span class="p">)];</span><span class="c1">//1
+</span>        <span class="p">}</span>
+        <span class="n">tempByte</span> <span class="o">=</span> <span class="mh">0x01</span><span class="p">;</span>
+        <span class="p">[</span><span class="n">flvData</span> <span class="nf">appendBytes</span><span class="p">:</span><span class="o">&amp;</span><span class="n">tempByte</span> <span class="nf">length</span><span class="p">:</span><span class="k">sizeof</span><span class="p">(</span><span class="n">tempByte</span><span class="p">)];</span><span class="c1">//2
+</span>        
+        <span class="n">tempByte</span> <span class="o">=</span> <span class="mh">0x000000</span><span class="p">;</span>
+        <span class="p">[</span><span class="n">flvData</span> <span class="nf">appendBytes</span><span class="p">:</span><span class="o">&amp;</span><span class="n">tempByte</span> <span class="nf">length</span><span class="p">:</span><span class="mi">3</span><span class="p">];</span><span class="c1">//3、4、5
+</span>        
+        <span class="c1">// NALU 长度写入
+</span>        <span class="n">NSLog</span><span class="p">(</span><span class="s">@"len:%ld"</span><span class="p">,(</span><span class="kt">long</span><span class="p">)[</span><span class="n">NALU</span> <span class="nf">length</span><span class="p">]);</span>
+        <span class="n">writeIntegerToDataWithHex32</span><span class="p">([</span><span class="n">NALU</span> <span class="nf">length</span><span class="p">],</span> <span class="n">flvData</span><span class="p">);</span> <span class="c1">//6、7、8、9
+</span>        <span class="c1">// NALU数据写入
+</span>        <span class="p">[</span><span class="n">flvData</span> <span class="nf">appendData</span><span class="p">:[</span><span class="n">self</span><span class="p">.</span><span class="n">h264NALUArray</span> <span class="nf">objectAtIndex</span><span class="p">:</span><span class="n">j</span><span class="p">]];</span>
+        
+        <span class="n">time_h</span><span class="o">=</span><span class="n">time_h</span><span class="o">+</span><span class="mi">40</span><span class="p">;</span><span class="c1">//对于一个裸h264流，没有时间戳的概念，可以默认以25fps，即40ms一帧数据
+</span>        
+    <span class="p">}</span><span class="c1">//for
+</span></code></pre>
+</div>
+
+<h4 id="5保存flv文件">5、保存FLV文件</h4>
+
+<div class="language-objc highlighter-rouge"><pre class="highlight"><code>    <span class="n">NSString</span> <span class="o">*</span><span class="n">documentPath</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSSearchPathForDirectoriesInDomains</span><span class="p">(</span><span class="n">NSDocumentDirectory</span><span class="p">,</span> <span class="n">NSUserDomainMask</span><span class="p">,</span> <span class="nb">YES</span><span class="p">)</span> <span class="nf">objectAtIndex</span><span class="p">:</span><span class="mi">0</span><span class="p">];</span>
+    <span class="n">NSString</span> <span class="o">*</span><span class="n">flvPath</span> <span class="o">=</span> <span class="p">[</span><span class="n">documentPath</span> <span class="nf">stringByAppendingPathComponent</span><span class="p">:</span><span class="s">@"a.flv"</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">flvData</span> <span class="nf">writeToFile</span><span class="p">:</span><span class="n">flvPath</span> <span class="nf">atomically</span><span class="p">:</span><span class="nb">YES</span><span class="p">];</span>
+</code></pre>
+</div>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/%E7%9B%B4%E6%92%AD/2018/05/03/librtmp/" data-toggle="tooltip" data-placement="top" title="在iOS上推流">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>
