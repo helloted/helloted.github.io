@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-05-10T16:30:31+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">H.264封装成FLV</title><link href="http://www.helloted.com/ios/2018/05/08/h264toflv/" rel="alternate" type="text/html" title="H.264封装成FLV" /><published>2018-05-08T20:00:00+08:00</published><updated>2018-05-08T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2018/05/08/h264toflv</id><content type="html" xml:base="http://www.helloted.com/ios/2018/05/08/h264toflv/">&lt;h3 id=&quot;一h264和flv&quot;&gt;一、H.264和FLV&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-05-10T16:31:59+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">H.264封装成FLV</title><link href="http://www.helloted.com/%E7%9B%B4%E6%92%AD/2018/05/08/h264toflv/" rel="alternate" type="text/html" title="H.264封装成FLV" /><published>2018-05-08T20:00:00+08:00</published><updated>2018-05-08T20:00:00+08:00</updated><id>http://www.helloted.com/%E7%9B%B4%E6%92%AD/2018/05/08/h264toflv</id><content type="html" xml:base="http://www.helloted.com/%E7%9B%B4%E6%92%AD/2018/05/08/h264toflv/">&lt;h3 id=&quot;一h264和flv&quot;&gt;一、H.264和FLV&lt;/h3&gt;
 
 &lt;p&gt;&lt;strong&gt;H.264&lt;/strong&gt;&lt;/p&gt;
 
@@ -11,7 +11,7 @@
 #define NALU_TYPE_DPB 3  
 #define NALU_TYPE_DPC 4  
 #define NALU_TYPE_IDR 5    /**关键帧***/  
-#define NALU_TYPE_SEI 6    /*****曾强帧******/       
+#define NALU_TYPE_SEI 6    /*****增强帧******/       
 #define NALU_TYPE_SPS 7  
 #define NALU_TYPE_PPS 8  
 #define NALU_TYPE_AUD 9  
@@ -206,7 +206,7 @@
     &lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flvPath&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;documentPath&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;stringByAppendingPathComponent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;a.flv&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flvData&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;writeToFile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flvPath&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;atomically&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;YES&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">一、H.264和FLV</summary></entry><entry><title type="html">在iOS上推流</title><link href="http://www.helloted.com/%E7%9B%B4%E6%92%AD/2018/05/03/librtmp/" rel="alternate" type="text/html" title="在iOS上推流" /><published>2018-05-03T20:00:00+08:00</published><updated>2018-05-03T20:00:00+08:00</updated><id>http://www.helloted.com/%E7%9B%B4%E6%92%AD/2018/05/03/librtmp</id><content type="html" xml:base="http://www.helloted.com/%E7%9B%B4%E6%92%AD/2018/05/03/librtmp/">&lt;h3 id=&quot;一编译lib库&quot;&gt;一、编译lib库&lt;/h3&gt;
+&lt;/div&gt;</content><author><name>Ted</name></author><category term="直播" /><summary type="html">一、H.264和FLV</summary></entry><entry><title type="html">在iOS上推流</title><link href="http://www.helloted.com/%E7%9B%B4%E6%92%AD/2018/05/03/librtmp/" rel="alternate" type="text/html" title="在iOS上推流" /><published>2018-05-03T20:00:00+08:00</published><updated>2018-05-03T20:00:00+08:00</updated><id>http://www.helloted.com/%E7%9B%B4%E6%92%AD/2018/05/03/librtmp</id><content type="html" xml:base="http://www.helloted.com/%E7%9B%B4%E6%92%AD/2018/05/03/librtmp/">&lt;h3 id=&quot;一编译lib库&quot;&gt;一、编译lib库&lt;/h3&gt;
 
 &lt;h4 id=&quot;1编译openssl&quot;&gt;1、编译openssl&lt;/h4&gt;
 
