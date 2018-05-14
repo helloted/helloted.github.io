@@ -3,7 +3,7 @@ layout:     post
 category:   Linux
 title:      "Nginx添加第三方模块"
 subtitle:   "已经安装的Nginx添加第三方模块"
-date:       2018-05-14 12:00:00
+date:       2018-05-13 12:00:00
 author:     "Ted"
 header-img: "img/bg_01.jpg"
 ---
