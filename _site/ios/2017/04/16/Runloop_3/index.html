@@ -189,9 +189,8 @@
 
 <p>在你在辅助线程运行 run loop 之前，你必须至少添加一输入源或定时器给它。 如果 run loop 没有任何源需要监视的话，它会在你启动之际立马退出</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>[runLoop runUntilDate:[NSDate date]];
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[runLoop runUntilDate:[NSDate date]];
+</code></pre></div></div>
 
 <p>当当前长时间运行的线程配置 run loop 的时候，最好添加至少一个输入源到 run loop 以接收消息。虽然你可以使用附属的定时器来进入 run loop，但是一旦定时器 触发后，它通常就变为无效了，这会导致 run loop 退出。虽然附加一个循环的定时 器可以让 run loop 运行一个相对较长的周期，但是这也会导致周期性的唤醒线程， 这实际上是轮询(polling)的另一种形式而已。与之相反，输入源会一直等待某事 件发生，在事情导致前它让线程处于休眠状态。</p>
 

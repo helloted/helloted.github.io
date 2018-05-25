@@ -161,10 +161,9 @@
 
 <p>或者用代码创建</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">CGRect</span>  <span class="n">viewRect</span> <span class="o">=</span> <span class="n">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">CGRect</span>  <span class="n">viewRect</span> <span class="o">=</span> <span class="n">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span>
 <span class="n">UIView</span><span class="o">*</span> <span class="n">myView</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIView</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithFrame</span><span class="p">:</span><span class="n">viewRect</span><span class="p">];</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="设置view的属性">设置View的属性</h4>
 
@@ -229,35 +228,34 @@
 
 <p>一个地方你可以添加subview到view层次结构是在VC的loadView或viewDidLoad方法。如果以编程方式构建view，则将view创建代码放置在view controller的loadView方法中。无论是以编程方式创建view还是从nib文件加载view，都可以在viewDidLoad方法中包含其他view配置代码。</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">viewDidLoad</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">viewDidLoad</span>
 <span class="p">{</span>
     <span class="p">[</span><span class="n">super</span> <span class="nf">viewDidLoad</span><span class="p">];</span>
  
     <span class="n">self</span><span class="p">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">NSLocalizedString</span><span class="p">(</span><span class="s">@"TransitionsTitle"</span><span class="p">,</span> <span class="s">@""</span><span class="p">);</span>
  
-    <span class="c1">// create the container view which we will use for transition animation (centered horizontally)
-</span>    <span class="n">CGRect</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">CGRectMake</span><span class="p">(</span><span class="n">round</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="n">bounds</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">width</span> <span class="o">-</span> <span class="n">kImageWidth</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">.</span><span class="mi">0</span><span class="p">),</span>
+    <span class="c1">// create the container view which we will use for transition animation (centered horizontally)</span>
+    <span class="n">CGRect</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">CGRectMake</span><span class="p">(</span><span class="n">round</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="n">bounds</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">width</span> <span class="o">-</span> <span class="n">kImageWidth</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">.</span><span class="mi">0</span><span class="p">),</span>
                                                         <span class="n">kTopPlacement</span><span class="p">,</span> <span class="n">kImageWidth</span><span class="p">,</span> <span class="n">kImageHeight</span><span class="p">);</span>
     <span class="n">self</span><span class="p">.</span><span class="n">containerView</span> <span class="o">=</span> <span class="p">[[[</span><span class="n">UIView</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithFrame</span><span class="p">:</span><span class="n">frame</span><span class="p">]</span> <span class="nf">autorelease</span><span class="p">];</span>
     <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">view</span> <span class="nf">addSubview</span><span class="p">:</span><span class="n">self</span><span class="p">.</span><span class="n">containerView</span><span class="p">];</span>
  
-    <span class="c1">// The container view can represent the images for accessibility.
-</span>    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">containerView</span> <span class="nf">setIsAccessibilityElement</span><span class="p">:</span><span class="nb">YES</span><span class="p">];</span>
+    <span class="c1">// The container view can represent the images for accessibility.</span>
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">containerView</span> <span class="nf">setIsAccessibilityElement</span><span class="p">:</span><span class="nb">YES</span><span class="p">];</span>
     <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">containerView</span> <span class="nf">setAccessibilityLabel</span><span class="p">:</span><span class="n">NSLocalizedString</span><span class="p">(</span><span class="s">@"ImagesTitle"</span><span class="p">,</span> <span class="s">@""</span><span class="p">)];</span>
  
-    <span class="c1">// create the initial image view
-</span>    <span class="n">frame</span> <span class="o">=</span> <span class="n">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span> <span class="n">kImageWidth</span><span class="p">,</span> <span class="n">kImageHeight</span><span class="p">);</span>
+    <span class="c1">// create the initial image view</span>
+    <span class="n">frame</span> <span class="o">=</span> <span class="n">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span> <span class="n">kImageWidth</span><span class="p">,</span> <span class="n">kImageHeight</span><span class="p">);</span>
     <span class="n">self</span><span class="p">.</span><span class="n">mainView</span> <span class="o">=</span> <span class="p">[[[</span><span class="n">UIImageView</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithFrame</span><span class="p">:</span><span class="n">frame</span><span class="p">]</span> <span class="nf">autorelease</span><span class="p">];</span>
     <span class="n">self</span><span class="p">.</span><span class="n">mainView</span><span class="p">.</span><span class="n">image</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIImage</span> <span class="nf">imageNamed</span><span class="p">:</span><span class="s">@"scene1.jpg"</span><span class="p">];</span>
     <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">containerView</span> <span class="nf">addSubview</span><span class="p">:</span><span class="n">self</span><span class="p">.</span><span class="n">mainView</span><span class="p">];</span>
  
-    <span class="c1">// create the alternate image view (to transition between)
-</span>    <span class="n">CGRect</span> <span class="n">imageFrame</span> <span class="o">=</span> <span class="n">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span> <span class="n">kImageWidth</span><span class="p">,</span> <span class="n">kImageHeight</span><span class="p">);</span>
+    <span class="c1">// create the alternate image view (to transition between)</span>
+    <span class="n">CGRect</span> <span class="n">imageFrame</span> <span class="o">=</span> <span class="n">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span> <span class="n">kImageWidth</span><span class="p">,</span> <span class="n">kImageHeight</span><span class="p">);</span>
     <span class="n">self</span><span class="p">.</span><span class="n">flipToView</span> <span class="o">=</span> <span class="p">[[[</span><span class="n">UIImageView</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithFrame</span><span class="p">:</span><span class="n">imageFrame</span><span class="p">]</span> <span class="nf">autorelease</span><span class="p">];</span>
     <span class="n">self</span><span class="p">.</span><span class="n">flipToView</span><span class="p">.</span><span class="n">image</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIImage</span> <span class="nf">imageNamed</span><span class="p">:</span><span class="s">@"scene2.jpg"</span><span class="p">];</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>重要提示：Superviews自动retain subviews，所以在嵌入subview之后，释放该subview是安全的。 实际上，建议这样做是因为它会阻止您的应用程序保留一次太多的view，并在稍后导致内存泄漏。 请记住，如果您从其supview中删除subview并打算重用它，则必须再次保留该subview。 <code class="highlighter-rouge">removeFromSuperview</code>方法在移除之前autorelease一个subview。 如果在下一个事件循环周期之前不retain view，view将被released。</p>
 
@@ -296,10 +294,9 @@
 
 <p>UIView的transform属性包含一个应用了转换的CGAffineTransform结构。 默认情况下，此属性设置为标记转换，不会修改view的外观。 您可以随时为此属性分配一个新的转换。 例如，要将view旋转45度，可以使用以下代码：</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">CGAffineTransform</span> <span class="n">xform</span> <span class="o">=</span> <span class="n">CGAffineTransformMakeRotation</span><span class="p">(</span><span class="n">M_PI</span><span class="o">/</span><span class="mi">4</span><span class="p">.</span><span class="mi">0</span><span class="p">);</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">CGAffineTransform</span> <span class="n">xform</span> <span class="o">=</span> <span class="n">CGAffineTransformMakeRotation</span><span class="p">(</span><span class="n">M_PI</span><span class="o">/</span><span class="mi">4</span><span class="p">.</span><span class="mi">0</span><span class="p">);</span>
 <span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="n">transform</span> <span class="o">=</span> <span class="n">xform</span><span class="p">;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>将上述代码中的变换应用于view将围绕其中心点顺时针旋转。</p>
 
@@ -421,44 +418,42 @@
 
 <p>实现layerClass方法应该简单地创建所需的Class对象并返回它。 例如，使用平铺的view将为此方法提供以下实现：</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">Class</span><span class="p">)</span><span class="n">layerClass</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">Class</span><span class="p">)</span><span class="n">layerClass</span>
 <span class="p">{</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">CATiledLayer</span> <span class="nf">class</span><span class="p">];</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>每个view在其初始化过程中尽早调用其layerClass方法，并使用返回的类来创建其图层对象。 另外，view总是将自己指定为其图层对象的delegate。 在这一点上，view拥有它的层，view和层之间的关系不能改变。 您还必须不分配与任何其他图层对象的delegate相同的view。 更改view的所有权或delegate关系会导致绘图问题和应用程序中的潜在崩溃</p>
 
 <p>如果您主要使用图层对象而不是view，则可以根据需要将自定义图层对象合并到view层次结构中。 自定义图层对象是不属于view的CALayer的任何实例。 您通常以编程方式创建自定义图层，并使用Core Animation例程将其合并。 自定义图层不接收事件或参与响应者链，但根据核心动画规则绘制自己的图形并响应其父view或图层中的大小更改</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">viewDidLoad</span> <span class="p">{</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">viewDidLoad</span> <span class="p">{</span>
     <span class="p">[</span><span class="n">super</span> <span class="nf">viewDidLoad</span><span class="p">];</span>
  
-    <span class="c1">// Create the layer.
-</span>    <span class="n">CALayer</span><span class="o">*</span> <span class="n">myLayer</span> <span class="o">=</span> <span class="p">[[</span><span class="n">CALayer</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+    <span class="c1">// Create the layer.</span>
+    <span class="n">CALayer</span><span class="o">*</span> <span class="n">myLayer</span> <span class="o">=</span> <span class="p">[[</span><span class="n">CALayer</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
  
-    <span class="c1">// Set the contents of the layer to a fixed image. And set
-</span>    <span class="c1">// the size of the layer to match the image size.
-</span>    <span class="n">UIImage</span> <span class="n">layerContents</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIImage</span> <span class="nf">imageNamed</span><span class="p">:</span><span class="s">@"myImage"</span><span class="p">]</span> <span class="nf">retain</span><span class="p">];</span>
+    <span class="c1">// Set the contents of the layer to a fixed image. And set</span>
+    <span class="c1">// the size of the layer to match the image size.</span>
+    <span class="n">UIImage</span> <span class="n">layerContents</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIImage</span> <span class="nf">imageNamed</span><span class="p">:</span><span class="s">@"myImage"</span><span class="p">]</span> <span class="nf">retain</span><span class="p">];</span>
     <span class="n">CGSize</span> <span class="n">imageSize</span> <span class="o">=</span> <span class="n">layerContents</span><span class="p">.</span><span class="n">size</span><span class="p">;</span>
  
     <span class="n">myLayer</span><span class="p">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="n">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">imageSize</span><span class="p">.</span><span class="n">width</span><span class="p">,</span> <span class="n">imageSize</span><span class="p">.</span><span class="n">height</span><span class="p">);</span>
     <span class="n">myLayer</span> <span class="o">=</span> <span class="n">layerContents</span><span class="p">.</span><span class="n">CGImage</span><span class="p">;</span>
  
-    <span class="c1">// Add the layer to the view.
-</span>    <span class="n">CALayer</span><span class="o">*</span>    <span class="n">viewLayer</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="n">layer</span><span class="p">;</span>
+    <span class="c1">// Add the layer to the view.</span>
+    <span class="n">CALayer</span><span class="o">*</span>    <span class="n">viewLayer</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="n">layer</span><span class="p">;</span>
     <span class="p">[</span><span class="n">viewLayer</span> <span class="nf">addSublayer</span><span class="p">:</span><span class="n">myLayer</span><span class="p">];</span>
  
-    <span class="c1">// Center the layer in the view.
-</span>    <span class="n">CGRect</span>        <span class="n">viewBounds</span> <span class="o">=</span> <span class="n">backingView</span><span class="p">.</span><span class="n">bounds</span><span class="p">;</span>
+    <span class="c1">// Center the layer in the view.</span>
+    <span class="n">CGRect</span>        <span class="n">viewBounds</span> <span class="o">=</span> <span class="n">backingView</span><span class="p">.</span><span class="n">bounds</span><span class="p">;</span>
     <span class="n">myLayer</span><span class="p">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">CGPointMake</span><span class="p">(</span><span class="n">CGRectGetMidX</span><span class="p">(</span><span class="n">viewBounds</span><span class="p">),</span> <span class="n">CGRectGetMidY</span><span class="p">(</span><span class="n">viewBounds</span><span class="p">));</span>
  
-    <span class="c1">// Release the layer, since it is retained by the view's layer
-</span>    <span class="p">[</span><span class="n">myLayer</span> <span class="nf">release</span><span class="p">];</span>
+    <span class="c1">// Release the layer, since it is retained by the view's layer</span>
+    <span class="p">[</span><span class="n">myLayer</span> <span class="nf">release</span><span class="p">];</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="响应事件">响应事件</h4>
 

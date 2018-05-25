@@ -126,15 +126,13 @@
 
 <p>信号创建，其中value是初始信号值</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>dispatch_semaphore_create(long value) 
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dispatch_semaphore_create(long value) 
+</code></pre></div></div>
 
 <p>信号等待函数，dsema是信号，timeout是等待时间点，在等待时间点内，只有信号dsema的信号值大于等于1才放行，继续往下执行；放行之后信号值减1；</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>dispatch_semaphore_wait(dispatch_semaphore_t dsema, dispatch_time_t timeout); 
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dispatch_semaphore_wait(dispatch_semaphore_t dsema, dispatch_time_t timeout); 
+</code></pre></div></div>
 
 <p>增加信号值，每使用一次对应的dsema的信号值就加1</p>
 
@@ -145,7 +143,7 @@
 
 <p>1、普通，可以看出异步执行</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (void)normalTest{
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)normalTest{
     dispatch_queue_t queue = dispatch_get_global_queue(0, 0); 
     NSMutableArray *array = [NSMutableArray array];  
     for (int index = 0; index &lt; 5; index++) {      
@@ -158,14 +156,13 @@
         });        
     }
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><img src="/img/Simple_3/01.png" alt="" /></p>
 
 <p>2、加了semaphore之后，变成同步执行</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (void)semaphoreTest{
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)semaphoreTest{
     dispatch_queue_t queue = dispatch_get_global_queue(0, 0);   
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(1);
     NSMutableArray *array = [NSMutableArray array];
@@ -182,14 +179,13 @@
         });        
     }
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><img src="/img/Simple_3/02.png" alt="" /></p>
 
 <p>3、控制并发数</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>    dispatch_semaphore_t semaphore = dispatch_semaphore_create(2);
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    dispatch_semaphore_t semaphore = dispatch_semaphore_create(2);
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     for (int i = 0; i &lt; 10; i++)
     {
@@ -200,8 +196,7 @@
             dispatch_semaphore_signal(semaphore);
         });
     }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><img src="/img/Simple_3/03.png" alt="" /></p>
 

@@ -166,80 +166,71 @@
 
 <p>2、安装pip</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>yum -y install epel-release
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yum -y install epel-release
+</code></pre></div></div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>yum -y install python-pip
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yum -y install python-pip
+</code></pre></div></div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>yum clean all
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yum clean all
+</code></pre></div></div>
 
 <p>3、安装shadowsocks</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>pip install shadowsocks
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip install shadowsocks
+</code></pre></div></div>
 
 <p>4、配置shadowsocks</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>/etc/shadowsocks.json
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/etc/shadowsocks.json
+</code></pre></div></div>
 
 <p>​	配置的形式有官方样式两种</p>
 
 <p>​	一种是<a href="https://github.com/shadowsocks/shadowsocks/wiki/Configuration-via-Config-File">单人配置</a></p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="nt">"server"</span><span class="p">:</span><span class="s2">"my_server_ip"</span><span class="p">,</span><span class="w">   </span><span class="err">//VPSIP</span><span class="w">
-    </span><span class="nt">"server_port"</span><span class="p">:</span><span class="mi">8388</span><span class="p">,</span><span class="w">  </span><span class="err">//VPS端口，</span><span class="w">
-    </span><span class="nt">"local_address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"127.0.0.1"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"local_port"</span><span class="p">:</span><span class="mi">1080</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"password"</span><span class="p">:</span><span class="s2">"mypassword"</span><span class="p">,</span><span class="w">  </span><span class="err">//shadowsocks客户端用密码</span><span class="w">
-    </span><span class="nt">"timeout"</span><span class="p">:</span><span class="mi">300</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"method"</span><span class="p">:</span><span class="s2">"aes-256-cfb"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"fast_open"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+    "server":"my_server_ip",   //VPSIP
+    "server_port":8388,  //VPS端口，
+    "local_address": "127.0.0.1",
+    "local_port":1080,
+    "password":"mypassword",  //shadowsocks客户端用密码
+    "timeout":300,
+    "method":"aes-256-cfb",
+    "fast_open": false
+}
+</code></pre></div></div>
 
 <p>​	<a href="https://github.com/shadowsocks/shadowsocks/wiki/Configure-Multiple-Users">多人模式</a></p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="nt">"server"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.0.0.0"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"port_password"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"8381"</span><span class="p">:</span><span class="w"> </span><span class="s2">"foobar1"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"8382"</span><span class="p">:</span><span class="w"> </span><span class="s2">"foobar2"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"8383"</span><span class="p">:</span><span class="w"> </span><span class="s2">"foobar3"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"8384"</span><span class="p">:</span><span class="w"> </span><span class="s2">"foobar4"</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"timeout"</span><span class="p">:</span><span class="w"> </span><span class="mi">300</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aes-256-cfb"</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+    "server": "0.0.0.0",
+    "port_password": {
+        "8381": "foobar1",
+        "8382": "foobar2",
+        "8383": "foobar3",
+        "8384": "foobar4"
+    },
+    "timeout": 300,
+    "method": "aes-256-cfb"
+}
+</code></pre></div></div>
 
 <p>5、开启防火墙端口。</p>
 
 <p>​     如果要打开防火墙，则应打开上面设置的端口，示例打开8388端口</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>iptables -A INPUT -p tcp --dport 8388 -j ACCEPT 
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>iptables -A INPUT -p tcp --dport 8388 -j ACCEPT 
+</code></pre></div></div>
 
 <p>​	相关防火墙配置可参考<a href="http://blog.csdn.net/u011846257/article/details/54707864">防火墙配置</a></p>
 
 <p>6、开启showdosocks转发</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>ssserver -c /etc/shadowsocks.json  //前台运行，可看到日志
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssserver -c /etc/shadowsocks.json  //前台运行，可看到日志
 ssserver -c /etc/shadowsocks.json -d start    //后台运行
 ssserver -c /etc/shadowsocks.json -d stop  //停止
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>到这里，服务端的配置就完成了</p>
 

@@ -128,7 +128,7 @@
 
 <p><code class="highlighter-rouge">dir</code>是最重要的内省函数之一，它会返回对象的属性和方法的列表，下面是例子：</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">my_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">my_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
 <span class="nb">dir</span><span class="p">(</span><span class="n">my_list</span><span class="p">)</span>
 <span class="c"># Output: ['__add__', '__class__', '__contains__', '__delattr__', '__delitem__',</span>
 <span class="c"># '__delslice__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__',</span>
@@ -138,8 +138,7 @@
 <span class="c"># '__setattr__', '__setitem__', '__setslice__', '__sizeof__', '__str__',</span>
 <span class="c"># '__subclasshook__', 'append', 'count', 'extend', 'index', 'insert', 'pop',</span>
 <span class="c"># 'remove', 'reverse', 'sort']</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>我们的内省给了我们所有列表方法的名字。 当你不能记得一个方法的名字时，这可能会很方便。 如果我们运行没有任何参数的<code class="highlighter-rouge">dir()</code>，它将返回当前作用域中的所有名称。</p>
 
@@ -147,7 +146,7 @@
 
 <p><code class="highlighter-rouge">type</code>函数返回对象的类型，例子如下:</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="s">''</span><span class="p">))</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="s">''</span><span class="p">))</span>
 <span class="c"># Output: &lt;type 'str'&gt;</span>
 
 <span class="k">print</span><span class="p">(</span><span class="nb">type</span><span class="p">([]))</span>
@@ -161,26 +160,23 @@
 
 <span class="k">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
 <span class="c"># Output: &lt;type 'int'&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><code class="highlighter-rouge">id</code>返回对象的唯一标识符，比如:</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">name</span> <span class="o">=</span> <span class="s">"Yasoob"</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">name</span> <span class="o">=</span> <span class="s">"Yasoob"</span>
 <span class="k">print</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
 <span class="c"># Output: 139972439030304</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="3inspect模块">3、inspect模块</h4>
 
 <p><code class="highlighter-rouge">inspect</code>模块还提供了几个有用的功能来获取有关活着的对象的信息。 例如，您可以运行以下命令来检查对象的成员：</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">inspect</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">inspect</span>
 <span class="k">print</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getmembers</span><span class="p">(</span><span class="nb">str</span><span class="p">))</span>
 <span class="c"># Output: [('__add__', &lt;slot wrapper '__add__' of ... ...</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 
 

@@ -138,17 +138,15 @@
 
 <p>在librtmp目录下，</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>touch build.sh
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>touch build.sh
+</code></pre></div></div>
 
 <p>将下面的脚本复制进去，注意要修改的地方，<code class="highlighter-rouge">SDKVERSION</code>为当前mac上最新的iOS SDK的版本，可以通过得到</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>ls /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs
-</code></pre>
-</div>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">ls</span> /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs
+</code></pre></div></div>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c">#!/bin/sh</span>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/sh</span>
 
 <span class="c">###########################################################################</span>
 <span class="c">#  Change values here                                                                     </span>
@@ -167,9 +165,9 @@
 <span class="nv">INCLUDEPATH</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">CURRENTPATH</span><span class="k">}</span><span class="s2">/include"</span>  
 <span class="nv">SRCPATH</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">CURRENTPATH</span><span class="k">}</span><span class="s2">/src"</span>  
 <span class="nv">LIBRTMP</span><span class="o">=</span><span class="s2">"librtmp.a"</span>  
-<span class="nv">DEVELOPER</span><span class="o">=</span><span class="sb">`</span>xcode-select -print-path<span class="sb">`</span>
+<span class="nv">DEVELOPER</span><span class="o">=</span><span class="sb">`</span>xcode-select <span class="nt">-print-path</span><span class="sb">`</span>
 
-<span class="k">if</span> <span class="o">[</span> ! -d <span class="s2">"</span><span class="nv">$DEVELOPER</span><span class="s2">"</span> <span class="o">]</span>; <span class="k">then  
+<span class="k">if</span> <span class="o">[</span> <span class="o">!</span> <span class="nt">-d</span> <span class="s2">"</span><span class="nv">$DEVELOPER</span><span class="s2">"</span> <span class="o">]</span><span class="p">;</span> <span class="k">then  
   </span><span class="nb">echo</span> <span class="s2">"xcode path is not set correctly </span><span class="nv">$DEVELOPER</span><span class="s2"> does not exist (most likely because of xcode &gt; 4.3)"</span>
   <span class="nb">echo</span> <span class="s2">"run"</span>
   <span class="nb">echo</span> <span class="s2">"sudo xcode-select -switch &lt;xcode path&gt;"</span>
@@ -181,9 +179,9 @@
 <span class="c"># Check whether openssl has already installed on the machine or not.</span>
 <span class="c"># libcrypt.a / libssl.a</span>
 
-<span class="nb">set</span> -e  
+<span class="nb">set</span> <span class="nt">-e</span>  
 <span class="nb">echo</span> <span class="s1">'Check openssl installation'</span>  
-<span class="k">if</span> <span class="o">[</span> -f <span class="s2">"</span><span class="k">${</span><span class="nv">LIBPATH</span><span class="k">}</span><span class="s2">/libcrypto.a"</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="o">[</span> -f <span class="s2">"</span><span class="k">${</span><span class="nv">LIBPATH</span><span class="k">}</span><span class="s2">/libssl.a"</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="o">[</span> -d <span class="s2">"</span><span class="k">${</span><span class="nv">INCLUDEPATH</span><span class="k">}</span><span class="s2">/openssl"</span> <span class="o">]</span>; <span class="k">then  
+<span class="k">if</span> <span class="o">[</span> <span class="nt">-f</span> <span class="s2">"</span><span class="k">${</span><span class="nv">LIBPATH</span><span class="k">}</span><span class="s2">/libcrypto.a"</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="o">[</span> <span class="nt">-f</span> <span class="s2">"</span><span class="k">${</span><span class="nv">LIBPATH</span><span class="k">}</span><span class="s2">/libssl.a"</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="o">[</span> <span class="nt">-d</span> <span class="s2">"</span><span class="k">${</span><span class="nv">INCLUDEPATH</span><span class="k">}</span><span class="s2">/openssl"</span> <span class="o">]</span><span class="p">;</span> <span class="k">then  
   </span><span class="nb">echo</span> <span class="s1">'Openssl for iOS has already installed, no need to install openssl'</span>
 <span class="k">else  
   </span><span class="nb">echo</span> <span class="s1">'Openssl for iOS not found, will install openssl for iOS'</span>
@@ -196,7 +194,7 @@
 <span class="nb">echo</span> <span class="s1">'Clone librtmp git repository'</span>
 
 <span class="c"># Remove the directory if already exist</span>
-rm -rf <span class="s2">"</span><span class="k">${</span><span class="nv">SRCPATH</span><span class="k">}</span><span class="s2">/rtmpdump"</span>
+<span class="nb">rm</span> <span class="nt">-rf</span> <span class="s2">"</span><span class="k">${</span><span class="nv">SRCPATH</span><span class="k">}</span><span class="s2">/rtmpdump"</span>
 
 git clone <span class="k">${</span><span class="nv">LIBRTMPREPO</span><span class="k">}</span> src/rtmpdump  
 <span class="nb">cd</span> <span class="s2">"</span><span class="k">${</span><span class="nv">SRCPATH</span><span class="k">}</span><span class="s2">/rtmpdump/librtmp"</span>
@@ -205,7 +203,7 @@ git clone <span class="k">${</span><span class="nv">LIBRTMPREPO</span><span clas
 
 <span class="k">for </span>ARCH <span class="k">in</span> <span class="k">${</span><span class="nv">ARCHS</span><span class="k">}</span>  
 <span class="k">do  
-  if</span> <span class="o">[</span> <span class="s2">"</span><span class="k">${</span><span class="nv">ARCH</span><span class="k">}</span><span class="s2">"</span> <span class="o">==</span> <span class="s2">"i386"</span> <span class="o">]</span> <span class="o">||</span> <span class="o">[</span> <span class="s2">"</span><span class="k">${</span><span class="nv">ARCH</span><span class="k">}</span><span class="s2">"</span> <span class="o">==</span> <span class="s2">"x86_64"</span> <span class="o">]</span>;
+  if</span> <span class="o">[</span> <span class="s2">"</span><span class="k">${</span><span class="nv">ARCH</span><span class="k">}</span><span class="s2">"</span> <span class="o">==</span> <span class="s2">"i386"</span> <span class="o">]</span> <span class="o">||</span> <span class="o">[</span> <span class="s2">"</span><span class="k">${</span><span class="nv">ARCH</span><span class="k">}</span><span class="s2">"</span> <span class="o">==</span> <span class="s2">"x86_64"</span> <span class="o">]</span><span class="p">;</span>
   <span class="k">then
       </span><span class="nv">PLATFORM</span><span class="o">=</span><span class="s2">"iPhoneSimulator"</span>
   <span class="k">else  
@@ -220,14 +218,14 @@ git clone <span class="k">${</span><span class="nv">LIBRTMPREPO</span><span clas
   <span class="nb">echo</span> <span class="s2">"Please wait..."</span>
 
   <span class="c"># add arch to CC=</span>
-  sed -ie <span class="s2">"s!AR=</span><span class="se">\$</span><span class="s2">(CROSS_COMPILE)ar!AR=/usr/bin/ar!"</span> <span class="s2">"Makefile"</span>
-  sed -ie <span class="s2">"/CC=</span><span class="se">\$</span><span class="s2">(CROSS_COMPILE)gcc/d"</span> <span class="s2">"Makefile"</span>
-  <span class="nb">echo</span> <span class="s2">"CC=</span><span class="se">\$</span><span class="s2">(CROSS_COMPILE)gcc -arch </span><span class="k">${</span><span class="nv">ARCH</span><span class="k">}</span><span class="s2">"</span> &gt;&gt; <span class="s2">"Makefile"</span>
+  <span class="nb">sed</span> <span class="nt">-ie</span> <span class="s2">"s!AR=</span><span class="se">\$</span><span class="s2">(CROSS_COMPILE)ar!AR=/usr/bin/ar!"</span> <span class="s2">"Makefile"</span>
+  <span class="nb">sed</span> <span class="nt">-ie</span> <span class="s2">"/CC=</span><span class="se">\$</span><span class="s2">(CROSS_COMPILE)gcc/d"</span> <span class="s2">"Makefile"</span>
+  <span class="nb">echo</span> <span class="s2">"CC=</span><span class="se">\$</span><span class="s2">(CROSS_COMPILE)gcc -arch </span><span class="k">${</span><span class="nv">ARCH</span><span class="k">}</span><span class="s2">"</span> <span class="o">&gt;&gt;</span> <span class="s2">"Makefile"</span>
 
   <span class="nb">export </span><span class="nv">CROSS_COMPILE</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">DEVELOPER</span><span class="k">}</span><span class="s2">/usr/bin/"</span>  
   <span class="nb">export </span><span class="nv">XCFLAGS</span><span class="o">=</span><span class="s2">"-isysroot </span><span class="k">${</span><span class="nv">CROSS_TOP</span><span class="k">}</span><span class="s2">/SDKs/</span><span class="k">${</span><span class="nv">CROSS_SDK</span><span class="k">}</span><span class="s2"> -miphoneos-version-min=7.0 -I</span><span class="k">${</span><span class="nv">INCLUDEPATH</span><span class="k">}</span><span class="s2"> -arch </span><span class="k">${</span><span class="nv">ARCH</span><span class="k">}</span><span class="s2">"</span>
 
-  <span class="k">if</span> <span class="o">[</span> <span class="s2">"</span><span class="k">${</span><span class="nv">ARCH</span><span class="k">}</span><span class="s2">"</span> <span class="o">==</span> <span class="s2">"i386"</span> <span class="o">]</span> <span class="o">||</span> <span class="o">[</span> <span class="s2">"</span><span class="k">${</span><span class="nv">ARCH</span><span class="k">}</span><span class="s2">"</span> <span class="o">==</span> <span class="s2">"x86_64"</span> <span class="o">]</span>;
+  <span class="k">if</span> <span class="o">[</span> <span class="s2">"</span><span class="k">${</span><span class="nv">ARCH</span><span class="k">}</span><span class="s2">"</span> <span class="o">==</span> <span class="s2">"i386"</span> <span class="o">]</span> <span class="o">||</span> <span class="o">[</span> <span class="s2">"</span><span class="k">${</span><span class="nv">ARCH</span><span class="k">}</span><span class="s2">"</span> <span class="o">==</span> <span class="s2">"x86_64"</span> <span class="o">]</span><span class="p">;</span>
   <span class="k">then
       </span><span class="nb">export </span><span class="nv">XLDFLAGS</span><span class="o">=</span><span class="s2">"-isysroot </span><span class="k">${</span><span class="nv">CROSS_TOP</span><span class="k">}</span><span class="s2">/SDKs/</span><span class="k">${</span><span class="nv">CROSS_SDK</span><span class="k">}</span><span class="s2"> -miphoneos-version-min=7.0 -L</span><span class="k">${</span><span class="nv">LIBPATH</span><span class="k">}</span><span class="s2"> -arch </span><span class="k">${</span><span class="nv">ARCH</span><span class="k">}</span><span class="s2">"</span>
   <span class="k">else
@@ -235,41 +233,38 @@ git clone <span class="k">${</span><span class="nv">LIBRTMPREPO</span><span clas
   <span class="k">fi
 
   </span><span class="nv">OUTPATH</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">BUILDPATH</span><span class="k">}</span><span class="s2">/librtmp-</span><span class="k">${</span><span class="nv">PLATFORM</span><span class="k">}${</span><span class="nv">SDKVERSION</span><span class="k">}</span><span class="s2">-</span><span class="k">${</span><span class="nv">ARCH</span><span class="k">}</span><span class="s2">.sdk"</span>
-  mkdir -p <span class="s2">"</span><span class="k">${</span><span class="nv">OUTPATH</span><span class="k">}</span><span class="s2">"</span>
+  <span class="nb">mkdir</span> <span class="nt">-p</span> <span class="s2">"</span><span class="k">${</span><span class="nv">OUTPATH</span><span class="k">}</span><span class="s2">"</span>
   <span class="nv">LOG</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">OUTPATH</span><span class="k">}</span><span class="s2">/build-librtmp.log"</span>
 
-  make <span class="nv">SYS</span><span class="o">=</span>darwin &gt;&gt; <span class="s2">"</span><span class="k">${</span><span class="nv">LOG</span><span class="k">}</span><span class="s2">"</span> 2&gt;&amp;1  
-  make <span class="nv">SYS</span><span class="o">=</span>darwin <span class="nv">prefix</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">OUTPATH</span><span class="k">}</span><span class="s2">"</span> install  &gt;&gt; <span class="s2">"</span><span class="k">${</span><span class="nv">LOG</span><span class="k">}</span><span class="s2">"</span> 2&gt;&amp;1
-  make clean &gt;&gt; <span class="s2">"</span><span class="k">${</span><span class="nv">LOG</span><span class="k">}</span><span class="s2">"</span> 2&gt;&amp;1
+  make <span class="nv">SYS</span><span class="o">=</span>darwin <span class="o">&gt;&gt;</span> <span class="s2">"</span><span class="k">${</span><span class="nv">LOG</span><span class="k">}</span><span class="s2">"</span> 2&gt;&amp;1  
+  make <span class="nv">SYS</span><span class="o">=</span>darwin <span class="nv">prefix</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">OUTPATH</span><span class="k">}</span><span class="s2">"</span> <span class="nb">install</span>  <span class="o">&gt;&gt;</span> <span class="s2">"</span><span class="k">${</span><span class="nv">LOG</span><span class="k">}</span><span class="s2">"</span> 2&gt;&amp;1
+  make clean <span class="o">&gt;&gt;</span> <span class="s2">"</span><span class="k">${</span><span class="nv">LOG</span><span class="k">}</span><span class="s2">"</span> 2&gt;&amp;1
 
   LIBRTMP_REPO+<span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">OUTPATH</span><span class="k">}</span><span class="s2">/lib/</span><span class="k">${</span><span class="nv">LIBRTMP</span><span class="k">}</span><span class="s2"> "</span>
 <span class="k">done
 
 </span><span class="nb">echo</span> <span class="s2">"Build universal library..."</span>  
-lipo -create <span class="k">${</span><span class="nv">LIBRTMP_REPO</span><span class="k">}</span>-output <span class="k">${</span><span class="nv">LIBPATH</span><span class="k">}</span>/<span class="k">${</span><span class="nv">LIBRTMP</span><span class="k">}</span>
+lipo <span class="nt">-create</span> <span class="k">${</span><span class="nv">LIBRTMP_REPO</span><span class="k">}</span><span class="nt">-output</span> <span class="k">${</span><span class="nv">LIBPATH</span><span class="k">}</span>/<span class="k">${</span><span class="nv">LIBRTMP</span><span class="k">}</span>
 
-mkdir -p <span class="k">${</span><span class="nv">INCLUDEPATH</span><span class="k">}</span>  
-cp -R <span class="k">${</span><span class="nv">BUILDPATH</span><span class="k">}</span>/librtmp-iPhoneSimulator<span class="k">${</span><span class="nv">SDKVERSION</span><span class="k">}</span>-i386.sdk/include/ <span class="k">${</span><span class="nv">INCLUDEPATH</span><span class="k">}</span>/
+<span class="nb">mkdir</span> <span class="nt">-p</span> <span class="k">${</span><span class="nv">INCLUDEPATH</span><span class="k">}</span>  
+<span class="nb">cp</span> <span class="nt">-R</span> <span class="k">${</span><span class="nv">BUILDPATH</span><span class="k">}</span>/librtmp-iPhoneSimulator<span class="k">${</span><span class="nv">SDKVERSION</span><span class="k">}</span><span class="nt">-i386</span>.sdk/include/ <span class="k">${</span><span class="nv">INCLUDEPATH</span><span class="k">}</span>/
 
 <span class="nb">echo</span> <span class="s2">"Building done."</span>  
 <span class="nb">echo</span> <span class="s2">"Cleaning up..."</span>
 
-rm -rf <span class="k">${</span><span class="nv">SRCPATH</span><span class="k">}</span>/rtmpdump  
+<span class="nb">rm</span> <span class="nt">-rf</span> <span class="k">${</span><span class="nv">SRCPATH</span><span class="k">}</span>/rtmpdump  
 <span class="nb">echo</span> <span class="s2">"Done."</span>  
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>保存并且执行</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>./build.sh
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./build.sh
+</code></pre></div></div>
 
 <p>如果报权限错误，则先赋予权限</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>chmod +x build.sh
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>chmod +x build.sh
+</code></pre></div></div>
 
 <p><img src="/img/Simple_7/28.png" alt="img" /></p>
 
@@ -295,7 +290,7 @@ rm -rf <span class="k">${</span><span class="nv">SRCPATH</span><span class="k">}
 
 <p>因为librtmp用的是C语言，为了方便调用，我用OC封装了一下一个类RTMPPuser。用来推流的代码是</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code>    <span class="n">RTMPPusher</span> <span class="o">*</span><span class="n">pusher</span> <span class="o">=</span> <span class="p">[[</span><span class="n">RTMPPusher</span> <span class="nf">alloc</span><span class="p">]</span><span class="nf">init</span><span class="p">];</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="n">RTMPPusher</span> <span class="o">*</span><span class="n">pusher</span> <span class="o">=</span> <span class="p">[[</span><span class="n">RTMPPusher</span> <span class="nf">alloc</span><span class="p">]</span><span class="nf">init</span><span class="p">];</span>
     <span class="n">BOOL</span> <span class="n">success</span> <span class="o">=</span> <span class="p">[</span><span class="n">pusher</span> <span class="nf">connectWithURL</span><span class="p">:</span><span class="s">@"rtmp://192.168.0.16:1935/zbcs/room"</span><span class="p">];</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">success</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">NSString</span> <span class="o">*</span><span class="n">htmlFile</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSBundle</span> <span class="nf">mainBundle</span><span class="p">]</span><span class="nf">pathForResource</span><span class="p">:</span><span class="s">@"demo"</span> <span class="nf">ofType</span><span class="p">:</span><span class="s">@"flv"</span><span class="p">];</span>
@@ -303,12 +298,11 @@ rm -rf <span class="k">${</span><span class="nv">SRCPATH</span><span class="k">}
         <span class="p">[</span><span class="n">pusher</span> <span class="nf">pushFullVideoData</span><span class="p">:</span><span class="n">video</span> <span class="nf">chunkSize</span><span class="p">:</span><span class="mi">10</span> <span class="o">*</span> <span class="mi">5120</span><span class="p">];</span>
     <span class="p">}</span>
     <span class="p">[</span><span class="n">pusher</span> <span class="nf">closeRTMP</span><span class="p">];</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="1建立连接">1、建立连接</h4>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">connectWithURL</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">url</span><span class="p">{</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">connectWithURL</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">url</span><span class="p">{</span>
     <span class="n">_url</span> <span class="o">=</span> <span class="n">url</span><span class="p">;</span>
     <span class="k">@synchronized</span> <span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">_rtmp</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span> <span class="nf">newRTMP</span><span class="p">];</span>
@@ -328,18 +322,17 @@ rm -rf <span class="k">${</span><span class="nv">SRCPATH</span><span class="k">}
         <span class="k">return</span> <span class="nb">YES</span><span class="p">;</span>
     <span class="p">}</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="2切片">2、切片</h4>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">pushFullVideoData</span><span class="p">:(</span><span class="n">NSData</span> <span class="o">*</span><span class="p">)</span><span class="nv">fullVideo</span> <span class="nf">chunkSize</span><span class="p">:(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="nv">size</span><span class="p">{</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">pushFullVideoData</span><span class="p">:(</span><span class="n">NSData</span> <span class="o">*</span><span class="p">)</span><span class="nv">fullVideo</span> <span class="nf">chunkSize</span><span class="p">:(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="nv">size</span><span class="p">{</span>
     <span class="n">NSUInteger</span> <span class="n">length</span> <span class="o">=</span> <span class="p">[</span><span class="n">fullVideo</span> <span class="nf">length</span><span class="p">];</span>
     <span class="n">NSUInteger</span> <span class="n">chunkSize</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="mi">5120</span><span class="p">;</span>
     <span class="n">NSUInteger</span> <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-    <span class="c1">// 将整视频切片后推送
-</span>    <span class="k">do</span> <span class="p">{</span>
+    <span class="c1">// 将整视频切片后推送</span>
+    <span class="k">do</span> <span class="p">{</span>
         <span class="n">NSUInteger</span> <span class="n">thisChunkSize</span> <span class="o">=</span> <span class="n">length</span> <span class="o">-</span> <span class="n">offset</span> <span class="o">&gt;</span> <span class="n">chunkSize</span> <span class="p">?</span> <span class="n">chunkSize</span> <span class="p">:</span> <span class="n">length</span> <span class="o">-</span> <span class="n">offset</span><span class="p">;</span>
         <span class="n">NSData</span><span class="o">*</span> <span class="n">chunk</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSData</span> <span class="nf">dataWithBytesNoCopy</span><span class="p">:(</span><span class="kt">char</span> <span class="o">*</span><span class="p">)[</span><span class="n">fullVideo</span> <span class="nf">bytes</span><span class="p">]</span> <span class="o">+</span> <span class="n">offset</span>
                                              <span class="nf">length</span><span class="p">:</span><span class="n">thisChunkSize</span>
@@ -349,12 +342,11 @@ rm -rf <span class="k">${</span><span class="nv">SRCPATH</span><span class="k">}
         <span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
     <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="n">offset</span> <span class="o">&lt;</span> <span class="n">length</span><span class="p">);</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="3写入推流">3、写入推流</h4>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="nf">write</span><span class="p">:(</span><span class="n">NSData</span> <span class="o">*</span><span class="p">)</span><span class="nv">data</span><span class="p">{</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="nf">write</span><span class="p">:(</span><span class="n">NSData</span> <span class="o">*</span><span class="p">)</span><span class="nv">data</span><span class="p">{</span>
     <span class="k">@synchronized</span> <span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="p">{</span>
         <span class="kt">int</span> <span class="n">sent</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">_connected</span><span class="p">)</span> <span class="p">{</span>
@@ -363,8 +355,7 @@ rm -rf <span class="k">${</span><span class="nv">SRCPATH</span><span class="k">}
         <span class="k">return</span> <span class="n">sent</span><span class="p">;</span>
     <span class="p">}</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>以上代码可以在<a href="https://github.com/helloted/iOS_Demo/tree/master/RTMPDemo">推流Demo</a>下载</p>
 

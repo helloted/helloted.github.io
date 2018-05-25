@@ -172,7 +172,7 @@
 
 <p>来看看一个文件的编译过程，新建Test.m</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="cp">#import &lt;Foundation/Foundation.h&gt;
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#import &lt;Foundation/Foundation.h&gt;
 </span>
 <span class="kt">int</span> <span class="n">main</span><span class="p">(){</span>
     <span class="err">@autoreleasepool</span> <span class="p">{</span>
@@ -180,27 +180,24 @@
     <span class="p">}</span>
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>在终端输入：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>clang -ccc-print-phases -framework Foundation test.m -o test
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>clang -ccc-print-phases -framework Foundation test.m -o test
+</code></pre></div></div>
 
 <p>会看到下列的：</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>0: input, <span class="s2">"Foundation"</span>, object 
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0: input, <span class="s2">"Foundation"</span>, object 
 1: input, <span class="s2">"test.m"</span>, objective-c
 2: preprocessor, <span class="o">{</span>1<span class="o">}</span>, objective-c-cpp-output//预处理
 3: compiler, <span class="o">{</span>2<span class="o">}</span>, ir //编译生成IR<span class="o">(</span>中间代码<span class="o">)</span>
 4: backend, <span class="o">{</span>3<span class="o">}</span>, assembler//汇编器生成汇编代码
 5: assembler, <span class="o">{</span>4<span class="o">}</span>, object//生成机器码
 6: linker, <span class="o">{</span>0, 5<span class="o">}</span>, image//链接
-7: <span class="nb">bind</span>-arch, <span class="s2">"x86_64"</span>, <span class="o">{</span>6<span class="o">}</span>, image//生成Image，也就是最后的可执行文件
-</code></pre>
-</div>
+7: bind-arch, <span class="s2">"x86_64"</span>, <span class="o">{</span>6<span class="o">}</span>, image//生成Image，也就是最后的可执行文件
+</code></pre></div></div>
 
 <h4 id="编译器前端">编译器前端</h4>
 
@@ -235,14 +232,13 @@
   <li>
     <p>编译文件：针对每一个文件进行编译，生成可执行文件 Mach-O，这过程 LLVM 的完整流程，前端、优化器、后端；使用<code class="highlighter-rouge">CompileC</code>和<code class="highlighter-rouge">clang</code>命令。</p>
 
-    <div class="highlighter-rouge"><pre class="highlight"><code>CompileC ClassName.o ClassName.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CompileC ClassName.o ClassName.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
 export LANG=en_US.US-ASCII
 export PATH="..."
 clang -x objective-c -arch x86_64 -fmessage-length=0 -fobjc-arc... -Wno-missing-field-initializers ... -DDEBUG=1 ... -isysroot iPhoneSimulator10.1.sdk -fasm-blocks ... -I 上文提到的文件 -F 所需要的Framework  -iquote 所需要的Framework  ... -c ClassName.c -o ClassName.o
-</code></pre>
-    </div>
+</code></pre></div>    </div>
 
-    <div class="highlighter-rouge"><pre class="highlight"><code>clang是实际的编译命令
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>clang是实际的编译命令
 -x      objective-c 指定了编译的语言
 -arch   x86_64制定了编译的架构，类似还有arm7等
 -fobjc-arc 一些列-f开头的，指定了采用arc等信息。这个也就是为什么你可以对单独的一个.m文件采用非ARC编程。
@@ -253,8 +249,7 @@ clang -x objective-c -arch x86_64 -fmessage-length=0 -fobjc-arc... -Wno-missing-
 -F 链接所需要的Framework
 -c ClassName.c 编译文件
 -o ClassName.o 编译产物
-</code></pre>
-    </div>
+</code></pre></div>    </div>
   </li>
   <li>
     <p>链接库，例如<code class="highlighter-rouge">Foundation.framework</code>,<code class="highlighter-rouge">AFNetworking.framework</code>…</p>
@@ -292,9 +287,8 @@ clang -x objective-c -arch x86_64 -fmessage-length=0 -fobjc-arc... -Wno-missing-
 <p>我们需要一个途径，能够看到编译的时间，这样才能有个对比，知道我们的优化究竟有没有效果。 
 对于XCode 8，关闭XCode，终端输入以下指令</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>$ defaults write com.apple.dt.Xcode ShowBuildOperationDuration YES
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ defaults write com.apple.dt.Xcode ShowBuildOperationDuration YES
+</code></pre></div></div>
 
 <h4 id="代码优化-forward-declaration">代码优化-<strong>forward declaration</strong></h4>
 

@@ -157,7 +157,7 @@
 
 <p>注意在使用指针的时候一定要注意边界条件，即检查空指针。当树A或树B为空的时候，定义相应的输出。如果没有检查并做相应的处理，程序非常容易崩溃。</p>
 
-<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">struct</span> <span class="n">BinaryTreeNode</span>
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="n">BinaryTreeNode</span>
 <span class="p">{</span>
     <span class="kt">int</span>             <span class="n">m_nValue</span><span class="p">;</span>
     <span class="n">BinaryTreeNode</span> <span class="o">*</span><span class="n">m_pLeft</span><span class="p">;</span>
@@ -195,8 +195,7 @@
     <span class="k">return</span> <span class="n">DoesTree1HaveTree2</span><span class="p">(</span><span class="n">pRoot1</span><span class="o">-&gt;</span><span class="n">m_pLeft</span><span class="p">,</span> <span class="n">pRoot2</span><span class="o">-&gt;</span><span class="n">m_pLeft</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
         <span class="n">DoesTree1HaveTree2</span><span class="p">(</span><span class="n">pRoot1</span><span class="o">-&gt;</span><span class="n">m_pRight</span><span class="p">,</span> <span class="n">pRoot2</span><span class="o">-&gt;</span><span class="n">m_pRight</span><span class="p">);</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="22树的镜像">22、树的镜像</h4>
 
@@ -204,7 +203,7 @@
 
 <p>思路：对于树根，不变，交换左右两个子树，然后在对左右子树作为树根进行递归交换他们的子树。注意处理子树为空的情况。</p>
 
-<div class="language-c++ highlighter-rouge"><pre class="highlight"><code>    <span class="kt">void</span> <span class="nf">Mirror</span><span class="p">(</span><span class="n">TreeNode</span> <span class="o">*</span><span class="n">pRoot</span><span class="p">)</span> <span class="p">{</span>
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="kt">void</span> <span class="nf">Mirror</span><span class="p">(</span><span class="n">TreeNode</span> <span class="o">*</span><span class="n">pRoot</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">if</span><span class="p">(</span><span class="n">pRoot</span><span class="o">==</span><span class="nb">NULL</span><span class="p">){</span>
             <span class="k">return</span><span class="p">;</span>
         <span class="p">}</span>
@@ -214,8 +213,7 @@
         <span class="n">Mirror</span><span class="p">(</span><span class="n">pRoot</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">);</span>
         <span class="n">Mirror</span><span class="p">(</span><span class="n">pRoot</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">);</span>
     <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="23包含min函数的栈">23、包含min函数的栈</h4>
 
@@ -223,7 +221,7 @@
 
 <p>思路：在存入栈的时候，计算最小值，将最小值找个地方存一下。要用一个辅助的栈用来保存每次push进来后整个栈的最小值。当pop的时候，也将最小值栈pop一下，这样就行了，而且时间复杂度也能满足题目中的O(1)的要求。就是push新元素的时候，都跟最小值栈的栈顶比较小，如果比栈顶大，则不做任何动作，如果小，则在最小值栈中push新的最小值；pop的时候，将pop的元素跟最小值栈的栈顶比较下，如果等于栈顶，则将最小值栈也pop一下，如果大于的话则无视</p>
 
-<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
 <span class="err">     </span>
 <span class="err">    </span><span class="n">stack</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">stack1</span><span class="p">,</span><span class="n">stack2</span><span class="p">;</span>
@@ -254,8 +252,7 @@
 <span class="err">    </span><span class="p">}</span>
 <span class="err">     </span>
 <span class="p">};</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="24栈的压入弹出序列">24、栈的压入、弹出序列</h4>
 
@@ -263,7 +260,7 @@
 
 <p>思路：定义一个vector模拟栈的操作，依次将pushV的元素压入栈中，每次压入都判断这个元素是否和popV相同，如果相同，则将这个元素弹出。直到所有pushV的元素都被压入。 则如果最终vector栈是空的，说明popV是一个弹出序列，否则不是弹出序列。</p>
 
-<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="kt">bool</span> <span class="n">IsPopOrder</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">pushV</span><span class="p">,</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">popV</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">if</span><span class="p">(</span><span class="n">pushV</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
@@ -278,24 +275,23 @@
         <span class="k">return</span> <span class="n">stack</span><span class="p">.</span><span class="n">empty</span><span class="p">();</span>
     <span class="p">}</span>
 <span class="p">};</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="25字符串的排列">25、字符串的排列</h4>
 
 <p>题目：输入一个字符串，打印出该字符串中字符的所有排列。例如输入字符串abc。则打印出由字符a、b、c 所能排列出来的所有字符串abc、acb、bac 、bca、cab 和cba 。</p>
 
-<div class="language-c highlighter-rouge"><pre class="highlight"><code><span class="cp">#include&lt;stdio.h&gt;
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include&lt;stdio.h&gt;
 #include&lt;string&gt;
-</span><span class="c1">//交换两个字符
-</span><span class="kt">void</span> <span class="nf">Swap</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">a</span> <span class="p">,</span><span class="kt">char</span> <span class="o">*</span><span class="n">b</span><span class="p">)</span>
+</span><span class="c1">//交换两个字符</span>
+<span class="kt">void</span> <span class="nf">Swap</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">a</span> <span class="p">,</span><span class="kt">char</span> <span class="o">*</span><span class="n">b</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="kt">char</span> <span class="n">temp</span> <span class="o">=</span> <span class="o">*</span><span class="n">a</span><span class="p">;</span>
     <span class="o">*</span><span class="n">a</span> <span class="o">=</span> <span class="o">*</span><span class="n">b</span><span class="p">;</span>
     <span class="o">*</span><span class="n">b</span> <span class="o">=</span> <span class="n">temp</span><span class="p">;</span>
 <span class="p">}</span>
-<span class="c1">//递归全排列，start 为全排列开始的下标， length 为str数组的长度
-</span><span class="kt">void</span> <span class="nf">AllRange</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span> <span class="n">str</span><span class="p">,</span><span class="kt">int</span> <span class="n">start</span><span class="p">,</span><span class="kt">int</span> <span class="n">length</span><span class="p">)</span>
+<span class="c1">//递归全排列，start 为全排列开始的下标， length 为str数组的长度</span>
+<span class="kt">void</span> <span class="nf">AllRange</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span> <span class="n">str</span><span class="p">,</span><span class="kt">int</span> <span class="n">start</span><span class="p">,</span><span class="kt">int</span> <span class="n">length</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="k">if</span><span class="p">(</span><span class="n">start</span> <span class="o">==</span> <span class="n">length</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
     <span class="p">{</span>
@@ -304,8 +300,8 @@
     <span class="k">else</span>
     <span class="p">{</span>
         <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">start</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">length</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
-        <span class="p">{</span>	<span class="c1">//从下标为start的数开始，分别与它后面的数字交换
-</span>            <span class="n">Swap</span><span class="p">(</span><span class="o">&amp;</span><span class="n">str</span><span class="p">[</span><span class="n">start</span><span class="p">],</span><span class="o">&amp;</span><span class="n">str</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+        <span class="p">{</span>	<span class="c1">//从下标为start的数开始，分别与它后面的数字交换</span>
+            <span class="n">Swap</span><span class="p">(</span><span class="o">&amp;</span><span class="n">str</span><span class="p">[</span><span class="n">start</span><span class="p">],</span><span class="o">&amp;</span><span class="n">str</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
             <span class="n">AllRange</span><span class="p">(</span><span class="n">str</span><span class="p">,</span><span class="n">start</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">length</span><span class="p">);</span>
             <span class="n">Swap</span><span class="p">(</span><span class="o">&amp;</span><span class="n">str</span><span class="p">[</span><span class="n">start</span><span class="p">],</span><span class="o">&amp;</span><span class="n">str</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
         <span class="p">}</span>
@@ -325,8 +321,7 @@
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="26数组中出现次数超过一半的数字">26、数组中出现次数超过一半的数字</h4>
 
@@ -334,7 +329,7 @@
 
 <p>思路：当我们遍历到下一个数字的时候，如果下一个数字和我们之前保存的数字相同，则次数加1,；如果下一个数字和我们之前保存的数字不同，则次数减1,。如果次数为0，我们需要保存下一个数字，并把数字设为1,。由于我们要找的数字出现的次数比其他所有数字出现的次数还要多，那么要找的数字肯定是最后一次把次数设为1时对应的数字。</p>
 
-<div class="language-c highlighter-rouge"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">HalfData</span><span class="p">(</span><span class="kt">int</span> <span class="n">arr</span><span class="p">[],</span><span class="kt">int</span> <span class="n">len</span><span class="p">)</span>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">HalfData</span><span class="p">(</span><span class="kt">int</span> <span class="n">arr</span><span class="p">[],</span><span class="kt">int</span> <span class="n">len</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="kt">int</span> <span class="n">b</span><span class="p">,</span><span class="n">count</span><span class="p">;</span>
     <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">len</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
@@ -351,16 +346,15 @@
             <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">b</span>  <span class="o">&amp;&amp;</span> <span class="n">count</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span>
                 <span class="n">count</span><span class="o">--</span><span class="p">;</span>
             <span class="k">else</span>
-            <span class="p">{</span> <span class="c1">// 到这一步说明前面i个里面被i/2抵消了
-</span>                <span class="n">b</span> <span class="o">=</span> <span class="n">arr</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+            <span class="p">{</span> <span class="c1">// 到这一步说明前面i个里面被i/2抵消了</span>
+                <span class="n">b</span> <span class="o">=</span> <span class="n">arr</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
                 <span class="n">count</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
             <span class="p">}</span>
         <span class="p">}</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">b</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="27最小的k个数">27、最小的k个数</h4>
 
@@ -375,46 +369,46 @@
 
 <p>遍历完成以后，数组的前 k 个数就是最小的 k 个数，但是它们并非有序，而是以堆的形式存在。</p>
 
-<div class="language-c highlighter-rouge"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">AdjustDown</span><span class="p">(</span><span class="kt">int</span> <span class="n">A</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="kt">int</span> <span class="n">len</span><span class="p">)</span>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">AdjustDown</span><span class="p">(</span><span class="kt">int</span> <span class="n">A</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="kt">int</span> <span class="n">len</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="kt">int</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>  <span class="c1">// 暂存A[i]
-</span>
+    <span class="kt">int</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>  <span class="c1">// 暂存A[i]</span>
+
     <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">largest</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span> <span class="n">largest</span><span class="o">&lt;</span><span class="n">len</span><span class="p">;</span> <span class="n">largest</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">largest</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
     <span class="p">{</span>
         <span class="k">if</span><span class="p">(</span><span class="n">largest</span><span class="o">!=</span><span class="n">len</span><span class="o">-</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">A</span><span class="p">[</span><span class="n">largest</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">&gt;</span><span class="n">A</span><span class="p">[</span><span class="n">largest</span><span class="p">])</span>
-            <span class="o">++</span><span class="n">largest</span><span class="p">;</span>         <span class="c1">// 如果右子结点大
-</span>        <span class="k">if</span><span class="p">(</span><span class="n">temp</span> <span class="o">&lt;</span> <span class="n">A</span><span class="p">[</span><span class="n">largest</span><span class="p">])</span>
+            <span class="o">++</span><span class="n">largest</span><span class="p">;</span>         <span class="c1">// 如果右子结点大</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">temp</span> <span class="o">&lt;</span> <span class="n">A</span><span class="p">[</span><span class="n">largest</span><span class="p">])</span>
         <span class="p">{</span>
             <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">largest</span><span class="p">];</span>
-            <span class="n">i</span> <span class="o">=</span> <span class="n">largest</span><span class="p">;</span>         <span class="c1">// 记录交换后的位置
-</span>        <span class="p">}</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">largest</span><span class="p">;</span>         <span class="c1">// 记录交换后的位置</span>
+        <span class="p">}</span>
         <span class="k">else</span>
             <span class="k">break</span><span class="p">;</span>
     <span class="p">}</span>
-    <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">;</span>    <span class="c1">// 被筛选结点的值放入最终位置
-</span><span class="p">}</span>
+    <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">;</span>    <span class="c1">// 被筛选结点的值放入最终位置</span>
+<span class="p">}</span>
 
 <span class="cm">/* 建堆 */</span>
 <span class="kt">void</span> <span class="nf">BuildMaxHeap</span><span class="p">(</span><span class="kt">int</span> <span class="n">A</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">len</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">len</span><span class="o">/</span><span class="mi">2</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">;</span> <span class="o">--</span><span class="n">i</span><span class="p">)</span>  <span class="c1">// 从i=n/2-1到0，反复调整堆
-</span>        <span class="n">AdjustDown</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">len</span><span class="p">);</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">len</span><span class="o">/</span><span class="mi">2</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">;</span> <span class="o">--</span><span class="n">i</span><span class="p">)</span>  <span class="c1">// 从i=n/2-1到0，反复调整堆</span>
+        <span class="n">AdjustDown</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">len</span><span class="p">);</span>
 <span class="p">}</span>
 
 
 <span class="cm">/* 维护 A[0...k-1] 这个大根堆 */</span>
 <span class="kt">void</span> <span class="nf">topK</span><span class="p">(</span><span class="kt">int</span> <span class="n">A</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="n">k</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="n">BuildMaxHeap</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">k</span><span class="p">);</span>  <span class="c1">// 先用前面的k个数建大根堆
-</span>    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">k</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">BuildMaxHeap</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">k</span><span class="p">);</span>  <span class="c1">// 先用前面的k个数建大根堆</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">k</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
     <span class="p">{</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1">// 如果小于堆顶元素，替换之
-</span>        <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1">// 如果小于堆顶元素，替换之</span>
+        <span class="p">{</span>
             <span class="kt">int</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
             <span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
             <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">;</span>
-            <span class="n">AdjustDown</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">k</span><span class="p">);</span>  <span class="c1">// 向下调整
-</span>        <span class="p">}</span>
+            <span class="n">AdjustDown</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">k</span><span class="p">);</span>  <span class="c1">// 向下调整</span>
+        <span class="p">}</span>
     <span class="p">}</span>
 
 
@@ -422,8 +416,7 @@
         <span class="n">printf</span><span class="p">(</span><span class="s">"%d"</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>
     <span class="p">}</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="28连续子数组的最大和">28、连续子数组的最大和</h4>
 
@@ -431,7 +424,7 @@
 
 <p>思路：思路：从左往右遍历，将当前相加的结果存入到数字current中，将当前最大的结果记录到result 中，如果current=0，则重新归0计算，从下一个数开始求和，当current&gt;result时，令result=current。当遍历完数组时，最后result中的数就是连续子数组的最大值。</p>
 
-<div class="language-c++ highlighter-rouge"><pre class="highlight"><code> <span class="kt">int</span> <span class="nf">FindGreatestSumOfSubArray</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">array</span><span class="p">)</span> <span class="p">{</span>
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="kt">int</span> <span class="nf">FindGreatestSumOfSubArray</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">array</span><span class="p">)</span> <span class="p">{</span>
     <span class="kt">int</span> <span class="n">result</span><span class="o">=</span><span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
     <span class="kt">int</span> <span class="n">current</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
     <span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
@@ -446,8 +439,7 @@
     <span class="p">}</span>
         <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
     <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="29求1出现的次数">29、求1出现的次数</h4>
 
@@ -480,17 +472,17 @@
 
 <p>上述算法的时间复杂度：O(logL)O(logL)，L 为 n 的10进制的位数</p>
 
-<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
 </span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
 <span class="kt">int</span> <span class="nf">Counts1OfN</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
     <span class="kt">int</span> <span class="n">counts</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="kt">int</span> <span class="n">base</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-    <span class="kt">int</span> <span class="n">low</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">//低位数字
-</span>    <span class="kt">int</span> <span class="n">cur</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">//当前位
-</span>    <span class="kt">int</span> <span class="n">high</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">//高位数字
-</span>    <span class="k">while</span> <span class="p">(</span><span class="n">n</span><span class="o">/</span><span class="n">base</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">//如12345：base = 100, cur = 3, low = 45, hight 12
-</span>        <span class="n">low</span> <span class="o">=</span> <span class="n">n</span> <span class="o">%</span> <span class="n">base</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">low</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">//低位数字</span>
+    <span class="kt">int</span> <span class="n">cur</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">//当前位</span>
+    <span class="kt">int</span> <span class="n">high</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">//高位数字</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">n</span><span class="o">/</span><span class="n">base</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">//如12345：base = 100, cur = 3, low = 45, hight 12</span>
+        <span class="n">low</span> <span class="o">=</span> <span class="n">n</span> <span class="o">%</span> <span class="n">base</span><span class="p">;</span>
         <span class="n">cur</span> <span class="o">=</span> <span class="p">(</span><span class="n">n</span> <span class="o">/</span> <span class="n">base</span><span class="p">)</span> <span class="o">%</span> <span class="mi">10</span><span class="p">;</span>
         <span class="n">high</span> <span class="o">=</span> <span class="n">n</span> <span class="o">/</span> <span class="p">(</span><span class="n">base</span><span class="o">*</span><span class="mi">10</span><span class="p">);</span>
         <span class="k">switch</span><span class="p">(</span><span class="n">cur</span><span class="p">)</span> <span class="p">{</span>
@@ -515,8 +507,7 @@
         <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"0 ~ "</span> <span class="o">&lt;&lt;</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="s">" 包含 1 的个数："</span> <span class="o">&lt;&lt;</span> <span class="n">Counts1OfN</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
     <span class="p">}</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="30把数组排成最小的数">30、把数组排成最小的数</h4>
 
@@ -524,7 +515,7 @@
 
 <p>思路：比较的方法是两个数a、b,若ab&gt;ba,就规定a&gt;b,否则a&lt;b;用这种方法把数组按从小到大的顺序排列并保存到字符串中。</p>
 
-<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
 #include &lt;vector&gt;
 </span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
 
@@ -534,10 +525,10 @@
     <span class="k">if</span> <span class="p">(</span><span class="n">numbers</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>  <span class="k">return</span> <span class="n">to_string</span><span class="p">(</span><span class="n">numbers</span><span class="p">.</span><span class="n">back</span><span class="p">());</span>
     <span class="n">string</span> <span class="n">res</span> <span class="o">=</span> <span class="s">""</span><span class="p">;</span>
     <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">while</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">numbers</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">){</span>  <span class="c1">//只需确定n-1个位置的值；
-</span>        <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span><span class="n">k</span><span class="o">=</span><span class="n">i</span><span class="p">;</span>
-        <span class="k">while</span> <span class="p">(</span><span class="n">j</span> <span class="o">&lt;</span> <span class="n">numbers</span><span class="p">.</span><span class="n">size</span><span class="p">()){</span>  <span class="c1">//k保存从数组下标i之后的"最小值"下标；
-</span>            <span class="n">string</span> <span class="n">ab</span> <span class="o">=</span> <span class="n">to_string</span><span class="p">(</span><span class="n">numbers</span><span class="p">[</span><span class="n">k</span><span class="p">])</span> <span class="o">+</span> <span class="n">to_string</span><span class="p">(</span><span class="n">numbers</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">numbers</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">){</span>  <span class="c1">//只需确定n-1个位置的值；</span>
+        <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span><span class="n">k</span><span class="o">=</span><span class="n">i</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">j</span> <span class="o">&lt;</span> <span class="n">numbers</span><span class="p">.</span><span class="n">size</span><span class="p">()){</span>  <span class="c1">//k保存从数组下标i之后的"最小值"下标；</span>
+            <span class="n">string</span> <span class="n">ab</span> <span class="o">=</span> <span class="n">to_string</span><span class="p">(</span><span class="n">numbers</span><span class="p">[</span><span class="n">k</span><span class="p">])</span> <span class="o">+</span> <span class="n">to_string</span><span class="p">(</span><span class="n">numbers</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>
             <span class="n">string</span> <span class="n">ba</span> <span class="o">=</span> <span class="n">to_string</span><span class="p">(</span><span class="n">numbers</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="o">+</span> <span class="n">to_string</span><span class="p">(</span><span class="n">numbers</span><span class="p">[</span><span class="n">k</span><span class="p">]);</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">ab</span><span class="o">&gt;</span><span class="n">ba</span><span class="p">)</span> <span class="n">k</span> <span class="o">=</span> <span class="n">j</span><span class="p">;</span>
             <span class="n">j</span><span class="o">++</span><span class="p">;</span>
@@ -558,8 +549,7 @@
     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">b</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 
 

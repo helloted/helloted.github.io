@@ -164,26 +164,25 @@
 
 <p><img src="/img/Runloop/runloop_05.jpg" alt="img" /></p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">RunLoopSource</span> <span class="p">:</span> <span class="nc">NSObject</span>
-<span class="p">{</span>
-    <span class="n">CFRunLoopSourceRef</span> <span class="n">runLoopSource</span><span class="p">;</span>
-    <span class="n">NSMutableArray</span><span class="o">*</span> <span class="n">commands</span><span class="p">;</span>
-<span class="p">}</span>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@interface RunLoopSource : NSObject
+{
+    CFRunLoopSourceRef runLoopSource;
+    NSMutableArray* commands;
+}
  
-<span class="o">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">init</span><span class="p">;</span>
-<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">addToCurrentRunLoop</span><span class="p">;</span>
-<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">invalidate</span><span class="p">;</span>
+- (id)init;
+- (void)addToCurrentRunLoop;
+- (void)invalidate;
  
-<span class="c1">// Handler method
-</span><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">sourceFired</span><span class="p">;</span>
+// Handler method
+- (void)sourceFired;
  
-<span class="c1">// Client interface for registering commands to process
-</span><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">addCommand</span><span class="p">:(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">command</span> <span class="nf">withData</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">data</span><span class="p">;</span>
-<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fireAllCommandsOnRunLoop</span><span class="p">:(</span><span class="n">CFRunLoopRef</span><span class="p">)</span><span class="nv">runloop</span><span class="p">;</span>
+// Client interface for registering commands to process
+- (void)addCommand:(NSInteger)command withData:(id)data;
+- (void)fireAllCommandsOnRunLoop:(CFRunLoopRef)runloop;
  
-<span class="k">@end</span>
-</code></pre>
-</div>
+@end
+</code></pre></div></div>
 
 <blockquote>
   <p>The <code class="highlighter-rouge">RunLoopSource</code> object manages a command buffer and uses that buffer to receive messages from other threads</p>
@@ -191,24 +190,23 @@
 
 <p>RunLoopSource对象管理了一个command buffer并且用buffer来从其他线程接受信息。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">// These are the CFRunLoopSourceRef callback functions.
-</span><span class="kt">void</span> <span class="n">RunLoopSourceScheduleRoutine</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">info</span><span class="p">,</span> <span class="n">CFRunLoopRef</span> <span class="n">rl</span><span class="p">,</span> <span class="n">CFStringRef</span> <span class="n">mode</span><span class="p">);</span>
-<span class="kt">void</span> <span class="n">RunLoopSourcePerformRoutine</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">info</span><span class="p">);</span>
-<span class="kt">void</span> <span class="n">RunLoopSourceCancelRoutine</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">info</span><span class="p">,</span> <span class="n">CFRunLoopRef</span> <span class="n">rl</span><span class="p">,</span> <span class="n">CFStringRef</span> <span class="n">mode</span><span class="p">);</span>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// These are the CFRunLoopSourceRef callback functions.
+void RunLoopSourceScheduleRoutine (void *info, CFRunLoopRef rl, CFStringRef mode);
+void RunLoopSourcePerformRoutine (void *info);
+void RunLoopSourceCancelRoutine (void *info, CFRunLoopRef rl, CFStringRef mode);
  
-<span class="c1">// RunLoopContext is a container object used during registration of the input source.
-</span><span class="k">@interface</span> <span class="nc">RunLoopContext</span> <span class="p">:</span> <span class="nc">NSObject</span>
-<span class="p">{</span>
-    <span class="n">CFRunLoopRef</span>        <span class="n">runLoop</span><span class="p">;</span>
-    <span class="n">RunLoopSource</span><span class="o">*</span>        <span class="n">source</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">)</span> <span class="n">CFRunLoopRef</span> <span class="n">runLoop</span><span class="p">;</span>
-<span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">)</span> <span class="n">RunLoopSource</span><span class="o">*</span> <span class="n">source</span><span class="p">;</span>
+// RunLoopContext is a container object used during registration of the input source.
+@interface RunLoopContext : NSObject
+{
+    CFRunLoopRef        runLoop;
+    RunLoopSource*        source;
+}
+@property (readonly) CFRunLoopRef runLoop;
+@property (readonly) RunLoopSource* source;
  
-<span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="nf">initWithSource</span><span class="p">:(</span><span class="n">RunLoopSource</span><span class="o">*</span><span class="p">)</span><span class="nv">src</span> <span class="nf">andLoop</span><span class="p">:(</span><span class="n">CFRunLoopRef</span><span class="p">)</span><span class="nv">loop</span><span class="p">;</span>
-<span class="k">@end</span>
-</code></pre>
-</div>
+- (id)initWithSource:(RunLoopSource*)src andLoop:(CFRunLoopRef)loop;
+@end
+</code></pre></div></div>
 
 <blockquote>
   <p><code class="highlighter-rouge">RunLoopContext</code> object, which is really just a container object used to pass a <code class="highlighter-rouge">RunLoopSource</code> object and a run loop reference to the application’s main thread.</p>
@@ -222,7 +220,7 @@
 
 <p>当你把runloop source放入到runloop时，实际会调用下面这个函数。因为input source只有一个端口（主线程），input source使用调度函数来发送一个消息从而注册他本身到线程的delegate上，当delegate用<code class="highlighter-rouge">RunLoopContext</code>与input source交流，</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>void RunLoopSourceScheduleRoutine (void *info, CFRunLoopRef rl, CFStringRef mode)
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void RunLoopSourceScheduleRoutine (void *info, CFRunLoopRef rl, CFStringRef mode)
 {
     RunLoopSource* obj = (RunLoopSource*)info;
     AppDelegate*   del = [AppDelegate sharedAppDelegate];
@@ -231,8 +229,7 @@
     [del performSelectorOnMainThread:@selector(registerSource:)
                                 withObject:theContext waitUntilDone:NO];
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <blockquote>
   <p>One of the most important callback routines is the one used to process custom data when your input source is signaled. Listing 3-5 shows the perform callback routine associated with the <code class="highlighter-rouge">RunLoopSource</code> object. This function simply forwards the request to do the work to the <code class="highlighter-rouge">sourceFired</code> method, which then processes any commands present in the command buffer.</p>
@@ -240,13 +237,12 @@
 
 <p>最重要之一的回调是当input sour发完信号时处理自定义的数据，下面的代码展示了RunLoopSource的处理回调。这个函数简单地将需求转发到sourceFired方法（处理任何在命令缓存池的命令）</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>void RunLoopSourcePerformRoutine (void *info)
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void RunLoopSourcePerformRoutine (void *info)
 {
     RunLoopSource*  obj = (RunLoopSource*)info;
     [obj sourceFired];
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <blockquote>
   <p>f you ever remove your input source from its run loop using the <code class="highlighter-rouge">CFRunLoopSourceInvalidate</code> function, the system calls your input source’s cancellation routine. You can use this routine to notify clients that your input source is no longer valid and that they should remove any references to it</p>
@@ -254,7 +250,7 @@
 
 <p>如果你使用CFRunLoopSourceInvalidate这个函数来将input source移除，系统会调input source的移除例程函数，你可以用这个例程函数来通知客户端你的input source不再可用而且应该移除相关。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>void RunLoopSourceCancelRoutine (void *info, CFRunLoopRef rl, CFStringRef mode)
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void RunLoopSourceCancelRoutine (void *info, CFRunLoopRef rl, CFStringRef mode)
 {
     RunLoopSource* obj = (RunLoopSource*)info;
     AppDelegate* del = [AppDelegate sharedAppDelegate];
@@ -263,8 +259,7 @@
     [del performSelectorOnMainThread:@selector(removeSource:)
                                 withObject:theContext waitUntilDone:YES];
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="将input-source放入runloop">将input source放入runloop</h4>
 
@@ -274,7 +269,7 @@
 
 <p>在工作线程调用addToCurrentRunLoop方法之前，input source并不会install，这个时候会调用RunLoopSourceScheduleRoutine回调函数，一旦input source被添加进runloop，线程就开始运行runloop.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (id)init
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (id)init
 {
     CFRunLoopSourceContext    context = {0, self, NULL, NULL, NULL, NULL, NULL,
                                         &amp;RunLoopSourceScheduleRoutine,
@@ -292,8 +287,7 @@
     CFRunLoopRef runLoop = CFRunLoopGetCurrent();
     CFRunLoopAddSource(runLoop, runLoopSource, kCFRunLoopDefaultMode);
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="调度input-source的客户端">调度input source的客户端</h4>
 
@@ -311,7 +305,7 @@
 
 <p>下面的代码显示了当调用RunloopSource对象的调度程序函数时，由程序delegate定义并调用的注册方法。这个方法接受RunLoopSource对象提供的RunLoopContext对象并将其添加到源列表里。代码还显示了当从runloop里移除input source时将其注销</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (void)registerSource:(RunLoopContext*)sourceInfo;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)registerSource:(RunLoopContext*)sourceInfo;
 {
     [sourcesToPing addObject:sourceInfo];
 }
@@ -332,8 +326,7 @@
     if (objToRemove)
         [sourcesToPing removeObject:objToRemove];
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="给input-source发出信号">给input source发出信号</h4>
 
@@ -347,13 +340,12 @@
 
 <p>下面的代码显示了RunLoopSource对象的fireCommandsOnRunLoop方法，这个方法会在当客户端准备好source来处理添加到缓存区的命令时调用。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (void)fireCommandsOnRunLoop:(CFRunLoopRef)runloop
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)fireCommandsOnRunLoop:(CFRunLoopRef)runloop
 {
     CFRunLoopSourceSignal(runLoopSource);
     CFRunLoopWakeUp(runloop);
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="二配置timer-sources">二、配置Timer Sources</h3>
 
@@ -363,10 +355,9 @@
 
 <p>创建一个timer source，你需要做的就是创建一个timer对象然后将其放入runloop，用NSTimer或者CFRunLoopTimerRef都可以。可以用下面的方法</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>scheduledTimerWithTimeInterval:target:selector:userInfo:repeats:
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scheduledTimerWithTimeInterval:target:selector:userInfo:repeats:
 scheduledTimerWithTimeInterval:invocation:repeats:
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <blockquote>
   <p>These methods create the timer and add it to the current thread’s run loop in the default mode (<code class="highlighter-rouge">NSDefaultRunLoopMode</code>). You can also schedule a timer manually if you want by creating your <code class="highlighter-rouge">NSTimer</code> object and then adding it to the run loop using the <code class="highlighter-rouge">addTimer:forMode:</code> method of <code class="highlighter-rouge">NSRunLoop</code>. Both techniques do basically the same thing but give you different levels of control over the timer’s configuration. For example, if you create the timer and add it to the run loop manually, you can do so using a mode other than the default mode. Listing 3-10 shows how to create timers using both techniques. The first timer has an initial delay of 1 second but then fires regularly every 0.1 seconds after that. The second timer begins firing after an initial 0.2 second delay and then fires every 0.2 seconds after that.</p>
@@ -374,7 +365,7 @@ scheduledTimerWithTimeInterval:invocation:repeats:
 
 <p>上面的两个方法创建一个timer并且将它以默认模式NSDefaultRunLoopMode添加到当前线程的runloop。当然你也可以手动创建一个并用addTimer:forMode:添加进runloop.两种方法都是一样的，其中一个可以配置更多。下面的方法显示了两种方法的详细</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>NSRunLoop* myRunLoop = [NSRunLoop currentRunLoop];
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSRunLoop* myRunLoop = [NSRunLoop currentRunLoop];
  
 // Create and schedule the first timer.
 NSDate* futureDate = [NSDate dateWithTimeIntervalSinceNow:1.0];
@@ -392,19 +383,17 @@ NSTimer* myTimer = [[NSTimer alloc] initWithFireDate:futureDate
                         selector:@selector(myDoFireTimer2:)
                         userInfo:nil
                         repeats:YES];
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>下面这个是用Core Foundation来添加一个timer</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>CFRunLoopRef runLoop = CFRunLoopGetCurrent();
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CFRunLoopRef runLoop = CFRunLoopGetCurrent();
 CFRunLoopTimerContext context = {0, NULL, NULL, NULL, NULL};
 CFRunLoopTimerRef timer = CFRunLoopTimerCreate(kCFAllocatorDefault, 0.1, 0.3, 0, 0,
                                         &amp;myCFTimerCallback, &amp;context);
  
 CFRunLoopAddTimer(runLoop, timer, kCFRunLoopCommonModes);
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="三配置一个port-based-input-source">三、配置一个Port-Based Input Source</h3>
 
@@ -418,7 +407,7 @@ CFRunLoopAddTimer(runLoop, timer, kCFRunLoopCommonModes);
 
 <p>下面代码显示了一个主要线程来启动一个辅助线程</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (void)launchThread
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)launchThread
 {
     NSPort* myPort = [NSMachPort port];
     if (myPort)
@@ -434,8 +423,7 @@ CFRunLoopAddTimer(runLoop, timer, kCFRunLoopCommonModes);
                toTarget:[MyWorkerClass class] withObject:myPort];
     }
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 
 

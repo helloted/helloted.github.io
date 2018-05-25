@@ -144,25 +144,21 @@
 
 <p>2、安装CMake，用Homebrew安装</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>brew install cmake
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew install cmake
+</code></pre></div></div>
 
 <p>3、用CMake编译OpenCV</p>
 
 <p>在解压后的opencv文件夹内，新建一个文件夹release，并且cd进入，分别执行以下的命令行</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>cmake -G "Unix Makefiles" ..
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cmake -G "Unix Makefiles" ..
+</code></pre></div></div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>make
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make
+</code></pre></div></div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>sudo make install
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo make install
+</code></pre></div></div>
 
 <p><img src="/img/Simple_5/02.png" alt="img" /></p>
 
@@ -174,7 +170,7 @@
 
 <p>DisplayImage.cpp</p>
 
-<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
 #include &lt;opencv2/opencv.hpp&gt;
 </span><span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
 <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span> <span class="p">)</span>
@@ -191,12 +187,11 @@
     <span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>CMakeLists.txt</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>cmake_minimum_required(VERSION 2.8)
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cmake_minimum_required(VERSION 2.8)
 
 //show 项目
 project( show )
@@ -204,16 +199,14 @@ find_package( OpenCV REQUIRED )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 add_executable( show main.cpp )
 target_link_libraries( show ${OpenCV_LIBS} )
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>在文件夹内执行命令</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>cmake .
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cmake .
 make
 ./show a.png
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>就可以把图片a打开来</p>
 

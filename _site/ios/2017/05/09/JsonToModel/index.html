@@ -132,48 +132,42 @@
 
 <p>其中JSon转Model的核心知识点就在于利用Runtime的特点来获取属性以及KVC进行赋值，尝试了一下，封装了一个简易版的工具，一行代码即可完成转换</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>User *user = [User ht_modelFromJson:jsonStr];
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User *user = [User ht_modelFromJson:jsonStr];
+</code></pre></div></div>
 
 <h3 id="二流程">二、流程</h3>
 
 <p>首先要引入runtime</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>#import &lt;objc/runtime.h&gt;
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#import &lt;objc/runtime.h&gt;
+</code></pre></div></div>
 
 <p>拿到Model里的所有属性</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>//获取当前类中的所有属性
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//获取当前类中的所有属性
  unsigned int propertyCount;
  objc_property_t *allPropertys = class_copyPropertyList([self class], &amp;propertyCount);
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>获取属性的name</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>  //拿到属性名称
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  //拿到属性名称
  NSString *property_name = [NSString stringWithUTF8String:property_getName(property)];
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>以name为key从Json字典里获取值</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>// 从Json字典里获取值
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// 从Json字典里获取值
 id value = [dict objectForKey:key];
 if (value == nil) {
 continue;
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>KVC赋值</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>[self setValue:value forKey:key];
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[self setValue:value forKey:key];
+</code></pre></div></div>
 
 <h3 id="三补充">三、补充</h3>
 
@@ -181,7 +175,7 @@ continue;
   <p>1、拿到的可能不是Json字典，而是Json字符串或者是二进制类型NSData，那么首先要对将Json字符串转成Json字典</p>
 </blockquote>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (NSDictionary *)dictionaryWithJSON:(id)json
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (NSDictionary *)dictionaryWithJSON:(id)json
 {
     if (!json) {
         return nil;
@@ -216,8 +210,7 @@ continue;
     
     return dict;
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <blockquote>
   <p>2、如果字典属性与模型属性不完全相同，则需要匹配一下</p>
@@ -225,40 +218,38 @@ continue;
 
 <p>解决方案是定义一个Protocol</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">@protocol</span> <span class="nc">JSONModelSpecialAttributesProtocol</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@protocol JSONModelSpecialAttributesProtocol &lt;NSObject&gt;
 
-<span class="k">@optional</span>
-<span class="c1">// 属性匹配
-</span><span class="o">+</span> <span class="p">(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="n">attributesMapperDictionary</span><span class="p">;</span>
+@optional
+// 属性匹配
++ (NSDictionary *)attributesMapperDictionary;
 
-<span class="c1">// 嵌套模型
-</span><span class="k">+</span> <span class="p">(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="n">attributesNestDictionary</span><span class="p">;</span>
+// 嵌套模型
++ (NSDictionary *)attributesNestDictionary;
 
-<span class="k">@end</span>
-</code></pre>
-</div>
+@end
+</code></pre></div></div>
 
 <p>如果某个Model与字典不一一匹配，则遵循这个协议，将需要配套的属性返回即可，在赋值的时候，将key现行转换一下</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>    <span class="c1">// 某些属性需要重新映射===
-</span>    <span class="n">NSDictionary</span> <span class="o">*</span><span class="n">mapperDict</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">([</span><span class="n">self</span> <span class="nf">conformsToProtocol</span><span class="p">:</span><span class="k">@protocol</span><span class="err">(</span><span class="nc">JSONModelSpecialAttributesProtocol</span><span class="p">)]</span> <span class="o">&amp;&amp;</span> <span class="p">[[</span><span class="n">self</span> <span class="nf">class</span><span class="p">]</span> <span class="nf">respondsToSelector</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="n">attributesMapperDictionary</span><span class="p">)])</span> <span class="p">{</span>
-        <span class="n">mapperDict</span> <span class="o">=</span> <span class="p">[[</span><span class="n">self</span> <span class="nf">class</span><span class="p">]</span> <span class="nf">attributesMapperDictionary</span><span class="p">];</span>
-    <span class="p">}</span>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    // 某些属性需要重新映射===
+    NSDictionary *mapperDict;
+    if ([self conformsToProtocol:@protocol(JSONModelSpecialAttributesProtocol)] &amp;&amp; [[self class] respondsToSelector:@selector(attributesMapperDictionary)]) {
+        mapperDict = [[self class] attributesMapperDictionary];
+    }
     
-    <span class="c1">// 如果有属性需要重新映射===
-</span>    <span class="n">NSString</span> <span class="o">*</span><span class="n">key</span> <span class="o">=</span> <span class="n">property_name</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">mapperDict</span> <span class="o">&amp;&amp;</span> <span class="p">[</span><span class="n">mapperDict</span> <span class="nf">objectForKey</span><span class="p">:</span><span class="n">property_name</span><span class="p">])</span> <span class="p">{</span>
-    <span class="n">key</span> <span class="o">=</span> <span class="p">[</span><span class="n">mapperDict</span> <span class="nf">objectForKey</span><span class="p">:</span><span class="n">property_name</span><span class="p">];</span>
-    <span class="p">}</span>
-</code></pre>
-</div>
+    // 如果有属性需要重新映射===
+    NSString *key = property_name;
+    if (mapperDict &amp;&amp; [mapperDict objectForKey:property_name]) {
+    key = [mapperDict objectForKey:property_name];
+    }
+</code></pre></div></div>
 
 <blockquote>
   <p>3、如果模型里面嵌套了模型，也是需要先自定义下，在赋值时做个区分</p>
 </blockquote>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>      // 如果有属性嵌套其他Model
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>      // 如果有属性嵌套其他Model
         if (nestDict &amp;&amp; [nestDict objectForKey:property_name]) {
             NSString *className = [nestDict objectForKey:property_name];
             Class class = NSClassFromString(className);
@@ -268,8 +259,7 @@ continue;
         }else{
             [self setValue:value forKey:key];
         }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>完整版代码可以在<a href="https://github.com/helloted/JsonToModel">GitHub-JsonToModel</a>下载</p>
 

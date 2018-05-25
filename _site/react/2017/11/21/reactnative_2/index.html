@@ -128,9 +128,8 @@
 
 <p>使用之前先在根目录文件内执行命令</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>yarn add react-navigation
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yarn add react-navigation
+</code></pre></div></div>
 
 <p>它有三种类型的</p>
 
@@ -148,71 +147,70 @@
 
 <p>在iOS将文件名替换为stack</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>  jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"stack" fallbackResource:nil];
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"stack" fallbackResource:nil];
+</code></pre></div></div>
 
 <p>照例，先定义好页面</p>
 
-<pre><code class="language-jsx">AppRegistry.registerComponent('DemoProject', () =&gt; RootPage);
-export default class RootPage extends React.Component {
-  render() {
-    return &lt;CustomStack /&gt;;
-  }
-}
-</code></pre>
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">AppRegistry</span><span class="p">.</span><span class="nx">registerComponent</span><span class="p">(</span><span class="s1">'DemoProject'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">RootPage</span><span class="p">);</span>
+<span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">RootPage</span> <span class="kd">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{</span>
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">&lt;</span><span class="nc">CustomStack</span> <span class="p">/&gt;;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
 <p>其中，<code class="highlighter-rouge">CustomStack</code>是我们自定义的导航组件</p>
 
-<pre><code class="language-jsx">export const CustomStack = StackNavigator({
-  HomePage: {
-    screen: HomeVC
-  },
-  SecondPage: {
-    screen: SecondVC
-  },
-});
-</code></pre>
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">const</span> <span class="nx">CustomStack</span> <span class="o">=</span> <span class="nx">StackNavigator</span><span class="p">({</span>
+  <span class="na">HomePage</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">screen</span><span class="p">:</span> <span class="nx">HomeVC</span>
+  <span class="p">},</span>
+  <span class="na">SecondPage</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">screen</span><span class="p">:</span> <span class="nx">SecondVC</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+</code></pre></div></div>
 
 <p>由StackNavigator生成导航主键。HomePage和SecondPage是我们的两个页面，页面里带有screen的参数,里面的组件才是定义页面内容的地方。要注意的是，顺序依次是进栈的顺序。</p>
 
 <p>分别定义HomeVC组件和SecondVC组件</p>
 
-<pre><code class="language-jsx">class HomeVC extends React.Component {
-  static navigationOptions = {
-    title: 'HomeVC',
-  };
-  render() {
-    const {
-      navigate
-    } = this.props.navigation;
-    return (
-      &lt;View&gt;
-        &lt;Text&gt;Hello, This is HomeVC!&lt;/Text&gt;
-        &lt;Button
-          onPress={() =&gt; navigate('SecondPage')}
-          title="Jump to SecondVC"
-        /&gt;
-      &lt;/View&gt;
-    );
-  }
-}
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">HomeVC</span> <span class="kd">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{</span>
+  <span class="kr">static</span> <span class="nx">navigationOptions</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">title</span><span class="p">:</span> <span class="s1">'HomeVC'</span><span class="p">,</span>
+  <span class="p">};</span>
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span>
+      <span class="nx">navigate</span>
+    <span class="p">}</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">navigation</span><span class="p">;</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="p">&lt;</span><span class="nc">View</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nc">Text</span><span class="p">&gt;</span>Hello, This is HomeVC!<span class="p">&lt;/</span><span class="nc">Text</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nc">Button</span>
+          <span class="na">onPress=</span><span class="si">{</span><span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">navigate</span><span class="p">(</span><span class="s1">'SecondPage'</span><span class="p">)</span><span class="si">}</span>
+          <span class="na">title=</span><span class="s2">"Jump to SecondVC"</span>
+        <span class="p">/&gt;</span>
+      <span class="p">&lt;/</span><span class="nc">View</span><span class="p">&gt;</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 
 
-class SecondVC extends React.Component {
-  static navigationOptions = {
-    title: 'SecondVC',
-  };
-  render() {
-    return (
-      &lt;View&gt;
-        &lt;Text&gt;Now, you are in SecondVC&lt;/Text&gt;
-      &lt;/View&gt;
-    );
-  }
-}
+<span class="kd">class</span> <span class="nx">SecondVC</span> <span class="kd">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{</span>
+  <span class="kr">static</span> <span class="nx">navigationOptions</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">title</span><span class="p">:</span> <span class="s1">'SecondVC'</span><span class="p">,</span>
+  <span class="p">};</span>
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="p">&lt;</span><span class="nc">View</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nc">Text</span><span class="p">&gt;</span>Now, you are in SecondVC<span class="p">&lt;/</span><span class="nc">Text</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nc">View</span><span class="p">&gt;</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 
-</code></pre>
+</code></pre></div></div>
 
 <p>可以有以下的效果：</p>
 
@@ -222,93 +220,93 @@ class SecondVC extends React.Component {
 
 <p>stack.js</p>
 
-<pre><code class="language-jsx">import React from 'react';
-import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  View,
-  Button
-} from 'react-native';
-import {
-  StackNavigator
-} from 'react-navigation';
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s1">'react'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span>
+  <span class="nx">AppRegistry</span><span class="p">,</span>
+  <span class="nx">StyleSheet</span><span class="p">,</span>
+  <span class="nx">Text</span><span class="p">,</span>
+  <span class="nx">View</span><span class="p">,</span>
+  <span class="nx">Button</span>
+<span class="p">}</span> <span class="k">from</span> <span class="s1">'react-native'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span>
+  <span class="nx">StackNavigator</span>
+<span class="p">}</span> <span class="k">from</span> <span class="s1">'react-navigation'</span><span class="p">;</span>
 
-AppRegistry.registerComponent('DemoProject', () =&gt; RootPage);
-export default class RootPage extends React.Component {
-  render() {
-    return &lt;CustomStack /&gt;;
-  }
-}
-
-
-
-class HomeVC extends React.Component {
-  static navigationOptions = {
-    title: 'HomeVC',
-  };
-  render() {
-    const {
-      navigate
-    } = this.props.navigation;
-    return (
-      &lt;View&gt;
-        &lt;Text&gt;Hello, This is HomeVC!&lt;/Text&gt;
-        &lt;Button
-          onPress={() =&gt; navigate('SecondPage')}
-          title="Jump to SecondVC"
-        /&gt;
-      &lt;/View&gt;
-    );
-  }
-}
+<span class="nx">AppRegistry</span><span class="p">.</span><span class="nx">registerComponent</span><span class="p">(</span><span class="s1">'DemoProject'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">RootPage</span><span class="p">);</span>
+<span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">RootPage</span> <span class="kd">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{</span>
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">&lt;</span><span class="nc">CustomStack</span> <span class="p">/&gt;;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 
 
-class SecondVC extends React.Component {
-  static navigationOptions = {
-    title: 'SecondVC',
-  };
-  render() {
-    return (
-      &lt;View&gt;
-        &lt;Text&gt;Now, you are in SecondVC&lt;/Text&gt;
-      &lt;/View&gt;
-    );
-  }
-}
 
-export const CustomStack = StackNavigator({
-  HomePage: {
-    screen: HomeVC
-  },
-  SecondPage: {
-    screen: SecondVC
-  },
-});
-</code></pre>
+<span class="kd">class</span> <span class="nx">HomeVC</span> <span class="kd">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{</span>
+  <span class="kr">static</span> <span class="nx">navigationOptions</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">title</span><span class="p">:</span> <span class="s1">'HomeVC'</span><span class="p">,</span>
+  <span class="p">};</span>
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span>
+      <span class="nx">navigate</span>
+    <span class="p">}</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">navigation</span><span class="p">;</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="p">&lt;</span><span class="nc">View</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nc">Text</span><span class="p">&gt;</span>Hello, This is HomeVC!<span class="p">&lt;/</span><span class="nc">Text</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nc">Button</span>
+          <span class="na">onPress=</span><span class="si">{</span><span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">navigate</span><span class="p">(</span><span class="s1">'SecondPage'</span><span class="p">)</span><span class="si">}</span>
+          <span class="na">title=</span><span class="s2">"Jump to SecondVC"</span>
+        <span class="p">/&gt;</span>
+      <span class="p">&lt;/</span><span class="nc">View</span><span class="p">&gt;</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+
+<span class="kd">class</span> <span class="nx">SecondVC</span> <span class="kd">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{</span>
+  <span class="kr">static</span> <span class="nx">navigationOptions</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">title</span><span class="p">:</span> <span class="s1">'SecondVC'</span><span class="p">,</span>
+  <span class="p">};</span>
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="p">&lt;</span><span class="nc">View</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nc">Text</span><span class="p">&gt;</span>Now, you are in SecondVC<span class="p">&lt;/</span><span class="nc">Text</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nc">View</span><span class="p">&gt;</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">CustomStack</span> <span class="o">=</span> <span class="nx">StackNavigator</span><span class="p">({</span>
+  <span class="na">HomePage</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">screen</span><span class="p">:</span> <span class="nx">HomeVC</span>
+  <span class="p">},</span>
+  <span class="na">SecondPage</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">screen</span><span class="p">:</span> <span class="nx">SecondVC</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+</code></pre></div></div>
 
 <h3 id="六tabnavigator的使用">六、TabNavigator的使用</h3>
 
 <p>声明很简单</p>
 
-<pre><code class="language-jsx">const MainTabController = TabNavigator({
-  TabItem_1: {
-    screen: HomeVc
-  },
-  TabItem_2: {
-    screen: SecondVC
-  },
-  TabItem_3: {
-    screen: ThirdVC
-  },
-}, {
-  tabBarPosition: 'bottom',
-  tabBarOptions: {
-    activeTintColor: '#e91e63',
-  },
-});
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">MainTabController</span> <span class="o">=</span> <span class="nx">TabNavigator</span><span class="p">({</span>
+  <span class="na">TabItem_1</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">screen</span><span class="p">:</span> <span class="nx">HomeVc</span>
+  <span class="p">},</span>
+  <span class="na">TabItem_2</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">screen</span><span class="p">:</span> <span class="nx">SecondVC</span>
+  <span class="p">},</span>
+  <span class="na">TabItem_3</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">screen</span><span class="p">:</span> <span class="nx">ThirdVC</span>
+  <span class="p">},</span>
+<span class="p">},</span> <span class="p">{</span>
+  <span class="na">tabBarPosition</span><span class="p">:</span> <span class="s1">'bottom'</span><span class="p">,</span>
+  <span class="na">tabBarOptions</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">activeTintColor</span><span class="p">:</span> <span class="s1">'#e91e63'</span><span class="p">,</span>
+  <span class="p">},</span>
+<span class="p">});</span>
 
-</code></pre>
+</code></pre></div></div>
 
 <p>每个VC都对应一个界面，</p>
 
@@ -318,29 +316,29 @@ export const CustomStack = StackNavigator({
 
 <p>页面代码：</p>
 
-<pre><code class="language-jsx">class HomeVc extends React.Component {
-  static navigationOptions = {
-    tabBarLabel: 'Home',
-    tabBarIcon: ({
-      tintColor
-    }) =&gt; (
-      &lt;Image
-        source={require('./imgs/01.png')}
-        style={[styles.icon, {tintColor: tintColor}]}
-      /&gt;
-    ),
-  };
-  render() {
-    return (
-      &lt;View style={styles.homecontainer}&gt;
-        &lt;Text&gt;
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">HomeVc</span> <span class="kd">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{</span>
+  <span class="kr">static</span> <span class="nx">navigationOptions</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">tabBarLabel</span><span class="p">:</span> <span class="s1">'Home'</span><span class="p">,</span>
+    <span class="na">tabBarIcon</span><span class="p">:</span> <span class="p">({</span>
+      <span class="nx">tintColor</span>
+    <span class="p">})</span> <span class="o">=&gt;</span> <span class="p">(</span>
+      <span class="p">&lt;</span><span class="nc">Image</span>
+        <span class="na">source=</span><span class="si">{</span><span class="nx">require</span><span class="p">(</span><span class="s1">'./imgs/01.png'</span><span class="p">)</span><span class="si">}</span>
+        <span class="na">style=</span><span class="si">{</span><span class="p">[</span><span class="nx">styles</span><span class="p">.</span><span class="nx">icon</span><span class="p">,</span> <span class="p">{</span><span class="na">tintColor</span><span class="p">:</span> <span class="nx">tintColor</span><span class="p">}]</span><span class="si">}</span>
+      <span class="p">/&gt;</span>
+    <span class="p">),</span>
+  <span class="p">};</span>
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="p">&lt;</span><span class="nc">View</span> <span class="na">style=</span><span class="si">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">homecontainer</span><span class="si">}</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nc">Text</span><span class="p">&gt;</span>
           This is HomeVC page
-        &lt;/Text&gt;
-      &lt;/View&gt;
-    );
-  }
-}
-</code></pre>
+        <span class="p">&lt;/</span><span class="nc">Text</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nc">View</span><span class="p">&gt;</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
 <p>navigationOptions是Tab的一些选项，里面有Tab的名称和图片，依次设置三个页面后可以达到这个效果</p>
 
@@ -348,35 +346,35 @@ export const CustomStack = StackNavigator({
 
 <p>将StackNavigator作为一个Page插入TabItem</p>
 
-<pre><code class="language-jsx">const HomeNav = StackNavigator({
-  HomePage: {
-    screen: HomeVC,
-    navigationOptions: {
-      title: 'HomePage',
-    }
-  },
-  SecondPage: {
-    screen: SecondVC
-  },
-});
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">HomeNav</span> <span class="o">=</span> <span class="nx">StackNavigator</span><span class="p">({</span>
+  <span class="na">HomePage</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">screen</span><span class="p">:</span> <span class="nx">HomeVC</span><span class="p">,</span>
+    <span class="na">navigationOptions</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">title</span><span class="p">:</span> <span class="s1">'HomePage'</span><span class="p">,</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="na">SecondPage</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">screen</span><span class="p">:</span> <span class="nx">SecondVC</span>
+  <span class="p">},</span>
+<span class="p">});</span>
 
-const MainTabController = TabNavigator({
-  TabItem_1: {
-    screen: HomeNav  //Nav作为一个Page插入来
-  },
-  TabItem_2: {
-    screen: MessageVC
-  },
-  TabItem_3: {
-    screen: SettingVC
-  },
-}, {
-  tabBarPosition: 'bottom',
-  tabBarOptions: {
-    activeTintColor: '#e91e63',
-  },
-});
-</code></pre>
+<span class="kd">const</span> <span class="nx">MainTabController</span> <span class="o">=</span> <span class="nx">TabNavigator</span><span class="p">({</span>
+  <span class="na">TabItem_1</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">screen</span><span class="p">:</span> <span class="nx">HomeNav</span>  <span class="c1">//Nav作为一个Page插入来</span>
+  <span class="p">},</span>
+  <span class="na">TabItem_2</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">screen</span><span class="p">:</span> <span class="nx">MessageVC</span>
+  <span class="p">},</span>
+  <span class="na">TabItem_3</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">screen</span><span class="p">:</span> <span class="nx">SettingVC</span>
+  <span class="p">},</span>
+<span class="p">},</span> <span class="p">{</span>
+  <span class="na">tabBarPosition</span><span class="p">:</span> <span class="s1">'bottom'</span><span class="p">,</span>
+  <span class="na">tabBarOptions</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">activeTintColor</span><span class="p">:</span> <span class="s1">'#e91e63'</span><span class="p">,</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+</code></pre></div></div>
 
 <p>下面就是Tab+Nav的效果</p>
 
@@ -384,7 +382,7 @@ const MainTabController = TabNavigator({
 
 <h3 id="七drawernavigator">七、DrawerNavigator</h3>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>class MyHomeScreen extends React.Component {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class MyHomeScreen extends React.Component {
   static navigationOptions = {
     drawerLabel: 'Home',
     drawerIcon: ({
@@ -457,20 +455,17 @@ const MyApp = DrawerNavigator({
     screen: MyNotificationsScreen,
   },
 });
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>其中</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>this.props.navigation.navigate('DrawerOpen')
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>this.props.navigation.navigate('DrawerOpen')
+</code></pre></div></div>
 
 <p>这是打开抽屉</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>this.props.navigation.navigate('DrawerClose')
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>this.props.navigation.navigate('DrawerClose')
+</code></pre></div></div>
 
 <p>点击空白或者上面这句代码是关闭抽屉，</p>
 

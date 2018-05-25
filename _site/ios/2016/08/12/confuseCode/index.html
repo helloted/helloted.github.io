@@ -130,9 +130,8 @@
 
 <p>从<a href="http://stevenygard.com/projects/class-dump">class-dump下载地址</a>将dmg文件下载下来，将class-dump复制到/usr/bin目录，并在终端执行下面命令赋予权限</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>sudo chmod 777 /usr/bin/class-dump
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo chmod 777 /usr/bin/class-dump
+</code></pre></div></div>
 
 <p>如果没有办法复制到根目录，则先要开启系统权限</p>
 
@@ -151,9 +150,8 @@
 
 <p>将ipa改名为zip并解压能看到一个.app结尾的文件,执行</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>class-dump -H /Users/imac/Desktop/Payload/test.app -o /Users/imac/Desktop/heads
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class-dump -H /Users/imac/Desktop/Payload/test.app -o /Users/imac/Desktop/heads
+</code></pre></div></div>
 
 <p>其中<font color="gray">/Users/imac/Desktop/Payload/test.app</font>是源文件路径,<font color="gray"> /Users/imac/Desktop/heads</font>是要导出的头文件的路径</p>
 
@@ -169,7 +167,7 @@
 
 <p>在confuse.sh添加以下代码</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#!/usr/bin/env bash</span>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/env bash</span>
 
 <span class="nv">TABLENAME</span><span class="o">=</span>symbols
 <span class="nv">SYMBOL_DB_FILE</span><span class="o">=</span><span class="s2">"symbols"</span>
@@ -195,36 +193,34 @@ query<span class="o">()</span>
 
 ramdomString<span class="o">()</span>
 <span class="o">{</span>
-    openssl rand -base64 64 | tr -cd <span class="s1">'a-zA-Z'</span> |head -c 16
+    openssl rand <span class="nt">-base64</span> 64 | <span class="nb">tr</span> <span class="nt">-cd</span> <span class="s1">'a-zA-Z'</span> |head <span class="nt">-c</span> 16
 <span class="o">}</span>
 
-rm -f <span class="nv">$SYMBOL_DB_FILE</span>
-rm -f <span class="nv">$HEAD_FILE</span>
+<span class="nb">rm</span> <span class="nt">-f</span> <span class="nv">$SYMBOL_DB_FILE</span>
+<span class="nb">rm</span> <span class="nt">-f</span> <span class="nv">$HEAD_FILE</span>
 createTable
 
-touch <span class="nv">$HEAD_FILE</span>
+<span class="nb">touch</span> <span class="nv">$HEAD_FILE</span>
 <span class="nb">echo</span> <span class="s1">'#ifndef Demo_codeObfuscation_h
-#define Demo_codeObfuscation_h'</span> &gt;&gt; <span class="nv">$HEAD_FILE</span>
-<span class="nb">echo</span> <span class="s2">"//confuse string at </span><span class="sb">`</span>date<span class="sb">`</span><span class="s2">"</span> &gt;&gt; <span class="nv">$HEAD_FILE</span>
-cat <span class="s2">"</span><span class="nv">$STRING_SYMBOL_FILE</span><span class="s2">"</span> | <span class="k">while </span><span class="nb">read</span> -ra line; <span class="k">do
-    if</span> <span class="o">[[</span> ! -z <span class="s2">"</span><span class="nv">$line</span><span class="s2">"</span> <span class="o">]]</span>; <span class="k">then
+#define Demo_codeObfuscation_h'</span> <span class="o">&gt;&gt;</span> <span class="nv">$HEAD_FILE</span>
+<span class="nb">echo</span> <span class="s2">"//confuse string at </span><span class="sb">`</span><span class="nb">date</span><span class="sb">`</span><span class="s2">"</span> <span class="o">&gt;&gt;</span> <span class="nv">$HEAD_FILE</span>
+<span class="nb">cat</span> <span class="s2">"</span><span class="nv">$STRING_SYMBOL_FILE</span><span class="s2">"</span> | <span class="k">while </span><span class="nb">read</span> <span class="nt">-ra</span> line<span class="p">;</span> <span class="k">do
+    if</span> <span class="o">[[</span> <span class="o">!</span> <span class="nt">-z</span> <span class="s2">"</span><span class="nv">$line</span><span class="s2">"</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then
         </span><span class="nv">ramdom</span><span class="o">=</span><span class="sb">`</span>ramdomString<span class="sb">`</span>
         <span class="nb">echo</span> <span class="nv">$line</span> <span class="nv">$ramdom</span>
         insertValue <span class="nv">$line</span> <span class="nv">$ramdom</span>
-        <span class="nb">echo</span> <span class="s2">"#define </span><span class="nv">$line</span><span class="s2"> </span><span class="nv">$ramdom</span><span class="s2">"</span> &gt;&gt; <span class="nv">$HEAD_FILE</span>
+        <span class="nb">echo</span> <span class="s2">"#define </span><span class="nv">$line</span><span class="s2"> </span><span class="nv">$ramdom</span><span class="s2">"</span> <span class="o">&gt;&gt;</span> <span class="nv">$HEAD_FILE</span>
     <span class="k">fi
 done
-</span><span class="nb">echo</span> <span class="s2">"#endif"</span> &gt;&gt; <span class="nv">$HEAD_FILE</span>
+</span><span class="nb">echo</span> <span class="s2">"#endif"</span> <span class="o">&gt;&gt;</span> <span class="nv">$HEAD_FILE</span>
 
 sqlite3 <span class="nv">$SYMBOL_DB_FILE</span> .dump
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>用终端给confuse.sh添加权限</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>chmod 755 confuse.sh
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>chmod 755 confuse.sh
+</code></pre></div></div>
 
 <p>并且在Build Phase里添加运行脚本</p>
 
@@ -232,14 +228,13 @@ sqlite3 <span class="nv">$SYMBOL_DB_FILE</span> .dump
 
 <p>并且在pch文件中加入</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>#ifdef __OBJC__  
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifdef __OBJC__  
     #import &lt;UIKit/UIKit.h&gt;  
     #import &lt;Foundation/Foundation.h&gt;  
     //添加混淆作用的头文件（这个文件名是脚本confuse.sh中定义的）  
     #import "codeObfuscation.h"  
 #endif  
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>再次打包用class-dump测试一下，会发现代码乱了</p>
 

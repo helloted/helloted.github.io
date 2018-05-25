@@ -128,44 +128,39 @@
 
 <p>曾经想要通过网络快速共享文件？ 好吧，你是幸运的。 Python为你提供了一个功能。 转到您要通过网络提供的目录，然后在终端中输入以下代码：</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c"># Python 2</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Python 2</span>
 <span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">SimpleHTTPServer</span>
 
 <span class="c"># Python 3</span>
 <span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">http</span><span class="o">.</span><span class="n">server</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>会建立一个服务器</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>Serving HTTP on 0.0.0.0 port 8000 ...
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Serving HTTP on 0.0.0.0 port 8000 ...
+</code></pre></div></div>
 
 <h4 id="美观打印">美观打印</h4>
 
 <p>您可以在Python代码中以美观的格式打印list和Dict。 这是相关的代码：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>from pprint import pprint
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>from pprint import pprint
 
 my_dict = {'name': 'Yasoob', 'age': 'undefined', 'personality': 'awesome'}
 pprint(my_dict)
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>此外，如果你想很快从文件打印JSON，那么你可以简单地做：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>cat file.json | python -m json.tool
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat file.json | python -m json.tool
+</code></pre></div></div>
 
 <h4 id="分析脚本">分析脚本</h4>
 
 <p>这对查明脚本中的瓶颈非常有帮助：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>python -m cProfile my_script.py
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python -m cProfile my_script.py
+</code></pre></div></div>
 
 <p>注意： <code class="highlighter-rouge">cProfile</code> 会比 <code class="highlighter-rouge">profile</code> 更快因为是用 c写的</p>
 
@@ -173,33 +168,30 @@ pprint(my_dict)
 
 <p>在终端中跑下面的代码:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>python -c "import csv,json;print json.dumps(list(csv.reader(open('csv_file.csv'))))"
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python -c "import csv,json;print json.dumps(list(csv.reader(open('csv_file.csv'))))"
+</code></pre></div></div>
 
 <h4 id="list展开">List展开</h4>
 
 <p>您可以使用itertools包中的<code class="highlighter-rouge">itertools.chain.from_iterable</code>来快速简单地展开列表。 这是一个简单的例子：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>a_list = [[1, 2], [3, 4], [5, 6]]
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>a_list = [[1, 2], [3, 4], [5, 6]]
 print(list(itertools.chain.from_iterable(a_list)))
 # Output: [1, 2, 3, 4, 5, 6]
 
 # or
 print(list(itertools.chain(*a_list)))
 # Output: [1, 2, 3, 4, 5, 6]
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="一行构造">一行构造</h4>
 
 <p>初始化类时避免大量的样板设置</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">locals</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s">'self'</span><span class="p">})</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>更多可以在这里 <a href="https://wiki.python.org/moin/Powerful%20Python%20One-Liners">Python website</a>.</p>
 

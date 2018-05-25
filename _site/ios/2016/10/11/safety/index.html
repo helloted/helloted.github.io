@@ -176,37 +176,32 @@
 
 <p>1、AppName.app 目录：这是应用程序的程序包目录，这里面存放的是应用程序的源文件，包括资源文件和可执行文件。包含应用程序的本身。由于应用程序必须经过签名，所以您在运行时不能对这个目录中的内容进行修改，否则可能会使应用程序无法启动。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>NSLog(@"%@",[[NSBundle mainBundle] bundlePath]);
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSLog(@"%@",[[NSBundle mainBundle] bundlePath]);
 NSString *imagePath = [[NSBundle mainBundle] pathForResource:@"apple" ofType:@"png"];
 UIImage *appleImage = [[UIImage alloc] initWithContentsOfFile:imagePath];
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>2、Documents 目录：您应该将所有的应用程序数据文件写入到这个目录下。这个目录用于存储用户数据。该路径可通过配置实现iTunes共享文件。可被iTunes备份。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+</code></pre></div></div>
 
 <p>3、Library 目录：这个目录下有两个子目录：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>NSString *libDir = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) lastObject];
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSString *libDir = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) lastObject];
+</code></pre></div></div>
 
 <p>Preferences 目录：包含应用程序的偏好设置文件。您不应该直接创建偏好设置文件，而是应该使用NSUserDefaults类来取得和设置应用程序的偏好.
 Caches 目录：用于存放应用程序专用的支持文件，保存应用程序再次启动过程中需要的信息。
 可创建子文件夹。可以用来放置您希望被备份但不希望被用户看到的数据。该路径下的文件夹，除Caches以外，都会被iTunes备份。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>NSString *cachesDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSString *cachesDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
+</code></pre></div></div>
 
 <p>4、tmp 目录：这个目录用于存放临时文件，保存应用程序再次启动过程中不需要的信息。该路径下的文件不会被iTunes备份。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>NSString *tmpDir =  NSTemporaryDirectory();
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSString *tmpDir =  NSTemporaryDirectory();
+</code></pre></div></div>
 
 <p>综上，itunes会备份的目录为Documents以及Library目录里除Caches目录的文件。</p>
 
@@ -244,7 +239,7 @@ Caches 目录：用于存放应用程序专用的支持文件，保存应用程�
   <p>异或加密和解密的方法一致，运算一次就是加密，再运算一次就是解密。</p>
 </blockquote>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (NSString *)xorStr:(NSString *)xorStr withKey:(NSString *)key{
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (NSString *)xorStr:(NSString *)xorStr withKey:(NSString *)key{
     NSData  *strData = [xorStr dataUsingEncoding:NSUTF8StringEncoding];
     NSData *keyData = [key dataUsingEncoding:NSUTF8StringEncoding];
     Byte *keyBytes = (Byte *)[keyData bytes];   //取关键字的Byte数组, keyBytes一直指向头部
@@ -255,8 +250,7 @@ Caches 目录：用于存放应用程序专用的支持文件，保存应用程�
     NSString *outStr = [[NSString alloc]initWithData:strData encoding:NSUTF8StringEncoding];
     return outStr;
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <ol>
   <li>
@@ -294,7 +288,7 @@ Caches 目录：用于存放应用程序专用的支持文件，保存应用程�
 
 <h5 id="11md5">1.1、Md5</h5>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (NSString *)md5:(NSString *)src
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (NSString *)md5:(NSString *)src
 {
     if (src &amp;&amp; src.length &gt; 0) {
         const char *cStr = [src UTF8String];
@@ -310,12 +304,11 @@ Caches 目录：用于存放应用程序专用的支持文件，保存应用程�
     }
     return nil;
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h5 id="12sha">1.2、SHA</h5>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (NSString*)sha1:(NSString *)src
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (NSString*)sha1:(NSString *)src
 {
     const char *cstr = [src cStringUsingEncoding:NSUTF8StringEncoding];
     NSData *data = [NSData dataWithBytes:cstr length:src.length];
@@ -328,8 +321,7 @@ Caches 目录：用于存放应用程序专用的支持文件，保存应用程�
         [output appendFormat:@"%02x", digest[i]];
     return output;
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="2base64编码">2、Base64编码</h4>
 
@@ -345,18 +337,17 @@ Caches 目录：用于存放应用程序专用的支持文件，保存应用程�
 
 <p>AES(Advanced Encryption Standard)，高级加密标准，是下一代的加密算法标准，速度快，安全级别高。AES算法基于排列和置换运算。<strong>排列</strong>是对数据重新进行安排，<strong>置换</strong>是将一个数据单元替换为另一个。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">NSString</span> <span class="p">(</span><span class="nl">AES</span><span class="p">)</span>
-<span class="c1">//加密
-</span><span class="k">-</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span> <span class="nf">AES256_Encrypt</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">key</span><span class="p">;</span>
-<span class="c1">//解密
-</span><span class="k">-</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span> <span class="nf">AES256_Decrypt</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">key</span><span class="p">;</span>
-<span class="k">@end</span>
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@interface NSString (AES)
+//加密
+- (NSString *) AES256_Encrypt:(NSString *)key;
+//解密
+- (NSString *) AES256_Decrypt:(NSString *)key;
+@end
+</code></pre></div></div>
 
 <p>.m</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>//加密
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//加密
 - (NSString *) AES256_Encrypt:(NSString *)key{
     const char *cstr = [self cStringUsingEncoding:NSUTF8StringEncoding];
     NSData *data = [NSData dataWithBytes:cstr length:self.length];
@@ -397,8 +388,7 @@ Caches 目录：用于存放应用程序专用的支持文件，保存应用程�
     }
     return nil;
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="4非对称加密">4、非对称加密</h4>
 

@@ -147,7 +147,7 @@
 
 <p>GLKit视图会自动创建和配置自己的OpenGL ES帧缓冲区对象和渲染缓冲区。 您可以使用视图的可绘制属性来控制这些对象的属性，如下所示。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (void)viewDidLoad
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)viewDidLoad
 {
     [super viewDidLoad];
  
@@ -163,8 +163,7 @@
     // Enable multisampling
     view.drawableMultisample = GLKViewDrawableMultisample4X;
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>如果您更改GLKit视图的大小，比例因子或可绘制属性，则会在下次绘制内容时自动删除并重新创建适当的帧缓冲区对象和渲染缓冲区.</p>
 
@@ -172,7 +171,7 @@
 
 <h4 id="用glkit-view进行绘制">用GLKit View进行绘制</h4>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (void)drawRect:(CGRect)rect
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)drawRect:(CGRect)rect
 {
     // Clear the framebuffer
     glClearColor(0.0f, 0.0f, 0.1f, 1.0f);
@@ -185,8 +184,7 @@
     glBindVertexArrayOES(_planetMesh);
     glDrawElements(GL_TRIANGLE_STRIP, 256, GL_UNSIGNED_SHORT);
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>注意：glClear函数提示OpenGL ES可以丢弃任何现有的帧缓冲区内容，避免了将以前的内容加载到内存中的昂贵的内存操作。 为确保最佳性能，在绘制之前应始终调用此函数。</p>
 
@@ -215,7 +213,7 @@
 
 <p>GLKit非常适合这种方法 - 您可以使您的渲染器对象为标准GLKView实例的代理。 您的渲染器类不使用GLKView的子类并实现<code class="highlighter-rouge">drawRect：</code>方法，而是使用GLKViewDelegate协议并实现<code class="highlighter-rouge">glkView:drawInRect:</code>方法。 下面代码在应用启动时基于硬件特性选择渲染器类</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Create a context so we can test for features
     EAGLContext *context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
@@ -238,8 +236,7 @@
  
     return YES;
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="glkit-view-controller">GLKit View Controller</h4>
 
@@ -259,53 +256,52 @@
 
 <p>下面代码演示了使用GLKViewController子类和GLKView实例呈现动画OpenGL ES内容的典型策略。</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">@implementation</span> <span class="nc">PlanetViewController</span> <span class="c1">// subclass of GLKViewController
-</span> 
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@implementation</span> <span class="nc">PlanetViewController</span> <span class="c1">// subclass of GLKViewController</span>
+ 
 <span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">viewDidLoad</span>
 <span class="p">{</span>
     <span class="p">[</span><span class="n">super</span> <span class="nf">viewDidLoad</span><span class="p">];</span>
  
-    <span class="c1">// Create an OpenGL ES context and assign it to the view loaded from storyboard
-</span>    <span class="n">GLKView</span> <span class="o">*</span><span class="n">view</span> <span class="o">=</span> <span class="p">(</span><span class="n">GLKView</span> <span class="o">*</span><span class="p">)</span><span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">;</span>
+    <span class="c1">// Create an OpenGL ES context and assign it to the view loaded from storyboard</span>
+    <span class="n">GLKView</span> <span class="o">*</span><span class="n">view</span> <span class="o">=</span> <span class="p">(</span><span class="n">GLKView</span> <span class="o">*</span><span class="p">)</span><span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">;</span>
     <span class="n">view</span><span class="p">.</span><span class="n">context</span> <span class="o">=</span> <span class="p">[[</span><span class="n">EAGLContext</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithAPI</span><span class="p">:</span><span class="n">kEAGLRenderingAPIOpenGLES2</span><span class="p">];</span>
  
-    <span class="c1">// Set animation frame rate
-</span>    <span class="n">self</span><span class="p">.</span><span class="n">preferredFramesPerSecond</span> <span class="o">=</span> <span class="mi">60</span><span class="p">;</span>
+    <span class="c1">// Set animation frame rate</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">preferredFramesPerSecond</span> <span class="o">=</span> <span class="mi">60</span><span class="p">;</span>
  
-    <span class="c1">// Not shown: load shaders, textures and vertex arrays, set up projection matrix
-</span>    <span class="p">[</span><span class="n">self</span> <span class="nf">setupGL</span><span class="p">];</span>
+    <span class="c1">// Not shown: load shaders, textures and vertex arrays, set up projection matrix</span>
+    <span class="p">[</span><span class="n">self</span> <span class="nf">setupGL</span><span class="p">];</span>
 <span class="p">}</span>
  
 <span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">update</span>
 <span class="p">{</span>
-    <span class="n">_rotation</span> <span class="o">+=</span> <span class="n">self</span><span class="p">.</span><span class="n">timeSinceLastUpdate</span> <span class="o">*</span> <span class="n">M_PI_2</span><span class="p">;</span> <span class="c1">// one quarter rotation per second
-</span> 
-    <span class="c1">// Set up transform matrices for the rotating planet
-</span>    <span class="n">GLKMatrix4</span> <span class="n">modelViewMatrix</span> <span class="o">=</span> <span class="n">GLKMatrix4MakeRotation</span><span class="p">(</span><span class="n">_rotation</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">,</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">);</span>
+    <span class="n">_rotation</span> <span class="o">+=</span> <span class="n">self</span><span class="p">.</span><span class="n">timeSinceLastUpdate</span> <span class="o">*</span> <span class="n">M_PI_2</span><span class="p">;</span> <span class="c1">// one quarter rotation per second</span>
+ 
+    <span class="c1">// Set up transform matrices for the rotating planet</span>
+    <span class="n">GLKMatrix4</span> <span class="n">modelViewMatrix</span> <span class="o">=</span> <span class="n">GLKMatrix4MakeRotation</span><span class="p">(</span><span class="n">_rotation</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">,</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">);</span>
     <span class="n">_normalMatrix</span> <span class="o">=</span> <span class="n">GLKMatrix3InvertAndTranspose</span><span class="p">(</span><span class="n">GLKMatrix4GetMatrix3</span><span class="p">(</span><span class="n">modelViewMatrix</span><span class="p">),</span> <span class="nb">NULL</span><span class="p">);</span>
     <span class="n">_modelViewProjectionMatrix</span> <span class="o">=</span> <span class="n">GLKMatrix4Multiply</span><span class="p">(</span><span class="n">_projectionMatrix</span><span class="p">,</span> <span class="n">modelViewMatrix</span><span class="p">);</span>
 <span class="p">}</span>
  
 <span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">glkView</span><span class="o">:</span><span class="p">(</span><span class="n">GLKView</span> <span class="o">*</span><span class="p">)</span><span class="n">view</span> <span class="n">drawInRect</span><span class="o">:</span><span class="p">(</span><span class="n">CGRect</span><span class="p">)</span><span class="n">rect</span>
 <span class="p">{</span>
-    <span class="c1">// Clear the framebuffer
-</span>    <span class="n">glClearColor</span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="n">f</span><span class="p">,</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">);</span>
+    <span class="c1">// Clear the framebuffer</span>
+    <span class="n">glClearColor</span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="n">f</span><span class="p">,</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">);</span>
     <span class="n">glClear</span><span class="p">(</span><span class="n">GL_COLOR_BUFFER_BIT</span> <span class="o">|</span> <span class="n">GL_DEPTH_BUFFER_BIT</span><span class="p">);</span>
  
-    <span class="c1">// Set shader uniforms to values calculated in -update
-</span>    <span class="n">glUseProgram</span><span class="p">(</span><span class="n">_diffuseShading</span><span class="p">);</span>
+    <span class="c1">// Set shader uniforms to values calculated in -update</span>
+    <span class="n">glUseProgram</span><span class="p">(</span><span class="n">_diffuseShading</span><span class="p">);</span>
     <span class="n">glUniformMatrix4fv</span><span class="p">(</span><span class="n">_uniformModelViewProjectionMatrix</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">_modelViewProjectionMatrix</span><span class="p">.</span><span class="n">m</span><span class="p">);</span>
     <span class="n">glUniformMatrix3fv</span><span class="p">(</span><span class="n">_uniformNormalMatrix</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">_normalMatrix</span><span class="p">.</span><span class="n">m</span><span class="p">);</span>
  
-    <span class="c1">// Draw using previously configured texture and vertex array
-</span>    <span class="n">glBindTexture</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span> <span class="n">_planetTexture</span><span class="p">);</span>
+    <span class="c1">// Draw using previously configured texture and vertex array</span>
+    <span class="n">glBindTexture</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span> <span class="n">_planetTexture</span><span class="p">);</span>
     <span class="n">glBindVertexArrayOES</span><span class="p">(</span><span class="n">_planetMesh</span><span class="p">);</span>
     <span class="n">glDrawElements</span><span class="p">(</span><span class="n">GL_TRIANGLE_STRIP</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="n">GL_UNSIGNED_SHORT</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
 <span class="p">}</span>
  
 <span class="k">@end</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>在这个例子中，一个PlanetViewController类的实例（一个自定义的GLKViewController子类）从storyboard加载，以及一个标准的GLKView实例及其可绘制属性。 viewDidLoad方法创建一个OpenGL ES上下文并将其提供给视图，并且还设置动画循环的帧速率。</p>
 
@@ -345,40 +341,36 @@
 
 <p>1、创建帧缓冲并将其绑定。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>GLuint framebuffer;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GLuint framebuffer;
 glGenFramebuffers(1, &amp;framebuffer);
 glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>2、创建一个颜色渲染缓冲区，为其分配存储空间，并将其附加到帧缓冲区的颜色附着点。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>GLuint colorRenderbuffer;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GLuint colorRenderbuffer;
 glGenRenderbuffers(1, &amp;colorRenderbuffer);
 glBindRenderbuffer(GL_RENDERBUFFER, colorRenderbuffer);
 glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, width, height);
 glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colorRenderbuffer);
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>3、创建深度或深度/模板渲染缓冲区，为其分配存储空间，并将其附加到帧缓冲区的深度附着点。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>GLuint depthRenderbuffer;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GLuint depthRenderbuffer;
 glGenRenderbuffers(1, &amp;depthRenderbuffer);
 glBindRenderbuffer(GL_RENDERBUFFER, depthRenderbuffer);
 glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, width, height);
 glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRenderbuffer);
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>4、测试帧缓冲区的完整性。 只有在帧缓冲区的配置发生变化时才需要执行此测试。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER) ;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER) ;
 if(status != GL_FRAMEBUFFER_COMPLETE) {
     NSLog(@"failed to make complete framebuffer object %x", status);
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>在绘制到离屏渲染缓冲区之后，您可以使用glReadPixels函数将其内容返回给CPU进一步处理。</p>
 
@@ -391,15 +383,14 @@ if(status != GL_FRAMEBUFFER_COMPLETE) {
   <li>创建目标纹理，并将其附加到帧缓冲区的颜色附着点。</li>
 </ol>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>// create the texture
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// create the texture
 GLuint texture;
 glGenTextures(1, &amp;texture);
 glBindTexture(GL_TEXTURE_2D, texture);
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,  width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>3.分配并附加深度缓冲区（与以前一样）。</p>
 
@@ -433,23 +424,21 @@ glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, text
   <li>
     <p>创建一个颜色渲染缓冲区，通过调用上下文的renderbufferStorage：fromDrawable：方法并传递图层对象作为参数来分配其存储空间。宽度，高度和像素格式取自图层并用于为渲染缓冲区分配存储空间。</p>
 
-    <div class="highlighter-rouge"><pre class="highlight"><code>GLuint colorRenderbuffer;
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GLuint colorRenderbuffer;
 glGenRenderbuffers(1, &amp;colorRenderbuffer);
 glBindRenderbuffer(GL_RENDERBUFFER, colorRenderbuffer);
 [myContext renderbufferStorage:GL_RENDERBUFFER fromDrawable:myEAGLLayer];
 glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colorRenderbuffer);
-</code></pre>
-    </div>
+</code></pre></div>    </div>
   </li>
   <li>
     <p>检索颜色渲染缓冲区的高度和宽度。</p>
 
-    <div class="highlighter-rouge"><pre class="highlight"><code>GLint width;
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GLint width;
 GLint height;
 glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &amp;width);
 glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &amp;height);
-</code></pre>
-    </div>
+</code></pre></div>    </div>
 
     <p>在前面的例子中，渲染缓冲区的宽度和高度被明确提供来为缓冲区分配存储空间。 这里，代码在分配存储空间后从颜色渲染缓冲区中检索宽度和高度。 你的应用程序这样做是因为颜色渲染缓冲区的实际尺寸是根据图层的边界和比例因子来计算的。 附加到帧缓冲区的其他渲染缓冲区必须具有相同的尺寸。 除了使用高度和宽度分配深度缓冲区外，还可以使用它们分配OpenGL ES视口并帮助确定应用纹理和模型中所需的详细程度。 请参阅支持高分辨率显示。</p>
   </li>
@@ -480,10 +469,9 @@ glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &amp;heigh
 
 <p>注意：GLKViewController类自动使用CADisplayLink对象来动画GLKView内容。 只有当您需要超出GLKit框架提供的行为时，才可以直接使用CADisplayLink类。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>displayLink = [myView.window.screen displayLinkWithTarget:self selector:@selector(drawFrame)];
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>displayLink = [myView.window.screen displayLinkWithTarget:self selector:@selector(drawFrame)];
 [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>在实现drawFrame方法的内部，读取displaylink的timestamp属性以获取要渲染的下一帧的时间戳。 它可以使用该值来计算下一帧中对象的位置。</p>
 
@@ -501,10 +489,9 @@ glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &amp;heigh
 
 <p>在每个帧的开始处，擦除所有帧缓冲区附件的内容，其内容不需要先前的帧来绘制下一帧。 调用glClear函数，将所有缓冲区的位掩码传入以清除</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>对OpenGL ES使用glClear可以放弃渲染缓冲区或纹理的现有内容，从而避免将以前内容加载到内存中的代价高昂的操作。</p>
 
@@ -528,11 +515,10 @@ glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
 <p>在渲染循环的这个阶段，你的应用程序已经提交了该帧的所有绘图命令。虽然您的应用程序需要颜色渲染缓冲区才能显示到屏幕上，但它可能不需要深度缓冲区的内容。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>const GLenum discards[]  = {GL_DEPTH_ATTACHMENT};
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>const GLenum discards[]  = {GL_DEPTH_ATTACHMENT};
 glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 glDiscardFramebufferEXT(GL_FRAMEBUFFER,1,discards);
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>注意：glDiscardFramebufferEXT函数由OpenGL ES 1.1和2.0的EXT_discard_framebuffer扩展提供。 在OpenGL ES 3.0上下文中，改用glInvalidateFramebuffer函数。</p>
 
@@ -540,10 +526,9 @@ glDiscardFramebufferEXT(GL_FRAMEBUFFER,1,discards);
 
 <p>在此步骤中，颜色渲染缓冲区保存完成的帧，因此您只需将其呈现给用户即可。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>glBindRenderbuffer(GL_RENDERBUFFER, colorRenderbuffer);
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>glBindRenderbuffer(GL_RENDERBUFFER, colorRenderbuffer);
 [context presentRenderbuffer:GL_RENDERBUFFER];
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>默认情况下，您必须假设在您的应用呈现渲染缓冲区后渲染缓冲区的内容将被丢弃。 这意味着每次您的应用呈现一个框架时，它必须在呈现新框架时完全重新创建框架的内容。 出于这个原因，上面的代码总是会擦除颜色缓冲区。</p>
 
@@ -559,7 +544,7 @@ glDiscardFramebufferEXT(GL_FRAMEBUFFER,1,discards);
 
 <p>下面显示了创建多重采样缓冲区的代码。 此代码使用先前创建的缓冲区的宽度和高度。 它调用glRenderbufferStorageMultisampleAPPLE函数为渲染缓冲区创建多重采样存储</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>glGenFramebuffers(1, &amp;sampleFramebuffer);
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>glGenFramebuffers(1, &amp;sampleFramebuffer);
 glBindFramebuffer(GL_FRAMEBUFFER, sampleFramebuffer);
  
 glGenRenderbuffers(1, &amp;sampleColorRenderbuffer);
@@ -574,8 +559,7 @@ glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, 
  
 if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
     NSLog(@"Failed to make complete framebuffer object %x", glCheckFramebufferStatus(GL_FRAMEBUFFER));
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>以下是修改您的渲染代码以支持多重采样的步骤：</p>
 
@@ -583,36 +567,32 @@ if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
   <li>
     <p>在清除缓冲区步骤中，清除多重采样帧缓冲区的内容。</p>
 
-    <div class="highlighter-rouge"><pre class="highlight"><code>glBindFramebuffer(GL_FRAMEBUFFER, sampleFramebuffer);
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>glBindFramebuffer(GL_FRAMEBUFFER, sampleFramebuffer);
 glViewport(0, 0, framebufferWidth, framebufferHeight);
 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-</code></pre>
-    </div>
+</code></pre></div>    </div>
   </li>
   <li>
     <p>提交绘图命令后，您将内容从多重采样缓冲区解析到解析缓冲区。 为每个像素存储的样本在解析缓冲区中合并为一个样本。</p>
 
-    <div class="highlighter-rouge"><pre class="highlight"><code>glBindFramebuffer(GL_DRAW_FRAMEBUFFER_APPLE, resolveFrameBuffer);
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>glBindFramebuffer(GL_DRAW_FRAMEBUFFER_APPLE, resolveFrameBuffer);
 glBindFramebuffer(GL_READ_FRAMEBUFFER_APPLE, sampleFramebuffer);
 glResolveMultisampleFramebufferAPPLE();
-</code></pre>
-    </div>
+</code></pre></div>    </div>
   </li>
   <li>
     <p>在放弃步骤中，您可以放弃连接到多采样帧缓冲区的两个渲染缓冲区。 这是因为您打算呈现的内容存储在解析帧缓冲区中。</p>
 
-    <div class="highlighter-rouge"><pre class="highlight"><code>const GLenum discards[]  = {GL_COLOR_ATTACHMENT0,GL_DEPTH_ATTACHMENT};
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>const GLenum discards[]  = {GL_COLOR_ATTACHMENT0,GL_DEPTH_ATTACHMENT};
 glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE,2,discards);
-</code></pre>
-    </div>
+</code></pre></div>    </div>
   </li>
   <li>
     <p>在“当前结果”步骤中，您将呈现附加到解析帧缓冲区的颜色渲染缓冲区。</p>
 
-    <div class="highlighter-rouge"><pre class="highlight"><code>glBindRenderbuffer(GL_RENDERBUFFER, colorRenderbuffer);
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>glBindRenderbuffer(GL_RENDERBUFFER, colorRenderbuffer);
 [context presentRenderbuffer:GL_RENDERBUFFER];
-</code></pre>
-    </div>
+</code></pre></div>    </div>
   </li>
 </ol>
 

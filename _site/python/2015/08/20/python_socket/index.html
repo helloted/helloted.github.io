@@ -130,7 +130,7 @@
 
 <p>Receive:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>#coding=utf-8
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#coding=utf-8
 import socket
 
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -143,12 +143,11 @@ while True:
   data, addr = s.recvfrom(1024)
   print 'Received from {addr} data:{data}'.format(data=data,addr=addr)
   # s.sendto('Hello, %s!' % data, addr)
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Send:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>#coding=utf-8
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#coding=utf-8
 import socket
 
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -158,8 +157,7 @@ for data in ['Michael', 'Tracy', 'Sarah']:
   # 接收数据:
   print s.recv(1024)
 s.close()
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="二tcp">二、TCP</h3>
 
@@ -167,7 +165,7 @@ s.close()
 
 <p>Server:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>from socket import *
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>from socket import *
 from time import ctime
 
 HOST=''
@@ -197,12 +195,11 @@ while True:
         print([ctime()], ':', data.decode('utf8'))
 tcpClientSock.close()
 sock.close()
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Client:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>from socket import *
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>from socket import *
 
 class TcpClient:
     HOST='127.0.0.1'
@@ -225,8 +222,7 @@ class TcpClient:
             
 if __name__ == '__main__':
     client=TcpClient()
-</code></pre>
-</div>
+</code></pre></div></div>
 
 
 

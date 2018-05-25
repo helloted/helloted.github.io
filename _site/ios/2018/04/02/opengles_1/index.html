@@ -187,29 +187,28 @@
 
 <h4 id="1渲染整个context的背景色">1、渲染整个context的背景色</h4>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">viewDidLoad</span> <span class="p">{</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">viewDidLoad</span> <span class="p">{</span>
     <span class="p">[</span><span class="n">super</span> <span class="nf">viewDidLoad</span><span class="p">];</span>
     <span class="n">GLKView</span> <span class="o">*</span><span class="n">glkView</span> <span class="o">=</span> <span class="p">(</span><span class="n">GLKView</span> <span class="o">*</span><span class="p">)</span><span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">;</span>
     <span class="n">glkView</span><span class="p">.</span><span class="n">context</span> <span class="o">=</span> <span class="p">[[</span><span class="n">EAGLContext</span> <span class="nf">alloc</span><span class="p">]</span><span class="nf">initWithAPI</span><span class="p">:</span><span class="n">kEAGLRenderingAPIOpenGLES2</span><span class="p">];</span>
     <span class="n">glkView</span><span class="p">.</span><span class="n">drawableColorFormat</span> <span class="o">=</span> <span class="n">GLKViewDrawableColorFormatRGBA8888</span><span class="p">;</span>
     <span class="n">glkView</span><span class="p">.</span><span class="n">drawableDepthFormat</span> <span class="o">=</span> <span class="n">GLKViewDrawableDepthFormat24</span><span class="p">;</span>
-   <span class="c1">//将此“EAGLContext”实例设置为OpenGL的“当前激活”的“Context”。这样，以后所有“GL”的指令均作用在这个“Context”上。
-</span>    <span class="p">[</span><span class="n">EAGLContext</span> <span class="nf">setCurrentContext</span><span class="p">:</span><span class="n">glkView</span><span class="p">.</span><span class="n">context</span><span class="p">];</span>
+   <span class="c1">//将此“EAGLContext”实例设置为OpenGL的“当前激活”的“Context”。这样，以后所有“GL”的指令均作用在这个“Context”上。</span>
+    <span class="p">[</span><span class="n">EAGLContext</span> <span class="nf">setCurrentContext</span><span class="p">:</span><span class="n">glkView</span><span class="p">.</span><span class="n">context</span><span class="p">];</span>
 <span class="p">}</span>
 
 <span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">glkView</span><span class="o">:</span><span class="p">(</span><span class="n">GLKView</span> <span class="o">*</span><span class="p">)</span><span class="n">view</span> <span class="n">drawInRect</span><span class="o">:</span><span class="p">(</span><span class="n">CGRect</span><span class="p">)</span><span class="n">rect</span> <span class="p">{</span>
-    <span class="c1">// 指定刷新整个context颜色缓冲区时所用的颜色，RGBA
-</span>    <span class="n">glClearColor</span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">3</span><span class="n">f</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">6</span><span class="n">f</span><span class="p">,</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">,</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">);</span>
+    <span class="c1">// 指定刷新整个context颜色缓冲区时所用的颜色，RGBA</span>
+    <span class="n">glClearColor</span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">3</span><span class="n">f</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">6</span><span class="n">f</span><span class="p">,</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">,</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">);</span>
     
-    <span class="c1">// 刷新缓存区
-</span>    <span class="c1">// GL_COLOR_BUFFER_BIT:    当前可写的颜色缓冲
-</span>    <span class="c1">// GL_DEPTH_BUFFER_BIT:    深度缓冲
-</span>    <span class="c1">// GL_ACCUM_BUFFER_BIT:    累积缓冲
-</span>    <span class="c1">// GL_STENCIL_BUFFER_BIT:  模板缓冲
-</span>    <span class="n">glClear</span><span class="p">(</span><span class="n">GL_COLOR_BUFFER_BIT</span> <span class="o">|</span> <span class="n">GL_DEPTH_BUFFER_BIT</span><span class="p">);</span>
+    <span class="c1">// 刷新缓存区</span>
+    <span class="c1">// GL_COLOR_BUFFER_BIT:    当前可写的颜色缓冲</span>
+    <span class="c1">// GL_DEPTH_BUFFER_BIT:    深度缓冲</span>
+    <span class="c1">// GL_ACCUM_BUFFER_BIT:    累积缓冲</span>
+    <span class="c1">// GL_STENCIL_BUFFER_BIT:  模板缓冲</span>
+    <span class="n">glClear</span><span class="p">(</span><span class="n">GL_COLOR_BUFFER_BIT</span> <span class="o">|</span> <span class="n">GL_DEPTH_BUFFER_BIT</span><span class="p">);</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>如图所示，可以将整个背景渲染成蓝色</p>
 
@@ -233,48 +232,47 @@
 
 <p><img src="/img/Simple_6/22.png" alt="img" /></p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code>    <span class="c1">// 声明顶点数据
-</span>    <span class="n">GLfloat</span> <span class="n">vertexData</span><span class="p">[]</span> <span class="o">=</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">// 声明顶点数据</span>
+    <span class="n">GLfloat</span> <span class="n">vertexData</span><span class="p">[]</span> <span class="o">=</span>
     <span class="p">{</span>
         <span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">,</span>
         <span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">,</span>
         <span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">,</span>
     <span class="p">};</span>
-    <span class="c1">//顶点数据缓存
-</span>    <span class="c1">//这几行代码表示的含义是：声明一个缓冲区的标识（GLuint类型）让OpenGL自动分配一个缓冲区并且返回这个标识的值绑定这个缓冲区到当前“Context”最后，将我们前面预先定义的顶点数据“vertexData”复制进这个缓冲区中。参数“GL_STATIC_DRAW”，它表示此缓冲区内容只能被修改一次，但可以无限次读取。
-</span>    <span class="n">GLuint</span> <span class="n">buffer</span><span class="p">;</span>
+    <span class="c1">//顶点数据缓存</span>
+    <span class="c1">//这几行代码表示的含义是：声明一个缓冲区的标识（GLuint类型）让OpenGL自动分配一个缓冲区并且返回这个标识的值绑定这个缓冲区到当前“Context”最后，将我们前面预先定义的顶点数据“vertexData”复制进这个缓冲区中。参数“GL_STATIC_DRAW”，它表示此缓冲区内容只能被修改一次，但可以无限次读取。</span>
+    <span class="n">GLuint</span> <span class="n">buffer</span><span class="p">;</span>
     <span class="n">glGenBuffers</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">buffer</span><span class="p">);</span>
     <span class="n">glBindBuffer</span><span class="p">(</span><span class="n">GL_ARRAY_BUFFER</span><span class="p">,</span> <span class="n">buffer</span><span class="p">);</span>
     <span class="n">glBufferData</span><span class="p">(</span><span class="n">GL_ARRAY_BUFFER</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">vertexData</span><span class="p">),</span> <span class="n">vertexData</span><span class="p">,</span> <span class="n">GL_STATIC_DRAW</span><span class="p">);</span>
     
-    <span class="c1">// 激活顶点属性（默认它的关闭的）
-</span>    <span class="n">glEnableVertexAttribArray</span><span class="p">(</span><span class="n">GLKVertexAttribPosition</span><span class="p">);</span>
-    <span class="c1">// 填充顶点数据，顶点属性索引（这里是位置）、3个分量的矢量、类型是浮点（GL_FLOAT）、填充时不需要单位化（GL_FALSE）、在数据数组中每行的跨度是12个字节（4*3=12。从预定义的数组中可看出，每行有3个GL_FLOAT浮点值，而GL_FLOAT占4个字节，因此每一行的跨度是4*3），最后一个参数是一个偏移量的指针，用来确定“第一个数据”将从内存数据块的什么地方开始。
-</span>    <span class="n">glVertexAttribPointer</span><span class="p">(</span><span class="n">GLKVertexAttribPosition</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">GL_FLOAT</span><span class="p">,</span> <span class="n">GL_FALSE</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">GLfloat</span><span class="p">)</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="p">(</span><span class="n">GLfloat</span> <span class="o">*</span><span class="p">)</span><span class="nb">NULL</span> <span class="o">+</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="c1">// 激活顶点属性（默认它的关闭的）</span>
+    <span class="n">glEnableVertexAttribArray</span><span class="p">(</span><span class="n">GLKVertexAttribPosition</span><span class="p">);</span>
+    <span class="c1">// 填充顶点数据，顶点属性索引（这里是位置）、3个分量的矢量、类型是浮点（GL_FLOAT）、填充时不需要单位化（GL_FALSE）、在数据数组中每行的跨度是12个字节（4*3=12。从预定义的数组中可看出，每行有3个GL_FLOAT浮点值，而GL_FLOAT占4个字节，因此每一行的跨度是4*3），最后一个参数是一个偏移量的指针，用来确定“第一个数据”将从内存数据块的什么地方开始。</span>
+    <span class="n">glVertexAttribPointer</span><span class="p">(</span><span class="n">GLKVertexAttribPosition</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">GL_FLOAT</span><span class="p">,</span> <span class="n">GL_FALSE</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">GLfloat</span><span class="p">)</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="p">(</span><span class="n">GLfloat</span> <span class="o">*</span><span class="p">)</span><span class="nb">NULL</span> <span class="o">+</span> <span class="mi">0</span><span class="p">);</span>
 
-    <span class="c1">// 着色器
-</span>    <span class="n">self</span><span class="p">.</span><span class="n">mEffect</span> <span class="o">=</span> <span class="p">[[</span><span class="n">GLKBaseEffect</span> <span class="nf">alloc</span><span class="p">]</span><span class="nf">init</span><span class="p">];</span>
-    <span class="c1">// 着色器的颜色
-</span>    <span class="n">self</span><span class="p">.</span><span class="n">mEffect</span><span class="p">.</span><span class="n">constantColor</span> <span class="o">=</span> <span class="n">GLKVector4Make</span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="n">f</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="p">,</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">,</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">);</span>
+    <span class="c1">// 着色器</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">mEffect</span> <span class="o">=</span> <span class="p">[[</span><span class="n">GLKBaseEffect</span> <span class="nf">alloc</span><span class="p">]</span><span class="nf">init</span><span class="p">];</span>
+    <span class="c1">// 着色器的颜色</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">mEffect</span><span class="p">.</span><span class="n">constantColor</span> <span class="o">=</span> <span class="n">GLKVector4Make</span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="n">f</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="p">,</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">,</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">);</span>
     
  <span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">glkView</span><span class="p">:(</span><span class="n">GLKView</span> <span class="o">*</span><span class="p">)</span><span class="nv">view</span> <span class="nf">drawInRect</span><span class="p">:(</span><span class="n">CGRect</span><span class="p">)</span><span class="nv">rect</span> <span class="p">{</span>
-    <span class="c1">// 指定刷新整个context颜色缓冲区时所用的颜色，RGBA
-</span>    <span class="n">glClearColor</span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">3</span><span class="n">f</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">6</span><span class="n">f</span><span class="p">,</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">,</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">);</span>
+    <span class="c1">// 指定刷新整个context颜色缓冲区时所用的颜色，RGBA</span>
+    <span class="n">glClearColor</span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">3</span><span class="n">f</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">6</span><span class="n">f</span><span class="p">,</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">,</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">);</span>
     
-    <span class="c1">// 刷新缓存区
-</span>    <span class="c1">// GL_COLOR_BUFFER_BIT:    当前可写的颜色缓冲
-</span>    <span class="c1">// GL_DEPTH_BUFFER_BIT:    深度缓冲
-</span>    <span class="c1">// GL_ACCUM_BUFFER_BIT:    累积缓冲
-</span>    <span class="c1">// GL_STENCIL_BUFFER_BIT:  模板缓冲
-</span>    <span class="n">glClear</span><span class="p">(</span><span class="n">GL_COLOR_BUFFER_BIT</span> <span class="o">|</span> <span class="n">GL_DEPTH_BUFFER_BIT</span><span class="p">);</span>
+    <span class="c1">// 刷新缓存区</span>
+    <span class="c1">// GL_COLOR_BUFFER_BIT:    当前可写的颜色缓冲</span>
+    <span class="c1">// GL_DEPTH_BUFFER_BIT:    深度缓冲</span>
+    <span class="c1">// GL_ACCUM_BUFFER_BIT:    累积缓冲</span>
+    <span class="c1">// GL_STENCIL_BUFFER_BIT:  模板缓冲</span>
+    <span class="n">glClear</span><span class="p">(</span><span class="n">GL_COLOR_BUFFER_BIT</span> <span class="o">|</span> <span class="n">GL_DEPTH_BUFFER_BIT</span><span class="p">);</span>
     
-   <span class="c1">//启动着色器
-</span>    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">mEffect</span> <span class="nf">prepareToDraw</span><span class="p">];</span>
-   <span class="c1">// 画出三角形
-</span>    <span class="n">glDrawArrays</span><span class="p">(</span><span class="n">GL_TRIANGLES</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+   <span class="c1">//启动着色器</span>
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">mEffect</span> <span class="nf">prepareToDraw</span><span class="p">];</span>
+   <span class="c1">// 画出三角形</span>
+    <span class="n">glDrawArrays</span><span class="p">(</span><span class="n">GL_TRIANGLES</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><img src="/img/Simple_6/24.png" alt="img" /></p>
 

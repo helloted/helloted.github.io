@@ -182,7 +182,7 @@
 
 <p>我们也可以自己去生成一个单例</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>+ (SingleObject *)sharedSingleton{
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+ (SingleObject *)sharedSingleton{
     static SingleObject *_singleObj = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&amp;onceToken, ^{
@@ -190,8 +190,7 @@
     });
     return _singleObj;
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="2mvc模式">2、MVC模式</h4>
 
@@ -215,11 +214,10 @@
 
 <p>应用：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">AnimalFactory</span><span class="p">:</span><span class="nc">NSObject</span>
-<span class="k">-</span><span class="p">(</span><span class="n">Animal</span> <span class="o">*</span><span class="p">)</span><span class="nf">createAnimalyWithType</span><span class="p">:(</span><span class="n">Type</span><span class="p">)</span><span class="nv">type</span><span class="p">;</span>
-<span class="k">@end</span><span class="p">;</span>
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@interface AnimalFactory:NSObject
+-(Animal *)createAnimalyWithType:(Type)type;
+@end;
+</code></pre></div></div>
 
 <h4 id="5工厂方法模式factory-method">5、工厂方法模式(Factory Method)</h4>
 
@@ -227,28 +225,25 @@
 
 <p>应用：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">AnimalFactory</span><span class="p">:</span><span class="nc">NSObject</span>
-<span class="k">-</span><span class="p">(</span><span class="n">Animal</span><span class="o">*</span><span class="p">)</span><span class="n">createAnimal</span><span class="p">;</span>
-<span class="k">@end</span><span class="p">;</span>
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@interface AnimalFactory:NSObject
+-(Animal*)createAnimal;
+@end;
+</code></pre></div></div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">DogFactory</span><span class="p">:</span><span class="nc">AnimalFactory</span><span class="p">;</span>
-<span class="k">@implementation</span> <span class="nc">DogFactory</span>
-<span class="k">-</span><span class="p">(</span><span class="n">Animal</span> <span class="o">*</span><span class="p">)</span><span class="n">createAnimal</span><span class="p">{</span>
-<span class="cp">#Dog继承自Animal
-</span><span class="n">retrurn</span> <span class="p">[[</span><span class="n">Dog</span> <span class="nf">alloc</span><span class="p">]</span><span class="nf">init</span><span class="p">];</span>
-<span class="p">}</span>
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@interface DogFactory:AnimalFactory;
+@implementation DogFactory
+-(Animal *)createAnimal{
+#Dog继承自Animal
+retrurn [[Dog alloc]init];
+}
+</code></pre></div></div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">CatFactory</span><span class="p">:</span><span class="nc">AnimalFactory</span><span class="p">;</span>
-<span class="k">@implementation</span> <span class="nc">Cat</span> <span class="n">Factory</span>
-<span class="o">-</span><span class="p">(</span><span class="n">Animal</span> <span class="o">*</span><span class="p">)</span><span class="n">createAnimal</span>
-<span class="n">retrurn</span> <span class="p">[[</span><span class="n">Cat</span> <span class="nf">alloc</span><span class="p">]</span><span class="nf">init</span><span class="p">];</span>
-<span class="p">}</span>
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@interface CatFactory:AnimalFactory;
+@implementation Cat Factory
+-(Animal *)createAnimal
+retrurn [[Cat alloc]init];
+}
+</code></pre></div></div>
 
 <h4 id="6抽象工厂模式abstract-factory">6、抽象工厂模式(Abstract Factory)</h4>
 
@@ -256,12 +251,11 @@
 
 <p>应用：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">AnimalFactory</span><span class="p">:</span><span class="nc">NSObject</span>
-<span class="k">-</span><span class="p">(</span><span class="n">Dog</span> <span class="o">*</span><span class="p">)</span><span class="n">createDog</span><span class="p">;</span>
-<span class="k">-</span><span class="p">(</span><span class="n">Cat</span> <span class="o">*</span><span class="p">)</span><span class="n">createCat</span><span class="p">;</span>
-<span class="k">@end</span><span class="p">;</span>
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@interface AnimalFactory:NSObject
+-(Dog *)createDog;
+-(Cat *)createCat;
+@end;
+</code></pre></div></div>
 
 <p>Cocoa中的NSNumber也是如此，numberWithBool:和numberWithInt:分别返回的是NSCFBoolean、NSCFNumber类型</p>
 
@@ -316,30 +310,29 @@
 
 <p>应用：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">Facade</span> <span class="p">:</span> <span class="nc">NSObject</span>
-<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">createApp</span>
-<span class="k">@end</span>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@interface Facade : NSObject
+- (void)createApp
+@end
 
-<span class="k">@implementation</span> <span class="nc">NSObject</span>
+@implementation NSObject
 
-<span class="k">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="n">init</span>
-<span class="p">{</span>
-    <span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nf">init</span><span class="p">];</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">ios_dev</span> <span class="o">=</span> <span class="p">[[</span><span class="n">IosDev</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
-        <span class="n">andriod_dev</span> <span class="o">=</span> <span class="p">[[</span><span class="n">AndroidDev</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
-        <span class="n">server_dev</span> <span class="o">=</span> <span class="p">[[</span><span class="n">ServerDev</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
-<span class="p">}</span>
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        ios_dev = [[IosDev alloc] init];
+        andriod_dev = [[AndroidDev alloc] init];
+        server_dev = [[ServerDev alloc] init];
+    }
+    return self;
+}
 
-<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">createApp</span><span class="p">{</span>
-  <span class="p">[</span><span class="n">ios_dev</span> <span class="nf">ios</span><span class="p">]</span>
-  <span class="p">[</span><span class="n">andriod_dev</span> <span class="nf">android</span><span class="p">]</span>
-  <span class="p">[</span><span class="n">server_dev</span> <span class="nf">server</span><span class="p">]</span>
-<span class="p">}</span>
-</code></pre>
-</div>
+- (void)createApp{
+  [ios_dev ios]
+  [andriod_dev android]
+  [server_dev server]
+}
+</code></pre></div></div>
 
 <h4 id="11中介者模式mediator">11、中介者模式(Mediator)</h4>
 
@@ -378,14 +371,13 @@
 
 <p>应用：NSEnumerator,<code class="highlighter-rouge">enumerateObjectsUsingBlock:(void(^)(id obj, NSUInteger idx, BOOL *stop))block</code>  等等</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">Iterator</span><span class="p">:</span><span class="nc">NSObject</span>
-<span class="k">-</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">First</span><span class="p">;</span>
-<span class="k">-</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">Next</span><span class="p">;</span>
-<span class="k">-</span><span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="n">IsDone</span><span class="p">;</span>
-<span class="k">-</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">CurrentItem</span><span class="p">;</span>
-<span class="k">@end</span>
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@interface Iterator:NSObject
+-(id)First;
+-(id)Next;
+-(BOOL)IsDone;
+-(id)CurrentItem;
+@end
+</code></pre></div></div>
 
 <h4 id="15访问者模式vistor">15、访问者模式(Vistor)</h4>
 

@@ -150,7 +150,7 @@
 
 <p>思路：只计算丑数，而不在非丑数的整数上花费时间。根据丑数的定义，丑数应该是另一个丑数乘以2、3或者5的结果（1除外）。因此我们可以创建一个数组，里面的数字是排好序的丑数。里面的每一个丑数是前面的丑数乘以2、3或者5得到的。这种思路的关键在于怎样确保数组里面的丑数是排好序的。我们假设数组中已经有若干个丑数，排好序后存在数组中。我们把现有的最大丑数记做M。现在我们来生成下一个丑数，该丑数肯定是前面某一个丑数乘以2、3或者5的结果。我们首先考虑把已有的每个丑数乘以2。在乘以2的时候，能得到若干个结果小于或等于M的。由于我们是按照顺序生成的，小于或者等于M肯定已经在数组中了，我们不需再次考虑；我们还会得到若干个大于M的结果，但我们只需要第一个大于M的结果，因为我们希望丑数是按从小到大顺序生成的，其他更大的结果我们以后再说。我们把得到的第一个乘以2后大于M的结果，记为M2。同样我们把已有的每一个丑数乘以3和5，能得到第一个大于M的结果M3和M5。那么下一个丑数应该是M2、M3和M5三个数的最小者。前面我们分析的时候，提到把已有的每个丑数分别都乘以2、3和5，事实上是不需要的，因为已有的丑数是按顺序存在数组中的。对乘以2而言，肯定存在某一个丑数T2，排在它之前的每一个丑数乘以2得到的结果都会小于已有最大的丑数，在它之后的每一个丑数乘以2得到的结果都会太大。我们只需要记下这个丑数的位置，同时每次生成新的丑数的时候，去更新这个T2。对乘以3和5而言，存在着同样的T3和T5。</p>
 
-<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">Min</span><span class="p">(</span><span class="kt">int</span> <span class="n">number1</span><span class="p">,</span> <span class="kt">int</span> <span class="n">number2</span><span class="p">,</span> <span class="kt">int</span> <span class="n">number3</span><span class="p">)</span>
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">Min</span><span class="p">(</span><span class="kt">int</span> <span class="n">number1</span><span class="p">,</span> <span class="kt">int</span> <span class="n">number2</span><span class="p">,</span> <span class="kt">int</span> <span class="n">number3</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="kt">int</span> <span class="n">min</span> <span class="o">=</span> <span class="p">(</span><span class="n">number1</span> <span class="o">&lt;</span> <span class="n">number2</span><span class="p">)</span> <span class="o">?</span> <span class="n">number1</span> <span class="o">:</span> <span class="n">number2</span><span class="p">;</span>
     <span class="n">min</span> <span class="o">=</span> <span class="p">(</span><span class="n">min</span> <span class="o">&lt;</span> <span class="n">number3</span><span class="p">)</span> <span class="o">?</span> <span class="n">min</span> <span class="o">:</span> <span class="n">number3</span><span class="p">;</span>
@@ -195,8 +195,7 @@
 
 	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="32第一个只出现过一次的字符">32、第一个只出现过一次的字符</h4>
 
@@ -204,7 +203,7 @@
 
 <p>思路：采用一个数组记录出现的次数然后再遍历该数组</p>
 
-<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="cp">#include "stdafx.h"
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include "stdafx.h"
 #include &lt;iostream&gt;
 </span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
 
@@ -252,8 +251,7 @@
 	<span class="n">getchar</span><span class="p">();</span>
 	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="33数组中的逆序对">33、数组中的逆序对</h4>
 
@@ -265,16 +263,14 @@
 
 <p>1）总体的意思就是将数组分成两段，首先求段内的逆序对数量，比如下面两段代码就是求左右两端数组段内的逆序对数量</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>inversions+=InversePairsCore(arry,start,mid,temp);//找左半段的逆序对数目
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>inversions+=InversePairsCore(arry,start,mid,temp);//找左半段的逆序对数目
 inversions+=InversePairsCore(arry,mid+1,end,temp);//找右半段的逆序对数目
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>（2）然后求段间的逆序对数量，如下面的代码</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>inversions+=MergeArray(arry,start,mid,end,temp);//在找完左右半段逆序对以后两段数组有序，然后找两段之间的逆序对。最小的逆序段只有一个元素。
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>inversions+=MergeArray(arry,start,mid,end,temp);//在找完左右半段逆序对以后两段数组有序，然后找两段之间的逆序对。最小的逆序段只有一个元素。
+</code></pre></div></div>
 
 <p>（3）然后在求段间逆序对的时候，我们分为arry[start…mid]和arry[mid+1…end]，然后设置两个指针ij分别指向两段数组的末尾元素，也就是i=mid，j=end。然后比较arry[i]和arry[j]，</p>
 
@@ -283,7 +279,7 @@ inversions+=InversePairsCore(arry,mid+1,end,temp);//找右半段的逆序对数�
   <li>如果arry[i]&lt;arry[j]，则将大数arry[j]放入temp[]中，j往前移。</li>
 </ol>
 
-<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="cp">#include&lt;iostream&gt;
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include&lt;iostream&gt;
 #include&lt;stdlib.h&gt;
 </span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
 
@@ -293,23 +289,23 @@ inversions+=InversePairsCore(arry,mid+1,end,temp);//找右半段的逆序对数�
         <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">arry</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">&lt;&lt;</span><span class="s">" "</span><span class="p">;</span>
     <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
 <span class="p">}</span>
-<span class="kt">int</span> <span class="nf">MergeArray</span><span class="p">(</span><span class="kt">int</span> <span class="n">arry</span><span class="p">[],</span><span class="kt">int</span> <span class="n">start</span><span class="p">,</span><span class="kt">int</span> <span class="n">mid</span><span class="p">,</span><span class="kt">int</span> <span class="n">end</span><span class="p">,</span><span class="kt">int</span> <span class="n">temp</span><span class="p">[])</span><span class="c1">//数组的归并操作
-</span><span class="p">{</span>
-    <span class="c1">//int leftLen=mid-start+1;//arry[start...mid]左半段长度
-</span>    <span class="c1">//int rightLlen=end-mid;//arry[mid+1...end]右半段长度
-</span>
+<span class="kt">int</span> <span class="nf">MergeArray</span><span class="p">(</span><span class="kt">int</span> <span class="n">arry</span><span class="p">[],</span><span class="kt">int</span> <span class="n">start</span><span class="p">,</span><span class="kt">int</span> <span class="n">mid</span><span class="p">,</span><span class="kt">int</span> <span class="n">end</span><span class="p">,</span><span class="kt">int</span> <span class="n">temp</span><span class="p">[])</span><span class="c1">//数组的归并操作</span>
+<span class="p">{</span>
+    <span class="c1">//int leftLen=mid-start+1;//arry[start...mid]左半段长度</span>
+    <span class="c1">//int rightLlen=end-mid;//arry[mid+1...end]右半段长度</span>
+
     <span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">mid</span><span class="p">;</span>
     <span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="n">end</span><span class="p">;</span>
-    <span class="kt">int</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="c1">//临时数组末尾坐标
-</span>    <span class="kt">int</span> <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
-    <span class="c1">//设定两个指针ij分别指向两段有序数组的头元素，将小的那一个放入到临时数组中去。
-</span>    <span class="k">while</span><span class="p">(</span><span class="n">i</span><span class="o">&gt;=</span><span class="n">start</span><span class="o">&amp;&amp;</span><span class="n">j</span><span class="o">&gt;</span><span class="n">mid</span><span class="p">)</span>
+    <span class="kt">int</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="c1">//临时数组末尾坐标</span>
+    <span class="kt">int</span> <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+    <span class="c1">//设定两个指针ij分别指向两段有序数组的头元素，将小的那一个放入到临时数组中去。</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">i</span><span class="o">&gt;=</span><span class="n">start</span><span class="o">&amp;&amp;</span><span class="n">j</span><span class="o">&gt;</span><span class="n">mid</span><span class="p">)</span>
     <span class="p">{</span>
         <span class="k">if</span><span class="p">(</span><span class="n">arry</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">&gt;</span><span class="n">arry</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
         <span class="p">{</span>
-            <span class="n">temp</span><span class="p">[</span><span class="n">k</span><span class="o">++</span><span class="p">]</span><span class="o">=</span><span class="n">arry</span><span class="p">[</span><span class="n">i</span><span class="o">--</span><span class="p">];</span><span class="c1">//从临时数组的最后一个位置开始排序
-</span>            <span class="n">count</span><span class="o">+=</span><span class="n">j</span><span class="o">-</span><span class="n">mid</span><span class="p">;</span><span class="c1">//因为arry[mid+1...j...end]是有序的，如果arry[i]&gt;arry[j]，那么也大于arry[j]之前的元素，从a[mid+1...j]一共有j-(mid+1)+1=j-mid
-</span>            
+            <span class="n">temp</span><span class="p">[</span><span class="n">k</span><span class="o">++</span><span class="p">]</span><span class="o">=</span><span class="n">arry</span><span class="p">[</span><span class="n">i</span><span class="o">--</span><span class="p">];</span><span class="c1">//从临时数组的最后一个位置开始排序</span>
+            <span class="n">count</span><span class="o">+=</span><span class="n">j</span><span class="o">-</span><span class="n">mid</span><span class="p">;</span><span class="c1">//因为arry[mid+1...j...end]是有序的，如果arry[i]&gt;arry[j]，那么也大于arry[j]之前的元素，从a[mid+1...j]一共有j-(mid+1)+1=j-mid</span>
+            
         <span class="p">}</span>
         <span class="k">else</span>
         <span class="p">{</span>
@@ -317,8 +313,8 @@ inversions+=InversePairsCore(arry,mid+1,end,temp);//找右半段的逆序对数�
         <span class="p">}</span>
     <span class="p">}</span>
     <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">"调用MergeArray时的count："</span><span class="o">&lt;&lt;</span><span class="n">count</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
-    <span class="k">while</span><span class="p">(</span><span class="n">i</span><span class="o">&gt;=</span><span class="n">start</span><span class="p">)</span><span class="c1">//表示前半段数组中还有元素未放入临时数组
-</span>    <span class="p">{</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">i</span><span class="o">&gt;=</span><span class="n">start</span><span class="p">)</span><span class="c1">//表示前半段数组中还有元素未放入临时数组</span>
+    <span class="p">{</span>
         <span class="n">temp</span><span class="p">[</span><span class="n">k</span><span class="o">++</span><span class="p">]</span><span class="o">=</span><span class="n">arry</span><span class="p">[</span><span class="n">i</span><span class="o">--</span><span class="p">];</span>
     <span class="p">}</span>
 
@@ -327,12 +323,12 @@ inversions+=InversePairsCore(arry,mid+1,end,temp);//找右半段的逆序对数�
         <span class="n">temp</span><span class="p">[</span><span class="n">k</span><span class="o">++</span><span class="p">]</span><span class="o">=</span><span class="n">arry</span><span class="p">[</span><span class="n">j</span><span class="o">--</span><span class="p">];</span>
     <span class="p">}</span>
 
-    <span class="c1">//将临时数组中的元素写回到原数组当中去。
-</span>    <span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">k</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="c1">//将临时数组中的元素写回到原数组当中去。</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">k</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
         <span class="n">arry</span><span class="p">[</span><span class="n">end</span><span class="o">-</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="n">temp</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
 
-    <span class="n">printArray</span><span class="p">(</span><span class="n">arry</span><span class="p">,</span><span class="mi">8</span><span class="p">);</span><span class="c1">//输出进过一次归并以后的数组，用于理解整体过程
-</span>    <span class="k">return</span> <span class="n">count</span><span class="p">;</span>
+    <span class="n">printArray</span><span class="p">(</span><span class="n">arry</span><span class="p">,</span><span class="mi">8</span><span class="p">);</span><span class="c1">//输出进过一次归并以后的数组，用于理解整体过程</span>
+    <span class="k">return</span> <span class="n">count</span><span class="p">;</span>
 
 <span class="p">}</span>
 
@@ -342,10 +338,10 @@ inversions+=InversePairsCore(arry,mid+1,end,temp);//找右半段的逆序对数�
     <span class="k">if</span><span class="p">(</span><span class="n">start</span><span class="o">&lt;</span><span class="n">end</span><span class="p">)</span>
     <span class="p">{</span>
         <span class="kt">int</span> <span class="n">mid</span><span class="o">=</span><span class="p">(</span><span class="n">start</span><span class="o">+</span><span class="n">end</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span>
-        <span class="n">inversions</span><span class="o">+=</span><span class="n">InversePairsCore</span><span class="p">(</span><span class="n">arry</span><span class="p">,</span><span class="n">start</span><span class="p">,</span><span class="n">mid</span><span class="p">,</span><span class="n">temp</span><span class="p">);</span><span class="c1">//找左半段的逆序对数目
-</span>        <span class="n">inversions</span><span class="o">+=</span><span class="n">InversePairsCore</span><span class="p">(</span><span class="n">arry</span><span class="p">,</span><span class="n">mid</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">end</span><span class="p">,</span><span class="n">temp</span><span class="p">);</span><span class="c1">//找右半段的逆序对数目
-</span>        <span class="n">inversions</span><span class="o">+=</span><span class="n">MergeArray</span><span class="p">(</span><span class="n">arry</span><span class="p">,</span><span class="n">start</span><span class="p">,</span><span class="n">mid</span><span class="p">,</span><span class="n">end</span><span class="p">,</span><span class="n">temp</span><span class="p">);</span><span class="c1">//在找完左右半段逆序对以后两段数组有序，然后找两段之间的逆序对。最小的逆序段只有一个元素。
-</span>    <span class="p">}</span>    
+        <span class="n">inversions</span><span class="o">+=</span><span class="n">InversePairsCore</span><span class="p">(</span><span class="n">arry</span><span class="p">,</span><span class="n">start</span><span class="p">,</span><span class="n">mid</span><span class="p">,</span><span class="n">temp</span><span class="p">);</span><span class="c1">//找左半段的逆序对数目</span>
+        <span class="n">inversions</span><span class="o">+=</span><span class="n">InversePairsCore</span><span class="p">(</span><span class="n">arry</span><span class="p">,</span><span class="n">mid</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">end</span><span class="p">,</span><span class="n">temp</span><span class="p">);</span><span class="c1">//找右半段的逆序对数目</span>
+        <span class="n">inversions</span><span class="o">+=</span><span class="n">MergeArray</span><span class="p">(</span><span class="n">arry</span><span class="p">,</span><span class="n">start</span><span class="p">,</span><span class="n">mid</span><span class="p">,</span><span class="n">end</span><span class="p">,</span><span class="n">temp</span><span class="p">);</span><span class="c1">//在找完左右半段逆序对以后两段数组有序，然后找两段之间的逆序对。最小的逆序段只有一个元素。</span>
+    <span class="p">}</span>    
     <span class="k">return</span> <span class="n">inversions</span><span class="p">;</span>
 <span class="p">}</span>
 
@@ -360,17 +356,16 @@ inversions+=InversePairsCore(arry,mid+1,end,temp);//找右半段的逆序对数�
 
 <span class="kt">void</span> <span class="nf">main</span><span class="p">()</span>
 <span class="p">{</span>
-    <span class="c1">//int arry[]={7,5,6,4};
-</span>    <span class="kt">int</span> <span class="n">arry</span><span class="p">[]</span><span class="o">=</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">5</span><span class="p">};</span>
+    <span class="c1">//int arry[]={7,5,6,4};</span>
+    <span class="kt">int</span> <span class="n">arry</span><span class="p">[]</span><span class="o">=</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">5</span><span class="p">};</span>
     <span class="kt">int</span> <span class="n">len</span><span class="o">=</span><span class="k">sizeof</span><span class="p">(</span><span class="n">arry</span><span class="p">)</span><span class="o">/</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">);</span>
-    <span class="c1">//printArray(arry,len);
-</span>    <span class="kt">int</span> <span class="n">count</span><span class="o">=</span><span class="n">InversePairs</span><span class="p">(</span><span class="n">arry</span><span class="p">,</span><span class="n">len</span><span class="p">);</span>
-    <span class="c1">//printArray(arry,len);
-</span>    <span class="c1">//cout&lt;&lt;count&lt;&lt;endl;
-</span>    <span class="n">system</span><span class="p">(</span><span class="s">"pause"</span><span class="p">);</span>
+    <span class="c1">//printArray(arry,len);</span>
+    <span class="kt">int</span> <span class="n">count</span><span class="o">=</span><span class="n">InversePairs</span><span class="p">(</span><span class="n">arry</span><span class="p">,</span><span class="n">len</span><span class="p">);</span>
+    <span class="c1">//printArray(arry,len);</span>
+    <span class="c1">//cout&lt;&lt;count&lt;&lt;endl;</span>
+    <span class="n">system</span><span class="p">(</span><span class="s">"pause"</span><span class="p">);</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="34两个链表的第一个公共结点">34、两个链表的第一个公共结点</h4>
 
@@ -380,7 +375,7 @@ inversions+=InversePairsCore(arry,mid+1,end,temp);//找右半段的逆序对数�
 
 <p>思路：我们可以先遍历一次得到它们的长度分别为5 和4， 也就是较长的链表与较短的链表相比多一个结点。第二次先在长的链表上走1 步，到达结点2。接下来分别从结点2 和结点4 出发同时遍历两个结点， 直到找到它们第一个相同的结点6，这就是我们想要的结果。</p>
 
-<div class="language-c highlighter-rouge"><pre class="highlight"><code><span class="cm">/*
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/*
 获取链表的长度
 */</span>
 <span class="kt">int</span> <span class="nf">getLength</span><span class="p">(</span><span class="n">pNode</span> <span class="n">pHead</span><span class="p">)</span>
@@ -429,8 +424,7 @@ inversions+=InversePairsCore(arry,mid+1,end,temp);//找右半段的逆序对数�
 	<span class="p">}</span>
 	<span class="k">return</span> <span class="n">pListLong</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="35数字在排序数组中出现的次数">35、数字在排序数组中出现的次数</h4>
 
@@ -443,7 +437,7 @@ inversions+=InversePairsCore(arry,mid+1,end,temp);//找右半段的逆序对数�
 <p>如何用二分查找算法在数组中找到第一个k，二分查找算法总是先拿数组中间的数字和k作比较。如果中间的数字比k大，那么k只有可能出现在数组的前半段，下一轮我们只在数组的前半段查找就可以了。如果中间的数字比k小，那么k只有可能出现在数组的后半段，下一轮我们只在数组的后半乓查找就可以了。如果中间的数字和k 相等呢？我们先判断这个数字是不是第一个k。如果位于中间数字的前面一个数字不是k,此时中间的数字刚好就是第一个k。如果中间数字的前面一个数字也是k，也就是说第一个k肯定在数组的前半段， 下一轮我们仍然需要在数组的前半段查找。 
 　　同样的思路在排序数组中找到最后一个k。如果中间数字比k大，那么k只能出现在数组的前半段。如果中间数字比k小，k就只能出现在数组的后半段。如果中间数字等于k呢？我们需要判断这个k是不是最后一个k，也就是中间数字的下一个数字是不是也等于k。如果下一个数字不是k，则中间数字就是最后一个k了：否则下一轮我们还是要在数组的后半段中去查找。</p>
 
-<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="cp">#include&lt;iostream&gt;
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include&lt;iostream&gt;
 </span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
 
 <span class="kt">int</span> <span class="nf">searchFirstEqual</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">[],</span><span class="kt">int</span> <span class="n">n</span><span class="p">,</span><span class="kt">int</span> <span class="n">key</span><span class="p">)</span>
@@ -497,8 +491,7 @@ inversions+=InversePairsCore(arry,mid+1,end,temp);//找右半段的逆序对数�
     <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">end</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
     <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">end</span><span class="o">-</span><span class="n">start</span><span class="o">+</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="36二叉树的深度">36、二叉树的深度</h4>
 
@@ -508,15 +501,14 @@ inversions+=InversePairsCore(arry,mid+1,end,temp);//找右半段的逆序对数�
 
 <p>思路：依次选择最深的左右子树, 然后<strong>递归</strong>加1.</p>
 
-<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">TreeDepth</span><span class="p">(</span><span class="n">BinaryTreeNode</span><span class="o">*</span> <span class="n">pRoot</span><span class="p">)</span> <span class="p">{</span>  
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">TreeDepth</span><span class="p">(</span><span class="n">BinaryTreeNode</span><span class="o">*</span> <span class="n">pRoot</span><span class="p">)</span> <span class="p">{</span>  
     <span class="k">if</span> <span class="p">(</span><span class="n">pRoot</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>  
         <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>  
     <span class="kt">int</span> <span class="n">nLeft</span> <span class="o">=</span> <span class="n">TreeDepth</span><span class="p">(</span><span class="n">pRoot</span><span class="o">-&gt;</span><span class="n">m_pLeft</span><span class="p">);</span>  
     <span class="kt">int</span> <span class="n">nRight</span> <span class="o">=</span> <span class="n">TreeDepth</span><span class="p">(</span><span class="n">pRoot</span><span class="o">-&gt;</span><span class="n">m_pRight</span><span class="p">);</span>  
     <span class="k">return</span> <span class="p">(</span><span class="n">nLeft</span><span class="o">&gt;</span><span class="n">nRight</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="n">nLeft</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">:</span><span class="p">(</span><span class="n">nRight</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>  
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="37数组中只出现一次的数字">37、数组中只出现一次的数字</h4>
 
@@ -532,24 +524,24 @@ inversions+=InversePairsCore(arry,mid+1,end,temp);//找右半段的逆序对数�
 
 <p>现在我们已经把原数组分成了两个子数组，每个子数组都包含一个只出现一次的数字，而其他数字都出现了两次。因此到此为止，所有的问题我们都已经解决。</p>
 
-<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">FindNumsAppearOnce</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">data</span><span class="p">,</span><span class="kt">int</span><span class="o">*</span> <span class="n">num1</span><span class="p">,</span><span class="kt">int</span> <span class="o">*</span><span class="n">num2</span><span class="p">)</span> <span class="p">{</span>  
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">FindNumsAppearOnce</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">data</span><span class="p">,</span><span class="kt">int</span><span class="o">*</span> <span class="n">num1</span><span class="p">,</span><span class="kt">int</span> <span class="o">*</span><span class="n">num2</span><span class="p">)</span> <span class="p">{</span>  
         <span class="k">if</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">&lt;</span><span class="mi">2</span><span class="p">)</span>   <span class="k">return</span> <span class="p">;</span>  
           
         <span class="kt">int</span> <span class="n">size</span><span class="o">=</span><span class="n">data</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>  
         <span class="kt">int</span> <span class="n">temp</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>  
-        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">size</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="c1">//对数组中每个数字做异或  
-</span>            <span class="n">temp</span><span class="o">=</span><span class="n">temp</span><span class="o">^</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>  
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">size</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="c1">//对数组中每个数字做异或  </span>
+            <span class="n">temp</span><span class="o">=</span><span class="n">temp</span><span class="o">^</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>  
         <span class="k">if</span><span class="p">(</span><span class="n">temp</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span>    <span class="k">return</span> <span class="p">;</span>  
           
         <span class="kt">int</span> <span class="n">index</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>  
-        <span class="k">while</span><span class="p">((</span><span class="n">temp</span><span class="o">&amp;</span><span class="mi">1</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span><span class="c1">//在整数temp的二进制表示中找到最右边是1的位  
-</span>        <span class="p">{</span>  
+        <span class="k">while</span><span class="p">((</span><span class="n">temp</span><span class="o">&amp;</span><span class="mi">1</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span><span class="c1">//在整数temp的二进制表示中找到最右边是1的位  </span>
+        <span class="p">{</span>  
             <span class="n">temp</span><span class="o">=</span><span class="n">temp</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">;</span>  
             <span class="o">++</span><span class="n">index</span><span class="p">;</span>  
         <span class="p">}</span>  
           
-        <span class="c1">//根据数组的倒数第index位是否为1，将数组划分为两个子数组，并分别对两个子数组进行求异或，得到num1			和num2  
-</span>        <span class="o">*</span><span class="n">num1</span><span class="o">=*</span><span class="n">num2</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>  
+        <span class="c1">//根据数组的倒数第index位是否为1，将数组划分为两个子数组，并分别对两个子数组进行求异或，得到num1			和num2  </span>
+        <span class="o">*</span><span class="n">num1</span><span class="o">=*</span><span class="n">num2</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>  
         <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">size</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>  
         <span class="p">{</span>  
             <span class="k">if</span><span class="p">(</span><span class="n">IsBit</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">index</span><span class="p">))</span>  
@@ -559,14 +551,13 @@ inversions+=InversePairsCore(arry,mid+1,end,temp);//找右半段的逆序对数�
         <span class="p">}</span>  
  <span class="p">}</span>  
       
-    <span class="c1">//判断在num的二进制表示中从右边起的index位是不是1  
-</span><span class="kt">bool</span> <span class="nf">IsBit</span><span class="p">(</span><span class="kt">int</span> <span class="n">num</span><span class="p">,</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span>  
+    <span class="c1">//判断在num的二进制表示中从右边起的index位是不是1  </span>
+<span class="kt">bool</span> <span class="nf">IsBit</span><span class="p">(</span><span class="kt">int</span> <span class="n">num</span><span class="p">,</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span>  
 <span class="p">{</span>  
     <span class="n">num</span><span class="o">=</span><span class="n">num</span><span class="o">&gt;&gt;</span><span class="n">index</span><span class="p">;</span>  
     <span class="k">return</span> <span class="p">(</span><span class="n">num</span><span class="o">&amp;</span><span class="mi">1</span><span class="p">);</span>  
 <span class="p">}</span>  
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="38和为s的两个数字">38、和为S的两个数字</h4>
 
@@ -580,7 +571,7 @@ inversions+=InversePairsCore(arry,mid+1,end,temp);//找右半段的逆序对数�
 
 <p>若ai + aj &lt; sum，ai肯定不是答案之一（前面已得出 j 后面的数已是不可能），i += 1</p>
 
-<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">typedef</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">vi</span><span class="p">;</span>
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">typedef</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">vi</span><span class="p">;</span>
 <span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
 <span class="err">   </span> <span class="n">vi</span> <span class="n">FindNumbersWithSum</span><span class="p">(</span><span class="k">const</span> <span class="n">vi</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span><span class="kt">int</span> <span class="n">sum</span><span class="p">)</span> <span class="p">{</span>
@@ -599,8 +590,7 @@ inversions+=InversePairsCore(arry,mid+1,end,temp);//找右半段的逆序对数�
 <span class="err">   </span> <span class="err"> </span> <span class="err"> </span> <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
 <span class="err">   </span> <span class="p">}</span>
 <span class="p">};</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="39翻转单词顺序">39、翻转单词顺序</h4>
 
@@ -610,7 +600,7 @@ inversions+=InversePairsCore(arry,mid+1,end,temp);//找右半段的逆序对数�
 
 <p>思路一：左往右遍历字符串，逐个拼接每个单词即可</p>
 
-<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
 #include &lt;string&gt;
 </span>
 <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
@@ -621,8 +611,8 @@ inversions+=InversePairsCore(arry,mid+1,end,temp);//找右半段的逆序对数�
 
     <span class="k">for</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">str</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
     <span class="p">{</span>
-        <span class="c1">// 遇到空格
-</span>        <span class="k">if</span><span class="p">(</span><span class="n">str</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="sc">' '</span><span class="p">)</span>
+        <span class="c1">// 遇到空格</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">str</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="sc">' '</span><span class="p">)</span>
         <span class="p">{</span>
             <span class="n">res</span> <span class="o">=</span> <span class="s">" "</span> <span class="o">+</span> <span class="n">tmp</span> <span class="o">+</span> <span class="n">res</span><span class="p">;</span>
             <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">tmp</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span> <span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
@@ -634,8 +624,8 @@ inversions+=InversePairsCore(arry,mid+1,end,temp);//找右半段的逆序对数�
         <span class="p">}</span>
     <span class="p">}</span>
 
-    <span class="c1">// 最后一个字符
-</span>    <span class="k">if</span><span class="p">(</span><span class="n">tmp</span><span class="p">.</span><span class="n">size</span><span class="p">())</span>
+    <span class="c1">// 最后一个字符</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">tmp</span><span class="p">.</span><span class="n">size</span><span class="p">())</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">tmp</span> <span class="o">+</span> <span class="n">res</span><span class="p">;</span>
 
     <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
@@ -648,8 +638,7 @@ inversions+=InversePairsCore(arry,mid+1,end,temp);//找右半段的逆序对数�
 
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>思路二：将整个字符串翻转，然后定位到每个单词再次翻转一下</p>
 
@@ -661,7 +650,7 @@ inversions+=InversePairsCore(arry,mid+1,end,temp);//找右半段的逆序对数�
 
 <p>思路：分为两部分，分别翻转成为“bagfedc”，在整体翻转</p>
 
-<div class="language-c highlighter-rouge"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
 </span>
 <span class="kt">void</span> <span class="n">reverse</span><span class="p">(</span><span class="kt">char</span> <span class="n">a</span><span class="p">[],</span><span class="kt">int</span> <span class="n">l</span><span class="p">,</span><span class="kt">int</span> <span class="n">r</span><span class="p">){</span>
     <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">l</span><span class="p">;</span>
@@ -687,8 +676,7 @@ inversions+=InversePairsCore(arry,mid+1,end,temp);//找右半段的逆序对数�
     <span class="n">left_rever</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>####</p>
 

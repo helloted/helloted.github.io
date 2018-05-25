@@ -178,7 +178,7 @@
 
 <p>除了创建帧缓冲区对象中描述的过程外，您还可以设置多个渲染目标。 您可以创建多个，而不是为帧缓冲区创建单个颜色附件。 然后，调用glDrawBuffers函数来指定在渲染中使用哪些帧缓冲区附件，如所示。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>// Attach (previously created) textures to the framebuffer.
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// Attach (previously created) textures to the framebuffer.
 glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _colorTexture, 0);
 glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, _positionTexture, 0);
 glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, _normalTexture, 0);
@@ -187,12 +187,11 @@ glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXT
 // Specify the framebuffer attachments for rendering.
 GLenum targets[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2};
 glDrawBuffers(3, targets);
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>当您的应用程序发出绘图命令时，片段着色器将确定为每个渲染目标中的每个像素输出的颜色（或非颜色数据）。 下面代码显示了一个基本的片段着色器，该片段着色器通过分配位置与上面设置的位置匹配的片段输出变量来呈现给多个目标</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>#version 300 es
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#version 300 es
  
 uniform lowp sampler2D myTexture;
 in mediump vec2 texCoord;
@@ -209,8 +208,7 @@ void main()
     positionData = position;
     normalData = vec4(normalize(normal), 1.0);
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>多个渲染目标对于其他高级图形技术也很有用，例如实时反射，屏幕空间环境遮挡和体积照明。</p>
 

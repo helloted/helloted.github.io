@@ -130,40 +130,34 @@
 
 <p>1、利用HomeBrew来安装Node</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>brew install node
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew install node
+</code></pre></div></div>
 
 <p>2、安装React Native</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>npm install react-native-cli
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm install react-native-cli
+</code></pre></div></div>
 
 <p>3、安装Yarn，Yarn是FaceBook用来替代npm的工具</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>npm install -g yarn
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm install -g yarn
+</code></pre></div></div>
 
 <p>4、初始化React Native，第一个Demo，FirstDemo，先cd要某个文件夹</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>react-native init FirstDemo
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>react-native init FirstDemo
+</code></pre></div></div>
 
 <p>5、运行，直接点Xcode的Run或者用命令行</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>cd FirstDemo
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd FirstDemo
 react-native run-ios
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>6、真机运行，手机与mac在同一个网络下面</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>jsCodeLocation =  [NSURL URLWithString:@"http://本机IP:8081/index.bundle?platform=ios"];
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jsCodeLocation =  [NSURL URLWithString:@"http://本机IP:8081/index.bundle?platform=ios"];
+</code></pre></div></div>
 
 <p><img src="/img/Simple_1/14.png" alt="" /></p>
 
@@ -171,91 +165,88 @@ react-native run-ios
 
 <p>本地IP地址</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>ifconfig | grep "inet " | grep -v 127.0.0.1
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ifconfig | grep "inet " | grep -v 127.0.0.1
+</code></pre></div></div>
 
 <p>添加第三方库，比如react-navigation，cd到根目录，执行</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>yarn add react-navigation
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yarn add react-navigation
+</code></pre></div></div>
 
 <h3 id="三基础代码讲解">三、基础代码讲解</h3>
 
 <p>iOS端</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code>  <span class="n">jsCodeLocation</span> <span class="o">=</span> <span class="p">[[</span><span class="n">RCTBundleURLProvider</span> <span class="nf">sharedSettings</span><span class="p">]</span> <span class="nf">jsBundleURLForBundleRoot</span><span class="p">:</span><span class="s">@"App"</span> <span class="nf">fallbackResource</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">jsCodeLocation</span> <span class="o">=</span> <span class="p">[[</span><span class="n">RCTBundleURLProvider</span> <span class="nf">sharedSettings</span><span class="p">]</span> <span class="nf">jsBundleURLForBundleRoot</span><span class="p">:</span><span class="s">@"App"</span> <span class="nf">fallbackResource</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span>
   <span class="n">RCTRootView</span> <span class="o">*</span><span class="n">rootView</span> <span class="o">=</span> <span class="p">[[</span><span class="n">RCTRootView</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithBundleURL</span><span class="p">:</span><span class="n">jsCodeLocation</span>
                                                       <span class="nf">moduleName</span><span class="p">:</span><span class="s">@"DemoProject"</span>
                                                <span class="n">initialProperties</span><span class="o">:</span><span class="nb">nil</span>
                                                    <span class="n">launchOptions</span><span class="o">:</span><span class="n">launchOptions</span><span class="p">];</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>里面有两个关键词，<code class="highlighter-rouge">App</code>和<code class="highlighter-rouge">DemoProject</code>，其中<code class="highlighter-rouge">DemoProject</code>是项目文件夹目录名称，App则是这个RCTRootView对应的js文件的名称，即对应的文件为App.js。</p>
 
 <p>App.js</p>
 
-<pre><code class="language-jsx">import React, {
-  Component
-} from 'react';
-import {
-  AppRegistry,
-  Platform,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span><span class="p">,</span> <span class="p">{</span>
+  <span class="nx">Component</span>
+<span class="p">}</span> <span class="k">from</span> <span class="s1">'react'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span>
+  <span class="nx">AppRegistry</span><span class="p">,</span>
+  <span class="nx">Platform</span><span class="p">,</span>
+  <span class="nx">StyleSheet</span><span class="p">,</span>
+  <span class="nx">Text</span><span class="p">,</span>
+  <span class="nx">View</span>
+<span class="p">}</span> <span class="k">from</span> <span class="s1">'react-native'</span><span class="p">;</span>
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' +
-    'Cmd+D or shake for dev menu',
-  android: 'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
+<span class="kd">const</span> <span class="nx">instructions</span> <span class="o">=</span> <span class="nx">Platform</span><span class="p">.</span><span class="nx">select</span><span class="p">({</span>
+  <span class="na">ios</span><span class="p">:</span> <span class="s1">'Press Cmd+R to reload,</span><span class="err">\</span><span class="s1">n'</span> <span class="o">+</span>
+    <span class="s1">'Cmd+D or shake for dev menu'</span><span class="p">,</span>
+  <span class="na">android</span><span class="p">:</span> <span class="s1">'Double tap R on your keyboard to reload,</span><span class="err">\</span><span class="s1">n'</span> <span class="o">+</span>
+    <span class="s1">'Shake or press menu button for dev menu'</span><span class="p">,</span>
+<span class="p">});</span>
 
-//将RootPage注册
-AppRegistry.registerComponent('DemoProject', () =&gt; RootPage);
+<span class="c1">//将RootPage注册</span>
+<span class="nx">AppRegistry</span><span class="p">.</span><span class="nx">registerComponent</span><span class="p">(</span><span class="s1">'DemoProject'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">RootPage</span><span class="p">);</span>
 
-// 自定义RootPage
-export default class RootPage extends Component &lt; {} &gt; {
-  render() {
-    return (
-      &lt;View style={styles.container}&gt;
-        &lt;Text style={styles.welcome}&gt;
+<span class="c1">// 自定义RootPage</span>
+<span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">RootPage</span> <span class="kd">extends</span> <span class="nx">Component</span> <span class="o">&lt;</span> <span class="p">{}</span> <span class="o">&gt;</span> <span class="p">{</span>
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="p">&lt;</span><span class="nc">View</span> <span class="na">style=</span><span class="si">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">container</span><span class="si">}</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nc">Text</span> <span class="na">style=</span><span class="si">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">welcome</span><span class="si">}</span><span class="p">&gt;</span>
           Welcome to React Native!
-        &lt;/Text&gt;
-        &lt;Text style={styles.instructions}&gt;
+        <span class="p">&lt;/</span><span class="nc">Text</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nc">Text</span> <span class="na">style=</span><span class="si">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">instructions</span><span class="si">}</span><span class="p">&gt;</span>
           To get started, edit App.js
-        &lt;/Text&gt;
-        &lt;Text style={styles.instructions}&gt;
-          {instructions}
-        &lt;/Text&gt;
-      &lt;/View&gt;
-    );
-  }
-}
+        <span class="p">&lt;/</span><span class="nc">Text</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nc">Text</span> <span class="na">style=</span><span class="si">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">instructions</span><span class="si">}</span><span class="p">&gt;</span>
+          <span class="si">{</span><span class="nx">instructions</span><span class="si">}</span>
+        <span class="p">&lt;/</span><span class="nc">Text</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nc">View</span><span class="p">&gt;</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
-</code></pre>
+<span class="kd">const</span> <span class="nx">styles</span> <span class="o">=</span> <span class="nx">StyleSheet</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+  <span class="na">container</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">flex</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="na">justifyContent</span><span class="p">:</span> <span class="s1">'center'</span><span class="p">,</span>
+    <span class="na">alignItems</span><span class="p">:</span> <span class="s1">'center'</span><span class="p">,</span>
+    <span class="na">backgroundColor</span><span class="p">:</span> <span class="s1">'#F5FCFF'</span><span class="p">,</span>
+  <span class="p">},</span>
+  <span class="na">welcome</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">fontSize</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+    <span class="na">textAlign</span><span class="p">:</span> <span class="s1">'center'</span><span class="p">,</span>
+    <span class="na">margin</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+  <span class="p">},</span>
+  <span class="na">instructions</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">textAlign</span><span class="p">:</span> <span class="s1">'center'</span><span class="p">,</span>
+    <span class="na">color</span><span class="p">:</span> <span class="s1">'#333333'</span><span class="p">,</span>
+    <span class="na">marginBottom</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+</code></pre></div></div>
 
 <p>其中Text, View, Button三个标签类似于iOS当中的UITextView,UIView,UIButton。</p>
 

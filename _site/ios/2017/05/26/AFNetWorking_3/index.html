@@ -148,32 +148,30 @@
 
 <h4 id="二状态">（二）状态</h4>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>typedef NS_ENUM(NSInteger, AFNetworkReachabilityStatus) {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>typedef NS_ENUM(NSInteger, AFNetworkReachabilityStatus) {
     AFNetworkReachabilityStatusUnknown          = -1,  //未知状态
     AFNetworkReachabilityStatusNotReachable     = 0,   //不可到达状态
     AFNetworkReachabilityStatusReachableViaWWAN = 1,   //蜂窝网络状态
     AFNetworkReachabilityStatusReachableViaWiFi = 2,  //Wifi网络状态
 };
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>可以检测出总共四种状态：未知状态、不可到达状态、蜂窝网络(2G,3G,4G)状态、Wifi网络状态</p>
 
 <h4 id="三使用方式">（三）使用方式</h4>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>    AFNetworkReachabilityManager *manager = [AFNetworkReachabilityManager sharedManager];
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    AFNetworkReachabilityManager *manager = [AFNetworkReachabilityManager sharedManager];
     [manager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
 		NSLog(@"current--%@",[manager localizedNetworkReachabilityStatusString]);
 	}];
     [manager startMonitoring];
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="四初始化">（四）初始化</h4>
 
 <p>有四种类型的初始化方式</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>Creates and returns a network reachability manager with the default socket address.
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Creates and returns a network reachability manager with the default socket address.
  // 监控一个默认的地址
 + (instancetype)manager;
 
@@ -190,20 +188,18 @@
 /**
  Initializes an instance of a network reachability manager from the specified reachability object.
 - (instancetype)initWithReachability:(SCNetworkReachabilityRef)reachability；
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>下面是其中一种方法的实现</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>+ (instancetype)managerForDomain:(NSString *)domain {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+ (instancetype)managerForDomain:(NSString *)domain {
     SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(kCFAllocatorDefault, [domain UTF8String]);
     AFNetworkReachabilityManager *manager = [[self alloc] initWithReachability:reachability];  
     CFRelease(reachability);
     return manager;
 }
 
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>可以发现，最终都是要得到<code class="highlighter-rouge">SCNetworkReachabilityRef</code>这个东西，这是何许东西？</p>
 

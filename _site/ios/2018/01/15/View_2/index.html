@@ -170,9 +170,8 @@
 
 <p>如果您希望以编程方式创建应用程序的main window，则应在应用程序中包含与以下代码相似的代码：didFinishLaunchingWithOptions：应用程序delegate的方法：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>self.window = [[[UIWindow alloc] initWithFrame：[[UIScreen mainScreen] bounds]]
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>self.window = [[[UIWindow alloc] initWithFrame：[[UIScreen mainScreen] bounds]]
+</code></pre></div></div>
 
 <p>在前面的示例中，self.window被假定为您的应用程序delegate的声明属性，该属性被配置为保留window对象。如果您是为外部显示创建window，则应将其分配给其他变量，并且需要指定代表该显示的非主UIScreen对象的边界。</p>
 
@@ -182,9 +181,8 @@
 
 <p>每个window通常都有一个root view对象（由相应的view controller管理），其中包含代表您的内容的所有其他view。使用单个root view简化了更改界面的过程;要显示新的内容，你所要做的就是替换root view。要在window中安装view，请使用<code class="highlighter-rouge">addSubview：</code>方法。例如，要安装由VC管理的view，可以使用类似于以下内容的代码：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>[window addSubview:viewController.view];
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[window addSubview:viewController.view];
+</code></pre></div></div>
 
 <p>代替上述代码，您可以在您的nib文件中配置window的rootViewController属性。此属性提供了一种使用nib文件而非编程方式配置window的root view的便捷方法。如果在从其nib文件加载window时设置此属性，则UIKit会自动将相关VC的view安装为window的root view。此属性仅用于安装root view，不用于window与VC进行通信。
 您可以使用任何您想要的view作为window的root view。取决于你的界面设计，root view可以是一个通用的UIView对象，充当一个或多个子view的容器，root view可以是标准的系统view，或者rootview可以是你定义的自定义view。通常用作roo tview的一些标准系统view包括滚动view，表view和图像view。

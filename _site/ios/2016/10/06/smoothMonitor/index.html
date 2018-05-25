@@ -202,7 +202,7 @@
 
 <p>UI更新一般<font color="gray">kCFRunLoopBeforeSources</font>和<font color="gray">kCFRunLoopBeforeWaiting</font>之间，所以我们监测他们之间的时间段就能知道UI是否卡顿了</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (void)startMoniter{
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)startMoniter{
 	//添加监听
     CFRunLoopObserverContext context = {0,(__bridge void*)self,NULL,NULL};
     _observer = CFRunLoopObserverCreate(kCFAllocatorDefault,
@@ -241,19 +241,17 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
     dispatch_semaphore_t semaphore = instrance.semaphore;
     dispatch_semaphore_signal(semaphore);
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="三收集堆栈">三、收集堆栈</h3>
 
 <p>收集堆栈信息以用来分析卡顿引起的代码</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>#import &lt;libkern/OSAtomic.h&gt;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#import &lt;libkern/OSAtomic.h&gt;
 #import &lt;execinfo.h&gt;
-</code></pre>
-</div>
+</code></pre></div></div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (void)logStack{
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)logStack{
     void* callstack[128];
     int frames = backtrace(callstack, 128);
     char **strs = backtrace_symbols(callstack, frames);
@@ -264,8 +262,7 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
     }
     free(strs);
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>可以得到类似于下方的堆栈记录</p>
 
@@ -275,7 +272,7 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
 
 <p>一但 CADisplayLink 以特定的模式注册到runloop之后，每当屏幕需要刷新的时候，runloop就会调用CADisplayLink绑定的target上的selector，这时target可以读到 CADisplayLink 的每次调用的时间戳，用来准备下一帧显示需要的数据。所以通过比较dispalylink的更新时间就可以知道是否存在卡顿</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (void)updateTime{
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)updateTime{
     if (!_last_time) {
         _last_time = self.displayLink.timestamp;
         return;
@@ -298,8 +295,7 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
     }
     return _displayLink;
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="五上传记录">五、上传记录</h3>
 

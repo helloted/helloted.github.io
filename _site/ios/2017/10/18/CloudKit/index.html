@@ -171,8 +171,8 @@
 
 <p>1、获取URL，这个URL类似于我们在沙盒里的位置</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="c1">//获取url
-</span><span class="k">-</span><span class="p">(</span><span class="n">NSURL</span><span class="o">*</span><span class="p">)</span><span class="nf">getUbiquityContainerUrl</span><span class="p">:(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">fileName</span><span class="p">{</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//获取url</span>
+<span class="k">-</span><span class="p">(</span><span class="n">NSURL</span><span class="o">*</span><span class="p">)</span><span class="nf">getUbiquityContainerUrl</span><span class="p">:(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">fileName</span><span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">self</span><span class="p">.</span><span class="n">myUrl</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">self</span><span class="p">.</span><span class="n">myUrl</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSFileManager</span> <span class="nf">defaultManager</span><span class="p">]</span> <span class="nf">URLForUbiquityContainerIdentifier</span><span class="p">:</span><span class="n">UbiquityContainerIdentifier</span><span class="p">];</span>
         <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">self</span><span class="p">.</span><span class="n">myUrl</span><span class="p">)</span> <span class="p">{</span>
@@ -184,34 +184,32 @@
     <span class="n">url</span> <span class="o">=</span> <span class="p">[</span><span class="n">url</span> <span class="nf">URLByAppendingPathComponent</span><span class="p">:</span><span class="n">fileName</span><span class="p">];</span>
     <span class="k">return</span> <span class="n">url</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>2、上传文档，我们首先创建一个类用于上传下载文档，继承自UIDocument</p>
 
 <p>.h</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">MyDocument</span> <span class="p">:</span> <span class="nc">UIDocument</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">MyDocument</span> <span class="p">:</span> <span class="nc">UIDocument</span>
 
 <span class="k">@property</span><span class="p">(</span><span class="n">strong</span><span class="p">,</span><span class="n">nonatomic</span><span class="p">)</span><span class="n">NSData</span> <span class="o">*</span> <span class="n">data</span><span class="p">;</span>
 
 <span class="k">@end</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>.m文件</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">@implementation</span> <span class="nc">MyDocument</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@implementation</span> <span class="nc">MyDocument</span>
 
-<span class="c1">//读取icloud数据调用，响应openWithCompletionHandler
-</span><span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">loadFromContents</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">contents</span> <span class="nf">ofType</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">typeName</span> <span class="nf">error</span><span class="p">:(</span><span class="n">NSError</span> <span class="o">**</span><span class="p">)</span><span class="nv">outError</span> <span class="n">__TVOS_PROHIBITED</span>
+<span class="c1">//读取icloud数据调用，响应openWithCompletionHandler</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">loadFromContents</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">contents</span> <span class="nf">ofType</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">typeName</span> <span class="nf">error</span><span class="p">:(</span><span class="n">NSError</span> <span class="o">**</span><span class="p">)</span><span class="nv">outError</span> <span class="n">__TVOS_PROHIBITED</span>
 <span class="p">{</span>
     <span class="n">self</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">contents</span> <span class="nf">copy</span><span class="p">];</span>
     <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="c1">//保存数据、修改数据到icloud，响应save
-</span><span class="o">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">id</span><span class="p">)</span><span class="n">contentsForType</span><span class="o">:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">typeName</span> <span class="n">error</span><span class="o">:</span><span class="p">(</span><span class="n">NSError</span> <span class="o">**</span><span class="p">)</span><span class="n">outError</span> <span class="n">__TVOS_PROHIBITED</span>
+<span class="c1">//保存数据、修改数据到icloud，响应save</span>
+<span class="o">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">id</span><span class="p">)</span><span class="n">contentsForType</span><span class="o">:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">typeName</span> <span class="n">error</span><span class="o">:</span><span class="p">(</span><span class="n">NSError</span> <span class="o">**</span><span class="p">)</span><span class="n">outError</span> <span class="n">__TVOS_PROHIBITED</span>
 <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">self</span><span class="p">.</span><span class="n">data</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">self</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSData</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
@@ -219,12 +217,11 @@
     <span class="k">return</span> <span class="n">self</span><span class="p">.</span><span class="n">data</span><span class="p">;</span>
 <span class="p">}</span>
 <span class="k">@end</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>3、创建文件并上传</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code>    <span class="n">NSString</span> <span class="o">*</span><span class="n">fileName</span> <span class="o">=</span><span class="s">@"back_key"</span><span class="p">;</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="n">NSString</span> <span class="o">*</span><span class="n">fileName</span> <span class="o">=</span><span class="s">@"back_key"</span><span class="p">;</span>
     <span class="n">NSURL</span> <span class="o">*</span><span class="n">url</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span> <span class="nf">getUbiquityContainerUrl</span><span class="p">:</span><span class="n">fileName</span><span class="p">];</span>
     <span class="n">MyDocument</span> <span class="o">*</span><span class="n">docHandler</span> <span class="o">=</span> <span class="p">[[</span><span class="n">MyDocument</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithFileURL</span><span class="p">:</span><span class="n">url</span><span class="p">];</span>
     <span class="n">NSData</span> <span class="o">*</span><span class="n">back_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSKeyedArchiver</span> <span class="nf">archivedDataWithRootObject</span><span class="p">:</span><span class="n">app</span><span class="p">.</span><span class="n">items</span><span class="p">];</span>
@@ -238,16 +235,15 @@
             <span class="n">NSLog</span><span class="p">(</span><span class="s">@"上传失败"</span><span class="p">);</span>
         <span class="p">}</span>
     <span class="p">}];</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>4、更新文档</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code>    <span class="n">NSString</span> <span class="o">*</span><span class="n">fileName</span> <span class="o">=</span><span class="s">@"back_key"</span><span class="p">;</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="n">NSString</span> <span class="o">*</span><span class="n">fileName</span> <span class="o">=</span><span class="s">@"back_key"</span><span class="p">;</span>
     <span class="n">NSURL</span> <span class="o">*</span><span class="n">url</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span> <span class="nf">getUbiquityContainerUrl</span><span class="p">:</span><span class="n">fileName</span><span class="p">];</span>
     <span class="n">MyDocument</span> <span class="o">*</span><span class="n">doc</span> <span class="o">=</span> <span class="p">[[</span><span class="n">MyDocument</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithFileURL</span><span class="p">:</span><span class="n">url</span><span class="p">];</span>
-    <span class="c1">//文档内容
-</span>    <span class="n">NSString</span><span class="o">*</span><span class="n">str</span> <span class="o">=</span> <span class="s">@"修改了数据"</span><span class="p">;</span>
+    <span class="c1">//文档内容</span>
+    <span class="n">NSString</span><span class="o">*</span><span class="n">str</span> <span class="o">=</span> <span class="s">@"修改了数据"</span><span class="p">;</span>
     <span class="n">doc</span><span class="p">.</span><span class="n">myData</span> <span class="o">=</span> <span class="p">[</span><span class="n">str</span> <span class="nf">dataUsingEncoding</span><span class="p">:</span><span class="n">NSUTF8StringEncoding</span><span class="p">];</span>
     <span class="p">[</span><span class="n">doc</span> <span class="nf">saveToURL</span><span class="p">:</span><span class="n">url</span> <span class="nf">forSaveOperation</span><span class="p">:</span><span class="n">UIDocumentSaveForOverwriting</span> <span class="n">completionHandler</span><span class="o">:^</span><span class="p">(</span><span class="n">BOOL</span> <span class="n">success</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">success</span><span class="p">)</span> <span class="p">{</span>
@@ -257,34 +253,31 @@
             <span class="n">NSLog</span><span class="p">(</span><span class="s">@"修改失败"</span><span class="p">);</span>
         <span class="p">}</span>
     <span class="p">}];</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>5、下载文档</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="c1">//获取最新数据
-</span><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">downloadDoc</span><span class="p">{</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//获取最新数据</span>
+<span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">downloadDoc</span><span class="p">{</span>
     <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">myMetadataQuery</span> <span class="nf">setSearchScopes</span><span class="p">:@[</span><span class="n">NSMetadataQueryUbiquitousDocumentsScope</span><span class="p">]];</span>
     <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">myMetadataQuery</span> <span class="nf">startQuery</span><span class="p">];</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>监听下载完成</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code>    <span class="p">[[</span><span class="n">NSNotificationCenter</span> <span class="nf">defaultCenter</span><span class="p">]</span> <span class="nf">addObserver</span><span class="p">:</span><span class="n">self</span> <span class="nf">selector</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="n">MetadataQueryDidFinishGathering</span><span class="o">:</span><span class="p">)</span> <span class="n">name</span><span class="o">:</span><span class="n">NSMetadataQueryDidFinishGatheringNotification</span> <span class="n">object</span><span class="o">:</span><span class="n">self</span><span class="p">.</span><span class="n">myMetadataQuery</span><span class="p">];</span>
-</code></pre>
-</div>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="p">[[</span><span class="n">NSNotificationCenter</span> <span class="nf">defaultCenter</span><span class="p">]</span> <span class="nf">addObserver</span><span class="p">:</span><span class="n">self</span> <span class="nf">selector</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="n">MetadataQueryDidFinishGathering</span><span class="o">:</span><span class="p">)</span> <span class="n">name</span><span class="o">:</span><span class="n">NSMetadataQueryDidFinishGatheringNotification</span> <span class="n">object</span><span class="o">:</span><span class="n">self</span><span class="p">.</span><span class="n">myMetadataQuery</span><span class="p">];</span>
+</code></pre></div></div>
 
 <p>下载成功</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="c1">//获取成功
-</span><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">MetadataQueryDidFinishGathering</span><span class="p">:(</span><span class="n">NSNotification</span><span class="o">*</span><span class="p">)</span><span class="nv">noti</span><span class="p">{</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//获取成功</span>
+<span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">MetadataQueryDidFinishGathering</span><span class="p">:(</span><span class="n">NSNotification</span><span class="o">*</span><span class="p">)</span><span class="nv">noti</span><span class="p">{</span>
     <span class="n">NSArray</span> <span class="o">*</span><span class="n">items</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">myMetadataQuery</span><span class="p">.</span><span class="n">results</span><span class="p">;</span>
     <span class="p">[</span><span class="n">items</span> <span class="nf">enumerateObjectsUsingBlock</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">NSMetadataItem</span> <span class="o">*</span><span class="n">item</span><span class="p">,</span> <span class="n">NSUInteger</span> <span class="n">idx</span><span class="p">,</span> <span class="n">BOOL</span> <span class="o">*</span> <span class="n">_Nonnull</span> <span class="n">stop</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">NSString</span> <span class="o">*</span><span class="n">fileName</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="nf">valueForAttribute</span><span class="p">:</span><span class="n">NSMetadataItemFSNameKey</span><span class="p">];</span>
-        <span class="c1">//读取文件内容
-</span>        <span class="n">MyDocument</span> <span class="o">*</span><span class="n">doc</span> <span class="o">=</span><span class="p">[[</span><span class="n">MyDocument</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithFileURL</span><span class="p">:[</span><span class="n">self</span> <span class="nf">getUbiquityContainerUrl</span><span class="p">:</span><span class="n">fileName</span><span class="p">]];</span>
+        <span class="c1">//读取文件内容</span>
+        <span class="n">MyDocument</span> <span class="o">*</span><span class="n">doc</span> <span class="o">=</span><span class="p">[[</span><span class="n">MyDocument</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithFileURL</span><span class="p">:[</span><span class="n">self</span> <span class="nf">getUbiquityContainerUrl</span><span class="p">:</span><span class="n">fileName</span><span class="p">]];</span>
         <span class="p">[</span><span class="n">doc</span> <span class="nf">openWithCompletionHandler</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">BOOL</span> <span class="n">success</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">success</span><span class="p">)</span> <span class="p">{</span>
                 <span class="n">NSArray</span> <span class="o">*</span><span class="n">array</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSKeyedUnarchiver</span> <span class="nf">unarchiveObjectWithData</span><span class="p">:</span><span class="n">doc</span><span class="p">.</span><span class="n">data</span><span class="p">];</span>
@@ -295,8 +288,7 @@
         <span class="p">}];</span>
     <span class="p">}];</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 
 

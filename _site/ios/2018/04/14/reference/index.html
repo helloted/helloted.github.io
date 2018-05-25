@@ -148,7 +148,7 @@
 
 <h4 id="三nstimer引起的循环引用">三、NSTimer引起的循环引用</h4>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">DetailViewController</span> <span class="p">()</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">DetailViewController</span> <span class="p">()</span>
 <span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">weak</span><span class="p">)</span> <span class="n">NSTimer</span> <span class="o">*</span><span class="n">timer</span><span class="p">;</span>
 <span class="k">@end</span>
 
@@ -166,8 +166,7 @@
     <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Fire"</span><span class="p">);</span>
 <span class="p">}</span>
 <span class="k">@end</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>当我们从这个界面跳转到其他界面的时候却发现：控制台还在源源不断的输出着 Fire 。看来 <code class="highlighter-rouge">Timer</code> 并没有停止。ViewController的dealloc也未被调用。</p>
 
@@ -177,14 +176,13 @@
 
 <p>那么换成weakSelf呢？就是我们在block中常用的那种。</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">__weak</span> <span class="n">typeof</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="n">weakSelf</span> <span class="o">=</span> <span class="n">self</span><span class="p">;</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">__weak</span> <span class="n">typeof</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="n">weakSelf</span> <span class="o">=</span> <span class="n">self</span><span class="p">;</span>
 <span class="n">_timer</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSTimer</span> <span class="nf">scheduledTimerWithTimeInterval</span><span class="p">:</span><span class="mi">3</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span>
                                           <span class="nf">target</span><span class="p">:</span><span class="n">weakSelf</span>
                                         <span class="n">selector</span><span class="o">:</span><span class="k">@selector</span><span class="p">(</span><span class="n">timerFire</span><span class="o">:</span><span class="p">)</span>
                                         <span class="n">userInfo</span><span class="o">:</span><span class="nb">nil</span>
                                          <span class="n">repeats</span><span class="o">:</span><span class="nb">YES</span><span class="p">];</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>实际运行发现，还是不行，说明target就是强引用。</p>
 
@@ -192,7 +190,7 @@
 
 <p>使用一个中间target给timer，不让timer直接强引用VC。</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">@implementation</span> <span class="nc">HTWeakTimer</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@implementation</span> <span class="nc">HTWeakTimer</span>
 <span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="nf">fire</span><span class="p">:(</span><span class="n">NSTimer</span> <span class="o">*</span><span class="p">)</span><span class="nv">timer</span> <span class="p">{</span>
     <span class="k">if</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">target</span><span class="p">)</span> <span class="p">{</span>
         <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">target</span> <span class="nf">performSelector</span><span class="p">:</span><span class="n">self</span><span class="p">.</span><span class="n">selector</span> <span class="nf">withObject</span><span class="p">:</span><span class="n">timer</span><span class="p">.</span><span class="n">userInfo</span><span class="p">];</span>
@@ -218,14 +216,13 @@
     <span class="k">return</span> <span class="n">timerTarget</span><span class="p">.</span><span class="n">timer</span><span class="p">;</span>
 <span class="p">}</span>
 <span class="k">@end</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="四如何objc_setassociatedobject关联weak属性">四、如何objc_setAssociatedObject关联weak属性</h3>
 
 <p><code class="highlighter-rouge">OBJC_ASSOCIATION_ASSIGN</code> 不会在属性清空后将引用指针清空，这会造成野指针，所以是由风险去访问一个已经被清除的对象的。但是我们可以用另外的一种方法来关联一个weak属性，那就是强关联一个对象，然后让这个对象来弱引用这个属性。</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">WeakObjectContainer</span> <span class="p">:</span> <span class="nc">NSObject</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">WeakObjectContainer</span> <span class="p">:</span> <span class="nc">NSObject</span>
 <span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">,</span> <span class="n">weak</span><span class="p">)</span> <span class="n">id</span> <span class="n">object</span><span class="p">;</span>
 <span class="k">@end</span>
 
@@ -240,14 +237,12 @@
     <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
 <span class="p">}</span>
 <span class="k">@end</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>把WeakObjectContainer对象用OBJC_ASSOCIATION_RETAIN_NONATOMIC强关联</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">objc_setAssociatedObject</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">MyKey</span><span class="p">,</span> <span class="p">[[</span><span class="n">WeakObjectContainer</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithObject</span><span class="p">:</span><span class="n">object</span><span class="p">],</span> <span class="n">OBJC_ASSOCIATION_RETAIN_NONATOMIC</span><span class="p">);</span>
-</code></pre>
-</div>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">objc_setAssociatedObject</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">MyKey</span><span class="p">,</span> <span class="p">[[</span><span class="n">WeakObjectContainer</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithObject</span><span class="p">:</span><span class="n">object</span><span class="p">],</span> <span class="n">OBJC_ASSOCIATION_RETAIN_NONATOMIC</span><span class="p">);</span>
+</code></pre></div></div>
 
 <p>取</p>
 

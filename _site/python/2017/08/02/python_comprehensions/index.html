@@ -136,35 +136,31 @@
 
 <p>样板：</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">variable</span> <span class="o">=</span> <span class="p">[</span><span class="n">out_exp</span> <span class="k">for</span> <span class="n">out_exp</span> <span class="ow">in</span> <span class="n">input_list</span> <span class="k">if</span> <span class="n">out_exp</span> <span class="o">==</span> <span class="mi">2</span><span class="p">]</span>
-</code></pre>
-</div>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">variable</span> <span class="o">=</span> <span class="p">[</span><span class="n">out_exp</span> <span class="k">for</span> <span class="n">out_exp</span> <span class="ow">in</span> <span class="n">input_list</span> <span class="k">if</span> <span class="n">out_exp</span> <span class="o">==</span> <span class="mi">2</span><span class="p">]</span>
+</code></pre></div></div>
 
 <p>下面是一个简短的例子：</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">multiples</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">multiples</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
 <span class="k">print</span><span class="p">(</span><span class="n">multiples</span><span class="p">)</span>
 <span class="c"># Output: [0, 3, 6, 9, 12, 15, 18, 21, 24, 27]</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>这对于快速创建list非常有用。 它甚至是一些替代<code class="highlighter-rouge">filter</code>功能的首选。 列表推导真正的亮点，当你想提供一个方法或函数的列表，通过在for循环的每个迭代中附加一项来创建一个新的列表。 例如，你通常会做这样的事情：</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">squared</span> <span class="o">=</span> <span class="p">[]</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">squared</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
     <span class="n">squared</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>用推导就很简单了：</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">squared</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
-</code></pre>
-</div>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">squared</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
+</code></pre></div></div>
 
 <h4 id="dictionary-comprehensions">dictionary comprehensions</h4>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">mcase</span> <span class="o">=</span> <span class="p">{</span><span class="s">'a'</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s">'b'</span><span class="p">:</span> <span class="mi">34</span><span class="p">,</span> <span class="s">'A'</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span> <span class="s">'Z'</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mcase</span> <span class="o">=</span> <span class="p">{</span><span class="s">'a'</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s">'b'</span><span class="p">:</span> <span class="mi">34</span><span class="p">,</span> <span class="s">'A'</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span> <span class="s">'Z'</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
 
 <span class="n">mcase_frequency</span> <span class="o">=</span> <span class="p">{</span>
     <span class="n">k</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span> <span class="n">mcase</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">mcase</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="mi">0</span><span class="p">)</span>
@@ -172,22 +168,19 @@
 <span class="p">}</span>
 
 <span class="c"># mcase_frequency == {'a': 17, 'z': 3, 'b': 34}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>在上面的例子中，我们把key相同但是类型不同的联合到一起，可以有更快的方式</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="err">v:</span><span class="w"> </span><span class="err">k</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="err">k,</span><span class="w"> </span><span class="err">v</span><span class="w"> </span><span class="err">in</span><span class="w"> </span><span class="err">some_dict.items()</span><span class="p">}</span><span class="w">
-</span></code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{v: k for k, v in some_dict.items()}
+</code></pre></div></div>
 
 <h4 id="set-comprehensions">set comprehensions</h4>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">squared</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]}</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">squared</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]}</span>
 <span class="k">print</span><span class="p">(</span><span class="n">squared</span><span class="p">)</span>
 <span class="c"># Output: {1, 4}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 
 

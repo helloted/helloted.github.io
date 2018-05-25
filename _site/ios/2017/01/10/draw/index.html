@@ -177,13 +177,12 @@
 
 <p>注意要显式调用[view.layer setNeedsDisplay]这个方法才起作用</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx{
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx{
     CGContextAddEllipseInRect(ctx, CGRectMake(100,100,100,100));
     CGContextSetFillColorWithColor(ctx, [UIColor orangeColor].CGColor);
     CGContextFillPath(ctx);
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>或者</p>
 
@@ -249,13 +248,12 @@
 
 <h4 id="1cgcontextsavegstatecgcontextrestoregstate">1、CGContextSaveGState/CGContextRestoreGState</h4>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>[[UIColor redColor] setStroke]; //画笔红色
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[[UIColor redColor] setStroke]; //画笔红色
 CGContextSaveGState(UIGraphicsGetCurrentContext()); //记录上下文的当前状态
 [[UIColor blackColor] setStroke]; //画笔黑色
 CGContextRestoreGState(UIGraphicsGetCurrentContext()); //恢复之前记录的上下文状态
 UIRectFill(CGRectMake(10, 10, 100, 100)); //绘制红色矩形
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="2uigraphicspushcontextuigraphicspopcontext">2、UIGraphicsPushContext/UIGraphicsPopContext</h4>
 
@@ -266,15 +264,14 @@ UIRectFill(CGRectMake(10, 10, 100, 100)); //绘制红色矩形
   <li>使用UIGraphicsPopContext恢复之前的绘图context，继续使用CoreGraphics绘制图形A。</li>
 </ol>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx{
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx{
     UIGraphicsPushContext(ctx);
     UIBezierPath* p = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(100,100,100,100)];
     [[UIColor orangeColor] setFill];
     [p fill];
     UIGraphicsPopContext();
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="3uigraphicsbeginimagecontextuigraphicsendimagecontext">3、UIGraphicsBeginImageContext/UIGraphicsEndImageContext</h4>
 
@@ -287,15 +284,14 @@ UIRectFill(CGRectMake(10, 10, 100, 100)); //绘制红色矩形
   <li>结束绘制图形B之后，使用UIGraphicsEndImageContext恢复到之前的绘图context，继续绘制图形A。</li>
 </ol>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>// 绘图中
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// 绘图中
 UIGraphicsBeginImageContext(CGSizeMake(200, 200));
 [self.view drawViewHierarchyInRect:self.view.bounds afterScreenUpdates:YES];
 UIImage *snapshot = UIGraphicsGetImageFromCurrentImageContext();
 UIGraphicsEndImageContext();
 imageView.image = snapshot;
 // 继续绘图
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="四calayer与uiview">四、CALayer与UIView</h3>
 

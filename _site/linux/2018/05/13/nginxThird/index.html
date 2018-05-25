@@ -126,9 +126,8 @@
 
 <h4 id="1查看版本和已经安装模块">1、查看版本和已经安装模块</h4>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>nginx -V
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nginx -V
+</code></pre></div></div>
 
 <p>可以查看当前版本信息和已经安装的模块</p>
 
@@ -136,76 +135,66 @@
 
 <h4 id="2下载对应版本的的nginx源码">2、下载对应版本的的nginx源码</h4>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>cd /opt
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd /opt
+</code></pre></div></div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>wget http://nginx.org/download/nginx-1.12.1.tar.gz
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget http://nginx.org/download/nginx-1.12.1.tar.gz
+</code></pre></div></div>
 
 <h4 id="3下载应的第三方模块">3、下载应的第三方模块</h4>
 
 <p>以ngx-fancyindex为例</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>git clone https://github.com/aperezdc/ngx-fancyindex.git ngx-fancyindex
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/aperezdc/ngx-fancyindex.git ngx-fancyindex
+</code></pre></div></div>
 
 <h4 id="4查看对应的configure">4、查看对应的configure</h4>
 
 <p>解压nginx源码</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>tar xf nginx-1.12.2.tar.gz
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tar xf nginx-1.12.2.tar.gz
+</code></pre></div></div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>cd nginx-1.12.2
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd nginx-1.12.2
+</code></pre></div></div>
 
 <h4 id="5添加对应的模块">5、添加对应的模块</h4>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>./configure --prefix=/etc/nginx \
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./configure --prefix=/etc/nginx \
             --sbin-path=/usr/sbin/nginx \
             --conf-path=/etc/nginx/nginx.conf \
             ...
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>注意，这里可以copy之前对应的配置</p>
 
 <p>添加命令</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>--add-module=../ngx-fancyindex
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>--add-module=../ngx-fancyindex
+</code></pre></div></div>
 
 <p><code class="highlighter-rouge">../ngx-fancyindex</code>是模块下载的位置</p>
 
 <p>所以整体的命令应该是</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>./configure --prefix=/etc/nginx \
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./configure --prefix=/etc/nginx \
             --sbin-path=/usr/sbin/nginx \
             --conf-path=/etc/nginx/nginx.conf \
             ...
             --add-module=../ngx-fancyindex
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="6编译">6、编译</h4>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>make <span class="o">&amp;&amp;</span> make install
-</code></pre>
-</div>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make <span class="o">&amp;&amp;</span> make <span class="nb">install</span>
+</code></pre></div></div>
 
 <h4 id="7备份替换">7、备份替换</h4>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code>cp /usr/sbin/nginx /usr/sbin/nginx.bak <span class="c">#备份</span>
-cp /opt/nginx-1.12.1/objs/nginx /usr/sbin/nginx <span class="c">#替换</span>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cp</span> /usr/sbin/nginx /usr/sbin/nginx.bak <span class="c">#备份</span>
+<span class="nb">cp</span> /opt/nginx-1.12.1/objs/nginx /usr/sbin/nginx <span class="c">#替换</span>
 systemctl restart nginx <span class="c">#重启 nginx 服务</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 
 
@@ -217,6 +206,10 @@ systemctl restart nginx <span class="c">#重启 nginx 服务</span>
                         <a href="/%E7%9B%B4%E6%92%AD/2018/05/08/h264toflv/" data-toggle="tooltip" data-placement="top" title="H.264封装成FLV">&larr; 上一篇</a>
                     </li>
                     
+                    
+                    <li class="next">
+                        <a href="/%E5%B7%A5%E5%85%B7/2018/05/13/cocoapod/" data-toggle="tooltip" data-placement="top" title="发布库到cocoapod">下一篇 &rarr;</a>
+                    </li>
                     
                 </ul>
 

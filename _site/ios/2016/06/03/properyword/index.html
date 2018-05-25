@@ -192,23 +192,22 @@
   <li>是一个默认的属性关键字</li>
 </ul>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">var</span><span class="p">;</span>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@property (copy, nonatomic) NSString *var;
  
-<span class="o">------------------</span><span class="err">等效分割线</span><span class="o">------------------</span>
-<span class="k">@synthesize</span> <span class="n">var</span><span class="p">;</span> 
-<span class="k">-</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">var</span> <span class="p">{</span>
-	  <span class="k">@synchronized</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n">_var</span><span class="p">;</span>
-	  <span class="p">}</span>   
-<span class="p">}</span>
+------------------等效分割线------------------
+@synthesize var; 
+- (NSString *)var {
+	  @synchronized(self) {
+        return _var;
+	  }   
+}
  
-<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">setVar</span><span class="o">:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">var</span> <span class="p">{</span>
-	<span class="k">@synchronized</span><span class="p">(</span><span class="n">self</span><span class="p">){</span>
-      <span class="n">_var</span> <span class="o">=</span> <span class="n">var</span><span class="p">;</span>
-	<span class="p">}</span>   
-<span class="p">}</span>
-</code></pre>
-</div>
+- (void)setVar:(NSString *)var {
+	@synchronized(self){
+      _var = var;
+	}   
+}
+</code></pre></div></div>
 
 <h4 id="nonatomic">nonatomic</h4>
 
@@ -245,13 +244,12 @@
   <li>与Strong区别在于，只要有一个Strong指针指向该对象，则不会被释放，但是如果只有weak指针指向，无论多少weak，依旧会被释放</li>
 </ul>
 
-<div class="highlighter-rouge"><pre class="highlight"><code> <span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">str</span><span class="p">;</span>   
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> @property (nonatomic, strong) NSString *str;   
  
- <span class="n">NSString</span> <span class="o">*</span><span class="n">first</span> <span class="o">=</span> <span class="s">@"Hello"</span><span class="p">;</span>
- <span class="n">self</span><span class="p">.</span><span class="n">str</span>  <span class="o">=</span> <span class="n">first</span><span class="p">;</span>
- <span class="n">first</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
-</code></pre>
-</div>
+ NSString *first = @"Hello";
+ self.str  = first;
+ first = nil;
+</code></pre></div></div>
 
 <p>代码解释，first是强指针引用，之后str也指向”Hello”这个内存，</p>
 
@@ -263,11 +261,10 @@
   <p>weak指针置为nil?</p>
 </blockquote>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="err">id</span><span class="w"> </span><span class="err">__weak</span><span class="w"> </span><span class="err">obj_weak</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">obj;//obj已被赋值。而且是strong类型的</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+    id __weak obj_weak = obj;//obj已被赋值。而且是strong类型的
+}
+</code></pre></div></div>
 
 <p>Runtime维护了一个Weak表，用于存储指向某个对象的所有Weak指针。Weak表其实是一个哈希表，objc_storeWeak函数以把obj的地址作为键值，obj_weak的地址作为值存放到weak表（weak是一个hash表）中。</p>
 
@@ -304,7 +301,7 @@
 
 <p>先看一下区别</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>    for (int i = 0; i &lt; 10; i ++) {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    for (int i = 0; i &lt; 10; i ++) {
         int a = 0;    
         a ++;    //打印结果
         NSLog(@"a=%d",a);
@@ -315,12 +312,11 @@
     a = 1
     a = 1
     ...
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>加Static关键字</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>    for (int i = 0; i &lt; 10; i ++) {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    for (int i = 0; i &lt; 10; i ++) {
         int static a = 0;    
         a ++;    //打印结果
         NSLog(@"a=%d",a);
@@ -331,14 +327,13 @@
     a = 2
     a = 3
     ...
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <blockquote>
   <p>使全局变量的作用域仅限于当前文件内部，即当前文件内部才能访问该全局变量。</p>
 </blockquote>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>+ (SingleObject *)sharedSingleton{
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+ (SingleObject *)sharedSingleton{
     static SingleObject *_singleObj = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&amp;onceToken, ^{
@@ -346,37 +341,33 @@
     });
     return _singleObj;
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="2const">2、Const</h4>
 
 <p>（1 const用来修饰右边的基本变量或指针变量
 （2 被修饰的变量只读，不能被修改</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>int  const  *p   //  *p只读 ;p变量
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int  const  *p   //  *p只读 ;p变量
 int  * const  p  // *p变量 ; p只读
 const  int   * const p //p和*p都只读
 int  const  * const  p   //p和*p都只读
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="3extern">3、extern</h4>
 
 <p>我们可以在.h文件中extern声明一些全局的常量</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>.h声明一些全局常量
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>.h声明一些全局常量
 extern NSString * const name;extern NSInteger const count;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>然后在.m文件中去实现</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>.m实现
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>.m实现
 NSString *const name = @"helloted";
 NSInteger const count = 6;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>这样，只要导入头文件，就可以全局的使用定义的变量或常量。</p>
 

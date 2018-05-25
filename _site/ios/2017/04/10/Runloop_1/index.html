@@ -225,7 +225,7 @@
   <li>
     <p>Cocoa框架为我们定义了一些Custom Input Sources，允许我们在线程中执行一系列selector方法，这些在NSThread类里面。和Port-Based Sources一样，这些selector的请求会在目标线程中序列化，以减缓线程中多个方法执行带来的同步问题。和Port-Based Sources不一样的是，一个selector方法执行完之后会自动从当前Run Loop中移除。</p>
 
-    <div class="highlighter-rouge"><pre class="highlight"><code>performSelectorOnMainThread:withObject:waitUntilDone:
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>performSelectorOnMainThread:withObject:waitUntilDone:
 performSelectorOnMainThread:withObject:waitUntilDone:modes:
 
 performSelector:onThread:withObject:waitUntilDone:
@@ -236,8 +236,7 @@ performSelector:withObject:afterDelay:inModes:
 
 cancelPreviousPerformRequestsWithTarget:
 cancelPreviousPerformRequestsWithTarget:selector:object:
-</code></pre>
-    </div>
+</code></pre></div>    </div>
   </li>
 </ul>
 
@@ -567,7 +566,7 @@ cancelPreviousPerformRequestsWithTarget:selector:object:
 
 <h4 id="runloop框架">Runloop框架</h4>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (void)skeletonThreadMain
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)skeletonThreadMain
 {
     // Set up an autorelease pool here if not using garbage collection.
     BOOL done = NO;
@@ -591,8 +590,7 @@ cancelPreviousPerformRequestsWithTarget:selector:object:
  
     // Clean up code here. Be sure to release any allocated autorelease pools.
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <blockquote>
   <p>The key portion of this example shows the basic structure of a run loop. In essence, you add your input sources and timers to the run loop and then repeatedly call one of the routines to start the run loop. Each time the run loop routine returns, you check to see if any conditions have arisen that might warrant exiting the thread.</p>

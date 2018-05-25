@@ -126,9 +126,8 @@
 
 <p><a href="https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/KeyValueCoding/CollectionOperators.html#//apple_ref/doc/uid/20002176-BAJEAIEE">苹果官方文档</a></p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">NSNumber</span> <span class="o">*</span><span class="n">transactionAverage</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">transactions</span> <span class="nf">valueForKeyPath</span><span class="p">:</span><span class="s">@"@avg.amount"</span><span class="p">];</span>
-</code></pre>
-</div>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">NSNumber</span> <span class="o">*</span><span class="n">transactionAverage</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">transactions</span> <span class="nf">valueForKeyPath</span><span class="p">:</span><span class="s">@"@avg.amount"</span><span class="p">];</span>
+</code></pre></div></div>
 
 <p>当你发送符合键值的对象<code class="highlighter-rouge">valueForKeyPath：</code>消息时，可以在key path中嵌入一个集合运算符。 一个集合运算符是一个小的关键字列表之一，前面有一个符号（@），它指定了getter在返回之前以某种方式对数据进行处理。NSObject提供的<code class="highlighter-rouge">valueForKeyPath</code>默认实现实现了这种行为。</p>
 
@@ -150,16 +149,15 @@
 
 <p>有一个简单实例</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">Transaction</span> <span class="p">:</span> <span class="nc">NSObject</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">Transaction</span> <span class="p">:</span> <span class="nc">NSObject</span>
  
-<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSString</span><span class="o">*</span> <span class="n">payee</span><span class="p">;</span>   <span class="c1">// To whom
-</span><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSNumber</span><span class="o">*</span> <span class="n">amount</span><span class="p">;</span>  <span class="c1">// How much
-</span><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSDate</span><span class="o">*</span> <span class="n">date</span><span class="p">;</span>      <span class="c1">// When
-</span> 
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSString</span><span class="o">*</span> <span class="n">payee</span><span class="p">;</span>   <span class="c1">// To whom</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSNumber</span><span class="o">*</span> <span class="n">amount</span><span class="p">;</span>  <span class="c1">// How much</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSDate</span><span class="o">*</span> <span class="n">date</span><span class="p">;</span>      <span class="c1">// When</span>
+ 
 <span class="k">@end</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>有一个数组self.transactions包含了一些对象的数据</p>
 
@@ -242,41 +240,36 @@
 
 <h4 id="avg求某个属性平均值">@avg求某个属性平均值</h4>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>NSNumber *transactionAverage = [self.transactions valueForKeyPath:@"@avg.amount"];
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSNumber *transactionAverage = [self.transactions valueForKeyPath:@"@avg.amount"];
+</code></pre></div></div>
 
 <p>这个可以求得<code class="highlighter-rouge">amount</code>属性的平均值</p>
 
 <h4 id="count集合里对象的数量">@count集合里对象的数量</h4>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>NSNumber *numberOfTransactions = [self.transactions valueForKeyPath:@"@count"];
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSNumber *numberOfTransactions = [self.transactions valueForKeyPath:@"@count"];
+</code></pre></div></div>
 
 <p>可以求得集合里对象的总数量</p>
 
 <h4 id="max某个属性的最大值">@max某个属性的最大值</h4>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>NSDate *latestDate = [self.transactions valueForKeyPath:@"@max.date"];
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSDate *latestDate = [self.transactions valueForKeyPath:@"@max.date"];
+</code></pre></div></div>
 
 <p>可以得到<code class="highlighter-rouge">date</code>这个属性的最大值</p>
 
 <h4 id="min某个属性的最小值">@min某个属性的最小值</h4>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>NSDate *earliestDate = [self.transactions valueForKeyPath:@"@min.date"];
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSDate *earliestDate = [self.transactions valueForKeyPath:@"@min.date"];
+</code></pre></div></div>
 
 <p>可以得到<code class="highlighter-rouge">date</code>这个属性的最小值</p>
 
 <h4 id="sum某个属性的总和">@sum某个属性的总和</h4>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>NSNumber *amountSum = [self.transactions valueForKeyPath:@"@sum.amount"];
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSNumber *amountSum = [self.transactions valueForKeyPath:@"@sum.amount"];
+</code></pre></div></div>
 
 <p>可以得到<code class="highlighter-rouge">amount</code>这个属性的总和</p>
 
@@ -290,17 +283,15 @@
 
 <h4 id="distinctunionofobjects-某个属性的值的数组去重">@distinctUnionOfObjects 某个属性的值的数组（去重）</h4>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>NSArray *distinctPayees = [self.transactions valueForKeyPath:@"@distinctUnionOfObjects.payee"];
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSArray *distinctPayees = [self.transactions valueForKeyPath:@"@distinctUnionOfObjects.payee"];
+</code></pre></div></div>
 
 <p>会得到payee这个属性的的值，里面的值会去重</p>
 
 <h4 id="unionofobjects某个属性的所有值的数组未去重">@unionOfObjects某个属性的所有值的数组（未去重）</h4>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>NSArray *payees = [self.transactions valueForKeyPath:@"@unionOfObjects.payee"];
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSArray *payees = [self.transactions valueForKeyPath:@"@unionOfObjects.payee"];
+</code></pre></div></div>
 
 <p>会得到payee这个属性的的值，与上面那个不一样，里面的值不会去重</p>
 
@@ -320,16 +311,14 @@
 
 <p>我们增加一个数组进行嵌套</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>NSArray* moreTransactions = @[&lt;# transaction data #&gt;];
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSArray* moreTransactions = @[&lt;# transaction data #&gt;];
 NSArray* arrayOfArrays = @[self.transactions, moreTransactions];
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="distinctunionofarrays-返回某个属性不同值">@distinctUnionOfArrays 返回某个属性不同值</h4>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>NSArray *collectedDistinctPayees = [arrayOfArrays valueForKeyPath:@"@distinctUnionOfArrays.payee"];
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSArray *collectedDistinctPayees = [arrayOfArrays valueForKeyPath:@"@distinctUnionOfArrays.payee"];
+</code></pre></div></div>
 
 <p>会返回两个数组里payee属性不同的值，与 <code class="highlighter-rouge">@unionOfArrays</code>类似，但是不会去重。</p>
 
@@ -337,9 +326,8 @@ NSArray* arrayOfArrays = @[self.transactions, moreTransactions];
 
 <h4 id="unionofarrays-返回某个属性所有的值">@unionOfArrays 返回某个属性所有的值</h4>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>NSArray *collectedPayees = [arrayOfArrays valueForKeyPath:@"@unionOfArrays.payee"];
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSArray *collectedPayees = [arrayOfArrays valueForKeyPath:@"@unionOfArrays.payee"];
+</code></pre></div></div>
 
 <p>返回两个数组里payee属性所有的值，且不去重</p>
 

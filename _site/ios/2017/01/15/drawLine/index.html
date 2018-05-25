@@ -126,25 +126,23 @@
 
 <h4 id="1创建cashaperlayer">1、创建CAShaperLayer</h4>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code>    <span class="c1">//创建出CAShapeLayer
-</span>    <span class="n">_shapeLayer</span> <span class="o">=</span> <span class="p">[</span><span class="n">CAShapeLayer</span> <span class="nf">layer</span><span class="p">];</span>
-    <span class="n">_shapeLayer</span><span class="p">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="n">bounds</span><span class="p">;</span><span class="c1">//设置shapeLayer的尺寸和位置
-</span>    <span class="n">_shapeLayer</span><span class="p">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="n">center</span><span class="p">;</span>
-    <span class="n">_shapeLayer</span><span class="p">.</span><span class="n">fillColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="nf">clearColor</span><span class="p">].</span><span class="n">CGColor</span><span class="p">;</span><span class="c1">//填充颜色为ClearColor
-</span></code></pre>
-</div>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">//创建出CAShapeLayer</span>
+    <span class="n">_shapeLayer</span> <span class="o">=</span> <span class="p">[</span><span class="n">CAShapeLayer</span> <span class="nf">layer</span><span class="p">];</span>
+    <span class="n">_shapeLayer</span><span class="p">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="n">bounds</span><span class="p">;</span><span class="c1">//设置shapeLayer的尺寸和位置</span>
+    <span class="n">_shapeLayer</span><span class="p">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="n">center</span><span class="p">;</span>
+    <span class="n">_shapeLayer</span><span class="p">.</span><span class="n">fillColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="nf">clearColor</span><span class="p">].</span><span class="n">CGColor</span><span class="p">;</span><span class="c1">//填充颜色为ClearColor</span>
+</code></pre></div></div>
 
 <h4 id="2定义线条">2、定义线条</h4>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code>    <span class="c1">//设置线条的宽度和颜色
-</span>    <span class="n">_shapeLayer</span><span class="p">.</span><span class="n">lineWidth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">;</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">//设置线条的宽度和颜色</span>
+    <span class="n">_shapeLayer</span><span class="p">.</span><span class="n">lineWidth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">;</span>
     <span class="n">_shapeLayer</span><span class="p">.</span><span class="n">strokeColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="nf">redColor</span><span class="p">].</span><span class="n">CGColor</span><span class="p">;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="3设置线条路径">3、设置线条路径</h4>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code>    <span class="n">CGPoint</span> <span class="n">point_1</span> <span class="o">=</span> <span class="n">CGPointMake</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="n">CGPoint</span> <span class="n">point_1</span> <span class="o">=</span> <span class="n">CGPointMake</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span>
     <span class="n">CGPoint</span> <span class="n">point_2</span> <span class="o">=</span> <span class="n">CGPointMake</span><span class="p">(</span><span class="mi">120</span><span class="p">,</span> <span class="mi">150</span><span class="p">);</span>
     <span class="n">CGPoint</span> <span class="n">point_3</span> <span class="o">=</span> <span class="n">CGPointMake</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">);</span>
     <span class="n">NSMutableArray</span> <span class="o">*</span><span class="n">array</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSMutableArray</span> <span class="nf">arrayWithObjects</span><span class="p">:</span><span class="err">@</span><span class="p">(</span><span class="n">point_1</span><span class="p">),</span><span class="err">@</span><span class="p">(</span><span class="n">point_2</span><span class="p">),</span><span class="err">@</span><span class="p">(</span><span class="n">point_3</span><span class="p">),</span> <span class="nb">nil</span><span class="p">];</span>
@@ -158,19 +156,17 @@
                                        <span class="p">[</span><span class="n">path</span> <span class="nf">addLineToPoint</span><span class="p">:[</span><span class="n">pointValue</span> <span class="nf">CGPointValue</span><span class="p">]];</span>
                                    <span class="p">}];</span>
     <span class="n">path</span><span class="p">.</span><span class="n">usesEvenOddFillRule</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="4添加动画">4、添加动画</h4>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code>    <span class="c1">//创建动画
-</span>    <span class="n">CABasicAnimation</span> <span class="o">*</span><span class="n">animation</span> <span class="o">=</span> <span class="p">[</span><span class="n">CABasicAnimation</span> <span class="nf">animationWithKeyPath</span><span class="p">:</span><span class="n">NSStringFromSelector</span><span class="p">(</span><span class="k">@selector</span><span class="p">(</span><span class="n">strokeEnd</span><span class="p">))];</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">//创建动画</span>
+    <span class="n">CABasicAnimation</span> <span class="o">*</span><span class="n">animation</span> <span class="o">=</span> <span class="p">[</span><span class="n">CABasicAnimation</span> <span class="nf">animationWithKeyPath</span><span class="p">:</span><span class="n">NSStringFromSelector</span><span class="p">(</span><span class="k">@selector</span><span class="p">(</span><span class="n">strokeEnd</span><span class="p">))];</span>
     <span class="n">animation</span><span class="p">.</span><span class="n">fromValue</span> <span class="o">=</span> <span class="mf">@0.0</span><span class="p">;</span>
     <span class="n">animation</span><span class="p">.</span><span class="n">toValue</span> <span class="o">=</span> <span class="mf">@1.0</span><span class="p">;</span>
-    <span class="n">animation</span><span class="p">.</span><span class="n">duration</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span><span class="c1">//动画时间;
-</span>    <span class="p">[</span><span class="n">_shapeLayer</span> <span class="nf">addAnimation</span><span class="p">:</span><span class="n">animation</span> <span class="nf">forKey</span><span class="p">:</span><span class="n">NSStringFromSelector</span><span class="p">(</span><span class="k">@selector</span><span class="p">(</span><span class="n">strokeEnd</span><span class="p">))];</span>
-</code></pre>
-</div>
+    <span class="n">animation</span><span class="p">.</span><span class="n">duration</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span><span class="c1">//动画时间;</span>
+    <span class="p">[</span><span class="n">_shapeLayer</span> <span class="nf">addAnimation</span><span class="p">:</span><span class="n">animation</span> <span class="nf">forKey</span><span class="p">:</span><span class="n">NSStringFromSelector</span><span class="p">(</span><span class="k">@selector</span><span class="p">(</span><span class="n">strokeEnd</span><span class="p">))];</span>
+</code></pre></div></div>
 
 <h4 id="5效果">5、效果</h4>
 
@@ -178,14 +174,13 @@
 
 <h3 id="二平滑曲线">二、平滑曲线</h3>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code>    <span class="n">UIBezierPath</span><span class="o">*</span> <span class="n">aPath</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIBezierPath</span> <span class="nf">bezierPath</span><span class="p">];</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="n">UIBezierPath</span><span class="o">*</span> <span class="n">aPath</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIBezierPath</span> <span class="nf">bezierPath</span><span class="p">];</span>
     <span class="n">aPath</span><span class="p">.</span><span class="n">lineWidth</span> <span class="o">=</span> <span class="mi">5</span><span class="p">.</span><span class="mi">0</span><span class="p">;</span>
-    <span class="n">aPath</span><span class="p">.</span><span class="n">lineCapStyle</span> <span class="o">=</span> <span class="n">kCGLineCapRound</span><span class="p">;</span> <span class="c1">//线条拐角
-</span>    <span class="n">aPath</span><span class="p">.</span><span class="n">lineJoinStyle</span> <span class="o">=</span> <span class="n">kCGLineCapRound</span><span class="p">;</span> <span class="c1">//终点处理
-</span>    <span class="p">[</span><span class="n">aPath</span> <span class="nf">moveToPoint</span><span class="p">:</span><span class="n">CGPointMake</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">)];</span>
+    <span class="n">aPath</span><span class="p">.</span><span class="n">lineCapStyle</span> <span class="o">=</span> <span class="n">kCGLineCapRound</span><span class="p">;</span> <span class="c1">//线条拐角</span>
+    <span class="n">aPath</span><span class="p">.</span><span class="n">lineJoinStyle</span> <span class="o">=</span> <span class="n">kCGLineCapRound</span><span class="p">;</span> <span class="c1">//终点处理</span>
+    <span class="p">[</span><span class="n">aPath</span> <span class="nf">moveToPoint</span><span class="p">:</span><span class="n">CGPointMake</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">)];</span>
     <span class="p">[</span><span class="n">aPath</span> <span class="nf">addCurveToPoint</span><span class="p">:</span><span class="n">CGPointMake</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span> <span class="nf">controlPoint1</span><span class="p">:</span><span class="n">CGPointMake</span><span class="p">(</span><span class="mi">110</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="n">controlPoint2</span><span class="o">:</span><span class="n">CGPointMake</span><span class="p">(</span><span class="mi">110</span><span class="p">,</span> <span class="mi">100</span><span class="p">)];</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><img src="/img/draw/05.png" alt="img" /></p>
 

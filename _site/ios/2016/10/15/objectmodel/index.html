@@ -133,7 +133,7 @@
 
 <p>alloc与init发生了什么呢？</p>
 
-<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="o">+</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">alloc</span> <span class="p">{</span>
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">+</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">alloc</span> <span class="p">{</span>
     <span class="k">return</span> <span class="n">_objc_rootAlloc</span><span class="p">(</span><span class="n">self</span><span class="p">);</span>
 <span class="p">}</span>
 
@@ -162,23 +162,21 @@
 
     <span class="k">return</span> <span class="n">obj</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>可以看出，alloc类方法是开辟了一块内存，生成了一个实例对象，并且对实例对象进行了初始化</p>
 
-<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="o">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">init</span> <span class="p">{</span>
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">init</span> <span class="p">{</span>
     <span class="k">return</span> <span class="n">_objc_rootInit</span><span class="p">(</span><span class="n">self</span><span class="p">);</span>
 <span class="p">}</span>
 
 <span class="n">id</span> <span class="n">_objc_rootInit</span><span class="p">(</span><span class="n">id</span> <span class="n">obj</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="c1">// In practice, it will be hard to rely on this function.
-</span>    <span class="c1">// Many classes do not properly chain -init calls.
-</span>    <span class="k">return</span> <span class="n">obj</span><span class="p">;</span>
+    <span class="c1">// In practice, it will be hard to rely on this function.</span>
+    <span class="c1">// Many classes do not properly chain -init calls.</span>
+    <span class="k">return</span> <span class="n">obj</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>init方法只是返回了该实例对象</p>
 
@@ -221,7 +219,7 @@
   <p>objc_class</p>
 </blockquote>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>struct objc_class {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct objc_class {
     Class isa;
 
 #if !__OBJC2__
@@ -236,8 +234,7 @@
     struct objc_protocol_list *protocols                     OBJC2_UNAVAILABLE;
 #endif
 } OBJC2_UNAVAILABLE;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>isa指针指向哪里？</p>
 
@@ -321,22 +318,20 @@
 
 <p>经典题目</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>BOOL res1 = [(id)[NSObject class] isKindOfClass:[NSObject class]]; //YES
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>BOOL res1 = [(id)[NSObject class] isKindOfClass:[NSObject class]]; //YES
 BOOL res2 = [(id)[NSObject class] isMemberOfClass:[NSObject class]]; //NO
 BOOL res3 = [(id)[Sark class] isKindOfClass:[Sark class]]; //NO
 BOOL res4 = [(id)[Sark class] isMemberOfClass:[Sark class]]; //NO
-</code></pre>
-</div>
+</code></pre></div></div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>NSObject = [NSObject class]
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSObject = [NSObject class]
 [NSObject isMemberOfClass:NSObject]?
 题目变成：
 object_getClass(NSObject)==NSObject?
 metat_NSObject = object_getClass(NSObject) 
 所以最终题目转化为
 metat_NSObject != NSObject?  ==&gt; NO;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="四kvo与kvc">四、KVO与KVC</h3>
 
@@ -398,17 +393,15 @@ valueForUndefinedKey 默认实现是抛出异常，可重写这个函数做错�
 
 <p>isa指针（is kind of 的意思）指向维护分发表的对象的类，该分发表实际上包含了指向实现类中的方法的指针和其他数据。比如说如下的一行KVC代码：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>[site setValue:@"sitename" forKey:@"name"];
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[site setValue:@"sitename" forKey:@"name"];
+</code></pre></div></div>
 
 <p>//会被编译器处理成</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>SEL sel = sel_get_uid(setValue:forKey);
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SEL sel = sel_get_uid(setValue:forKey);
 IMP method = objc_msg_loopup(site-&gt;isa,sel);
 method(site,sel,@"sitename",@"name");
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>每个类都有一张方法表，是一个hash表，值是还书指针IMP，SEL的名称就是查表时所用的键。</p>
 
@@ -448,22 +441,20 @@ There’s anotherimportant keyword available to you in Objective-C, called super
 
 <p>但是底层原理呢？我们知道，OC的消息转发机制，当self时，方法转换成</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>id objc_msgSend(id receiver, SEL theSelector, ...)
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>id objc_msgSend(id receiver, SEL theSelector, ...)
+</code></pre></div></div>
 
 <p>​	objc_msgSend sends a message with a simple return value to an instance of a class</p>
 
 <p>而super关键字调用方法则转换成</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>id objc_msgSendSuper(struct objc_super *super, SEL op, ...)
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>id objc_msgSendSuper(struct objc_super *super, SEL op, ...)
 
 struct objc_super {
   id receiver;
   Class superClass;
 };
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>​	objc_msgSendSuper sends a message with a simple return value to the superclass of an instance of a class.</p>
 
@@ -471,11 +462,10 @@ struct objc_super {
 
 <p>objc_msgSend与objc_msgSendSuperd都去查找class的Seletor，一直查到NSObject类才查到class方法</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (Class)class {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (Class)class {
     return object_getClass(self);
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>也就是说，最终都是调用的receiver也就是son，获取到了Class.</p>
 
@@ -489,33 +479,31 @@ struct objc_super {
 
 <p>所以标准的初始化代码</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (id)init {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (id)init {
     if (self = [super init]) { // equivalent to "self does not equal nil"
         self ...
     }
     return self;
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="六属性与变量property--instance-variable">六、属性与变量(property &amp; instance variable)</h3>
 
 <p>在ios5以后我们使用@property来声明属性变量，编译器会自动(@syntheszie var = _var)为我们生成对应的一个以下 划线加属性名 命名的实例变量，还有其对应的getter、setter</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">var</span><span class="p">;</span>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@property (copy, nonatomic) NSString *var;
  
-<span class="o">------------------</span><span class="err">等效分割线</span><span class="o">------------------</span>
-<span class="n">NSString</span> <span class="o">*</span><span class="n">_var</span><span class="p">;</span>
+------------------等效分割线------------------
+NSString *_var;
  
-<span class="k">-</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">var</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="n">_var</span><span class="p">;</span>
-<span class="p">}</span>
+- (NSString *)var {
+    return _var;
+}
  
-<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">setVar</span><span class="o">:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">var</span> <span class="p">{</span>
-    <span class="n">_var</span> <span class="o">=</span> <span class="n">var</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre>
-</div>
+- (void)setVar:(NSString *)var {
+    _var = var;
+}
+</code></pre></div></div>
 
 <p>这样一来我们就可以看出通过self.var和_var访问实例变量的区别，在.m文件中可以通过_var来访问实例变量，但是getter、setter不会被调用，而来自外部的访问，需要通过getter、setter。</p>
 

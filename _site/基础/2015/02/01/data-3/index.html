@@ -140,7 +140,7 @@
 
 <p>核心思想：每一循环，都能找到基准位置对应的数(第1小，第2小)。</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">bubbling_sor</span><span class="p">(</span><span class="n">orgin_list</span><span class="p">):</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">bubbling_sor</span><span class="p">(</span><span class="n">orgin_list</span><span class="p">):</span>
     <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">orgin_list</span><span class="p">)</span>
     <span class="n">temp</span> <span class="o">=</span> <span class="mi">0</span>
 
@@ -152,8 +152,7 @@
             <span class="k">if</span> <span class="n">orgin_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">orgin_list</span><span class="p">[</span><span class="n">j</span><span class="p">]:</span>
                 <span class="n">orgin_list</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">orgin_list</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">orgin_list</span><span class="p">[</span><span class="n">j</span><span class="p">],</span><span class="n">orgin_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">orgin_list</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="二交换排序二快速排序填坑排序分治排序">二、交换排序(二)：快速排序(填坑排序、分治排序)</h3>
 
@@ -169,7 +168,7 @@
 
 <p>5、对左边和右边分别进行递归。</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">quick_sort</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">left</span><span class="p">,</span><span class="n">right</span><span class="p">):</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">def</span> <span class="nf">quick_sort</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">left</span><span class="p">,</span><span class="n">right</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">left</span> <span class="o">&lt;</span> <span class="n">right</span><span class="p">:</span>
             <span class="n">i</span> <span class="o">=</span> <span class="n">left</span>
             <span class="n">j</span> <span class="o">=</span> <span class="n">right</span>
@@ -201,14 +200,13 @@
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
     <span class="n">orgin</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">]</span>
     <span class="n">quick_sort</span><span class="p">(</span><span class="n">orgin</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">orgin</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="三插入排序一直接插入排序">三、插入排序(一)：直接插入排序</h3>
 
 <p><strong>基本思想：</strong>将待排序的无序数列看成是一个仅含有一个元素的有序数列和一个无序数列，将无序数列中的元素逐次插入到有序数列中，从而获得最终的有序数列。</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">insert_sort</span><span class="p">(</span><span class="n">orgin_list</span><span class="p">):</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">insert_sort</span><span class="p">(</span><span class="n">orgin_list</span><span class="p">):</span>
     <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">orgin_list</span><span class="p">)</span>
     <span class="c"># 从list[0]开始遍历，进行外循环，list[i]作为基准位置比较数</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
@@ -218,8 +216,7 @@
                 <span class="k">break</span>
             <span class="n">orgin_list</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">orgin_list</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">orgin_list</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">orgin_list</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">orgin_list</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="四插入排序二希尔排序">四、插入排序(二)：希尔排序</h3>
 
@@ -242,7 +239,7 @@
 
 <p><strong>基本思想：</strong>在要排序的一组数中，选出最小（或者最大）的一个数与第1个位置的数交换；然后在剩下的数当中再找最小（或者最大）的与第2个位置的数交换，依次类推，直到第n-1个元素（倒数第二个数）和第n个元素（最后一个数）比较为止。</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">select_sort</span><span class="p">(</span><span class="n">orgin_list</span><span class="p">):</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">select_sort</span><span class="p">(</span><span class="n">orgin_list</span><span class="p">):</span>
     <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">orgin_list</span><span class="p">)</span>
     <span class="c"># 从list[0]开始遍历，进行外循环，list[i]作为基准位置比较数</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
@@ -253,14 +250,13 @@
                 <span class="n">mi</span> <span class="o">=</span> <span class="n">j</span>
         <span class="n">orgin_list</span><span class="p">[</span><span class="n">mi</span><span class="p">],</span><span class="n">orgin_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">orgin_list</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">orgin_list</span><span class="p">[</span><span class="n">mi</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">orgin_list</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="六选择排序二堆排序">六、选择排序(二)：堆排序</h3>
 
 <p>堆排序(Heapsort)是指利用堆积树（堆）这种数据结构所设计的一种排序算法，它是选择排序的一种。可以利用数组的特点快速定位指定索引的元素。堆分为大根堆和小根堆，是完全二叉树。大根堆的要求是每个节点的值都不大于其父节点的值，即A[PARENT[i]] &gt;= A[i]。在数组的非降序排序中，需要使用的就是大根堆，因为根据大根堆的要求可知，最大的值一定在堆顶。</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">adjust_heap</span><span class="p">(</span><span class="n">lists</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">adjust_heap</span><span class="p">(</span><span class="n">lists</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
     <span class="n">lchild</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
     <span class="n">rchild</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">2</span>
     <span class="nb">max</span> <span class="o">=</span> <span class="n">i</span>
@@ -283,8 +279,7 @@
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
         <span class="n">lists</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lists</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">lists</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">lists</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">adjust_heap</span><span class="p">(</span><span class="n">lists</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="七归并排序">七、归并排序</h3>
 

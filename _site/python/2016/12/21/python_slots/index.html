@@ -128,14 +128,13 @@
 
 <p>没有<code class="highlighter-rouge">__slots__</code></p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">identifier</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="n">identifier</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_up</span><span class="p">()</span>
     <span class="c"># ...</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>有<code class="highlighter-rouge">__slots__</code></p>
 
@@ -154,7 +153,7 @@
 
 <p>下面你可以看到一个例子，显示在<code class="highlighter-rouge">__slots__</code>中完成的确切的内存使用情况，其中的<a href="https://github.com/ianozsvald/ipython_memory_usage">iPython</a></p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>Python 3.4.3 (default, Jun  6 2015, 13:32:34)
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Python 3.4.3 (default, Jun  6 2015, 13:32:34)
 Type "copyright", "credits" or "license" for more information.
 
 IPython 4.0.0 -- An enhanced Interactive Python.
@@ -194,30 +193,27 @@ In [5] used 0.1758 MiB RAM in 0.12s, peaked 0.00 MiB above current, total RAM us
 
 In [6]: from noslots import *
 In [6] used 22.6680 MiB RAM in 0.80s, peaked 0.00 MiB above current, total RAM usage 47.95 MiB
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="限制属性">限制属性</h4>
 
 <p>如果在定义class时，定义了<code class="highlighter-rouge">__slots__</code>变量，可以用来现在属性</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">Student</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">Student</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="o">...</span>     <span class="n">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s">'name'</span><span class="p">,</span> <span class="s">'age'</span><span class="p">)</span> <span class="c"># 用tuple定义允许绑定的属性名称</span>
 <span class="o">...</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>试试</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">s</span> <span class="o">=</span> <span class="n">Student</span><span class="p">()</span> <span class="c"># 创建新的实例</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">s</span> <span class="o">=</span> <span class="n">Student</span><span class="p">()</span> <span class="c"># 创建新的实例</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">s</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">'Michael'</span> <span class="c"># 绑定属性'name'</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">s</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">25</span> <span class="c"># 绑定属性'age'</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">s</span><span class="o">.</span><span class="n">score</span> <span class="o">=</span> <span class="mi">99</span> <span class="c"># 绑定属性'score'</span>
 <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
   <span class="n">File</span> <span class="s">"&lt;stdin&gt;"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
 <span class="nb">AttributeError</span><span class="p">:</span> <span class="s">'Student'</span> <span class="nb">object</span> <span class="n">has</span> <span class="n">no</span> <span class="n">attribute</span> <span class="s">'score'</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>由于<code class="highlighter-rouge">'score'</code>没有被放到<code class="highlighter-rouge">__slots__</code>中，所以不能绑定<code class="highlighter-rouge">score</code>属性，试图绑定<code class="highlighter-rouge">score</code>将得到AttributeError的错误。</p>
 

@@ -134,15 +134,13 @@
 
 <p>3、使用命令行修改文件夹的权限</p>
 
-<div class="language-sh highlighter-rouge"><pre class="highlight"><code>sudo chmod 755 /Library/Tomcat/bin/<span class="k">*</span>.sh
-</code></pre>
-</div>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo chmod </span>755 /Library/Tomcat/bin/<span class="k">*</span>.sh
+</code></pre></div></div>
 
 <p>4、cd到<code class="highlighter-rouge">/Library/Tomcat/bin</code>文件夹下，启动Tomcat</p>
 
-<div class="language-sh highlighter-rouge"><pre class="highlight"><code>sudo sh startup.sh
-</code></pre>
-</div>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>sh startup.sh
+</code></pre></div></div>
 
 <p><img src="/img/Simple_4/14.png" alt="img" /></p>
 
@@ -152,9 +150,8 @@
 
 <p>6、关闭命令是</p>
 
-<div class="language-sh highlighter-rouge"><pre class="highlight"><code>sudo sh shutdown.sh
-</code></pre>
-</div>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>sh shutdown.sh
+</code></pre></div></div>
 
 <h3 id="二新建网页服务器">二、新建网页服务器</h3>
 
@@ -178,7 +175,7 @@
 
 <p>看看网页源代码</p>
 
-<div class="language-html highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;html&gt;</span>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;html&gt;</span>
   <span class="nt">&lt;head&gt;</span>
     <span class="nt">&lt;title&gt;</span>$Title$<span class="nt">&lt;/title&gt;</span>
   <span class="nt">&lt;/head&gt;</span>
@@ -186,8 +183,7 @@
   $END$
   <span class="nt">&lt;/body&gt;</span>
 <span class="nt">&lt;/html&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>其实就是index.jsp的代码，说明此时访问的是index.jsp的页面。下面我们来新建新的页面</p>
 
@@ -217,24 +213,22 @@
 
 <p>在fisrt.java的doGet里添加代码如下</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">doGet</span><span class="o">(</span><span class="n">HttpServletRequest</span> <span class="n">request</span><span class="o">,</span> <span class="n">HttpServletResponse</span> <span class="n">response</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ServletException</span><span class="o">,</span> <span class="n">IOException</span> <span class="o">{</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">doGet</span><span class="o">(</span><span class="n">HttpServletRequest</span> <span class="n">request</span><span class="o">,</span> <span class="n">HttpServletResponse</span> <span class="n">response</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ServletException</span><span class="o">,</span> <span class="n">IOException</span> <span class="o">{</span>
         <span class="n">response</span><span class="o">.</span><span class="na">setContentType</span><span class="o">(</span><span class="s">"text/html"</span><span class="o">);</span>
         <span class="n">PrintWriter</span> <span class="n">out</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="na">getWriter</span><span class="o">();</span>
         <span class="n">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"This is First Page"</span><span class="o">);</span>
     <span class="o">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>7、配置访问路径</p>
 
 <p>在web.xml里添加以下代码</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>    &lt;servlet-mapping&gt;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    &lt;servlet-mapping&gt;
         &lt;servlet-name&gt;first&lt;/servlet-name&gt;
         &lt;url-pattern&gt;/first&lt;/url-pattern&gt;
     &lt;/servlet-mapping&gt;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><img src="/img/Simple_4/24.png" alt="img" /></p>
 

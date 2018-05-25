@@ -218,7 +218,7 @@ OpenGL则专注在Graphics，3D绘图。
 
 <p>要检查OpenGL ES 3.0扩展，请使用<code class="highlighter-rouge">glGetIntegerv</code>和<code class="highlighter-rouge">glGetStringi</code>函数，如下面的代码示例所示：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>BOOL CheckForExtension(NSString *searchName)
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>BOOL CheckForExtension(NSString *searchName)
 {
     // Create a set containing all extension names.
     // (For better performance, create the set only once and cache it for future use.)
@@ -230,8 +230,7 @@ OpenGL则专注在Graphics，3D绘图。
     }
     return [extensions containsObject: searchName];
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>要检查OpenGL ES 1.1和2.0扩展，请调用<code class="highlighter-rouge">glGetString</code>（GL_EXTENSIONS）以获取所有扩展名的列表。</p>
 
@@ -273,17 +272,15 @@ OpenGL则专注在Graphics，3D绘图。
 
 <p>要设置线程的当前上下文，请在该线程上执行时调用EAGLContext类方法setCurrentContext：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>[EAGLContext setCurrentContext: myContext];
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[EAGLContext setCurrentContext: myContext];
+</code></pre></div></div>
 
 <p>注意：如果您的应用程序在同一线程中的两个或更多个上下文之间主动切换，请在将新上下文设置为当前上下文之前调用glFlush函数。 这确保以前提交的命令及时传送到图形硬件。</p>
 
 <p>获取线程的当前上下文可以用这个：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>[EAGLContext currentContext];
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[EAGLContext currentContext];
+</code></pre></div></div>
 
 <p>OpenGL ES持有与当前上下文对应的<code class="highlighter-rouge">EAGLContext</code>对象的强引用。 （如果您正在使用手动引用计数，则OpenGL ES将保留此对象。）当您调用setCurrentContext：方法更改当前上下文时，OpenGL ES不再引用上一个上下文。 （如果使用手动引用计数，OpenGL ES会释放EAGLContext对象。）为防止EAGLContext对象在不是当前上下文时被释放，您的应用程序必须对这些对象进行强引用（或保留）。</p>
 
@@ -295,7 +292,7 @@ OpenGL则专注在Graphics，3D绘图。
 
 <p>要在应用中支持多个版本的OpenGL ES作为渲染选项，应首先尝试初始化要定位的最新版本的渲染上下文。如果返回的对象为零，请改为初始化旧版本的上下文。下面的代码表示如何执行此操作</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>EAGLContext* CreateBestEAGLContext()
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>EAGLContext* CreateBestEAGLContext()
 {
    EAGLContext *context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
    if (context == nil) {
@@ -303,8 +300,7 @@ OpenGL则专注在Graphics，3D绘图。
    }
    return context;
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>上下文的API属性指定上下文支持哪个版本的OpenGL ES。 您的应用程序应该测试上下文的API属性并使用它来选择正确的呈现路径。 实现此行为的常见模式是为每个呈现路径创建一个类。 您的应用程序在初始化时测试上下文并创建一次渲染器。</p>
 
@@ -327,10 +323,9 @@ OpenGL则专注在Graphics，3D绘图。
 
 <p>要创建引用相同Sharegroup的多个上下文，首先通过调用initWithAPI来初始化第一个上下文： 会自动为上下文创建Sharegroup。 通过调用<code class="highlighter-rouge">initWithAPI:sharegroup:</code> 方法，第二个和之后的上下文被初始化为使用第一个上下文的Sharegroup。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>EAGLContext* firstContext = CreateBestEAGLContext();
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>EAGLContext* firstContext = CreateBestEAGLContext();
 EAGLContext* secondContext = [[EAGLContext alloc] initWithAPI:[firstContext API] sharegroup: [firstContext sharegroup]];
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><strong>重要提示</strong>：与同一Sharegroup关联的所有上下文必须使用与初始上下文相同版本的OpenGL ES API。</p>
 
