@@ -144,11 +144,11 @@
 
 <p>TCP/IP是互联网相关的各类协议族的名称</p>
 
-<p><img src="/img/Http/tcp.png" alt="" /></p>
+<p><img src="/img/Simple_8/tcp.png" alt="" /></p>
 
 <p>OSI七层模型太过繁琐，所以就对应有了TCP/IP四层模型，对应的将OSI中的应用层、表示层、会话层统一归为应用层。</p>
 
-<p><img src="/img/Http/OSI.png" alt="" /></p>
+<p><img src="/img/Simple_8/OSI.png" alt="" /></p>
 
 <ul>
   <li>
@@ -165,7 +165,7 @@
   </li>
 </ul>
 
-<p><img src="/img/Http/model.png" alt="" /></p>
+<p><img src="/img/Simple_8/model.png" alt="" /></p>
 
 <h4 id="tcptransmission-control-protocol传输控制协议">TCP（Transmission Control Protocol）传输控制协议</h4>
 
@@ -201,7 +201,7 @@
 
 <p>连接关闭。</p>
 
-<p><img src="/img/Http/01.jpg" alt="" /></p>
+<p><img src="/img/Simple_8/01.jpg" alt="" /></p>
 
 <p>TCP窗口：TCP中，发送端的数据包到达接收端时，接收端会返回一个带序号的ACK确认，当数据包丢失或者ACK丢失或者延误时，发送端就会重新发送数据包。当ACK延误时，会出现重复发送的状况。引入序号机制则可以避免重复发送实现可靠传输。如果每次发送都要等确认的话，这样包的往返时间，网络吞吐量就会差。所以引入窗口机制。窗口控制，允许收到ACK之前，多次发送数据组。</p>
 
@@ -275,9 +275,9 @@
 
 <p>一个HTTP请求报文由请求行（request line）、请求头部（header）、空行、请求数据4个部分组成</p>
 
-<p><img src="/img/Http/request.png" alt="" /></p>
+<p><img src="/img/Simple_8/request.png" alt="" /></p>
 
-<p><img src="/img/Http/02.png" alt="" /></p>
+<p><img src="/img/Simple_8/02.png" alt="" /></p>
 
 <blockquote>
   <p>请求行</p>
@@ -320,15 +320,15 @@
 
 <p>状态行(有HTTP协议版本号，状态码和状态说明)、响应头、空行、消息体</p>
 
-<p><img src="/img/Http/response.png" alt="" /></p>
+<p><img src="/img/Simple_8/response.png" alt="" /></p>
 
-<p><img src="/img/Http/03.png" alt="" /></p>
+<p><img src="/img/Simple_8/03.png" alt="" /></p>
 
 <blockquote>
   <p>状态码</p>
 </blockquote>
 
-<p><img src="/img/Http/statusCode.png" alt="" /></p>
+<p><img src="/img/Simple_8/statusCode.png" alt="" /></p>
 
 <p>常见状态码</p>
 
@@ -349,7 +349,7 @@
 
 <p>在报文中有一个字段：connnection:keep-alive;是长连接的意思，从Http1.1开始就是默认TCP保持长连接，只要任意一端没有提出断开连接，则会一直保持连接状态，一次长连接可以进行多次请求和响应，好处是可以减少建立连接和断开连接的开销，减少服务器的负载，另外也可以加快Http请求和响应；</p>
 
-<p><img src="/img/Http/connection.png" alt="" /></p>
+<p><img src="/img/Simple_8/connection.png" alt="" /></p>
 
 <blockquote>
   <p>Cookies</p>

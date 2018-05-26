@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.2">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-05-25T15:02:42+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">发布库到cocoapod</title><link href="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/05/13/cocoapod/" rel="alternate" type="text/html" title="发布库到cocoapod" /><published>2018-05-13T20:00:00+08:00</published><updated>2018-05-13T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/05/13/cocoapod</id><content type="html" xml:base="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/05/13/cocoapod/">&lt;h4 id=&quot;1创建podspec文件&quot;&gt;1、创建podspec文件&lt;/h4&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.2">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-05-26T17:31:08+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">发布库到cocoapod</title><link href="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/05/13/cocoapod/" rel="alternate" type="text/html" title="发布库到cocoapod" /><published>2018-05-13T20:00:00+08:00</published><updated>2018-05-13T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/05/13/cocoapod</id><content type="html" xml:base="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/05/13/cocoapod/">&lt;h4 id=&quot;1创建podspec文件&quot;&gt;1、创建podspec文件&lt;/h4&gt;
 
 &lt;p&gt;在你要发布的库的根目录下运行下面的👇的命令行&lt;/p&gt;
 
@@ -57,12 +57,18 @@ pod spec lint （从本地和远程验证你的pod能否通过验证）
 
 &lt;p&gt;&lt;img src=&quot;/img/Simple_2/24.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 
-&lt;h4 id=&quot;5发布到cocoapods&quot;&gt;5、发布到CocoaPods&lt;/h4&gt;
+&lt;h4 id=&quot;5git打标签&quot;&gt;5、Git打标签&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git tag '1.0.0' 
+git push --tags 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;6发布到cocoapods&quot;&gt;6、发布到CocoaPods&lt;/h4&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pod trunk push
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h4 id=&quot;6查看自己的库&quot;&gt;6、查看自己的库&lt;/h4&gt;
+&lt;h4 id=&quot;7查看自己的库&quot;&gt;7、查看自己的库&lt;/h4&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pod setup
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;

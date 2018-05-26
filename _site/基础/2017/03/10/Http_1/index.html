@@ -16,9 +16,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
 
-    <title>Lambdas表达式 - Helloted Blog</title>
+    <title>HTTP权威指南 - Helloted Blog</title>
 
-    <link rel="canonical" href="http://www.helloted.com/python/2017/03/02/python_lambdas/">
+    <link rel="canonical" href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2017/03/10/Http_1/">
 
     <link rel="shortcut icon" href="/img/favicon.ico">
    
@@ -105,11 +105,11 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <div class="post-heading">
-                    <h1>Lambdas表达式</h1>
+                    <h1>HTTP权威指南</h1>
                     
-                    <h2 class="subheading">Python进阶之Lambdas表达式</h2>
+                    <h2 class="subheading">HTTP权威指南</h2>
                     
-                    <span class="meta">Posted by Ted on March 2, 2017</span>
+                    <span class="meta">Posted by Ted on March 10, 2017</span>
                 </div>
             </div>
         </div>
@@ -122,44 +122,31 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
 
-				<p>Lambdas是一行函数。 他们在其他语言也被称为匿名函数。 如果您不想在程序中用某个函数用两次，您可能需要使用lambda表达式。 他们就像普通函数一样表现功能。</p>
+				<h4 id="1http报文">1、HTTP报文</h4>
 
-<p>样本</p>
+<p>从客户端发往服务器的HTTP报文称为请求报文，从服务器发往客户端的报文称为响应报文。二者格式很类似：</p>
 
-<pre><code class="language-Python">lambda argument: manipulate(argument)
-</code></pre>
+<p>HTTP报文包含了三个部分：</p>
 
-<p>例子</p>
+<ul>
+  <li>
+    <p>起始行</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">add</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+    <p>第一行就是起始行，请求报文中用来说明要做什么，在响应报文中说明出现了什么情况</p>
+  </li>
+  <li>
+    <p>首部字段</p>
 
-<span class="k">print</span><span class="p">(</span><span class="n">add</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-<span class="c"># Output: 8</span>
-</code></pre></div></div>
+    <p>起始行后面有0个或者多个首部字段，每个字段都是一个key:value的形式。首部的结束以一个空行结束</p>
+  </li>
+  <li>
+    <p>主体</p>
 
-<p>下面是lambdas的一些有用的用例:</p>
+    <p>空行之后就是可选的报文主体了，其中包含了所有类型的数据，请求主体中包含了要发送给服务器的数据，响应主体装载了要返回客户端的数据，起始行和首部字段都是结构化的，但是主体可以包含任意格式</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">a</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">)]</span>
-<span class="n">a</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-
-<span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
-<span class="c"># Output: [(13, -3), (4, 1), (1, 2), (9, 10)]</span>
-</code></pre></div></div>
-
-<p>这个按照元组第二个元素排序列表</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">list1</span><span class="p">,</span> <span class="n">list2</span><span class="p">)</span>
-<span class="n">data</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
-<span class="n">list1</span><span class="p">,</span> <span class="n">list2</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">data</span><span class="p">))</span>
-</code></pre></div></div>
-
-<p>列表的并行排序</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">list1</span><span class="p">,</span> <span class="n">list2</span><span class="p">)</span>
-<span class="n">data</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
-<span class="n">list1</span><span class="p">,</span> <span class="n">list2</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">data</span><span class="p">))</span>
-</code></pre></div></div>
-
+    <p><img src="/img/Simple_8/05.png" alt="" /></p>
+  </li>
+</ul>
 
 
                 <hr>
@@ -167,12 +154,12 @@
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/python/2017/03/02/python_exceptions/" data-toggle="tooltip" data-placement="top" title="Exception">&larr; 上一篇</a>
+                        <a href="/python/2017/03/02/python_lambdas/" data-toggle="tooltip" data-placement="top" title="Lambdas表达式">&larr; 上一篇</a>
                     </li>
                     
                     
                     <li class="next">
-                        <a href="/%E5%9F%BA%E7%A1%80/2017/03/10/Http_1/" data-toggle="tooltip" data-placement="top" title="HTTP权威指南">下一篇 &rarr;</a>
+                        <a href="/ios/2017/04/10/Runloop_1/" data-toggle="tooltip" data-placement="top" title="Runloop(1):基础">下一篇 &rarr;</a>
                     </li>
                     
                 </ul>
