@@ -234,6 +234,8 @@
 
 <h3 id="四消息发送机制">四、消息发送机制：</h3>
 
+<p><img src="/img/Simple_4/01.png" alt="" /></p>
+
 <p>伪代码：</p>
 
 <div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">id</span> <span class="nf">objc_msgSend</span><span class="p">(</span><span class="n">id</span> <span class="n">self</span><span class="p">,</span> <span class="n">SEL</span> <span class="n">_cmd</span><span class="p">,</span> <span class="p">...)</span> <span class="p">{</span>
@@ -260,24 +262,47 @@
 <p>4、寻找父类的method list，并依次往上寻找(会找到NSObject)，直到找到selector，填充到缓存中，并返回selector，否则</p>
 
 <blockquote>
-  <p>动态解析</p>
+  <p>动态解析,这里动态添加方法</p>
 </blockquote>
 
 <p>5、如果找到可以动态resolve为一个selector（调用 <code class="highlighter-rouge">resolveInstanceMethod:</code> 和 <code class="highlighter-rouge">resolveClassMethod:</code> 方法添加实例方法实现和类方法实现。），不缓存，方法返回，否则</p>
 
 <blockquote>
-  <p>消息重定向</p>
+  <p>消息快速转发，这里将消息分配给其他对象处理</p>
 </blockquote>
 
 <p>6、消息转发机制执行前，Runtime 系统允许我们替换消息的接收者为其他对象。通过 <code class="highlighter-rouge">- (id)forwardingTargetForSelector:(SEL)aSelector</code> 方法。</p>
 
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (id)forwardingTargetForSelector:(SEL)sel { return _otherObject; }
+</code></pre></div></div>
+
+<p>因为这一步不会创建任何新的对象，但下一步转发会创建一个 NSInvocation 对象，所以相对更快点。</p>
+
 <blockquote>
-  <p>消息转发</p>
+  <p>消息普通转发</p>
 </blockquote>
 
-<p>7、首先runtime发送<code class="highlighter-rouge">methodSignatureForSelector:</code>消息查看Selector对应的方法签名，即参数与返回值的类型信息。如果有方法签名返回，runtime则根据方法签名创建描述该消息的NSInvocation，向当前对象发送<code class="highlighter-rouge">forwardInvocation:</code>消息，以创建的NSInvocation对象作为参数；若<code class="highlighter-rouge">methodSignatureForSelector:</code>无方法签名返回，则向当前对象发送<code class="highlighter-rouge">doesNotRecognizeSelector:</code>消息,程序抛出异常退出。</p>
+<p>7、首先runtime发送<code class="highlighter-rouge">methodSignatureForSelector:</code>消息</p>
 
-<p><img src="/img/Simple_4/01.png" alt="" /></p>
+<p>生成Selector对应的方法签名，即参数与返回值的类型信息。</p>
+
+<p>如果有方法签名返回，runtime则根据方法签名创建描述该消息的NSInvocation(NSInvocation 实际上就是对一个消息的描述，包括selector 以及参数等信息)，向当前对象发送<code class="highlighter-rouge">forwardInvocation:</code>消息，以创建的NSInvocation对象作为参数；</p>
+
+<p>若<code class="highlighter-rouge">methodSignatureForSelector:</code>无方法签名返回，则向当前对象发送<code class="highlighter-rouge">doesNotRecognizeSelector:</code>消息,程序抛出异常退出。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)forwardInvocation:(NSInvocation *)invocation
+{
+    SEL sel = invocation.selector;
+    if([someObject respondsToSelector:sel]) {
+        [invocation invokeWithTarget:someObject];
+    } 
+    else { //或者崩掉
+        [self doesNotRecognizeSelector:sel];
+    }
+}
+</code></pre></div></div>
+
+<p>与快速转发二者区别：快速转发不用专门生成NSInvocation，快速消耗少，普通转发可以转发给多个对象。</p>
 
 <p><img src="/img/Simple_4/02.jpg" alt="" /></p>
 
