@@ -130,12 +130,12 @@
 
 <ol>
   <li>系统先读取App的可执行文件（Mach-O文件），从里面获得dyld的路径</li>
-  <li>加载dyld，dyld去初始化运行环境，开启缓存策略，加载程序相关依赖库(其中也包含我们的可执行文件)，并对这些库进行链接</li>
-  <li>调用每个依赖库的初始化方法</li>
+  <li>加载dyld（the dynamic link editor，Apple 的动态链接器，系统 kernel 做好启动程序的初始准备后，交给 dyld 负责），dyld去初始化运行环境，开启缓存策略，</li>
+  <li>dyld加载程序相关动态库，并对这些库进行链接,调用每个依赖库的初始化方法</li>
   <li>runtime被初始化</li>
-  <li>runtime对项目中所有类进行类结构初始化</li>
-  <li>调用所有的load方法</li>
-  <li>dyld返回main函数地址，main函数被调用</li>
+  <li>ImageLoader:dyld把Image（包含我们的类、方法等）load进来</li>
+  <li>runtime对加载进来的Image所有类进行类结构初始化，调用所有的load方法，Category方法也在此时被调用</li>
+  <li><code class="highlighter-rouge">dyld返回main函数地址，main函数被调用</code></li>
   <li>main函数调用</li>
   <li>执行AppDelegate的代理方法，主要是<code class="highlighter-rouge">didFinishLaunchingWithOptions</code></li>
   <li>初始化Window，初始化基础的ViewController结构</li>

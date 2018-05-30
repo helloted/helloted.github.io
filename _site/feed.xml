@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.2">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-05-30T10:57:39+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">发布库到cocoapod</title><link href="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/05/24/cocoapod/" rel="alternate" type="text/html" title="发布库到cocoapod" /><published>2018-05-24T20:00:00+08:00</published><updated>2018-05-24T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/05/24/cocoapod</id><content type="html" xml:base="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/05/24/cocoapod/">&lt;h4 id=&quot;1创建podspec文件&quot;&gt;1、创建podspec文件&lt;/h4&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.2">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-05-30T15:41:24+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">发布库到cocoapod</title><link href="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/05/24/cocoapod/" rel="alternate" type="text/html" title="发布库到cocoapod" /><published>2018-05-24T20:00:00+08:00</published><updated>2018-05-24T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/05/24/cocoapod</id><content type="html" xml:base="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/05/24/cocoapod/">&lt;h4 id=&quot;1创建podspec文件&quot;&gt;1、创建podspec文件&lt;/h4&gt;
 
 &lt;p&gt;在你要发布的库的根目录下运行下面的👇的命令行&lt;/p&gt;
 
@@ -1304,12 +1304,12 @@ ffmpeg -f avfoundation -framerate 30 -video_size 320x240 -i &quot;0&quot; -vcode
 
 &lt;ol&gt;
   &lt;li&gt;系统先读取App的可执行文件（Mach-O文件），从里面获得dyld的路径&lt;/li&gt;
-  &lt;li&gt;加载dyld，dyld去初始化运行环境，开启缓存策略，加载程序相关依赖库(其中也包含我们的可执行文件)，并对这些库进行链接&lt;/li&gt;
-  &lt;li&gt;调用每个依赖库的初始化方法&lt;/li&gt;
+  &lt;li&gt;加载dyld（the dynamic link editor，Apple 的动态链接器，系统 kernel 做好启动程序的初始准备后，交给 dyld 负责），dyld去初始化运行环境，开启缓存策略，&lt;/li&gt;
+  &lt;li&gt;dyld加载程序相关动态库，并对这些库进行链接,调用每个依赖库的初始化方法&lt;/li&gt;
   &lt;li&gt;runtime被初始化&lt;/li&gt;
-  &lt;li&gt;runtime对项目中所有类进行类结构初始化&lt;/li&gt;
-  &lt;li&gt;调用所有的load方法&lt;/li&gt;
-  &lt;li&gt;dyld返回main函数地址，main函数被调用&lt;/li&gt;
+  &lt;li&gt;ImageLoader:dyld把Image（包含我们的类、方法等）load进来&lt;/li&gt;
+  &lt;li&gt;runtime对加载进来的Image所有类进行类结构初始化，调用所有的load方法，Category方法也在此时被调用&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;dyld返回main函数地址，main函数被调用&lt;/code&gt;&lt;/li&gt;
   &lt;li&gt;main函数调用&lt;/li&gt;
   &lt;li&gt;执行AppDelegate的代理方法，主要是&lt;code class=&quot;highlighter-rouge&quot;&gt;didFinishLaunchingWithOptions&lt;/code&gt;&lt;/li&gt;
   &lt;li&gt;初始化Window，初始化基础的ViewController结构&lt;/li&gt;
