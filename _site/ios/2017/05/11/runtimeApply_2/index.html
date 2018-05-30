@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>Runtime应用(二)：捕获异常 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/ios/2017/05/11/runtimeApply_2/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>Runtime应用(二)：捕获异常</h1>
+                    
+                    <h2 class="subheading">捕获'unrecognized selector sent to instance'异常</h2>
+                    
+                    <span class="meta">Posted by Ted on May 11, 2017</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h4 id="1错误">1、错误</h4>
+
+<p>先看一个常见的错误</p>
+
+<p><img src="/img/Simple_2/25.png" alt="img" /></p>
+
+<p>运行一个类没有的实例方法，就会报错‘unrecognized selector sent to instance’</p>
+
+<p>我们知道，Objective-C的方法实际是是消息发送，我们来看一张经典的图</p>
+
+<p><img src="/img/Simple_4/01.png" alt="" /></p>
+
+<p>当对象经过查找，一直找不到可以运行的IMP，最后调用</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)doesNotRecognizeSelector:(SEL)aSelector
+</code></pre></div></div>
+
+<p>我尝试了去hook这个方法，结果导致</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Thread 1: EXC_BAD_INSTRUCTION (code=EXC_I386_INVOP, subcode=0x0)
+</code></pre></div></div>
+
+<p>怀疑这个方法是消息调用的失败结果，不能被hook。</p>
+
+<p>所以只好在调用这个方法之前将问题解决</p>
+
+<h4 id="2解决方案">2、解决方案</h4>
+
+<ol>
+  <li>在<code class="highlighter-rouge">methodSignatureForSelector</code>阶段将找不到的Selector添加到NSObject里去，</li>
+  <li>在<code class="highlighter-rouge">forwardInvocation</code>阶段将消息重新转发给NSObject</li>
+</ol>
+
+<p>具体代码</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">NSMethodSignature</span> <span class="o">*</span><span class="p">)</span><span class="nf">ht_methodSignatureForSelector</span><span class="p">:(</span><span class="n">SEL</span><span class="p">)</span><span class="nv">aSelector</span><span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">[</span><span class="n">self</span> <span class="nf">respondsToSelector</span><span class="p">:</span><span class="n">aSelector</span><span class="p">])</span> <span class="p">{</span>
+        <span class="n">_errorSelectorName</span> <span class="o">=</span> <span class="n">NSStringFromSelector</span><span class="p">(</span><span class="n">aSelector</span><span class="p">);</span>
+        <span class="n">NSMethodSignature</span> <span class="o">*</span><span class="n">methodSignature</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span> <span class="nf">ht_methodSignatureForSelector</span><span class="p">:</span><span class="n">aSelector</span><span class="p">];</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">class_addMethod</span><span class="p">([</span><span class="n">self</span> <span class="nf">class</span><span class="p">],</span> <span class="n">aSelector</span><span class="p">,</span> <span class="p">(</span><span class="n">IMP</span><span class="p">)</span><span class="n">dynamicMethodIMP</span><span class="p">,</span> <span class="s">"v@:"</span><span class="p">))</span> <span class="p">{</span><span class="c1">//方法参数的获取存在问题</span>
+            <span class="n">NSLog</span><span class="p">(</span><span class="s">@"%@ Selector添加成功！"</span><span class="p">,</span><span class="n">_errorSelectorName</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">methodSignature</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">methodSignature</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span> <span class="nf">ht_methodSignatureForSelector</span><span class="p">:</span><span class="n">aSelector</span><span class="p">];</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">methodSignature</span><span class="p">;</span>
+    <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">self</span> <span class="nf">ht_methodSignatureForSelector</span><span class="p">:</span><span class="n">aSelector</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">ht_forwardInvocation</span><span class="p">:(</span><span class="n">NSInvocation</span> <span class="o">*</span><span class="p">)</span><span class="nv">anInvocation</span><span class="p">{</span>
+    <span class="n">SEL</span> <span class="n">selector</span> <span class="o">=</span> <span class="p">[</span><span class="n">anInvocation</span> <span class="nf">selector</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">([</span><span class="n">self</span> <span class="nf">respondsToSelector</span><span class="p">:</span><span class="n">selector</span><span class="p">])</span> <span class="p">{</span>
+        <span class="p">[</span><span class="n">anInvocation</span> <span class="nf">invokeWithTarget</span><span class="p">:</span><span class="n">self</span><span class="p">];</span>
+    <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+        <span class="p">[</span><span class="n">self</span> <span class="nf">ht_forwardInvocation</span><span class="p">:</span><span class="n">anInvocation</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>其中，dynamicMethodIMP是对应找不到的selector的添加IMP，我们可以再里面实现我们自己的逻辑</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifdef DEBUG
+    NSString *error = [NSString stringWithFormat:@"errorClass-&gt;:%@\n errorSelector-&gt;%@\n errorReason-&gt;UnRecognized Selector",NSStringFromClass([self class]),_errorSelectorName];
+    NSLog(@"%@",error);
+#else
+    //upload error
+#endif
+    
+}
+</code></pre></div></div>
+
+<p>这样，我们调用不存在的方法就不会报错了</p>
+
+<p><img src="/img/Simple_2/26.png" alt="img" /></p>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/ios/2017/05/09/runtimeApply_1/" data-toggle="tooltip" data-placement="top" title="Runtime应用(一)：Json转Model">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/ios/2017/05/26/AFNetWorking_1/" data-toggle="tooltip" data-placement="top" title="源码分析之AFNetworking(一)">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>
