@@ -161,6 +161,94 @@
     [obj performSelector:NSSelectorFromString(@"doSomethingWithParameter:") withObject:@"this is the value"];
 </code></pre></div></div>
 
+<p>performSelector虽然能达到调用方法的目的，但是传递的参数最多只能由两个，也许可以通过封装进字典来传递，但是这样就徒增了工作。我们可以用NSInvocation的特性来达到这个目的</p>
+
+<h4 id="3nsinvocation">3、NSInvocation</h4>
+
+<p>我们知道，iOS的方法调用实际上就是消息转发</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>objc_msgSend(Class receiver,SEL selector, arg1, arg2, ...)
+</code></pre></div></div>
+
+<p>而NSInvocation就是用来制造消息发送的类。</p>
+
+<p>NSInvocation与其他NSObject类不一样，不会通过alloc/init来生成，它需要通过一个方法签名NSMethodSignature来生成</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSInvocation *invocatin = [NSInvocation invocationWithMethodSignature:sig];
+</code></pre></div></div>
+
+<p>而NSMethodSignature由类的selector来形成的</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSMethodSignature *sig  = [cls instanceMethodSignatureForSelector:aSelecotor];
+</code></pre></div></div>
+
+<p>依次填补参数，</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    [invocatin setTarget:obj];
+    [invocatin setSelector:aSelecotor];
+    NSString *para = @"this is the value";
+    [invocatin setArgument:&amp;para atIndex:2];
+</code></pre></div></div>
+
+<p>触发，就可以发送一条消息</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[invocatin invoke];
+</code></pre></div></div>
+
+<p>下面是调用HTOtherModule类的方法的完整代码：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    SEL aSelecotor = NSSelectorFromString(@"doSomethingWithParameter:");
+    Class cls = NSClassFromString(@"HTOtherModule");
+    id obj = [[cls alloc]init];
+    NSMethodSignature * sig  = [cls instanceMethodSignatureForSelector:aSelecotor];
+    NSInvocation * invocatin = [NSInvocation invocationWithMethodSignature:sig];
+    [invocatin setTarget:obj];
+    [invocatin setSelector:aSelecotor];
+    NSString *para = @"this is the value";
+    [invocatin setArgument:&amp;para atIndex:2];
+    [invocatin invoke];
+</code></pre></div></div>
+
+<h4 id="4中间件的考虑">4、中间件的考虑</h4>
+
+<p>如果把所有跨模块的调用都写到一个类里，那么这个类肯定会变得臃肿，所以，建议是在一个类里写下核心代码，而对于某个模块需要被调用的方法，则通过Category的形式，整合到一起。</p>
+
+<p>这是核心代码</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (id)performTarget:(NSString *)targetName action:(NSString *)actionName parameters:(NSArray *)parameters{
+    Class tagetClass = NSClassFromString(targetName);
+    NSObject *tagert= [[tagetClass alloc]init];
+    SEL aSelector = NSSelectorFromString(actionName);
+    NSMethodSignature *methodSignature = [tagetClass instanceMethodSignatureForSelector:aSelector];
+    if(methodSignature == nil) // 方法签名找不到，异常情况自己处理
+    {
+        NSLog(@"找不到这个方法");
+        return nil;
+    }
+    else
+    {
+        NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
+        [invocation setTarget:tagert];
+        [invocation setSelector:aSelector];
+        
+        //消息发送的参数，签名两个是class和selector，所以方法参数从第3个开始
+        [parameters enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [invocation setArgument:&amp;obj atIndex:idx+2];
+        }];
+        [invocation invoke];
+        
+        //返回值处理
+        __autoreleasing id callBackObject = nil;
+        if(methodSignature.methodReturnLength)
+        {
+            [invocation getReturnValue:&amp;callBackObject];
+        }
+        return callBackObject;
+    }
+    return nil;
+}
+</code></pre></div></div>
+
 
 
                 <hr>

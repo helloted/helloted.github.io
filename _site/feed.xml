@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.2">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-05-31T15:08:19+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">Runtime应用(三)：NSInvocation</title><link href="http://www.helloted.com/ios/2018/05/30/runtimeApply_3/" rel="alternate" type="text/html" title="Runtime应用(三)：NSInvocation" /><published>2018-05-30T20:00:00+08:00</published><updated>2018-05-30T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2018/05/30/runtimeApply_3</id><content type="html" xml:base="http://www.helloted.com/ios/2018/05/30/runtimeApply_3/">&lt;h4 id=&quot;1解耦&quot;&gt;1、解耦&lt;/h4&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.2">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-05-31T16:50:18+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">Runtime应用(三)：NSInvocation</title><link href="http://www.helloted.com/ios/2018/05/30/runtimeApply_3/" rel="alternate" type="text/html" title="Runtime应用(三)：NSInvocation" /><published>2018-05-30T20:00:00+08:00</published><updated>2018-05-30T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2018/05/30/runtimeApply_3</id><content type="html" xml:base="http://www.helloted.com/ios/2018/05/30/runtimeApply_3/">&lt;h4 id=&quot;1解耦&quot;&gt;1、解耦&lt;/h4&gt;
 
 &lt;p&gt;一个大的APP里有多个模块，很多时候模块之间要相互调用、通信，通常情况下，我们都是讲要调用的模块引入进来，然后生成对象，调用其方法。这种情况下，一旦模块比较多，相互调用也比较多，就会出现下图的这种关系，复杂，错乱，耦合比较严重&lt;/p&gt;
 
@@ -35,6 +35,94 @@
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    Class cls = NSClassFromString(@&quot;HTOtherModule&quot;);
     id obj = [[cls alloc]init];
     [obj performSelector:NSSelectorFromString(@&quot;doSomethingWithParameter:&quot;) withObject:@&quot;this is the value&quot;];
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;performSelector虽然能达到调用方法的目的，但是传递的参数最多只能由两个，也许可以通过封装进字典来传递，但是这样就徒增了工作。我们可以用NSInvocation的特性来达到这个目的&lt;/p&gt;
+
+&lt;h4 id=&quot;3nsinvocation&quot;&gt;3、NSInvocation&lt;/h4&gt;
+
+&lt;p&gt;我们知道，iOS的方法调用实际上就是消息转发&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;objc_msgSend(Class receiver,SEL selector, arg1, arg2, ...)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;而NSInvocation就是用来制造消息发送的类。&lt;/p&gt;
+
+&lt;p&gt;NSInvocation与其他NSObject类不一样，不会通过alloc/init来生成，它需要通过一个方法签名NSMethodSignature来生成&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSInvocation *invocatin = [NSInvocation invocationWithMethodSignature:sig];
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;而NSMethodSignature由类的selector来形成的&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSMethodSignature *sig  = [cls instanceMethodSignatureForSelector:aSelecotor];
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;依次填补参数，&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [invocatin setTarget:obj];
+    [invocatin setSelector:aSelecotor];
+    NSString *para = @&quot;this is the value&quot;;
+    [invocatin setArgument:&amp;amp;para atIndex:2];
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;触发，就可以发送一条消息&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[invocatin invoke];
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;下面是调用HTOtherModule类的方法的完整代码：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    SEL aSelecotor = NSSelectorFromString(@&quot;doSomethingWithParameter:&quot;);
+    Class cls = NSClassFromString(@&quot;HTOtherModule&quot;);
+    id obj = [[cls alloc]init];
+    NSMethodSignature * sig  = [cls instanceMethodSignatureForSelector:aSelecotor];
+    NSInvocation * invocatin = [NSInvocation invocationWithMethodSignature:sig];
+    [invocatin setTarget:obj];
+    [invocatin setSelector:aSelecotor];
+    NSString *para = @&quot;this is the value&quot;;
+    [invocatin setArgument:&amp;amp;para atIndex:2];
+    [invocatin invoke];
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;4中间件的考虑&quot;&gt;4、中间件的考虑&lt;/h4&gt;
+
+&lt;p&gt;如果把所有跨模块的调用都写到一个类里，那么这个类肯定会变得臃肿，所以，建议是在一个类里写下核心代码，而对于某个模块需要被调用的方法，则通过Category的形式，整合到一起。&lt;/p&gt;
+
+&lt;p&gt;这是核心代码&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (id)performTarget:(NSString *)targetName action:(NSString *)actionName parameters:(NSArray *)parameters{
+    Class tagetClass = NSClassFromString(targetName);
+    NSObject *tagert= [[tagetClass alloc]init];
+    SEL aSelector = NSSelectorFromString(actionName);
+    NSMethodSignature *methodSignature = [tagetClass instanceMethodSignatureForSelector:aSelector];
+    if(methodSignature == nil) // 方法签名找不到，异常情况自己处理
+    {
+        NSLog(@&quot;找不到这个方法&quot;);
+        return nil;
+    }
+    else
+    {
+        NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
+        [invocation setTarget:tagert];
+        [invocation setSelector:aSelector];
+        
+        //消息发送的参数，签名两个是class和selector，所以方法参数从第3个开始
+        [parameters enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [invocation setArgument:&amp;amp;obj atIndex:idx+2];
+        }];
+        [invocation invoke];
+        
+        //返回值处理
+        __autoreleasing id callBackObject = nil;
+        if(methodSignature.methodReturnLength)
+        {
+            [invocation getReturnValue:&amp;amp;callBackObject];
+        }
+        return callBackObject;
+    }
+    return nil;
+}
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">1、解耦</summary></entry><entry><title type="html">发布库到cocoapod</title><link href="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/05/24/cocoapod/" rel="alternate" type="text/html" title="发布库到cocoapod" /><published>2018-05-24T20:00:00+08:00</published><updated>2018-05-24T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/05/24/cocoapod</id><content type="html" xml:base="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/05/24/cocoapod/">&lt;h4 id=&quot;1创建podspec文件&quot;&gt;1、创建podspec文件&lt;/h4&gt;
 
 &lt;p&gt;在你要发布的库的根目录下运行下面的👇的命令行&lt;/p&gt;
