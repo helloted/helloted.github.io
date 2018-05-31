@@ -16,9 +16,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
 
-    <title>发布库到cocoapod - Helloted Blog</title>
+    <title>Runtime应用(三)：NSInvocation - Helloted Blog</title>
 
-    <link rel="canonical" href="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/05/24/cocoapod/">
+    <link rel="canonical" href="http://www.helloted.com/ios/2018/05/30/runtimeApply_3/">
 
     <link rel="shortcut icon" href="/img/favicon.ico">
    
@@ -100,16 +100,16 @@
 
 
     <!-- Post Header -->
-<header class="intro-header" style="background-image: url('/img/bg_01.jpg')">
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <div class="post-heading">
-                    <h1>发布库到cocoapod</h1>
+                    <h1>Runtime应用(三)：NSInvocation</h1>
                     
-                    <h2 class="subheading">发布库到cocoapod</h2>
+                    <h2 class="subheading">应用NSInvocation写一个中间件来调用方法</h2>
                     
-                    <span class="meta">Posted by Ted on May 24, 2018</span>
+                    <span class="meta">Posted by Ted on May 30, 2018</span>
                 </div>
             </div>
         </div>
@@ -122,85 +122,43 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
 
-				<h4 id="1创建podspec文件">1、创建podspec文件</h4>
+				<h4 id="1解耦">1、解耦</h4>
 
-<p>在你要发布的库的根目录下运行下面的👇的命令行</p>
+<p>一个大的APP里有多个模块，很多时候模块之间要相互调用、通信，通常情况下，我们都是讲要调用的模块引入进来，然后生成对象，调用其方法。这种情况下，一旦模块比较多，相互调用也比较多，就会出现下图的这种关系，复杂，错乱，耦合比较严重</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pod spec create &lt;pod_name&gt;
+<p><img src="/img/Simple_8/10.png" alt="img" /></p>
+
+<p>一个解决思路就是，建立一个中间件Meditor，所有的模块都只有Meditor相互通信，如果要调用其他类，也是通过Meditor来调用，从而达到解耦的目的</p>
+
+<p><img src="/img/Simple_8/11.png" alt="img" /></p>
+
+<h4 id="2调用">2、调用</h4>
+
+<p>在 iOS中不通过类可以直接调用某个对象的消息方式有两种:</p>
+
+<ul>
+  <li>一种是<code class="highlighter-rouge">performSelector:withObject;</code></li>
+  <li>另外一种就是<code class="highlighter-rouge">NSInvocation。</code></li>
+</ul>
+
+<p>我们先来看<code class="highlighter-rouge">performSelector:withObject;</code></p>
+
+<p>如果我们有一个类HTOtherModule，并有一个方法如下</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@implementation HTOtherModule
+
+- (void)doSomethingWithParameter:(NSString *)para{
+    NSLog(@"done some with:%@",para);
+}
+
+@end
 </code></pre></div></div>
 
-<p>pod_name是你要发布的库的名称</p>
+<p>我们在其他类中，不通过类而是通过runtime的方式来调用这个方法，我们可以这样做：</p>
 
-<p>命令行过后会在根目录生成一个podspec文件，接下来就是将podspec文件完善</p>
-
-<h4 id="2修改podspec文件">2、修改podspec文件</h4>
-
-<p>podspec文件里面的属性都有解释用途，不是所有的属性都必填，参考自己的需要</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>name：框架名
-version：当前版本（注意，是当前版本，假如你后续更新了新版本，需要修改此处）
-summary：简要描述，在pod search ZCPKit的时候会显示该信息。
-description：详细描述
-homepage：页面链接
-license：开源协议
-author：作者
-source：源码git地址
-platform：支持最低ios版本
-source_files：源文件（可以包含.h和.m）
-public_header_files：头文件(.h文件)
-resources：资源文件（配置的文件都会被放到mainBundle中）
-resource_bundles：资源文件（配置的文件会放到你自己指定的bundle中）
-frameworks：依赖的系统框架
-vendored_frameworks：依赖的非系统框架
-libraries：依赖的系统库
-vendored_libraries：依赖的非系统的静态库
-dependency：依赖的三方库
-</code></pre></div></div>
-
-<h4 id="3校验podspec文件">3、校验podspec文件</h4>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pod lib lint （从本地验证你的pod能否通过验证）
-pod spec lint （从本地和远程验证你的pod能否通过验证）
-</code></pre></div></div>
-
-<p>出现下面的图片说明校验成功，就可以发布到网上去了</p>
-
-<p><img src="/img/Simple_2/23.png" alt="img" /></p>
-
-<h4 id="4注册cocoapods-trunk账号">4、注册CocoaPods Trunk账号</h4>
-
-<p>运行命令</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pod trunk register helloted@live.com  'helloted'
-</code></pre></div></div>
-
-<p>之后会收到一封邮件，点击验证之后，运行命令可查看信息</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pod trunk me
-</code></pre></div></div>
-
-<p><img src="/img/Simple_2/24.png" alt="img" /></p>
-
-<h4 id="5git打标签">5、Git打标签</h4>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git tag '1.0.0' 
-git push --tags 
-</code></pre></div></div>
-
-<h4 id="6发布到cocoapods">6、发布到CocoaPods</h4>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pod trunk push
-</code></pre></div></div>
-
-<h4 id="7查看自己的库">7、查看自己的库</h4>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pod setup
-</code></pre></div></div>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rm ~/Library/Caches/CocoaPods/search_index.json
-</code></pre></div></div>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pod search HTLivePushKit
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    Class cls = NSClassFromString(@"HTOtherModule");
+    id obj = [[cls alloc]init];
+    [obj performSelector:NSSelectorFromString(@"doSomethingWithParameter:") withObject:@"this is the value"];
 </code></pre></div></div>
 
 
@@ -210,13 +168,9 @@ git push --tags
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/linux/2018/05/13/nginxThird/" data-toggle="tooltip" data-placement="top" title="Nginx添加第三方模块">&larr; 上一篇</a>
+                        <a href="/%E5%B7%A5%E5%85%B7/2018/05/24/cocoapod/" data-toggle="tooltip" data-placement="top" title="发布库到cocoapod">&larr; 上一篇</a>
                     </li>
                     
-                    
-                    <li class="next">
-                        <a href="/ios/2018/05/30/runtimeApply_3/" data-toggle="tooltip" data-placement="top" title="Runtime应用(三)：NSInvocation">下一篇 &rarr;</a>
-                    </li>
                     
                 </ul>
 

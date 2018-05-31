@@ -1,4 +1,41 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.2">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-05-31T15:04:38+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">发布库到cocoapod</title><link href="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/05/24/cocoapod/" rel="alternate" type="text/html" title="发布库到cocoapod" /><published>2018-05-24T20:00:00+08:00</published><updated>2018-05-24T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/05/24/cocoapod</id><content type="html" xml:base="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/05/24/cocoapod/">&lt;h4 id=&quot;1创建podspec文件&quot;&gt;1、创建podspec文件&lt;/h4&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.2">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-05-31T15:08:19+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">Runtime应用(三)：NSInvocation</title><link href="http://www.helloted.com/ios/2018/05/30/runtimeApply_3/" rel="alternate" type="text/html" title="Runtime应用(三)：NSInvocation" /><published>2018-05-30T20:00:00+08:00</published><updated>2018-05-30T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2018/05/30/runtimeApply_3</id><content type="html" xml:base="http://www.helloted.com/ios/2018/05/30/runtimeApply_3/">&lt;h4 id=&quot;1解耦&quot;&gt;1、解耦&lt;/h4&gt;
+
+&lt;p&gt;一个大的APP里有多个模块，很多时候模块之间要相互调用、通信，通常情况下，我们都是讲要调用的模块引入进来，然后生成对象，调用其方法。这种情况下，一旦模块比较多，相互调用也比较多，就会出现下图的这种关系，复杂，错乱，耦合比较严重&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/10.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;一个解决思路就是，建立一个中间件Meditor，所有的模块都只有Meditor相互通信，如果要调用其他类，也是通过Meditor来调用，从而达到解耦的目的&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/11.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;2调用&quot;&gt;2、调用&lt;/h4&gt;
+
+&lt;p&gt;在 iOS中不通过类可以直接调用某个对象的消息方式有两种:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;一种是&lt;code class=&quot;highlighter-rouge&quot;&gt;performSelector:withObject;&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;另外一种就是&lt;code class=&quot;highlighter-rouge&quot;&gt;NSInvocation。&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;我们先来看&lt;code class=&quot;highlighter-rouge&quot;&gt;performSelector:withObject;&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;如果我们有一个类HTOtherModule，并有一个方法如下&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@implementation HTOtherModule
+
+- (void)doSomethingWithParameter:(NSString *)para{
+    NSLog(@&quot;done some with:%@&quot;,para);
+}
+
+@end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;我们在其他类中，不通过类而是通过runtime的方式来调用这个方法，我们可以这样做：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    Class cls = NSClassFromString(@&quot;HTOtherModule&quot;);
+    id obj = [[cls alloc]init];
+    [obj performSelector:NSSelectorFromString(@&quot;doSomethingWithParameter:&quot;) withObject:@&quot;this is the value&quot;];
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">1、解耦</summary></entry><entry><title type="html">发布库到cocoapod</title><link href="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/05/24/cocoapod/" rel="alternate" type="text/html" title="发布库到cocoapod" /><published>2018-05-24T20:00:00+08:00</published><updated>2018-05-24T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/05/24/cocoapod</id><content type="html" xml:base="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/05/24/cocoapod/">&lt;h4 id=&quot;1创建podspec文件&quot;&gt;1、创建podspec文件&lt;/h4&gt;
 
 &lt;p&gt;在你要发布的库的根目录下运行下面的👇的命令行&lt;/p&gt;
 
@@ -1505,196 +1542,4 @@ ffmpeg -f avfoundation -framerate 30 -video_size 320x240 -i &quot;0&quot; -vcode
 
 &lt;p&gt;https://blog.csdn.net/hello_hwc/article/details/78317863&lt;/p&gt;
 
-&lt;p&gt;WWDC 2017: &lt;a href=&quot;https://developer.apple.com/videos/play/wwdc2017/413/&quot;&gt;App Startup Time: Past, Present, and Future&lt;/a&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">一、启动过程</summary></entry><entry><title type="html">APP生成与运行(一)</title><link href="http://www.helloted.com/ios/2018/03/29/app-1/" rel="alternate" type="text/html" title="APP生成与运行(一)" /><published>2018-03-29T20:00:00+08:00</published><updated>2018-03-29T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2018/03/29/app-1</id><content type="html" xml:base="http://www.helloted.com/ios/2018/03/29/app-1/">&lt;h3 id=&quot;一编译&quot;&gt;一、编译&lt;/h3&gt;
-
-&lt;h4 id=&quot;汇编&quot;&gt;汇编&lt;/h4&gt;
-
-&lt;p&gt;CPU 由上亿个晶体管组成，在运行的时候，单个晶体管只能根据电流的流通或关闭来确认两种状态，我们一般说 0 或 1，根据这种状态，人类创造了二进制，通过二进制编码我们可以表示所有的概念。但是，CPU 依然只能执行二进制代码。我们将一组二进制代码合并成一个指令或符号，创造了汇编语言，汇编语言以一种相对好理解的方式来编写，然后通过汇编过程生成 CPU 可以运行的二进制代码并运行在 CPU 上。&lt;/p&gt;
-
-&lt;h4 id=&quot;编译&quot;&gt;编译&lt;/h4&gt;
-
-&lt;p&gt;编译器将原始程序（Source program）作为输入，翻译产生使用目标语言（Target language）的等价程序。源代码一般为高阶语言 (High-level language), 如C、C++、C# 、Objective-C、Swift、Java 等，而目标语言则是汇编语言或目标机器的目标代码（Object code），有时也称作机器代码（Machine code）&lt;/p&gt;
-
-&lt;h4 id=&quot;编译型语言和解释型语言&quot;&gt;编译型语言和解释型语言&lt;/h4&gt;
-
-&lt;p&gt;编译程序是整体编译完了，再一次性执行。 而解释程序是一边解释，一边执行。&lt;/p&gt;
-
-&lt;p&gt;编译型语言：C系，java&lt;/p&gt;
-
-&lt;p&gt;解释型语言：html、javascript&lt;/p&gt;
-
-&lt;h3 id=&quot;二llvmclang&quot;&gt;二、LLVM、Clang&lt;/h3&gt;
-
-&lt;h4 id=&quot;llvm&quot;&gt;LLVM&lt;/h4&gt;
-
-&lt;p&gt;LLVM本身并不是编译器，只是一套用于开发编译器、解释器等程序语言相关工具的库，主要聚焦于编译器后端功能，如代码生成、代码优化、JIT等。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;LLVM&lt;a href=&quot;http://www.aosabook.org/en/llvm.html#footnote-1&quot;&gt;1&lt;/a&gt; an umbrella project that hosts and develops a set of close-knit low-level toolchain components (e.g., assemblers, compilers, debuggers, etc.)&lt;/p&gt;
-
-  &lt;p&gt;LLVM 是一个涵盖和开发一系列紧密结合的低级工具链组件（例如，汇编器，编译器，调试器等）的综合项目&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;传统的编译器通常分为三个部分，前端(frontEnd)，优化器(Optimizer)和后端(backEnd)，在编译过程中，前端主要负责词法和语法分析，将源代码转化为抽象语法树；优化器则是在前端的基础上，对得到的中间代码进行优化，使代码更加高效；后端则是将已经优化的中间代码转化为针对各自平台的机器代码。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/05.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;clang&quot;&gt;Clang&lt;/h4&gt;
-
-&lt;p&gt;Clang 是一个C、C++、Objective-C和Objective-C++编程语言的编译器前端。它采用了LLVM作为其后端。&lt;/p&gt;
-
-&lt;p&gt;Clang是2005年由苹果电脑发起，是LLVM编译器工具集的前端（front-end），目的是输出代码对应的抽象语法树（Abstract Syntax Tree, AST），并将代码编译成LLVM Bitcode。接着在后端（back-end）使用LLVM编译成平台相关的机器语言 。Clang支持C、C++、Objective C。&lt;/p&gt;
-
-&lt;p&gt;Clang本身性能优异，其生成的AST所耗用掉的内存仅仅是GCC的20%左右，测试证明Clang编译Objective-C代码时速度为GCC的3倍，还能针对用户发生的编译错误准确地给出建议。&lt;/p&gt;
-
-&lt;h3 id=&quot;三ios中的编译&quot;&gt;三、iOS中的编译&lt;/h3&gt;
-
-&lt;p&gt;Objective C采用Clang作为前端，而Swift则采用swift()作为前端，二者LLVM(Low level vritual machine)作为编译器后端。编译过程如下图&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/06.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;来看看一个文件的编译过程，新建Test.m&lt;/p&gt;
-
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;#import &amp;lt;Foundation/Foundation.h&amp;gt;
-&lt;/span&gt;
-&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
-    &lt;span class=&quot;err&quot;&gt;@autoreleasepool&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;NSLog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;%@&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;Hello Leo&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;在终端输入：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;clang -ccc-print-phases -framework Foundation test.m -o test
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;会看到下列的：&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;0: input, &lt;span class=&quot;s2&quot;&gt;&quot;Foundation&quot;&lt;/span&gt;, object 
-1: input, &lt;span class=&quot;s2&quot;&gt;&quot;test.m&quot;&lt;/span&gt;, objective-c
-2: preprocessor, &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;1&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;, objective-c-cpp-output//预处理
-3: compiler, &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;2&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;, ir //编译生成IR&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;中间代码&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-4: backend, &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;3&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;, assembler//汇编器生成汇编代码
-5: assembler, &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;4&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;, object//生成机器码
-6: linker, &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;0, 5&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;, image//链接
-7: bind-arch, &lt;span class=&quot;s2&quot;&gt;&quot;x86_64&quot;&lt;/span&gt;, &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;6&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;, image//生成Image，也就是最后的可执行文件
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;编译器前端&quot;&gt;编译器前端&lt;/h4&gt;
-
-&lt;p&gt;编译器前端的任务是进行：语法分析，语义分析，生成中间代码(intermediate representation )。在这个过程中，会进行类型检查，如果发现错误或者警告会标注出来在哪一行。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/07.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;编译器优化&quot;&gt;编译器优化&lt;/h4&gt;
-
-&lt;p&gt;LVVM优化器会进行BitCode的生成，链接期优化等等&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/08.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;编译器后端&quot;&gt;编译器后端&lt;/h4&gt;
-
-&lt;p&gt;LLVM机器码生成器会针对不同的架构，比如arm64等生成不同的机器码&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/09.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;四xcode执行build的流程&quot;&gt;四、Xcode执行Build的流程&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;编译信息写入辅助文件，创建编译后的文件架构(name.app)&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;写入辅助文件：将项目的文件结构对应表、将要执行的脚本、项目依赖库的文件结构对应表写成文件，方便后面使用&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;运行预设脚本：Cocoapods 会预设一些脚本，当然你也可以自己预设一些脚本来运行。这些脚本都在 Build Phases 中可以看到；&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;编译文件：针对每一个文件进行编译，生成可执行文件 Mach-O，这过程 LLVM 的完整流程，前端、优化器、后端；使用&lt;code class=&quot;highlighter-rouge&quot;&gt;CompileC&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;clang&lt;/code&gt;命令。&lt;/p&gt;
-
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;CompileC ClassName.o ClassName.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-export LANG=en_US.US-ASCII
-export PATH=&quot;...&quot;
-clang -x objective-c -arch x86_64 -fmessage-length=0 -fobjc-arc... -Wno-missing-field-initializers ... -DDEBUG=1 ... -isysroot iPhoneSimulator10.1.sdk -fasm-blocks ... -I 上文提到的文件 -F 所需要的Framework  -iquote 所需要的Framework  ... -c ClassName.c -o ClassName.o
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;clang是实际的编译命令
--x      objective-c 指定了编译的语言
--arch   x86_64制定了编译的架构，类似还有arm7等
--fobjc-arc 一些列-f开头的，指定了采用arc等信息。这个也就是为什么你可以对单独的一个.m文件采用非ARC编程。
--Wno-missing-field-initializers 一系列以-W开头的，指的是编译的警告选项，通过这些你可以定制化编译选项
--DDEBUG=1 一些列-D开头的，指的是预编译宏，通过这些宏可以实现条件编译
--iPhoneSimulator10.1.sdk 制定了编译采用的iOS SDK版本
--I 把编译信息写入指定的辅助文件
--F 链接所需要的Framework
--c ClassName.c 编译文件
--o ClassName.o 编译产物
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;链接库，例如&lt;code class=&quot;highlighter-rouge&quot;&gt;Foundation.framework&lt;/code&gt;,&lt;code class=&quot;highlighter-rouge&quot;&gt;AFNetworking.framework&lt;/code&gt;…&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;拷贝资源文件：将项目中的资源文件拷贝到目标包；&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;编译 storyboard 文件：storyboard 文件也是会被编译的；&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;链接 storyboard 文件：将编译后的 storyboard 文件链接成一个文件；&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;编译 Asset 文件：我们的图片如果使用 Assets.xcassets 来管理图片，那么这些图片将会被编译成机器码，除了 icon 和 launchImage；&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;运行 Cocoapods 脚本：将在编译项目之前已经编译好的依赖库和相关资源拷贝到包中。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;创建.app文件和对其签名&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;dsym-文件&quot;&gt;dSYM 文件&lt;/h4&gt;
-
-&lt;p&gt;我们在每次编译过后，都会生成一个dsym文件。dsym文件中，存储了16进制的函数地址映射。&lt;/p&gt;
-
-&lt;p&gt;在App实际执行的二进制文件中，是通过地址来调用方法的。在App crash的时候，第三方工具（Fabric,友盟等）会帮我们抓到崩溃的调用栈，调用栈里会包含crash地址的调用信息。然后，通过dSYM文件，我们就可以由地址映射到具体的函数位置。&lt;/p&gt;
-
-&lt;h3 id=&quot;五提高项目build速度&quot;&gt;五、提高项目Build速度&lt;/h3&gt;
-
-&lt;h4 id=&quot;查看编译时间&quot;&gt;查看编译时间&lt;/h4&gt;
-
-&lt;p&gt;我们需要一个途径，能够看到编译的时间，这样才能有个对比，知道我们的优化究竟有没有效果。 
-对于XCode 8，关闭XCode，终端输入以下指令&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ defaults write com.apple.dt.Xcode ShowBuildOperationDuration YES
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;代码优化-forward-declaration&quot;&gt;代码优化-&lt;strong&gt;forward declaration&lt;/strong&gt;&lt;/h4&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;@class CLASSNAME&lt;/code&gt;，而不是&lt;code class=&quot;highlighter-rouge&quot;&gt;#import CLASSNAME.h&lt;/code&gt;。这样，编译器能大大提高#import的替换速度。&lt;/p&gt;
-
-&lt;h4 id=&quot;对常用工具类打包&quot;&gt;对常用工具类打包&lt;/h4&gt;
-
-&lt;p&gt;打包成Framework或者静态库，这样编译的时候这部分代码就不需要重新编译了。&lt;/p&gt;
-
-&lt;h4 id=&quot;常用头文件放到预编译文件里&quot;&gt;常用头文件放到预编译文件里&lt;/h4&gt;
-
-&lt;p&gt;XCode的pch文件是预编译文件，这里的内容在执行XCode build之前就已经被预编译，并且引入到每一个.m文件里了。&lt;/p&gt;
-
-&lt;p&gt;编译器选项优化&lt;/p&gt;
-
-&lt;h4 id=&quot;debug模式下不生成dsym文件&quot;&gt;Debug模式下，不生成dsym文件&lt;/h4&gt;
-
-&lt;p&gt;上文提到了，dysm文件里存储了调试信息，在Debug模式下，我们可以借助XCode和LLDB进行调试。所以，不需要生成额外的dsym文件来降低编译速度。&lt;/p&gt;
-
-&lt;h4 id=&quot;debug开启build-active-architecture-only&quot;&gt;Debug开启&lt;code class=&quot;highlighter-rouge&quot;&gt;Build Active Architecture Only&lt;/code&gt;&lt;/h4&gt;
-
-&lt;p&gt;在XCode -&amp;gt; Build Settings -&amp;gt; Build Active Architecture Only 改为YES。这样做，可以只编译当前的版本，比如arm7/arm64等等，记得只开启Debug模式。这个选项在高版本的XCode中自动开启了。&lt;/p&gt;
-
-&lt;h4 id=&quot;debug模式下关闭编译器优化&quot;&gt;Debug模式下，关闭编译器优化&lt;/h4&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/10.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">一、编译</summary></entry></feed>
+&lt;p&gt;WWDC 2017: &lt;a href=&quot;https://developer.apple.com/videos/play/wwdc2017/413/&quot;&gt;App Startup Time: Past, Present, and Future&lt;/a&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">一、启动过程</summary></entry></feed>
