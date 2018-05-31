@@ -105,9 +105,19 @@ NSMethodSignature *sig  = [cls instanceMethodSignatureForSelector:aSelecotor];
 
 如果把所有跨模块的调用都写到一个类里，那么这个类肯定会变得臃肿，所以，建议是在一个类里写下核心代码，而对于某个模块需要被调用的方法，则通过Category的形式，整合到一起。
 
+Categroy
+
+```objc
+@interface HTMediator (HTOtherModule)
+
+- (NSString *)otherModulePerform:(NSString *)targetName action:(NSString *)actionName name:(NSString *)name hour:(NSUInteger)hour place:(NSString *)palce doSomething:(NSString *)doSomething;
+
+@end
+```
+
 这是核心代码
 
-```
+```objc
 - (id)performTarget:(NSString *)targetName action:(NSString *)actionName parameters:(NSArray *)parameters{
     Class tagetClass = NSClassFromString(targetName);
     NSObject *tagert= [[tagetClass alloc]init];
@@ -142,3 +152,4 @@ NSMethodSignature *sig  = [cls instanceMethodSignatureForSelector:aSelecotor];
 }
 ```
 
+所有代码可以在[Github](https://github.com/helloted/iOS_Demo/tree/master/HTMediator)

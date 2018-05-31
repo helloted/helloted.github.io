@@ -213,42 +213,52 @@
 
 <p>如果把所有跨模块的调用都写到一个类里，那么这个类肯定会变得臃肿，所以，建议是在一个类里写下核心代码，而对于某个模块需要被调用的方法，则通过Category的形式，整合到一起。</p>
 
-<p>这是核心代码</p>
+<p>Categroy</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (id)performTarget:(NSString *)targetName action:(NSString *)actionName parameters:(NSArray *)parameters{
-    Class tagetClass = NSClassFromString(targetName);
-    NSObject *tagert= [[tagetClass alloc]init];
-    SEL aSelector = NSSelectorFromString(actionName);
-    NSMethodSignature *methodSignature = [tagetClass instanceMethodSignatureForSelector:aSelector];
-    if(methodSignature == nil) // 方法签名找不到，异常情况自己处理
-    {
-        NSLog(@"找不到这个方法");
-        return nil;
-    }
-    else
-    {
-        NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
-        [invocation setTarget:tagert];
-        [invocation setSelector:aSelector];
-        
-        //消息发送的参数，签名两个是class和selector，所以方法参数从第3个开始
-        [parameters enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            [invocation setArgument:&amp;obj atIndex:idx+2];
-        }];
-        [invocation invoke];
-        
-        //返回值处理
-        __autoreleasing id callBackObject = nil;
-        if(methodSignature.methodReturnLength)
-        {
-            [invocation getReturnValue:&amp;callBackObject];
-        }
-        return callBackObject;
-    }
-    return nil;
-}
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">HTMediator</span> <span class="p">(</span><span class="nl">HTOtherModule</span><span class="p">)</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nf">otherModulePerform</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">targetName</span> <span class="nf">action</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">actionName</span> <span class="nf">name</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">name</span> <span class="nf">hour</span><span class="p">:(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="nv">hour</span> <span class="nf">place</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">palce</span> <span class="nf">doSomething</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">doSomething</span><span class="p">;</span>
+
+<span class="k">@end</span>
 </code></pre></div></div>
 
+<p>这是核心代码</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="nf">performTarget</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">targetName</span> <span class="nf">action</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">actionName</span> <span class="nf">parameters</span><span class="p">:(</span><span class="n">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="nv">parameters</span><span class="p">{</span>
+    <span class="n">Class</span> <span class="n">tagetClass</span> <span class="o">=</span> <span class="n">NSClassFromString</span><span class="p">(</span><span class="n">targetName</span><span class="p">);</span>
+    <span class="n">NSObject</span> <span class="o">*</span><span class="n">tagert</span><span class="o">=</span> <span class="p">[[</span><span class="n">tagetClass</span> <span class="nf">alloc</span><span class="p">]</span><span class="nf">init</span><span class="p">];</span>
+    <span class="n">SEL</span> <span class="n">aSelector</span> <span class="o">=</span> <span class="n">NSSelectorFromString</span><span class="p">(</span><span class="n">actionName</span><span class="p">);</span>
+    <span class="n">NSMethodSignature</span> <span class="o">*</span><span class="n">methodSignature</span> <span class="o">=</span> <span class="p">[</span><span class="n">tagetClass</span> <span class="nf">instanceMethodSignatureForSelector</span><span class="p">:</span><span class="n">aSelector</span><span class="p">];</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">methodSignature</span> <span class="o">==</span> <span class="nb">nil</span><span class="p">)</span> <span class="c1">// 方法签名找不到，异常情况自己处理</span>
+    <span class="p">{</span>
+        <span class="n">NSLog</span><span class="p">(</span><span class="s">@"找不到这个方法"</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nb">nil</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="n">NSInvocation</span> <span class="o">*</span><span class="n">invocation</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSInvocation</span> <span class="nf">invocationWithMethodSignature</span><span class="p">:</span><span class="n">methodSignature</span><span class="p">];</span>
+        <span class="p">[</span><span class="n">invocation</span> <span class="nf">setTarget</span><span class="p">:</span><span class="n">tagert</span><span class="p">];</span>
+        <span class="p">[</span><span class="n">invocation</span> <span class="nf">setSelector</span><span class="p">:</span><span class="n">aSelector</span><span class="p">];</span>
+        
+        <span class="c1">//消息发送的参数，签名两个是class和selector，所以方法参数从第3个开始</span>
+        <span class="p">[</span><span class="n">parameters</span> <span class="nf">enumerateObjectsUsingBlock</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">id</span>  <span class="n">_Nonnull</span> <span class="n">obj</span><span class="p">,</span> <span class="n">NSUInteger</span> <span class="n">idx</span><span class="p">,</span> <span class="n">BOOL</span> <span class="o">*</span> <span class="n">_Nonnull</span> <span class="n">stop</span><span class="p">)</span> <span class="p">{</span>
+            <span class="p">[</span><span class="n">invocation</span> <span class="nf">setArgument</span><span class="p">:</span><span class="o">&amp;</span><span class="n">obj</span> <span class="nf">atIndex</span><span class="p">:</span><span class="n">idx</span><span class="o">+</span><span class="mi">2</span><span class="p">];</span>
+        <span class="p">}];</span>
+        <span class="p">[</span><span class="n">invocation</span> <span class="nf">invoke</span><span class="p">];</span>
+        
+        <span class="c1">//返回值处理</span>
+        <span class="n">__autoreleasing</span> <span class="n">id</span> <span class="n">callBackObject</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">methodSignature</span><span class="p">.</span><span class="n">methodReturnLength</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="p">[</span><span class="n">invocation</span> <span class="nf">getReturnValue</span><span class="p">:</span><span class="o">&amp;</span><span class="n">callBackObject</span><span class="p">];</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">callBackObject</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nb">nil</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>所有代码可以在<a href="https://github.com/helloted/iOS_Demo/tree/master/HTMediator">Github</a></p>
 
 
                 <hr>
