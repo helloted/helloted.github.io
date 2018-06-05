@@ -160,13 +160,8 @@
 <div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">NSMethodSignature</span> <span class="o">*</span><span class="p">)</span><span class="nf">ht_methodSignatureForSelector</span><span class="p">:(</span><span class="n">SEL</span><span class="p">)</span><span class="nv">aSelector</span><span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">[</span><span class="n">self</span> <span class="nf">respondsToSelector</span><span class="p">:</span><span class="n">aSelector</span><span class="p">])</span> <span class="p">{</span>
         <span class="n">_errorSelectorName</span> <span class="o">=</span> <span class="n">NSStringFromSelector</span><span class="p">(</span><span class="n">aSelector</span><span class="p">);</span>
+        <span class="n">class_addMethod</span><span class="p">([</span><span class="n">self</span> <span class="nf">class</span><span class="p">],</span> <span class="n">aSelector</span><span class="p">,</span> <span class="p">(</span><span class="n">IMP</span><span class="p">)</span><span class="n">dynamicMethodIMP</span><span class="p">,</span> <span class="s">"v@:"</span><span class="p">);</span>
         <span class="n">NSMethodSignature</span> <span class="o">*</span><span class="n">methodSignature</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span> <span class="nf">ht_methodSignatureForSelector</span><span class="p">:</span><span class="n">aSelector</span><span class="p">];</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">class_addMethod</span><span class="p">([</span><span class="n">self</span> <span class="nf">class</span><span class="p">],</span> <span class="n">aSelector</span><span class="p">,</span> <span class="p">(</span><span class="n">IMP</span><span class="p">)</span><span class="n">dynamicMethodIMP</span><span class="p">,</span> <span class="s">"v@:"</span><span class="p">))</span> <span class="p">{</span><span class="c1">//方法参数的获取存在问题</span>
-            <span class="n">NSLog</span><span class="p">(</span><span class="s">@"%@ Selector添加成功！"</span><span class="p">,</span><span class="n">_errorSelectorName</span><span class="p">);</span>
-        <span class="p">}</span>
-        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">methodSignature</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">methodSignature</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span> <span class="nf">ht_methodSignatureForSelector</span><span class="p">:</span><span class="n">aSelector</span><span class="p">];</span>
-        <span class="p">}</span>
         <span class="k">return</span> <span class="n">methodSignature</span><span class="p">;</span>
     <span class="p">}</span><span class="k">else</span><span class="p">{</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">self</span> <span class="nf">ht_methodSignatureForSelector</span><span class="p">:</span><span class="n">aSelector</span><span class="p">];</span>
@@ -198,6 +193,27 @@
 <p>这样，我们调用不存在的方法就不会报错了</p>
 
 <p><img src="/img/Simple_2/26.png" alt="img" /></p>
+
+<p>如果，不想对现有的类添加过多的方法，可以用一个专门的类来收集这些方法NSProxy</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">NSMethodSignature</span> <span class="o">*</span><span class="p">)</span><span class="nf">methodSignatureForSelector</span><span class="p">:(</span><span class="n">SEL</span><span class="p">)</span><span class="nv">aSelector</span><span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">[</span><span class="n">self</span> <span class="nf">respondsToSelector</span><span class="p">:</span><span class="n">aSelector</span><span class="p">])</span> <span class="p">{</span>
+        <span class="n">_errorSelectorName</span> <span class="o">=</span> <span class="n">NSStringFromSelector</span><span class="p">(</span><span class="n">aSelector</span><span class="p">);</span>
+        <span class="n">class_addMethod</span><span class="p">([</span><span class="n">self</span> <span class="nf">class</span><span class="p">],</span> <span class="n">aSelector</span><span class="p">,</span> <span class="p">(</span><span class="n">IMP</span><span class="p">)</span><span class="n">proxyDynamicMethodIMP</span><span class="p">,</span> <span class="s">"v@:"</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">NSMethodSignature</span> <span class="o">*</span><span class="n">methodSignature</span> <span class="o">=</span> <span class="p">[[</span><span class="n">self</span> <span class="nf">class</span><span class="p">]</span> <span class="nf">instanceMethodSignatureForSelector</span><span class="p">:</span><span class="n">aSelector</span><span class="p">];</span>
+    <span class="k">return</span> <span class="n">methodSignature</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">forwardInvocation</span><span class="p">:(</span><span class="n">NSInvocation</span> <span class="o">*</span><span class="p">)</span><span class="nv">anInvocation</span><span class="p">{</span>
+    <span class="n">SEL</span> <span class="n">selector</span> <span class="o">=</span> <span class="p">[</span><span class="n">anInvocation</span> <span class="nf">selector</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">([</span><span class="n">self</span> <span class="nf">respondsToSelector</span><span class="p">:</span><span class="n">selector</span><span class="p">])</span> <span class="p">{</span>
+        <span class="p">[</span><span class="n">anInvocation</span> <span class="nf">invokeWithTarget</span><span class="p">:</span><span class="n">self</span><span class="p">];</span>
+    <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+        <span class="p">[</span><span class="n">self</span> <span class="nf">forwardInvocation</span><span class="p">:</span><span class="n">anInvocation</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
 
 

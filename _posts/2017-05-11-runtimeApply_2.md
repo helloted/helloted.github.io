@@ -47,13 +47,8 @@ Thread 1: EXC_BAD_INSTRUCTION (code=EXC_I386_INVOP, subcode=0x0)
 - (NSMethodSignature *)ht_methodSignatureForSelector:(SEL)aSelector{
     if (![self respondsToSelector:aSelector]) {
         _errorSelectorName = NSStringFromSelector(aSelector);
+        class_addMethod([self class], aSelector, (IMP)dynamicMethodIMP, "v@:");
         NSMethodSignature *methodSignature = [self ht_methodSignatureForSelector:aSelector];
-        if (class_addMethod([self class], aSelector, (IMP)dynamicMethodIMP, "v@:")) {//方法参数的获取存在问题
-            NSLog(@"%@ Selector添加成功！",_errorSelectorName);
-        }
-        if (!methodSignature) {
-            methodSignature = [self ht_methodSignatureForSelector:aSelector];
-        }
         return methodSignature;
     }else{
         return [self ht_methodSignatureForSelector:aSelector];
@@ -86,4 +81,28 @@ Thread 1: EXC_BAD_INSTRUCTION (code=EXC_I386_INVOP, subcode=0x0)
 这样，我们调用不存在的方法就不会报错了
 
 ![img](/img/Simple_2/26.png)
+
+如果，不想对现有的类添加过多的方法，可以用一个专门的类来收集这些方法NSProxy
+
+```objc
+- (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector{
+    if (![self respondsToSelector:aSelector]) {
+        _errorSelectorName = NSStringFromSelector(aSelector);
+        class_addMethod([self class], aSelector, (IMP)proxyDynamicMethodIMP, "v@:");
+    }
+    NSMethodSignature *methodSignature = [[self class] instanceMethodSignatureForSelector:aSelector];
+    return methodSignature;
+}
+
+- (void)forwardInvocation:(NSInvocation *)anInvocation{
+    SEL selector = [anInvocation selector];
+    if ([self respondsToSelector:selector]) {
+        [anInvocation invokeWithTarget:self];
+    }else{
+        [self forwardInvocation:anInvocation];
+    }
+}
+```
+
+
 

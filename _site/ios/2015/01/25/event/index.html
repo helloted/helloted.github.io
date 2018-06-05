@@ -192,8 +192,6 @@
 
 <p>当找到最合适的响应者之后, 便会调用控件相应的touches方法来作具体处理. 并将该事件随着响应者链条往回传递, 交给上一个响应者来处理. (即调用super的touches方法)，从之前往下走的路线往上回传，在其中加入了Viewtroller来处理</p>
 
-<p>作用：这样设计是为了让一个事件能够被多个对象处理</p>
-
 <ol>
   <li>
     <p>如果view的控制器存在，就传递给控制器；如果控制器不存在，则将其传递给它的父View</p>
@@ -211,10 +209,21 @@
     <p>如果UIApplication也不能处理该事件或消息，响应者链条从头到尾，都未处理，则将其丢弃</p>
 
     <p><img src="/img/Simple_1/02.png" alt="" /></p>
+
+    <p>事件不处理，指的是<code class="highlighter-rouge">touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event;</code>方法不写。</p>
   </li>
 </ol>
 
 <h3 id="四实例分析">四、实例分析</h3>
+
+<p>UIButton的继承链是：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>UIButton-&gt;UIControl-&gt;UIView-&gt;UIResponder-&gt;NSObject
+</code></pre></div></div>
+
+<p>UIApplication能够接受事件，因为UIApplication和UIView一样继承自UIResponder</p>
+
+<p>下面是一个点击事件的方法过程</p>
 
 <div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="n">UIButton</span> <span class="o">*</span><span class="n">button</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIButton</span> <span class="nf">buttonWithType</span><span class="p">:</span><span class="n">UIButtonTypeContactAdd</span><span class="p">];</span>
     <span class="n">button</span><span class="p">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">CGRectMake</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">40</span><span class="p">);</span>
