@@ -1,7 +1,7 @@
 ---
 layout:     post
 category:   iOS
-title:      "Runtime应用(三)：NSProxy"
+title:      "Runtime应用(四)：NSProxy"
 subtitle:   "利用NSProxy以及运行时来实现“多继承”"
 date:       2018-06-04 12:00:00
 author:     "Ted"
@@ -16,7 +16,7 @@ header-img: "img/default.jpg"
 
 NSProxy是与NSObject并列的一个类，它有两个运行时方法
 
-```
+```objc
 - (void)forwardInvocation:(NSInvocation *)anInvocation;
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)sel;
 ```
@@ -27,7 +27,7 @@ NSProxy是与NSObject并列的一个类，它有两个运行时方法
 
 先新建两个普通类Teacher和Worker;
 
-```
+```objc
 #import "Teacher.h"
 
 @implementation Teacher
@@ -39,7 +39,7 @@ NSProxy是与NSObject并列的一个类，它有两个运行时方法
 @end
 ```
 
-```
+```objc
 #import "Worker.h"
 
 @implementation Worker
@@ -63,7 +63,7 @@ NSProxy是与NSObject并列的一个类，它有两个运行时方法
 
 NSProxy与NSObject不同的是，初始化一个NSProxy只需要alloc方法，不需要init方法，为了模仿普通类，我们自定义一个init方法，并在其中做一些初始化
 
-```
+```objc
 - (instancetype)init{
     _methodsMap = [NSMutableDictionary dictionary];
     Teacher *teacher = [[Teacher alloc] init];
@@ -78,7 +78,7 @@ NSProxy与NSObject不同的是，初始化一个NSProxy只需要alloc方法，�
 
 初始化的主要工作就是将需要继承的类的方法存储好
 
-```
+```objc
 - (void)inheriteMethodsFromSuperTarget:(id)target{
     unsigned int numberOfMethods = 0;
     Method *method_list = class_copyMethodList([target class], &numberOfMethods);
@@ -94,7 +94,7 @@ NSProxy与NSObject不同的是，初始化一个NSProxy只需要alloc方法，�
 
 然后重写两个消息转发的方法
 
-```
+```objc
 - (void)forwardInvocation:(NSInvocation *)invocation{
     SEL sel = invocation.selector;
     NSString *methodName = NSStringFromSelector(sel);
@@ -120,7 +120,7 @@ NSProxy与NSObject不同的是，初始化一个NSProxy只需要alloc方法，�
 }
 ```
 
-![img](/img/Simple_8/11.png)
+![img](/img/Simple_8/12.png)
 
 可以看到虽然，没有实现workHard和teachStudent两个方法，我们依旧可以调用者两个其他类的方法，模拟成了多继承。
 

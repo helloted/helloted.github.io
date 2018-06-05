@@ -16,7 +16,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
 
-    <title>Runtime应用(三)：NSProxy - Helloted Blog</title>
+    <title>Runtime应用(四)：NSProxy - Helloted Blog</title>
 
     <link rel="canonical" href="http://www.helloted.com/ios/2018/06/04/runtimeApply_4/">
 
@@ -105,7 +105,7 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <div class="post-heading">
-                    <h1>Runtime应用(三)：NSProxy</h1>
+                    <h1>Runtime应用(四)：NSProxy</h1>
                     
                     <h2 class="subheading">利用NSProxy以及运行时来实现“多继承”</h2>
                     
@@ -132,8 +132,8 @@
 
 <p>NSProxy是与NSObject并列的一个类，它有两个运行时方法</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)forwardInvocation:(NSInvocation *)anInvocation;
-- (NSMethodSignature *)methodSignatureForSelector:(SEL)sel;
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">forwardInvocation</span><span class="p">:(</span><span class="n">NSInvocation</span> <span class="o">*</span><span class="p">)</span><span class="nv">anInvocation</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">NSMethodSignature</span> <span class="o">*</span><span class="p">)</span><span class="nf">methodSignatureForSelector</span><span class="p">:(</span><span class="n">SEL</span><span class="p">)</span><span class="nv">sel</span><span class="p">;</span>
 </code></pre></div></div>
 
 <p>我们可以通过消息转发的特性，将消息转发到另外的实例来实现多继承。</p>
@@ -142,26 +142,26 @@
 
 <p>先新建两个普通类Teacher和Worker;</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#import "Teacher.h"
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#import "Teacher.h"
+</span>
+<span class="k">@implementation</span> <span class="nc">Teacher</span>
 
-@implementation Teacher
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">teachStudent</span><span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"我可以教导学生"</span><span class="p">);</span>
+<span class="p">}</span>
 
-- (void)teachStudent{
-    NSLog(@"我可以教导学生");
-}
-
-@end
+<span class="k">@end</span>
 </code></pre></div></div>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#import "Worker.h"
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#import "Worker.h"
+</span>
+<span class="k">@implementation</span> <span class="nc">Worker</span>
 
-@implementation Worker
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">workHard</span><span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"我可以做工"</span><span class="p">);</span>
+<span class="p">}</span>
 
-- (void)workHard{
-    NSLog(@"我可以做工");
-}
-
-@end
+<span class="k">@end</span>
 </code></pre></div></div>
 
 <p>再新建一个类SuperPerson继承自NSProxy</p>
@@ -175,61 +175,61 @@
 
 <p>NSProxy与NSObject不同的是，初始化一个NSProxy只需要alloc方法，不需要init方法，为了模仿普通类，我们自定义一个init方法，并在其中做一些初始化</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (instancetype)init{
-    _methodsMap = [NSMutableDictionary dictionary];
-    Teacher *teacher = [[Teacher alloc] init];
-    Worker *worker = [[Worker alloc] init];
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="n">init</span><span class="p">{</span>
+    <span class="n">_methodsMap</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSMutableDictionary</span> <span class="nf">dictionary</span><span class="p">];</span>
+    <span class="n">Teacher</span> <span class="o">*</span><span class="n">teacher</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Teacher</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+    <span class="n">Worker</span> <span class="o">*</span><span class="n">worker</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Worker</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
     
-    // 将"父类"方法继承
-    [self inheriteMethodsFromSuperTarget:teacher];
-    [self inheriteMethodsFromSuperTarget:worker];
-    return self;
-}
+    <span class="c1">// 将"父类"方法继承</span>
+    <span class="p">[</span><span class="n">self</span> <span class="nf">inheriteMethodsFromSuperTarget</span><span class="p">:</span><span class="n">teacher</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">self</span> <span class="nf">inheriteMethodsFromSuperTarget</span><span class="p">:</span><span class="n">worker</span><span class="p">];</span>
+    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+<span class="p">}</span>
 </code></pre></div></div>
 
 <p>初始化的主要工作就是将需要继承的类的方法存储好</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)inheriteMethodsFromSuperTarget:(id)target{
-    unsigned int numberOfMethods = 0;
-    Method *method_list = class_copyMethodList([target class], &amp;numberOfMethods);
-    for (int i = 0; i &lt; numberOfMethods; i ++) {
-        Method temp_method = method_list[i];
-        SEL temp_sel = method_getName(temp_method);
-        const char *temp_method_name = sel_getName(temp_sel);
-        [_methodsMap setObject:target forKey:[NSString stringWithUTF8String:temp_method_name]];
-    }
-    free(method_list);
-}
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">inheriteMethodsFromSuperTarget</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">target</span><span class="p">{</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">numberOfMethods</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">Method</span> <span class="o">*</span><span class="n">method_list</span> <span class="o">=</span> <span class="n">class_copyMethodList</span><span class="p">([</span><span class="n">target</span> <span class="nf">class</span><span class="p">],</span> <span class="o">&amp;</span><span class="n">numberOfMethods</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numberOfMethods</span><span class="p">;</span> <span class="n">i</span> <span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">Method</span> <span class="n">temp_method</span> <span class="o">=</span> <span class="n">method_list</span><span class="p">[</span><span class="nf">i</span><span class="p">];</span>
+        <span class="n">SEL</span> <span class="n">temp_sel</span> <span class="o">=</span> <span class="n">method_getName</span><span class="p">(</span><span class="n">temp_method</span><span class="p">);</span>
+        <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">temp_method_name</span> <span class="o">=</span> <span class="n">sel_getName</span><span class="p">(</span><span class="n">temp_sel</span><span class="p">);</span>
+        <span class="p">[</span><span class="n">_methodsMap</span> <span class="nf">setObject</span><span class="p">:</span><span class="n">target</span> <span class="nf">forKey</span><span class="p">:[</span><span class="n">NSString</span> <span class="nf">stringWithUTF8String</span><span class="p">:</span><span class="n">temp_method_name</span><span class="p">]];</span>
+    <span class="p">}</span>
+    <span class="n">free</span><span class="p">(</span><span class="n">method_list</span><span class="p">);</span>
+<span class="p">}</span>
 </code></pre></div></div>
 
 <p>然后重写两个消息转发的方法</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)forwardInvocation:(NSInvocation *)invocation{
-    SEL sel = invocation.selector;
-    NSString *methodName = NSStringFromSelector(sel);
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">forwardInvocation</span><span class="p">:(</span><span class="n">NSInvocation</span> <span class="o">*</span><span class="p">)</span><span class="nv">invocation</span><span class="p">{</span>
+    <span class="n">SEL</span> <span class="n">sel</span> <span class="o">=</span> <span class="n">invocation</span><span class="p">.</span><span class="n">selector</span><span class="p">;</span>
+    <span class="n">NSString</span> <span class="o">*</span><span class="n">methodName</span> <span class="o">=</span> <span class="n">NSStringFromSelector</span><span class="p">(</span><span class="n">sel</span><span class="p">);</span>
     
-    //查找对应的target
-    id target = _methodsMap[methodName];
+    <span class="c1">//查找对应的target</span>
+    <span class="n">id</span> <span class="n">target</span> <span class="o">=</span> <span class="n">_methodsMap</span><span class="p">[</span><span class="nf">methodName</span><span class="p">];</span>
     
-    if (target &amp;&amp; [target respondsToSelector:sel]) {
-        [invocation invokeWithTarget:target];
-    } else {
-        [super forwardInvocation:invocation];
-    }
-}
+    <span class="k">if</span> <span class="p">(</span><span class="n">target</span> <span class="o">&amp;&amp;</span> <span class="p">[</span><span class="n">target</span> <span class="nf">respondsToSelector</span><span class="p">:</span><span class="n">sel</span><span class="p">])</span> <span class="p">{</span>
+        <span class="p">[</span><span class="n">invocation</span> <span class="nf">invokeWithTarget</span><span class="p">:</span><span class="n">target</span><span class="p">];</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="p">[</span><span class="n">super</span> <span class="nf">forwardInvocation</span><span class="p">:</span><span class="n">invocation</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-- (NSMethodSignature *)methodSignatureForSelector:(SEL)sel{
-    NSString *methodName = NSStringFromSelector(sel);
-    id target = _methodsMap[methodName];
-    if (target &amp;&amp; [target respondsToSelector:sel]) {
-        return [target methodSignatureForSelector:sel];
-    } else {
-        return [super methodSignatureForSelector:sel];
-    }
-}
+<span class="k">-</span> <span class="p">(</span><span class="n">NSMethodSignature</span> <span class="o">*</span><span class="p">)</span><span class="nf">methodSignatureForSelector</span><span class="p">:(</span><span class="n">SEL</span><span class="p">)</span><span class="nv">sel</span><span class="p">{</span>
+    <span class="n">NSString</span> <span class="o">*</span><span class="n">methodName</span> <span class="o">=</span> <span class="n">NSStringFromSelector</span><span class="p">(</span><span class="n">sel</span><span class="p">);</span>
+    <span class="n">id</span> <span class="n">target</span> <span class="o">=</span> <span class="n">_methodsMap</span><span class="p">[</span><span class="nf">methodName</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">target</span> <span class="o">&amp;&amp;</span> <span class="p">[</span><span class="n">target</span> <span class="nf">respondsToSelector</span><span class="p">:</span><span class="n">sel</span><span class="p">])</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">target</span> <span class="nf">methodSignatureForSelector</span><span class="p">:</span><span class="n">sel</span><span class="p">];</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">super</span> <span class="nf">methodSignatureForSelector</span><span class="p">:</span><span class="n">sel</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 </code></pre></div></div>
 
-<p><img src="/img/Simple_8/11.png" alt="img" /></p>
+<p><img src="/img/Simple_8/12.png" alt="img" /></p>
 
 <p>可以看到虽然，没有实现workHard和teachStudent两个方法，我们依旧可以调用者两个其他类的方法，模拟成了多继承。</p>
 
