@@ -1,4 +1,61 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-06-20T10:31:45+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">Runtime应用(四)：NSProxy</title><link href="http://www.helloted.com/ios/2018/06/04/runtimeApply_4/" rel="alternate" type="text/html" title="Runtime应用(四)：NSProxy" /><published>2018-06-04T20:00:00+08:00</published><updated>2018-06-04T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2018/06/04/runtimeApply_4</id><content type="html" xml:base="http://www.helloted.com/ios/2018/06/04/runtimeApply_4/">&lt;h4 id=&quot;1继承&quot;&gt;1、继承&lt;/h4&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-06-22T19:41:52+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">iOS APP分发</title><link href="http://www.helloted.com/ios/2018/06/21/appstore/" rel="alternate" type="text/html" title="iOS APP分发" /><published>2018-06-21T20:00:00+08:00</published><updated>2018-06-21T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2018/06/21/appstore</id><content type="html" xml:base="http://www.helloted.com/ios/2018/06/21/appstore/">&lt;p&gt;在不越狱的情况下，下载正式版的app只能通过官方appstore进行下载，但是如果仅仅是测试的话，是可以通过其他渠道来下载app，苹果官方有testflight，第三方比较有名的有&lt;a href=&quot;https://www.pgyer.com/&quot;&gt;蒲公英&lt;/a&gt;，&lt;a href=&quot;https://fir.im/&quot;&gt;Fir.im&lt;/a&gt;。将ipa包上传之后，其他人就可以通过链接来下载。大概是这样：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/13.jpeg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;其原理是实现一个协议。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;itms-services://?action=download-manifest&amp;amp;url=https://xxxxxxx.plist
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;xxxx.plist是一个app的属性列表，下面是参考&lt;/p&gt;
+
+&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;&amp;lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;plist&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;version=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;1.0&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;dict&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;items&lt;span class=&quot;nt&quot;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;array&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;dict&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;assets&lt;span class=&quot;nt&quot;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;array&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;dict&amp;gt;&lt;/span&gt;
+                    &lt;span class=&quot;nt&quot;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;kind&lt;span class=&quot;nt&quot;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+                    &lt;span class=&quot;nt&quot;&gt;&amp;lt;string&amp;gt;&lt;/span&gt;software-package&lt;span class=&quot;nt&quot;&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+                    &lt;span class=&quot;nt&quot;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;url&lt;span class=&quot;nt&quot;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+                    &lt;span class=&quot;nt&quot;&gt;&amp;lt;string&amp;gt;&lt;/span&gt;你的app下载链接&lt;span class=&quot;nt&quot;&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;/dict&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;/array&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;metadata&lt;span class=&quot;nt&quot;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;dict&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;bundle-identifier&lt;span class=&quot;nt&quot;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;string&amp;gt;&lt;/span&gt;app的bundle-identifier&lt;span class=&quot;nt&quot;&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;bundle-version&lt;span class=&quot;nt&quot;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;string&amp;gt;&lt;/span&gt;版本号&lt;span class=&quot;nt&quot;&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;kind&lt;span class=&quot;nt&quot;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;string&amp;gt;&lt;/span&gt;software&lt;span class=&quot;nt&quot;&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;title&lt;span class=&quot;nt&quot;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;string&amp;gt;&lt;/span&gt;请填上标题&lt;span class=&quot;nt&quot;&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;/dict&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/dict&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/array&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/dict&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/plist&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;所以，总共有三个步骤：&lt;/p&gt;
+
+&lt;p&gt;1、将app上传到一个https的网站供下载&lt;/p&gt;
+
+&lt;p&gt;2、将app下载链接填充到download.plist里，同样上传到一个https网站以供下载&lt;/p&gt;
+
+&lt;p&gt;3、用safari地址栏打开以下&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;itms-services://?action=download-manifest&amp;amp;url=https://xxxxxxx.download.plist
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/14.jpeg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/15.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">在不越狱的情况下，下载正式版的app只能通过官方appstore进行下载，但是如果仅仅是测试的话，是可以通过其他渠道来下载app，苹果官方有testflight，第三方比较有名的有蒲公英，Fir.im。将ipa包上传之后，其他人就可以通过链接来下载。大概是这样：</summary></entry><entry><title type="html">Runtime应用(四)：NSProxy</title><link href="http://www.helloted.com/ios/2018/06/04/runtimeApply_4/" rel="alternate" type="text/html" title="Runtime应用(四)：NSProxy" /><published>2018-06-04T20:00:00+08:00</published><updated>2018-06-04T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2018/06/04/runtimeApply_4</id><content type="html" xml:base="http://www.helloted.com/ios/2018/06/04/runtimeApply_4/">&lt;h4 id=&quot;1继承&quot;&gt;1、继承&lt;/h4&gt;
 
 &lt;p&gt;继承是面向对象的三个基本特征(封装，继承，多态)之一，Objective-C语法中，是单继承。而多继承可以看作是单继承的扩展。所谓多继承是指派生类具有多个基类，派生类与每个基类之间的关系仍可看作是一个单继承。我们可以利用NSProxy的特性来模拟多继承&lt;/p&gt;
 
@@ -1391,156 +1448,4 @@ ffmpeg -f avfoundation -framerate 30 -video_size 320x240 -i &quot;0&quot; -vcode
 &lt;p&gt;取&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&quot;language-Objc&quot;&gt;id object = [objc_getAssociatedObject(self, &amp;amp;MyKey) object];
-&lt;/code&gt;&lt;/pre&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">一、引用</summary></entry><entry><title type="html">OpenGL ES实践</title><link href="http://www.helloted.com/ios/2018/04/02/opengles_1/" rel="alternate" type="text/html" title="OpenGL ES实践" /><published>2018-04-02T20:00:00+08:00</published><updated>2018-04-02T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2018/04/02/opengles_1</id><content type="html" xml:base="http://www.helloted.com/ios/2018/04/02/opengles_1/">&lt;h3 id=&quot;一概念简介&quot;&gt;一、概念简介&lt;/h3&gt;
-
-&lt;p&gt;&lt;strong&gt;GPU&lt;/strong&gt;：能够结合几何、颜色、灯光和其他数据而产生一个屏幕图像的硬件组件&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;渲染&lt;/strong&gt;：把程序提供的几何数据转换成屏幕上的图像的过程叫做渲染，渲染的结果保存在帧缓存中&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;像素&lt;/strong&gt;：计算机上显示的图片都是由矩形的颜色点组成，这些颜色点叫做像素，每个像素都是由3个颜色元素组成的，一个红点、一个绿点和一个蓝点、RGB&lt;/p&gt;
-
-&lt;h4 id=&quot;缓存&quot;&gt;缓存&lt;/h4&gt;
-
-&lt;p&gt;OpenGL ES部分运行在CPU上，部分运行在GPU上，协调两个内存区域之间的数据交换，而OpenGL ES为两个内存区域间的数据交换定义了缓存(buffers)的概念，缓存是指图形处理器能够控制和管理的连续RAM。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;OpenGL ES为缓存提供数据的7个步骤：&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;1、生成glGenBuffers()——请求OpenGL ES为图形处理器控制的缓存生成一个独一无二的标识符。&lt;/p&gt;
-
-&lt;p&gt;2、绑定glBindBuffer()——告诉OpenGL ES为接下来的运算使用一个缓存。&lt;/p&gt;
-
-&lt;p&gt;3、缓冲数据glBufferData()或glBufferSubData()——让OpenGL ES为当前绑定的缓存分配病初始化足够的连续内存（通常是从CPU控制的内存复制数据到分配的内存）。&lt;/p&gt;
-
-&lt;p&gt;4、启用或者禁止glEnableVertexAttribArray()或glDisVertexAttribArray()——告诉OpenGL ES在接下来的渲染中是否使用缓存中的数据。&lt;/p&gt;
-
-&lt;p&gt;5、设置指针glVertexAttribPointer()——告诉OpenGL ES在缓存中的数据的类型和所有需要访问的数据的内存偏移值。&lt;/p&gt;
-
-&lt;p&gt;6、绘制glDrawArrays()或glDrawElements()——告诉OpenGL ES使用当前绑定并启用的缓冲中的数据渲染整个场景或者某个场景的一部分。&lt;/p&gt;
-
-&lt;p&gt;7、删除glDeleteBuffers()——告诉OpenGL ES删除以前生成的缓存病释放相关的资源。&lt;/p&gt;
-
-&lt;h4 id=&quot;帧缓存&quot;&gt;帧缓存&lt;/h4&gt;
-
-&lt;p&gt;GPU需要知道应该在内存中那个位置存储渲染出来的2D图像像素数据，接受渲染结果的缓存区叫做帧缓存。&lt;/p&gt;
-
-&lt;p&gt;屏幕显示像素受到保存在前帧缓存中的像素颜色元素控制，所以程序和操作系统不会直接渲染到前帧缓存中，因为那样会让用户看到还没渲染完成的图像。而是，把渲染结果保存到后帧缓存中，当后帧缓存包含一个&lt;strong&gt;完成&lt;/strong&gt;的图像，前后帧缓存瞬间切换，这样就呈现了新的图像。在iOS系统中，这些操作由系统之家完成，应用不能插手。Core Animation会把多个层（应用的层，系统的层比如状态栏）混合起来并在后帧缓存中产生最终的颜色，然后切换缓存。&lt;/p&gt;
-
-&lt;h3 id=&quot;二ios的图像架构&quot;&gt;二、iOS的图像架构&lt;/h3&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_6/20.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;而在iOS 8之后，苹果推出了metal框架用来取代OpenGL&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_6/21.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;关于Core Graphics和OpenGL ES之间的关系：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;当图像是要显示到屏幕上的时候，OpenGL ES是Core Graphics的底层，用于连接硬件&lt;/li&gt;
-  &lt;li&gt;而如果是离屏渲染，用于生成PDF和图片文件，Core Graphics则是与OpenGL ES处于并列关系&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Yes, on iOS Core Graphics (Quartz) appears to be layered on top of OpenGL ES for drawing that targets the screen, although not in an explicit way that we have access to.&lt;/p&gt;
-
-  &lt;p&gt;Core Graphics takes vector elements (lines, arcs, etc.) and some raster ones (images) and processes them for display to the screen or for other forms of output (PDF files, printing, etc.). If the target is the screen on iOS, those vector elements will be hosted in a CALayer, either directly or through the backing layer of a UIView.&lt;/p&gt;
-
-  &lt;p&gt;These Core Animation layers are effectively wrappers around rectangular textures on the GPU, which is how Core Animation can provide the smooth translation, scaling, and rotation of layers on even the original iPhone hardware. I can’t find a reference for it right now, but at least one WWDC presentation states that OpenGL ES is used by Core Animation to communicate with the GPU to perform this hardware acceleration. Something similar can be observed on the new dual-GPU MacBook Pros, where the more powerful GPU kicks in when interacting with an application using Core Animation.&lt;/p&gt;
-
-  &lt;p&gt;Because Core Graphics rasterizes the vector and raster elements into a CALayer when drawing to the screen, and a CALayer effectively wraps around an OpenGL ES texture, I would place OpenGL ES below Core Graphics on iOS, but only for the case where Core Graphics is rendering to the screen. The reason for the side-by-side placement in the hierarchy you saw may be due to three factors: on the Mac, not all views are layer-backed, so they may not be hardware accelerated in the same way; we can’t really interact with the OpenGL ES backing of standard UI elements, so from a developer’s point of view they are distinct concepts; and Core Graphics can be used to render to offscreen contexts, like PDF files or images.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;引自&lt;a href=&quot;https://stackoverflow.com/questions/7558636/ios-is-core-graphics-implemented-on-top-of-opengl&quot;&gt;iOS: is Core Graphics implemented on top of OpenGL?&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;三helloworld&quot;&gt;三、HelloWorld&lt;/h3&gt;
-
-&lt;h4 id=&quot;1渲染整个context的背景色&quot;&gt;1、渲染整个context的背景色&lt;/h4&gt;
-
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;viewDidLoad&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;super&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;viewDidLoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;GLKView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;glkView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GLKView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;glkView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;EAGLContext&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;initWithAPI&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;kEAGLRenderingAPIOpenGLES2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;glkView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;drawableColorFormat&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GLKViewDrawableColorFormatRGBA8888&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;glkView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;drawableDepthFormat&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GLKViewDrawableDepthFormat24&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-   &lt;span class=&quot;c1&quot;&gt;//将此“EAGLContext”实例设置为OpenGL的“当前激活”的“Context”。这样，以后所有“GL”的指令均作用在这个“Context”上。&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;EAGLContext&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;setCurrentContext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;glkView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;glkView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GLKView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;drawInRect&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CGRect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rect&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// 指定刷新整个context颜色缓冲区时所用的颜色，RGBA&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;glClearColor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    
-    &lt;span class=&quot;c1&quot;&gt;// 刷新缓存区&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// GL_COLOR_BUFFER_BIT:    当前可写的颜色缓冲&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// GL_DEPTH_BUFFER_BIT:    深度缓冲&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// GL_ACCUM_BUFFER_BIT:    累积缓冲&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// GL_STENCIL_BUFFER_BIT:  模板缓冲&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;glClear&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GL_COLOR_BUFFER_BIT&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GL_DEPTH_BUFFER_BIT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;如图所示，可以将整个背景渲染成蓝色&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_6/23.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;解释&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;&lt;strong&gt;drawableColorFormat&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;你的OpenGL上下文有一个缓冲区，它用以存储将在屏幕中显示的颜色。你可以使用其属性来设置缓冲区中每个像素的颜色格式。缺省值是GLKViewDrawableColorFormatRGBA8888，即缓冲区的每个像素的最小组成部分(-个像素有四个元素组成 RGBA)使用8个bit(如R使用8个bit)（所以每个像素4个字节 既 4*8 个bit）。这非常好，因为它给了你提供了最广泛的颜色范围，让你的app看起来更好。但是如果你的app允许更小范围的颜色，你可以设置为GLKViewDrawableColorFormatRGB565，从而使你的app消耗更少的资源（内存和处理时间）。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;drawableDepthFormat&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;你的OpenGL上下文还可以（可选地）有另一个缓冲区，称为深度缓冲区。这帮助我们确保更接近观察者的对象显示在远一些的对象的前面（意思就是离观察者近一些的对象会挡住在它后面的对象）。其缺省的工作方式是：OpenGL把接近观察者的对象的所有像素存储到深度缓冲区，当开始绘制一个像素时，它（OpenGL）首先检查深度缓冲区，看是否已经绘制了更接近观察者的什么东西，如果是则忽略它（要绘制的像素，就是说，在绘制一个像素之前，看看前面有没有挡着它的东西，如果有那就不用绘制了）。否则，把它增加到深度缓冲区和颜色缓冲区。你可以设置这个属性，以选择深度缓冲区的格式。缺省值是GLKViewDrawableDepthFormatNone，意味着完全没有深度缓冲区。但是如果你要使用这个属性（一般用于3D游戏），你应该选择GLKViewDrawableDepthFormat16或GLKViewDrawableDepthFormat24。这里的差别是使用GLKViewDrawableDepthFormat16将消耗更少的资源，但是当对象非常接近彼此时，你可能存在渲染问题。&lt;/p&gt;
-
-&lt;h4 id=&quot;2渲染某个色块&quot;&gt;2、渲染某个色块&lt;/h4&gt;
-
-&lt;p&gt;OpenGL ES的坐标系与Core Graphics的坐标系不一样，起点是在屏幕的中点，到两边是1&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_6/22.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;c1&quot;&gt;// 声明顶点数据&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;GLfloat&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vertexData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;//顶点数据缓存&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;//这几行代码表示的含义是：声明一个缓冲区的标识（GLuint类型）让OpenGL自动分配一个缓冲区并且返回这个标识的值绑定这个缓冲区到当前“Context”最后，将我们前面预先定义的顶点数据“vertexData”复制进这个缓冲区中。参数“GL_STATIC_DRAW”，它表示此缓冲区内容只能被修改一次，但可以无限次读取。&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;GLuint&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;glGenBuffers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;glBindBuffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GL_ARRAY_BUFFER&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;glBufferData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GL_ARRAY_BUFFER&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vertexData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vertexData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GL_STATIC_DRAW&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    
-    &lt;span class=&quot;c1&quot;&gt;// 激活顶点属性（默认它的关闭的）&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;glEnableVertexAttribArray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GLKVertexAttribPosition&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// 填充顶点数据，顶点属性索引（这里是位置）、3个分量的矢量、类型是浮点（GL_FLOAT）、填充时不需要单位化（GL_FALSE）、在数据数组中每行的跨度是12个字节（4*3=12。从预定义的数组中可看出，每行有3个GL_FLOAT浮点值，而GL_FLOAT占4个字节，因此每一行的跨度是4*3），最后一个参数是一个偏移量的指针，用来确定“第一个数据”将从内存数据块的什么地方开始。&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;glVertexAttribPointer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GLKVertexAttribPosition&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GL_FLOAT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GL_FALSE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GLfloat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GLfloat&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-
-    &lt;span class=&quot;c1&quot;&gt;// 着色器&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mEffect&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GLKBaseEffect&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// 着色器的颜色&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mEffect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;constantColor&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GLKVector4Make&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    
- &lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;glkView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GLKView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;view&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;drawInRect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CGRect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;rect&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// 指定刷新整个context颜色缓冲区时所用的颜色，RGBA&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;glClearColor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    
-    &lt;span class=&quot;c1&quot;&gt;// 刷新缓存区&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// GL_COLOR_BUFFER_BIT:    当前可写的颜色缓冲&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// GL_DEPTH_BUFFER_BIT:    深度缓冲&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// GL_ACCUM_BUFFER_BIT:    累积缓冲&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// GL_STENCIL_BUFFER_BIT:  模板缓冲&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;glClear&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GL_COLOR_BUFFER_BIT&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GL_DEPTH_BUFFER_BIT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    
-   &lt;span class=&quot;c1&quot;&gt;//启动着色器&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mEffect&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;prepareToDraw&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-   &lt;span class=&quot;c1&quot;&gt;// 画出三角形&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;glDrawArrays&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GL_TRIANGLES&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_6/24.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">一、概念简介</summary></entry></feed>
+&lt;/code&gt;&lt;/pre&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">一、引用</summary></entry></feed>
