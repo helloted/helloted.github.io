@@ -1,6 +1,6 @@
 ---
 layout:     post
-category:   iOS
+category:   基础
 title:      "设计模式"
 subtitle:   "iOS开发中常用的一些设计模式以及代码示例"
 date:       2017-08-08 12:00:00
