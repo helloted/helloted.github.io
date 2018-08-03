@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-08-03T18:32:29+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">虚幻引擎搭建配置环境</title><link href="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/unrealengine/" rel="alternate" type="text/html" title="虚幻引擎搭建配置环境" /><published>2018-06-21T20:00:00+08:00</published><updated>2018-06-21T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/unrealengine</id><content type="html" xml:base="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/unrealengine/">&lt;h4 id=&quot;一下载安装运行epic-game-launcher&quot;&gt;一、下载安装运行Epic Game Launcher&lt;/h4&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-08-03T19:27:28+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">虚幻引擎搭建配置环境</title><link href="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/unrealengine/" rel="alternate" type="text/html" title="虚幻引擎搭建配置环境" /><published>2018-06-21T20:00:00+08:00</published><updated>2018-06-21T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/unrealengine</id><content type="html" xml:base="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/unrealengine/">&lt;h4 id=&quot;一下载安装运行epic-game-launcher&quot;&gt;一、下载安装运行Epic Game Launcher&lt;/h4&gt;
 
 &lt;p&gt;1、虚幻引擎的中文文档：&lt;a href=&quot;http://api.unrealengine.com/CHN/index.html&quot;&gt;文档地址&lt;/a&gt;&lt;/p&gt;
 
@@ -6,13 +6,13 @@
 
 &lt;p&gt;3、安装后登陆到主界面&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/Simple_8/16.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/17.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;其中&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;ENGINE VERSIONS&lt;/strong&gt;是引擎版本，点击+进行安装，会默认安装最新版本，&lt;/p&gt;
 
-&lt;p&gt;注意，&lt;/p&gt;
+&lt;p&gt;注意：&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;最新版本当前系统不一定能够跑起来，比如最新版本是4.20.0，我在masOS 10.13.4上就不能跑起来，我安装的是4.19.2。&lt;/li&gt;
@@ -46,7 +46,64 @@
   &lt;li&gt;通过Epic Game Launcher启动，这种方式会比较快&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/Simple_8/20.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="工具" /><summary type="html">一、下载安装运行Epic Game Launcher</summary></entry><entry><title type="html">iOS APP分发</title><link href="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/appstore/" rel="alternate" type="text/html" title="iOS APP分发" /><published>2018-06-21T20:00:00+08:00</published><updated>2018-06-21T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/appstore</id><content type="html" xml:base="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/appstore/">&lt;p&gt;在不越狱的情况下，下载正式版的app只能通过官方appstore进行下载，但是如果仅仅是测试的话，是可以通过其他渠道来下载app，苹果官方有testflight，第三方比较有名的有&lt;a href=&quot;https://www.pgyer.com/&quot;&gt;蒲公英&lt;/a&gt;，&lt;a href=&quot;https://fir.im/&quot;&gt;Fir.im&lt;/a&gt;。将ipa包上传之后，其他人就可以通过链接来下载。大概是这样：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/20.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;新建项目有两种方式：蓝图和C++，分别对应的就是视图操作和代码。选择移动端项目，新建一个工程&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/21.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;c++代码在source文件夹里。&lt;/p&gt;
+
+&lt;h4 id=&quot;四ios配置&quot;&gt;四、iOS配置&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;编辑--&amp;gt;项目设置--&amp;gt;平台--&amp;gt;iOS
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/22.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;1、证书配置&lt;/p&gt;
+
+&lt;p&gt;UE4项目只能在真机上跑，所以必须配置证书，在”导入服务条款”导入.mobileprovision文件，在“导入证书”导入.cer文件。&lt;/p&gt;
+
+&lt;p&gt;证书配置好后，在启动里选择对应的设备就可以启动了&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/23.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;2、info.plist文件配置&lt;/p&gt;
+
+&lt;p&gt;在&lt;strong&gt;Extra Plist Data&lt;/strong&gt;填入info.plist里的信息，以xml格式，比如要添加访问相册权限以及iOS9之后HTTP访问权限，则如下&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;key&amp;gt;NSPhotoLibraryUsageDescription&amp;lt;/key&amp;gt;
+&amp;lt;string&amp;gt;App需要您的同意,才能访问相册&amp;lt;/string&amp;gt;
+&amp;lt;key&amp;gt;NSAppTransportSecurity&amp;lt;/key&amp;gt;
+&amp;lt;dict&amp;gt;
+	&amp;lt;key&amp;gt;NSAllowsArbitraryLoads&amp;lt;/key&amp;gt;
+	&amp;lt;true/&amp;gt;
+&amp;lt;/dict&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/24.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;3、添加第三方framwork&lt;/p&gt;
+
+&lt;p&gt;将framwork文件打包成zip文件，放到source文件夹下的ThirdParty文件夹里&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/25.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;在source/项目/项目.Build.cs里添加如下内容&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;        if (Target.Platform == UnrealTargetPlatform.IOS)
+        {
+            PublicAdditionalFrameworks.Add(
+                new UEBuildFramework(
+                    &quot;WEGameHelperSDK&quot;,
+                    &quot;../ThirdParty/MySDK.zip&quot;
+                                    )
+            );
+        }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/26.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="工具" /><summary type="html">一、下载安装运行Epic Game Launcher</summary></entry><entry><title type="html">iOS APP分发</title><link href="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/appstore/" rel="alternate" type="text/html" title="iOS APP分发" /><published>2018-06-21T20:00:00+08:00</published><updated>2018-06-21T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/appstore</id><content type="html" xml:base="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/appstore/">&lt;p&gt;在不越狱的情况下，下载正式版的app只能通过官方appstore进行下载，但是如果仅仅是测试的话，是可以通过其他渠道来下载app，苹果官方有testflight，第三方比较有名的有&lt;a href=&quot;https://www.pgyer.com/&quot;&gt;蒲公英&lt;/a&gt;，&lt;a href=&quot;https://fir.im/&quot;&gt;Fir.im&lt;/a&gt;。将ipa包上传之后，其他人就可以通过链接来下载。大概是这样：&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/Simple_8/15.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 

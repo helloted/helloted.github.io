@@ -113,7 +113,7 @@
                 <div class="post-heading">
                     <h1>虚幻引擎搭建配置环境</h1>
                     
-                    <h2 class="subheading">不通过苹果appstore来分发测试app</h2>
+                    <h2 class="subheading">虚幻引擎搭建配置环境,iOS的一些配置</h2>
                     
                     <span class="meta">Posted by Ted on June 21, 2018</span>
                 </div>
@@ -136,13 +136,13 @@
 
 <p>3、安装后登陆到主界面</p>
 
-<p><img src="/img/Simple_8/16.png" alt="img" /></p>
+<p><img src="/img/Simple_8/17.png" alt="img" /></p>
 
 <p>其中</p>
 
 <p><strong>ENGINE VERSIONS</strong>是引擎版本，点击+进行安装，会默认安装最新版本，</p>
 
-<p>注意，</p>
+<p>注意：</p>
 
 <ul>
   <li>最新版本当前系统不一定能够跑起来，比如最新版本是4.20.0，我在masOS 10.13.4上就不能跑起来，我安装的是4.19.2。</li>
@@ -177,6 +177,63 @@
 </ul>
 
 <p><img src="/img/Simple_8/20.png" alt="img" /></p>
+
+<p>新建项目有两种方式：蓝图和C++，分别对应的就是视图操作和代码。选择移动端项目，新建一个工程</p>
+
+<p><img src="/img/Simple_8/21.png" alt="img" /></p>
+
+<p>c++代码在source文件夹里。</p>
+
+<h4 id="四ios配置">四、iOS配置</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>编辑--&gt;项目设置--&gt;平台--&gt;iOS
+</code></pre></div></div>
+
+<p><img src="/img/Simple_8/22.png" alt="img" /></p>
+
+<p>1、证书配置</p>
+
+<p>UE4项目只能在真机上跑，所以必须配置证书，在”导入服务条款”导入.mobileprovision文件，在“导入证书”导入.cer文件。</p>
+
+<p>证书配置好后，在启动里选择对应的设备就可以启动了</p>
+
+<p><img src="/img/Simple_8/23.png" alt="img" /></p>
+
+<p>2、info.plist文件配置</p>
+
+<p>在<strong>Extra Plist Data</strong>填入info.plist里的信息，以xml格式，比如要添加访问相册权限以及iOS9之后HTTP访问权限，则如下</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;key&gt;NSPhotoLibraryUsageDescription&lt;/key&gt;
+&lt;string&gt;App需要您的同意,才能访问相册&lt;/string&gt;
+&lt;key&gt;NSAppTransportSecurity&lt;/key&gt;
+&lt;dict&gt;
+	&lt;key&gt;NSAllowsArbitraryLoads&lt;/key&gt;
+	&lt;true/&gt;
+&lt;/dict&gt;
+</code></pre></div></div>
+
+<p><img src="/img/Simple_8/24.png" alt="img" /></p>
+
+<p>3、添加第三方framwork</p>
+
+<p>将framwork文件打包成zip文件，放到source文件夹下的ThirdParty文件夹里</p>
+
+<p><img src="/img/Simple_8/25.png" alt="img" /></p>
+
+<p>在source/项目/项目.Build.cs里添加如下内容</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        if (Target.Platform == UnrealTargetPlatform.IOS)
+        {
+            PublicAdditionalFrameworks.Add(
+                new UEBuildFramework(
+                    "WEGameHelperSDK",
+                    "../ThirdParty/MySDK.zip"
+                                    )
+            );
+        }
+</code></pre></div></div>
+
+<p><img src="/img/Simple_8/26.png" alt="img" /></p>
 
 
 
