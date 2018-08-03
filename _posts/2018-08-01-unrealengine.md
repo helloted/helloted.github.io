@@ -1,7 +1,7 @@
 ---
 layout:     post
 category:   工具
-title:      "虚幻引擎搭建配置环境"
+title:      "虚幻引擎(UnReal Engine)环境"
 subtitle:   "虚幻引擎搭建配置环境,iOS的一些配置"
 date:       2018-06-21 12:00:00
 author:     "Ted"
@@ -62,9 +62,7 @@ c++代码在source文件夹里。
 
 #### 四、iOS配置
 
-```
-编辑-->项目设置-->平台-->iOS
-```
+> 编辑-->项目设置-->平台-->iOS
 
 ![img](/img/Simple_8/22.png)
 
