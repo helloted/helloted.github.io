@@ -124,7 +124,17 @@ UE4项目只能在真机上跑，所以必须配置证书
 
 ![img](/img/Simple_8/27.png)
 
+#### 五、项目调试
 
+在通过UnReal Editor启动项目时，会有一个日志输出显示来展示部署到iOS设备上的日志，但是运行之后的日志确获取不到
+
+![img](/img/Simple_8/30.png)
+
+如果我们要像正常调试iOS项目那样，则在Intermediate/ProjectFilesIOS/文件夹下有生成的项目的xcodeproj文件，打开
+
+![img](/img/Simple_8/31.png)
+
+![img](/img/Simple_8/32.png)
 
 
 

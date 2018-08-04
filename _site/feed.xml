@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-08-04T10:37:16+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">虚幻引擎(UnReal Engine)环境</title><link href="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/unrealengine/" rel="alternate" type="text/html" title="虚幻引擎(UnReal Engine)环境" /><published>2018-06-21T20:00:00+08:00</published><updated>2018-06-21T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/unrealengine</id><content type="html" xml:base="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/unrealengine/">&lt;h4 id=&quot;一下载安装运行epic-game-launcher&quot;&gt;一、下载安装运行Epic Game Launcher&lt;/h4&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-08-04T10:50:40+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">虚幻引擎(UnReal Engine)环境</title><link href="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/unrealengine/" rel="alternate" type="text/html" title="虚幻引擎(UnReal Engine)环境" /><published>2018-06-21T20:00:00+08:00</published><updated>2018-06-21T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/unrealengine</id><content type="html" xml:base="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/unrealengine/">&lt;h4 id=&quot;一下载安装运行epic-game-launcher&quot;&gt;一、下载安装运行Epic Game Launcher&lt;/h4&gt;
 
 &lt;p&gt;1、虚幻引擎的中文文档：&lt;a href=&quot;http://api.unrealengine.com/CHN/index.html&quot;&gt;文档地址&lt;/a&gt;&lt;/p&gt;
 
@@ -121,7 +121,19 @@
 
 &lt;p&gt;注意：每次更新framwork，要在文件—&amp;gt;刷新Xcode项目&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/Simple_8/27.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="工具" /><summary type="html">一、下载安装运行Epic Game Launcher</summary></entry><entry><title type="html">iOS APP分发</title><link href="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/appstore/" rel="alternate" type="text/html" title="iOS APP分发" /><published>2018-06-21T20:00:00+08:00</published><updated>2018-06-21T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/appstore</id><content type="html" xml:base="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/appstore/">&lt;p&gt;在不越狱的情况下，下载正式版的app只能通过官方appstore进行下载，但是如果仅仅是测试的话，是可以通过其他渠道来下载app，苹果官方有testflight，第三方比较有名的有&lt;a href=&quot;https://www.pgyer.com/&quot;&gt;蒲公英&lt;/a&gt;，&lt;a href=&quot;https://fir.im/&quot;&gt;Fir.im&lt;/a&gt;。将ipa包上传之后，其他人就可以通过链接来下载。大概是这样：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/27.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;五项目调试&quot;&gt;五、项目调试&lt;/h4&gt;
+
+&lt;p&gt;在通过UnReal Editor启动项目时，会有一个日志输出显示来展示部署到iOS设备上的日志，但是运行之后的日志确获取不到&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/30.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;如果我们要像正常调试iOS项目那样，则在Intermediate/ProjectFilesIOS/文件夹下有生成的项目的xcodeproj文件，打开&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/31.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/32.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="工具" /><summary type="html">一、下载安装运行Epic Game Launcher</summary></entry><entry><title type="html">iOS APP分发</title><link href="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/appstore/" rel="alternate" type="text/html" title="iOS APP分发" /><published>2018-06-21T20:00:00+08:00</published><updated>2018-06-21T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/appstore</id><content type="html" xml:base="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/appstore/">&lt;p&gt;在不越狱的情况下，下载正式版的app只能通过官方appstore进行下载，但是如果仅仅是测试的话，是可以通过其他渠道来下载app，苹果官方有testflight，第三方比较有名的有&lt;a href=&quot;https://www.pgyer.com/&quot;&gt;蒲公英&lt;/a&gt;，&lt;a href=&quot;https://fir.im/&quot;&gt;Fir.im&lt;/a&gt;。将ipa包上传之后，其他人就可以通过链接来下载。大概是这样：&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/Simple_8/15.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 
