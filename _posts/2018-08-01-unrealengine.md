@@ -64,11 +64,19 @@ c++代码在source文件夹里。
 
 > 编辑-->项目设置-->平台-->iOS
 
-![img](/img/Simple_8/22.png)
-
 1、证书配置
 
-UE4项目只能在真机上跑，所以必须配置证书，在"导入服务条款"导入.mobileprovision文件，在“导入证书”导入.cer文件。
+UE4项目只能在真机上跑，所以必须配置证书
+
+- 自动配置：首先在苹果开发者账号里找到你的Team ID，然后将Team ID填入并且将Automatic Signing勾选上
+
+  ![img](/img/Simple_8/28.png)
+
+  ![img](/img/Simple_8/29.png)
+
+- 手动配置：在"导入服务条款"导入.mobileprovision文件，在“导入证书”导入.cer文件。
+
+![img](/img/Simple_8/22.png)
 
 证书配置好后，在启动里选择对应的设备就可以启动了
 
