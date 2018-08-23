@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-08-23T11:33:35+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">安卓学习记录</title><link href="http://www.helloted.com/android/2018/08/19/learnAndroid/" rel="alternate" type="text/html" title="安卓学习记录" /><published>2018-08-19T20:00:00+08:00</published><updated>2018-08-19T20:00:00+08:00</updated><id>http://www.helloted.com/android/2018/08/19/learnAndroid</id><content type="html" xml:base="http://www.helloted.com/android/2018/08/19/learnAndroid/">&lt;h3 id=&quot;一安卓四大组件&quot;&gt;一、安卓四大组件&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-08-23T17:09:00+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">安卓学习记录</title><link href="http://www.helloted.com/android/2018/08/19/learnAndroid/" rel="alternate" type="text/html" title="安卓学习记录" /><published>2018-08-19T20:00:00+08:00</published><updated>2018-08-19T20:00:00+08:00</updated><id>http://www.helloted.com/android/2018/08/19/learnAndroid</id><content type="html" xml:base="http://www.helloted.com/android/2018/08/19/learnAndroid/">&lt;h3 id=&quot;一安卓四大组件&quot;&gt;一、安卓四大组件&lt;/h3&gt;
 
 &lt;ul&gt;
   &lt;li&gt;Activity:是所有Android应用程序的门面，凡是在应用中你看到的东西，都是在里面。每一个Activity都独立于其他Activity而存在。因此，其他应用可以启动其中任何一个Activity(当然得应用允许)&lt;/li&gt;
@@ -25,7 +25,27 @@
   &lt;li&gt;声明应用使用或需要的硬件和软件功能，如相机、蓝牙服务或多点触摸屏幕&lt;/li&gt;
   &lt;li&gt;应用需要链接的 API 库（Android 框架 API 除外），如 &lt;a href=&quot;http://code.google.com/android/add-ons/google-apis/maps-overview.html&quot;&gt;Google 地图库&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;其他功能&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Ted</name></author><category term="Android" /><summary type="html">一、安卓四大组件</summary></entry><entry><title type="html">虚幻引擎(UnReal Engine)环境</title><link href="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/unrealengine/" rel="alternate" type="text/html" title="虚幻引擎(UnReal Engine)环境" /><published>2018-06-21T20:00:00+08:00</published><updated>2018-06-21T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/unrealengine</id><content type="html" xml:base="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/unrealengine/">&lt;h4 id=&quot;一下载安装运行epic-game-launcher&quot;&gt;一、下载安装运行Epic Game Launcher&lt;/h4&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;1、设定一个首页&lt;/p&gt;
+
+&lt;p&gt;所有的Activity都要在的 AndroidManifest.xml文件里注册，否则不能使用，不过Android Studio会自动帮我们做这个操作，但是如果要设定一个activity为主页，则需要添加intent-filter表情，比如，要设置一个名称为FirstActivity为首页&lt;/p&gt;
+
+&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;        &lt;span class=&quot;nt&quot;&gt;&amp;lt;activity&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;.FirstActivity&quot;&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;android:label=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;this is FirstActivity&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;intent-filter&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;action&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;android.intent.action.MAIN&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;category&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;android.intent.category.LAUNCHER&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;/intent-filter&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/activity&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;android.intent.action.MAIN决定应用程序最先启动的Activity&lt;/li&gt;
+  &lt;li&gt;android.intent.category.LAUNCHER决定应用程序是否显示在程序列表里&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;上面两个标签必须同时有，缺一不可。&lt;/p&gt;</content><author><name>Ted</name></author><category term="Android" /><summary type="html">一、安卓四大组件</summary></entry><entry><title type="html">虚幻引擎(UnReal Engine)环境</title><link href="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/unrealengine/" rel="alternate" type="text/html" title="虚幻引擎(UnReal Engine)环境" /><published>2018-06-21T20:00:00+08:00</published><updated>2018-06-21T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/unrealengine</id><content type="html" xml:base="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/unrealengine/">&lt;h4 id=&quot;一下载安装运行epic-game-launcher&quot;&gt;一、下载安装运行Epic Game Launcher&lt;/h4&gt;
 
 &lt;p&gt;1、虚幻引擎的中文文档：&lt;a href=&quot;http://api.unrealengine.com/CHN/index.html&quot;&gt;文档地址&lt;/a&gt;&lt;/p&gt;
 

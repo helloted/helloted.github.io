@@ -33,3 +33,21 @@ header-img: "img/default.jpg"
 - 应用需要链接的 API 库（Android 框架 API 除外），如 [Google 地图库](http://code.google.com/android/add-ons/google-apis/maps-overview.html)
 - 其他功能
 
+1、设定一个首页
+
+所有的Activity都要在的 AndroidManifest.xml文件里注册，否则不能使用，不过Android Studio会自动帮我们做这个操作，但是如果要设定一个activity为主页，则需要添加intent-filter表情，比如，要设置一个名称为FirstActivity为首页
+
+```xml
+        <activity android:name=".FirstActivity"
+            android:label="this is FirstActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+```
+
+- android.intent.action.MAIN决定应用程序最先启动的Activity
+- android.intent.category.LAUNCHER决定应用程序是否显示在程序列表里
+
+上面两个标签必须同时有，缺一不可。
