@@ -75,12 +75,6 @@
                 
 				
                 <li>
-                    <a href="/Temp/2018-08-07-MixCppObjeciveC/">C++与Objective-C混编</a>
-                </li>
-				
-                
-				
-                <li>
                     <a href="/aacategory/">Categorys</a>
                 </li>
 				
@@ -148,6 +142,20 @@
 <p>由于系统在单独的进程中运行每个应用，且其文件权限会限制对其他应用的访问，因此您的应用无法直接启动其他应用中的组件， 但 Android 系统却可以。因此，要想启动其他应用中的组件，您必须向系统传递一则消息，说明您想启动特定组件的 <em>Intent</em>。 系统随后便会为您启动该组件。</p>
 
 <p>四种组件类型中的三种 — Activity、服务和广播接收器 — 通过名为 <em>Intent</em> 的异步消息进行启动。Intent 会在运行时将各个组件相互绑定（您可以将 Intent 视为从其他组件请求操作的信使），无论组件属于您的应用还是其他应用。</p>
+
+<h3 id="二清单文件">二、清单文件</h3>
+
+<p><strong>在 Android 系统启动应用组件之前，系统必须通过读取应用的 <code class="highlighter-rouge">AndroidManifest.xml</code> 文件（“清单”文件）确认组件存在。 您的应用必须在此文件中声明其所有组件，该文件必须位于应用项目目录的根目录中。</strong></p>
+
+<p>除了声明应用的组件外，清单文件还有许多其他作用，如：</p>
+
+<ul>
+  <li>确定应用需要的任何用户权限，如互联网访问权限或对用户联系人的读取权限</li>
+  <li>根据应用使用的 API，声明应用所需的最低 <a href="https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels">API 级别</a></li>
+  <li>声明应用使用或需要的硬件和软件功能，如相机、蓝牙服务或多点触摸屏幕</li>
+  <li>应用需要链接的 API 库（Android 框架 API 除外），如 <a href="http://code.google.com/android/add-ons/google-apis/maps-overview.html">Google 地图库</a></li>
+  <li>其他功能</li>
+</ul>
 
 
 

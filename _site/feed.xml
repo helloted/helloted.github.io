@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-08-23T11:24:14+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">安卓学习记录</title><link href="http://www.helloted.com/android/2018/08/19/learnAndroid/" rel="alternate" type="text/html" title="安卓学习记录" /><published>2018-08-19T20:00:00+08:00</published><updated>2018-08-19T20:00:00+08:00</updated><id>http://www.helloted.com/android/2018/08/19/learnAndroid</id><content type="html" xml:base="http://www.helloted.com/android/2018/08/19/learnAndroid/">&lt;h3 id=&quot;一安卓四大组件&quot;&gt;一、安卓四大组件&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-08-23T11:33:35+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">安卓学习记录</title><link href="http://www.helloted.com/android/2018/08/19/learnAndroid/" rel="alternate" type="text/html" title="安卓学习记录" /><published>2018-08-19T20:00:00+08:00</published><updated>2018-08-19T20:00:00+08:00</updated><id>http://www.helloted.com/android/2018/08/19/learnAndroid</id><content type="html" xml:base="http://www.helloted.com/android/2018/08/19/learnAndroid/">&lt;h3 id=&quot;一安卓四大组件&quot;&gt;一、安卓四大组件&lt;/h3&gt;
 
 &lt;ul&gt;
   &lt;li&gt;Activity:是所有Android应用程序的门面，凡是在应用中你看到的东西，都是在里面。每一个Activity都独立于其他Activity而存在。因此，其他应用可以启动其中任何一个Activity(当然得应用允许)&lt;/li&gt;
@@ -11,7 +11,21 @@
 
 &lt;p&gt;由于系统在单独的进程中运行每个应用，且其文件权限会限制对其他应用的访问，因此您的应用无法直接启动其他应用中的组件， 但 Android 系统却可以。因此，要想启动其他应用中的组件，您必须向系统传递一则消息，说明您想启动特定组件的 &lt;em&gt;Intent&lt;/em&gt;。 系统随后便会为您启动该组件。&lt;/p&gt;
 
-&lt;p&gt;四种组件类型中的三种 — Activity、服务和广播接收器 — 通过名为 &lt;em&gt;Intent&lt;/em&gt; 的异步消息进行启动。Intent 会在运行时将各个组件相互绑定（您可以将 Intent 视为从其他组件请求操作的信使），无论组件属于您的应用还是其他应用。&lt;/p&gt;</content><author><name>Ted</name></author><category term="Android" /><summary type="html">一、安卓四大组件</summary></entry><entry><title type="html">虚幻引擎(UnReal Engine)环境</title><link href="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/unrealengine/" rel="alternate" type="text/html" title="虚幻引擎(UnReal Engine)环境" /><published>2018-06-21T20:00:00+08:00</published><updated>2018-06-21T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/unrealengine</id><content type="html" xml:base="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/unrealengine/">&lt;h4 id=&quot;一下载安装运行epic-game-launcher&quot;&gt;一、下载安装运行Epic Game Launcher&lt;/h4&gt;
+&lt;p&gt;四种组件类型中的三种 — Activity、服务和广播接收器 — 通过名为 &lt;em&gt;Intent&lt;/em&gt; 的异步消息进行启动。Intent 会在运行时将各个组件相互绑定（您可以将 Intent 视为从其他组件请求操作的信使），无论组件属于您的应用还是其他应用。&lt;/p&gt;
+
+&lt;h3 id=&quot;二清单文件&quot;&gt;二、清单文件&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;在 Android 系统启动应用组件之前，系统必须通过读取应用的 &lt;code class=&quot;highlighter-rouge&quot;&gt;AndroidManifest.xml&lt;/code&gt; 文件（“清单”文件）确认组件存在。 您的应用必须在此文件中声明其所有组件，该文件必须位于应用项目目录的根目录中。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;除了声明应用的组件外，清单文件还有许多其他作用，如：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;确定应用需要的任何用户权限，如互联网访问权限或对用户联系人的读取权限&lt;/li&gt;
+  &lt;li&gt;根据应用使用的 API，声明应用所需的最低 &lt;a href=&quot;https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels&quot;&gt;API 级别&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;声明应用使用或需要的硬件和软件功能，如相机、蓝牙服务或多点触摸屏幕&lt;/li&gt;
+  &lt;li&gt;应用需要链接的 API 库（Android 框架 API 除外），如 &lt;a href=&quot;http://code.google.com/android/add-ons/google-apis/maps-overview.html&quot;&gt;Google 地图库&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;其他功能&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Ted</name></author><category term="Android" /><summary type="html">一、安卓四大组件</summary></entry><entry><title type="html">虚幻引擎(UnReal Engine)环境</title><link href="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/unrealengine/" rel="alternate" type="text/html" title="虚幻引擎(UnReal Engine)环境" /><published>2018-06-21T20:00:00+08:00</published><updated>2018-06-21T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/unrealengine</id><content type="html" xml:base="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/unrealengine/">&lt;h4 id=&quot;一下载安装运行epic-game-launcher&quot;&gt;一、下载安装运行Epic Game Launcher&lt;/h4&gt;
 
 &lt;p&gt;1、虚幻引擎的中文文档：&lt;a href=&quot;http://api.unrealengine.com/CHN/index.html&quot;&gt;文档地址&lt;/a&gt;&lt;/p&gt;
 

@@ -21,5 +21,15 @@ header-img: "img/default.jpg"
 
 四种组件类型中的三种 — Activity、服务和广播接收器 — 通过名为 *Intent* 的异步消息进行启动。Intent 会在运行时将各个组件相互绑定（您可以将 Intent 视为从其他组件请求操作的信使），无论组件属于您的应用还是其他应用。
 
+### 二、清单文件
 
+**在 Android 系统启动应用组件之前，系统必须通过读取应用的 `AndroidManifest.xml` 文件（“清单”文件）确认组件存在。 您的应用必须在此文件中声明其所有组件，该文件必须位于应用项目目录的根目录中。**
+
+除了声明应用的组件外，清单文件还有许多其他作用，如：
+
+- 确定应用需要的任何用户权限，如互联网访问权限或对用户联系人的读取权限
+- 根据应用使用的 API，声明应用所需的最低 [API 级别](https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels)
+- 声明应用使用或需要的硬件和软件功能，如相机、蓝牙服务或多点触摸屏幕
+- 应用需要链接的 API 库（Android 框架 API 除外），如 [Google 地图库](http://code.google.com/android/add-ons/google-apis/maps-overview.html)
+- 其他功能
 
