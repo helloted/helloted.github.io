@@ -21,7 +21,7 @@ header-img: "img/default.jpg"
 
 四种组件类型中的三种 — Activity、服务和广播接收器 — 通过名为 *Intent* 的异步消息进行启动。Intent 会在运行时将各个组件相互绑定（您可以将 Intent 视为从其他组件请求操作的信使），无论组件属于您的应用还是其他应用。
 
-### 二、清单文件
+### 二、AndroidManifest.xml
 
 **在 Android 系统启动应用组件之前，系统必须通过读取应用的 `AndroidManifest.xml` 文件（“清单”文件）确认组件存在。 您的应用必须在此文件中声明其所有组件，该文件必须位于应用项目目录的根目录中。**
 
@@ -51,3 +51,55 @@ header-img: "img/default.jpg"
 - android.intent.category.LAUNCHER决定应用程序是否显示在程序列表里
 
 上面两个标签必须同时有，缺一不可。
+
+### 三、Intent
+
+Intent是一个消息传递对象，您可以使用它从其他应用组件请求操作，基本用例主要包括以下三个
+
+- 启动Activity
+- 启动服务
+- 传递广播
+
+Intent 分为两种类型：
+
+- **显式 Intent**：按名称（完全限定类名）指定要启动的组件。 通常，您会在自己的应用中使用显式 Intent 来启动组件，这是因为您知道要启动的 Activity 或服务的类名。例如，启动新 Activity 以响应用户操作，或者启动服务以在后台下载文件。
+- **隐式 Intent** ：不会指定特定的组件，而是声明要执行的常规操作，从而允许其他应用中的组件来处理它。 例如，如需在地图上向用户显示位置，则可以使用隐式 Intent，请求另一具有此功能的应用在地图上显示指定的位置。隐式Intent需要配合Intent-filter。
+
+> **注意：**为了确保应用的安全性，启动 `Service` 时，请始终使用显式 Intent，且不要为服务声明 Intent 过滤器。使用隐式 Intent 启动服务存在安全隐患，因为您无法确定哪些服务将响应 Intent，且用户无法看到哪些服务已启动。从 Android 5.0（API 级别 21）开始，如果使用隐式 Intent 调用 `bindService()`，系统会引发异常。
+
+#### intent-filter
+
+Intent 过滤器是应用清单文件中的一个表达式，它指定该组件要接收的 Intent 类型。
+
+请在[清单文件](https://developer.android.com/guide/topics/manifest/manifest-intro.html)中使用intent-filter元素为每个应用组件声明一个或多个 Intent 过滤器。每个 Intent 过滤器均根据 Intent 的操作、数据和类别指定自身接受的 Intent 类型。 仅当隐式 Intent 可以通过 Intent 过滤器之一传递时，系统才会将该 Intent 传递给应用组件。
+
+创建隐式 Intent 时，Android 系统通过将 Intent 的内容与在设备上其他应用的[清单文件](https://developer.android.com/guide/topics/manifest/manifest-intro.html)中声明的 Intent 过滤器进行比较，从而找到要启动的相应组件。 如果 Intent 与 Intent 过滤器匹配，则系统将启动该组件，并向其传递 `Intent`对象。 如果多个 Intent 过滤器兼容，则系统会显示一个对话框，支持用户选取要使用的应用。
+
+您可以使用以下三个元素中的一个或多个指定要接受的 Intent 类型：
+
+- <action>
+
+  在 `name` 属性中，声明接受的 Intent 操作。该值必须是操作的文本字符串值，而不是类常量。
+
+- <data>
+
+  使用一个或多个指定数据 URI 各个方面（`scheme`、`host`、`port`、`path` 等）和 MIME 类型的属性，声明接受的数据类型。
+
+- <category>
+
+  在 `name` 属性中，声明接受的 Intent 类别。该值必须是操作的文本字符串值，而不是类常量。
+
+#### 构建
+
+`Intent` 对象携带了 Android 系统用来确定要启动哪个组件的信息，以及目标组件为了正确执行操作而使用的信息，主要包含：
+
+组件名称：可选项，如果隐式则根据其他信息来判断
+
+- 操作
+- 数据
+- Extra:附加信息的key-value
+- 标志：
+
+
+
+ 
