@@ -1,13 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-08-25T16:15:58+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">安卓学习记录</title><link href="http://www.helloted.com/android/2018/08/19/learnAndroid/" rel="alternate" type="text/html" title="安卓学习记录" /><published>2018-08-19T20:00:00+08:00</published><updated>2018-08-19T20:00:00+08:00</updated><id>http://www.helloted.com/android/2018/08/19/learnAndroid</id><content type="html" xml:base="http://www.helloted.com/android/2018/08/19/learnAndroid/">&lt;h3 id=&quot;一安卓四大组件&quot;&gt;一、安卓四大组件&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-08-28T17:05:48+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">安卓学习记录</title><link href="http://www.helloted.com/android/2018/08/19/learnAndroid/" rel="alternate" type="text/html" title="安卓学习记录" /><published>2018-08-19T20:00:00+08:00</published><updated>2018-08-19T20:00:00+08:00</updated><id>http://www.helloted.com/android/2018/08/19/learnAndroid</id><content type="html" xml:base="http://www.helloted.com/android/2018/08/19/learnAndroid/">&lt;h3 id=&quot;一安卓四大组件&quot;&gt;一、安卓四大组件&lt;/h3&gt;
 
 &lt;ul&gt;
   &lt;li&gt;Activity:是所有Android应用程序的门面，凡是在应用中你看到的东西，都是在里面。每一个Activity都独立于其他Activity而存在。因此，其他应用可以启动其中任何一个Activity(当然得应用允许)&lt;/li&gt;
   &lt;li&gt;Service:是一种在后台运行的组件，用于执行长时间运行的操作或为远程进程执行作业，服务不提供用户界面。例如，当用户位于其他应用时，服务可能在后台播放音乐或者通过网络获取数据&lt;/li&gt;
   &lt;li&gt;Broadcast Receiver：用于响应系统范围广播通知的组件。接收来自各处的广播消息，比如短信、电话，屏幕，当然应用也可以向外发出广播消息。尽管广播接收器不会显示用户界面，但他们可以创建状态栏同辉，在发生广播事件的时候提醒用户&lt;/li&gt;
-  &lt;li&gt;Content Provider：您可以将数据存储在文件系统、SQLite 数据库、网络上或您的应用可以访问的任何其他永久性存储位置。 其他应用可以通过内容提供程序查询数据，甚至修改数据（如果内容提供程序允许），比如你想要读取系统电话簿中的联系人，就需要通过内容提供器&lt;/li&gt;
-&lt;/ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Content Provider：您可以将数据存储在文件系统、SQLite 数据库、网络上或您的应用可以访问的任何其他永久性存储位置。 其他应用可以通过内容提供程序查询数据，甚至修改数据（如果内容提供程序允许），比如你想要读取系统电话簿中的联系人，就需要通过内容提供器&lt;/p&gt;
 
-&lt;p&gt;​       任何应用都可以启动其他应用的组件，比如拍照，您的应用可以利用拍照应用而不是开发一个Activity来自行拍摄照片，只需启动照相应用的Activity，完成拍摄后，系统将照片返回您的应用。当系统启动某个组件时，会启动该应用的进程(如果尚未运行)，并且实例化该组件所需要的类。例如，如果您的应用启动相机应用中拍摄照片的Activity，则该 Activity 会在属于相机应用的进程，而不是您的应用的进程中运行。因此，与大多数其他系统上的应用不同，Android 应用并没有单一入口点（例如，没有 &lt;code class=&quot;highlighter-rouge&quot;&gt;main()&lt;/code&gt; 函数）。&lt;/p&gt;
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; 任何应用都可以启动其他应用的组件，比如拍照，您的应用可以利用拍照应用而不是开发一个Activity来自行拍摄照片，只需启动照相应用的Activity，完成拍摄后，系统将照片返回您的应用。当系统启动某个组件时，会启动该应用的进程(如果尚未运行)，并且实例化该组件所需要的类。例如，如果您的应用启动相机应用中拍摄照片的Activity，则该 Activity 会在属于相机应用的进程，而不是您的应用的进程中运行。因此，与大多数其他系统上的应用不同，Android 应用并没有单一入口点（例如，没有 `main()` 函数）。
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;p&gt;由于系统在单独的进程中运行每个应用，且其文件权限会限制对其他应用的访问，因此您的应用无法直接启动其他应用中的组件， 但 Android 系统却可以。因此，要想启动其他应用中的组件，您必须向系统传递一则消息，说明您想启动特定组件的 &lt;em&gt;Intent&lt;/em&gt;。 系统随后便会为您启动该组件。&lt;/p&gt;
 
@@ -112,6 +115,39 @@
   &lt;li&gt;数据&lt;/li&gt;
   &lt;li&gt;Extra:附加信息的key-value&lt;/li&gt;
   &lt;li&gt;标志：&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;四activity&quot;&gt;四、Activity&lt;/h3&gt;
+
+&lt;h4 id=&quot;1四个状态&quot;&gt;1、四个状态：&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;运行：在返回栈的栈顶，最不可能被回收&lt;/li&gt;
+  &lt;li&gt;暂停：不再栈顶，但是仍然可见，比如对话框的时候，背后的Activity就是暂停状态，只有在内存极低的情况下，系统才会考虑回收&lt;/li&gt;
+  &lt;li&gt;停止：当一个Activity不再处于栈顶位置，并且完全不可见的时候，就进入了停止状态，当其他地方需要内存时，极有可能会被系统回收&lt;/li&gt;
+  &lt;li&gt;销毁：当一个活动从返回栈移除后就变成了销毁状态。系统最倾向于回收这种状态，保证手机的内存充足。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;2回调方法&quot;&gt;2、回调方法&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;onCreate():在活动第一次被创建的时候调用，在这个方法里完成初始化操作，比如加载布局，绑定事件&lt;/li&gt;
+  &lt;li&gt;onStart():在活动由不可见变为可见的时候调用&lt;/li&gt;
+  &lt;li&gt;onResume():在活动准备好和用户进行交互的时候调用，此时活动一定位于返回栈的栈顶，并且处于运行状态&lt;/li&gt;
+  &lt;li&gt;onPause():在系统准备去启动或者恢复另一个活动的时候调用，通常在这个方法中将一些消耗CPU资源释放掉，以及保存一些关键数据，但是这个方法一定要快，否则会影响到新的栈顶活动的使用&lt;/li&gt;
+  &lt;li&gt;onStop():在活动完全不可见的时候调用，与onpause的区别是，如果新活动是对话框式的，会调用onPause而不会调用onStop&lt;/li&gt;
+  &lt;li&gt;onDestory():在被销毁之前调用，之后的活动状态变为销毁状态&lt;/li&gt;
+  &lt;li&gt;onRestart():在活动由停止状态变为运行状态之前调用，也就是活动被重新启动了&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_1/40.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;3生存期&quot;&gt;3、生存期&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;完整生存期:在onCreate()和onDestory之间的方法所经历的，就是完整生存期，一般情况下，一个活动会在onCreate()方法中完成各种初始化操作，而在onDestory方法中完成内存释放的操作&lt;/li&gt;
+  &lt;li&gt;可见生存期:活动在onStart()和onStop()之间所经历的，就是可见生存期。在可见生存期，活动对于用户总是可见的，即时可能无法和用户进行交互&lt;/li&gt;
+  &lt;li&gt;前台生存期：活动在onResume()方法和onPause()方法之间所经历的就是前台生存期。在前台生存期内，活动总是处于运行状态，此时的活动是可以与用户进行交互。&lt;/li&gt;
 &lt;/ul&gt;</content><author><name>Ted</name></author><category term="Android" /><summary type="html">一、安卓四大组件</summary></entry><entry><title type="html">C++与Objective-C混编</title><link href="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/08/07/MixCppObjeciveC/" rel="alternate" type="text/html" title="C++与Objective-C混编" /><published>2018-08-07T20:00:00+08:00</published><updated>2018-08-07T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/08/07/MixCppObjeciveC</id><content type="html" xml:base="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/08/07/MixCppObjeciveC/">&lt;p&gt;在一些iOS开发中，经常有一些第三方的框架是用C++写的，有时候我们需要在C++文件中调用OC方法，或者在OC文件中调用C++函数，也就是C++与Objective-C混编。但是我们知道在纯OC文件中是不能编译C++代码的，在纯C++文件中又是不能编译Objective-C代码的。直接引入编译不过会报错&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/Simple_1/39.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
