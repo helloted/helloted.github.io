@@ -255,19 +255,19 @@
   <li>运行：在返回栈的栈顶，最不可能被回收</li>
   <li>暂停：不再栈顶，但是仍然可见，比如对话框的时候，背后的Activity就是暂停状态，只有在内存极低的情况下，系统才会考虑回收</li>
   <li>停止：当一个Activity不再处于栈顶位置，并且完全不可见的时候，就进入了停止状态，当其他地方需要内存时，极有可能会被系统回收</li>
-  <li>销毁：当一个活动从返回栈移除后就变成了销毁状态。系统最倾向于回收这种状态，保证手机的内存充足。</li>
+  <li>销毁：当一个Activity从返回栈移除后就变成了销毁状态。系统最倾向于回收这种状态，保证手机的内存充足。</li>
 </ul>
 
 <h4 id="2回调方法">2、回调方法</h4>
 
 <ul>
-  <li>onCreate():在活动第一次被创建的时候调用，在这个方法里完成初始化操作，比如加载布局，绑定事件</li>
-  <li>onStart():在活动由不可见变为可见的时候调用</li>
-  <li>onResume():在活动准备好和用户进行交互的时候调用，此时活动一定位于返回栈的栈顶，并且处于运行状态</li>
-  <li>onPause():在系统准备去启动或者恢复另一个活动的时候调用，通常在这个方法中将一些消耗CPU资源释放掉，以及保存一些关键数据，但是这个方法一定要快，否则会影响到新的栈顶活动的使用</li>
-  <li>onStop():在活动完全不可见的时候调用，与onpause的区别是，如果新活动是对话框式的，会调用onPause而不会调用onStop</li>
-  <li>onDestory():在被销毁之前调用，之后的活动状态变为销毁状态</li>
-  <li>onRestart():在活动由停止状态变为运行状态之前调用，也就是活动被重新启动了</li>
+  <li>onCreate():在Activity第一次被创建的时候调用，在这个方法里完成初始化操作，比如加载布局，绑定事件</li>
+  <li>onStart():在Activity由不可见变为可见的时候调用</li>
+  <li>onResume():在Activity准备好和用户进行交互的时候调用，此时Activity一定位于返回栈的栈顶，并且处于运行状态</li>
+  <li>onPause():在系统准备去启动或者恢复另一个Activity的时候调用，通常在这个方法中将一些消耗CPU资源释放掉，以及保存一些关键数据，但是这个方法一定要快，否则会影响到新的栈顶Activity的使用</li>
+  <li>onStop():在Activity完全不可见的时候调用，与onpause的区别是，如果新Activity是对话框式的，会调用onPause而不会调用onStop</li>
+  <li>onDestory():在被销毁之前调用，之后的Activity状态变为销毁状态</li>
+  <li>onRestart():在Activity由停止状态变为运行状态之前调用，也就是Activity被重新启动了</li>
 </ul>
 
 <p><img src="/img/Simple_1/40.png" alt="img" /></p>
@@ -275,10 +275,50 @@
 <h4 id="3生存期">3、生存期</h4>
 
 <ul>
-  <li>完整生存期:在onCreate()和onDestory之间的方法所经历的，就是完整生存期，一般情况下，一个活动会在onCreate()方法中完成各种初始化操作，而在onDestory方法中完成内存释放的操作</li>
-  <li>可见生存期:活动在onStart()和onStop()之间所经历的，就是可见生存期。在可见生存期，活动对于用户总是可见的，即时可能无法和用户进行交互</li>
-  <li>前台生存期：活动在onResume()方法和onPause()方法之间所经历的就是前台生存期。在前台生存期内，活动总是处于运行状态，此时的活动是可以与用户进行交互。</li>
+  <li>完整生存期:在onCreate()和onDestory之间的方法所经历的，就是完整生存期，一般情况下，一个Activity会在onCreate()方法中完成各种初始化操作，而在onDestory方法中完成内存释放的操作</li>
+  <li>可见生存期:Activity在onStart()和onStop()之间所经历的，就是可见生存期。在可见生存期，Activity对于用户总是可见的，即时可能无法和用户进行交互</li>
+  <li>前台生存期：Activity在onResume()方法和onPause()方法之间所经历的就是前台生存期。在前台生存期内，Activity总是处于运行状态，此时的Activity是可以与用户进行交互。</li>
 </ul>
+
+<h4 id="4活动的启动模式">4、活动的启动模式</h4>
+
+<p>需要在AndroidManifest.xml中通过<activity>标签指定android:lanuchMode属性来选择启动模式</activity></p>
+
+<ul>
+  <li>standard：活动的默认启动模式，系统不会在乎这个活动在返回栈中的情况，每次启动都会创建活动的一个新的实例</li>
+  <li>singleTop：在启动活动如果发现返回栈中的栈顶已经是该活动，则直接使用，不会再创建新的</li>
+  <li>singleTask：在启动该活动时系统会在返回栈中检查是否存在该活动实例，如果有，则把活动之上的所有活动全部出栈，然后直接使用这个活动</li>
+  <li>singleInstance：系统会有一个单独的返回栈来管理这个活动，不管是哪个应用来访问这个活动，都共用一个单例</li>
+</ul>
+
+<h3 id="五安卓ui布局">五、安卓UI布局</h3>
+
+<ul>
+  <li>android:layout_width: 控件的宽度</li>
+  <li>android:layout_height: 控件的高度</li>
+</ul>
+
+<p>可选值有三种：match_parent，fill_parent，和wrap_content，match_parent和fill_parent一样都是跟父布局大小一致。wrap_parent则是由内容来觉得，也就是刚好包住内容。</p>
+
+<h4 id="1约束布局">1、约束布局</h4>
+
+<p>根据控件间的相互约束来决定布局，2017年推出，成为主流布局方式</p>
+
+<h4 id="2线性布局linearlayout">2、线性布局LinearLayout</h4>
+
+<p>将所有包含的控件在线性方向上依次排列，通过android:orientation属性可以指定排列方向，vertical是竖直方向，horizontal是水平方向。默认是水平方向。还有个属性layout_weiht，用来按比例分布排列</p>
+
+<h4 id="3相对布局relativelayout">3、相对布局RelativeLayout</h4>
+
+<p>通过相对定位的方式让控件出现在布局的任何位置，主要是利用控件间对齐来布局，属性比较多</p>
+
+<h4 id="4帧布局framelayout">4、帧布局FrameLayout</h4>
+
+<p>所有的控件默认拜访在布局的左上角，应用较少</p>
+
+<h4 id="5百分比布局">5、百分比布局</h4>
+
+<p>根据百分比来布局</p>
 
 
 
