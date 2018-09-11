@@ -3,7 +3,7 @@ layout:     post
 category:   Android
 title:      "安卓学习记录"
 subtitle:   "安卓学习过程中的随记"
-date:       2018-08-19 12:00:00
+date:       2018-04-19 12:00:00
 author:     "Ted"
 header-img: "img/default.jpg"
 ---

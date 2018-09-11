@@ -1,194 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-08-30T17:21:31+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">安卓学习记录</title><link href="http://www.helloted.com/android/2018/08/19/learnAndroid/" rel="alternate" type="text/html" title="安卓学习记录" /><published>2018-08-19T20:00:00+08:00</published><updated>2018-08-19T20:00:00+08:00</updated><id>http://www.helloted.com/android/2018/08/19/learnAndroid</id><content type="html" xml:base="http://www.helloted.com/android/2018/08/19/learnAndroid/">&lt;h3 id=&quot;一安卓四大组件&quot;&gt;一、安卓四大组件&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Activity:是所有Android应用程序的门面，凡是在应用中你看到的东西，都是在里面。每一个Activity都独立于其他Activity而存在。因此，其他应用可以启动其中任何一个Activity(当然得应用允许)&lt;/li&gt;
-  &lt;li&gt;Service:是一种在后台运行的组件，用于执行长时间运行的操作或为远程进程执行作业，服务不提供用户界面。例如，当用户位于其他应用时，服务可能在后台播放音乐或者通过网络获取数据&lt;/li&gt;
-  &lt;li&gt;Broadcast Receiver：用于响应系统范围广播通知的组件。接收来自各处的广播消息，比如短信、电话，屏幕，当然应用也可以向外发出广播消息。尽管广播接收器不会显示用户界面，但他们可以创建状态栏同辉，在发生广播事件的时候提醒用户&lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Content Provider：您可以将数据存储在文件系统、SQLite 数据库、网络上或您的应用可以访问的任何其他永久性存储位置。 其他应用可以通过内容提供程序查询数据，甚至修改数据（如果内容提供程序允许），比如你想要读取系统电话簿中的联系人，就需要通过内容提供器&lt;/p&gt;
-
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; 任何应用都可以启动其他应用的组件，比如拍照，您的应用可以利用拍照应用而不是开发一个Activity来自行拍摄照片，只需启动照相应用的Activity，完成拍摄后，系统将照片返回您的应用。当系统启动某个组件时，会启动该应用的进程(如果尚未运行)，并且实例化该组件所需要的类。例如，如果您的应用启动相机应用中拍摄照片的Activity，则该 Activity 会在属于相机应用的进程，而不是您的应用的进程中运行。因此，与大多数其他系统上的应用不同，Android 应用并没有单一入口点（例如，没有 `main()` 函数）。
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;由于系统在单独的进程中运行每个应用，且其文件权限会限制对其他应用的访问，因此您的应用无法直接启动其他应用中的组件， 但 Android 系统却可以。因此，要想启动其他应用中的组件，您必须向系统传递一则消息，说明您想启动特定组件的 &lt;em&gt;Intent&lt;/em&gt;。 系统随后便会为您启动该组件。&lt;/p&gt;
-
-&lt;p&gt;四种组件类型中的三种 — Activity、服务和广播接收器 — 通过名为 &lt;em&gt;Intent&lt;/em&gt; 的异步消息进行启动。Intent 会在运行时将各个组件相互绑定（您可以将 Intent 视为从其他组件请求操作的信使），无论组件属于您的应用还是其他应用。&lt;/p&gt;
-
-&lt;h3 id=&quot;二androidmanifestxml&quot;&gt;二、AndroidManifest.xml&lt;/h3&gt;
-
-&lt;p&gt;&lt;strong&gt;在 Android 系统启动应用组件之前，系统必须通过读取应用的 &lt;code class=&quot;highlighter-rouge&quot;&gt;AndroidManifest.xml&lt;/code&gt; 文件（“清单”文件）确认组件存在。 您的应用必须在此文件中声明其所有组件，该文件必须位于应用项目目录的根目录中。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;除了声明应用的组件外，清单文件还有许多其他作用，如：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;确定应用需要的任何用户权限，如互联网访问权限或对用户联系人的读取权限&lt;/li&gt;
-  &lt;li&gt;根据应用使用的 API，声明应用所需的最低 &lt;a href=&quot;https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels&quot;&gt;API 级别&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;声明应用使用或需要的硬件和软件功能，如相机、蓝牙服务或多点触摸屏幕&lt;/li&gt;
-  &lt;li&gt;应用需要链接的 API 库（Android 框架 API 除外），如 &lt;a href=&quot;http://code.google.com/android/add-ons/google-apis/maps-overview.html&quot;&gt;Google 地图库&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;其他功能&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;1、设定一个首页&lt;/p&gt;
-
-&lt;p&gt;所有的Activity都要在的 AndroidManifest.xml文件里注册，否则不能使用，不过Android Studio会自动帮我们做这个操作，但是如果要设定一个activity为主页，则需要添加intent-filter表情，比如，要设置一个名称为FirstActivity为首页&lt;/p&gt;
-
-&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;        &lt;span class=&quot;nt&quot;&gt;&amp;lt;activity&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;.FirstActivity&quot;&lt;/span&gt;
-            &lt;span class=&quot;na&quot;&gt;android:label=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;this is FirstActivity&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
-            &lt;span class=&quot;nt&quot;&gt;&amp;lt;intent-filter&amp;gt;&lt;/span&gt;
-                &lt;span class=&quot;nt&quot;&gt;&amp;lt;action&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;android.intent.action.MAIN&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
-                &lt;span class=&quot;nt&quot;&gt;&amp;lt;category&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;android.intent.category.LAUNCHER&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
-            &lt;span class=&quot;nt&quot;&gt;&amp;lt;/intent-filter&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/activity&amp;gt;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;android.intent.action.MAIN决定应用程序最先启动的Activity&lt;/li&gt;
-  &lt;li&gt;android.intent.category.LAUNCHER决定应用程序是否显示在程序列表里&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;上面两个标签必须同时有，缺一不可。&lt;/p&gt;
-
-&lt;h3 id=&quot;三intent&quot;&gt;三、Intent&lt;/h3&gt;
-
-&lt;p&gt;Intent是一个消息传递对象，您可以使用它从其他应用组件请求操作，基本用例主要包括以下三个&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;启动Activity&lt;/li&gt;
-  &lt;li&gt;启动服务&lt;/li&gt;
-  &lt;li&gt;传递广播&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Intent 分为两种类型：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;显式 Intent&lt;/strong&gt;：按名称（完全限定类名）指定要启动的组件。 通常，您会在自己的应用中使用显式 Intent 来启动组件，这是因为您知道要启动的 Activity 或服务的类名。例如，启动新 Activity 以响应用户操作，或者启动服务以在后台下载文件。&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;隐式 Intent&lt;/strong&gt; ：不会指定特定的组件，而是声明要执行的常规操作，从而允许其他应用中的组件来处理它。 例如，如需在地图上向用户显示位置，则可以使用隐式 Intent，请求另一具有此功能的应用在地图上显示指定的位置。隐式Intent需要配合Intent-filter。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;&lt;strong&gt;注意：&lt;/strong&gt;为了确保应用的安全性，启动 &lt;code class=&quot;highlighter-rouge&quot;&gt;Service&lt;/code&gt; 时，请始终使用显式 Intent，且不要为服务声明 Intent 过滤器。使用隐式 Intent 启动服务存在安全隐患，因为您无法确定哪些服务将响应 Intent，且用户无法看到哪些服务已启动。从 Android 5.0（API 级别 21）开始，如果使用隐式 Intent 调用 &lt;code class=&quot;highlighter-rouge&quot;&gt;bindService()&lt;/code&gt;，系统会引发异常。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h4 id=&quot;intent-filter&quot;&gt;intent-filter&lt;/h4&gt;
-
-&lt;p&gt;Intent 过滤器是应用清单文件中的一个表达式，它指定该组件要接收的 Intent 类型。&lt;/p&gt;
-
-&lt;p&gt;请在&lt;a href=&quot;https://developer.android.com/guide/topics/manifest/manifest-intro.html&quot;&gt;清单文件&lt;/a&gt;中使用intent-filter元素为每个应用组件声明一个或多个 Intent 过滤器。每个 Intent 过滤器均根据 Intent 的操作、数据和类别指定自身接受的 Intent 类型。 仅当隐式 Intent 可以通过 Intent 过滤器之一传递时，系统才会将该 Intent 传递给应用组件。&lt;/p&gt;
-
-&lt;p&gt;创建隐式 Intent 时，Android 系统通过将 Intent 的内容与在设备上其他应用的&lt;a href=&quot;https://developer.android.com/guide/topics/manifest/manifest-intro.html&quot;&gt;清单文件&lt;/a&gt;中声明的 Intent 过滤器进行比较，从而找到要启动的相应组件。 如果 Intent 与 Intent 过滤器匹配，则系统将启动该组件，并向其传递 &lt;code class=&quot;highlighter-rouge&quot;&gt;Intent&lt;/code&gt;对象。 如果多个 Intent 过滤器兼容，则系统会显示一个对话框，支持用户选取要使用的应用。&lt;/p&gt;
-
-&lt;p&gt;您可以使用以下三个元素中的一个或多个指定要接受的 Intent 类型：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;action&gt;
-
-在 `name` 属性中，声明接受的 Intent 操作。该值必须是操作的文本字符串值，而不是类常量。
-
-&lt;/action&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;data&gt;
-
-使用一个或多个指定数据 URI 各个方面（`scheme`、`host`、`port`、`path` 等）和 MIME 类型的属性，声明接受的数据类型。
-
-&lt;/data&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;category&gt;
-
-在 `name` 属性中，声明接受的 Intent 类别。该值必须是操作的文本字符串值，而不是类常量。
-
-&lt;/category&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 id=&quot;构建&quot;&gt;构建&lt;/h4&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Intent&lt;/code&gt; 对象携带了 Android 系统用来确定要启动哪个组件的信息，以及目标组件为了正确执行操作而使用的信息，主要包含：&lt;/p&gt;
-
-&lt;p&gt;组件名称：可选项，如果隐式则根据其他信息来判断&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;操作&lt;/li&gt;
-  &lt;li&gt;数据&lt;/li&gt;
-  &lt;li&gt;Extra:附加信息的key-value&lt;/li&gt;
-  &lt;li&gt;标志：&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;四activity&quot;&gt;四、Activity&lt;/h3&gt;
-
-&lt;h4 id=&quot;1四个状态&quot;&gt;1、四个状态：&lt;/h4&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;运行：在返回栈的栈顶，最不可能被回收&lt;/li&gt;
-  &lt;li&gt;暂停：不再栈顶，但是仍然可见，比如对话框的时候，背后的Activity就是暂停状态，只有在内存极低的情况下，系统才会考虑回收&lt;/li&gt;
-  &lt;li&gt;停止：当一个Activity不再处于栈顶位置，并且完全不可见的时候，就进入了停止状态，当其他地方需要内存时，极有可能会被系统回收&lt;/li&gt;
-  &lt;li&gt;销毁：当一个Activity从返回栈移除后就变成了销毁状态。系统最倾向于回收这种状态，保证手机的内存充足。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;2回调方法&quot;&gt;2、回调方法&lt;/h4&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;onCreate():在Activity第一次被创建的时候调用，在这个方法里完成初始化操作，比如加载布局，绑定事件&lt;/li&gt;
-  &lt;li&gt;onStart():在Activity由不可见变为可见的时候调用&lt;/li&gt;
-  &lt;li&gt;onResume():在Activity准备好和用户进行交互的时候调用，此时Activity一定位于返回栈的栈顶，并且处于运行状态&lt;/li&gt;
-  &lt;li&gt;onPause():在系统准备去启动或者恢复另一个Activity的时候调用，通常在这个方法中将一些消耗CPU资源释放掉，以及保存一些关键数据，但是这个方法一定要快，否则会影响到新的栈顶Activity的使用&lt;/li&gt;
-  &lt;li&gt;onStop():在Activity完全不可见的时候调用，与onpause的区别是，如果新Activity是对话框式的，会调用onPause而不会调用onStop&lt;/li&gt;
-  &lt;li&gt;onDestory():在被销毁之前调用，之后的Activity状态变为销毁状态&lt;/li&gt;
-  &lt;li&gt;onRestart():在Activity由停止状态变为运行状态之前调用，也就是Activity被重新启动了&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_1/40.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;3生存期&quot;&gt;3、生存期&lt;/h4&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;完整生存期:在onCreate()和onDestory之间的方法所经历的，就是完整生存期，一般情况下，一个Activity会在onCreate()方法中完成各种初始化操作，而在onDestory方法中完成内存释放的操作&lt;/li&gt;
-  &lt;li&gt;可见生存期:Activity在onStart()和onStop()之间所经历的，就是可见生存期。在可见生存期，Activity对于用户总是可见的，即时可能无法和用户进行交互&lt;/li&gt;
-  &lt;li&gt;前台生存期：Activity在onResume()方法和onPause()方法之间所经历的就是前台生存期。在前台生存期内，Activity总是处于运行状态，此时的Activity是可以与用户进行交互。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;4活动的启动模式&quot;&gt;4、活动的启动模式&lt;/h4&gt;
-
-&lt;p&gt;需要在AndroidManifest.xml中通过&lt;activity&gt;标签指定android:lanuchMode属性来选择启动模式&lt;/activity&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;standard：活动的默认启动模式，系统不会在乎这个活动在返回栈中的情况，每次启动都会创建活动的一个新的实例&lt;/li&gt;
-  &lt;li&gt;singleTop：在启动活动如果发现返回栈中的栈顶已经是该活动，则直接使用，不会再创建新的&lt;/li&gt;
-  &lt;li&gt;singleTask：在启动该活动时系统会在返回栈中检查是否存在该活动实例，如果有，则把活动之上的所有活动全部出栈，然后直接使用这个活动&lt;/li&gt;
-  &lt;li&gt;singleInstance：系统会有一个单独的返回栈来管理这个活动，不管是哪个应用来访问这个活动，都共用一个单例&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;五安卓ui布局&quot;&gt;五、安卓UI布局&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;android:layout_width: 控件的宽度&lt;/li&gt;
-  &lt;li&gt;android:layout_height: 控件的高度&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;可选值有三种：match_parent，fill_parent，和wrap_content，match_parent和fill_parent一样都是跟父布局大小一致。wrap_parent则是由内容来觉得，也就是刚好包住内容。&lt;/p&gt;
-
-&lt;h4 id=&quot;1约束布局&quot;&gt;1、约束布局&lt;/h4&gt;
-
-&lt;p&gt;根据控件间的相互约束来决定布局，2017年推出，成为主流布局方式&lt;/p&gt;
-
-&lt;h4 id=&quot;2线性布局linearlayout&quot;&gt;2、线性布局LinearLayout&lt;/h4&gt;
-
-&lt;p&gt;将所有包含的控件在线性方向上依次排列，通过android:orientation属性可以指定排列方向，vertical是竖直方向，horizontal是水平方向。默认是水平方向。还有个属性layout_weiht，用来按比例分布排列&lt;/p&gt;
-
-&lt;h4 id=&quot;3相对布局relativelayout&quot;&gt;3、相对布局RelativeLayout&lt;/h4&gt;
-
-&lt;p&gt;通过相对定位的方式让控件出现在布局的任何位置，主要是利用控件间对齐来布局，属性比较多&lt;/p&gt;
-
-&lt;h4 id=&quot;4帧布局framelayout&quot;&gt;4、帧布局FrameLayout&lt;/h4&gt;
-
-&lt;p&gt;所有的控件默认拜访在布局的左上角，应用较少&lt;/p&gt;
-
-&lt;h4 id=&quot;5百分比布局&quot;&gt;5、百分比布局&lt;/h4&gt;
-
-&lt;p&gt;根据百分比来布局&lt;/p&gt;</content><author><name>Ted</name></author><category term="Android" /><summary type="html">一、安卓四大组件</summary></entry><entry><title type="html">C++与Objective-C混编</title><link href="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/08/07/MixCppObjeciveC/" rel="alternate" type="text/html" title="C++与Objective-C混编" /><published>2018-08-07T20:00:00+08:00</published><updated>2018-08-07T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/08/07/MixCppObjeciveC</id><content type="html" xml:base="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/08/07/MixCppObjeciveC/">&lt;p&gt;在一些iOS开发中，经常有一些第三方的框架是用C++写的，有时候我们需要在C++文件中调用OC方法，或者在OC文件中调用C++函数，也就是C++与Objective-C混编。但是我们知道在纯OC文件中是不能编译C++代码的，在纯C++文件中又是不能编译Objective-C代码的。直接引入编译不过会报错&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-09-11T15:11:50+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">C++与Objective-C混编</title><link href="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/08/07/MixCppObjeciveC/" rel="alternate" type="text/html" title="C++与Objective-C混编" /><published>2018-08-07T20:00:00+08:00</published><updated>2018-08-07T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/08/07/MixCppObjeciveC</id><content type="html" xml:base="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/08/07/MixCppObjeciveC/">&lt;p&gt;在一些iOS开发中，经常有一些第三方的框架是用C++写的，有时候我们需要在C++文件中调用OC方法，或者在OC文件中调用C++函数，也就是C++与Objective-C混编。但是我们知道在纯OC文件中是不能编译C++代码的，在纯C++文件中又是不能编译Objective-C代码的。直接引入编译不过会报错&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/Simple_1/39.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 
@@ -1378,4 +1188,115 @@ lipo &lt;span class=&quot;nt&quot;&gt;-create&lt;/span&gt; &lt;span class=&quot;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;以上代码可以在&lt;a href=&quot;https://github.com/helloted/iOS_Demo/tree/master/RTMPDemo&quot;&gt;推流Demo&lt;/a&gt;下载&lt;/p&gt;</content><author><name>Ted</name></author><category term="直播" /><summary type="html">一、编译lib库</summary></entry></feed>
+&lt;p&gt;以上代码可以在&lt;a href=&quot;https://github.com/helloted/iOS_Demo/tree/master/RTMPDemo&quot;&gt;推流Demo&lt;/a&gt;下载&lt;/p&gt;</content><author><name>Ted</name></author><category term="直播" /><summary type="html">一、编译lib库</summary></entry><entry><title type="html">Mac上搭建直播服务器</title><link href="http://www.helloted.com/%E7%9B%B4%E6%92%AD/2018/05/01/vlclive/" rel="alternate" type="text/html" title="Mac上搭建直播服务器" /><published>2018-05-01T20:00:00+08:00</published><updated>2018-05-01T20:00:00+08:00</updated><id>http://www.helloted.com/%E7%9B%B4%E6%92%AD/2018/05/01/vlclive</id><content type="html" xml:base="http://www.helloted.com/%E7%9B%B4%E6%92%AD/2018/05/01/vlclive/">&lt;h4 id=&quot;1安装nginx&quot;&gt;1、安装Nginx&lt;/h4&gt;
+
+&lt;p&gt;通过homebrew来安装支持rtmp协议模块的nginx&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;brew install nginx-full --with-rtmp-module
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;通过下面的命令来查看安装位置&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;brew info nginx-full
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_7/22.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;通过浏览器访问&lt;a href=&quot;http://localhost:8080&quot;&gt;http://localhost:8080&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_7/23.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;在nginx.conf里配置&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;rtmp {
+    server {
+        listen 1935;
+        application zbcs {
+            live on;
+            record off;
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;重启&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nginx -s reload
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;2安装ffmpeg来推流本地视频&quot;&gt;2、安装ffmpeg来推流本地视频&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;brew install ffmpeg
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;推流命令为&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ffmpeg -re -i /Users/imac/Documents/demo.mp4 -vcodec copy -f flv rtmp://127.0.0.1:1935/zbcs/room
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ffmpeg -re -i 你的视频文件的绝对路径 -vcodec copy -f flv rtmp://localhost:1935/nginx配置的application名称/room
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;这就开始推流了&lt;/p&gt;
+
+&lt;h4 id=&quot;3vlc直播&quot;&gt;3、VLC直播&lt;/h4&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;mac端&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;下载vlc播放器，在File-&amp;gt;open network输入&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;rtmp://127.0.0.1:1935/zbcs/room
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_7/24.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;iPhone&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;下载VLC播放器，同一局域网，打开网络流，输入&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;rtmp://电脑的本地IP:1935/zbcs/room
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_7/26.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;4推流桌面或者摄像头直播&quot;&gt;4、推流桌面或者摄像头直播&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ffmpeg -f avfoundation -list_devices true -i &quot;&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_7/25.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;可以看到在视频设备：&lt;/p&gt;
+
+&lt;p&gt;0：摄像头&lt;/p&gt;
+
+&lt;p&gt;1：桌面捕获&lt;/p&gt;
+
+&lt;p&gt;音频设备：&lt;/p&gt;
+
+&lt;p&gt;0：麦克风&lt;/p&gt;
+
+&lt;p&gt;所以如果要直播摄像头&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ffmpeg -f avfoundation -i &quot;0&quot; -vcodec libx264  -f flv rtmp://localhost:1935/zbcs/room
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;加上声音&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ffmpeg -f avfoundation -i &quot;0:0&quot; -vcodec libx264  -acodec libmp3lame -ar 44100 -ac 1 -f flv rtmp://localhost:1935/zbcs/room
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;还可以设置频率和分辨率&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// 设置帧率为30帧，图像大小为320x240
+ffmpeg -f avfoundation -framerate 30 -video_size 320x240 -i &quot;0&quot; -vcodec libx264 -f flv rtmp://localhost:1935/zbcs/room
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;如果要实现电脑屏幕和摄像头一起直播&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ffmpeg -f avfoundation  -framerate 30 -i &quot;1:0&quot; -f avfoundation -framerate 30 -video_size 320x240 -i &quot;0&quot; -vcodec libx264 -filter_complex 'overlay=main_w-overlay_w-10:main_h-overlay_h-10'  -acodec libmp3lame -ar 44100 -ac 1 -f flv rtmp://localhost:1935/zbcs/room
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Ted</name></author><category term="直播" /><summary type="html">1、安装Nginx</summary></entry></feed>
