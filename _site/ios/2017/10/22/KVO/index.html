@@ -75,13 +75,25 @@
                 
 				
                 <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
                     <a href="/about/">About</a>
                 </li>
 				
                 
 				
                 <li>
-                    <a href="/contact/">Contact</a>
+                    <a href="/app/">APP</a>
                 </li>
 				
                 
@@ -186,12 +198,11 @@
 
 <p>下面显示了以这种方式选择的balance和interestRate属性的示例context。</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">static</span> <span class="kt">void</span> <span class="o">*</span><span class="n">PersonAccountBalanceContext</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">PersonAccountBalanceContext</span><span class="p">;</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">static</span> <span class="kt">void</span> <span class="o">*</span><span class="n">PersonAccountBalanceContext</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">PersonAccountBalanceContext</span><span class="p">;</span>
 <span class="k">static</span> <span class="kt">void</span> <span class="o">*</span><span class="n">PersonAccountInterestRateContext</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">PersonAccountInterestRateContext</span><span class="p">;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">registerAsObserverForAccount</span><span class="p">:(</span><span class="n">Account</span><span class="o">*</span><span class="p">)</span><span class="nv">account</span> <span class="p">{</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">registerAsObserverForAccount</span><span class="p">:(</span><span class="n">Account</span><span class="o">*</span><span class="p">)</span><span class="nv">account</span> <span class="p">{</span>
     <span class="p">[</span><span class="n">account</span> <span class="nf">addObserver</span><span class="p">:</span><span class="n">self</span>
               <span class="nf">forKeyPath</span><span class="p">:</span><span class="s">@"balance"</span>
                  <span class="nl">options:</span><span class="p">(</span><span class="n">NSKeyValueObservingOptionNew</span> <span class="o">|</span>
@@ -204,8 +215,7 @@
                           <span class="n">NSKeyValueObservingOptionOld</span><span class="p">)</span>
                   <span class="nl">context:</span><span class="n">PersonAccountInterestRateContext</span><span class="p">];</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><strong>注意:</strong>  <code class="highlighter-rouge">addObserver:forKeyPath:options:context:</code> 没有强引用 observing object, the observed objects, or the context.</p>
 
@@ -217,7 +227,7 @@
 如果观察到的属性是一对多的关系，则NSKeyValueChangeKindKey还指示关系中的对象是分别通过返回NSKeyValueChangeInsertion，NSKeyValueChangeRemoval还是NSKeyValueChangeReplacement来插入，移除或替换。
 NSKeyValueChangeIndexesKey的值是一个NSIndexSet对象，用于指定已更改的关系中的索引。如果在注册观察者时将NSKeyValueObservingOptionNew或NSKeyValueObservingOptionOld指定为选项，则更改字典中的NSKeyValueChangeOldKey和NSKeyValueChangeNewKey值是包含相关对象在更改之前和之后的值的数组。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (void)observeValueForKeyPath:(NSString *)keyPath
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)observeValueForKeyPath:(NSString *)keyPath
                       ofObject:(id)object
                         change:(NSDictionary *)change
                        context:(void *)context {
@@ -236,8 +246,7 @@ NSKeyValueChangeIndexesKey的值是一个NSIndexSet对象，用于指定已更�
                                context:context];
     }
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>如果在注册观察者时指定了NULL context，则可以将通知的键路径与您正在观察的键路径进行比较，以确定发生了什么变化。 如果您对所有观察到的键路径使用单个context，则首先根据通知的context对其进行测试，并找到匹配项，然后使用键路径字符串比较来确定具体发生了什么变化。 如果您为每个关键路径提供了唯一的上下文，如下所示，一系列简单的指针比较会同时告诉您该通知是否适用于此观察者，如果是，那么哪个关键路径发生了变化。</p>
 
@@ -249,7 +258,7 @@ NSKeyValueChangeIndexesKey的值是一个NSIndexSet对象，用于指定已更�
 
 <p>移除时，要注意以下几点：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (void)unregisterAsObserverForAccount:(Account*)account {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)unregisterAsObserverForAccount:(Account*)account {
     [account removeObserver:self
                  forKeyPath:@"balance"
                     context:PersonAccountBalanceContext];
@@ -258,8 +267,7 @@ NSKeyValueChangeIndexesKey的值是一个NSIndexSet对象，用于指定已更�
                  forKeyPath:@"interestRate"
                     context:PersonAccountInterestRateContext];
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <ul>
   <li>删除未注册的观察对象将导致NSRangeException。您可以调用<code class="highlighter-rouge">removeObserver：forKeyPath：context：</code>恰好相应调用一次<code class="highlighter-rouge">addObserver：forKeyPath：options：context :</code>,或者如果在您的应用中不可行，则将try / catch块中的<code class="highlighter-rouge">removeObserver：forKeyPath：context：call</code>以处理潜在的例外。</li>
@@ -288,21 +296,20 @@ KVO支持与KVC相同的数据类型，包括Objective-C对象以及标量和结
 
 <p>NSObject提供了自动键值更改通知的基本实现。 自动键值更改通知通知观察者使用键值兼容访问器所做的更改以及键值编码方法。 自动通知还受由例如<code class="highlighter-rouge">mutableArrayValueForKey：</code>返回的集合代理对象的支持。</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="c1">// Call the accessor method.
-</span><span class="p">[</span><span class="n">account</span> <span class="nf">setName</span><span class="p">:</span><span class="s">@"Savings"</span><span class="p">];</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Call the accessor method.</span>
+<span class="p">[</span><span class="n">account</span> <span class="nf">setName</span><span class="p">:</span><span class="s">@"Savings"</span><span class="p">];</span>
  
-<span class="c1">// Use setValue:forKey:.
-</span><span class="p">[</span><span class="n">account</span> <span class="nf">setValue</span><span class="p">:</span><span class="s">@"Savings"</span> <span class="nf">forKey</span><span class="p">:</span><span class="s">@"name"</span><span class="p">];</span>
+<span class="c1">// Use setValue:forKey:.</span>
+<span class="p">[</span><span class="n">account</span> <span class="nf">setValue</span><span class="p">:</span><span class="s">@"Savings"</span> <span class="nf">forKey</span><span class="p">:</span><span class="s">@"name"</span><span class="p">];</span>
  
-<span class="c1">// Use a key path, where 'account' is a kvc-compliant property of 'document'.
-</span><span class="p">[</span><span class="n">document</span> <span class="nf">setValue</span><span class="p">:</span><span class="s">@"Savings"</span> <span class="nf">forKeyPath</span><span class="p">:</span><span class="s">@"account.name"</span><span class="p">];</span>
+<span class="c1">// Use a key path, where 'account' is a kvc-compliant property of 'document'.</span>
+<span class="p">[</span><span class="n">document</span> <span class="nf">setValue</span><span class="p">:</span><span class="s">@"Savings"</span> <span class="nf">forKeyPath</span><span class="p">:</span><span class="s">@"account.name"</span><span class="p">];</span>
  
-<span class="c1">// Use mutableArrayValueForKey: to retrieve a relationship proxy object.
-</span><span class="n">Transaction</span> <span class="o">*</span><span class="n">newTransaction</span> <span class="o">=</span> <span class="o">&lt;</span><span class="err">#</span><span class="n">Create</span> <span class="n">a</span> <span class="n">new</span> <span class="n">transaction</span> <span class="k">for</span> <span class="n">the</span> <span class="n">account</span><span class="err">#</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="c1">// Use mutableArrayValueForKey: to retrieve a relationship proxy object.</span>
+<span class="n">Transaction</span> <span class="o">*</span><span class="n">newTransaction</span> <span class="o">=</span> <span class="o">&lt;</span><span class="err">#</span><span class="n">Create</span> <span class="n">a</span> <span class="n">new</span> <span class="n">transaction</span> <span class="k">for</span> <span class="n">the</span> <span class="n">account</span><span class="err">#</span><span class="o">&gt;</span><span class="p">;</span>
 <span class="n">NSMutableArray</span> <span class="o">*</span><span class="n">transactions</span> <span class="o">=</span> <span class="p">[</span><span class="n">account</span> <span class="nf">mutableArrayValueForKey</span><span class="p">:</span><span class="s">@"transactions"</span><span class="p">];</span>
 <span class="p">[</span><span class="n">transactions</span> <span class="nf">addObject</span><span class="p">:</span><span class="n">newTransaction</span><span class="p">];</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="手动通知">手动通知</h4>
 
@@ -310,7 +317,7 @@ KVO支持与KVC相同的数据类型，包括Objective-C对象以及标量和结
 
 <p>手动和自动通知不是相互排斥的。除了已有的自动通知外，您还可以自由发布手动通知。更典型的是，你可能想完全控制一个特定属性的通知。在这种情况下，对于要排除其自动通知的属性，您会覆盖自动通知<code class="highlighter-rouge">ObserversForKey</code>的NSObject实现，自动通知观察者关键字的子类实现应返回“NO”。子类的实现应该为任何无法识别的键调用super。</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">automaticallyNotifiesObserversForKey</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">theKey</span> <span class="p">{</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">automaticallyNotifiesObserversForKey</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">theKey</span> <span class="p">{</span>
  
     <span class="n">BOOL</span> <span class="n">automatic</span> <span class="o">=</span> <span class="nb">NO</span><span class="p">;</span>
     <span class="k">if</span> <span class="p">([</span><span class="n">theKey</span> <span class="nf">isEqualToString</span><span class="p">:</span><span class="s">@"balance"</span><span class="p">])</span> <span class="p">{</span>
@@ -321,34 +328,31 @@ KVO支持与KVC相同的数据类型，包括Objective-C对象以及标量和结
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">automatic</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>要实现手动观察者通知，可以在更改值之前调用<code class="highlighter-rouge">willChangeValueForKey</code>，并在更改值之后调用<code class="highlighter-rouge">didChangeValueForKey</code>。</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setBalance</span><span class="p">:(</span><span class="kt">double</span><span class="p">)</span><span class="nv">theBalance</span> <span class="p">{</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setBalance</span><span class="p">:(</span><span class="kt">double</span><span class="p">)</span><span class="nv">theBalance</span> <span class="p">{</span>
     <span class="p">[</span><span class="n">self</span> <span class="nf">willChangeValueForKey</span><span class="p">:</span><span class="s">@"balance"</span><span class="p">];</span>
     <span class="n">_balance</span> <span class="o">=</span> <span class="n">theBalance</span><span class="p">;</span>
     <span class="p">[</span><span class="n">self</span> <span class="nf">didChangeValueForKey</span><span class="p">:</span><span class="s">@"balance"</span><span class="p">];</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>你可以减少没必要的通知</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setBalance</span><span class="p">:(</span><span class="kt">double</span><span class="p">)</span><span class="nv">theBalance</span> <span class="p">{</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setBalance</span><span class="p">:(</span><span class="kt">double</span><span class="p">)</span><span class="nv">theBalance</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">theBalance</span> <span class="o">!=</span> <span class="n">_balance</span><span class="p">)</span> <span class="p">{</span>
         <span class="p">[</span><span class="n">self</span> <span class="nf">willChangeValueForKey</span><span class="p">:</span><span class="s">@"balance"</span><span class="p">];</span>
         <span class="n">_balance</span> <span class="o">=</span> <span class="n">theBalance</span><span class="p">;</span>
         <span class="p">[</span><span class="n">self</span> <span class="nf">didChangeValueForKey</span><span class="p">:</span><span class="s">@"balance"</span><span class="p">];</span>
     <span class="p">}</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>你可以操作多个key</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setBalance</span><span class="p">:(</span><span class="kt">double</span><span class="p">)</span><span class="nv">theBalance</span> <span class="p">{</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setBalance</span><span class="p">:(</span><span class="kt">double</span><span class="p">)</span><span class="nv">theBalance</span> <span class="p">{</span>
     <span class="p">[</span><span class="n">self</span> <span class="nf">willChangeValueForKey</span><span class="p">:</span><span class="s">@"balance"</span><span class="p">];</span>
     <span class="p">[</span><span class="n">self</span> <span class="nf">willChangeValueForKey</span><span class="p">:</span><span class="s">@"itemChanged"</span><span class="p">];</span>
     <span class="n">_balance</span> <span class="o">=</span> <span class="n">theBalance</span><span class="p">;</span>
@@ -356,22 +360,20 @@ KVO支持与KVC相同的数据类型，包括Objective-C对象以及标量和结
     <span class="p">[</span><span class="n">self</span> <span class="nf">didChangeValueForKey</span><span class="p">:</span><span class="s">@"itemChanged"</span><span class="p">];</span>
     <span class="p">[</span><span class="n">self</span> <span class="nf">didChangeValueForKey</span><span class="p">:</span><span class="s">@"balance"</span><span class="p">];</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>在有序对多关系的情况下，您不仅必须指定已更改的关键字，还必须指定所涉及对象的更改类型和索引。 更改的类型是指定NSKeyValueChangeInsertion，NSKeyValueChangeRemoval或NSKeyValueChangeReplacement的NSKeyValueChange。 受影响对象的索引作为NSIndexSet对象传递。</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">removeTransactionsAtIndexes</span><span class="p">:(</span><span class="n">NSIndexSet</span> <span class="o">*</span><span class="p">)</span><span class="nv">indexes</span> <span class="p">{</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">removeTransactionsAtIndexes</span><span class="p">:(</span><span class="n">NSIndexSet</span> <span class="o">*</span><span class="p">)</span><span class="nv">indexes</span> <span class="p">{</span>
     <span class="p">[</span><span class="n">self</span> <span class="nf">willChange</span><span class="p">:</span><span class="n">NSKeyValueChangeRemoval</span>
         <span class="nf">valuesAtIndexes</span><span class="p">:</span><span class="n">indexes</span> <span class="n">forKey</span><span class="o">:</span><span class="s">@"transactions"</span><span class="p">];</span>
  
-    <span class="c1">// Remove the transaction objects at the specified indexes.
-</span> 
+    <span class="c1">// Remove the transaction objects at the specified indexes.</span>
+ 
     <span class="p">[</span><span class="n">self</span> <span class="nf">didChange</span><span class="p">:</span><span class="n">NSKeyValueChangeRemoval</span>
         <span class="nf">valuesAtIndexes</span><span class="p">:</span><span class="n">indexes</span> <span class="n">forKey</span><span class="o">:</span><span class="s">@"transactions"</span><span class="p">];</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="四注册依赖keys">四、注册依赖keys</h3>
 
@@ -383,17 +385,16 @@ KVO支持与KVC相同的数据类型，包括Objective-C对象以及标量和结
 
 <p>例如，一个人的fullName取决于firstName和lastName。 返回fullName的方法可以写成如下形式：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (NSString *)fullName {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (NSString *)fullName {
     return [NSString stringWithFormat:@"%@ %@",firstName, lastName];
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>观察fullName属性的应用程序必须在firstName或lastName属性发生更改时通知，因为它们会影响属性的值。</p>
 
 <p>一种解决方案是覆盖keyPathsForValuesAffectingValueForKey：指定一个人的fullName属性依赖于lastName和firstName属性。</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">NSSet</span> <span class="o">*</span><span class="p">)</span><span class="nf">keyPathsForValuesAffectingValueForKey</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">key</span> <span class="p">{</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">NSSet</span> <span class="o">*</span><span class="p">)</span><span class="nf">keyPathsForValuesAffectingValueForKey</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">key</span> <span class="p">{</span>
  
     <span class="n">NSSet</span> <span class="o">*</span><span class="n">keyPaths</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nf">keyPathsForValuesAffectingValueForKey</span><span class="p">:</span><span class="n">key</span><span class="p">];</span>
  
@@ -403,16 +404,14 @@ KVO支持与KVC相同的数据类型，包括Objective-C对象以及标量和结
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">keyPaths</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>你也可以采用 <code class="highlighter-rouge">keyPathsForValuesAffecting&lt;Key&gt;</code> 这种方法</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">NSSet</span> <span class="o">*</span><span class="p">)</span><span class="n">keyPathsForValuesAffectingFullName</span> <span class="p">{</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">NSSet</span> <span class="o">*</span><span class="p">)</span><span class="n">keyPathsForValuesAffectingFullName</span> <span class="p">{</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">NSSet</span> <span class="nf">setWithObjects</span><span class="p">:</span><span class="s">@"lastName"</span><span class="p">,</span> <span class="s">@"firstName"</span><span class="p">,</span> <span class="nb">nil</span><span class="p">];</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>一个已经存在的类的属性，不能通过category去重写 <code class="highlighter-rouge">keyPathsForValuesAffectingValueForKey:</code> 方法，这种情况下，就应该用 <code class="highlighter-rouge">keyPathsForValuesAffecting&lt;Key&gt;</code> 这种。</p>
 
@@ -420,14 +419,14 @@ KVO支持与KVC相同的数据类型，包括Objective-C对象以及标量和结
 
 <p>您可以使用键值观察将所有子项（在此示例中为employees）的相关属性的注册母项（在本例中为Department）注册为观察者。 当子对象添加到关系中并从关系中删除时，您必须添加并删除父项作为观察者（请参阅注册键值观察）。 在<code class="highlighter-rouge">observeValueForKeyPath：ofObject：change：context：</code>方法中，您更新相关值以响应更改，如下面的代码片段所示：</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">observeValueForKeyPath</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">keyPath</span> <span class="nf">ofObject</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">object</span> <span class="nf">change</span><span class="p">:(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="nv">change</span> <span class="nf">context</span><span class="p">:(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span><span class="nv">context</span> <span class="p">{</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">observeValueForKeyPath</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">keyPath</span> <span class="nf">ofObject</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">object</span> <span class="nf">change</span><span class="p">:(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="nv">change</span> <span class="nf">context</span><span class="p">:(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span><span class="nv">context</span> <span class="p">{</span>
  
     <span class="k">if</span> <span class="p">(</span><span class="n">context</span> <span class="o">==</span> <span class="n">totalSalaryContext</span><span class="p">)</span> <span class="p">{</span>
         <span class="p">[</span><span class="n">self</span> <span class="nf">updateTotalSalary</span><span class="p">];</span>
     <span class="p">}</span>
     <span class="k">else</span>
-    <span class="c1">// deal with other observations and/or invoke super...
-</span><span class="p">}</span>
+    <span class="c1">// deal with other observations and/or invoke super...</span>
+<span class="p">}</span>
  
 <span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">updateTotalSalary</span> <span class="p">{</span>
     <span class="p">[</span><span class="n">self</span> <span class="nf">setTotalSalary</span><span class="p">:[</span><span class="n">self</span> <span class="nf">valueForKeyPath</span><span class="p">:</span><span class="s">@"employees.@sum.salary"</span><span class="p">]];</span>
@@ -445,8 +444,7 @@ KVO支持与KVC相同的数据类型，包括Objective-C对象以及标量和结
 <span class="o">-</span> <span class="p">(</span><span class="n">NSNumber</span> <span class="o">*</span><span class="p">)</span><span class="n">totalSalary</span> <span class="p">{</span>
     <span class="k">return</span> <span class="n">_totalSalary</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>如果您使用的是CoreData，则可以将母项的通知中心注册为其管理对象上下文的观察者。 母项应以类似于键值观察的方式来回应子项发布的相关变化通知。</p>
 

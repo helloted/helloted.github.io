@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>Runtime应用(三)：NSInvocation - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/ios/2018/05/30/runtimeApply_3/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/app/">APP</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>Runtime应用(三)：NSInvocation</h1>
+                    
+                    <h2 class="subheading">应用NSInvocation写一个中间件来调用方法</h2>
+                    
+                    <span class="meta">Posted by Ted on May 30, 2018</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h4 id="1解耦">1、解耦</h4>
+
+<p>一个大的APP里有多个模块，很多时候模块之间要相互调用、通信，通常情况下，我们都是讲要调用的模块引入进来，然后生成对象，调用其方法。这种情况下，一旦模块比较多，相互调用也比较多，就会出现下图的这种关系，复杂，错乱，耦合比较严重</p>
+
+<p><img src="/img/Simple_8/10.png" alt="img" /></p>
+
+<p>一个解决思路就是，建立一个中间件Meditor，所有的模块都只有Meditor相互通信，如果要调用其他类，也是通过Meditor来调用，从而达到解耦的目的</p>
+
+<p><img src="/img/Simple_8/11.png" alt="img" /></p>
+
+<h4 id="2调用">2、调用</h4>
+
+<p>在 iOS中不通过类可以直接调用某个对象的消息方式有两种:</p>
+
+<ul>
+  <li>一种是<code class="highlighter-rouge">performSelector:withObject;</code></li>
+  <li>另外一种就是<code class="highlighter-rouge">NSInvocation。</code></li>
+</ul>
+
+<p>我们先来看<code class="highlighter-rouge">performSelector:withObject;</code></p>
+
+<p>如果我们有一个类HTOtherModule，并有一个方法如下</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@implementation HTOtherModule
+
+- (void)doSomethingWithParameter:(NSString *)para{
+    NSLog(@"done some with:%@",para);
+}
+
+@end
+</code></pre></div></div>
+
+<p>我们在其他类中，不通过类而是通过runtime的方式来调用这个方法，我们可以这样做：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    Class cls = NSClassFromString(@"HTOtherModule");
+    id obj = [[cls alloc]init];
+    [obj performSelector:NSSelectorFromString(@"doSomethingWithParameter:") withObject:@"this is the value"];
+</code></pre></div></div>
+
+<p>performSelector虽然能达到调用方法的目的，但是传递的参数最多只能由两个，也许可以通过封装进字典来传递，但是这样就徒增了工作。我们可以用NSInvocation的特性来达到这个目的</p>
+
+<h4 id="3nsinvocation">3、NSInvocation</h4>
+
+<p>我们知道，iOS的方法调用实际上就是消息转发</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>objc_msgSend(Class receiver,SEL selector, arg1, arg2, ...)
+</code></pre></div></div>
+
+<p>而NSInvocation就是用来制造消息发送的类。</p>
+
+<p>NSInvocation与其他NSObject类不一样，不会通过alloc/init来生成，它需要通过一个方法签名NSMethodSignature来生成</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSInvocation *invocatin = [NSInvocation invocationWithMethodSignature:sig];
+</code></pre></div></div>
+
+<p>而NSMethodSignature由类的selector来形成的</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSMethodSignature *sig  = [cls instanceMethodSignatureForSelector:aSelecotor];
+</code></pre></div></div>
+
+<p>依次填补参数，</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    [invocatin setTarget:obj];
+    [invocatin setSelector:aSelecotor];
+    NSString *para = @"this is the value";
+    [invocatin setArgument:&amp;para atIndex:2];
+</code></pre></div></div>
+
+<p>触发，就可以发送一条消息</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[invocatin invoke];
+</code></pre></div></div>
+
+<p>下面是调用HTOtherModule类的方法的完整代码：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    SEL aSelecotor = NSSelectorFromString(@"doSomethingWithParameter:");
+    Class cls = NSClassFromString(@"HTOtherModule");
+    id obj = [[cls alloc]init];
+    NSMethodSignature * sig  = [cls instanceMethodSignatureForSelector:aSelecotor];
+    NSInvocation * invocatin = [NSInvocation invocationWithMethodSignature:sig];
+    [invocatin setTarget:obj];
+    [invocatin setSelector:aSelecotor];
+    NSString *para = @"this is the value";
+    [invocatin setArgument:&amp;para atIndex:2];
+    [invocatin invoke];
+</code></pre></div></div>
+
+<h4 id="4中间件的考虑">4、中间件的考虑</h4>
+
+<p>如果把所有跨模块的调用都写到一个类里，那么这个类肯定会变得臃肿，所以，建议是在一个类里写下核心代码，而对于某个模块需要被调用的方法，则通过Category的形式，整合到一起。</p>
+
+<p>Categroy</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">HTMediator</span> <span class="p">(</span><span class="nl">HTOtherModule</span><span class="p">)</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nf">otherModulePerform</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">targetName</span> <span class="nf">action</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">actionName</span> <span class="nf">name</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">name</span> <span class="nf">hour</span><span class="p">:(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="nv">hour</span> <span class="nf">place</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">palce</span> <span class="nf">doSomething</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">doSomething</span><span class="p">;</span>
+
+<span class="k">@end</span>
+</code></pre></div></div>
+
+<p>这是核心代码</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="nf">performTarget</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">targetName</span> <span class="nf">action</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">actionName</span> <span class="nf">parameters</span><span class="p">:(</span><span class="n">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="nv">parameters</span><span class="p">{</span>
+    <span class="n">Class</span> <span class="n">tagetClass</span> <span class="o">=</span> <span class="n">NSClassFromString</span><span class="p">(</span><span class="n">targetName</span><span class="p">);</span>
+    <span class="n">NSObject</span> <span class="o">*</span><span class="n">tagert</span><span class="o">=</span> <span class="p">[[</span><span class="n">tagetClass</span> <span class="nf">alloc</span><span class="p">]</span><span class="nf">init</span><span class="p">];</span>
+    <span class="n">SEL</span> <span class="n">aSelector</span> <span class="o">=</span> <span class="n">NSSelectorFromString</span><span class="p">(</span><span class="n">actionName</span><span class="p">);</span>
+    <span class="n">NSMethodSignature</span> <span class="o">*</span><span class="n">methodSignature</span> <span class="o">=</span> <span class="p">[</span><span class="n">tagetClass</span> <span class="nf">instanceMethodSignatureForSelector</span><span class="p">:</span><span class="n">aSelector</span><span class="p">];</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">methodSignature</span> <span class="o">==</span> <span class="nb">nil</span><span class="p">)</span> <span class="c1">// 方法签名找不到，异常情况自己处理</span>
+    <span class="p">{</span>
+        <span class="n">NSLog</span><span class="p">(</span><span class="s">@"找不到这个方法"</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nb">nil</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="n">NSInvocation</span> <span class="o">*</span><span class="n">invocation</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSInvocation</span> <span class="nf">invocationWithMethodSignature</span><span class="p">:</span><span class="n">methodSignature</span><span class="p">];</span>
+        <span class="p">[</span><span class="n">invocation</span> <span class="nf">setTarget</span><span class="p">:</span><span class="n">tagert</span><span class="p">];</span>
+        <span class="p">[</span><span class="n">invocation</span> <span class="nf">setSelector</span><span class="p">:</span><span class="n">aSelector</span><span class="p">];</span>
+        
+        <span class="c1">//消息发送的参数，签名两个是class和selector，所以方法参数从第3个开始</span>
+        <span class="p">[</span><span class="n">parameters</span> <span class="nf">enumerateObjectsUsingBlock</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">id</span>  <span class="n">_Nonnull</span> <span class="n">obj</span><span class="p">,</span> <span class="n">NSUInteger</span> <span class="n">idx</span><span class="p">,</span> <span class="n">BOOL</span> <span class="o">*</span> <span class="n">_Nonnull</span> <span class="n">stop</span><span class="p">)</span> <span class="p">{</span>
+            <span class="p">[</span><span class="n">invocation</span> <span class="nf">setArgument</span><span class="p">:</span><span class="o">&amp;</span><span class="n">obj</span> <span class="nf">atIndex</span><span class="p">:</span><span class="n">idx</span><span class="o">+</span><span class="mi">2</span><span class="p">];</span>
+        <span class="p">}];</span>
+        <span class="p">[</span><span class="n">invocation</span> <span class="nf">invoke</span><span class="p">];</span>
+        
+        <span class="c1">//返回值处理</span>
+        <span class="n">__autoreleasing</span> <span class="n">id</span> <span class="n">callBackObject</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">methodSignature</span><span class="p">.</span><span class="n">methodReturnLength</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="p">[</span><span class="n">invocation</span> <span class="nf">getReturnValue</span><span class="p">:</span><span class="o">&amp;</span><span class="n">callBackObject</span><span class="p">];</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">callBackObject</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nb">nil</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>所有代码可以在<a href="https://github.com/helloted/iOS_Demo/tree/master/HTMediator">Github</a></p>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/%E5%B7%A5%E5%85%B7/2018/05/24/cocoapod/" data-toggle="tooltip" data-placement="top" title="发布库到cocoapod">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/ios/2018/06/04/runtimeApply_4/" data-toggle="tooltip" data-placement="top" title="Runtime应用(四)：NSProxy">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

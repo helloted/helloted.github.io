@@ -10,7 +10,7 @@ header-img: "img/bg_02.jpg"
 
 ### 一、UI更新原理和卡顿原因
 
-![img](/img/Smooth/smooth_03.png)
+![img](/img/Simple_6/03.png)
 
 在 VSync 信号到来后，系统图形服务会通过 CADisplayLink 等机制通知 App，App 主线程开始在 CPU 中计算显示内容，比如视图的创建、布局计算、图片解码、文本绘制等。随后 CPU 会将计算好的内容提交到 GPU 去，由 GPU 进行变换、合成、渲染。随后 GPU 会把渲染结果提交到帧缓冲区去，等待下一次 VSync 信号到来时显示到屏幕上。由于垂直同步的机制，如果在一个 VSync 时间内，CPU 或者 GPU 没有完成内容提交，则那一帧就会被丢弃，等待下一次机会再显示，而这时显示屏会保留之前的内容不变。这就是界面卡顿的原因。
 
@@ -24,7 +24,7 @@ header-img: "img/bg_02.jpg"
 
   这里我引用一张微信开发团队的监测流程图：
 
-  ![img](/img/Smooth/smooth_01.png)
+  ![img](/img/Simple_6/01.png)
 
 ### 二、Runloop检测卡顿
 
@@ -150,7 +150,7 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
 
 可以得到类似于下方的堆栈记录
 
-![img](/img/Smooth/smooth_02.png)
+![img](/img/Simple_6/02.png)
 
 ### 四、DisplayLink检测卡顿
 

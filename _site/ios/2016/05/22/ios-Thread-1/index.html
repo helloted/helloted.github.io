@@ -75,13 +75,25 @@
                 
 				
                 <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
                     <a href="/about/">About</a>
                 </li>
 				
                 
 				
                 <li>
-                    <a href="/contact/">Contact</a>
+                    <a href="/app/">APP</a>
                 </li>
 				
                 
@@ -189,17 +201,16 @@
 
 <p>POSIX线程（POSIX threads），简称Pthreads，是线程的POSIX标准。该标准定义了创建和操纵线程的一整套API。在类Unix操作系统（Unix、Linux、Mac OS X等）中，都使用Pthreads作为操作系统的线程,这是一套在很多操作系统上都通用的多线程API，所以移植性很强（然并卵），当然在 iOS 中也是可以的。不过这是基于 c语言的框架；</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">touchesBegan</span><span class="p">:(</span><span class="n">NSSet</span> <span class="o">*</span><span class="p">)</span><span class="nv">touches</span> <span class="nf">withEvent</span><span class="p">:(</span><span class="n">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="nv">event</span> <span class="p">{</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">touchesBegan</span><span class="p">:(</span><span class="n">NSSet</span> <span class="o">*</span><span class="p">)</span><span class="nv">touches</span> <span class="nf">withEvent</span><span class="p">:(</span><span class="n">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="nv">event</span> <span class="p">{</span>
     <span class="n">pthread_t</span> <span class="kr">thread</span><span class="p">;</span>
-    <span class="c1">//创建一个线程并自动执行
-</span>    <span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="kr">thread</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="c1">//创建一个线程并自动执行</span>
+    <span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="kr">thread</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
 <span class="p">}</span>
 <span class="kt">void</span> <span class="o">*</span><span class="nf">start</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">data</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">NSLog</span><span class="p">(</span><span class="s">@"%@"</span><span class="p">,</span> <span class="p">[</span><span class="n">NSThread</span> <span class="nf">currentThread</span><span class="p">]);</span>
     <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="三nsthread">三、NSThread</h3>
 
@@ -209,51 +220,48 @@
 
 <p>NSThread实例方法：</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithTarget</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">target</span> <span class="nf">selector</span><span class="p">:(</span><span class="n">SEL</span><span class="p">)</span><span class="nv">selector</span> <span class="nf">object</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">id</span><span class="p">)</span><span class="nv">argument</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithTarget</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">target</span> <span class="nf">selector</span><span class="p">:(</span><span class="n">SEL</span><span class="p">)</span><span class="nv">selector</span> <span class="nf">object</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">id</span><span class="p">)</span><span class="nv">argument</span>
 <span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">start</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>NSThread类方法：</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">detachNewThreadWithBlock</span><span class="p">:(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">block</span> 
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">detachNewThreadWithBlock</span><span class="p">:(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">block</span> 
 <span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">detachNewThreadSelector</span><span class="p">:(</span><span class="n">SEL</span><span class="p">)</span><span class="nv">selector</span> <span class="nf">toTarget</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">target</span> <span class="nf">withObject</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">id</span><span class="p">)</span><span class="nv">argument</span><span class="p">;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Datach Thread(脱离线程)，允许系统在线程完成时立即释放它的数据结构。</p>
 
 <h4 id="2nsthread线程操作">2、NSThread线程操作</h4>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="c1">//取消线程,并不是停止线程，这个只是一个标志位，对应isCanceled
-</span><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">cancel</span><span class="p">;</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//取消线程,并不是停止线程，这个只是一个标志位，对应isCanceled</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">cancel</span><span class="p">;</span>
 
-<span class="c1">//启动线程
-</span><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">start</span><span class="p">;</span>
+<span class="c1">//启动线程</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">start</span><span class="p">;</span>
 
-<span class="c1">//判断某个线程的状态的属性
-</span><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">getter</span><span class="o">=</span><span class="n">isExecuting</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">executing</span><span class="p">;</span>
+<span class="c1">//判断某个线程的状态的属性</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">getter</span><span class="o">=</span><span class="n">isExecuting</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">executing</span><span class="p">;</span>
 <span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">getter</span><span class="o">=</span><span class="n">isFinished</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">finished</span><span class="p">;</span>
 <span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">getter</span><span class="o">=</span><span class="n">isCancelled</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">cancelled</span><span class="p">;</span>
 
-<span class="c1">//设置和获取线程名字
-</span><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setName</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">n</span><span class="p">;</span>
+<span class="c1">//设置和获取线程名字</span>
+<span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setName</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">n</span><span class="p">;</span>
 <span class="k">-</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">name</span><span class="p">;</span>
 
-<span class="c1">//获取当前线程信息
-</span><span class="k">+</span> <span class="p">(</span><span class="n">NSThread</span> <span class="o">*</span><span class="p">)</span><span class="n">currentThread</span><span class="p">;</span>
+<span class="c1">//获取当前线程信息</span>
+<span class="k">+</span> <span class="p">(</span><span class="n">NSThread</span> <span class="o">*</span><span class="p">)</span><span class="n">currentThread</span><span class="p">;</span>
 
-<span class="c1">//退出线程 不推荐使用，杀死一个线程阻止了线程本身的清理工作。线程分配的内存可能造成泄露，并且其他线程当前使用的资源可能没有被正确清理干净，之后造成潜在的问题
-</span><span class="k">+</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">exit</span><span class="err">；</span>
+<span class="c1">//退出线程 不推荐使用，杀死一个线程阻止了线程本身的清理工作。线程分配的内存可能造成泄露，并且其他线程当前使用的资源可能没有被正确清理干净，之后造成潜在的问题</span>
+<span class="k">+</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">exit</span><span class="err">；</span>
 
-<span class="c1">//获取主线程信息
-</span><span class="o">+</span> <span class="p">(</span><span class="n">NSThread</span> <span class="o">*</span><span class="p">)</span><span class="n">mainThread</span><span class="p">;</span>
+<span class="c1">//获取主线程信息</span>
+<span class="o">+</span> <span class="p">(</span><span class="n">NSThread</span> <span class="o">*</span><span class="p">)</span><span class="n">mainThread</span><span class="p">;</span>
 
-<span class="c1">//使当前线程暂停一段时间，或者暂停到某个时刻
-</span><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">sleepForTimeInterval</span><span class="p">:(</span><span class="n">NSTimeInterval</span><span class="p">)</span><span class="nv">time</span><span class="p">;</span>
+<span class="c1">//使当前线程暂停一段时间，或者暂停到某个时刻</span>
+<span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">sleepForTimeInterval</span><span class="p">:(</span><span class="n">NSTimeInterval</span><span class="p">)</span><span class="nv">time</span><span class="p">;</span>
 <span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">sleepUntilDate</span><span class="p">:(</span><span class="n">NSDate</span> <span class="o">*</span><span class="p">)</span><span class="nv">date</span><span class="p">;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="3设置优先级">3、设置优先级</h4>
 
@@ -267,15 +275,13 @@
 
 <p>第一种方式为performSelector, runloop是实现performOnThread的基础——目标thread必须有runloop在运行，因为该实现的原理是基于runloop源的</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">performSelector</span><span class="p">:(</span><span class="n">SEL</span><span class="p">)</span><span class="nv">aSelector</span> <span class="nf">onThread</span><span class="p">:(</span><span class="n">NSThread</span> <span class="o">*</span><span class="p">)</span><span class="nv">thr</span> <span class="nf">withObject</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">id</span><span class="p">)</span><span class="nv">arg</span> <span class="nf">waitUntilDone</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">wait</span>  
-</code></pre>
-</div>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">performSelector</span><span class="p">:(</span><span class="n">SEL</span><span class="p">)</span><span class="nv">aSelector</span> <span class="nf">onThread</span><span class="p">:(</span><span class="n">NSThread</span> <span class="o">*</span><span class="p">)</span><span class="nv">thr</span> <span class="nf">withObject</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">id</span><span class="p">)</span><span class="nv">arg</span> <span class="nf">waitUntilDone</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">wait</span>  
+</code></pre></div></div>
 
 <p>主线程比较特殊，有专门的方法</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">performSelectorOnMainThread</span><span class="p">:(</span><span class="n">SEL</span><span class="p">)</span><span class="nv">aSelector</span> <span class="nf">withObject</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">id</span><span class="p">)</span><span class="nv">arg</span> <span class="nf">waitUntilDone</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">wait</span><span class="p">;</span> <span class="c1">//wait如果传入的是YES: 那么会等到主线程中的方法执行完毕, 才会继续执行下面其他行的代码
-</span></code></pre>
-</div>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">performSelectorOnMainThread</span><span class="p">:(</span><span class="n">SEL</span><span class="p">)</span><span class="nv">aSelector</span> <span class="nf">withObject</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">id</span><span class="p">)</span><span class="nv">arg</span> <span class="nf">waitUntilDone</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">wait</span><span class="p">;</span> <span class="c1">//wait如果传入的是YES: 那么会等到主线程中的方法执行完毕, 才会继续执行下面其他行的代码</span>
+</code></pre></div></div>
 
 <p>第2种为NSMachPort方式。NSPort有3个子类，NSSocketPort、NSMessagePort、NSMachPort，但在iOS下只有NSMachPort可用。</p>
 
@@ -285,13 +291,11 @@
 
 <h3 id="四使用nsobject来异步编程">四、使用NSObject来异步编程</h3>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>[obj performSelectorInBackground:@selector(backMethod) withObject:nil];
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[obj performSelectorInBackground:@selector(backMethod) withObject:nil];
+</code></pre></div></div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>[obj performSelectorOnMainThread:@selector(toMain) withObject:nil waitUntilDone:NO];
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[obj performSelectorOnMainThread:@selector(toMain) withObject:nil waitUntilDone:NO];
+</code></pre></div></div>
 
 
 

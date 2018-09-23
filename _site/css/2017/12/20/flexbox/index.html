@@ -75,13 +75,25 @@
                 
 				
                 <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
                     <a href="/about/">About</a>
                 </li>
 				
                 
 				
                 <li>
-                    <a href="/contact/">Contact</a>
+                    <a href="/app/">APP</a>
                 </li>
 				
                 
@@ -157,21 +169,19 @@
 
 <p>定义了container是一个弹性可伸缩的，值有可能为flex或者inline-flex</p>
 
-<div class="language-css highlighter-rouge"><pre class="highlight"><code><span class="nc">.container</span> <span class="p">{</span>
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">.container</span> <span class="p">{</span>
   <span class="nl">display</span><span class="p">:</span> <span class="n">flex</span><span class="p">;</span> <span class="c">/* or inline-flex */</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="flex-direction">flex-direction</h4>
 
 <p>建立了主轴，从而决定了items放置在container里的方向， Flexbox是（除了可选的wrapping）单向布局的概念。 将items视为主要布置在水平行或垂直列中。</p>
 
-<div class="language-css highlighter-rouge"><pre class="highlight"><code><span class="nc">.container</span> <span class="p">{</span>
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">.container</span> <span class="p">{</span>
   <span class="nl">flex-direction</span><span class="p">:</span> <span class="n">row</span> <span class="err">|</span> <span class="n">row-reverse</span> <span class="err">|</span> <span class="n">column</span> <span class="err">|</span> <span class="n">column-reverse</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><img src="/img/flex/04.svg" alt="img" /></p>
 
@@ -183,11 +193,10 @@
 
 <p><img src="/img/flex/05.svg" alt="img" /></p>
 
-<div class="language-css highlighter-rouge"><pre class="highlight"><code><span class="nc">.container</span><span class="p">{</span>
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">.container</span><span class="p">{</span>
   <span class="nl">flex-wrap</span><span class="p">:</span> <span class="nb">nowrap</span> <span class="err">|</span> <span class="n">wrap</span> <span class="err">|</span> <span class="n">wrap-reverse</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <ul>
   <li><code class="highlighter-rouge">nowrap</code> (默认): 所有的弹性items都在一行</li>
@@ -206,11 +215,10 @@
 
 <p>这定义了沿主轴的对齐方式。 当一条线上的所有items都不是弹性，或者是弹性的、但已经达到其最大尺寸时，它有助于分配剩余空间。 当items溢出时，它也对项目的对齐进行控制。</p>
 
-<div class="language-css highlighter-rouge"><pre class="highlight"><code><span class="nc">.container</span> <span class="p">{</span>
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">.container</span> <span class="p">{</span>
   <span class="nl">justify-content</span><span class="p">:</span> <span class="n">flex-start</span> <span class="err">|</span> <span class="n">flex-end</span> <span class="err">|</span> <span class="nb">center</span> <span class="err">|</span> <span class="n">space-between</span> <span class="err">|</span> <span class="n">space-around</span> <span class="err">|</span> <span class="n">space-evenly</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><img src="/img/flex/06.svg" alt="img" /></p>
 
@@ -227,11 +235,10 @@
 
 <p>这定义了如何在当前轴上沿纵向对齐的方式。 把它看作是纵轴轴（垂直于主轴）的 <code class="highlighter-rouge">justify-content</code> 版本。</p>
 
-<div class="language-css highlighter-rouge"><pre class="highlight"><code><span class="nc">.container</span> <span class="p">{</span>
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">.container</span> <span class="p">{</span>
   <span class="nl">align-items</span><span class="p">:</span> <span class="n">flex-start</span> <span class="err">|</span> <span class="n">flex-end</span> <span class="err">|</span> <span class="nb">center</span> <span class="err">|</span> <span class="nb">baseline</span> <span class="err">|</span> <span class="n">stretch</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><img src="/img/flex/07.svg" alt="img" /></p>
 
@@ -249,11 +256,10 @@
 
 <p>注意：只有一行items时，此属性不起作用。</p>
 
-<div class="language-css highlighter-rouge"><pre class="highlight"><code><span class="nc">.container</span> <span class="p">{</span>
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">.container</span> <span class="p">{</span>
   <span class="nl">align-content</span><span class="p">:</span> <span class="n">flex-start</span> <span class="err">|</span> <span class="n">flex-end</span> <span class="err">|</span> <span class="nb">center</span> <span class="err">|</span> <span class="n">space-between</span> <span class="err">|</span> <span class="n">space-around</span> <span class="err">|</span> <span class="n">stretch</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><img src="/img/flex/08.svg" alt="img" /></p>
 
@@ -272,21 +278,19 @@
 
 <p>默认情况下，Flex项目按源代码顺序排列。 但是，order属性可以控制它们在container中的显示顺序。</p>
 
-<div class="language-css highlighter-rouge"><pre class="highlight"><code><span class="nc">.item</span> <span class="p">{</span>
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">.item</span> <span class="p">{</span>
   <span class="nl">order</span><span class="p">:</span> <span class="err">&lt;</span><span class="n">integer</span><span class="err">&gt;</span><span class="p">;</span> <span class="c">/* default is 0 */</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><img src="/img/flex/09.svg" alt="img" /></p>
 
 <h4 id="flex-grow">flex-grow</h4>
 
-<div class="language-css highlighter-rouge"><pre class="highlight"><code><span class="nc">.item</span> <span class="p">{</span>
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">.item</span> <span class="p">{</span>
   <span class="nl">flex-grow</span><span class="p">:</span> <span class="err">&lt;</span><span class="n">number</span><span class="err">&gt;</span><span class="p">;</span> <span class="c">/* default 0 */</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>这定义了item在必要时增长空间的能力。它接受一个没有单位的数字，用作比例。 它规定了该itme应该占用container内的可用空间量。
 如果所有item的flex-grow的值设为1，则容器中的剩余空间将平均分配给所有的item, 如果其中一个item的值为2，其他为1，则剩余空间将占用其他空间的两倍（或者至少会尝试）。</p>
@@ -297,19 +301,17 @@
 
 <p>定义了item在必要时进行缩小的能力</p>
 
-<div class="language-css highlighter-rouge"><pre class="highlight"><code><span class="nc">.item</span> <span class="p">{</span>
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">.item</span> <span class="p">{</span>
   <span class="nl">flex-shrink</span><span class="p">:</span> <span class="err">&lt;</span><span class="n">number</span><span class="err">&gt;</span><span class="p">;</span> <span class="c">/* default 1,必须大于0 */</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="flex-basis">flex-basis</h4>
 
-<div class="language-css highlighter-rouge"><pre class="highlight"><code><span class="nc">.item</span> <span class="p">{</span>
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">.item</span> <span class="p">{</span>
   <span class="nl">flex-basis</span><span class="p">:</span> <span class="err">&lt;</span><span class="n">length</span><span class="err">&gt;</span> <span class="err">|</span> <span class="nb">auto</span><span class="p">;</span> <span class="c">/* default auto */</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>在剩余空间分配之前，这个定义了元素的默认大小。 它可以是一个长度（例如20％，5rem等）或关键字。 <code class="highlighter-rouge">auto</code>关键字的意思是“看我的宽度或高度属性”（这是临时由<code class="highlighter-rouge">main-size</code>关键字完成，直到被弃用）。 <code class="highlighter-rouge">content</code> 关键字的意思是“根据item的内容来确定它的大小” - 这个关键字还没有得到很好的支持，所以很难去测试，也很难知道它的 <code class="highlighter-rouge">max-content</code>, <code class="highlighter-rouge">min-content</code>, and <code class="highlighter-rouge">fit-content</code> 是什么。</p>
 
@@ -317,11 +319,10 @@
 
 <p>这是 <code class="highlighter-rouge">flex-grow,</code> <code class="highlighter-rouge">flex-shrink</code> and <code class="highlighter-rouge">flex-basis</code> 集合. 第二个和第三个 (<code class="highlighter-rouge">flex-shrink</code>and <code class="highlighter-rouge">flex-basis</code>) 可选的，默认值是 <code class="highlighter-rouge">0 1 auto</code>.</p>
 
-<div class="language-css highlighter-rouge"><pre class="highlight"><code><span class="nc">.item</span> <span class="p">{</span>
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">.item</span> <span class="p">{</span>
   <span class="nl">flex</span><span class="p">:</span> <span class="nb">none</span> <span class="err">|</span> <span class="p">[</span> <span class="err">&lt;</span><span class="s2">'flex-grow'</span><span class="err">&gt;</span> <span class="err">&lt;</span><span class="s2">'flex-shrink'</span><span class="err">&gt;?</span> <span class="err">||</span> <span class="err">&lt;</span><span class="s2">'flex-basis'</span><span class="err">&gt;</span> <span class="p">]</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>简易你设置这个属性而不是单独对各个属性进行设置。</p>
 
@@ -329,11 +330,10 @@
 
 <p>对某个item在纵轴方向上进行单独定义</p>
 
-<div class="language-css highlighter-rouge"><pre class="highlight"><code><span class="nc">.item</span> <span class="p">{</span>
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">.item</span> <span class="p">{</span>
   <span class="nl">align-self</span><span class="p">:</span> <span class="nb">auto</span> <span class="err">|</span> <span class="n">flex-start</span> <span class="err">|</span> <span class="n">flex-end</span> <span class="err">|</span> <span class="nb">center</span> <span class="err">|</span> <span class="nb">baseline</span> <span class="err">|</span> <span class="n">stretch</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><img src="/img/flex/11.svg" alt="img" /></p>
 
@@ -347,7 +347,7 @@
 
 <p>我们来开始一个简单的实例，解决一个日常的问题，居中，如果用flexbox就再简单不过了</p>
 
-<div class="language-css highlighter-rouge"><pre class="highlight"><code><span class="nc">.parent</span> <span class="p">{</span>
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">.parent</span> <span class="p">{</span>
   <span class="nl">display</span><span class="p">:</span> <span class="n">flex</span><span class="p">;</span>
   <span class="nl">height</span><span class="p">:</span> <span class="m">300px</span><span class="p">;</span> <span class="c">/* Or whatever */</span>
 <span class="p">}</span>
@@ -357,14 +357,13 @@
   <span class="nl">height</span><span class="p">:</span> <span class="m">100px</span><span class="p">;</span> <span class="c">/* Or whatever */</span>
   <span class="nl">margin</span><span class="p">:</span> <span class="nb">auto</span><span class="p">;</span>  <span class="c">/* Magic! */</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>依赖一个事实就是， margin设置为 <code class="highlighter-rouge">auto</code> 在 container吸纳额外空间. 所以设置垂直居中为 <code class="highlighter-rouge">auto</code> 将会使item在两个轴上都完美居中.</p>
 
 <p>看看其他属性. 考虑如果列出 6 items, 因为美观，这6个item都有固定尺寸，但是都可以自动调整大小.当我们调整浏览器大小时，我们需要它们在水平方向上均匀且完美地分布</p>
 
-<div class="language-css highlighter-rouge"><pre class="highlight"><code><span class="nc">.flex-container</span> <span class="p">{</span>
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">.flex-container</span> <span class="p">{</span>
   <span class="c">/* 我们首先定义一个 flex layout 的上下文 */</span>
   <span class="nl">display</span><span class="p">:</span> <span class="n">flex</span><span class="p">;</span>
   
@@ -378,14 +377,13 @@
   <span class="c">/* 再定义看看怎么进行分布剩余空间 */</span>
   <span class="nl">justify-content</span><span class="p">:</span> <span class="n">space-around</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>完整代码如下：</p>
 
 <p>html</p>
 
-<div class="language-html highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;ul</span> <span class="na">class=</span><span class="s">"flex-container"</span><span class="nt">&gt;</span>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;ul</span> <span class="na">class=</span><span class="s">"flex-container"</span><span class="nt">&gt;</span>
   <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">"flex-item"</span><span class="nt">&gt;</span>1<span class="nt">&lt;/li&gt;</span>
   <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">"flex-item"</span><span class="nt">&gt;</span>2<span class="nt">&lt;/li&gt;</span>
   <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">"flex-item"</span><span class="nt">&gt;</span>3<span class="nt">&lt;/li&gt;</span>
@@ -393,12 +391,11 @@
   <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">"flex-item"</span><span class="nt">&gt;</span>5<span class="nt">&lt;/li&gt;</span>
   <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">"flex-item"</span><span class="nt">&gt;</span>6<span class="nt">&lt;/li&gt;</span>
 <span class="nt">&lt;/ul&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Css</p>
 
-<div class="language-css highlighter-rouge"><pre class="highlight"><code><span class="k">@import</span> <span class="s1">"compass/css3"</span><span class="p">;</span>
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@import</span> <span class="s1">"compass/css3"</span><span class="p">;</span>
 
 <span class="nc">.flex-container</span> <span class="p">{</span>
   <span class="nl">padding</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span>
@@ -428,8 +425,7 @@
   <span class="nl">font-size</span><span class="p">:</span> <span class="m">3em</span><span class="p">;</span>
   <span class="nl">text-align</span><span class="p">:</span> <span class="nb">center</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><img src="/img/flex/12.png" alt="img" /></p>
 
@@ -441,7 +437,7 @@
 
 <p><img src="/img/flex/15.png" alt="img" /></p>
 
-<div class="language-css highlighter-rouge"><pre class="highlight"><code><span class="c">/* 大屏 */</span>
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">/* 大屏 */</span>
 <span class="nc">.navigation</span> <span class="p">{</span>
   <span class="nl">display</span><span class="p">:</span> <span class="n">flex</span><span class="p">;</span>
   <span class="nl">flex-flow</span><span class="p">:</span> <span class="n">row</span> <span class="n">wrap</span><span class="p">;</span>
@@ -464,25 +460,23 @@
     <span class="nl">flex-direction</span><span class="p">:</span> <span class="n">column</span><span class="p">;</span>
   <span class="p">}</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>完整代码</p>
 
 <p>Html:</p>
 
-<div class="language-html highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;ul</span> <span class="na">class=</span><span class="s">"navigation"</span><span class="nt">&gt;</span>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;ul</span> <span class="na">class=</span><span class="s">"navigation"</span><span class="nt">&gt;</span>
   <span class="nt">&lt;li&gt;&lt;a</span> <span class="na">href=</span><span class="s">"#"</span><span class="nt">&gt;</span>Home<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
   <span class="nt">&lt;li&gt;&lt;a</span> <span class="na">href=</span><span class="s">"#"</span><span class="nt">&gt;</span>About<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
   <span class="nt">&lt;li&gt;&lt;a</span> <span class="na">href=</span><span class="s">"#"</span><span class="nt">&gt;</span>Products<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
   <span class="nt">&lt;li&gt;&lt;a</span> <span class="na">href=</span><span class="s">"#"</span><span class="nt">&gt;</span>Contact<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
 <span class="nt">&lt;/ul&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Css:</p>
 
-<div class="language-css highlighter-rouge"><pre class="highlight"><code><span class="k">@import</span> <span class="s1">"compass/css3"</span><span class="p">;</span>
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@import</span> <span class="s1">"compass/css3"</span><span class="p">;</span>
 
 <span class="nc">.navigation</span> <span class="p">{</span>
   <span class="nl">list-style</span><span class="p">:</span> <span class="nb">none</span><span class="p">;</span>
@@ -536,8 +530,7 @@
     <span class="nl">border-bottom</span><span class="p">:</span> <span class="nb">none</span><span class="p">;</span>
   <span class="p">}</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="example-3-不同屏幕下的布局栏效果">Example 3 不同屏幕下的布局栏效果</h4>
 
@@ -551,7 +544,7 @@
 
 <p>html:</p>
 
-<div class="language-html highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"wrapper"</span><span class="nt">&gt;</span>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"wrapper"</span><span class="nt">&gt;</span>
   <span class="nt">&lt;header</span> <span class="na">class=</span><span class="s">"header"</span><span class="nt">&gt;</span>Header<span class="nt">&lt;/header&gt;</span>
   <span class="nt">&lt;article</span> <span class="na">class=</span><span class="s">"main"</span><span class="nt">&gt;</span>
     <span class="nt">&lt;p&gt;</span>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.<span class="nt">&lt;/p&gt;</span>  
@@ -560,12 +553,11 @@
   <span class="nt">&lt;aside</span> <span class="na">class=</span><span class="s">"aside aside-2"</span><span class="nt">&gt;</span>Aside 2<span class="nt">&lt;/aside&gt;</span>
   <span class="nt">&lt;footer</span> <span class="na">class=</span><span class="s">"footer"</span><span class="nt">&gt;</span>Footer<span class="nt">&lt;/footer&gt;</span>
 <span class="nt">&lt;/div&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Css:</p>
 
-<div class="language-css highlighter-rouge"><pre class="highlight"><code><span class="nc">.wrapper</span> <span class="p">{</span>
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">.wrapper</span> <span class="p">{</span>
   <span class="nl">display</span><span class="p">:</span> <span class="n">flex</span><span class="p">;</span>  
   <span class="nl">flex-flow</span><span class="p">:</span> <span class="n">row</span> <span class="n">wrap</span><span class="p">;</span>
   <span class="nl">font-weight</span><span class="p">:</span> <span class="nb">bold</span><span class="p">;</span>
@@ -613,8 +605,7 @@
 <span class="nt">body</span> <span class="p">{</span>
   <span class="nl">padding</span><span class="p">:</span> <span class="m">2em</span><span class="p">;</span> 
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 
 

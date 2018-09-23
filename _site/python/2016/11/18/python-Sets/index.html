@@ -75,13 +75,25 @@
                 
 				
                 <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
                     <a href="/about/">About</a>
                 </li>
 				
                 
 				
                 <li>
-                    <a href="/contact/">Contact</a>
+                    <a href="/app/">APP</a>
                 </li>
 				
                 
@@ -122,7 +134,7 @@
 
 <p>例如，你可能想要检查<code class="highlighter-rouge">list</code>中是否有重复的值。 你有两个选择。 第一个使用<code class="highlighter-rouge">for</code>循环，如下：</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">some_list</span> <span class="o">=</span> <span class="p">[</span><span class="s">'a'</span><span class="p">,</span> <span class="s">'b'</span><span class="p">,</span> <span class="s">'c'</span><span class="p">,</span> <span class="s">'b'</span><span class="p">,</span> <span class="s">'d'</span><span class="p">,</span> <span class="s">'m'</span><span class="p">,</span> <span class="s">'n'</span><span class="p">,</span> <span class="s">'n'</span><span class="p">]</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">some_list</span> <span class="o">=</span> <span class="p">[</span><span class="s">'a'</span><span class="p">,</span> <span class="s">'b'</span><span class="p">,</span> <span class="s">'c'</span><span class="p">,</span> <span class="s">'b'</span><span class="p">,</span> <span class="s">'d'</span><span class="p">,</span> <span class="s">'m'</span><span class="p">,</span> <span class="s">'n'</span><span class="p">,</span> <span class="s">'n'</span><span class="p">]</span>
 
 <span class="n">duplicates</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">some_list</span><span class="p">:</span>
@@ -132,36 +144,32 @@
 
 <span class="k">print</span><span class="p">(</span><span class="n">duplicates</span><span class="p">)</span>
 <span class="c"># Output: ['b', 'n']</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>但是如果用<code class="highlighter-rouge">sets</code>的话，会有一个更简单高效的操作，像这样</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">some_list</span> <span class="o">=</span> <span class="p">[</span><span class="s">'a'</span><span class="p">,</span> <span class="s">'b'</span><span class="p">,</span> <span class="s">'c'</span><span class="p">,</span> <span class="s">'b'</span><span class="p">,</span> <span class="s">'d'</span><span class="p">,</span> <span class="s">'m'</span><span class="p">,</span> <span class="s">'n'</span><span class="p">,</span> <span class="s">'n'</span><span class="p">]</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">some_list</span> <span class="o">=</span> <span class="p">[</span><span class="s">'a'</span><span class="p">,</span> <span class="s">'b'</span><span class="p">,</span> <span class="s">'c'</span><span class="p">,</span> <span class="s">'b'</span><span class="p">,</span> <span class="s">'d'</span><span class="p">,</span> <span class="s">'m'</span><span class="p">,</span> <span class="s">'n'</span><span class="p">,</span> <span class="s">'n'</span><span class="p">]</span>
 <span class="n">duplicates</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">some_list</span> <span class="k">if</span> <span class="n">some_list</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">])</span>
 <span class="k">print</span><span class="p">(</span><span class="n">duplicates</span><span class="p">)</span>
 <span class="c"># Output: set(['b', 'n'])</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="集合创建">集合创建</h4>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">a_set</span> <span class="o">=</span> <span class="p">{</span><span class="s">'red'</span><span class="p">,</span> <span class="s">'blue'</span><span class="p">,</span> <span class="s">'green'</span><span class="p">}</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">a_set</span> <span class="o">=</span> <span class="p">{</span><span class="s">'red'</span><span class="p">,</span> <span class="s">'blue'</span><span class="p">,</span> <span class="s">'green'</span><span class="p">}</span>
 <span class="k">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">a_set</span><span class="p">))</span>
 <span class="c"># Output: &lt;type 'set'&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="集合交集">集合交集</h4>
 
 <p>你可以让两个集合<code class="highlighter-rouge">sets</code>求交集</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">valid</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s">'yellow'</span><span class="p">,</span> <span class="s">'red'</span><span class="p">,</span> <span class="s">'blue'</span><span class="p">,</span> <span class="s">'green'</span><span class="p">,</span> <span class="s">'black'</span><span class="p">])</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">valid</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s">'yellow'</span><span class="p">,</span> <span class="s">'red'</span><span class="p">,</span> <span class="s">'blue'</span><span class="p">,</span> <span class="s">'green'</span><span class="p">,</span> <span class="s">'black'</span><span class="p">])</span>
 <span class="n">input_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s">'red'</span><span class="p">,</span> <span class="s">'brown'</span><span class="p">])</span>
 <span class="k">print</span><span class="p">(</span><span class="n">input_set</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">valid</span><span class="p">))</span>
 <span class="c"># Output: set(['red'])</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>会得到两个集合的交集部分</p>
 
@@ -169,12 +177,11 @@
 
 <p>同样可以用<code class="highlighter-rouge">difference</code>方法来求差异</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">valid</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s">'yellow'</span><span class="p">,</span> <span class="s">'red'</span><span class="p">,</span> <span class="s">'blue'</span><span class="p">,</span> <span class="s">'green'</span><span class="p">,</span> <span class="s">'black'</span><span class="p">])</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">valid</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s">'yellow'</span><span class="p">,</span> <span class="s">'red'</span><span class="p">,</span> <span class="s">'blue'</span><span class="p">,</span> <span class="s">'green'</span><span class="p">,</span> <span class="s">'black'</span><span class="p">])</span>
 <span class="n">input_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s">'red'</span><span class="p">,</span> <span class="s">'brown'</span><span class="p">])</span>
 <span class="k">print</span><span class="p">(</span><span class="n">input_set</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">valid</span><span class="p">))</span>
 <span class="c"># Output: set(['brown'])</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>参考资料：<a href="http://book.pythontips.com/en/latest/set_-_data_structure.html">set_-_data_structure</a></p>
 

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>Mac上搭建直播服务器 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/%E7%9B%B4%E6%92%AD/2018/05/01/vlclive/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/app/">APP</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/bg_01.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>Mac上搭建直播服务器</h1>
+                    
+                    <h2 class="subheading">在Mac上搭建nginx+rtmp进行直播推流</h2>
+                    
+                    <span class="meta">Posted by Ted on May 1, 2018</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h4 id="1安装nginx">1、安装Nginx</h4>
+
+<p>通过homebrew来安装支持rtmp协议模块的nginx</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew install nginx-full --with-rtmp-module
+</code></pre></div></div>
+
+<p>通过下面的命令来查看安装位置</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew info nginx-full
+</code></pre></div></div>
+
+<p><img src="/img/Simple_7/22.png" alt="img" /></p>
+
+<p>通过浏览器访问<a href="http://localhost:8080">http://localhost:8080</a></p>
+
+<p><img src="/img/Simple_7/23.png" alt="img" /></p>
+
+<p>在nginx.conf里配置</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rtmp {
+    server {
+        listen 1935;
+        application zbcs {
+            live on;
+            record off;
+        }
+    }
+}
+</code></pre></div></div>
+
+<p>重启</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nginx -s reload
+</code></pre></div></div>
+
+<h4 id="2安装ffmpeg来推流本地视频">2、安装ffmpeg来推流本地视频</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew install ffmpeg
+</code></pre></div></div>
+
+<p>推流命令为</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ffmpeg -re -i /Users/imac/Documents/demo.mp4 -vcodec copy -f flv rtmp://127.0.0.1:1935/zbcs/room
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ffmpeg -re -i 你的视频文件的绝对路径 -vcodec copy -f flv rtmp://localhost:1935/nginx配置的application名称/room
+</code></pre></div></div>
+
+<p>这就开始推流了</p>
+
+<h4 id="3vlc直播">3、VLC直播</h4>
+
+<blockquote>
+  <p>mac端</p>
+</blockquote>
+
+<p>下载vlc播放器，在File-&gt;open network输入</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rtmp://127.0.0.1:1935/zbcs/room
+</code></pre></div></div>
+
+<p><img src="/img/Simple_7/24.png" alt="img" /></p>
+
+<blockquote>
+  <p>iPhone</p>
+</blockquote>
+
+<p>下载VLC播放器，同一局域网，打开网络流，输入</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rtmp://电脑的本地IP:1935/zbcs/room
+</code></pre></div></div>
+
+<p><img src="/img/Simple_7/26.jpg" alt="img" /></p>
+
+<h4 id="4推流桌面或者摄像头直播">4、推流桌面或者摄像头直播</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ffmpeg -f avfoundation -list_devices true -i ""
+</code></pre></div></div>
+
+<p><img src="/img/Simple_7/25.png" alt="img" /></p>
+
+<p>可以看到在视频设备：</p>
+
+<p>0：摄像头</p>
+
+<p>1：桌面捕获</p>
+
+<p>音频设备：</p>
+
+<p>0：麦克风</p>
+
+<p>所以如果要直播摄像头</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ffmpeg -f avfoundation -i "0" -vcodec libx264  -f flv rtmp://localhost:1935/zbcs/room
+</code></pre></div></div>
+
+<p>加上声音</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ffmpeg -f avfoundation -i "0:0" -vcodec libx264  -acodec libmp3lame -ar 44100 -ac 1 -f flv rtmp://localhost:1935/zbcs/room
+</code></pre></div></div>
+
+<p>还可以设置频率和分辨率</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// 设置帧率为30帧，图像大小为320x240
+ffmpeg -f avfoundation -framerate 30 -video_size 320x240 -i "0" -vcodec libx264 -f flv rtmp://localhost:1935/zbcs/room
+</code></pre></div></div>
+
+<p>如果要实现电脑屏幕和摄像头一起直播</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ffmpeg -f avfoundation  -framerate 30 -i "1:0" -f avfoundation -framerate 30 -video_size 320x240 -i "0" -vcodec libx264 -filter_complex 'overlay=main_w-overlay_w-10:main_h-overlay_h-10'  -acodec libmp3lame -ar 44100 -ac 1 -f flv rtmp://localhost:1935/zbcs/room
+</code></pre></div></div>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/ios/2018/04/25/tableView_1/" data-toggle="tooltip" data-placement="top" title="UITableView实践(一):实现原理">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/%E7%9B%B4%E6%92%AD/2018/05/03/librtmp/" data-toggle="tooltip" data-placement="top" title="在iOS上推流">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

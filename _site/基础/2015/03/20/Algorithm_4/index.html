@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>算法题目（四） - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2015/03/20/Algorithm_4/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/app/">APP</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/Http/bg.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>算法题目（四）</h1>
+                    
+                    <h2 class="subheading">一些算法题的解法</h2>
+                    
+                    <span class="meta">Posted by Ted on March 20, 2015</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<p>31、丑数</p>
+
+<p>32、第一个只出现过一次的字符</p>
+
+<p>33、数组中的逆序对</p>
+
+<p>34、两个链表的第一个公共结点</p>
+
+<p>35、数字在排序数组中出现的次数</p>
+
+<p>36、二叉树的深度</p>
+
+<p>37、数组中只出现一次的数字</p>
+
+<p>38、和为S的两个数字</p>
+
+<p>39、翻转单词顺序</p>
+
+<p>40、左旋字符串</p>
+
+<h4 id="31丑数">31、丑数</h4>
+
+<p>题目：我们把只包含因子2、3 和5 的数称作丑数（Ugly Number）。求从小到大的顺序的第1500个丑数。</p>
+
+<p>举例说明：例如6、8 都是丑数，但14 不是，它包含因子7。习惯上我们把1 当做第一个丑数。</p>
+
+<p>思路：只计算丑数，而不在非丑数的整数上花费时间。根据丑数的定义，丑数应该是另一个丑数乘以2、3或者5的结果（1除外）。因此我们可以创建一个数组，里面的数字是排好序的丑数。里面的每一个丑数是前面的丑数乘以2、3或者5得到的。这种思路的关键在于怎样确保数组里面的丑数是排好序的。我们假设数组中已经有若干个丑数，排好序后存在数组中。我们把现有的最大丑数记做M。现在我们来生成下一个丑数，该丑数肯定是前面某一个丑数乘以2、3或者5的结果。我们首先考虑把已有的每个丑数乘以2。在乘以2的时候，能得到若干个结果小于或等于M的。由于我们是按照顺序生成的，小于或者等于M肯定已经在数组中了，我们不需再次考虑；我们还会得到若干个大于M的结果，但我们只需要第一个大于M的结果，因为我们希望丑数是按从小到大顺序生成的，其他更大的结果我们以后再说。我们把得到的第一个乘以2后大于M的结果，记为M2。同样我们把已有的每一个丑数乘以3和5，能得到第一个大于M的结果M3和M5。那么下一个丑数应该是M2、M3和M5三个数的最小者。前面我们分析的时候，提到把已有的每个丑数分别都乘以2、3和5，事实上是不需要的，因为已有的丑数是按顺序存在数组中的。对乘以2而言，肯定存在某一个丑数T2，排在它之前的每一个丑数乘以2得到的结果都会小于已有最大的丑数，在它之后的每一个丑数乘以2得到的结果都会太大。我们只需要记下这个丑数的位置，同时每次生成新的丑数的时候，去更新这个T2。对乘以3和5而言，存在着同样的T3和T5。</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">Min</span><span class="p">(</span><span class="kt">int</span> <span class="n">number1</span><span class="p">,</span> <span class="kt">int</span> <span class="n">number2</span><span class="p">,</span> <span class="kt">int</span> <span class="n">number3</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">min</span> <span class="o">=</span> <span class="p">(</span><span class="n">number1</span> <span class="o">&lt;</span> <span class="n">number2</span><span class="p">)</span> <span class="o">?</span> <span class="n">number1</span> <span class="o">:</span> <span class="n">number2</span><span class="p">;</span>
+    <span class="n">min</span> <span class="o">=</span> <span class="p">(</span><span class="n">min</span> <span class="o">&lt;</span> <span class="n">number3</span><span class="p">)</span> <span class="o">?</span> <span class="n">min</span> <span class="o">:</span> <span class="n">number3</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">min</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">int</span> <span class="nf">findUglyNum2</span><span class="p">(</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="kt">int</span> <span class="o">*</span><span class="n">pUglyNumbers</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">[</span><span class="n">index</span><span class="p">];</span>
+	<span class="n">pUglyNumbers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">nextUglyIndex</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+	<span class="kt">int</span> <span class="o">*</span><span class="n">pMultiply2</span> <span class="o">=</span> <span class="n">pUglyNumbers</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="o">*</span><span class="n">pMultiply3</span> <span class="o">=</span> <span class="n">pUglyNumbers</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="o">*</span><span class="n">pMultiply5</span> <span class="o">=</span> <span class="n">pUglyNumbers</span><span class="p">;</span>
+
+	<span class="k">while</span><span class="p">(</span><span class="n">nextUglyIndex</span> <span class="o">&lt;</span> <span class="n">index</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="kt">int</span> <span class="n">min</span> <span class="o">=</span> <span class="n">Min</span><span class="p">(</span><span class="o">*</span><span class="n">pMultiply2</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="o">*</span><span class="n">pMultiply3</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span><span class="o">*</span><span class="n">pMultiply5</span><span class="o">*</span><span class="mi">5</span><span class="p">);</span>
+		<span class="n">pUglyNumbers</span><span class="p">[</span><span class="n">nextUglyIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">min</span><span class="p">;</span>
+		<span class="k">while</span><span class="p">(</span><span class="o">*</span><span class="n">pMultiply2</span><span class="o">*</span><span class="mi">2</span> <span class="o">&lt;=</span> <span class="n">pUglyNumbers</span><span class="p">[</span><span class="n">nextUglyIndex</span><span class="p">])</span>
+			<span class="o">++</span><span class="n">pMultiply2</span><span class="p">;</span>
+		<span class="k">while</span><span class="p">(</span><span class="o">*</span><span class="n">pMultiply3</span><span class="o">*</span><span class="mi">3</span> <span class="o">&lt;=</span> <span class="n">pUglyNumbers</span><span class="p">[</span><span class="n">nextUglyIndex</span><span class="p">])</span>
+			<span class="o">++</span><span class="n">pMultiply3</span><span class="p">;</span>
+		<span class="k">while</span><span class="p">(</span><span class="o">*</span><span class="n">pMultiply5</span><span class="o">*</span><span class="mi">5</span> <span class="o">&lt;=</span> <span class="n">pUglyNumbers</span><span class="p">[</span><span class="n">nextUglyIndex</span><span class="p">])</span>
+			<span class="o">++</span><span class="n">pMultiply5</span><span class="p">;</span>
+		<span class="o">++</span><span class="n">nextUglyIndex</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="kt">int</span> <span class="n">ugly</span> <span class="o">=</span> <span class="n">pUglyNumbers</span><span class="p">[</span><span class="n">nextUglyIndex</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
+    <span class="k">delete</span><span class="p">[]</span> <span class="n">pUglyNumbers</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">ugly</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="kt">time_t</span>   <span class="n">begin2</span><span class="p">,</span><span class="n">end2</span><span class="p">;</span>   	
+	<span class="n">begin2</span><span class="o">=</span><span class="n">clock</span><span class="p">();</span> 
+	<span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">findUglyNum2</span><span class="p">(</span><span class="mi">1500</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+	<span class="n">end2</span><span class="o">=</span><span class="n">clock</span><span class="p">();</span>   
+	<span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">"runtime:   "</span><span class="o">&lt;&lt;</span><span class="kt">double</span><span class="p">(</span><span class="n">end2</span><span class="o">-</span><span class="n">begin2</span><span class="p">)</span><span class="o">/</span><span class="n">CLOCKS_PER_SEC</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+	
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="32第一个只出现过一次的字符">32、第一个只出现过一次的字符</h4>
+
+<p>题目：在字符串中找出第一个只出现一次的字符。</p>
+
+<p>思路：采用一个数组记录出现的次数然后再遍历该数组</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include "stdafx.h"
+#include &lt;iostream&gt;
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="cm">/*
+字符char是一个长度为8的数据类型，因此总共有256种可能，于是我们创建一个长度为256的数组
+每个字母根据其ASCII码值作为数组的下标对应数组的一个数字，而数组中存储的是每个字符出现的次数
+*/</span>
+
+<span class="kt">char</span> <span class="nf">FindFirstChar</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span> <span class="n">pString</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">pString</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+		<span class="k">return</span> <span class="sc">'\0'</span><span class="p">;</span>
+
+	<span class="k">const</span> <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">256</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">b</span><span class="p">[</span><span class="n">N</span><span class="p">];</span>
+	<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> 
+	<span class="p">}</span>
+
+	<span class="kt">char</span><span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="n">pString</span><span class="p">;</span>
+	<span class="k">while</span> <span class="p">(</span><span class="o">*</span><span class="n">p</span> <span class="o">!=</span> <span class="sc">'\0'</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">b</span><span class="p">[</span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">++</span><span class="p">)]</span><span class="o">++</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="n">p</span> <span class="o">=</span> <span class="n">pString</span><span class="p">;</span>
+	<span class="k">while</span> <span class="p">(</span><span class="o">*</span><span class="n">p</span> <span class="o">!=</span> <span class="sc">'\0'</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="o">*</span><span class="n">p</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="k">return</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span>
+		<span class="p">}</span>
+		<span class="o">++</span><span class="n">p</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="sc">'\0'</span><span class="p">;</span>
+
+<span class="p">}</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="kt">char</span><span class="o">*</span> <span class="n">pString</span> <span class="o">=</span> <span class="s">"abcddeeff"</span><span class="p">;</span>
+	<span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="n">FindFirstChar</span><span class="p">(</span><span class="n">pString</span><span class="p">);</span>
+	<span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">c</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+
+	<span class="n">getchar</span><span class="p">();</span>
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="33数组中的逆序对">33、数组中的逆序对</h4>
+
+<p>题目：在数组中的两个数字如果前面一个数字大于后面的数字，则这两个数字组成一个逆序对。输入一个数组，求出这个数组中的逆序对的总数。</p>
+
+<p>举例分析：例如在数组｛7, 5, 6, 4 }中， 一共存在5 个逆序对，分别是（7, 6）、（7，5），(7, 4）、（6, 4）和（5, 4）。</p>
+
+<p>思路：</p>
+
+<p>1）总体的意思就是将数组分成两段，首先求段内的逆序对数量，比如下面两段代码就是求左右两端数组段内的逆序对数量</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>inversions+=InversePairsCore(arry,start,mid,temp);//找左半段的逆序对数目
+inversions+=InversePairsCore(arry,mid+1,end,temp);//找右半段的逆序对数目
+</code></pre></div></div>
+
+<p>（2）然后求段间的逆序对数量，如下面的代码</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>inversions+=MergeArray(arry,start,mid,end,temp);//在找完左右半段逆序对以后两段数组有序，然后找两段之间的逆序对。最小的逆序段只有一个元素。
+</code></pre></div></div>
+
+<p>（3）然后在求段间逆序对的时候，我们分为arry[start…mid]和arry[mid+1…end]，然后设置两个指针ij分别指向两段数组的末尾元素，也就是i=mid，j=end。然后比较arry[i]和arry[j]，</p>
+
+<ol>
+  <li>如果arry[i]&gt;arry[j]，因为两段数组都是有序的，所以arry[i]&gt;arry[mid+1…j]，这些都是逆序对，我们统计出的逆序对为j-(mid+1)+1=j-mid。并且将大数arry[i]放入临时数组temp[]当中，i往前移动</li>
+  <li>如果arry[i]&lt;arry[j]，则将大数arry[j]放入temp[]中，j往前移。</li>
+</ol>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include&lt;iostream&gt;
+#include&lt;stdlib.h&gt;
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">printArray</span><span class="p">(</span><span class="kt">int</span> <span class="n">arry</span><span class="p">[],</span><span class="kt">int</span> <span class="n">len</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">len</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+        <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">arry</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">&lt;&lt;</span><span class="s">" "</span><span class="p">;</span>
+    <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">int</span> <span class="nf">MergeArray</span><span class="p">(</span><span class="kt">int</span> <span class="n">arry</span><span class="p">[],</span><span class="kt">int</span> <span class="n">start</span><span class="p">,</span><span class="kt">int</span> <span class="n">mid</span><span class="p">,</span><span class="kt">int</span> <span class="n">end</span><span class="p">,</span><span class="kt">int</span> <span class="n">temp</span><span class="p">[])</span><span class="c1">//数组的归并操作</span>
+<span class="p">{</span>
+    <span class="c1">//int leftLen=mid-start+1;//arry[start...mid]左半段长度</span>
+    <span class="c1">//int rightLlen=end-mid;//arry[mid+1...end]右半段长度</span>
+
+    <span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">mid</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="n">end</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="c1">//临时数组末尾坐标</span>
+    <span class="kt">int</span> <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+    <span class="c1">//设定两个指针ij分别指向两段有序数组的头元素，将小的那一个放入到临时数组中去。</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">i</span><span class="o">&gt;=</span><span class="n">start</span><span class="o">&amp;&amp;</span><span class="n">j</span><span class="o">&gt;</span><span class="n">mid</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">arry</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">&gt;</span><span class="n">arry</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+        <span class="p">{</span>
+            <span class="n">temp</span><span class="p">[</span><span class="n">k</span><span class="o">++</span><span class="p">]</span><span class="o">=</span><span class="n">arry</span><span class="p">[</span><span class="n">i</span><span class="o">--</span><span class="p">];</span><span class="c1">//从临时数组的最后一个位置开始排序</span>
+            <span class="n">count</span><span class="o">+=</span><span class="n">j</span><span class="o">-</span><span class="n">mid</span><span class="p">;</span><span class="c1">//因为arry[mid+1...j...end]是有序的，如果arry[i]&gt;arry[j]，那么也大于arry[j]之前的元素，从a[mid+1...j]一共有j-(mid+1)+1=j-mid</span>
+            
+        <span class="p">}</span>
+        <span class="k">else</span>
+        <span class="p">{</span>
+            <span class="n">temp</span><span class="p">[</span><span class="n">k</span><span class="o">++</span><span class="p">]</span><span class="o">=</span><span class="n">arry</span><span class="p">[</span><span class="n">j</span><span class="o">--</span><span class="p">];</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">"调用MergeArray时的count："</span><span class="o">&lt;&lt;</span><span class="n">count</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">i</span><span class="o">&gt;=</span><span class="n">start</span><span class="p">)</span><span class="c1">//表示前半段数组中还有元素未放入临时数组</span>
+    <span class="p">{</span>
+        <span class="n">temp</span><span class="p">[</span><span class="n">k</span><span class="o">++</span><span class="p">]</span><span class="o">=</span><span class="n">arry</span><span class="p">[</span><span class="n">i</span><span class="o">--</span><span class="p">];</span>
+    <span class="p">}</span>
+
+    <span class="k">while</span><span class="p">(</span><span class="n">j</span><span class="o">&gt;</span><span class="n">mid</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">temp</span><span class="p">[</span><span class="n">k</span><span class="o">++</span><span class="p">]</span><span class="o">=</span><span class="n">arry</span><span class="p">[</span><span class="n">j</span><span class="o">--</span><span class="p">];</span>
+    <span class="p">}</span>
+
+    <span class="c1">//将临时数组中的元素写回到原数组当中去。</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">k</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+        <span class="n">arry</span><span class="p">[</span><span class="n">end</span><span class="o">-</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="n">temp</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+
+    <span class="n">printArray</span><span class="p">(</span><span class="n">arry</span><span class="p">,</span><span class="mi">8</span><span class="p">);</span><span class="c1">//输出进过一次归并以后的数组，用于理解整体过程</span>
+    <span class="k">return</span> <span class="n">count</span><span class="p">;</span>
+
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">InversePairsCore</span><span class="p">(</span><span class="kt">int</span> <span class="n">arry</span><span class="p">[],</span><span class="kt">int</span> <span class="n">start</span><span class="p">,</span><span class="kt">int</span> <span class="n">end</span><span class="p">,</span><span class="kt">int</span> <span class="n">temp</span><span class="p">[])</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">inversions</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  
+    <span class="k">if</span><span class="p">(</span><span class="n">start</span><span class="o">&lt;</span><span class="n">end</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">mid</span><span class="o">=</span><span class="p">(</span><span class="n">start</span><span class="o">+</span><span class="n">end</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span>
+        <span class="n">inversions</span><span class="o">+=</span><span class="n">InversePairsCore</span><span class="p">(</span><span class="n">arry</span><span class="p">,</span><span class="n">start</span><span class="p">,</span><span class="n">mid</span><span class="p">,</span><span class="n">temp</span><span class="p">);</span><span class="c1">//找左半段的逆序对数目</span>
+        <span class="n">inversions</span><span class="o">+=</span><span class="n">InversePairsCore</span><span class="p">(</span><span class="n">arry</span><span class="p">,</span><span class="n">mid</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">end</span><span class="p">,</span><span class="n">temp</span><span class="p">);</span><span class="c1">//找右半段的逆序对数目</span>
+        <span class="n">inversions</span><span class="o">+=</span><span class="n">MergeArray</span><span class="p">(</span><span class="n">arry</span><span class="p">,</span><span class="n">start</span><span class="p">,</span><span class="n">mid</span><span class="p">,</span><span class="n">end</span><span class="p">,</span><span class="n">temp</span><span class="p">);</span><span class="c1">//在找完左右半段逆序对以后两段数组有序，然后找两段之间的逆序对。最小的逆序段只有一个元素。</span>
+    <span class="p">}</span>    
+    <span class="k">return</span> <span class="n">inversions</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="kt">int</span> <span class="nf">InversePairs</span><span class="p">(</span><span class="kt">int</span> <span class="n">arry</span><span class="p">[],</span><span class="kt">int</span> <span class="n">len</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="o">*</span><span class="n">temp</span><span class="o">=</span><span class="k">new</span> <span class="kt">int</span><span class="p">[</span><span class="n">len</span><span class="p">];</span>
+    <span class="kt">int</span> <span class="n">count</span><span class="o">=</span><span class="n">InversePairsCore</span><span class="p">(</span><span class="n">arry</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">len</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">temp</span><span class="p">);</span>
+    <span class="k">delete</span><span class="p">[]</span> <span class="n">temp</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">count</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="c1">//int arry[]={7,5,6,4};</span>
+    <span class="kt">int</span> <span class="n">arry</span><span class="p">[]</span><span class="o">=</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">5</span><span class="p">};</span>
+    <span class="kt">int</span> <span class="n">len</span><span class="o">=</span><span class="k">sizeof</span><span class="p">(</span><span class="n">arry</span><span class="p">)</span><span class="o">/</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">);</span>
+    <span class="c1">//printArray(arry,len);</span>
+    <span class="kt">int</span> <span class="n">count</span><span class="o">=</span><span class="n">InversePairs</span><span class="p">(</span><span class="n">arry</span><span class="p">,</span><span class="n">len</span><span class="p">);</span>
+    <span class="c1">//printArray(arry,len);</span>
+    <span class="c1">//cout&lt;&lt;count&lt;&lt;endl;</span>
+    <span class="n">system</span><span class="p">(</span><span class="s">"pause"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="34两个链表的第一个公共结点">34、两个链表的第一个公共结点</h4>
+
+<p>题目：输入两个链表，找出它们的第一个公共结点。</p>
+
+<p><img src="/img/Simple_1/35.png" alt="img" /></p>
+
+<p>思路：我们可以先遍历一次得到它们的长度分别为5 和4， 也就是较长的链表与较短的链表相比多一个结点。第二次先在长的链表上走1 步，到达结点2。接下来分别从结点2 和结点4 出发同时遍历两个结点， 直到找到它们第一个相同的结点6，这就是我们想要的结果。</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/*
+获取链表的长度
+*/</span>
+<span class="kt">int</span> <span class="nf">getLength</span><span class="p">(</span><span class="n">pNode</span> <span class="n">pHead</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="n">pNode</span> <span class="n">pCur</span> <span class="o">=</span> <span class="n">pHead</span><span class="p">;</span>
+	<span class="k">while</span><span class="p">(</span><span class="n">pCur</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">len</span><span class="o">++</span><span class="p">;</span>
+		<span class="n">pCur</span> <span class="o">=</span> <span class="n">pCur</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="n">len</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/*
+求两个链表的第一个公共节点
+*/</span>
+<span class="n">pNode</span> <span class="nf">FindFirstCommonNode</span><span class="p">(</span><span class="n">pNode</span> <span class="n">pHead1</span><span class="p">,</span><span class="n">pNode</span> <span class="n">pHead2</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">pHead1</span><span class="o">==</span><span class="nb">NULL</span> <span class="o">||</span><span class="n">pHead2</span><span class="o">==</span><span class="nb">NULL</span><span class="p">)</span>
+		<span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+
+	<span class="kt">int</span> <span class="n">len1</span> <span class="o">=</span> <span class="n">getLength</span><span class="p">(</span><span class="n">pHead1</span><span class="p">);</span>
+	<span class="kt">int</span> <span class="n">len2</span> <span class="o">=</span> <span class="n">getLength</span><span class="p">(</span><span class="n">pHead2</span><span class="p">);</span>
+	<span class="n">pNode</span> <span class="n">pListLong</span> <span class="o">=</span> <span class="n">pHead1</span><span class="p">;</span>
+	<span class="n">pNode</span> <span class="n">pListShort</span> <span class="o">=</span> <span class="n">pHead2</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">distance</span> <span class="o">=</span> <span class="n">len1</span><span class="o">-</span><span class="n">len2</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">shortLength</span> <span class="o">=</span> <span class="n">len2</span><span class="p">;</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">len1</span> <span class="o">&lt;</span> <span class="n">len2</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">pListLong</span> <span class="o">=</span> <span class="n">pHead2</span><span class="p">;</span>
+		<span class="n">pListShort</span> <span class="o">=</span> <span class="n">pHead1</span><span class="p">;</span>
+		<span class="n">distance</span> <span class="o">=</span> <span class="n">len2</span><span class="o">-</span><span class="n">len1</span><span class="p">;</span>
+		<span class="n">shortLength</span> <span class="o">=</span> <span class="n">len1</span><span class="p">;</span>
+	<span class="p">}</span>
+	
+	<span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+	<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">distance</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+		<span class="n">pListLong</span> <span class="o">=</span> <span class="n">pListLong</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+	<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">shortLength</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">pListLong</span><span class="o">-&gt;</span><span class="n">data</span> <span class="o">==</span> <span class="n">pListShort</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">)</span>
+			<span class="k">break</span><span class="p">;</span>
+		<span class="n">pListLong</span> <span class="o">=</span> <span class="n">pListLong</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+		<span class="n">pListShort</span> <span class="o">=</span> <span class="n">pListShort</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="n">pListLong</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="35数字在排序数组中出现的次数">35、数字在排序数组中出现的次数</h4>
+
+<p>题目：统计一个数字：在排序数组中出现的次数。</p>
+
+<p>举例说明：例如输入排序数组｛ 1, 2, 3, 3, 3, 3, 4, 5｝和数字3 ，由于3 在这个数组中出现了4 次，因此输出4 。</p>
+
+<p>思路：二分法找到第一个k和最后一个K</p>
+
+<p>如何用二分查找算法在数组中找到第一个k，二分查找算法总是先拿数组中间的数字和k作比较。如果中间的数字比k大，那么k只有可能出现在数组的前半段，下一轮我们只在数组的前半段查找就可以了。如果中间的数字比k小，那么k只有可能出现在数组的后半段，下一轮我们只在数组的后半乓查找就可以了。如果中间的数字和k 相等呢？我们先判断这个数字是不是第一个k。如果位于中间数字的前面一个数字不是k,此时中间的数字刚好就是第一个k。如果中间数字的前面一个数字也是k，也就是说第一个k肯定在数组的前半段， 下一轮我们仍然需要在数组的前半段查找。 
+　　同样的思路在排序数组中找到最后一个k。如果中间数字比k大，那么k只能出现在数组的前半段。如果中间数字比k小，k就只能出现在数组的后半段。如果中间数字等于k呢？我们需要判断这个k是不是最后一个k，也就是中间数字的下一个数字是不是也等于k。如果下一个数字不是k，则中间数字就是最后一个k了：否则下一轮我们还是要在数组的后半段中去查找。</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include&lt;iostream&gt;
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">searchFirstEqual</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">[],</span><span class="kt">int</span> <span class="n">n</span><span class="p">,</span><span class="kt">int</span> <span class="n">key</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">high</span><span class="o">=</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">mid</span><span class="p">;</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">low</span><span class="o">&lt;=</span><span class="n">high</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">mid</span><span class="o">=</span><span class="p">(</span><span class="n">low</span><span class="o">+</span><span class="n">high</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span><span class="o">&gt;=</span><span class="n">key</span><span class="p">)</span>
+            <span class="n">high</span><span class="o">=</span><span class="n">mid</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+        <span class="k">else</span>
+            <span class="n">low</span><span class="o">=</span><span class="n">mid</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">low</span><span class="o">&lt;</span><span class="n">n</span> <span class="o">&amp;&amp;</span> <span class="n">a</span><span class="p">[</span><span class="n">low</span><span class="p">]</span><span class="o">==</span><span class="n">key</span><span class="p">)</span> <span class="k">return</span> <span class="n">low</span><span class="p">;</span>
+    <span class="k">else</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">searchLastEqual</span><span class="p">(</span><span class="kt">int</span> <span class="n">arr</span><span class="p">[],</span><span class="kt">int</span> <span class="n">n</span><span class="p">,</span><span class="kt">int</span> <span class="n">key</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">high</span><span class="o">=</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">mid</span><span class="p">;</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">low</span><span class="o">&lt;=</span><span class="n">high</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">mid</span><span class="o">=</span><span class="n">low</span><span class="o">+</span><span class="p">(</span><span class="n">high</span><span class="o">-</span><span class="n">low</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">arr</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span><span class="o">&lt;=</span><span class="n">key</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">low</span><span class="o">=</span><span class="n">mid</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">else</span>
+        <span class="p">{</span>
+            <span class="n">high</span><span class="o">=</span><span class="n">mid</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="n">high</span><span class="o">&gt;=</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">arr</span><span class="p">[</span><span class="n">high</span><span class="p">]</span><span class="o">==</span><span class="n">key</span><span class="p">)</span> <span class="k">return</span> <span class="n">high</span><span class="p">;</span>
+    <span class="k">else</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">a</span><span class="p">[]</span><span class="o">=</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">};</span>
+    <span class="kt">int</span> <span class="n">n</span><span class="o">=</span><span class="k">sizeof</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">/</span><span class="k">sizeof</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+     
+    <span class="kt">int</span> <span class="n">start</span><span class="o">=</span><span class="n">searchFirstEqual</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="mi">3</span><span class="p">);</span>
+    <span class="kt">int</span> <span class="n">end</span><span class="o">=</span><span class="n">searchLastEqual</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="mi">3</span><span class="p">);</span>
+
+    <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">start</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+    <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">end</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+    <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">end</span><span class="o">-</span><span class="n">start</span><span class="o">+</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="36二叉树的深度">36、二叉树的深度</h4>
+
+<p>题目：输入一颗二叉树的根结点，求该树的深度</p>
+
+<p><img src="/img/Simple_1/36.png" alt="img" /></p>
+
+<p>思路：依次选择最深的左右子树, 然后<strong>递归</strong>加1.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">TreeDepth</span><span class="p">(</span><span class="n">BinaryTreeNode</span><span class="o">*</span> <span class="n">pRoot</span><span class="p">)</span> <span class="p">{</span>  
+    <span class="k">if</span> <span class="p">(</span><span class="n">pRoot</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>  
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>  
+    <span class="kt">int</span> <span class="n">nLeft</span> <span class="o">=</span> <span class="n">TreeDepth</span><span class="p">(</span><span class="n">pRoot</span><span class="o">-&gt;</span><span class="n">m_pLeft</span><span class="p">);</span>  
+    <span class="kt">int</span> <span class="n">nRight</span> <span class="o">=</span> <span class="n">TreeDepth</span><span class="p">(</span><span class="n">pRoot</span><span class="o">-&gt;</span><span class="n">m_pRight</span><span class="p">);</span>  
+    <span class="k">return</span> <span class="p">(</span><span class="n">nLeft</span><span class="o">&gt;</span><span class="n">nRight</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="n">nLeft</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">:</span><span class="p">(</span><span class="n">nRight</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>  
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="37数组中只出现一次的数字">37、数组中只出现一次的数字</h4>
+
+<p>题目：一个整型数组里除了两个数字之外，其他的数字都出现了两次，请写程序找出这两个只出现一次的数字。要求时间复杂度是O(n)，空间复杂度是O(1)。</p>
+
+<p>举例说明：例如输入数组｛2, 4, 3, 6, 3, 2, 5 }，因为只有4 、6 这两个数字只出现一次，其他数字都出现了两次，所以输出4和6 。</p>
+
+<p>思路：题目为什么要强调有一个数字出现一次，其他的出现两次？我们想到了异或运算的性质：任何一个数字异或它自己都等于0。也就是说，如果我们从头到尾依次异或数组中的每一个数字，那么最终的结果刚好是那个只出现依次的数字，因为那些出现两次的数字全部在异或中抵消掉了。</p>
+
+<p>有了上面简单问题的解决方案之后，我们回到原始的问题。如果能够把原数组分为两个子数组。在每个子数组中，包含一个只出现一次的数字，而其他数字都出现两次。如果能够这样拆分原数组，按照前面的办法就是分别求出这两个只出现一次的数字了。</p>
+
+<p>我们还是从头到尾依次异或数组中的每一个数字，那么最终得到的结果就是两个只出现一次的数字的异或结果。因为其他数字都出现了两次，在异或中全部抵消掉了。由于这两个数字肯定不一样，那么这个异或结果肯定不为0，也就是说在这个结果数字的二进制表示中至少就有一位为1。我们在结果数字中找到第一个为1的位的位置，记为第N位。现在我们以第N位是不是1为标准把原数组中的数字分成两个子数组，第一个子数组中每个数字的第N位都为1，而第二个子数组的每个数字的第N位都为0。</p>
+
+<p>现在我们已经把原数组分成了两个子数组，每个子数组都包含一个只出现一次的数字，而其他数字都出现了两次。因此到此为止，所有的问题我们都已经解决。</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">FindNumsAppearOnce</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">data</span><span class="p">,</span><span class="kt">int</span><span class="o">*</span> <span class="n">num1</span><span class="p">,</span><span class="kt">int</span> <span class="o">*</span><span class="n">num2</span><span class="p">)</span> <span class="p">{</span>  
+        <span class="k">if</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">&lt;</span><span class="mi">2</span><span class="p">)</span>   <span class="k">return</span> <span class="p">;</span>  
+          
+        <span class="kt">int</span> <span class="n">size</span><span class="o">=</span><span class="n">data</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>  
+        <span class="kt">int</span> <span class="n">temp</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>  
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">size</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="c1">//对数组中每个数字做异或  </span>
+            <span class="n">temp</span><span class="o">=</span><span class="n">temp</span><span class="o">^</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>  
+        <span class="k">if</span><span class="p">(</span><span class="n">temp</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span>    <span class="k">return</span> <span class="p">;</span>  
+          
+        <span class="kt">int</span> <span class="n">index</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>  
+        <span class="k">while</span><span class="p">((</span><span class="n">temp</span><span class="o">&amp;</span><span class="mi">1</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span><span class="c1">//在整数temp的二进制表示中找到最右边是1的位  </span>
+        <span class="p">{</span>  
+            <span class="n">temp</span><span class="o">=</span><span class="n">temp</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">;</span>  
+            <span class="o">++</span><span class="n">index</span><span class="p">;</span>  
+        <span class="p">}</span>  
+          
+        <span class="c1">//根据数组的倒数第index位是否为1，将数组划分为两个子数组，并分别对两个子数组进行求异或，得到num1			和num2  </span>
+        <span class="o">*</span><span class="n">num1</span><span class="o">=*</span><span class="n">num2</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>  
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">size</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>  
+        <span class="p">{</span>  
+            <span class="k">if</span><span class="p">(</span><span class="n">IsBit</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">index</span><span class="p">))</span>  
+                <span class="o">*</span><span class="n">num1</span><span class="o">^=</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>  
+            <span class="k">else</span>  
+                <span class="o">*</span><span class="n">num2</span><span class="o">^=</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>  
+        <span class="p">}</span>  
+ <span class="p">}</span>  
+      
+    <span class="c1">//判断在num的二进制表示中从右边起的index位是不是1  </span>
+<span class="kt">bool</span> <span class="nf">IsBit</span><span class="p">(</span><span class="kt">int</span> <span class="n">num</span><span class="p">,</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span>  
+<span class="p">{</span>  
+    <span class="n">num</span><span class="o">=</span><span class="n">num</span><span class="o">&gt;&gt;</span><span class="n">index</span><span class="p">;</span>  
+    <span class="k">return</span> <span class="p">(</span><span class="n">num</span><span class="o">&amp;</span><span class="mi">1</span><span class="p">);</span>  
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<h4 id="38和为s的两个数字">38、和为S的两个数字</h4>
+
+<p>题目：输入一个递增排序的数组和一个数字s，在数组中查找两个数，得它们的和正好是s。如果有多对数字的和等于s，输出任意一对即可。例如输入数组｛1 、2 、4、7 、11 、15 ｝和数字15. 由于4+ 11 = 15 ，因此输出4 和11 。</p>
+
+<p>思路：数列满足递增，设两个头尾两个指针i和j，</p>
+
+<p>若ai + aj == sum，就是答案（相差越远乘积越小）</p>
+
+<p>若ai + aj &gt; sum，aj肯定不是答案之一（前面已得出 i 前面的数已是不可能），j -= 1</p>
+
+<p>若ai + aj &lt; sum，ai肯定不是答案之一（前面已得出 j 后面的数已是不可能），i += 1</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">typedef</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">vi</span><span class="p">;</span>
+<span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="err">   </span> <span class="n">vi</span> <span class="n">FindNumbersWithSum</span><span class="p">(</span><span class="k">const</span> <span class="n">vi</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span><span class="kt">int</span> <span class="n">sum</span><span class="p">)</span> <span class="p">{</span>
+<span class="err">   </span> <span class="err"> </span> <span class="err"> </span> <span class="n">vi</span> <span class="n">res</span><span class="p">;</span>
+<span class="err">   </span> <span class="err"> </span> <span class="err"> </span> <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+<span class="err">   </span> <span class="err"> </span> <span class="err"> </span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+<span class="err">   </span> <span class="err"> </span> <span class="err"> </span> <span class="k">while</span><span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">j</span><span class="p">){</span>
+<span class="err">   </span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="k">if</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="n">sum</span><span class="p">){</span>
+<span class="err">   </span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="n">res</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+<span class="err">   </span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="n">res</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>
+<span class="err">   </span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="k">break</span><span class="p">;</span>
+<span class="err">   </span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="p">}</span>
+<span class="err">   </span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="k">while</span><span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">j</span> <span class="o">&amp;&amp;</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">sum</span><span class="p">)</span> <span class="o">--</span><span class="n">j</span><span class="p">;</span>
+<span class="err">   </span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="k">while</span><span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">j</span> <span class="o">&amp;&amp;</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">sum</span><span class="p">)</span> <span class="o">++</span><span class="n">i</span><span class="p">;</span>
+<span class="err">   </span> <span class="err"> </span> <span class="err"> </span> <span class="p">}</span>
+<span class="err">   </span> <span class="err"> </span> <span class="err"> </span> <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+<span class="err">   </span> <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h4 id="39翻转单词顺序">39、翻转单词顺序</h4>
+
+<p>题目：输入一个英文句子，翻转句子中单词的顺序，但单词内字啊的顺序不变。为简单起见，标点符号和普通字母一样处理。</p>
+
+<p>举例：例如输入字符串”I am a student. ”，则输出”student. a am I”。</p>
+
+<p>思路一：左往右遍历字符串，逐个拼接每个单词即可</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="n">string</span> <span class="nf">ReverseSentence</span><span class="p">(</span><span class="n">string</span> <span class="n">str</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">string</span> <span class="n">res</span> <span class="o">=</span> <span class="s">""</span><span class="p">,</span> <span class="n">tmp</span> <span class="o">=</span> <span class="s">""</span><span class="p">;</span>
+
+    <span class="k">for</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">str</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// 遇到空格</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">str</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="sc">' '</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="s">" "</span> <span class="o">+</span> <span class="n">tmp</span> <span class="o">+</span> <span class="n">res</span><span class="p">;</span>
+            <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">tmp</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span> <span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="s">""</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">else</span>
+        <span class="p">{</span>
+            <span class="n">tmp</span> <span class="o">+=</span> <span class="n">str</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 最后一个字符</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">tmp</span><span class="p">.</span><span class="n">size</span><span class="p">())</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">tmp</span> <span class="o">+</span> <span class="n">res</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">string</span> <span class="n">str</span> <span class="o">=</span> <span class="s">"student. a am I"</span><span class="p">;</span>
+    <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">ReverseSentence</span><span class="p">(</span><span class="n">str</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>思路二：将整个字符串翻转，然后定位到每个单词再次翻转一下</p>
+
+<h4 id="40左旋字符串">40、左旋字符串</h4>
+
+<p>题目：字符串的左旋转操作是把字符串前面的若干个字符转移到字符串的尾部。请定义一个函数实现字符串左旋转操作的功能。</p>
+
+<p>举例：比如输入字符串”abcdefg”和数字2，该函数将返回左旋转2 位得到的结”cdefgab”。</p>
+
+<p>思路：分为两部分，分别翻转成为“bagfedc”，在整体翻转</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
+</span>
+<span class="kt">void</span> <span class="n">reverse</span><span class="p">(</span><span class="kt">char</span> <span class="n">a</span><span class="p">[],</span><span class="kt">int</span> <span class="n">l</span><span class="p">,</span><span class="kt">int</span> <span class="n">r</span><span class="p">){</span>
+    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">l</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">r</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">j</span> <span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">,</span><span class="n">j</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">char</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+        <span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"==%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">a</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">left_rever</span><span class="p">(</span><span class="kt">char</span> <span class="n">a</span><span class="p">[],</span><span class="kt">int</span> <span class="n">leng</span><span class="p">,</span><span class="kt">int</span> <span class="n">n</span><span class="p">){</span>
+    <span class="n">reverse</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">reverse</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">leng</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">reverse</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">leng</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"%s"</span><span class="p">,</span><span class="n">a</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">char</span> <span class="n">a</span><span class="p">[]</span> <span class="o">=</span> <span class="s">"abcdefg"</span><span class="p">;</span>
+    <span class="n">left_rever</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>####</p>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/%E5%9F%BA%E7%A1%80/2015/03/17/Algorithm_3/" data-toggle="tooltip" data-placement="top" title="算法题目（三）">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/%E5%9F%BA%E7%A1%80/2015/03/21/Algorithm_5/" data-toggle="tooltip" data-placement="top" title="算法题目（五）">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

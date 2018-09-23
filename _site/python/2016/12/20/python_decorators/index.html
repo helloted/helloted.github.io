@@ -75,13 +75,25 @@
                 
 				
                 <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
                     <a href="/about/">About</a>
                 </li>
 				
                 
 				
                 <li>
-                    <a href="/contact/">Contact</a>
+                    <a href="/app/">APP</a>
                 </li>
 				
                 
@@ -124,7 +136,7 @@
 
 <p>首先理解一下Python中的函数</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">hi</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">"yasoob"</span><span class="p">):</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">hi</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">"yasoob"</span><span class="p">):</span>
     <span class="k">return</span> <span class="s">"hi "</span> <span class="o">+</span> <span class="n">name</span>
 
 <span class="k">print</span><span class="p">(</span><span class="n">hi</span><span class="p">())</span>
@@ -144,14 +156,13 @@
 
 <span class="k">print</span><span class="p">(</span><span class="n">greet</span><span class="p">())</span>
 <span class="c">#outputs: 'hi yasoob'</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="用函数来定义函数">用函数来定义函数</h4>
 
 <p>在Python中，我们可以在其他函数中定义函数：</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">hi</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">"yasoob"</span><span class="p">):</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">hi</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">"yasoob"</span><span class="p">):</span>
     <span class="k">print</span><span class="p">(</span><span class="s">"now you are inside the hi() function"</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">greet</span><span class="p">():</span>
@@ -176,8 +187,7 @@
 
 <span class="n">greet</span><span class="p">()</span>
 <span class="c">#outputs: NameError: name 'greet' is not defined</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>所以现在我们知道我们可以在其他函数中定义函数了。 换句话说：我们可以做嵌套函数。 现在你需要再学习一点，函数也可以返回函数。</p>
 
@@ -185,7 +195,7 @@
 
 <p>没有必要在另外一个函数中执行函数，我们可以把它作为输出：</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">hi</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">"yasoob"</span><span class="p">):</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">hi</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">"yasoob"</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">greet</span><span class="p">():</span>
         <span class="k">return</span> <span class="s">"now you are in the greet() function"</span>
 
@@ -206,14 +216,13 @@
 
 <span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="p">())</span>
 <span class="c">#outputs: now you are in the greet() function</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>再看看代码。 在<code class="highlighter-rouge">if/else</code>子句中，我们将返回<code class="highlighter-rouge">greet</code>和<code class="highlighter-rouge">welcome</code>，而不是<code class="highlighter-rouge">greet()</code>和<code class="highlighter-rouge">welcome()</code>。 这是为什么？ 这是因为当你在它后面加一对括号时，函数会被执行; 而如果不在后面加括号，那么它可以被传递并且可以被分配给其他变量而不执行它。 你明白了吗？ 让我稍微详细地解释一下。 当我们写a = hi()时，hi()得到执行，并且由于默认名称是yasoob，所以返回函数<code class="highlighter-rouge">greet</code>。 如果我们把语句改成a = hi(name =“ali”)，那么welcome函数将被返回。 我们也可以打印hi()()，现在输出greet()函数。</p>
 
 <h4 id="把函数作为参数">把函数作为参数</h4>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">hi</span><span class="p">():</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">hi</span><span class="p">():</span>
     <span class="k">return</span> <span class="s">"hi yasoob!"</span>
 
 <span class="k">def</span> <span class="nf">doSomethingBeforeHi</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
@@ -223,8 +232,7 @@
 <span class="n">doSomethingBeforeHi</span><span class="p">(</span><span class="n">hi</span><span class="p">)</span>
 <span class="c">#outputs:I am doing some boring work before executing hi()</span>
 <span class="c">#        hi yasoob!</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>现在你需要知道什么是装饰器了，装饰器就是在函数之前或者之后可以执行一段代码。</p>
 
@@ -260,7 +268,7 @@ a_function_requiring_decoration()
 
 <p>你明白了吗？ 我们只是应用了以前学过的原理。 这正是装饰器在Python中所做的！ 它们包装一个函数并以某种方式修改它的行为。 现在你可能想知道我们没有在我们的代码中使用任何@ 这只是构成装饰功能的简短方法。 以下是我们如何使用@运行以前的代码示例。</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="nd">@a_new_decorator</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@a_new_decorator</span>
 <span class="k">def</span> <span class="nf">a_function_requiring_decoration</span><span class="p">():</span>
     <span class="s">"""Hey you! Decorate me!"""</span>
     <span class="k">print</span><span class="p">(</span><span class="s">"I am the function which needs some decoration to "</span>
@@ -273,15 +281,13 @@ a_function_requiring_decoration()
 
 <span class="c">#the @a_new_decorator is just a short way of saying:</span>
 <span class="n">a_function_requiring_decoration</span> <span class="o">=</span> <span class="n">a_new_decorator</span><span class="p">(</span><span class="n">a_function_requiring_decoration</span><span class="p">)</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>现在代码里有个问题，如果我们：</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="n">a_function_requiring_decoration</span><span class="o">.</span><span class="n">__name__</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="n">a_function_requiring_decoration</span><span class="o">.</span><span class="n">__name__</span><span class="p">)</span>
 <span class="c"># Output: wrapTheFunction</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>这不是我们所期望的！ 它的名字是“a_function_requiring_decoration”。 我们的函数被wrapTheFunction所取代。 它覆盖了我们函数的名称的文档字符串。 幸运的是，Python为我们提供了一个简单的函数来解决这个问题，那就是functools.wraps。 让我们修改我们以前的例子来使用functools.wraps：</p>
 
@@ -308,7 +314,7 @@ print(a_function_requiring_decoration.__name__)
 
 <p>来学习一些装饰器例子</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
 <span class="k">def</span> <span class="nf">decorator_name</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
     <span class="nd">@wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">decorated</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -328,14 +334,13 @@ print(a_function_requiring_decoration.__name__)
 <span class="n">can_run</span> <span class="o">=</span> <span class="bp">False</span>
 <span class="k">print</span><span class="p">(</span><span class="n">func</span><span class="p">())</span>
 <span class="c"># Output: Function will not run</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="授权">授权</h4>
 
 <p>装饰者可以帮助检查是否有人有权在Web应用程序中使用端点。 它们广泛用于Flask web框架和Django。 这里是一个使用基于装饰器的认证的例子：</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
 
 <span class="k">def</span> <span class="nf">requires_auth</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
     <span class="nd">@wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
@@ -345,12 +350,11 @@ print(a_function_requiring_decoration.__name__)
             <span class="n">authenticate</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">decorated</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="logging">Logging</h4>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
 
 <span class="k">def</span> <span class="nf">logit</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
     <span class="nd">@wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
@@ -367,8 +371,7 @@ print(a_function_requiring_decoration.__name__)
 
 <span class="n">result</span> <span class="o">=</span> <span class="n">addition_func</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
 <span class="c"># Output: addition_func was called</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="用参数装饰">用参数装饰</h4>
 
@@ -414,7 +417,7 @@ myfunc2()
 
 <p>类也可以用来构建装饰器。</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">logit</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">logit</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logfile</span><span class="o">=</span><span class="s">'out.log'</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logfile</span> <span class="o">=</span> <span class="n">logfile</span>
 
@@ -431,20 +434,18 @@ myfunc2()
     <span class="k">def</span> <span class="nf">notify</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c"># logit only logs, no more</span>
         <span class="k">pass</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>这个实现有一个额外的好处，就是比嵌套函数方法更简洁，包装一个函数仍然会使用和以前一样的语法：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>@logit()
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@logit()
 def myfunc1():
     pass
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>现在，让我们继续分类logit添加电子邮件功能（虽然这个主题不会在这里介绍）。</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">email_logit</span><span class="p">(</span><span class="n">logit</span><span class="p">):</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">email_logit</span><span class="p">(</span><span class="n">logit</span><span class="p">):</span>
     <span class="s">'''
     A logit implementation for sending emails to admins
     when the function is called.
@@ -457,8 +458,7 @@ def myfunc1():
         <span class="c"># Send an email to self.email</span>
         <span class="c"># Will not be implemented here</span>
         <span class="k">pass</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>从这里, <code class="highlighter-rouge">@email_logit</code> 工作就像 <code class="highlighter-rouge">@logit</code> 但是发送了一个email给admin.</p>
 

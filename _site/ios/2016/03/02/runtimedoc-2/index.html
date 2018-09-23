@@ -75,13 +75,25 @@
                 
 				
                 <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
                     <a href="/about/">About</a>
                 </li>
 				
                 
 				
                 <li>
-                    <a href="/contact/">Contact</a>
+                    <a href="/app/">APP</a>
                 </li>
 				
                 
@@ -122,11 +134,10 @@
 
 <p>为了帮助运行时系统，编译器将字符串中每个方法的返回值和参数类型进行编码，并将字符串与方法选择器相关联。 它使用的编码方案在其他上下文中也是有用的，所以通过<code class="highlighter-rouge">@encode（）</code>编译器指令公开可用。 当给定类型规范时，<code class="highlighter-rouge">@encode（）</code>返回一个编码该类型的字符串。 这个类型可以是一个基本的类型，比如int，指针，带标签的结构体或联合体，或者是一个类名，实际上，它可以用作C <code class="highlighter-rouge">sizeof（）</code>运算符的参数。</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="kt">char</span> <span class="o">*</span><span class="n">buf1</span> <span class="o">=</span> <span class="k">@encode</span><span class="p">(</span><span class="kt">int</span> <span class="o">**</span><span class="p">);</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">char</span> <span class="o">*</span><span class="n">buf1</span> <span class="o">=</span> <span class="k">@encode</span><span class="p">(</span><span class="kt">int</span> <span class="o">**</span><span class="p">);</span>
 <span class="kt">char</span> <span class="o">*</span><span class="n">buf2</span> <span class="o">=</span> <span class="k">@encode</span><span class="p">(</span><span class="k">struct</span> <span class="n">key</span><span class="p">);</span>
 <span class="kt">char</span> <span class="o">*</span><span class="n">buf3</span> <span class="o">=</span> <span class="k">@encode</span><span class="p">(</span><span class="n">Rectangle</span><span class="p">);</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>下表列出了类型代码。 请注意，它们中的许多与用于存档或分发的对象编码时使用的代码重叠。 但是，这里列出的代码在编写代码时不能使用，并且在编写不是由<code class="highlighter-rouge">@encode（）</code>生成的代码时，可能需要使用代码。</p>
 
@@ -136,43 +147,37 @@
 
 <p>数组的类型代码用方括号括起来; 在数组类型之前，数组中元素的数目紧跟在开括号之后。 例如，一个由浮点数组成的12个指针的数组将被编码为：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>[12^f]
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[12^f]
+</code></pre></div></div>
 
 <p>结构在大括号内指定，而在括号内结合。 首先列出结构标签，然后是等号和结构字段的代码。 例如，结构：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>typedef struct example {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>typedef struct example {
     id   anObject;
     char *aString;
     int  anInt;
 } Example;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>会被编码成这样：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="err">example=@*i</span><span class="p">}</span><span class="w">
-</span></code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{example=@*i}
+</code></pre></div></div>
 
 <p>不管定义的类型名称（example）还是结构标记（example）传递给@encode（），相同的编码都会生成。 结构指针的编码携带与结构字段相同的信息量：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>^{example=@*i}
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>^{example=@*i}
+</code></pre></div></div>
 
 <p>但是，另一个间接级别删除了内部类型规范：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>^^{example}
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>^^{example}
+</code></pre></div></div>
 
 <p>对象被视为结构。例如，将NSObject类名称传递给@encode（）会产生以下编码：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="err">NSObject=#</span><span class="p">}</span><span class="w">
-</span></code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{NSObject=#}
+</code></pre></div></div>
 
 <p>NSObject类只声明一个Class类型的实例变量isa。</p>
 
@@ -225,9 +230,8 @@
 
 <p>Property结构定义了一个属性描述符的不透明处理。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>typedef struct objc_property *Property;
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>typedef struct objc_property *Property;
+</code></pre></div></div>
 
 <p>您可以使用函数<code class="highlighter-rouge">class_copyPropertyList</code>和<code class="highlighter-rouge">protocol_copyPropertyList</code>分别检索与类（包括加载的类）和协议相关的属性数组：</p>
 
@@ -237,52 +241,46 @@ objc_property_t *protocol_copyPropertyList(Protocol *proto, unsigned int *outCou
 
 <p>例如：</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">Lender</span> <span class="p">:</span> <span class="nc">NSObject</span> <span class="p">{</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">Lender</span> <span class="p">:</span> <span class="nc">NSObject</span> <span class="p">{</span>
     <span class="kt">float</span> <span class="n">alone</span><span class="p">;</span>
 <span class="p">}</span>
 <span class="k">@property</span> <span class="kt">float</span> <span class="n">alone</span><span class="p">;</span>
 <span class="k">@end</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>你可以得到属性列表：</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">id</span> <span class="n">LenderClass</span> <span class="o">=</span> <span class="n">objc_getClass</span><span class="p">(</span><span class="s">"Lender"</span><span class="p">);</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">id</span> <span class="n">LenderClass</span> <span class="o">=</span> <span class="n">objc_getClass</span><span class="p">(</span><span class="s">"Lender"</span><span class="p">);</span>
 <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">outCount</span><span class="p">;</span>
 <span class="n">objc_property_t</span> <span class="o">*</span><span class="n">properties</span> <span class="o">=</span> <span class="n">class_copyPropertyList</span><span class="p">(</span><span class="n">LenderClass</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">outCount</span><span class="p">);</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>你可以使用<code class="highlighter-rouge">property_getName</code>函数去获取属性的名称</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>const char *property_getName(objc_property_t property)
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>const char *property_getName(objc_property_t property)
+</code></pre></div></div>
 
 <p>你可以使用函数<code class="highlighter-rouge">class_getProperty</code>和<code class="highlighter-rouge">protocol_getProperty</code>分别获取对类中给定名称的属性的引用：</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">objc_property_t</span> <span class="n">class_getProperty</span><span class="p">(</span><span class="n">Class</span> <span class="n">cls</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">)</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">objc_property_t</span> <span class="n">class_getProperty</span><span class="p">(</span><span class="n">Class</span> <span class="n">cls</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">)</span>
 <span class="n">objc_property_t</span> <span class="n">protocol_getProperty</span><span class="p">(</span><span class="n">Protocol</span> <span class="o">*</span><span class="n">proto</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">,</span> <span class="n">BOOL</span> <span class="n">isRequiredProperty</span><span class="p">,</span> <span class="n">BOOL</span> <span class="n">isInstanceProperty</span><span class="p">)</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>您可以使用property_getAttributes函数来发现属性的名称和@encode类型的字符串</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">property_getAttributes</span><span class="p">(</span><span class="n">objc_property_t</span> <span class="n">property</span><span class="p">)</span>
-</code></pre>
-</div>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">property_getAttributes</span><span class="p">(</span><span class="n">objc_property_t</span> <span class="n">property</span><span class="p">)</span>
+</code></pre></div></div>
 
 <p>把它们放在一起，你可以使用下面的代码打印一个与类关联的所有属性的list：</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="n">id</span> <span class="n">LenderClass</span> <span class="o">=</span> <span class="n">objc_getClass</span><span class="p">(</span><span class="s">"Lender"</span><span class="p">);</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">id</span> <span class="n">LenderClass</span> <span class="o">=</span> <span class="n">objc_getClass</span><span class="p">(</span><span class="s">"Lender"</span><span class="p">);</span>
 <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">outCount</span><span class="p">,</span> <span class="n">i</span><span class="p">;</span>
 <span class="n">objc_property_t</span> <span class="o">*</span><span class="n">properties</span> <span class="o">=</span> <span class="n">class_copyPropertyList</span><span class="p">(</span><span class="n">LenderClass</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">outCount</span><span class="p">);</span>
 <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">outCount</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">objc_property_t</span> <span class="n">property</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="nf">i</span><span class="p">];</span>
     <span class="n">fprintf</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="s">"%s %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">property_getName</span><span class="p">(</span><span class="n">property</span><span class="p">),</span> <span class="n">property_getAttributes</span><span class="p">(</span><span class="n">property</span><span class="p">));</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="属性类型字符串">属性类型字符串</h4>
 
@@ -345,12 +343,11 @@ objc_property_t *protocol_copyPropertyList(Protocol *proto, unsigned int *outCou
 
 <p>给如下定义</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">enum</span> <span class="n">FooManChu</span> <span class="p">{</span> <span class="n">FOO</span><span class="p">,</span> <span class="n">MAN</span><span class="p">,</span> <span class="n">CHU</span> <span class="p">};</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">enum</span> <span class="n">FooManChu</span> <span class="p">{</span> <span class="n">FOO</span><span class="p">,</span> <span class="n">MAN</span><span class="p">,</span> <span class="n">CHU</span> <span class="p">};</span>
 <span class="k">struct</span> <span class="n">YorkshireTeaStruct</span> <span class="p">{</span> <span class="kt">int</span> <span class="n">pot</span><span class="p">;</span> <span class="kt">char</span> <span class="n">lady</span><span class="p">;</span> <span class="p">};</span>
 <span class="k">typedef</span> <span class="k">struct</span> <span class="n">YorkshireTeaStruct</span> <span class="n">YorkshireTeaStructType</span><span class="p">;</span>
 <span class="k">union</span> <span class="n">MoneyUnion</span> <span class="p">{</span> <span class="kt">float</span> <span class="n">alone</span><span class="p">;</span> <span class="kt">double</span> <span class="n">down</span><span class="p">;</span> <span class="p">};</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>下表显示了示例属性声明和property_getAttributes返回的相应字符串：</p>
 
@@ -363,111 +360,111 @@ objc_property_t *protocol_copyPropertyList(Protocol *proto, unsigned int *outCou
   </thead>
   <tbody>
     <tr>
-      <td><code class="highlighter-rouge"><span class="k">@property</span> <span class="kt">char</span> <span class="n">charDefault</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">@property char charDefault;</code></td>
       <td><code class="highlighter-rouge">Tc,VcharDefault</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge"><span class="k">@property</span> <span class="kt">double</span> <span class="n">doubleDefault</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">@property double doubleDefault;</code></td>
       <td><code class="highlighter-rouge">Td,VdoubleDefault</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge"><span class="k">@property</span> <span class="k">enum</span> <span class="n">FooManChu</span> <span class="n">enumDefault</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">@property enum FooManChu enumDefault;</code></td>
       <td><code class="highlighter-rouge">Ti,VenumDefault</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge"><span class="k">@property</span> <span class="kt">float</span> <span class="n">floatDefault</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">@property float floatDefault;</code></td>
       <td><code class="highlighter-rouge">Tf,VfloatDefault</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge"><span class="k">@property</span> <span class="kt">int</span> <span class="n">intDefault</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">@property int intDefault;</code></td>
       <td><code class="highlighter-rouge">Ti,VintDefault</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge"><span class="k">@property</span> <span class="kt">long</span> <span class="n">longDefault</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">@property long longDefault;</code></td>
       <td><code class="highlighter-rouge">Tl,VlongDefault</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge"><span class="k">@property</span> <span class="kt">short</span> <span class="n">shortDefault</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">@property short shortDefault;</code></td>
       <td><code class="highlighter-rouge">Ts,VshortDefault</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge"><span class="k">@property</span> <span class="kt">signed</span> <span class="n">signedDefault</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">@property signed signedDefault;</code></td>
       <td><code class="highlighter-rouge">Ti,VsignedDefault</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge"><span class="k">@property</span> <span class="k">struct</span> <span class="n">YorkshireTeaStruct</span> <span class="n">structDefault</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">@property struct YorkshireTeaStruct structDefault;</code></td>
       <td><code class="highlighter-rouge">T{YorkshireTeaStruct="pot"i"lady"c},VstructDefault</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge"><span class="k">@property</span> <span class="n">YorkshireTeaStructType</span> <span class="n">typedefDefault</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">@property YorkshireTeaStructType typedefDefault;</code></td>
       <td><code class="highlighter-rouge">T{YorkshireTeaStruct="pot"i"lady"c},VtypedefDefault</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge"><span class="k">@property</span> <span class="k">union</span> <span class="n">MoneyUnion</span> <span class="n">unionDefault</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">@property union MoneyUnion unionDefault;</code></td>
       <td><code class="highlighter-rouge">T(MoneyUnion="alone"f"down"d),VunionDefault</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge"><span class="k">@property</span> <span class="kt">unsigned</span> <span class="n">unsignedDefault</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">@property unsigned unsignedDefault;</code></td>
       <td><code class="highlighter-rouge">TI,VunsignedDefault</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge"><span class="k">@property</span> <span class="kt">int</span> <span class="p">(</span><span class="o">*</span><span class="n">functionPointerDefault</span><span class="p">)(</span><span class="kt">char</span> <span class="o">*</span><span class="p">);</span></code></td>
+      <td><code class="highlighter-rouge">@property int (*functionPointerDefault)(char *);</code></td>
       <td><code class="highlighter-rouge">T^?,VfunctionPointerDefault</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge"><span class="k">@property</span> <span class="n">id</span> <span class="n">idDefault</span><span class="p">;</span></code>Note: the compiler warns: <code class="highlighter-rouge">"no 'assign', 'retain', or 'copy' attribute is specified - 'assign' is assumed"</code></td>
+      <td><code class="highlighter-rouge">@property id idDefault;</code>Note: the compiler warns: <code class="highlighter-rouge">"no 'assign', 'retain', or 'copy' attribute is specified - 'assign' is assumed"</code></td>
       <td><code class="highlighter-rouge">T@,VidDefault</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge"><span class="k">@property</span> <span class="kt">int</span> <span class="o">*</span><span class="n">intPointer</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">@property int *intPointer;</code></td>
       <td><code class="highlighter-rouge">T^i,VintPointer</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge"><span class="k">@property</span> <span class="kt">void</span> <span class="o">*</span><span class="n">voidPointerDefault</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">@property void *voidPointerDefault;</code></td>
       <td><code class="highlighter-rouge">T^v,VvoidPointerDefault</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge"><span class="k">@property</span> <span class="kt">int</span> <span class="n">intSynthEquals</span><span class="p">;</span></code>In the implementation block:<code class="highlighter-rouge">@synthesize intSynthEquals=_intSynthEquals;</code></td>
+      <td><code class="highlighter-rouge">@property int intSynthEquals;</code>In the implementation block:<code class="highlighter-rouge">@synthesize intSynthEquals=_intSynthEquals;</code></td>
       <td><code class="highlighter-rouge">Ti,V_intSynthEquals</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge"><span class="k">@property</span><span class="p">(</span><span class="n">getter</span><span class="o">=</span><span class="n">intGetFoo</span><span class="p">,</span> <span class="n">setter</span><span class="o">=</span><span class="n">intSetFoo</span><span class="o">:</span><span class="p">)</span> <span class="kt">int</span> <span class="n">intSetterGetter</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">@property(getter=intGetFoo, setter=intSetFoo:) int intSetterGetter;</code></td>
       <td><code class="highlighter-rouge">Ti,GintGetFoo,SintSetFoo:,VintSetterGetter</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge"><span class="k">@property</span><span class="p">(</span><span class="n">readonly</span><span class="p">)</span> <span class="kt">int</span> <span class="n">intReadonly</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">@property(readonly) int intReadonly;</code></td>
       <td><code class="highlighter-rouge">Ti,R,VintReadonly</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge"><span class="k">@property</span><span class="p">(</span><span class="n">getter</span><span class="o">=</span><span class="n">isIntReadOnlyGetter</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="kt">int</span> <span class="n">intReadonlyGetter</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">@property(getter=isIntReadOnlyGetter, readonly) int intReadonlyGetter;</code></td>
       <td><code class="highlighter-rouge">Ti,R,GisIntReadOnlyGetter</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge"><span class="k">@property</span><span class="p">(</span><span class="n">readwrite</span><span class="p">)</span> <span class="kt">int</span> <span class="n">intReadwrite</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">@property(readwrite) int intReadwrite;</code></td>
       <td><code class="highlighter-rouge">Ti,VintReadwrite</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge"><span class="k">@property</span><span class="p">(</span><span class="n">assign</span><span class="p">)</span> <span class="kt">int</span> <span class="n">intAssign</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">@property(assign) int intAssign;</code></td>
       <td><code class="highlighter-rouge">Ti,VintAssign</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge"><span class="k">@property</span><span class="p">(</span><span class="n">retain</span><span class="p">)</span> <span class="n">id</span> <span class="n">idRetain</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">@property(retain) id idRetain;</code></td>
       <td><code class="highlighter-rouge">T@,&amp;,VidRetain</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge"><span class="k">@property</span><span class="p">(</span><span class="n">copy</span><span class="p">)</span> <span class="n">id</span> <span class="n">idCopy</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">@property(copy) id idCopy;</code></td>
       <td><code class="highlighter-rouge">T@,C,VidCopy</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge"><span class="k">@property</span><span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="kt">int</span> <span class="n">intNonatomic</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">@property(nonatomic) int intNonatomic;</code></td>
       <td><code class="highlighter-rouge">Ti,VintNonatomic</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge"><span class="k">@property</span><span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">,</span> <span class="n">copy</span><span class="p">)</span> <span class="n">id</span> <span class="n">idReadonlyCopyNonatomic</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">@property(nonatomic, readonly, copy) id idReadonlyCopyNonatomic;</code></td>
       <td><code class="highlighter-rouge">T@,R,C,VidReadonlyCopyNonatomic</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge"><span class="k">@property</span><span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">,</span> <span class="n">retain</span><span class="p">)</span> <span class="n">id</span> <span class="n">idReadonlyRetainNonatomic</span><span class="p">;</span></code></td>
+      <td><code class="highlighter-rouge">@property(nonatomic, readonly, retain) id idReadonlyRetainNonatomic;</code></td>
       <td><code class="highlighter-rouge">T@,R,&amp;,VidReadonlyRetainNonatomic</code></td>
     </tr>
   </tbody>

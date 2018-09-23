@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>UITableView实践(一):实现原理 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/ios/2018/04/25/tableView_1/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/app/">APP</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/bg_01.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>UITableView实践(一):实现原理</h1>
+                    
+                    <h2 class="subheading">通过查看UITableView的源码来查看实现原理</h2>
+                    
+                    <span class="meta">Posted by Ted on April 25, 2018</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h3 id="一综述">一、综述</h3>
+
+<p>UITableView应该是iOS中最经典也是最常见的一个控件了。使用很普遍</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">UITableView</span> <span class="o">*</span><span class="n">tableView</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UITableView</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithFrame</span><span class="p">:</span><span class="n">frame</span> <span class="nf">style</span><span class="p">:</span><span class="n">UITableViewStyleGrouped</span><span class="p">];</span>   
+<span class="n">tableView</span><span class="p">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="n">self</span><span class="p">;</span>
+<span class="n">tableView</span><span class="p">.</span><span class="n">dataSource</span> <span class="o">=</span> <span class="n">self</span><span class="p">;</span>
+<span class="p">[</span><span class="n">tableView</span> <span class="nf">registerClass</span><span class="p">:[</span><span class="n">UITableViewCell</span> <span class="nf">class</span><span class="p">]</span> <span class="nf">forCellReuseIdentifier</span><span class="p">:</span><span class="s">@"MyCellReuseIdentifier"</span><span class="p">];</span>
+<span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">view</span> <span class="nf">addSubview</span><span class="p">:</span><span class="n">tableView</span><span class="p">];</span>
+
+<span class="cp">#pragma mark - UITableViewDelegate
+</span><span class="c1">// 行高</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nf">tableView</span><span class="p">:(</span><span class="n">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="nv">tableView</span> <span class="nf">heightForRowAtIndexPath</span><span class="p">:(</span><span class="n">NSIndexPath</span> <span class="o">*</span><span class="p">)</span><span class="nv">indexPath</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="mi">50</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cp">#pragma mark - UITableViewDataSource
+</span><span class="c1">// Cell复用</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">UITableViewCell</span> <span class="o">*</span><span class="p">)</span><span class="nf">tableView</span><span class="p">:(</span><span class="n">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="nv">tableView</span> <span class="nf">cellForRowAtIndexPath</span><span class="p">:(</span><span class="n">NSIndexPath</span> <span class="o">*</span><span class="p">)</span><span class="nv">indexPath</span>
+<span class="p">{</span>
+    <span class="n">UITableViewCell</span> <span class="o">*</span><span class="n">cell</span> <span class="o">=</span> <span class="p">[</span><span class="n">tableView</span> <span class="nf">dequeueReusableCellWithIdentifier</span><span class="p">:</span><span class="s">@"MyCellReuseIdentifier"</span><span class="p">];</span>
+    <span class="k">return</span> <span class="n">cell</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// 行数</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nf">tableView</span><span class="p">:(</span><span class="n">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="nv">tableView</span> <span class="nf">numberOfRowsInSection</span><span class="p">:(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">section</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">self</span><span class="p">.</span><span class="n">dataArray</span><span class="p">.</span><span class="n">count</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="chameleon项目"><a href="https://github.com/BigZaphod/Chameleon">Chameleon</a>项目</h4>
+
+<blockquote>
+  <p>If you’re an iOS developer, you’re already familiar with UIKit, the framework used to create apps for the iPhone, iPod and iPad. Chameleon is a drop in replacement for UIKit that runs on Mac OS X. In many cases, your iOS code doesn’t need to change at all in order to run on a Mac.</p>
+
+  <p>This new framework is a clean room implementation of the work done by Apple for iOS. The only thing Chameleon has in common with UIKit are the public class and method names. The code is based on Apple’s documentation and does not use any private APIs or other techniques disallowed by the Mac App Store.</p>
+</blockquote>
+
+<p>我们知道在iOS上开发的视图使用UIKit，Mac OS则没有。Chameleon项目就是将UIKit的代码也可以运行在macOS上。我们可以通过Chameleon项目的源码来一探究竟，UITableView是如何实现的。</p>
+
+<h3 id="二初始化">二、初始化</h3>
+
+<h4 id="1init">1、init</h4>
+
+<p><code class="highlighter-rouge">initWithFrame:(CGRect)frame style:(UITableViewStyle)theStyle</code>是最常用的初始化方式，那么Chameleon项目是怎么做的呢？</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="nf">initWithFrame</span><span class="p">:(</span><span class="n">CGRect</span><span class="p">)</span><span class="nv">frame</span> <span class="nf">style</span><span class="p">:(</span><span class="n">UITableViewStyle</span><span class="p">)</span><span class="nv">theStyle</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">self</span><span class="o">=</span><span class="p">[</span><span class="n">super</span> <span class="nf">initWithFrame</span><span class="p">:</span><span class="n">frame</span><span class="p">]))</span> <span class="p">{</span>
+        <span class="n">_style</span> <span class="o">=</span> <span class="n">theStyle</span><span class="p">;</span>
+       <span class="c1">// 已生成Cell的缓存</span>
+        <span class="n">_cachedCells</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSMutableDictionary</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+       <span class="c1">// Secitons的缓存</span>
+        <span class="n">_sections</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSMutableArray</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+       <span class="c1">// 复用的Cells</span>
+        <span class="n">_reusableCells</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSMutableSet</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+
+      	<span class="c1">// 一些基本属性的初始化</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">separatorColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="nf">colorWithRed</span><span class="p">:.</span><span class="mi">88</span><span class="n">f</span> <span class="nf">green</span><span class="p">:.</span><span class="mi">88</span><span class="n">f</span> <span class="n">blue</span><span class="o">:</span><span class="p">.</span><span class="mi">88</span><span class="n">f</span> <span class="n">alpha</span><span class="o">:</span><span class="mi">1</span><span class="p">];</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">separatorStyle</span> <span class="o">=</span> <span class="n">UITableViewCellSeparatorStyleSingleLine</span><span class="p">;</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">showsHorizontalScrollIndicator</span> <span class="o">=</span> <span class="nb">NO</span><span class="p">;</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">allowsSelection</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">allowsSelectionDuringEditing</span> <span class="o">=</span> <span class="nb">NO</span><span class="p">;</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">sectionHeaderHeight</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">sectionFooterHeight</span> <span class="o">=</span> <span class="mi">22</span><span class="p">;</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">alwaysBounceVertical</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">_style</span> <span class="o">==</span> <span class="n">UITableViewStylePlain</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="nf">whiteColor</span><span class="p">];</span>
+        <span class="p">}</span>
+        
+      	<span class="c1">// setNeedsLayout</span>
+        <span class="p">[</span><span class="n">self</span> <span class="nf">_setNeedsReload</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">_setNeedsReload</span>
+<span class="p">{</span>
+    <span class="n">_needsReload</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">self</span> <span class="nf">setNeedsLayout</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>初始化大概分为三部分：</p>
+
+<ul>
+  <li>用来装载实例的容器初始化</li>
+  <li>基本属性的默认值赋值</li>
+  <li>标记需要<code class="highlighter-rouge">setNeedsLayout</code></li>
+</ul>
+
+<p>我们知道，iOS的交互流程是这样的</p>
+
+<p><img src="/img/Simple_3/15.jpg" alt="img" /></p>
+
+<p>所以，接下来就是<code class="highlighter-rouge">layoutSubviews</code></p>
+
+<h4 id="2layoutsubviews">2、layoutSubviews</h4>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">layoutSubviews</span>
+<span class="p">{</span>
+    <span class="n">_backgroundView</span><span class="p">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">bounds</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">self</span> <span class="nf">_reloadDataIfNeeded</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">self</span> <span class="nf">_layoutTableView</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">super</span> <span class="nf">layoutSubviews</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><img src="/img/Simple_7/20.png" alt="img" /></p>
+
+<blockquote>
+  <p>reloadData</p>
+</blockquote>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">reloadData</span>
+<span class="p">{</span>
+    <span class="c1">// clear the caches and remove the cells since everything is going to change</span>
+    <span class="p">[[</span><span class="n">_cachedCells</span> <span class="nf">allValues</span><span class="p">]</span> <span class="nf">makeObjectsPerformSelector</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="n">removeFromSuperview</span><span class="p">)];</span>
+    <span class="p">[</span><span class="n">_reusableCells</span> <span class="nf">makeObjectsPerformSelector</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="n">removeFromSuperview</span><span class="p">)];</span>
+    <span class="p">[</span><span class="n">_reusableCells</span> <span class="nf">removeAllObjects</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">_cachedCells</span> <span class="nf">removeAllObjects</span><span class="p">];</span>
+
+    <span class="c1">// clear prior selection</span>
+    <span class="n">_selectedRow</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+    <span class="n">_highlightedRow</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+    
+    <span class="c1">// trigger the section cache to be repopulated</span>
+    <span class="p">[</span><span class="n">self</span> <span class="nf">_updateSectionsCache</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">self</span> <span class="nf">_setContentSize</span><span class="p">];</span>
+    
+    <span class="n">_needsReload</span> <span class="o">=</span> <span class="nb">NO</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>因为需要重新加载数据，所以将缓存以及复用的Cell都清空掉，SectionsCache也更新掉</p>
+
+<blockquote>
+  <p>layoutTableView</p>
+</blockquote>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">_layoutTableView</span>
+<span class="p">{</span>
+    <span class="c1">// lays out headers and rows that are visible at the time. this should also do cell</span>
+    <span class="c1">// dequeuing and keep a list of all existing cells that are visible and those</span>
+    <span class="c1">// that exist but are not visible and are reusable</span>
+    <span class="c1">// if there's no section cache, no rows will be laid out but the header/footer will (if any).</span>
+    
+    <span class="k">const</span> <span class="n">CGSize</span> <span class="n">boundsSize</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">bounds</span><span class="p">.</span><span class="n">size</span><span class="p">;</span>
+    <span class="k">const</span> <span class="n">CGFloat</span> <span class="n">contentOffset</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">contentOffset</span><span class="p">.</span><span class="n">y</span><span class="p">;</span>
+    <span class="k">const</span> <span class="n">CGRect</span> <span class="n">visibleBounds</span> <span class="o">=</span> <span class="n">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">contentOffset</span><span class="p">,</span><span class="n">boundsSize</span><span class="p">.</span><span class="n">width</span><span class="p">,</span><span class="n">boundsSize</span><span class="p">.</span><span class="n">height</span><span class="p">);</span>
+    <span class="n">CGFloat</span> <span class="n">tableHeight</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="n">_tableHeaderView</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">CGRect</span> <span class="n">tableHeaderFrame</span> <span class="o">=</span> <span class="n">_tableHeaderView</span><span class="p">.</span><span class="n">frame</span><span class="p">;</span>
+        <span class="n">tableHeaderFrame</span><span class="p">.</span><span class="n">origin</span> <span class="o">=</span> <span class="n">CGPointZero</span><span class="p">;</span>
+        <span class="n">tableHeaderFrame</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">boundsSize</span><span class="p">.</span><span class="n">width</span><span class="p">;</span>
+        <span class="n">_tableHeaderView</span><span class="p">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">tableHeaderFrame</span><span class="p">;</span>
+        <span class="n">tableHeight</span> <span class="o">+=</span> <span class="n">tableHeaderFrame</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">height</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// layout sections and rows</span>
+    <span class="n">NSMutableDictionary</span> <span class="o">*</span><span class="n">availableCells</span> <span class="o">=</span> <span class="p">[</span><span class="n">_cachedCells</span> <span class="nf">mutableCopy</span><span class="p">];</span>
+    <span class="k">const</span> <span class="n">NSInteger</span> <span class="n">numberOfSections</span> <span class="o">=</span> <span class="p">[</span><span class="n">_sections</span> <span class="nf">count</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">_cachedCells</span> <span class="nf">removeAllObjects</span><span class="p">];</span>
+    
+    <span class="k">for</span> <span class="p">(</span><span class="n">NSInteger</span> <span class="n">section</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">section</span><span class="o">&lt;</span><span class="n">numberOfSections</span><span class="p">;</span> <span class="n">section</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">CGRect</span> <span class="n">sectionRect</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span> <span class="nf">rectForSection</span><span class="p">:</span><span class="n">section</span><span class="p">];</span>
+        <span class="n">tableHeight</span> <span class="o">+=</span> <span class="n">sectionRect</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">height</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">CGRectIntersectsRect</span><span class="p">(</span><span class="n">sectionRect</span><span class="p">,</span> <span class="n">visibleBounds</span><span class="p">))</span> <span class="p">{</span>
+            <span class="k">const</span> <span class="n">CGRect</span> <span class="n">headerRect</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span> <span class="nf">rectForHeaderInSection</span><span class="p">:</span><span class="n">section</span><span class="p">];</span>
+            <span class="k">const</span> <span class="n">CGRect</span> <span class="n">footerRect</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span> <span class="nf">rectForFooterInSection</span><span class="p">:</span><span class="n">section</span><span class="p">];</span>
+            <span class="n">UITableViewSection</span> <span class="o">*</span><span class="n">sectionRecord</span> <span class="o">=</span> <span class="p">[</span><span class="n">_sections</span> <span class="nf">objectAtIndex</span><span class="p">:</span><span class="n">section</span><span class="p">];</span>
+            <span class="k">const</span> <span class="n">NSInteger</span> <span class="n">numberOfRows</span> <span class="o">=</span> <span class="n">sectionRecord</span><span class="p">.</span><span class="n">numberOfRows</span><span class="p">;</span>
+            
+            <span class="k">if</span> <span class="p">(</span><span class="n">sectionRecord</span><span class="p">.</span><span class="n">headerView</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">sectionRecord</span><span class="p">.</span><span class="n">headerView</span><span class="p">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">headerRect</span><span class="p">;</span>
+            <span class="p">}</span>
+            
+            <span class="k">if</span> <span class="p">(</span><span class="n">sectionRecord</span><span class="p">.</span><span class="n">footerView</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">sectionRecord</span><span class="p">.</span><span class="n">footerView</span><span class="p">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">footerRect</span><span class="p">;</span>
+            <span class="p">}</span>
+            
+            <span class="k">for</span> <span class="p">(</span><span class="n">NSInteger</span> <span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">row</span><span class="o">&lt;</span><span class="n">numberOfRows</span><span class="p">;</span> <span class="n">row</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">NSIndexPath</span> <span class="o">*</span><span class="n">indexPath</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSIndexPath</span> <span class="nf">indexPathForRow</span><span class="p">:</span><span class="n">row</span> <span class="nf">inSection</span><span class="p">:</span><span class="n">section</span><span class="p">];</span>
+                <span class="n">CGRect</span> <span class="n">rowRect</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span> <span class="nf">rectForRowAtIndexPath</span><span class="p">:</span><span class="n">indexPath</span><span class="p">];</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">CGRectIntersectsRect</span><span class="p">(</span><span class="n">rowRect</span><span class="p">,</span><span class="n">visibleBounds</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">rowRect</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">height</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">UITableViewCell</span> <span class="o">*</span><span class="n">cell</span> <span class="o">=</span> <span class="p">[</span><span class="n">availableCells</span> <span class="nf">objectForKey</span><span class="p">:</span><span class="n">indexPath</span><span class="p">]</span> <span class="p">?:</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">dataSource</span> <span class="nf">tableView</span><span class="p">:</span><span class="n">self</span> <span class="nf">cellForRowAtIndexPath</span><span class="p">:</span><span class="n">indexPath</span><span class="p">];</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">cell</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="p">[</span><span class="n">_cachedCells</span> <span class="nf">setObject</span><span class="p">:</span><span class="n">cell</span> <span class="nf">forKey</span><span class="p">:</span><span class="n">indexPath</span><span class="p">];</span>
+                        <span class="p">[</span><span class="n">availableCells</span> <span class="nf">removeObjectForKey</span><span class="p">:</span><span class="n">indexPath</span><span class="p">];</span>
+                        <span class="n">cell</span><span class="p">.</span><span class="n">highlighted</span> <span class="o">=</span> <span class="p">[</span><span class="n">_highlightedRow</span> <span class="nf">isEqual</span><span class="p">:</span><span class="n">indexPath</span><span class="p">];</span>
+                        <span class="n">cell</span><span class="p">.</span><span class="n">selected</span> <span class="o">=</span> <span class="p">[</span><span class="n">_selectedRow</span> <span class="nf">isEqual</span><span class="p">:</span><span class="n">indexPath</span><span class="p">];</span>
+                        <span class="n">cell</span><span class="p">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">rowRect</span><span class="p">;</span>
+                        <span class="n">cell</span><span class="p">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">backgroundColor</span><span class="p">;</span>
+                        <span class="p">[</span><span class="n">cell</span> <span class="nf">_setSeparatorStyle</span><span class="p">:</span><span class="n">_separatorStyle</span> <span class="nf">color</span><span class="p">:</span><span class="n">_separatorColor</span><span class="p">];</span>
+                        <span class="p">[</span><span class="n">self</span> <span class="nf">addSubview</span><span class="p">:</span><span class="n">cell</span><span class="p">];</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// remove old cells, but save off any that might be reusable</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">UITableViewCell</span> <span class="o">*</span><span class="n">cell</span> <span class="k">in</span> <span class="p">[</span><span class="n">availableCells</span> <span class="nf">allValues</span><span class="p">])</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">cell</span><span class="p">.</span><span class="n">reuseIdentifier</span><span class="p">)</span> <span class="p">{</span>
+            <span class="p">[</span><span class="n">_reusableCells</span> <span class="nf">addObject</span><span class="p">:</span><span class="n">cell</span><span class="p">];</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="p">[</span><span class="n">cell</span> <span class="nf">removeFromSuperview</span><span class="p">];</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// non-reusable cells should end up dealloced after at this point, but reusable ones live on in _reusableCells.</span>
+    
+    <span class="c1">// now make sure that all available (but unused) reusable cells aren't on screen in the visible area.</span>
+    <span class="c1">// this is done becaue when resizing a table view by shrinking it's height in an animation, it looks better. The reason is that</span>
+    <span class="c1">// when an animation happens, it sets the frame to the new (shorter) size and thus recalcuates which cells should be visible.</span>
+    <span class="c1">// If it removed all non-visible cells, then the cells on the bottom of the table view would disappear immediately but before</span>
+    <span class="c1">// the frame of the table view has actually animated down to the new, shorter size. So the animation is jumpy/ugly because</span>
+    <span class="c1">// the cells suddenly disappear instead of seemingly animating down and out of view like they should. This tries to leave them</span>
+    <span class="c1">// on screen as long as possible, but only if they don't get in the way.</span>
+    <span class="n">NSArray</span><span class="o">*</span> <span class="n">allCachedCells</span> <span class="o">=</span> <span class="p">[</span><span class="n">_cachedCells</span> <span class="nf">allValues</span><span class="p">];</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">UITableViewCell</span> <span class="o">*</span><span class="n">cell</span> <span class="k">in</span> <span class="n">_reusableCells</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">CGRectIntersectsRect</span><span class="p">(</span><span class="n">cell</span><span class="p">.</span><span class="n">frame</span><span class="p">,</span><span class="n">visibleBounds</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="p">[</span><span class="n">allCachedCells</span> <span class="nf">containsObject</span><span class="p">:</span> <span class="n">cell</span><span class="p">])</span> <span class="p">{</span>
+            <span class="p">[</span><span class="n">cell</span> <span class="nf">removeFromSuperview</span><span class="p">];</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="n">_tableFooterView</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">CGRect</span> <span class="n">tableFooterFrame</span> <span class="o">=</span> <span class="n">_tableFooterView</span><span class="p">.</span><span class="n">frame</span><span class="p">;</span>
+        <span class="n">tableFooterFrame</span><span class="p">.</span><span class="n">origin</span> <span class="o">=</span> <span class="n">CGPointMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">tableHeight</span><span class="p">);</span>
+        <span class="n">tableFooterFrame</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">boundsSize</span><span class="p">.</span><span class="n">width</span><span class="p">;</span>
+        <span class="n">_tableFooterView</span><span class="p">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">tableFooterFrame</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>这一步操作主要是将已经初始化的Cells重新布局，以及其他布局如HeadView，FootView的设置</p>
+
+<h3 id="三cell复用">三、Cell复用</h3>
+
+<p>cell在初始化的时候会绑定一个Identifier用以以后复用</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="nf">initWithStyle</span><span class="p">:(</span><span class="n">UITableViewCellStyle</span><span class="p">)</span><span class="nv">style</span> <span class="nf">reuseIdentifier</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">reuseIdentifier</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">self</span><span class="o">=</span><span class="p">[</span><span class="n">self</span> <span class="nf">initWithFrame</span><span class="p">:</span><span class="n">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">320</span><span class="p">,</span><span class="n">_UITableViewDefaultRowHeight</span><span class="p">)]))</span> <span class="p">{</span>
+        <span class="n">_style</span> <span class="o">=</span> <span class="n">style</span><span class="p">;</span>
+        <span class="n">_reuseIdentifier</span> <span class="o">=</span> <span class="p">[</span><span class="n">reuseIdentifier</span> <span class="nf">copy</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>如上文，在UITableView初始化的时候，会初始化一个空的集合用来装载可复用的Cell。这是一个可变的集合</p>
+
+<pre><code class="language-Objc">_reusableCells = [[NSMutableSet alloc] init];
+</code></pre>
+
+<p>在UITableView重载数据<code class="highlighter-rouge">reloadData</code>时，会将里面的cell清空</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="n">_reusableCells</span> <span class="nf">makeObjectsPerformSelector</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="n">removeFromSuperview</span><span class="p">)];</span>
+<span class="p">[</span><span class="n">_reusableCells</span> <span class="nf">removeAllObjects</span><span class="p">];</span>
+</code></pre></div></div>
+
+<p>在TableView滑动或者做了其他更新布局<code class="highlighter-rouge">layoutTableView</code>，将绑定了Identifier的cell装入集合以便复用</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">// remove old cells, but save off any that might be reusable</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">UITableViewCell</span> <span class="o">*</span><span class="n">cell</span> <span class="k">in</span> <span class="p">[</span><span class="n">availableCells</span> <span class="nf">allValues</span><span class="p">])</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">cell</span><span class="p">.</span><span class="n">reuseIdentifier</span><span class="p">)</span> <span class="p">{</span>
+            <span class="p">[</span><span class="n">_reusableCells</span> <span class="nf">addObject</span><span class="p">:</span><span class="n">cell</span><span class="p">];</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="p">[</span><span class="n">cell</span> <span class="nf">removeFromSuperview</span><span class="p">];</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+
+<p>下面是UITableview数据源协议的复用代码</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">UITableViewCell</span> <span class="o">*</span><span class="p">)</span><span class="nf">tableView</span><span class="p">:(</span><span class="n">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="nv">tableView</span> <span class="nf">cellForRowAtIndexPath</span><span class="p">:(</span><span class="n">NSIndexPath</span> <span class="o">*</span><span class="p">)</span><span class="nv">indexPath</span>
+<span class="p">{</span>
+    <span class="n">UITableViewCell</span> <span class="o">*</span><span class="n">cell</span> <span class="o">=</span> <span class="p">[</span><span class="n">tableView</span> <span class="nf">dequeueReusableCellWithIdentifier</span><span class="p">:</span><span class="s">@"MyCellReuseIdentifier"</span><span class="p">];</span>
+    <span class="k">return</span> <span class="n">cell</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>根据Identifier将cell从集合中取出</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">UITableViewCell</span> <span class="o">*</span><span class="p">)</span><span class="nf">dequeueReusableCellWithIdentifier</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">identifier</span>
+<span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">UITableViewCell</span> <span class="o">*</span><span class="n">cell</span> <span class="k">in</span> <span class="n">_reusableCells</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">([</span><span class="n">cell</span><span class="p">.</span><span class="n">reuseIdentifier</span> <span class="nf">isEqualToString</span><span class="p">:</span><span class="n">identifier</span><span class="p">])</span> <span class="p">{</span>
+            <span class="n">UITableViewCell</span> <span class="o">*</span><span class="n">strongCell</span> <span class="o">=</span> <span class="n">cell</span><span class="p">;</span>
+            
+            <span class="c1">// the above strongCell reference seems totally unnecessary, but without it ARC apparently</span>
+            <span class="c1">// ends up releasing the cell when it's removed on this line even though we're referencing it</span>
+            <span class="c1">// later in this method by way of the cell variable. I do not like this.</span>
+            <span class="p">[</span><span class="n">_reusableCells</span> <span class="nf">removeObject</span><span class="p">:</span><span class="n">cell</span><span class="p">];</span>
+            <span class="k">return</span> <span class="n">strongCell</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="nb">nil</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="cell复用的三个容器">Cell复用的三个容器</h4>
+
+<ul>
+  <li><code class="highlighter-rouge">NSMutableDictionary</code> 类型 <strong>_cachedCells</strong>：用来存储当前屏幕上所有 Cell 与其对应的 indexPath。以键值对的关系进行存储。</li>
+  <li><code class="highlighter-rouge">NSMutableDictionary</code> 类型 <strong>availableCells</strong>：当列表发生滑动的时候，部分 Cell 从屏幕移出，这个容器会对 <code class="highlighter-rouge">_cachedCells</code> 进行拷贝，然后将屏幕上此时的 Cell 全部去除。即最终取出所有退出屏幕的 Cell。</li>
+  <li><code class="highlighter-rouge">NSMutableSet</code> 类型 <strong>_reusableCells</strong>：用来收集曾经出现过此时未出现在屏幕上的 Cell。当再出滑入主屏幕时，则直接使用其中的对象根据 <code class="highlighter-rouge">CGRectIntersectsRect</code> Rect 碰撞试验进行复用。</li>
+</ul>
+
+<p><img src="/img/Simple_7/21.png" alt="img" /></p>
+
+<p>当到状态 ② 的时候，我们发现 <code class="highlighter-rouge">_reusableCells</code> 容器中，已经出现了状态 ① 中已经退出屏幕的 Cell 0。而当我们重新将 Cell 0 滑入界面的时候，在系统 <code class="highlighter-rouge">addView</code> 渲染阶段，会直接将 <code class="highlighter-rouge">_reusableCells</code> 中的 Cell 0 立即取出进行渲染，从而代替创建新的实例再进行渲染，简化了时间与性能上的开销。</p>
+
+<p>参考：</p>
+
+<p>https://github.com/BigZaphod/Chameleon</p>
+
+<p>http://www.desgard.com/TableView-Reuse/</p>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/android/2018/04/19/learnAndroid/" data-toggle="tooltip" data-placement="top" title="安卓学习记录">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/%E7%9B%B4%E6%92%AD/2018/05/01/vlclive/" data-toggle="tooltip" data-placement="top" title="Mac上搭建直播服务器">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

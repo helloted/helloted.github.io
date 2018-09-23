@@ -75,13 +75,25 @@
                 
 				
                 <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
                     <a href="/about/">About</a>
                 </li>
 				
                 
 				
                 <li>
-                    <a href="/contact/">Contact</a>
+                    <a href="/app/">APP</a>
                 </li>
 				
                 
@@ -122,9 +134,8 @@
 
 <p>你可以用命令行的形式来使用debugger来跑一个脚本，例如</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>$ python -m pdb my_script.py
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ python -m pdb my_script.py
+</code></pre></div></div>
 
 <p>这将导致调试器找到的第一个语句就停止执行。 如果您的脚本很短，这会很有帮助。 然后，您可以检查这些变量并继续逐行执行。</p>
 
@@ -132,15 +143,14 @@
 
 <p>您可以在脚本中设置断点，以便您可以检查特定点处的变量和内容。 这可以使用<code class="highlighter-rouge">pdb.set_trace()</code>方法。 这里是一个例子：</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">pdb</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">pdb</span>
 
 <span class="k">def</span> <span class="nf">make_bread</span><span class="p">():</span>
     <span class="n">pdb</span><span class="o">.</span><span class="n">set_trace</span><span class="p">()</span>
     <span class="k">return</span> <span class="s">"I don't have time"</span>
 
 <span class="k">print</span><span class="p">(</span><span class="n">make_bread</span><span class="p">())</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="命令">命令</h4>
 

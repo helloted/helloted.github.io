@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>OpenGL ES编程指南（一） - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/20/OpenGL_1/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/app/">APP</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/bg_01.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>OpenGL ES编程指南（一）</h1>
+                    
+                    <h2 class="subheading">《OpenGL ES Programming Guide》文档翻译之预览与上下文</h2>
+                    
+                    <span class="meta">Posted by Ted on March 20, 2018</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<p>本文翻译自苹果官方文档<a href="https://developer.apple.com/library/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008793-CH1-SW1">OpenGL ES Programming Guide</a></p>
+
+<h3 id="一关于opengl-es">一、关于OpenGL ES</h3>
+
+<h4 id="什么是opengl">什么是OpenGL</h4>
+
+<p>OpenGL（全写Open Graphics Library）是指定义了一个跨编程语言、跨平台的编程接口规格的专业的图形程序接口。它用于三维图像（二维的亦可），是一个功能强大，调用方便的底层图形库。</p>
+
+<p>OpenGL™ 是行业领域中最为广泛接纳的 2D/3D 图形 API，其自诞生至今已催生了各种计算机平台及设备上的数千优秀应用程序。OpenGL™ 是独立于视窗操作系统或其它操作系统的，亦是网络透明的。在包含CAD、内容创作、能源、娱乐、游戏开发、制造业、制药业及虚拟现实等行业领域中，OpenGL™ 帮助程序员实现在 PC、工作站、超级计算机等硬件设备上的高性能、极具冲击力的高视觉表现力图形处理软件的开发。</p>
+
+<h4 id="opengl主要功能是什么">OpenGL主要功能是什么？</h4>
+
+<p>OpenGL是一个开放的三维图形软件包，它独立于窗口系统和操作系统，以它为基础开发的应用程序可以十分方便地在各种平台间移植；OpenGL可以与Visual C++紧密接口，便于实现机械手的有关计算和图形算法，可保证算法的正确性和可靠性；OpenGL使用简便，效率高。它具有七大功能：</p>
+
+<ul>
+  <li>1、建模：OpenGL图形库除了提供基本的点、线、多边形的绘制函数外，还提供了复杂的三维物体（球、锥、多面体、茶壶等）以及复杂曲线和曲面绘制函数。</li>
+  <li>2、变换：OpenGL图形库的变换包括基本变换和投影变换。基本变换有平移、旋转、缩放、镜像四种变换，投影变换有平行投影（又称正射投影）和透视投 影两种变换。其变换方法有利于减少算法的运行时间，提高三维图形的显示速度。</li>
+  <li>3、颜色模式设置：OpenGL颜色模式有两种，即RGBA模式和颜色索引（Color Index）。</li>
+  <li>4、光照和材质设置：OpenGL光有自发光（Emitted Light）、环境光（Ambient Light）、漫反射光（Diffuse Light）和高光（Specular Light）。材质是用光反射率来表示。场景（Scene）中物体最终反映到人眼的颜色是光的红绿蓝分量与材质红绿蓝分量的反射率相乘后形成的颜色。</li>
+  <li>5、纹理映射（Texture Mapping）。利用OpenGL纹理映射功能可以十分逼真地表达物体表面细节。</li>
+  <li>6、位图显示和图象增强图象功能除了基本的拷贝和像素读写外，还提供融合（Blending）、抗锯齿（反走样）（Antialiasing）和雾（fog）的特殊图象效果处理。以上三条可使被仿真物更具真实感，增强图形显示的效果。</li>
+  <li>7、双缓存动画（Double Buffering）双缓存即前台缓存和后台缓存，简言之，后台缓存计算场景、生成画面，前台缓存显示后台缓存已画好的画面。</li>
+</ul>
+
+<h4 id="opengl-es是什么">OpenGL ES是什么？</h4>
+
+<p>OpenGL ES (OpenGL for Embedded Systems) 是 OpenGL 三维图形 API 的子集，针对手机、PDA和游戏主机等嵌入式设备而设计。该API由Khronos集团定义推广，Khronos是一个图形软硬件行业协会，该协会主要关注图形和多媒体方面的开放标准。</p>
+
+<h4 id="opengl-vs-opencv">OpenGL VS OpenCV</h4>
+
+<p>Open CV是 Open Source Computer Vision Library
+Open GL是 Open Graphics Library
+Open CV主要是提供图像处理和视频处理的基础算法库，还涉及一些机器学习的算法。比如你想实现视频的降噪、运动物体的跟踪、目标（比如人脸）的识别这些都是CV的领域
+OpenGL则专注在Graphics，3D绘图。
+其实两者的区别就是Computer Vision和Computer Graphics这两个学科之间的区别，前者专注于从采集到的视觉图像中获取信息，是用机器来理解图像；后者是用机器绘制合适的视觉图像给人看。(摘自知乎)</p>
+
+<h4 id="预览">预览</h4>
+
+<p><em>Open Graphics Library</em>（OpenGL）用于可视化2D和3D数据。 它是一个多用途的开放标准图形库，支持2D和3D数字内容创建，机械和建筑设计，虚拟样机，飞行模拟，视频游戏等应用。 您可以使用OpenGL来配置3D图形管道并向其提交数据。 顶点被转换并且被点亮，然后组装成图元，并被光栅化用以创建2D图像。 OpenGL旨在将函数调用转换为可发送到底层图形硬件的图形命令。 由于底层硬件专用于处理图形命令，所以OpenGL绘图通常非常快速。</p>
+
+<p><em>OpenGL for Embedded Systems (OpenGL ES)</em> 是OpenGL的简化版本，它消除了冗余功能，提供了一个易于学习和易于在移动图形硬件中实现的库。</p>
+
+<p><img src="/img/Simple_6/04.png" alt="img" /></p>
+
+<p>OpenGL ES允许应用程序利用底层图形处理器的强大功能。 iOS设备上的GPU可以执行复杂的2D和3D绘图，以及最终图像中每个像素的复杂阴影计算。 如果您的应用程序的设计要求需要最直接，最全面地访问GPU硬件，则应该使用OpenGL ES。 OpenGL ES的典型客户端包括呈现3D图形的视频游戏和模拟。</p>
+
+<p>OpenGL ES是一个底层的，以硬件为中心的API。 虽然它提供了最强大和最灵活的图形处理工具，但它的学习曲线陡峭，对应用程序的整体设计也有重大影响。 对于需要高性能图形以进行更多专业用途的应用程序，iOS提供了几个更高层的框架：</p>
+
+<ul>
+  <li>Sprite Kit框架提供了一个为创建2D游戏而优化的硬件加速动画系统。</li>
+  <li>Core Image框架为静止和视频图像提供实时滤镜和分析。</li>
+  <li>Core Animation为所有iOS应用程序提供了硬件加速的图形渲染和动画基础结构，以及一个简单的声明式编程模型，使得实现复杂的用户界面动画变得非常简单。</li>
+  <li>您可以使用UIKit框架中的功能为Cocoa Touch用户界面添加动画，基于物理的动态效果和其他特殊效果。</li>
+</ul>
+
+<h3 id="二构建适用于ios-app的opengl-es清单">二、构建适用于iOS APP的OpenGL ES清单</h3>
+
+<p>OpenGL ES规范定义了一系列独立于平台的API，用于使用GPU硬件渲染图形。实现OpenGL ES的平台提供了：</p>
+
+<ul>
+  <li>一个渲染上下文用于执行OpenGL ES命令,</li>
+  <li>帧缓冲区用于保存渲染结果，</li>
+  <li>一个或多个渲染目标用以呈现帧缓冲区内容以供显示。</li>
+</ul>
+
+<p>在iOS中，<code class="highlighter-rouge">EAGLContext</code>类实现了渲染上下文。 iOS只提供一种类型的帧缓冲区也就是OpenGL ES framebuffer对象，GLKView和CAEAGLLayer类实现渲染目标。</p>
+
+<p>在iOS中构建OpenGL ES应用程序需要考虑几个问题，其中一些是OpenGL ES编程通用的，其中一些针对iOS。按照此清单以及下面的详细部分进行使用：</p>
+
+<ul>
+  <li>确定哪些版本的OpenGL ES为有您的应用程序需要的功能，并创建OpenGL ES上下文。</li>
+  <li>在运行时验证设备是否支持您要使用的OpenGL ES功能。</li>
+  <li>选择渲染OpenGL ES内容的位置。</li>
+  <li>确保您的应用在iOS中正常运行。</li>
+  <li>实现你的渲染引擎。</li>
+  <li>使用Xcode和Instruments调试您的OpenGL ES应用程序并调整它以获得最佳性能。</li>
+</ul>
+
+<h4 id="选择版本">选择版本</h4>
+
+<p>确定您的应用是否应该支持OpenGL ES 3.0，OpenGL ES 2.0，OpenGL ES 1.1或多个版本。</p>
+
+<ul>
+  <li>OpenGL ES 3.0是iOS 7中的新功能。它增加了许多新功能，可以实现更高性能，通用GPU计算技术以及以前只能在桌面级硬件和游戏控制台上实现的更复杂的视觉效果。</li>
+  <li>OpenGL ES 2.0是iOS设备的基准配置文件，具有基于可编程着色器的可配置图形管道。</li>
+  <li>OpenGL ES 1.1只提供了一个基本的固定功能图形管道，并且在iOS中主要用于向后兼容。</li>
+</ul>
+
+<h4 id="验证opengl-es功能">验证OpenGL ES功能</h4>
+
+<p><a href="https://developer.apple.com/library/content/documentation/DeviceInformation/Reference/iOSDeviceCompatibility/Introduction/Introduction.html#//apple_ref/doc/uid/TP40013599"><em>iOS Device Compatibility Reference</em> </a>总结了在iOS设备上可用的功能和拓展，但是为了尽可能多的系统版本和设备能够运行，你的APP应该总是在运行时查询OpenGL ES声明来检测功能。</p>
+
+<p>要确定特定实现的限制（如最大纹理大小或顶点属性的最大数量），请使用适当的glGet函数查找其数据，查找相应标记的值（如gl_h头中的MAX_TEXTURE_SIZE或MAX_VERTEX_ATTRIBS） 类型。</p>
+
+<p>要检查OpenGL ES 3.0扩展，请使用<code class="highlighter-rouge">glGetIntegerv</code>和<code class="highlighter-rouge">glGetStringi</code>函数，如下面的代码示例所示：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>BOOL CheckForExtension(NSString *searchName)
+{
+    // Create a set containing all extension names.
+    // (For better performance, create the set only once and cache it for future use.)
+    int max = 0;
+    glGetIntegerv(GL_NUM_EXTENSIONS, &amp;max);
+    NSMutableSet *extensions = [NSMutableSet set];
+    for (int i = 0; i &lt; max; i++) {
+        [extensions addObject: @( (char *)glGetStringi(GL_EXTENSIONS, i) )];
+    }
+    return [extensions containsObject: searchName];
+}
+</code></pre></div></div>
+
+<p>要检查OpenGL ES 1.1和2.0扩展，请调用<code class="highlighter-rouge">glGetString</code>（GL_EXTENSIONS）以获取所有扩展名的列表。</p>
+
+<h4 id="选择一个渲染目标">选择一个渲染目标</h4>
+
+<p>在iOS中，帧缓冲区对象存储绘图命令的结果。 （iOS不实现窗口系统提供的帧缓冲区。）你可以以多种方式使用帧缓冲区对象的内容：</p>
+
+<ul>
+  <li>GLKit框架提供了一个View，该View绘制OpenGL ES内容并管理其自己的帧缓冲区对象，以及支持动画OpenGL ES内容的View Controller。使用这些类创建全屏views或将您的OpenGL ES内容合并到UIKit视图层次结构中。</li>
+  <li>CAEAGLLayer类提供了一种将OpenGL ES内容绘制为Core Animation Layer组成部分的方法。使用此类时，您必须创建自己的帧缓冲区对象。</li>
+  <li>与任何OpenGL ES实现一样，您还可以使用帧缓冲器进行离屏图形处理或渲染纹理，以用于图形管道中的其他位置。借助OpenGL ES 3.0，可以在使用多个渲染目标的渲染算法中使用离屏缓冲区。</li>
+</ul>
+
+<h4 id="与ios集成">与iOS集成</h4>
+
+<p>iOS应用程序默认支持多任务处理，但在OpenGL ES应用程序中正确处理此功能需要额外考虑。不正确地使用OpenGL ES会导致您的应用在后台被系统杀死。</p>
+
+<p>许多iOS设备都包含高分辨率显示器，因此您的应用应支持多种显示屏尺寸和分辨率</p>
+
+<h4 id="实现渲染引擎">实现渲染引擎</h4>
+
+<p>设计OpenGL ES绘图代码有许多可能的策略，其全部细节超出了本文档的范围。渲染引擎设计的许多方面对于OpenGL和OpenGL ES的所有实现都是通用的。</p>
+
+<h4 id="调试和分析">调试和分析</h4>
+
+<p>Xcode和Instruments提供了许多工具来跟踪渲染问题并分析应用程序中的OpenGL ES性能。</p>
+
+<h3 id="三配置opengl-es上下文">三、配置OpenGL ES上下文</h3>
+
+<p>OpenGL ES的每个实现都提供了一种方式来创建渲染上下文来管理OpenGL ES规范所需状态。 通过把上述状态放入上下文中，多个应用程序可以轻松共享图形硬件而不会相互干扰</p>
+
+<h4 id="先初始化">先初始化</h4>
+
+<p>在您的应用程序可以调用任何OpenGL ES函数之前，它必须初始化一个EAGLContext对象。 <code class="highlighter-rouge">EAGLContext</code>类还提供了用于将OpenGL ES内容与Core Animation集成的方法。</p>
+
+<h4 id="当前上下文">当前上下文</h4>
+
+<p>iOS应用程序中的每个线程都有一个当前上下文; 当您调用OpenGL ES函数时，其实是上下文的状态发生了改变</p>
+
+<p>要设置线程的当前上下文，请在该线程上执行时调用EAGLContext类方法setCurrentContext：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[EAGLContext setCurrentContext: myContext];
+</code></pre></div></div>
+
+<p>注意：如果您的应用程序在同一线程中的两个或更多个上下文之间主动切换，请在将新上下文设置为当前上下文之前调用glFlush函数。 这确保以前提交的命令及时传送到图形硬件。</p>
+
+<p>获取线程的当前上下文可以用这个：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[EAGLContext currentContext];
+</code></pre></div></div>
+
+<p>OpenGL ES持有与当前上下文对应的<code class="highlighter-rouge">EAGLContext</code>对象的强引用。 （如果您正在使用手动引用计数，则OpenGL ES将保留此对象。）当您调用setCurrentContext：方法更改当前上下文时，OpenGL ES不再引用上一个上下文。 （如果使用手动引用计数，OpenGL ES会释放EAGLContext对象。）为防止EAGLContext对象在不是当前上下文时被释放，您的应用程序必须对这些对象进行强引用（或保留）。</p>
+
+<h4 id="每个上下文都针对特定版本的opengl-es">每个上下文都针对特定版本的OpenGL ES</h4>
+
+<p>一个<code class="highlighter-rouge">EAGLContext</code>对象只支持一个版本的OpenGL ES。例如，为OpenGL ES 1.1编写的代码与OpenGL ES 2.0或3.0上下文不兼容。使用核心OpenGL ES 2.0功能的代码与OpenGL ES 3.0上下文兼容，并且为OpenGL ES 2.0扩展设计的代码通常可以在OpenGL ES 3.0上下文中使用，只需稍作更改。许多新的OpenGL ES 3.0功能和增强的硬件功能需要OpenGL ES 3.0上下文。</p>
+
+<p>您的应用在创建并初始化EAGLContext对象时决定支持哪种版本的OpenGL ES。如果设备不支持请求的OpenGL ES版本，则initWithAPI：方法返回nil。在使用它之前，您的应用必须进行测试以确保上下文已成功初始化。</p>
+
+<p>要在应用中支持多个版本的OpenGL ES作为渲染选项，应首先尝试初始化要定位的最新版本的渲染上下文。如果返回的对象为零，请改为初始化旧版本的上下文。下面的代码表示如何执行此操作</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>EAGLContext* CreateBestEAGLContext()
+{
+   EAGLContext *context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
+   if (context == nil) {
+      context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+   }
+   return context;
+}
+</code></pre></div></div>
+
+<p>上下文的API属性指定上下文支持哪个版本的OpenGL ES。 您的应用程序应该测试上下文的API属性并使用它来选择正确的呈现路径。 实现此行为的常见模式是为每个呈现路径创建一个类。 您的应用程序在初始化时测试上下文并创建一次渲染器。</p>
+
+<h4 id="eagl-sharegroup为上下文管理opengl-es对象">EAGL Sharegroup为上下文管理OpenGL ES对象</h4>
+
+<p>尽管上下文保存了OpenGL ES状态，但它不直接管理OpenGL ES对象。相反，OpenGL ES对象由<code class="highlighter-rouge">EAGLSharegroup</code>对象创建和维护。每个上下文都包含一个<code class="highlighter-rouge">EAGLSharegroup</code>对象，它将对象创建委托给它。</p>
+
+<p><img src="/img/Simple_6/05.png" alt="img" /></p>
+
+<p>如图所示，当两个或两个以上的上下文引用相同的Sharegroup时，Sharegroup的优点变得明显。当多个上下文连接到一个公共Sharegroup时，任何上下文创建的OpenGL ES对象都可用于所有上下文;如果绑定到与创建它的另一个上下文相同的对象标识符，则引用相同的OpenGL ES对象。移动设备上的资源往往很少;在多个上下文中创建相同内容的多个副本是浪费的。共享公共资源可以更好地利用设备上的可用图形资源。</p>
+
+<p>Sharegroup是一个不透明的对象;它没有应用程序可以调用的方法或属性。使用共享组对象的上下文保持强烈的引用。</p>
+
+<p>在两种特定情况下，Sharegroup是最有用的：</p>
+
+<ul>
+  <li>当上下文之间共享的大部分资源不变时。</li>
+  <li>当您希望您的应用程序能够在渲染器的主线程以外的线程上创建新的OpenGL ES对象时。 在这种情况下，第二个上下文运行在单独的线程上，专门用于获取数据和创建资源。 资源加载后，第一个上下文可以绑定到对象并立即使用它。 <code class="highlighter-rouge">GLKTextureLoader</code>类使用此模式来提供异步纹理加载。</li>
+</ul>
+
+<p>要创建引用相同Sharegroup的多个上下文，首先通过调用initWithAPI来初始化第一个上下文： 会自动为上下文创建Sharegroup。 通过调用<code class="highlighter-rouge">initWithAPI:sharegroup:</code> 方法，第二个和之后的上下文被初始化为使用第一个上下文的Sharegroup。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>EAGLContext* firstContext = CreateBestEAGLContext();
+EAGLContext* secondContext = [[EAGLContext alloc] initWithAPI:[firstContext API] sharegroup: [firstContext sharegroup]];
+</code></pre></div></div>
+
+<p><strong>重要提示</strong>：与同一Sharegroup关联的所有上下文必须使用与初始上下文相同版本的OpenGL ES API。</p>
+
+<p>当Sharegroup由多个上下文共享时，您的应用程序有责任管理对OpenGL ES对象的状态更改。 下面是规则：</p>
+
+<ul>
+  <li>如果对象未被修改，您的应用程序可能会同时访问多个上下文中的对象。</li>
+  <li>当对象被发送到上下文的命令修改时，不得在任何其他上下文中读取或修改该对象。</li>
+  <li>对象修改后，所有上下文都必须重新绑定对象才能看到更改。 如果上下文在绑定它之前引用它，则该对象的内容是未定义的。</li>
+</ul>
+
+<p>以下是您的应用程序应该遵循的更新OpenGL ES对象的步骤：</p>
+
+<ul>
+  <li>在每个可能使用该对象的上下文中调用glFlush。</li>
+  <li>在想要修改对象的上下文中，调用一个或多个OpenGL ES函数来更改对象。</li>
+  <li>在接收到状态修改命令的上下文中调用glFlush。</li>
+  <li>在其他任何情况下，重新绑定对象标识符。</li>
+</ul>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/%E5%9F%BA%E7%A1%80/2018/03/11/OpenCV_1/" data-toggle="tooltip" data-placement="top" title="OpenCV学习简介">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/%E5%9F%BA%E7%A1%80/2018/03/21/OpenGL_2/" data-toggle="tooltip" data-placement="top" title="OpenGL ES编程指南（二）">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

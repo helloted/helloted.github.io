@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>对象内省 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/python/2017/03/02/python_object_introspection/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/app/">APP</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/bg_01.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>对象内省</h1>
+                    
+                    <h2 class="subheading">Python进阶之对象内省</h2>
+                    
+                    <span class="meta">Posted by Ted on March 2, 2017</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<p>在电脑编程中，内省是对象再运行时检测自我的能力，在Python中，万物皆对象，所以我们可以去检测这些对象。Python有些自带函数和模块来帮助我们。</p>
+
+<h4 id="1dir">1、dir</h4>
+
+<p><code class="highlighter-rouge">dir</code>是最重要的内省函数之一，它会返回对象的属性和方法的列表，下面是例子：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">my_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="nb">dir</span><span class="p">(</span><span class="n">my_list</span><span class="p">)</span>
+<span class="c"># Output: ['__add__', '__class__', '__contains__', '__delattr__', '__delitem__',</span>
+<span class="c"># '__delslice__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__',</span>
+<span class="c"># '__getitem__', '__getslice__', '__gt__', '__hash__', '__iadd__', '__imul__',</span>
+<span class="c"># '__init__', '__iter__', '__le__', '__len__', '__lt__', '__mul__', '__ne__',</span>
+<span class="c"># '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__reversed__', '__rmul__',</span>
+<span class="c"># '__setattr__', '__setitem__', '__setslice__', '__sizeof__', '__str__',</span>
+<span class="c"># '__subclasshook__', 'append', 'count', 'extend', 'index', 'insert', 'pop',</span>
+<span class="c"># 'remove', 'reverse', 'sort']</span>
+</code></pre></div></div>
+
+<p>我们的内省给了我们所有列表方法的名字。 当你不能记得一个方法的名字时，这可能会很方便。 如果我们运行没有任何参数的<code class="highlighter-rouge">dir()</code>，它将返回当前作用域中的所有名称。</p>
+
+<h4 id="2type和id">2、type和id</h4>
+
+<p><code class="highlighter-rouge">type</code>函数返回对象的类型，例子如下:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="s">''</span><span class="p">))</span>
+<span class="c"># Output: &lt;type 'str'&gt;</span>
+
+<span class="k">print</span><span class="p">(</span><span class="nb">type</span><span class="p">([]))</span>
+<span class="c"># Output: &lt;type 'list'&gt;</span>
+
+<span class="k">print</span><span class="p">(</span><span class="nb">type</span><span class="p">({}))</span>
+<span class="c"># Output: &lt;type 'dict'&gt;</span>
+
+<span class="k">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="nb">dict</span><span class="p">))</span>
+<span class="c"># Output: &lt;type 'type'&gt;</span>
+
+<span class="k">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+<span class="c"># Output: &lt;type 'int'&gt;</span>
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">id</code>返回对象的唯一标识符，比如:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">name</span> <span class="o">=</span> <span class="s">"Yasoob"</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+<span class="c"># Output: 139972439030304</span>
+</code></pre></div></div>
+
+<h4 id="3inspect模块">3、inspect模块</h4>
+
+<p><code class="highlighter-rouge">inspect</code>模块还提供了几个有用的功能来获取有关活着的对象的信息。 例如，您可以运行以下命令来检查对象的成员：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">inspect</span>
+<span class="k">print</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getmembers</span><span class="p">(</span><span class="nb">str</span><span class="p">))</span>
+<span class="c"># Output: [('__add__', &lt;slot wrapper '__add__' of ... ...</span>
+</code></pre></div></div>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/python/2017/03/01/python_enumerate/" data-toggle="tooltip" data-placement="top" title="Enumerate遍历">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/python/2017/03/02/python_exceptions/" data-toggle="tooltip" data-placement="top" title="Exception">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

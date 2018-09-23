@@ -75,13 +75,25 @@
                 
 				
                 <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
                     <a href="/about/">About</a>
                 </li>
 				
                 
 				
                 <li>
-                    <a href="/contact/">Contact</a>
+                    <a href="/app/">APP</a>
                 </li>
 				
                 
@@ -126,7 +138,7 @@
 
 <p>实例，当我们要对某个类的old_method方法以new_method方法替换掉，则新建一个Category，在其load类方法(Load方法每次APP加载都会调用)中实现以下：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>    static dispatch_once_t onceToken;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    static dispatch_once_t onceToken;
     dispatch_once(&amp;onceToken, ^{
         Class class = [self class];
         
@@ -152,8 +164,7 @@
             method_exchangeImplementations(originalMethod, swizzledMethod);
         }
     });
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="二javascriptcore">二、Javascriptcore</h3>
 
@@ -172,7 +183,7 @@
                     
                     
                     <li class="next">
-                        <a href="/ios/2017/05/09/JsonToModel/" data-toggle="tooltip" data-placement="top" title="Runtime运用：Json转Model">下一篇 &rarr;</a>
+                        <a href="/ios/2017/05/09/runtimeApply_1/" data-toggle="tooltip" data-placement="top" title="Runtime应用(一)：Json转Model">下一篇 &rarr;</a>
                     </li>
                     
                 </ul>

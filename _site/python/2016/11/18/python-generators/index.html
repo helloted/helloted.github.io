@@ -75,13 +75,25 @@
                 
 				
                 <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
                     <a href="/about/">About</a>
                 </li>
 				
                 
 				
                 <li>
-                    <a href="/contact/">Contact</a>
+                    <a href="/app/">APP</a>
                 </li>
 				
                 
@@ -142,7 +154,7 @@
 
 <p>生成器是迭代器，但是只能迭代一次。 这是因为他们没有将所有的值存储在内存中，他们在运行中生成值。 你可以通过遍历它们来使用它们，或者用’for’循环，或者把它们传递给迭代的任何函数或者构造。 大多数时候生成器被声明为函数。 但是，他们<code class="highlighter-rouge">不会返回一个值</code>，他们会产生值。 下面是一个简单的生成器函数的例子：</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">generator_function</span><span class="p">():</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">generator_function</span><span class="p">():</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
         <span class="k">yield</span> <span class="n">i</span>
 
@@ -159,46 +171,42 @@
 <span class="c"># 7</span>
 <span class="c"># 8</span>
 <span class="c"># 9</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>在这种情况下它并不是很有用。 生成器最适合计算大量结果集（特别是涉及循环本身的计算），因为您不希望在同一时间为所有结果分配内存。 在Python 2中返回list的许多标准库函数已被修改为在Python 3中返回生成器，因为生成器需要更少的资源。</p>
 
 <p>这是一个计算斐波纳契数字的例子：</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c"># generator version</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># generator version</span>
 <span class="k">def</span> <span class="nf">fibon</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
     <span class="n">a</span> <span class="o">=</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
         <span class="k">yield</span> <span class="n">a</span>
         <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>我们会这样使用</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">fibon</span><span class="p">(</span><span class="mi">1000000</span><span class="p">):</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">fibon</span><span class="p">(</span><span class="mi">1000000</span><span class="p">):</span>
     <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>这种情况下我们就不用担心使用大量的资源，但是如果我们像下面这种声明</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">fibon</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">fibon</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
     <span class="n">a</span> <span class="o">=</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
         <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
         <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
     <span class="k">return</span> <span class="n">result</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>在计算大量的输入时，它将用完我们所有的资源。</p>
 
 <p>我们已经讨论过我们只能迭代一次生成器，但是我们没有测试过。 在测试之前，您需要了解Python的另一个内置函数<code class="highlighter-rouge">next()</code>。 它允许我们访问序列的下一个元素。 那么让我们来测试一下我们的想法：</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">generator_function</span><span class="p">():</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">generator_function</span><span class="p">():</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
         <span class="k">yield</span> <span class="n">i</span>
 
@@ -213,22 +221,20 @@
 <span class="c"># Output: Traceback (most recent call last):</span>
 <span class="c">#            File "&lt;stdin&gt;", line 1, in &lt;module&gt;</span>
 <span class="c">#         StopIteration</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>正如我们所看到的， <code class="highlighter-rouge">next()</code>的所有值yielding之后，会导致StopIteration错误。 基本上这个错误告诉我们，所有的值已经yieded了。 你可能想知道为什么使用for循环时不会出现这个错误？ 那么答案很简单。 for循环自动捕获这个错误，然后停止调用<code class="highlighter-rouge">next()</code>。 你知道Python中的一些内置数据类型也支持迭代吗？ 让我们来看看：</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">my_string</span> <span class="o">=</span> <span class="s">"Yasoob"</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">my_string</span> <span class="o">=</span> <span class="s">"Yasoob"</span>
 <span class="nb">next</span><span class="p">(</span><span class="n">my_string</span><span class="p">)</span>
 <span class="c"># Output: Traceback (most recent call last):</span>
 <span class="c">#      File "&lt;stdin&gt;", line 1, in &lt;module&gt;</span>
 <span class="c">#    TypeError: str object is not an iterator</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>这不是我们所期望的。 错误说<code class="highlighter-rouge">str</code>不是一个迭代器。 那是对的！ 它可以迭代，但不是迭代器。 这意味着它支持迭代，但是我们不能直接迭代它。 那么我们将如何迭代呢？ 现在是了解更多内置函数的时候了。 它从一个迭代中返回一个迭代器对象。 虽然<code class="highlighter-rouge">int</code>不是可迭代的，但我们可以在字符串上使用它！</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">int_var</span> <span class="o">=</span> <span class="mi">1779</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">int_var</span> <span class="o">=</span> <span class="mi">1779</span>
 <span class="nb">iter</span><span class="p">(</span><span class="n">int_var</span><span class="p">)</span>
 <span class="c"># Output: Traceback (most recent call last):</span>
 <span class="c">#   File "&lt;stdin&gt;", line 1, in &lt;module&gt;</span>
@@ -239,8 +245,7 @@
 <span class="n">my_iter</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">my_string</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">my_iter</span><span class="p">))</span>
 <span class="c"># Output: 'Y'</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>这样就可以了</p>
 

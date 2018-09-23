@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>算法题目 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2015/03/16/Algorithm_1/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/app/">APP</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/Http/bg.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>算法题目</h1>
+                    
+                    <h2 class="subheading">一些算法题的解法</h2>
+                    
+                    <span class="meta">Posted by Ted on March 16, 2015</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<p>1、实现单例模式</p>
+
+<p>2、数组中的重复数字</p>
+
+<p>3、蛇形矩阵/顺时针矩阵</p>
+
+<p>4、二维数组中的查找</p>
+
+<p>5、替换字符串</p>
+
+<p>6、链表的一些操作</p>
+
+<p>7、反向打印链表</p>
+
+<p>8、树的一些操作</p>
+
+<p>9、重建树</p>
+
+<p>10、用两个栈来实现队列</p>
+
+<h4 id="1实现单例模式">1、实现单例模式</h4>
+
+<p>OC中的单例模式</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">SingleObject</span> <span class="o">*</span><span class="p">)</span><span class="n">sharedSingleton</span><span class="p">{</span>
+    <span class="k">static</span> <span class="n">SingleObject</span> <span class="o">*</span><span class="n">_singleObj</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+    <span class="k">static</span> <span class="n">dispatch_once_t</span> <span class="n">onceToken</span><span class="p">;</span>
+    <span class="n">dispatch_once</span><span class="p">(</span><span class="o">&amp;</span><span class="n">onceToken</span><span class="p">,</span> <span class="o">^</span><span class="p">{</span>
+        <span class="n">_singleObj</span> <span class="o">=</span> <span class="p">[[</span><span class="n">self</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+    <span class="p">});</span>
+    <span class="k">return</span> <span class="n">_singleObj</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="2数组中的重复数字">2、数组中的重复数字</h4>
+
+<blockquote>
+  <p>在长度为n的数组中，所有的元素都是0到n-1的范围内。 数组中的某些数字是重复的，但不知道有几个重复的数字，也不知道重复了几次，请找出任意重复的数字。 例如，输入长度为7的数组{2,3,1,0,2,5,3}，那么对应的输出为2或者3。</p>
+</blockquote>
+
+<p>解(一)：</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* 
+	快排之后，值与位置不对应的就是重复的
+*/</span>
+<span class="kt">int</span> <span class="n">method_2</span><span class="p">(</span><span class="kt">int</span> <span class="n">data</span><span class="p">[],</span><span class="kt">int</span> <span class="n">length</span><span class="p">){</span>
+	<span class="n">quick_sort</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">6</span><span class="p">);</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">length</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">i</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="cm">/* 
+	快排算法
+*/</span>
+<span class="kt">void</span> <span class="n">quick_sort</span><span class="p">(</span><span class="kt">int</span> <span class="n">data</span><span class="p">[],</span><span class="kt">int</span> <span class="n">l</span><span class="p">,</span> <span class="kt">int</span> <span class="n">r</span><span class="p">){</span>
+    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">l</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">r</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">];</span> <span class="c1">//l位置也就是i位置挖空,数值作为分化的标记。i位置现在为空</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">i</span><span class="o">&lt;</span> <span class="n">j</span><span class="p">){</span> <span class="c1">//从i,j两边向中间靠拢，将小于的值放到左边，大于的值放到右边</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">i</span><span class="o">&lt;</span><span class="n">j</span> <span class="o">&amp;&amp;</span> <span class="n">data</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">temp</span><span class="p">){</span> <span class="c1">//从右到左找到第一个小于temp的数</span>
+            <span class="n">j</span><span class="o">--</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="o">&lt;</span><span class="n">j</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">j</span><span class="p">];</span> <span class="c1">//将j位置小于temp的值，填入上一个挖空的i位置，j位置现在为空。</span>
+            <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">while</span><span class="p">(</span><span class="n">i</span><span class="o">&lt;</span><span class="n">j</span> <span class="o">&amp;&amp;</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">temp</span><span class="p">){</span> <span class="c1">//从左往右找到第一个大于x的数 </span>
+            <span class="n">i</span> <span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="o">&lt;</span><span class="n">j</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+            <span class="n">j</span><span class="o">--</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">;</span>
+    <span class="n">quick</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">l</span><span class="p">,</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">quick</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">r</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>解(二):</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* 
+	利用一个Hash表，已有的值在表中标记，重复的值就可以得到了
+*/</span>
+<span class="kt">int</span> <span class="n">method_1</span><span class="p">(</span><span class="kt">int</span> <span class="n">data</span><span class="p">[],</span><span class="kt">int</span> <span class="n">length</span><span class="p">){</span>
+	<span class="kt">int</span> <span class="n">hashMap</span><span class="p">[</span><span class="n">length</span><span class="p">];</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">length</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">{</span>
+    	<span class="n">hashMap</span><span class="p">[</span><span class="n">length</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">length</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">{</span>
+    	<span class="kt">int</span> <span class="n">value</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    	<span class="k">if</span> <span class="p">(</span><span class="n">hashMap</span><span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">){</span>
+    		<span class="n">hashMap</span><span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+    	<span class="p">}</span><span class="k">else</span><span class="p">{</span>
+    		<span class="k">return</span> <span class="n">value</span><span class="p">;</span>
+    	<span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>解(三):</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* 
+以数组{2,3,1,0,2,5,3}为例来分析找到重复数字的步骤。数组的第 0 个数字（从 0 开始计数，和数组的下标保持一致）是 2，与它的下标不相等，于是把它和下标为 2 的数字 1 交换。交换之后的数组是{1.3.2.0.2.5.3}。此时第 0 个数字是 1，仍然与它的下标不相等，继续把它和下标为 1 的数字 3 交换，得到数组{3,1,2,0,2,5,3}.接下来继续交换第 0 个数字 3 和第 3 个数字 0，得到数组{0,1,2,3,2,5,3}。此时第 0 个数字的数值为 0，接着扫描下一个数字。在接下来的几个数字中，下标为 1，2，3 的三个数字分别为 1，2，3 它们的下标和数值都分别相等，因此不需要做任何操作。接下来扫描到下标为 4 的数字 2。由于它的数值与它的下标不相等，再比较它和下标为 2 的数字。注意到此时数组中下标为 2 的数字也是 2，也就是数字在下标为 2 和下标为 4 的两个位置都出现了，因此找到一个重复的数字。
+*/</span>
+<span class="kt">int</span> <span class="n">method_3</span><span class="p">(</span><span class="kt">int</span> <span class="n">data</span><span class="p">[],</span><span class="kt">int</span> <span class="n">length</span><span class="p">){</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">length</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">i</span><span class="p">){</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+            <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+                <span class="kt">int</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+                <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">temp</span><span class="p">];</span>
+                <span class="n">data</span><span class="p">[</span><span class="n">temp</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="3蛇形矩阵顺时针矩阵">3、蛇形矩阵/顺时针矩阵</h4>
+
+<p><img src="/img/Simple_1/25.png" alt="img" /></p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="n">temp</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">,</span><span class="kt">int</span> <span class="n">m</span><span class="p">){</span>
+   	<span class="c1">// 数组初始化</span>
+    <span class="kt">int</span> <span class="n">a</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="n">m</span><span class="p">];</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">m</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">){</span>
+            <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+  	<span class="c1">// 从右上角开始</span>
+    <span class="kt">int</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">temp</span><span class="p">;</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">m</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+    <span class="k">while</span><span class="p">(</span><span class="n">temp</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="o">*</span> <span class="n">m</span> <span class="p">){</span>
+        <span class="c1">// 向下走，一直到m或者下一行已经赋值</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="o">&lt;</span><span class="n">m</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">a</span><span class="p">[</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">y</span><span class="p">]){</span>
+            <span class="n">a</span><span class="p">[</span><span class="o">++</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span><span class="o">=++</span><span class="n">temp</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="c1">// 向左走，一直到0列或者前列已经赋值</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">y</span><span class="o">-</span><span class="mi">1</span><span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">a</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="o">-</span><span class="mi">1</span><span class="p">]){</span>
+            <span class="n">a</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="o">--</span><span class="n">y</span><span class="p">]</span><span class="o">=++</span><span class="n">temp</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="c1">// 向上走，一直走到0行或者上行已经赋值</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="o">&gt;=</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">a</span><span class="p">[</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">y</span><span class="p">]){</span>
+            <span class="n">a</span><span class="p">[</span><span class="o">--</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span><span class="o">=++</span><span class="n">temp</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="c1">// 向右方向，一直走到最右或者右列已经赋值</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">y</span><span class="o">+</span><span class="mi">1</span><span class="o">&lt;</span> <span class="n">m</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">a</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="o">+</span><span class="mi">1</span><span class="p">]){</span>
+            <span class="n">a</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="o">++</span><span class="n">y</span><span class="p">]</span><span class="o">=++</span><span class="n">temp</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 打印</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">m</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span>
+            <span class="n">printf</span><span class="p">(</span><span class="s">"%4d "</span><span class="p">,</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]);</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"</span><span class="se">\n\n</span><span class="s">"</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="4二维数组中的查找">4、二维数组中的查找</h4>
+
+<blockquote>
+  <p>在一个二维数组中，每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。请完成一个函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。</p>
+</blockquote>
+
+<p><img src="/img/Simple_1/26.png" alt="img" /></p>
+
+<p>思路：首先选取数组中右上角的数字。如果该数字等于要查找的数字，查找过程结束；如果该数字大于要查找的数字，剔除这个数字所在的列；如果该数字小于要查找的数字，剔除这个数字所在的行。也就是说如果要查找的数字不在数组的右上角，则每一次都在数组的查找范围中剔除一行或者一列，这样每一步都可以缩小查找的范围，直到找到要查找的数字，或者查找范围为空。</p>
+
+<p>　　例如，我们要在上述的二维数组中查找数字7的步骤如下图所示：</p>
+
+<p><img src="/img/Simple_1/27.jpg" alt="img" /></p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">find</span><span class="p">(</span><span class="kt">int</span> <span class="n">row</span><span class="p">,</span><span class="kt">int</span> <span class="n">col</span><span class="p">,</span><span class="kt">int</span> <span class="n">arr</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">],</span><span class="kt">int</span> <span class="n">num</span><span class="p">){</span>
+    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">col</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">){</span>
+        <span class="kt">int</span> <span class="n">t</span> <span class="o">=</span> <span class="n">arr</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">];</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">t</span> <span class="o">==</span> <span class="n">num</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="p">}</span><span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="n">num</span><span class="p">){</span>  <span class="c1">//选择下一列</span>
+            <span class="n">j</span><span class="o">--</span><span class="p">;</span> 
+        <span class="p">}</span><span class="k">else</span><span class="p">{</span> <span class="c1">// 在这一行往下找</span>
+            <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="5替换字符串">5、替换字符串</h4>
+
+<p>题目：请实现一个函数，把字符串中的每个空格替换成”%20”，例如“We are happy.”，则输出“We%20are%20happy.”</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/*  请实现一个函数，把字符串中的每个空格替换成"%20"，例如“We are happy.”，则输出“We%20are%20happy” */</span>
+
+<span class="cp">#include &lt;stdio.h&gt;
+#include&lt;string.h&gt;
+</span>
+<span class="kt">void</span> <span class="n">replace</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">ori</span><span class="p">,</span><span class="kt">char</span> <span class="o">*</span><span class="n">des</span><span class="p">){</span>
+    <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">ori</span><span class="p">);</span>
+    <span class="kt">int</span> <span class="n">temp</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">len</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">ori</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="sc">' '</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">temp</span> <span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">len</span><span class="p">);</span>
+    <span class="kt">char</span> <span class="n">tar</span><span class="p">[</span><span class="n">len</span><span class="o">+</span><span class="n">temp</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">len</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">ori</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="sc">' '</span><span class="p">){</span>
+            <span class="n">tar</span><span class="p">[</span><span class="n">temp</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'%'</span><span class="p">;</span>
+            <span class="n">tar</span><span class="p">[</span><span class="n">temp</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'2'</span><span class="p">;</span>
+            <span class="n">tar</span><span class="p">[</span><span class="n">temp</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'0'</span><span class="p">;</span>
+            <span class="n">temp</span> <span class="o">+=</span> <span class="mi">3</span><span class="p">;</span>
+        <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+            <span class="n">tar</span><span class="p">[</span><span class="n">temp</span><span class="p">]</span> <span class="o">=</span> <span class="n">ori</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+            <span class="n">temp</span> <span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">tar</span><span class="p">[</span><span class="n">temp</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'\0'</span><span class="p">;</span>
+    <span class="n">stpcpy</span><span class="p">(</span><span class="n">des</span><span class="p">,</span><span class="n">tar</span><span class="p">);</span>
+<span class="p">}</span>
+
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">des</span><span class="p">;</span>
+    <span class="n">replace</span><span class="p">(</span><span class="s">"We are happy."</span><span class="p">,</span><span class="n">des</span><span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">des</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+
+</code></pre></div></div>
+
+<h4 id="6链表的一些操作">6、链表的一些操作</h4>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="c1">//链表节点定义</span>
+<span class="k">struct</span> <span class="n">ListNode</span>
+<span class="p">{</span>
+    <span class="kt">int</span>        <span class="n">value</span><span class="p">;</span>
+    <span class="n">ListNode</span><span class="o">*</span>  <span class="n">next</span><span class="p">;</span>
+<span class="p">};</span>
+
+
+<span class="c1">//创建链表节点</span>
+<span class="n">ListNode</span><span class="o">*</span> <span class="nf">CreateListNode</span><span class="p">(</span><span class="kt">int</span> <span class="n">value</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">ListNode</span><span class="o">*</span> <span class="n">pNode</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="p">();</span>
+    <span class="n">pNode</span><span class="o">-&gt;</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
+    <span class="n">pNode</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="n">pNode</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// 链接链表节点</span>
+<span class="kt">void</span> <span class="nf">ConnectListNodes</span><span class="p">(</span><span class="n">ListNode</span><span class="o">*</span> <span class="n">pCurrent</span><span class="p">,</span> <span class="n">ListNode</span><span class="o">*</span> <span class="n">next</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">pCurrent</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Error to connect two nodes."</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">pCurrent</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">next</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">//打印链表</span>
+<span class="kt">void</span> <span class="nf">PrintList</span><span class="p">(</span><span class="n">ListNode</span><span class="o">*</span> <span class="n">pHead</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"PrintList start:"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="n">ListNode</span><span class="o">*</span> <span class="n">pNode</span> <span class="o">=</span> <span class="n">pHead</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">pNode</span><span class="o">!=</span><span class="nb">NULL</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">pNode</span><span class="o">-&gt;</span><span class="n">value</span> <span class="o">&lt;&lt;</span> <span class="s">"   "</span><span class="p">;</span>
+        <span class="n">pNode</span> <span class="o">=</span> <span class="n">pNode</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="s">"PrintList end."</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="7反向打印链表">7、反向打印链表</h4>
+
+<p>题目：输入一个链表的头结点，从尾到头反过来打印出每个结点的值。</p>
+
+<blockquote>
+  <p>解法一</p>
+</blockquote>
+
+<p>利用栈先进后出的特点</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stack&gt;
+</span>
+<span class="kt">void</span> <span class="n">reverse_List</span><span class="p">(</span><span class="n">ListNode</span> <span class="o">*</span><span class="n">head</span><span class="p">){</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">stack</span><span class="o">&lt;</span><span class="n">ListNode</span><span class="o">*&gt;</span> <span class="n">nodeStack</span><span class="p">;</span>
+    <span class="n">ListNode</span> <span class="o">*</span><span class="n">pnode</span> <span class="o">=</span> <span class="n">head</span><span class="p">;</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">pnode</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">){</span>
+        <span class="n">nodeStack</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">pnode</span><span class="p">);</span>
+        <span class="n">pnode</span> <span class="o">=</span> <span class="n">pnode</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+    <span class="p">}</span>
+
+
+    <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">nodeStack</span><span class="p">.</span><span class="n">empty</span><span class="p">()){</span>
+        <span class="n">ListNode</span> <span class="o">*</span><span class="n">top</span> <span class="o">=</span> <span class="n">nodeStack</span><span class="p">.</span><span class="n">top</span><span class="p">();</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">top</span><span class="o">-&gt;</span><span class="n">value</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+        <span class="n">nodeStack</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>解法二</p>
+</blockquote>
+
+<p>利用递归：代码简洁，但是当链表非常长的时候，就会导致函数递归很深，从而有可能导致函数调用栈溢出。</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">reverse_List</span><span class="p">(</span><span class="n">ListNode</span> <span class="o">*</span><span class="n">pHead</span><span class="p">){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">pHead</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">pHead</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">reverse_List</span><span class="p">(</span><span class="n">pHead</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">pHead</span><span class="o">-&gt;</span><span class="n">value</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="8树的一些操作">8、树的一些操作</h4>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+
+<span class="c1">//树结点结构体</span>
+<span class="k">struct</span> <span class="n">BinaryTreeNode</span>
+<span class="p">{</span>
+    <span class="kt">int</span>                    <span class="n">nValue</span><span class="p">;</span>
+    <span class="n">BinaryTreeNode</span><span class="o">*</span>        <span class="n">pLeft</span><span class="p">;</span>
+    <span class="n">BinaryTreeNode</span><span class="o">*</span>        <span class="n">pRight</span><span class="p">;</span>
+<span class="p">};</span>
+
+
+<span class="c1">//打印树结点</span>
+<span class="kt">void</span> <span class="nf">PrintTreeNode</span><span class="p">(</span><span class="n">BinaryTreeNode</span> <span class="o">*</span><span class="n">pNode</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">pNode</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+        
+        <span class="c1">// 先序遍历</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"value of this node is : %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">pNode</span><span class="o">-&gt;</span><span class="n">nValue</span><span class="p">);</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">pNode</span><span class="o">-&gt;</span><span class="n">pLeft</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+            <span class="n">printf</span><span class="p">(</span><span class="s">"value of its left child is: %d.</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">pNode</span><span class="o">-&gt;</span><span class="n">pLeft</span><span class="o">-&gt;</span><span class="n">nValue</span><span class="p">);</span>
+        <span class="k">else</span>
+            <span class="n">printf</span><span class="p">(</span><span class="s">"left child is null.</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+
+        <span class="c1">// 中序遍历</span>
+        <span class="c1">// printf("value of this node is : %d\n", pNode-&gt;nValue);</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">pNode</span><span class="o">-&gt;</span><span class="n">pRight</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+            <span class="n">printf</span><span class="p">(</span><span class="s">"value of its right childe is : %d.</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">pNode</span><span class="o">-&gt;</span><span class="n">pRight</span><span class="o">-&gt;</span><span class="n">nValue</span><span class="p">);</span>
+        <span class="k">else</span>
+            <span class="n">printf</span><span class="p">(</span><span class="s">"right child is null.</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+
+        <span class="c1">// 后序遍历</span>
+        <span class="c1">// printf("value of this node is : %d\n", pNode-&gt;nValue);</span>
+        
+    <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"this node is null.</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// 打印树</span>
+<span class="kt">void</span> <span class="nf">PrintTree</span><span class="p">(</span><span class="n">BinaryTreeNode</span> <span class="o">*</span><span class="n">pRoot</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">PrintTreeNode</span><span class="p">(</span><span class="n">pRoot</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">pRoot</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">pRoot</span><span class="o">-&gt;</span><span class="n">pLeft</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+            <span class="n">PrintTree</span><span class="p">(</span><span class="n">pRoot</span><span class="o">-&gt;</span><span class="n">pLeft</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">pRoot</span><span class="o">-&gt;</span><span class="n">pRight</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+            <span class="n">PrintTree</span><span class="p">(</span><span class="n">pRoot</span><span class="o">-&gt;</span><span class="n">pRight</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="9重建树">9、重建树</h4>
+
+<p>题目：输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。例如输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}，则重建二叉树并返回。</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// startPreorder 前序遍历的第一个节点  </span>
+<span class="c1">// endPreorder   前序遍历的最后后一个节点  </span>
+<span class="c1">// startInorder  中序遍历的第一个节点  </span>
+<span class="c1">// startInorder  中序遍历的最后一个节点  </span>
+
+<span class="n">BinaryTreeNode</span><span class="o">*</span> <span class="nf">ConstructCore</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span> <span class="n">startPreorder</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">endPreorder</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">startInorder</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">endInorder</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// 先生成根结点</span>
+    <span class="kt">int</span> <span class="n">rootValue</span> <span class="o">=</span> <span class="n">startPreorder</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="n">BinaryTreeNode</span> <span class="o">*</span><span class="n">root</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BinaryTreeNode</span><span class="p">();</span>
+    <span class="n">root</span><span class="o">-&gt;</span><span class="n">nValue</span> <span class="o">=</span> <span class="n">rootValue</span><span class="p">;</span>
+    <span class="n">root</span><span class="o">-&gt;</span><span class="n">pLeft</span> <span class="o">=</span> <span class="n">root</span><span class="o">-&gt;</span><span class="n">pRight</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+
+    <span class="c1">// 只有一个结点</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">startPreorder</span> <span class="o">==</span> <span class="n">endPreorder</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">startInorder</span> <span class="o">==</span> <span class="n">endInorder</span> <span class="o">&amp;&amp;</span> <span class="o">*</span><span class="n">startPreorder</span> <span class="o">==</span> <span class="o">*</span><span class="n">startInorder</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">root</span><span class="p">;</span>
+        <span class="k">else</span>
+            <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">exception</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 在中序遍历中找到根结点的值  </span>
+    <span class="kt">int</span> <span class="o">*</span><span class="n">rootInorder</span> <span class="o">=</span> <span class="n">startInorder</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">rootInorder</span> <span class="o">&lt;=</span> <span class="n">endInorder</span> <span class="o">&amp;&amp;</span> <span class="o">*</span><span class="n">rootInorder</span> <span class="o">!=</span> <span class="n">rootValue</span><span class="p">)</span>
+        <span class="o">++</span><span class="n">rootInorder</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">rootInorder</span> <span class="o">==</span> <span class="n">endInorder</span> <span class="o">&amp;&amp;</span> <span class="o">*</span><span class="n">rootInorder</span> <span class="o">!=</span> <span class="n">rootValue</span><span class="p">)</span>
+        <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">exception</span><span class="p">();</span>
+
+
+    <span class="kt">int</span> <span class="n">leftLength</span> <span class="o">=</span> <span class="n">rootInorder</span> <span class="o">-</span> <span class="n">startInorder</span><span class="p">;</span>    <span class="c1">//中序序列的左子树序列长度</span>
+    <span class="kt">int</span> <span class="o">*</span><span class="n">leftPreorderEnd</span> <span class="o">=</span> <span class="n">startPreorder</span> <span class="o">+</span> <span class="n">leftLength</span><span class="p">;</span>    <span class="c1">//左子树前序序列的最后一个结点</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">leftLength</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 构建左子树</span>
+        <span class="n">root</span><span class="o">-&gt;</span><span class="n">pLeft</span> <span class="o">=</span> <span class="n">ConstructCore</span><span class="p">(</span><span class="n">startPreorder</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">leftPreorderEnd</span><span class="p">,</span> <span class="n">startInorder</span><span class="p">,</span> <span class="n">rootInorder</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">leftLength</span> <span class="o">&lt;</span> <span class="n">endPreorder</span> <span class="o">-</span> <span class="n">startPreorder</span><span class="p">){</span> <span class="c1">//构建右子树</span>
+        <span class="n">root</span><span class="o">-&gt;</span><span class="n">pRight</span> <span class="o">=</span> <span class="n">ConstructCore</span><span class="p">(</span><span class="n">leftPreorderEnd</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">endPreorder</span><span class="p">,</span> <span class="n">rootInorder</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">endInorder</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">root</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">BinaryTreeNode</span> <span class="o">*</span><span class="nf">Construct</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">preorder</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">inorder</span><span class="p">,</span> <span class="kt">int</span> <span class="n">length</span><span class="p">)</span><span class="c1">//输入前序序列，中序序列和序列长度</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">preorder</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="o">||</span> <span class="n">inorder</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="o">||</span> <span class="n">length</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">ConstructCore</span><span class="p">(</span><span class="n">preorder</span><span class="p">,</span> <span class="n">preorder</span> <span class="o">+</span> <span class="n">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">inorder</span><span class="p">,</span> <span class="n">inorder</span> <span class="o">+</span> <span class="n">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+
+
+<span class="c1">// 普通二叉树  </span>
+<span class="c1">//              1  </span>
+<span class="c1">//           /     \  </span>
+<span class="c1">//          2       3    </span>
+<span class="c1">//         /       / \  </span>
+<span class="c1">//        4       5   6  </span>
+<span class="c1">//         \         /  </span>
+<span class="c1">//          7       8</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">const</span> <span class="kt">int</span> <span class="n">length</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">preorder</span><span class="p">[</span><span class="n">length</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span> <span class="p">};</span>
+    <span class="kt">int</span> <span class="n">inorder</span><span class="p">[</span><span class="n">length</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">6</span> <span class="p">};</span>
+
+    <span class="n">BinaryTreeNode</span> <span class="o">*</span><span class="n">root</span> <span class="o">=</span> <span class="n">Construct</span><span class="p">(</span><span class="n">preorder</span><span class="p">,</span> <span class="n">inorder</span><span class="p">,</span> <span class="n">length</span><span class="p">);</span>
+    <span class="n">PrintTree</span><span class="p">(</span><span class="n">root</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="10用两个栈来实现队列">10、用两个栈来实现队列</h4>
+
+<p>题目：只能使用栈的pop(),top()和push()，以及测试栈是否为空empty()四个操作. 来实现队列的empty(), push(),pop(),back(),front()等操作。</p>
+
+<p><img src="/img/Simple_1/28.jpeg" alt="img" /></p>
+
+<p>思路：所有值放到栈一中，栈二作为临时过渡。</p>
+
+<p>栈一的push()对应队列的push(),top()对应队列的back(),empty()对应empty()</p>
+
+<p>将栈一的值放入到栈二中，正好可以将顺序对调，所以此时栈二的pop()对应队列的pop()，栈二的top()对应队列的front()</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+#include &lt;stack&gt;
+</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">MyQueue</span>
+<span class="p">{</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">stack</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">head</span><span class="p">;</span>
+    <span class="n">stack</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">tail</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">bool</span> <span class="n">empty</span><span class="p">()</span><span class="k">const</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">head</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span><span class="o">&amp;&amp;</span><span class="n">tail</span><span class="p">.</span><span class="n">empty</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="n">push</span><span class="p">(</span><span class="n">T</span> <span class="n">t</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">head</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">t</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">//删除对头元素</span>
+    <span class="c1">//因为queue是一种先进先出，而stack是先进后出，所以需要把head里的数据拷贝到tail中然后再从tail中pop头元素</span>
+    <span class="kt">void</span> <span class="n">pop</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">empty</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="c1">//throw exception("队列为NULL");</span>
+        <span class="p">}</span>
+        <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">head</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="n">tail</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">head</span><span class="p">.</span><span class="n">top</span><span class="p">());</span>
+            <span class="n">head</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="c1">//删除头元素</span>
+        <span class="n">tail</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+
+        <span class="c1">//再将队尾栈容器元素拷贝到队头栈容器中</span>
+        <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">tail</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="n">head</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">tail</span><span class="p">.</span><span class="n">top</span><span class="p">());</span>
+            <span class="n">tail</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="n">T</span><span class="o">&amp;</span> <span class="n">back</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">empty</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="c1">// throw exception("head is NULL");</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">head</span><span class="p">.</span><span class="n">top</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="c1">//返回第一个元素</span>
+    <span class="n">T</span><span class="o">&amp;</span> <span class="n">front</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">empty</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="c1">//throw exception("队列为NULL");</span>
+        <span class="p">}</span>
+        <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">head</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="n">tail</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">head</span><span class="p">.</span><span class="n">top</span><span class="p">());</span>
+            <span class="n">head</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="kt">int</span> <span class="n">tmp</span> <span class="o">=</span>  <span class="n">tail</span><span class="p">.</span><span class="n">top</span><span class="p">();</span>
+
+        <span class="c1">//再将队尾栈容器元素拷贝到队头栈容器中</span>
+        <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">tail</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="n">head</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">tail</span><span class="p">.</span><span class="n">top</span><span class="p">());</span>
+            <span class="n">tail</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">tmp</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">MyQueue</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">q</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">5</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">q</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">"front:"</span><span class="o">&lt;&lt;</span><span class="n">q</span><span class="p">.</span><span class="n">front</span><span class="p">()</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+    <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">"back:"</span><span class="o">&lt;&lt;</span><span class="n">q</span><span class="p">.</span><span class="n">back</span><span class="p">()</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/%E5%9F%BA%E7%A1%80/2015/02/01/data-3/" data-toggle="tooltip" data-placement="top" title="数据结构与算法(三):排序算法">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/%E5%9F%BA%E7%A1%80/2015/03/16/Algorithm_2/" data-toggle="tooltip" data-placement="top" title="算法题目（二）">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>虚幻引擎(UnReal Engine)环境 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/06/21/unrealengine/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/app/">APP</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>虚幻引擎(UnReal Engine)环境</h1>
+                    
+                    <h2 class="subheading">虚幻引擎搭建配置环境,iOS的一些配置</h2>
+                    
+                    <span class="meta">Posted by Ted on June 21, 2018</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h4 id="一下载安装运行epic-game-launcher">一、下载安装运行Epic Game Launcher</h4>
+
+<p>1、虚幻引擎的中文文档：<a href="http://api.unrealengine.com/CHN/index.html">文档地址</a></p>
+
+<p>2、注册并且下载<a href="https://www.unrealengine.com/zh-CN/download"><strong>Epic Game Launcher</strong></a></p>
+
+<p>3、安装后登陆到主界面</p>
+
+<p><img src="/img/Simple_8/17.png" alt="img" /></p>
+
+<p>其中</p>
+
+<p><strong>ENGINE VERSIONS</strong>是引擎版本，点击+进行安装，会默认安装最新版本，</p>
+
+<p>注意：</p>
+
+<ul>
+  <li>最新版本当前系统不一定能够跑起来，比如最新版本是4.20.0，我在masOS 10.13.4上就不能跑起来，我安装的是4.19.2。</li>
+  <li>引擎版本号要与后面下载的源码版本一一对应</li>
+</ul>
+
+<p><strong>MY PROJECTS</strong>就是你的项目了</p>
+
+<h4 id="二下载源码">二、下载源码</h4>
+
+<p>1、前往<a href="https://www.unrealengine.com/account/connected">关联账户网站</a>将github账户关联到UE4的账户中，这样才能下载源码</p>
+
+<p><img src="/img/Simple_8/16.png" alt="img" /></p>
+
+<p>2、前往<a href="https://github.com/EpicGames/UnrealEngine/releases">UnrealEngine Github库</a>下载源码，注意要选择与引擎版本号一致的源码</p>
+
+<p><img src="/img/Simple_8/18.png" alt="img" /></p>
+
+<p>3、解压后按照步骤运行命令来初始化代码</p>
+
+<p><img src="/img/Simple_8/19.png" alt="img" /></p>
+
+<p>4、打开<strong>UE4.xcworkspace</strong>，target先选择<strong>ShaderCompileWorker</strong>进行<strong>build</strong>，成功之后再将target切换成UE4，再次<strong>build</strong>，这次会花费大概半个小时。</p>
+
+<h4 id="三unreal-editor">三、UnReal Editor</h4>
+
+<p>项目要通过UnReal Editor来新建，打开UnReal Editor有两种方式</p>
+
+<ul>
+  <li>UE4–&gt;Run</li>
+  <li>通过Epic Game Launcher启动，这种方式会比较快</li>
+</ul>
+
+<p><img src="/img/Simple_8/20.png" alt="img" /></p>
+
+<p>新建项目有两种方式：蓝图和C++，分别对应的就是视图操作和代码。选择移动端项目，新建一个工程</p>
+
+<p><img src="/img/Simple_8/21.png" alt="img" /></p>
+
+<p>c++代码在source文件夹里。</p>
+
+<h4 id="四ios配置">四、iOS配置</h4>
+
+<blockquote>
+  <p>编辑–&gt;项目设置–&gt;平台–&gt;iOS</p>
+</blockquote>
+
+<p>1、证书配置</p>
+
+<p>UE4项目只能在真机上跑，所以必须配置证书</p>
+
+<ul>
+  <li>
+    <p>自动配置：首先在苹果开发者账号里找到你的Team ID，然后将Team ID填入并且将Automatic Signing勾选上</p>
+
+    <p><img src="/img/Simple_8/28.png" alt="img" /></p>
+
+    <p><img src="/img/Simple_8/29.png" alt="img" /></p>
+  </li>
+  <li>
+    <p>手动配置：在”导入服务条款”导入.mobileprovision文件，在“导入证书”导入.cer文件。</p>
+  </li>
+</ul>
+
+<p><img src="/img/Simple_8/22.png" alt="img" /></p>
+
+<p>证书配置好后，在启动里选择对应的设备就可以启动了</p>
+
+<p><img src="/img/Simple_8/23.png" alt="img" /></p>
+
+<p>2、info.plist文件配置</p>
+
+<p>在<strong>Extra Plist Data</strong>填入info.plist里的信息，以xml格式，比如要添加访问相册权限以及iOS9之后HTTP访问权限，则如下</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;key&gt;NSPhotoLibraryUsageDescription&lt;/key&gt;
+&lt;string&gt;App需要您的同意,才能访问相册&lt;/string&gt;
+&lt;key&gt;NSAppTransportSecurity&lt;/key&gt;
+&lt;dict&gt;
+	&lt;key&gt;NSAllowsArbitraryLoads&lt;/key&gt;
+	&lt;true/&gt;
+&lt;/dict&gt;
+</code></pre></div></div>
+
+<p><img src="/img/Simple_8/24.png" alt="img" /></p>
+
+<p>3、添加第三方framwork</p>
+
+<p>将framwork文件打包成zip文件，放到source文件夹下的ThirdParty文件夹里</p>
+
+<p><img src="/img/Simple_8/25.png" alt="img" /></p>
+
+<p>在source/项目/项目.Build.cs里添加如下内容</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        if (Target.Platform == UnrealTargetPlatform.IOS)
+        {
+            PublicAdditionalFrameworks.Add(
+                new UEBuildFramework(
+                    "WEGameHelperSDK",
+                    "../ThirdParty/MySDK.zip"
+                                    )
+            );
+        }
+</code></pre></div></div>
+
+<p><img src="/img/Simple_8/26.png" alt="img" /></p>
+
+<p>注意：每次更新framwork，要在文件—&gt;刷新Xcode项目</p>
+
+<p><img src="/img/Simple_8/27.png" alt="img" /></p>
+
+<h4 id="五项目调试">五、项目调试</h4>
+
+<p>在通过UnReal Editor启动项目时，会有一个日志输出显示来展示部署到iOS设备上的日志，但是运行之后的日志确获取不到</p>
+
+<p><img src="/img/Simple_8/30.png" alt="img" /></p>
+
+<p>如果我们要像正常调试iOS项目那样，则在Intermediate/ProjectFilesIOS/文件夹下有生成的项目的xcodeproj文件，打开</p>
+
+<p><img src="/img/Simple_8/31.png" alt="img" /></p>
+
+<p><img src="/img/Simple_8/32.png" alt="img" /></p>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/%E5%B7%A5%E5%85%B7/2018/06/21/appstore/" data-toggle="tooltip" data-placement="top" title="iOS APP分发">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/%E5%B7%A5%E5%85%B7/2018/08/07/MixCppObjeciveC/" data-toggle="tooltip" data-placement="top" title="C++与Objective-C混编">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

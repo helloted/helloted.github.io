@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>位运算 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2015/10/13/bit/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/app/">APP</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/Http/bg.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>位运算</h1>
+                    
+                    <h2 class="subheading">位运算符和移位</h2>
+                    
+                    <span class="meta">Posted by Ted on October 13, 2015</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h3 id="一位运算符">一、位运算符</h3>
+
+<h4 id="位取反not">位取反（NOT）<code class="highlighter-rouge">~</code></h4>
+
+<p><strong>取反</strong>是一元运算符，对一个二进制数的每一位执行逻辑反操作。使数字1成为0，0成为1。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NOT 0111（十进制7）
+  = 1000（十进制8）
+</code></pre></div></div>
+
+<p>值得注意的是此操作符与”逻辑非（!）”操作符不同</p>
+
+<h4 id="按位或or">按位或（OR）<code class="highlighter-rouge">|</code></h4>
+
+<p><strong>按位或</strong>处理两个长度相同的二进制数，两个相应的二进位中只要有一个为1，该位的结果值为1。例如</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        0101（十进制5）
+     OR 0011（十进制3）
+      = 0111（十进制7）
+</code></pre></div></div>
+
+<table>
+  <tbody>
+    <tr>
+      <td>这一操作符需要与逻辑或运算符（</td>
+      <td> </td>
+      <td>）区别开来</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="按位与and">按位与（AND）<code class="highlighter-rouge">&amp;</code></h3>
+
+<p>按位与处理两个长度相同的二进制数，两个相应的二进位都为1，该位的结果值才为1，否则为0。例如：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>         0101
+     AND 0011
+       = 0001
+</code></pre></div></div>
+
+<h3 id="按位异或xor">按位异或（XOR）<code class="highlighter-rouge">^</code></h3>
+
+<p><strong>按位异或</strong>运算，对等长二进制模式按位或二进制数的每一位执行逻辑异按位或操作。操作的结果是如果某位不同则该位为1，否则该位为0。例如</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>     	 0101
+     XOR 0011
+       = 0110
+</code></pre></div></div>
+
+<h3 id="二移位">二、移位</h3>
+
+<p><strong>移位</strong>是一个二元运算符，用来将一个二进制数中的每一位全部都向一个方向移动指定位，溢出的部分将被舍弃，而空缺的部分填入一定的值。在类C语言中，左移使用两个小于符号”«“表示，右移使用两个大于符号”»“表示。</p>
+
+<h4 id="逻辑移位">逻辑移位</h4>
+
+<p>应用逻辑移位时，移位后空缺的部分全部填0。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>       0001（十进制1）
+ &lt;&lt;       3（左移3位）
+     = 1000（十进制8）
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>       1010（十进制10）
+ &gt;&gt;       2（右移2位）
+	 = 0010（十进制2）
+</code></pre></div></div>
+
+<h4 id="算术移位">算术移位</h4>
+
+<p>算术移位要保证符号位的不改变（逻辑左移位补0,   逻辑右移位看符号位），算术移位和逻辑移位最大的区别，是算术移位在右移时不改变原来的数的符号而逻辑移位在右移时有可能改变原来的数的符号</p>
+
+<p><img src="/img/Simple_1/32.png" alt="img" /></p>
+
+<p><img src="/img/Simple_1/33.png" alt="img" /></p>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/%E5%9F%BA%E7%A1%80/2015/10/11/TCP/" data-toggle="tooltip" data-placement="top" title="深入理解TCP">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/ios/2016/03/01/runtimedoc/" data-toggle="tooltip" data-placement="top" title="Objective-C Runtime编程指南(1)">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

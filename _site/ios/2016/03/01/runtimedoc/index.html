@@ -75,13 +75,25 @@
                 
 				
                 <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
                     <a href="/about/">About</a>
                 </li>
 				
                 
 				
                 <li>
-                    <a href="/contact/">Contact</a>
+                    <a href="/app/">APP</a>
                 </li>
 				
                 
@@ -156,21 +168,18 @@
 
 <p>编译器会将一个下面的一个消息表达式</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="p">[</span><span class="n">receiver</span> <span class="nf">message</span><span class="p">]</span>
-</code></pre>
-</div>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="n">receiver</span> <span class="nf">message</span><span class="p">]</span>
+</code></pre></div></div>
 
 <p>转变成一个消息函数 <code class="highlighter-rouge">objc_msgSend</code>，这个函数将接收者和消息中提到的方法的名称（即方法selector）作为其两个主要参数：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>objc_msgSend(receiver, selector)
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>objc_msgSend(receiver, selector)
+</code></pre></div></div>
 
 <p>消息中传递的其他参数也在 <code class="highlighter-rouge">objc_msgSend</code>被处理</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>objc_msgSend(receiver, selector, arg1, arg2, ...)
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>objc_msgSend(receiver, selector, arg1, arg2, ...)
+</code></pre></div></div>
 
 <p>消息功能可以完成动态绑定所需的一切：</p>
 
@@ -212,7 +221,7 @@
 
 <p>虽然这些参数没有明确的声明，但源代码仍然可以引用它们（就像它可以引用接收对象的实例变量一样）。 一个方法将接收对象称为self，并将其作为<code class="highlighter-rouge">_cmd</code>自己的选择器。 在下面的例子中，<code class="highlighter-rouge">_cmd</code>指向<code class="highlighter-rouge">strange</code>方法的选择器，而自己指向接收<code class="highlighter-rouge">strange</code>消息的对象。</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="o">-</span> <span class="n">strange</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="o">-</span> <span class="n">strange</span>
 <span class="p">{</span>
     <span class="n">id</span>  <span class="n">target</span> <span class="o">=</span> <span class="n">getTheReceiver</span><span class="p">();</span>
     <span class="n">SEL</span> <span class="n">method</span> <span class="o">=</span> <span class="n">getTheMethod</span><span class="p">();</span>
@@ -221,8 +230,7 @@
         <span class="k">return</span> <span class="nb">nil</span><span class="p">;</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">target</span> <span class="nf">performSelector</span><span class="p">:</span><span class="n">method</span><span class="p">];</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="获取方法地址">获取方法地址</h4>
 
@@ -232,15 +240,14 @@
 
 <p>下面的例子展示了如何调用实现setFilled：方法的过程：</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">setter</span><span class="p">)(</span><span class="n">id</span><span class="p">,</span> <span class="n">SEL</span><span class="p">,</span> <span class="n">BOOL</span><span class="p">);</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">setter</span><span class="p">)(</span><span class="n">id</span><span class="p">,</span> <span class="n">SEL</span><span class="p">,</span> <span class="n">BOOL</span><span class="p">);</span>
 <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
  
 <span class="n">setter</span> <span class="o">=</span> <span class="p">(</span><span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="p">)(</span><span class="n">id</span><span class="p">,</span> <span class="n">SEL</span><span class="p">,</span> <span class="n">BOOL</span><span class="p">))[</span><span class="n">target</span>
     <span class="nf">methodForSelector</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nf">setFilled</span><span class="p">:)];</span>
 <span class="k">for</span> <span class="p">(</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">1000</span> <span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
     <span class="n">setter</span><span class="p">(</span><span class="n">targetList</span><span class="p">[</span><span class="nf">i</span><span class="p">],</span> <span class="k">@selector</span><span class="p">(</span><span class="n">setFilled</span><span class="o">:</span><span class="p">),</span> <span class="nb">YES</span><span class="p">);</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>传递给procedure的前两个参数是接收对象（self）和方法选择器（_cmd）。 这些参数在方法语法中是隐藏的，但当方法被调用为函数时必须明确。</p>
 
@@ -254,9 +261,8 @@
 
 <p>在某些情况下，您可能想要动态地提供方法的实现。 例如，Objective-C声明的属性功能包含@dynamic指令：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>@dynamic propertyName;
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@dynamic propertyName;
+</code></pre></div></div>
 
 <p>它告诉编译器与属性相关的方法将被动态地提供。</p>
 
@@ -264,15 +270,14 @@
 
 <p>Objective-C方法只是一个C函数，它至少需要两个参数<code class="highlighter-rouge">self</code>和<code class="highlighter-rouge">_cmd</code>。 您可以使用函数<code class="highlighter-rouge">class_addMethod</code>将函数添加到类中。 因此，给出以下功能：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>void dynamicMethodIMP(id self, SEL _cmd) {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void dynamicMethodIMP(id self, SEL _cmd) {
     // implementation ....
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>你可以动态地将它以一个方法的形式添加到一个类中 (调用 <code class="highlighter-rouge">resolveThisMethodDynamically</code>) 用<code class="highlighter-rouge">resolveInstanceMethod:</code></p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">@implementation</span> <span class="nc">MyClass</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@implementation</span> <span class="nc">MyClass</span>
 <span class="k">+</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">resolveInstanceMethod</span><span class="p">:(</span><span class="n">SEL</span><span class="p">)</span><span class="nv">aSEL</span>
 <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">aSEL</span> <span class="o">==</span> <span class="k">@selector</span><span class="p">(</span><span class="n">resolveThisMethodDynamically</span><span class="p">))</span> <span class="p">{</span>
@@ -282,8 +287,7 @@
     <span class="k">return</span> <span class="p">[</span><span class="n">super</span> <span class="nf">resolveInstanceMethod</span><span class="p">:</span><span class="n">aSEL</span><span class="p">];</span>
 <span class="p">}</span>
 <span class="k">@end</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>转发方法（如消息转发中所述）和动态方法解决方案在很大程度上是正交的。 一个类有机会在转发机制启动之前动态地解析一个方法。如果调用了<code class="highlighter-rouge">respondsToSelector：</code>或<code class="highlighter-rouge">instancesRespondToSelector：</code>，那么动态方法解析器就有机会为选择器提供一个IMP。 如果您实现<code class="highlighter-rouge">resolveInstanceMethod：</code>但希望特定的选择器实际上通过转发机制转发，则您为这些选择器返回NO。</p>
 
@@ -309,14 +313,13 @@
 
 <p>即使你的类不能继承<code class="highlighter-rouge">negotiate</code>方法，你仍然可以通过实现一个简单地将消息传递给另一个类的实例的方法来“借”它：</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">negotiate</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">negotiate</span>
 <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span> <span class="p">[</span><span class="n">someOtherObject</span> <span class="nf">respondsTo</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="n">negotiate</span><span class="p">)]</span> <span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">someOtherObject</span> <span class="nf">negotiate</span><span class="p">];</span>
     <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>这种做事的方式可能会有点麻烦，特别是如果有一些信息，你希望你的对象传递给另一个对象。 你必须实施一种方法来涵盖你想从其他类借用的每种方法。 而且，在你编写代码的时候，你不可能处理你不知道的情况，你可能想要转发的全部消息。 该集合可能取决于运行时的事件，并且可能会随着新的方法和类的实现而改变。</p>
 
@@ -331,7 +334,7 @@
 
 <p>消息可以使用<code class="highlighter-rouge">invokeWithTarget：</code>方法发送：</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">forwardInvocation</span><span class="p">:(</span><span class="n">NSInvocation</span> <span class="o">*</span><span class="p">)</span><span class="nv">anInvocation</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">forwardInvocation</span><span class="p">:(</span><span class="n">NSInvocation</span> <span class="o">*</span><span class="p">)</span><span class="nv">anInvocation</span>
 <span class="p">{</span>
     <span class="k">if</span> <span class="p">([</span><span class="n">someOtherObject</span> <span class="nf">respondsToSelector</span><span class="p">:</span>
             <span class="p">[</span><span class="n">anInvocation</span> <span class="nf">selector</span><span class="p">]])</span>
@@ -339,8 +342,7 @@
     <span class="k">else</span>
         <span class="p">[</span><span class="n">super</span> <span class="nf">forwardInvocation</span><span class="p">:</span><span class="n">anInvocation</span><span class="p">];</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>被转发的消息的返回值将返回给原始发送者。 可以将所有类型的返回值传递给发送者，包括id，结构和双精度浮点数。</p>
 
@@ -374,16 +376,15 @@
 
 <p>虽然转发模仿继承，NSObject类永远不会混淆两者。 像respondsToSelector：和isKindOfClass这样的方法：只能查看继承层次结构，而不能查看转发链。 例如，如果询问Warrior对象是否响应<code class="highlighter-rouge">negotiate</code>消息:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>if ( [aWarrior respondsToSelector:@selector(negotiate)] )
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if ( [aWarrior respondsToSelector:@selector(negotiate)] )
     ...
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>答案是NO，尽管它可以接受这个消息并且无误地回复。</p>
 
 <p>在很多情况下，NO是正确的答案。 但它也可能不是。 如果使用转发来设置代理对象或扩展类的功能，则转发机制应该与继承一样透明。 如果你希望你的对象的行为好像他们真的继承了它们转发消息的对象的行为，你需要重新实现<code class="highlighter-rouge">respondsToSelector：</code>和<code class="highlighter-rouge">isKindOfClass：</code>方法来包含你的转发算法：</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">respondsToSelector</span><span class="p">:(</span><span class="n">SEL</span><span class="p">)</span><span class="nv">aSelector</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">respondsToSelector</span><span class="p">:(</span><span class="n">SEL</span><span class="p">)</span><span class="nv">aSelector</span>
 <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span> <span class="p">[</span><span class="n">super</span> <span class="nf">respondsToSelector</span><span class="p">:</span><span class="n">aSelector</span><span class="p">]</span> <span class="p">)</span>
         <span class="k">return</span> <span class="nb">YES</span><span class="p">;</span>
@@ -394,12 +395,11 @@
     <span class="p">}</span>
     <span class="k">return</span> <span class="nb">NO</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>除了<code class="highlighter-rouge">respondsToSelector：</code>和<code class="highlighter-rouge">isKindOfClass：</code>之外，<code class="highlighter-rouge">instancesRespondToSelector：</code>方法也应该镜像转发算法。 如果使用协议，<code class="highlighter-rouge">conformsToProtocol：</code>方法同样应该被添加到列表中。 类似地，如果一个对象转发它接收到的任何远程消息，它应该有一个版本的<code class="highlighter-rouge">methodSignatureForSelector：</code>它可以返回最终响应转发消息的方法的准确描述; 例如，如果某个对象能够将消息转发给其代理，则可以实现<code class="highlighter-rouge">methodSignatureForSelector：</code>如下所示：</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">NSMethodSignature</span><span class="o">*</span><span class="p">)</span><span class="nf">methodSignatureForSelector</span><span class="p">:(</span><span class="n">SEL</span><span class="p">)</span><span class="nv">selector</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">NSMethodSignature</span><span class="o">*</span><span class="p">)</span><span class="nf">methodSignatureForSelector</span><span class="p">:(</span><span class="n">SEL</span><span class="p">)</span><span class="nv">selector</span>
 <span class="p">{</span>
     <span class="n">NSMethodSignature</span><span class="o">*</span> <span class="n">signature</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nf">methodSignatureForSelector</span><span class="p">:</span><span class="n">selector</span><span class="p">];</span>
     <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">signature</span><span class="p">)</span> <span class="p">{</span>
@@ -407,8 +407,7 @@
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">signature</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>您可能会考虑将转发算法放在私有代码中，并使用<code class="highlighter-rouge">forwardInvocation：</code>included方法调用它。</p>
 
@@ -419,7 +418,7 @@
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/%E5%9F%BA%E7%A1%80/2015/09/13/Http/" data-toggle="tooltip" data-placement="top" title="网络、Http与Https">&larr; 上一篇</a>
+                        <a href="/%E5%9F%BA%E7%A1%80/2015/10/13/bit/" data-toggle="tooltip" data-placement="top" title="位运算">&larr; 上一篇</a>
                     </li>
                     
                     

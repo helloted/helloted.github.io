@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>OpenGL ES编程指南（四） - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2018/03/23/OpenGL_4/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/app/">APP</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/bg_01.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>OpenGL ES编程指南（四）</h1>
+                    
+                    <h2 class="subheading">《OpenGL ES Programming Guide》文档翻译之OpenGL ES 设计指南</h2>
+                    
+                    <span class="meta">Posted by Ted on March 23, 2018</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<p>本文翻译自苹果官方文档<a href="https://developer.apple.com/library/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008793-CH1-SW1">OpenGL ES Programming Guide</a></p>
+
+<h3 id="七可视化opengl-es">七、可视化OpenGL ES</h3>
+
+<p>用于可视化OpenGL ES设计的两个方面：作为客户端 - 服务器体系结构和作为管道。 这两种观点都可以用于规划和评估应用程序的体系结构。</p>
+
+<h4 id="opengl-es作为客户端---服务器体系结构">OpenGL ES作为客户端 - 服务器体系结构</h4>
+
+<p>下图将OpenGL ES形象化为客户端 - 服务器体系结构。 您的应用程序将状态更改，纹理和顶点数据以及渲染命令传递给OpenGL ES客户端。 客户端将这些数据转换为图形硬件可以理解的格式，并将其转发给GPU。 这些进程会增加应用程序图形性能的开销。</p>
+
+<p><img src="/img/Simple_6/12.png" alt="img" /></p>
+
+<p>实现良好的性能需要仔细管理这些开销。 一个设计良好的应用程序可以减少对OpenGL ES的调用频率，使用适合硬件的数据格式来最大限度地降低翻译成本，并小心管理其本身和OpenGL ES之间的数据流。</p>
+
+<h4 id="opengl-es作为图形管道">OpenGL ES作为图形管道</h4>
+
+<p>下图将OpenGL ES形象化为图形管道。</p>
+
+<ol>
+  <li>您的应用程序配置图形管道，</li>
+  <li>然后执行绘图命令将顶点数据(vertex)发送到管道，</li>
+  <li>管道的连续阶段运行顶点着色器(shader)来处理顶点数据，将顶点组装成基元(primitives)，</li>
+  <li>将基元划分为片段(fragments)，</li>
+  <li>运行片段着色器( fragment shader)以计算每个片段的颜色和深度值，并将片段混合到帧缓冲区中以进行显示。</li>
+</ol>
+
+<p><img src="/img/Simple_6/13.png" alt="img" /></p>
+
+<p>使用管道作为模型来确定您的应用执行哪些工作来生成新框架。 您的渲染器设计包括编写着色器程序以处理管道的顶点和片段阶段，组织提供给这些程序的顶点和纹理数据，以及配置驱动流水线固定功能阶段的OpenGL ES状态机。</p>
+
+<p>图形管道中的各个阶段可以同时计算其结果 - 例如，您的应用程序可能会准备新的基元，而图形硬件的不同部分将对先前提交的几何图形执行顶点和片段计算。 然而，后期阶段取决于早期阶段的产出。 如果任何流水线阶段执行太多工作或执行得太慢，则其他流水线阶段处于闲置状态，直到最慢阶段完成其工作。 根据图形硬件功能，精心设计的应用程序会平衡每个流水线阶段执行的工作。</p>
+
+<h3 id="八opengl-es版本和渲染器架构">八、OpenGL ES版本和渲染器架构</h3>
+
+<p>iOS支持三种版本的OpenGL ES。 较新的版本提供了更多的灵活性，使您可以实现包含高质量视觉效果而不影响性能的渲染算法。</p>
+
+<h4 id="opengl-es-30">OpenGL ES 3.0</h4>
+
+<p>OpenGL ES 3.0是iOS 7中的新功能。您的应用程序可以使用OpenGL ES 3.0中引入的功能来实现先前的图形编程技术（以前仅在桌面级硬件和游戏控制台上提供），以获得更快的图形性能和引人注目的视觉效果。</p>
+
+<p>下面突出显示了OpenGL ES 3.0的一些关键特性。有关完整的概述，请参阅OpenGL ES API注册表中的OpenGL ES 3.0规范。</p>
+
+<h4 id="1opengl-es着色语言版本30">1、OpenGL ES着色语言版本3.0</h4>
+
+<p>GLSL ES 3.0增加了统一块，32位整数和附加整数运算等新功能，用于在顶点和片段着色器程序中执行更通用的计算任务。要在着色器程序中使用新语言，着色器源代码必须以#version 330 es指令开始。 OpenGL ES 3.0上下文与为OpenGL ES 2.0编写的着色器保持兼容。</p>
+
+<h4 id="2多个渲染目标">2、多个渲染目标</h4>
+
+<p>通过启用多个渲染目标，您可以创建片段着色器，以同时写入多个帧缓冲区附件。</p>
+
+<p>此功能允许使用高级渲染算法，如延迟着色，其中您的应用首先渲染一组纹理以存储几何数据，然后执行一次或多次从这些纹理读取的着色过程，并执行光照计算以输出最终图片。由于此方法会预先计算照明计算的输入，因此将大量灯光添加到场景的增量性能成本要小得多。延迟着色算法需要多个渲染目标支持，如下图所示，以实现合理的性能。否则，渲染到多个纹理需要为每个纹理单独绘制通过。</p>
+
+<p><img src="/img/Simple_6/14.png" alt="img" /></p>
+
+<p>除了创建帧缓冲区对象中描述的过程外，您还可以设置多个渲染目标。 您可以创建多个，而不是为帧缓冲区创建单个颜色附件。 然后，调用glDrawBuffers函数来指定在渲染中使用哪些帧缓冲区附件，如所示。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// Attach (previously created) textures to the framebuffer.
+glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _colorTexture, 0);
+glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, _positionTexture, 0);
+glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, _normalTexture, 0);
+glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, _depthTexture, 0);
+ 
+// Specify the framebuffer attachments for rendering.
+GLenum targets[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2};
+glDrawBuffers(3, targets);
+</code></pre></div></div>
+
+<p>当您的应用程序发出绘图命令时，片段着色器将确定为每个渲染目标中的每个像素输出的颜色（或非颜色数据）。 下面代码显示了一个基本的片段着色器，该片段着色器通过分配位置与上面设置的位置匹配的片段输出变量来呈现给多个目标</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#version 300 es
+ 
+uniform lowp sampler2D myTexture;
+in mediump vec2 texCoord;
+in mediump vec4 position;
+in mediump vec3 normal;
+ 
+layout(location = 0) out lowp vec4 colorData;
+layout(location = 1) out mediump vec4 positionData;
+layout(location = 2) out mediump vec4 normalData;
+ 
+void main()
+{
+    colorData = texture(myTexture, texCoord);
+    positionData = position;
+    normalData = vec4(normalize(normal), 1.0);
+}
+</code></pre></div></div>
+
+<p>多个渲染目标对于其他高级图形技术也很有用，例如实时反射，屏幕空间环境遮挡和体积照明。</p>
+
+<h4 id="3变换反馈">3、变换反馈</h4>
+
+<p>图形硬件使用针对矢量处理进行了优化的高度并行化架构。 您可以利用新的变换反馈功能更好地使用此硬件，该功能可以将顶点着色器的输出捕捉到GPU内存中的缓冲区对象中。 您可以捕获一个渲染过程中的数据以用于另一个过程，或者禁用图形管道的某些部分，并使用变换反馈进行通用计算。</p>
+
+<p>从变换反馈中受益的一种技术是动画粒子效应。 下图说明了渲染粒子系统的一般体系结构。 首先，应用程序设置粒子模拟的初始状态。 然后，对于每个渲染帧，应用程序运行一个模拟步骤，更新每个模拟粒子的位置，方向和速度，然后绘制代表粒子当前状态的可视化资源。</p>
+
+<p><img src="/img/Simple_6/15.png" alt="img" /></p>
+
+<p>传统上，实现粒子系统的应用程序在CPU上运行其模拟，将模拟结果存储在顶点缓冲区中以用于渲染粒子艺术。 但是，将顶点缓冲区的内容传输到GPU内存是非常耗时的。 通过优化现代GPU硬件中可用的并行架构的功能来转换反馈，可更有效地解决问题。</p>
+
+<p>借助变换反馈，您可以设计渲染引擎以更有效地解决此问题。 图6-5显示了应用程序如何配置OpenGL ES图形管道来实现粒子系统动画。 由于OpenGL ES将每个粒子及其状态表示为顶点，因此GPU的顶点着色器阶段可以同时运行多个粒子的模拟。 由于包含粒子状态数据的顶点缓冲区在帧之间被重用，因此在初始化时，将数据传输到GPU内存的昂贵过程只发生一次。</p>
+
+<p><img src="/img/Simple_6/16.png" alt="img" /></p>
+
+<ol>
+  <li>
+    <p>在初始化时，创建一个顶点缓冲区，并在其中填充包含模拟中所有粒子初始状态的数据。</p>
+  </li>
+  <li>
+    <p>在GLSL顶点着色器程序中实现您的粒子模拟，并通过绘制包含粒子位置数据的顶点缓冲区的内容来运行它。</p>
+
+    <p>要在启用变换反馈的情况下进行渲染，请调用glBeginTransformFeedback函数。 （在恢复正常绘图之前调用glEndTransformFeedback（）。）</p>
+
+    <p>使用glTransformFeedbackVaryings函数来指定哪些着色器输出应该被变换反馈捕获，并使用glBindBufferBase或glBindBufferRange函数和GL_TRANSFORM_FEEDBACK_BUFFER缓冲区类型来指定它们将被捕获到的缓冲区。</p>
+
+    <p>通过调用glEnable（GL_RASTERIZER_DISCARD）禁用栅格化（以及管道的后续阶段）。</p>
+  </li>
+  <li>
+    <p>要渲染模拟结果以供显示，请使用包含粒子位置的顶点缓冲区作为第二个绘制阶段的输入，并再次启用光栅化（以及管道的其余部分），并使用适合渲染应用视觉内容的顶点和片段着色器。</p>
+  </li>
+  <li>
+    <p>在下一帧中，使用上一帧模拟步骤输出的顶点缓冲区作为下一个模拟步骤的输入</p>
+  </li>
+</ol>
+
+<h4 id="opengl-es-20">OpenGL ES 2.0</h4>
+
+<p>OpenGL ES 2.0提供了可编程着色器的灵活图形管道，并可在所有当前的iOS设备上使用。 OpenGL ES 3.0规范中正式引入的许多功能通过OpenGL ES 2.0扩展可用于iOS设备，因此您可以在保持与大多数设备兼容的同时实现许多高级图形编程技术。</p>
+
+<h4 id="opengl-es-11">OpenGL ES 1.1</h4>
+
+<p>OpenGL ES 1.1只提供了一个基本的固定功能图形管道。 iOS支持OpenGL ES 1.1主要用于向后兼容。 如果您正在维护OpenGL ES 1.1应用程序，请考虑更新您的代码以获取更新的OpenGL ES版本。</p>
+
+<h3 id="九设计一个高性能opengl-es-app">九、设计一个高性能OpenGL ES App</h3>
+
+<p>总而言之，一个精心设计的OpenGL ES应用程序需要：</p>
+
+<ul>
+  <li>利用OpenGL ES管道中的并行性。</li>
+  <li>管理应用程序和图形硬件之间的数据流。</li>
+</ul>
+
+<p>下图给出了使用OpenGL ES对显示进行动画的应用程序的流程图。</p>
+
+<p><img src="/img/Simple_6/17.png" alt="img" /></p>
+
+<p>当应用程序启动时，它所做的第一件事是初始化资源，它不打算在应用程序的生命周期中进行更改。理想情况下，应用程序将这些资源封装到OpenGL ES对象中。我们的目标是创建任何可以保持应用运行时不变的对象（或甚至是应用生命周期的一部分，例如游戏中的关卡持续时间），交易增加的初始化时间以获得更好的呈现性能。复杂的命令或状态更改应该用OpenGL ES对象代替，这些对象可以与单个函数调用一起使用。例如，配置固定功能管道可能需要数十个函数调用。相反，在初始化时编译一个图形着色器，并在运行时用一个函数调用切换到它。几乎总是创建或修改昂贵的OpenGL ES对象应该被创建为静态对象。</p>
+
+<p>渲染循环处理您打算渲染到OpenGL ES上下文的所有项目，然后将结果呈现给显示器。在动画场景中，每帧都会更新一些数据。在图6-6所示的内部渲染循环中，应用程序在更新渲染资源（在过程中创建或修改OpenGL ES对象）和提交使用这些资源的绘图命令之间进行交替。这个内部循环的目标是平衡工作负载，以便CPU和GPU并行工作，防止应用程序和OpenGL ES同时访问相同的资源。在iOS上，修改OpenGL ES对象在帧的开始或结束没有执行修改时可能很昂贵。</p>
+
+<p>这个内部循环的一个重要目标是避免将数据从OpenGL ES复制回应用程序。从GPU复制结果到CPU可能非常缓慢。如果复制的数据稍后也用作渲染当前帧的过程的一部分，如中间渲染循环所示，则应用程序会阻止，直到完成所有以前提交的绘图命令。</p>
+
+<p>在应用程序提交框架中需要的所有绘图命令后，它会将结果呈现给屏幕。非交互式应用程序会将最终图像复制到应用程序内存以供进一步处理。</p>
+
+<p>最后，当您的应用程序准备退出或完成一项重要任务时，它将释放OpenGL ES对象以为其自身或其他应用程序提供额外资源。</p>
+
+<p>总结这个设计的重要特征：</p>
+
+<ul>
+  <li>尽可能创建静态资源。</li>
+  <li>内部渲染循环在修改动态资源和提交渲染命令之间交替进行。尽量避免修改动态资源，除了在帧的开始或结束时。</li>
+  <li>避免将中间渲染结果读回您的应用程序。</li>
+</ul>
+
+<h4 id="避免同步和刷新操作">避免同步和刷新操作</h4>
+
+<p>OpenGL ES规范不要求实现立即执行命令。通常，命令排队到命令缓冲区，稍后由硬件执行。通常，OpenGL ES会一直等待，直到应用程序在将命令发送到硬件之前将许多命令排队为止 - 批处理通常更高效。但是，一些OpenGL ES函数必须立即刷新命令缓冲区。其他函数不仅会刷新命令缓冲区，而且还会阻塞，直到先前提交的命令已完成，然后再返回对应用程序的控仅当需要此行为时才使用刷新和同步命令。过度使用刷新或同步命令可能会导致应用程序在等待硬件完成呈现时停顿。</p>
+
+<p>这些情况需要OpenGL ES将命令缓冲区提交给硬件执行。</p>
+
+<ul>
+  <li>
+    <p>函数glFlush将命令缓冲区发送到图形硬件。它会阻塞直到命令提交给硬件，但不会等待命令完成执行。</p>
+  </li>
+  <li>函数glFinish刷新命令缓冲区，然后等待所有先前提交的命令在图形硬件上完成执行。</li>
+  <li>检索帧缓冲区内容的函数（如glReadPixels）也等待提交的命令完成。</li>
+  <li>命令缓冲区已满。</li>
+</ul>
+
+<h4 id="有效地使用glflush">有效地使用glFlush</h4>
+
+<p>在某些桌面OpenGL实现中，定期调用glFlush函数以有效平衡CPU和GPU工作会很有用，但iOS中并非如此。由iOS图形硬件实现的基于图块的延迟渲染算法取决于缓冲场景中的所有顶点数据，因此可以针对隐藏的曲面去除进行最佳处理。通常，只有两种情况，OpenGL ES应用程序应调用glFlush或glFinish函数。</p>
+
+<p>当您的应用移动到后台时，您应该刷新命令缓冲区，因为在应用处于后台时在GPU上执行OpenGL ES命令会导致iOS终止您的应用。 （请参阅实施多任务处理型OpenGL ES应用程序。）
+如果您的应用程序在多个上下文之间共享OpenGL ES对象（如顶点缓冲区或纹理），则应该调用glFlush函数来同步对这些资源的访问。例如，您应该在一个上下文中加载顶点数据后调用glFlush函数，以确保其内容已准备好被另一个上下文检索。当与其他iOS API（如Core Image）共享OpenGL ES对象时，此建议也适用。</p>
+
+<h4 id="避免查询opengl-es状态">避免查询OpenGL ES状态</h4>
+
+<p>调用glGet *（）（包括glGetError（））可能需要OpenGL ES在检索任何状态变量之前执行先前的命令。这种同步迫使图形硬件与CPU进行锁步，减少了并行机会。为了避免这种情况，请维护您需要查询的任何状态的副本，并直接访问它，而不是调用OpenGL ES。</p>
+
+<p>发生错误时，OpenGL ES会设置一个错误标志。这些错误和其他错误出现在Xcode的OpenGL ES Frame Debugger或Instruments的OpenGL ES Analyzer中。您应该使用这些工具而不是glGetError函数，这会在频繁调用时降低性能。其他查询，如glCheckFramebufferStatus（），glGetProgramInfoLog（）和glValidateProgram（）通常也仅在开发和调试时有用。您应该在应用的发布版本中省略对这些功能的调用。</p>
+
+<h4 id="使用opengl-es来管理您的资源">使用OpenGL ES来管理您的资源</h4>
+
+<p>许多OpenGL数据可以直接存储在OpenGL ES渲染上下文及其相关的共享组对象中。 OpenGL ES实现可自由将数据转换为最适合图形硬件的格式。这可以显着提高性能，特别是对于频繁更改的数据。您的应用程序还可以向OpenGL ES提供关于打算如何使用这些数据的提示。 OpenGL ES实现可以使用这些提示更有效地处理数据。例如，静态数据可能被放置在图形处理器可以轻易获取的内存中，甚至放入专用图形内存中。</p>
+
+<h4 id="使用双缓冲来避免资源冲突">使用双缓冲来避免资源冲突</h4>
+
+<p>当您的应用程序和OpenGL ES同时访问OpenGL ES对象时，会发生资源冲突。 当一个参与者尝试修改另一个参与者使用的OpenGL ES对象时，它们可能会阻塞，直到该对象不再被使用。 一旦他们开始修改对象，其他参与者可能无法访问对象，直到修改完成。 或者，OpenGL ES可以隐式复制对象，以便两个参与者都可以继续执行命令。 这两个选项都是安全的，但每个选项都可能成为您应用程序的瓶颈。 图6-7显示了这个问题。 在这个例子中，有一个纹理对象，OpenGL ES和你的应用都想使用它。 当应用程序尝试更改纹理时，它必须等到之前提交的绘图命令完成CPU才会与GPU同步。</p>
+
+<p><img src="/img/Simple_6/18.png" alt="img" /></p>
+
+<p>为了解决这个问题，您的应用程序可以在更改对象和绘图之间执行额外的工作。 但是，如果你的应用程序没有额外的工作，它可以执行，它应该明确地创建两个相同大小的对象; 当一个参与者读取一个对象时，另一个参与者修改另一个参与者。 图6-8说明了双缓冲方法。 GPU在一个纹理上运行时，CPU会修改另一个纹理。 初次启动后，CPU或GPU都不处于闲置状态。 尽管显示了纹理，但该解决方案几乎适用于任何类型的OpenGL ES对象。</p>
+
+<p><img src="/img/Simple_6/19.png" alt="img" /></p>
+
+<p>对于大多数应用程序来说，双缓冲就足够了，但它要求两个参与者大致在同一时间完成处理命令。 为了避免阻塞，你可以添加更多的缓冲区; 这实现了传统的生产者 - 消费者模式。 如果生产者在消费者完成处理命令之前完成，它会占用一个空闲缓冲区并继续处理命令。 在这种情况下，制造商只有在消费者严重落后的情况下才会闲置。</p>
+
+<p>双倍和三倍缓冲折衷消耗额外的内存，以防止管道堵塞。 额外使用内存可能会对应用程序的其他部分造成压力。 在iOS设备上，内存可能非常稀少; 您的设计可能需要使用更多内存与其他应用程序优化进行平衡。</p>
+
+<h4 id="注意opengl-es状态">注意OpenGL ES状态</h4>
+
+<p>OpenGL ES实现维护一组复杂的状态数据，包括使用glEnable或glDisable函数设置的开关，当前着色器程序及其统一变量，当前绑定的纹理单元以及当前绑定的顶点缓冲区及其启用的顶点属性。硬件有一个当前状态，它被懒惰地编译和缓存。开关状态很昂贵，所以最好设计你的应用程序以最小化状态开关。</p>
+
+<p>不要设置已经设置的状态。一旦功能启用后，不需要再次启用。例如，如果多次调用具有相同参数的glUniform函数，OpenGL ES可能无法检查是否已经设置了相同的统一状态。即使该值与当前值相同，它也会更新状态值。</p>
+
+<p>通过使用专用的设置或关闭例程避免设置超过必要的状态，而不是将这些调用放入绘图循环中。设置和关闭例程对于打开和关闭实现特定视觉效果的功能也很有用 - 例如，在纹理多边形周围绘制线框轮廓时。</p>
+
+<h4 id="用opengl-es对象封装状态">用OpenGL ES对象封装状态</h4>
+
+<p>要减少状态更改，请创建将多个OpenGL ES状态更改收集到可通过单个函数调用进行绑定的对象中的对象。例如，顶点数组对象将多个顶点属性的配置存储到单个对象中。请参阅使用顶点数组对象合并顶点数组状态更改。</p>
+
+<h4 id="组织绘图调用以最小化状态更改">组织绘图调用以最小化状态更改</h4>
+
+<p>更改OpenGL ES状态不会立即生效。相反，当您发出绘图命令时，OpenGL ES会执行必要的工作以绘制一组状态值。您可以通过最小化状态更改来减少重新配置图形管道所花费的CPU时间。例如，在您的应用中保留一个状态向量，并且只有当您的状态在绘制调用之间改变时才设置相应的OpenGL ES状态。另一个有用的算法是状态排序 - 跟踪您需要执行的绘图操作以及每个绘图操作所需的状态更改量，然后对它们进行排序以连续执行使用相同状态的操作。</p>
+
+<p>OpenGL ES的iOS实现可以缓存一些状态之间有效切换所需的配置数据，但每个独特状态集的初始配置需要更长的时间。为了获得一致的性能，您可以“预热”您在安装例程期间计划使用的每个状态集：</p>
+
+<ol>
+  <li>启用您打算使用的状态配置或着色器。</li>
+  <li>使用该状态配置绘制一小堆顶点。</li>
+  <li>刷新OpenGL ES上下文，以便不显示此预热阶段的绘图。</li>
+</ol>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/%E5%9F%BA%E7%A1%80/2018/03/22/OpenGL_3/" data-toggle="tooltip" data-placement="top" title="OpenGL ES编程指南（三）">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/ios/2018/03/29/app-1/" data-toggle="tooltip" data-placement="top" title="APP生成与运行(一)">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

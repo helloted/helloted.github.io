@@ -75,13 +75,25 @@
                 
 				
                 <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
                     <a href="/about/">About</a>
                 </li>
 				
                 
 				
                 <li>
-                    <a href="/contact/">Contact</a>
+                    <a href="/app/">APP</a>
                 </li>
 				
                 
@@ -120,36 +132,33 @@
 
 <p><code class="highlighter-rouge">*args</code> 和<code class="highlighter-rouge">**kwargs</code>常用于方法定义，<code class="highlighter-rouge">*args</code> 和<code class="highlighter-rouge">**kwargs</code>允许你传递可变数量的参数到函数里，可变数量在这里的意思是，你事先不知道有多少个参数可以传递给你的函数，所以在这种情况下，你使用这两个关键字。<code class="highlighter-rouge">*args</code> 用于传递一个non-keyword的参数list给函数，看示例</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">test_var_args</span><span class="p">(</span><span class="n">f_arg</span><span class="p">,</span> <span class="o">*</span><span class="n">argv</span><span class="p">):</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">test_var_args</span><span class="p">(</span><span class="n">f_arg</span><span class="p">,</span> <span class="o">*</span><span class="n">argv</span><span class="p">):</span>
     <span class="k">print</span><span class="p">(</span><span class="s">"first normal arg:"</span><span class="p">,</span> <span class="n">f_arg</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">argv</span><span class="p">:</span>
         <span class="k">print</span><span class="p">(</span><span class="s">"another arg through *argv:"</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span>
 
 <span class="n">test_var_args</span><span class="p">(</span><span class="s">'yasoob'</span><span class="p">,</span> <span class="s">'python'</span><span class="p">,</span> <span class="s">'eggs'</span><span class="p">,</span> <span class="s">'test'</span><span class="p">)</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>程序会这样执行</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>first normal arg: yasoob
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>first normal arg: yasoob
 another arg through *argv: python
 another arg through *argv: eggs
 another arg through *argv: test
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="2kwargs的用法">2、**kwargs的用法</h4>
 
 <p><code class="highlighter-rouge">**kwargs</code>允许你传递一个keyword的可变参数list给函数，如果你需要在函数里处理带名称的参数，你应该使用<code class="highlighter-rouge">**kwargs</code>，下面有个例子</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">greet_me</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">greet_me</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">print</span><span class="p">(</span><span class="s">"{0} = {1}"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
 
 <span class="o">&gt;&gt;&gt;</span> <span class="n">greet_me</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">"yasoob"</span><span class="p">)</span>
 <span class="n">name</span> <span class="o">=</span> <span class="n">yasoob</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>你可以看到我们在函数里处理了keyword的参数list，这个只是<code class="highlighter-rouge">**kwargs</code>最基本的用法。</p>
 
@@ -157,51 +166,46 @@ another arg through *argv: test
 
 <p>思考一下你有这样一个函数</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>def test_args_kwargs(arg1, arg2, arg3):
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def test_args_kwargs(arg1, arg2, arg3):
     print("arg1:", arg1)
     print("arg2:", arg2)
     print("arg3:", arg3)
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>现在你可以使用<code class="highlighter-rouge">*args</code> 和<code class="highlighter-rouge">**kwargs</code>来传递参数到这个函数</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c"># first with *args</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># first with *args</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="s">"two"</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">test_args_kwargs</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
 <span class="n">arg1</span><span class="p">:</span> <span class="n">two</span>
 <span class="n">arg2</span><span class="p">:</span> <span class="mi">3</span>
 <span class="n">arg3</span><span class="p">:</span> <span class="mi">5</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c"># now with **kwargs:</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># now with **kwargs:</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s">"arg3"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s">"arg2"</span><span class="p">:</span> <span class="s">"two"</span><span class="p">,</span> <span class="s">"arg1"</span><span class="p">:</span> <span class="mi">5</span><span class="p">}</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">test_args_kwargs</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 <span class="n">arg1</span><span class="p">:</span> <span class="mi">5</span>
 <span class="n">arg2</span><span class="p">:</span> <span class="n">two</span>
 <span class="n">arg3</span><span class="p">:</span> <span class="mi">3</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><code class="highlighter-rouge">*args</code> 和<code class="highlighter-rouge">**kwargs</code>和普通参数的顺序应该是</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">some_func</span><span class="p">(</span><span class="n">fargs</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</code></pre>
-</div>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">some_func</span><span class="p">(</span><span class="n">fargs</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</code></pre></div></div>
 
 <h4 id="4使用情景">4、使用情景</h4>
 
 <p>最常用的使用情况是，创建函数修饰器的时候，在使用monkey patching的时候也会用到，Monkey patching 意味着在运行时的时候修改代码。思考这种情况，你有一个类有一个函数 <code class="highlighter-rouge">get_info</code> ，用于一个API返回response数据，如果我们想要测试它，我们可以通过直接替换返回数据来替换API</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">someclass</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">someclass</span>
 
 <span class="k">def</span> <span class="nf">get_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="k">return</span> <span class="s">"Test data"</span>
 
 <span class="n">someclass</span><span class="o">.</span><span class="n">get_info</span> <span class="o">=</span> <span class="n">get_info</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>参考资料：<a href="http://book.pythontips.com/en/latest/args_and_kwargs.html">args_and_kwargs</a></p>
 

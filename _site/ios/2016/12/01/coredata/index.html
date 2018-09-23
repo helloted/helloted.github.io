@@ -75,13 +75,25 @@
                 
 				
                 <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
                     <a href="/about/">About</a>
                 </li>
 				
                 
 				
                 <li>
-                    <a href="/contact/">Contact</a>
+                    <a href="/app/">APP</a>
                 </li>
 				
                 
@@ -268,13 +280,12 @@
     });
 </code></pre>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>2016-07-25 20:26:29.454 MagicR[19718:3903431] Created new private queue context: &lt;NSManagedObjectContext: 0x6100001da220&gt;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2016-07-25 20:26:29.454 MagicR[19718:3903431] Created new private queue context: &lt;NSManagedObjectContext: 0x6100001da220&gt;
 2016-07-25 20:26:29.454 MagicR[19718:3903443] → Saving &lt;NSManagedObjectContext (0x6100001da220): Untitled Context&gt; on a background thread
 2016-07-25 20:26:29.460 MagicR[19718:3903375] → Saving &lt;NSManagedObjectContext (0x6080001daa90): MagicalRecord Default Context&gt; on the main thread
 2016-07-25 20:26:29.462 MagicR[19718:3903431] → Saving &lt;NSManagedObjectContext (0x6180001da6d0): MagicalRecord Root Saving Context&gt; on a background thread
 2016-07-25 20:26:29.466 MagicR[19718:3903375] finish save
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>从MagicRecord的日志就可以看出来，整个过程如下：</p>
 
@@ -301,11 +312,10 @@
     });
 </code></pre>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>- (void)contextChanged:(NSNotification*)notification{
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)contextChanged:(NSNotification*)notification{
     [[NSManagedObjectContext MR_newPrivateQueueContext] mergeChangesFromContextDidSaveNotification:notification];
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>这样就能保证子线程的Context与主线程的context内容修改可以同步</p>
 

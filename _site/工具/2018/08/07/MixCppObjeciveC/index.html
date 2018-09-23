@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>C++与Objective-C混编 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/08/07/MixCppObjeciveC/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/app/">APP</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>C++与Objective-C混编</h1>
+                    
+                    <h2 class="subheading">iOS开发中的C++与Objective-C混编</h2>
+                    
+                    <span class="meta">Posted by Ted on August 7, 2018</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<p>在一些iOS开发中，经常有一些第三方的框架是用C++写的，有时候我们需要在C++文件中调用OC方法，或者在OC文件中调用C++函数，也就是C++与Objective-C混编。但是我们知道在纯OC文件中是不能编译C++代码的，在纯C++文件中又是不能编译Objective-C代码的。直接引入编译不过会报错</p>
+
+<p><img src="/img/Simple_1/39.png" alt="img" /></p>
+
+<p>如果要同时混编，就要利用下面的几种方式。</p>
+
+<ul>
+  <li>Objective-C++</li>
+  <li>运行时</li>
+</ul>
+
+<h4 id="一通过objective-c">一、通过Objective-C++</h4>
+
+<p>Objective-C++是C++的超集，就如同Objective-C是C的超集，在OS X上同时被GCC和Clang支持编译，能够不用C++来初始化OC对象和调用方法。只要在C ++模块的实现中隐藏Objective-C header导入和类型，它就不会感染任何“纯”C ++代码。</p>
+
+<p>.mm是Objective-C++的默认后缀名，Xcode会自动识别。在.mm文件中，Objective-C代码和C++代码都可以正常编译运行。</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//MyClass.h</span>
+<span class="k">class</span> <span class="nc">MyClass</span>
+<span class="p">{</span>
+  <span class="k">public</span><span class="o">:</span>
+    <span class="kt">double</span> <span class="n">secondsSince1970</span><span class="p">();</span>
+<span class="p">};</span>
+
+
+<span class="c1">//MyClass.mm</span>
+<span class="cp">#include "MyClass.h"
+#import &lt;Foundation/Foundation.h&gt;
+</span>
+<span class="kt">double</span> <span class="n">MyClass</span><span class="o">::</span><span class="n">secondsSince1970</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="k">return</span> <span class="p">[[</span><span class="n">NSDate</span> <span class="n">date</span><span class="p">]</span> <span class="n">timeIntervalSince1970</span><span class="p">];</span>
+<span class="p">}</span>
+
+
+<span class="c1">//Client.cpp</span>
+<span class="p">...</span>
+<span class="n">MyClass</span> <span class="n">c</span><span class="p">;</span>
+<span class="kt">double</span> <span class="n">seconds</span> <span class="o">=</span> <span class="n">c</span><span class="p">.</span><span class="n">secondsSince1970</span><span class="p">();</span>
+</code></pre></div></div>
+
+<h3 id="二通过c函数来桥接">二、通过C函数来桥接</h3>
+
+<p>我们知道Objective-C和C++都是在C语言的基础上发展而来的语言，都能同时支持C函数，所以我们可以通过C函数来桥接，从而能够编译。</p>
+
+<p>先定义一个.h文件:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//CppOCBridge.h
+typedef void (*interface) (void* caller,void* parameter);
+</code></pre></div></div>
+
+<p>自定义一个OC类</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  TargetOC.h</span>
+
+<span class="cp">#import &lt;Foundation/Foundation.h&gt;
+#import "CppOCBridge.h"
+</span>
+<span class="k">@interface</span> <span class="nc">TargetOC</span> <span class="p">:</span> <span class="nc">NSObject</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">doFirstMethodWith</span><span class="p">:(</span><span class="kt">void</span><span class="o">*</span><span class="p">)</span><span class="nv">parameter</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">doSecondMethodWith</span><span class="p">:(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span><span class="nv">parameter</span><span class="p">;</span>
+
+<span class="k">@property</span> <span class="n">interface</span> <span class="n">doFirstMethod</span><span class="p">;</span>
+<span class="k">@property</span> <span class="n">interface</span> <span class="n">doSecondMethod</span><span class="p">;</span>
+
+<span class="k">@end</span>
+</code></pre></div></div>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  TargetOC.m</span>
+
+<span class="cp">#import "TargetOC.h"
+</span>
+<span class="kt">void</span> <span class="n">OcObjectDoFirstMethodWithWith</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">ocInstance</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">parameter</span><span class="p">){</span>
+    <span class="p">[(</span><span class="n">__bridge</span> <span class="n">id</span><span class="p">)</span><span class="n">ocInstance</span> <span class="nf">doFirstMethodWith</span><span class="p">:</span><span class="n">parameter</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">OcObjectDoSecondMethodWithWith</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">ocInstance</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">parameter</span><span class="p">){</span>
+    <span class="p">[(</span><span class="n">__bridge</span> <span class="n">id</span><span class="p">)</span><span class="n">ocInstance</span> <span class="nf">doSecondMethodWith</span><span class="p">:</span><span class="n">parameter</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="k">@implementation</span> <span class="nc">TargetOC</span>
+
+<span class="k">-</span><span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="n">init</span><span class="p">{</span>
+    <span class="k">if</span> <span class="p">([</span><span class="n">super</span> <span class="nf">init</span><span class="p">])</span> <span class="p">{</span>
+        <span class="n">_doFirstMethod</span> <span class="o">=</span> <span class="n">OcObjectDoFirstMethodWithWith</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="o">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">doFirstMethodWith</span><span class="o">:</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span><span class="n">parameter</span><span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"oc doFirstMethodWith parameter==== %@"</span><span class="p">,</span><span class="n">parameter</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">doSecondMethodWith</span><span class="o">:</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span><span class="n">parameter</span><span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"oc doSecondMethodWith parameter==== %@"</span><span class="p">,</span><span class="n">parameter</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">@end</span>
+</code></pre></div></div>
+
+<p>那么，在一个C++类里，如果我们要调用一个方法的话，我们定义一个类ObjectCpp</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="n">ObjectCpp</span><span class="o">::</span><span class="n">call_oc_function</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">ocObj</span><span class="p">,</span> <span class="n">interface</span> <span class="n">function</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">parameter</span><span class="p">){</span>
+    <span class="n">function</span><span class="p">(</span><span class="n">ocObj</span><span class="p">,</span><span class="n">parameter</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>调用OC方法的步骤为</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="n">TargetOC</span> <span class="o">*</span><span class="n">ocObj</span> <span class="o">=</span> <span class="p">[[</span><span class="n">TargetOC</span> <span class="nf">alloc</span><span class="p">]</span><span class="nf">init</span><span class="p">];</span>
+    <span class="n">ObjectCpp</span> <span class="o">*</span><span class="n">cpp</span> <span class="o">=</span> <span class="n">new</span> <span class="n">ObjectCpp</span><span class="p">;</span> 
+    <span class="n">cpp</span><span class="o">-&gt;</span><span class="n">call_oc_function</span><span class="p">((</span><span class="n">__bridge</span> <span class="kt">void</span><span class="o">*</span><span class="p">)</span><span class="n">ocObj</span><span class="p">,</span><span class="n">ocObj</span><span class="p">.</span><span class="n">doFirstMethod</span><span class="p">,(</span><span class="n">__bridge</span> <span class="kt">void</span><span class="o">*</span><span class="p">)</span><span class="s">@"this is paras"</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>OC对象和方法都被包装成一个参数来进行调用，从而达到混编的目的</p>
+
+<h3 id="三运行时objc_msgsend">三、运行时objc_msgSend</h3>
+
+<p>一提到将OC方法变成C函数，肯定会想到运行时，在Objective-C中，消息在运行时才被绑定到方法实现。</p>
+
+<p>编译器会将一个下面的一个消息表达式</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="n">receiver</span> <span class="nf">message</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>转变成一个消息函数 <code class="highlighter-rouge">objc_msgSend</code>，这个函数将接收者和消息中提到的方法的名称（即方法selector）作为其两个主要参数：</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">objc_msgSend</span><span class="p">(</span><span class="n">receiver</span><span class="p">,</span> <span class="n">selector</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>消息中传递的其他参数也在 <code class="highlighter-rouge">objc_msgSend</code>被处理</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">objc_msgSend</span><span class="p">(</span><span class="n">receiver</span><span class="p">,</span> <span class="n">selector</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="p">...)</span>
+</code></pre></div></div>
+
+<p>所以，利用objc_msgSend也可以达到混编的目的</p>
+
+<p>假设我们有一个OC对象NewObject继承自NSObject:</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">NewObject</span> <span class="p">:</span> <span class="nc">NSObject</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">doSomethingWith</span><span class="p">:(</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="nv">paras</span><span class="p">;</span>
+
+<span class="k">@end</span>
+</code></pre></div></div>
+
+<p>正常在OC环境中，如果我们需要调用方法的话，步骤是这样的</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">NewObject</span> <span class="o">*</span><span class="n">myobj</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NewObject</span> <span class="nf">alloc</span><span class="p">]</span><span class="nf">init</span><span class="p">];</span>
+<span class="p">[</span><span class="n">myobj</span> <span class="nf">doSomethingWith</span><span class="p">:</span><span class="s">@"abc"</span><span class="p">];</span>
+</code></pre></div></div>
+
+<p>在运行时编译时，将被转换成：</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="kt">void</span> <span class="o">*</span><span class="n">myobj</span> <span class="o">=</span> <span class="n">objc_msgSend</span><span class="p">((</span><span class="n">id</span><span class="p">)</span><span class="n">objc_getClass</span><span class="p">(</span><span class="s">"NewObject"</span><span class="p">),</span> <span class="n">sel_registerName</span><span class="p">(</span><span class="s">"alloc"</span><span class="p">),</span> <span class="n">sel_registerName</span><span class="p">(</span><span class="s">"init"</span><span class="p">));</span>
+    <span class="n">objc_msgSend</span><span class="p">((</span><span class="n">id</span><span class="p">)</span><span class="n">myobj</span><span class="p">,</span> <span class="n">sel_registerName</span><span class="p">(</span><span class="s">"doSomethingWith:"</span><span class="p">),</span> <span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="s">"abc"</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>如果是类方法则更简单了：</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">objc_msgSend</span><span class="p">((</span><span class="n">id</span><span class="p">)</span><span class="n">objc_getClass</span><span class="p">(</span><span class="s">"NewObject"</span><span class="p">),</span> <span class="n">sel_registerName</span><span class="p">(</span><span class="s">"doThirdMethod:"</span><span class="p">),</span> <span class="mi">1</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>可以很清楚地看到，通过<code class="highlighter-rouge">objc_getClas</code>获取到了类，通过<code class="highlighter-rouge">sel_registerName</code>获得方法，而上面两个方法都是C函数方法，可以在C++文件中顺利调用，不过要注意先引入头文件</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#import &lt;objc/runtime.h&gt;
+#import &lt;objc/message.h&gt;
+</code></pre></div></div>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/%E5%B7%A5%E5%85%B7/2018/06/21/unrealengine/" data-toggle="tooltip" data-placement="top" title="虚幻引擎(UnReal Engine)环境">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

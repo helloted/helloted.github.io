@@ -75,13 +75,25 @@
                 
 				
                 <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
                     <a href="/about/">About</a>
                 </li>
 				
                 
 				
                 <li>
-                    <a href="/contact/">Contact</a>
+                    <a href="/app/">APP</a>
                 </li>
 				
                 
@@ -234,23 +246,21 @@
 
 <p>当你需要延时 release 方式时，就需要 autorelease 了，特别是当你从方法中返回一个对象的时候。比如，你可以这样来实现 fullName: 方法:</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code>   <span class="k">-</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">fullName</span><span class="p">{</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   <span class="k">-</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">fullName</span><span class="p">{</span>
       <span class="n">NSString</span> <span class="o">*</span><span class="n">string</span> <span class="o">=</span> <span class="p">[[[</span><span class="n">NSString</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithFormat</span><span class="p">:</span><span class="err">@”</span><span class="o">%</span><span class="err">@</span> <span class="o">%</span><span class="err">@”</span><span class="p">,</span><span class="n">self</span><span class="p">.</span><span class="n">firstName</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">lastName</span><span class="p">]</span> <span class="nf">autorelease</span><span class="p">];</span>
        <span class="k">return</span> <span class="n">string</span><span class="p">;</span>
     <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>上例中，你使用 alloc 方法创建了 string，所以你有该对象的所有权，因此你有义务在失去对它的引用前放弃该所有权。但如果你用 release，那么这种所有权的放弃是“即刻的”，立即生效。可是我们却要将这个对象 return，这将造成 return 时对象已经实际失效，方法实际上返回了一个无效的对象。我们采用 autorelease 来声明(译者:注意这里仅仅是一种意愿的表达，而非实际放弃的动作。)我们对所有权的放弃，但是同时允许 fullName: 方法的调用者来使用该对象。</p>
 
 <p>你还可以按下面做法来实现这个方法:</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code>   <span class="k">-</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span> <span class="n">fullName</span><span class="p">{</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   <span class="k">-</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span> <span class="n">fullName</span><span class="p">{</span>
        <span class="n">NSString</span> <span class="o">*</span><span class="n">string</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nf">stringWithFormat</span><span class="p">:</span><span class="err">@”</span><span class="o">%</span><span class="err">@</span> <span class="o">%</span><span class="err">@”</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">firstName</span><span class="p">,</span>   <span class="n">self</span><span class="p">.</span><span class="n">lastName</span><span class="p">]</span> <span class="p">;</span>
        <span class="k">return</span> <span class="n">string</span><span class="p">;</span>
   <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>根据我们说的基本规则，你对 stringWithFormat: 所返回的 string 没有所有权(译者:请注意到这里并没有使用 alloc，方法名也不是以 init 开始)。 因此你可以直接返回 string 给方法的调用者。</p>
 
@@ -266,36 +276,34 @@
 
 <p>Autorelease pool是得到了 autorelease 消息的对象的容器。 在 autorelease pool被 dealloc 的时候，它自己会给容纳的所有对象发送 release 消息。一个对象可以被多次放到同一个 autorelease pool，每一次放入(发送 autorelease消息)都会造成将来收到一次release。</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code>   <span class="n">NSAutoreleasePool</span> <span class="o">*</span><span class="n">pool</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSAutoreleasePool</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
-	<span class="c1">// Code benefitting from a local autorelease pool.
-</span>	<span class="p">[</span><span class="n">pool</span> <span class="nf">release</span><span class="p">];</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   <span class="n">NSAutoreleasePool</span> <span class="o">*</span><span class="n">pool</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSAutoreleasePool</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+	<span class="c1">// Code benefitting from a local autorelease pool.</span>
+	<span class="p">[</span><span class="n">pool</span> <span class="nf">release</span><span class="p">];</span>
    
    <span class="err">@autoreleasepool</span><span class="p">{</span>
-     <span class="c1">// Code benefitting from a local autorelease pool.
-</span>   <span class="p">}</span>
+     <span class="c1">// Code benefitting from a local autorelease pool.</span>
+   <span class="p">}</span>
    
    <span class="err">实际上等同于如下</span>
    <span class="p">{</span>
         <span class="kt">void</span> <span class="o">*</span> <span class="n">atautoreleasepoolobj</span> <span class="o">=</span> <span class="n">objc_autoreleasePoolPush</span><span class="p">();</span>
-        <span class="c1">// Code benefitting from a local autorelease pool.
-</span>        <span class="n">objc_autoreleasePoolPop</span><span class="p">(</span><span class="n">atautoreleasepoolobj</span><span class="p">);</span>
+        <span class="c1">// Code benefitting from a local autorelease pool.</span>
+        <span class="n">objc_autoreleasePoolPop</span><span class="p">(</span><span class="n">atautoreleasepoolobj</span><span class="p">);</span>
     <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>2.2、嵌套</p>
 
 <p>Autorelease pool blocks可以嵌套</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="err">@autoreleasepool</span> <span class="p">{</span>
-    <span class="c1">// . . .
-</span>    <span class="err">@autoreleasepool</span> <span class="p">{</span>
-        <span class="c1">// . . .
-</span>    <span class="p">}</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">@autoreleasepool</span> <span class="p">{</span>
+    <span class="c1">// . . .</span>
+    <span class="err">@autoreleasepool</span> <span class="p">{</span>
+        <span class="c1">// . . .</span>
+    <span class="p">}</span>
     <span class="p">.</span> <span class="p">.</span> <span class="p">.</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>实 际 上 它 们 是 按 照 栈( s t a c k ) 的方式工作的(译者:即类似于后进先出的队列)。当一个新的 autorelease 池创建后，它就位于这 个栈的最顶端。池被dealloc 的时候，就从栈中删除。当对象收到 autorelease 消息时，实际上它会被放到“这个线程”“当时”位于栈的最顶端的那个池中</p>
 
@@ -341,7 +349,7 @@
 
 <p>在 autorelease pool已经 dealloc 之后，那些曾经收到 autorelease 消息对象，只能被视为失效，而不要再给他们发消息，或者把他们作为返回值进行返回。如果你必须在 autorelease 之后还要使用某个临时对象，你可以先发一个 retain 消息，然后等到这时的池已经调用了 drain 之后，再发送 autorelease 消息。</p>
 
-<div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="err">–</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">findMatchingObject</span><span class="o">:</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">anObject</span> <span class="p">{</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">–</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">findMatchingObject</span><span class="o">:</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">anObject</span> <span class="p">{</span>
     <span class="n">id</span> <span class="n">match</span><span class="p">;</span>
     <span class="k">while</span> <span class="p">(</span><span class="n">match</span> <span class="o">==</span> <span class="nb">nil</span><span class="p">)</span> <span class="p">{</span>
         <span class="err">@autoreleasepool</span> <span class="p">{</span>
@@ -356,8 +364,7 @@
     <span class="p">}</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">match</span> <span class="nf">autorelease</span><span class="p">];</span>   <span class="cm">/* Let match go and return it. */</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>这种情况下，就可以再autoreleasepool外面也调用这个match对象</p>
 

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>HTTP权威指南 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/%E5%9F%BA%E7%A1%80/2017/03/10/Http_1/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/app/">APP</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/bg_01.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>HTTP权威指南</h1>
+                    
+                    <h2 class="subheading">HTTP权威指南</h2>
+                    
+                    <span class="meta">Posted by Ted on March 10, 2017</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h4 id="1http报文">1、HTTP报文</h4>
+
+<p>从客户端发往服务器的HTTP报文称为请求报文，从服务器发往客户端的报文称为响应报文。二者格式很类似：</p>
+
+<p>HTTP报文包含了三个部分：</p>
+
+<ul>
+  <li>
+    <p>起始行</p>
+
+    <p>第一行就是起始行，请求报文中用来说明要做什么，在响应报文中说明出现了什么情况</p>
+  </li>
+  <li>
+    <p>首部字段</p>
+
+    <p>起始行后面有0个或者多个首部字段，每个字段都是一个key:value的形式。首部的结束以一个空行结束</p>
+  </li>
+  <li>
+    <p>主体</p>
+
+    <p>空行之后就是可选的报文主体了，其中包含了所有类型的数据，请求主体中包含了要发送给服务器的数据，响应主体装载了要返回客户端的数据，起始行和首部字段都是结构化的，但是主体可以包含任意格式</p>
+
+    <p><img src="/img/Simple_8/05.png" alt="" /></p>
+  </li>
+</ul>
+
+<h4 id="2一个完整的http请求">2、一个完整的HTTP请求</h4>
+
+<ol>
+  <li>浏览器先查看浏览器缓存-系统缓存-路由器缓存，若缓存中有，请略过中间步骤，直接跳到第9步~若没有，则按照下面的步骤进行操作。</li>
+  <li>浏览器通过DNS服务从url中解析出服务器的主机名，并将主机名转换成服务器的IP地址。</li>
+  <li>浏览器从url中解析出端口号，默认80</li>
+  <li>浏览器建立一条与服务器的tcp连接</li>
+  <li>浏览器通过tcp连接向服务器发送http请求，请求数据包。</li>
+  <li>服务器处理HTTP请求，返回响应。</li>
+  <li>浏览器检查HTTP响应是否为一个重定向（3XX结果状态码）、一个验证请求（401）、错误（4XX、5XX）等等，这些都需要根据具体情况分类处理。</li>
+  <li>浏览器接收HTTP响应并且可能关掉TCP连接，或者是重新建立连接使用新情求，获得新响应。</li>
+  <li>浏览器解码响应，如果响应可以缓存，则存入缓存。</li>
+  <li>浏览器显示HTML页面。</li>
+  <li>浏览器发送请求获取嵌入在HTML中的资源（html，css，javascript，图片，音乐······），对于未知类型，会弹出对话框。</li>
+  <li>浏览器发送异步请求。</li>
+  <li>页面全部渲染结束。</li>
+</ol>
+
+<p><img src="/img/Simple_8/06.png" alt="" /></p>
+
+<h4 id="3方法和状态码">3、方法和状态码</h4>
+
+<p>方法是用来告诉服务器做什么事情的，状态码则用来告诉客户端，发生了什么事情</p>
+
+<p><img src="/img/Simple_8/07.png" alt="" /></p>
+
+<p><img src="/img/Simple_8/08.png" alt="" /></p>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/python/2017/03/02/python_lambdas/" data-toggle="tooltip" data-placement="top" title="Lambdas表达式">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/ios/2017/04/10/Runloop_1/" data-toggle="tooltip" data-placement="top" title="Runloop(1):基础">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

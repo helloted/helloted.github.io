@@ -75,13 +75,25 @@
                 
 				
                 <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
                     <a href="/about/">About</a>
                 </li>
 				
                 
 				
                 <li>
-                    <a href="/contact/">Contact</a>
+                    <a href="/app/">APP</a>
                 </li>
 				
                 
@@ -131,7 +143,7 @@
 
 <p>我个人使用<code class="highlighter-rouge">defaultdict</code>相当多。 与<code class="highlighter-rouge">dict</code>不同，<code class="highlighter-rouge">defaultdict</code>不需要检查一个键是否存在。 所以我们可以这样做：</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
 
 <span class="n">colours</span> <span class="o">=</span> <span class="p">(</span>
     <span class="p">(</span><span class="s">'Yasoob'</span><span class="p">,</span> <span class="s">'Yellow'</span><span class="p">),</span>
@@ -156,36 +168,32 @@
 <span class="c">#     'Ahmed': ['Silver'],</span>
 <span class="c">#     'Ali': ['Blue', 'Black']</span>
 <span class="c"># })</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>另外一个非常重要的用法是在字典中追加嵌套list。 如果一个键不在字典中，那么会产生一个KeyError。 <code class="highlighter-rouge">defaultdict</code>允许我们以一种聪明的方式绕开这个问题。 首先让我分享一个使用dict的例子，它引发了KeyError，然后我将使用<code class="highlighter-rouge">defaultdict</code>来分享一个解决方案。</p>
 
 <p>问题：</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">some_dict</span> <span class="o">=</span> <span class="p">{}</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">some_dict</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="n">some_dict</span><span class="p">[</span><span class="s">'colours'</span><span class="p">][</span><span class="s">'favourite'</span><span class="p">]</span> <span class="o">=</span> <span class="s">"yellow"</span>
 <span class="c"># Raises KeyError: 'colours'</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>解决方案：</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">collections</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">collections</span>
 <span class="n">tree</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
 <span class="n">some_dict</span> <span class="o">=</span> <span class="n">tree</span><span class="p">()</span>
 <span class="n">some_dict</span><span class="p">[</span><span class="s">'colours'</span><span class="p">][</span><span class="s">'favourite'</span><span class="p">]</span> <span class="o">=</span> <span class="s">"yellow"</span>
 <span class="c"># Works fine</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>你可以打印 <code class="highlighter-rouge">some_dict</code> 用 <code class="highlighter-rouge">json.dumps</code>:</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">json</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">json</span>
 <span class="k">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">some_dict</span><span class="p">))</span>
 <span class="c"># Output: {"colours": {"favourite": "yellow"}}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="ordereddict">OrderedDict</h4>
 
@@ -193,7 +201,7 @@
 
 <p>无顺序：</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">colours</span> <span class="o">=</span>  <span class="p">{</span><span class="s">"Red"</span> <span class="p">:</span> <span class="mi">198</span><span class="p">,</span> <span class="s">"Green"</span> <span class="p">:</span> <span class="mi">170</span><span class="p">,</span> <span class="s">"Blue"</span> <span class="p">:</span> <span class="mi">160</span><span class="p">}</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">colours</span> <span class="o">=</span>  <span class="p">{</span><span class="s">"Red"</span> <span class="p">:</span> <span class="mi">198</span><span class="p">,</span> <span class="s">"Green"</span> <span class="p">:</span> <span class="mi">170</span><span class="p">,</span> <span class="s">"Blue"</span> <span class="p">:</span> <span class="mi">160</span><span class="p">}</span>
 <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">colours</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
     <span class="k">print</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 <span class="c"># Output:</span>
@@ -201,12 +209,11 @@
 <span class="c">#   Blue 160</span>
 <span class="c">#   Red 198</span>
 <span class="c"># Entries are retrieved in an unpredictable order</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>有顺序</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
 
 <span class="n">colours</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">([(</span><span class="s">"Red"</span><span class="p">,</span> <span class="mi">198</span><span class="p">),</span> <span class="p">(</span><span class="s">"Green"</span><span class="p">,</span> <span class="mi">170</span><span class="p">),</span> <span class="p">(</span><span class="s">"Blue"</span><span class="p">,</span> <span class="mi">160</span><span class="p">)])</span>
 <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">colours</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -216,14 +223,13 @@
 <span class="c">#   Green 170</span>
 <span class="c">#   Blue 160</span>
 <span class="c"># Insertion order is preserved</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="counter">counter</h4>
 
 <p>counter计数器允许我们计算特定项目的出现次数。 例如，它可以用来计算个人最喜欢的颜色的数量：</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
 
 <span class="n">colours</span> <span class="o">=</span> <span class="p">(</span>
     <span class="p">(</span><span class="s">'Yasoob'</span><span class="p">,</span> <span class="s">'Yellow'</span><span class="p">),</span>
@@ -242,20 +248,18 @@
 <span class="c">#    'Arham': 1,</span>
 <span class="c">#    'Ahmed': 1</span>
 <span class="c"># })</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>同样可以用这个来计算一个文件中的最大相同行数</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">'filename'</span><span class="p">,</span> <span class="s">'rb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">'filename'</span><span class="p">,</span> <span class="s">'rb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="n">line_count</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="n">line_count</span><span class="p">)</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><code class="highlighter-rouge">deque</code>为您提供了一个双端队列，这意味着您可以从队列的任意一侧追加和删除元素。</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span>
 
 <span class="n">d</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
 <span class="n">d</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">'1'</span><span class="p">)</span>
@@ -270,12 +274,11 @@
 
 <span class="k">print</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 <span class="c"># Output: '3'</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>你可以在两端pop值：</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">d</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">d</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
 <span class="k">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
 <span class="c"># Output: 5</span>
 
@@ -287,34 +290,31 @@
 
 <span class="k">print</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
 <span class="c"># Output: deque([1, 2, 3])</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>你可以限制队列的最大长度。如果这样做当我们接收超出最大长度时，队里会在另外一端pop出。</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">d</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="n">maxlen</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">d</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="n">maxlen</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
 
 <span class="n">d</span> <span class="o">=</span> <span class="n">deque</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
 <span class="n">d</span><span class="o">.</span><span class="n">extendleft</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span>
 <span class="n">d</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">])</span>
 <span class="k">print</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
 <span class="c"># Output: deque([0, 1, 2, 3, 4, 5, 6, 7, 8])</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="namedtuple">namedtuple</h4>
 
 <p>你可能已经熟悉元组了。 一个元组基本上是一个不可变的list，它允许你存储由逗号分隔的一系列值。 他们就像list，但有几个关键的区别。 主要的一点是，不像list，你不能重新分配元组中的项目。 为了访问元组中的值，可以使用如下的整数索引：</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">man</span> <span class="o">=</span> <span class="p">(</span><span class="s">'Ali'</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">man</span> <span class="o">=</span> <span class="p">(</span><span class="s">'Ali'</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="n">man</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="c"># Output: Ali</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>那么现在是什么<code class="highlighter-rouge">namedtuple</code>？ 他们把元组变成方便的容器来完成简单的任务。 使用<code class="highlighter-rouge">namedtuples</code>，您不必使用整数索引来访问元组的成员。 你可以把<code class="highlighter-rouge">namedtuple</code>看作字典，但不同于字典，它们是不可变的。</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
 
 <span class="n">Animal</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s">'Animal'</span><span class="p">,</span> <span class="s">'name age type'</span><span class="p">)</span>
 <span class="n">perry</span> <span class="o">=</span> <span class="n">Animal</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">"perry"</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">31</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s">"cat"</span><span class="p">)</span>
@@ -324,14 +324,13 @@
 
 <span class="k">print</span><span class="p">(</span><span class="n">perry</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 <span class="c"># Output: 'perry'</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>现在你可以看到，我们可以通过使用一个名称来访问元组的成员。让我们再解析一下。 一个命名的元组有两个必需的参数。 它们是元组的名称和元组的field_names。 在上面的例子中，我们的元组名是’Animal’，而元组的field_names是’name’，’age’和’type’。 <code class="highlighter-rouge">Namedtuple</code>使你的元组自己生成文档。 快速浏览一下你的代码就可以很容易的理解到底发生了什么。 而且由于您不必使用整数索引来访问元组的成员，因此可以更容易地维护您的代码。 此外，由于<code class="highlighter-rouge">namedtuple</code>实例没有每个实例字典，所以它们是轻量级的，并且不需要比常规元组更多的内存。 这使得它们比字典更快。 但是，请记住，与元组一样，<code class="highlighter-rouge">namedtuples</code>中的属性是不可变的。</p>
 
 <p>这意味着这是下面这是行不通的：</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
 
 <span class="n">Animal</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s">'Animal'</span><span class="p">,</span> <span class="s">'name age type'</span><span class="p">)</span>
 <span class="n">perry</span> <span class="o">=</span> <span class="n">Animal</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">"perry"</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">31</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s">"cat"</span><span class="p">)</span>
@@ -340,34 +339,31 @@
 <span class="c"># Output: Traceback (most recent call last):</span>
 <span class="c">#            File "", line 1, in</span>
 <span class="c">#         AttributeError: can't set attribute</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>你同样可以用index来访问：</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
 
 <span class="n">Animal</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s">'Animal'</span><span class="p">,</span> <span class="s">'name age type'</span><span class="p">)</span>
 <span class="n">perry</span> <span class="o">=</span> <span class="n">Animal</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">"perry"</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">31</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s">"cat"</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="n">perry</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="c"># Output: perry</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>你可以把<code class="highlighter-rouge">namedtuple</code>转化成字典</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
 
 <span class="n">Animal</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s">'Animal'</span><span class="p">,</span> <span class="s">'name age type'</span><span class="p">)</span>
 <span class="n">perry</span> <span class="o">=</span> <span class="n">Animal</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">"Perry"</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">31</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s">"cat"</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="n">perry</span><span class="o">.</span><span class="n">_asdict</span><span class="p">())</span>
 <span class="c"># Output: OrderedDict([('name', 'Perry'), ('age', 31), ...</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="enumenumpython-34">enum.Enum(Python 3.4+)</h4>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
 <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
 
 <span class="k">class</span> <span class="nc">Species</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
@@ -397,16 +393,14 @@
 <span class="bp">True</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">charlie</span><span class="o">.</span><span class="nb">type</span>
 <span class="o">&lt;</span><span class="n">Species</span><span class="o">.</span><span class="n">cat</span><span class="p">:</span> <span class="mi">1</span><span class="o">&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>有三个方法去访问enumeration成员</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">Species</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Species</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">Species</span><span class="p">[</span><span class="s">'cat'</span><span class="p">]</span>
 <span class="n">Species</span><span class="o">.</span><span class="n">cat</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 
 

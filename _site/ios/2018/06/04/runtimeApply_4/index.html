@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>Runtime应用(四)：NSProxy - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/ios/2018/06/04/runtimeApply_4/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/app/">APP</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>Runtime应用(四)：NSProxy</h1>
+                    
+                    <h2 class="subheading">利用NSProxy以及运行时来实现“多继承”</h2>
+                    
+                    <span class="meta">Posted by Ted on June 4, 2018</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h4 id="1继承">1、继承</h4>
+
+<p>继承是面向对象的三个基本特征(封装，继承，多态)之一，Objective-C语法中，是单继承。而多继承可以看作是单继承的扩展。所谓多继承是指派生类具有多个基类，派生类与每个基类之间的关系仍可看作是一个单继承。我们可以利用NSProxy的特性来模拟多继承</p>
+
+<blockquote>
+  <p>NSProxy is an abstract superclass defining an API for objects that act as stand-ins for other objects or for objects that don’t exist yet. Typically, a message to a proxy is forwarded to the real object or causes the proxy to load (or transform itself into) the real object. Subclasses of NSProxy can be used to implement transparent distributed messaging (for example, <a href="https://link.jianshu.com?t=https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSDistantObject_Class/index.html#//apple_ref/occ/cl/NSDistantObject">NSDistantObject</a>) or for lazy instantiation of objects that are expensive to create.</p>
+</blockquote>
+
+<p>NSProxy是与NSObject并列的一个类，它有两个运行时方法</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">forwardInvocation</span><span class="p">:(</span><span class="n">NSInvocation</span> <span class="o">*</span><span class="p">)</span><span class="nv">anInvocation</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">NSMethodSignature</span> <span class="o">*</span><span class="p">)</span><span class="nf">methodSignatureForSelector</span><span class="p">:(</span><span class="n">SEL</span><span class="p">)</span><span class="nv">sel</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>我们可以通过消息转发的特性，将消息转发到另外的实例来实现多继承。</p>
+
+<h4 id="2多继承">2、多继承</h4>
+
+<p>先新建两个普通类Teacher和Worker;</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#import "Teacher.h"
+</span>
+<span class="k">@implementation</span> <span class="nc">Teacher</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">teachStudent</span><span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"我可以教导学生"</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">@end</span>
+</code></pre></div></div>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#import "Worker.h"
+</span>
+<span class="k">@implementation</span> <span class="nc">Worker</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">workHard</span><span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"我可以做工"</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">@end</span>
+</code></pre></div></div>
+
+<p>再新建一个类SuperPerson继承自NSProxy</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@interface SuperPerson : NSProxy
+
++ (instancetype)person;
+
+@end
+</code></pre></div></div>
+
+<p>NSProxy与NSObject不同的是，初始化一个NSProxy只需要alloc方法，不需要init方法，为了模仿普通类，我们自定义一个init方法，并在其中做一些初始化</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="n">init</span><span class="p">{</span>
+    <span class="n">_methodsMap</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSMutableDictionary</span> <span class="nf">dictionary</span><span class="p">];</span>
+    <span class="n">Teacher</span> <span class="o">*</span><span class="n">teacher</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Teacher</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+    <span class="n">Worker</span> <span class="o">*</span><span class="n">worker</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Worker</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+    
+    <span class="c1">// 将"父类"方法继承</span>
+    <span class="p">[</span><span class="n">self</span> <span class="nf">inheriteMethodsFromSuperTarget</span><span class="p">:</span><span class="n">teacher</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">self</span> <span class="nf">inheriteMethodsFromSuperTarget</span><span class="p">:</span><span class="n">worker</span><span class="p">];</span>
+    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>初始化的主要工作就是将需要继承的类的方法存储好</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">inheriteMethodsFromSuperTarget</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">target</span><span class="p">{</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">numberOfMethods</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">Method</span> <span class="o">*</span><span class="n">method_list</span> <span class="o">=</span> <span class="n">class_copyMethodList</span><span class="p">([</span><span class="n">target</span> <span class="nf">class</span><span class="p">],</span> <span class="o">&amp;</span><span class="n">numberOfMethods</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numberOfMethods</span><span class="p">;</span> <span class="n">i</span> <span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">Method</span> <span class="n">temp_method</span> <span class="o">=</span> <span class="n">method_list</span><span class="p">[</span><span class="nf">i</span><span class="p">];</span>
+        <span class="n">SEL</span> <span class="n">temp_sel</span> <span class="o">=</span> <span class="n">method_getName</span><span class="p">(</span><span class="n">temp_method</span><span class="p">);</span>
+        <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">temp_method_name</span> <span class="o">=</span> <span class="n">sel_getName</span><span class="p">(</span><span class="n">temp_sel</span><span class="p">);</span>
+        <span class="p">[</span><span class="n">_methodsMap</span> <span class="nf">setObject</span><span class="p">:</span><span class="n">target</span> <span class="nf">forKey</span><span class="p">:[</span><span class="n">NSString</span> <span class="nf">stringWithUTF8String</span><span class="p">:</span><span class="n">temp_method_name</span><span class="p">]];</span>
+    <span class="p">}</span>
+    <span class="n">free</span><span class="p">(</span><span class="n">method_list</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>然后重写两个消息转发的方法</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">forwardInvocation</span><span class="p">:(</span><span class="n">NSInvocation</span> <span class="o">*</span><span class="p">)</span><span class="nv">invocation</span><span class="p">{</span>
+    <span class="n">SEL</span> <span class="n">sel</span> <span class="o">=</span> <span class="n">invocation</span><span class="p">.</span><span class="n">selector</span><span class="p">;</span>
+    <span class="n">NSString</span> <span class="o">*</span><span class="n">methodName</span> <span class="o">=</span> <span class="n">NSStringFromSelector</span><span class="p">(</span><span class="n">sel</span><span class="p">);</span>
+    
+    <span class="c1">//查找对应的target</span>
+    <span class="n">id</span> <span class="n">target</span> <span class="o">=</span> <span class="n">_methodsMap</span><span class="p">[</span><span class="nf">methodName</span><span class="p">];</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="n">target</span> <span class="o">&amp;&amp;</span> <span class="p">[</span><span class="n">target</span> <span class="nf">respondsToSelector</span><span class="p">:</span><span class="n">sel</span><span class="p">])</span> <span class="p">{</span>
+        <span class="p">[</span><span class="n">invocation</span> <span class="nf">invokeWithTarget</span><span class="p">:</span><span class="n">target</span><span class="p">];</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="p">[</span><span class="n">super</span> <span class="nf">forwardInvocation</span><span class="p">:</span><span class="n">invocation</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="n">NSMethodSignature</span> <span class="o">*</span><span class="p">)</span><span class="nf">methodSignatureForSelector</span><span class="p">:(</span><span class="n">SEL</span><span class="p">)</span><span class="nv">sel</span><span class="p">{</span>
+    <span class="n">NSString</span> <span class="o">*</span><span class="n">methodName</span> <span class="o">=</span> <span class="n">NSStringFromSelector</span><span class="p">(</span><span class="n">sel</span><span class="p">);</span>
+    <span class="n">id</span> <span class="n">target</span> <span class="o">=</span> <span class="n">_methodsMap</span><span class="p">[</span><span class="nf">methodName</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">target</span> <span class="o">&amp;&amp;</span> <span class="p">[</span><span class="n">target</span> <span class="nf">respondsToSelector</span><span class="p">:</span><span class="n">sel</span><span class="p">])</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">target</span> <span class="nf">methodSignatureForSelector</span><span class="p">:</span><span class="n">sel</span><span class="p">];</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">super</span> <span class="nf">methodSignatureForSelector</span><span class="p">:</span><span class="n">sel</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><img src="/img/Simple_8/12.png" alt="img" /></p>
+
+<p>可以看到虽然，没有实现workHard和teachStudent两个方法，我们依旧可以调用者两个其他类的方法，模拟成了多继承。</p>
+
+<p>完整代码，可以在<a href="https://github.com/helloted/iOS_Demo/tree/master/NSProxy">github</a>下载</p>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/ios/2018/05/30/runtimeApply_3/" data-toggle="tooltip" data-placement="top" title="Runtime应用(三)：NSInvocation">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/%E5%B7%A5%E5%85%B7/2018/06/21/appstore/" data-toggle="tooltip" data-placement="top" title="iOS APP分发">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

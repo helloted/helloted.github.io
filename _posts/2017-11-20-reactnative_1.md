@@ -1,6 +1,6 @@
 ---
 layout:     post
-category:   iOS
+category:   React
 title:      "React Native(一)：基础"
 subtitle:   "React Natieve的常用命令和第三方使用"
 date:       2017-11-20 12:00:00
