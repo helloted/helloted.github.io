@@ -1,8 +1,8 @@
 ---
 layout:     post
 category:   代码
-title:      "常用代码"
-subtitle:   "常用代码"
+title:      "常用代码/Code"
+subtitle:   "iOS常用代码"
 date:       2016-12-21 12:00:00
 author:     "Ted"
 header-img: "img/bg_01.jpg"
