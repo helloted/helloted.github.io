@@ -5,7 +5,7 @@ title:      "C++与Objective-C混编"
 subtitle:   "iOS开发中的C++与Objective-C混编"
 date:       2018-08-07 12:00:00
 author:     "Ted"
-header-img: "img/default.jpg"
+header-img: "img/bg_03.jpg"
 ---
 
 在一些iOS开发中，经常有一些第三方的框架是用C++写的，有时候我们需要在C++文件中调用OC方法，或者在OC文件中调用C++函数，也就是C++与Objective-C混编。但是我们知道在纯OC文件中是不能编译C++代码的，在纯C++文件中又是不能编译Objective-C代码的。直接引入编译不过会报错
