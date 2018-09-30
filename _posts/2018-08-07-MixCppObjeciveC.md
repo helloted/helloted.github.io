@@ -15,6 +15,7 @@ header-img: "img/default.jpg"
 如果要同时混编，就要利用下面的几种方式。
 
 - Objective-C++
+- C函数桥接
 - 运行时
 
 #### 一、通过Objective-C++
