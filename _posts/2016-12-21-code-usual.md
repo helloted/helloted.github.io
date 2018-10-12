@@ -11,7 +11,8 @@ header-img: "img/bg_01.jpg"
 #### 1、Alert
 
 ```objc
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"提示" message:@"确定要这样做么" preferredStyle:UIAlertControllerStyleAlert];
+- (void)showAlert{
+   UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"提示" message:@"确定要这样做么" preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         
     }];
@@ -20,7 +21,19 @@ header-img: "img/bg_01.jpg"
     }];
     [alertController addAction:cancelAction];
     [alertController addAction:okAction];
-    [self presentViewController:alertController animated:NO completion:nil];
+    [[self getCurrentViewController] presentViewController:alertController animated:NO completion:nil]; 
+}    
+
+- (UIViewController *)getCurrentViewController
+{
+    UIResponder *responder = self;
+    while ((responder = [responder nextResponder])){
+        if ([responder isKindOfClass: [UIViewController class]]){
+            return (UIViewController *)responder;
+        }
+    }
+    return nil;
+}
 ```
 
 #### 2、GCD

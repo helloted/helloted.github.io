@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>代码优化之Analyze检测 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/08/07/Analysis/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/app/">APP</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>代码优化之Analyze检测</h1>
+                    
+                    <h2 class="subheading">iOS开发中静态检测-Analyze</h2>
+                    
+                    <span class="meta">Posted by Ted on August 7, 2018</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h3 id="一clang-static-analyzer简介">一、Clang Static Analyzer简介</h3>
+
+<p>https://clang-analyzer.llvm.org/</p>
+
+<p>Clang Static Analyzer是一个源码分析工具用于在C, C++和Objective-C项目中查找bugs。现在它可以在<a href="https://clang-analyzer.llvm.org/scan-build.html">单独的工具</a> 或者 <a href="https://clang-analyzer.llvm.org/xcode.html">Xcode中使用</a>，如果是单独使用，通过过命令行，与代码构建一起。</p>
+
+<p>Analyzer是100％开源的，是Clang项目的一部分。 与Clang的其余部分一样，Analyzer实现为一个C ++库，可以被其他工具或者应用使用。</p>
+
+<h4 id="静态分析">静态分析</h4>
+
+<p>术语“静态分析”有多种意思的，但在这里我们使用它来表示一些用于分析源代码以便自动发现bugs的算法和技术的集合。类似于编译器警告（这对于查找编码错误很有用），但更进一步，一般使用运行时调试技术（如测试）发现错误。</p>
+
+<p>静态分析错误查找工具在过去几十年中已经从基本的句法检查器发展到那些通过推理代码语义来发现深层错误的工具。 Clang Static Analyzer的目标是提供工业级静态分析框架，用于分析C，C ++和Objective-C程序，这些程序是免费提供的，可扩展的，并且具有高质量的实现。</p>
+
+<p>顾名思义，Clang Static Analyzer建立在Clang和LLVM之上。严格地说，Analyzer是Clang的一部分，因为Clang包含一组可重用的C ++库，用于构建强大的源代码级工具。 Clang Static Analyzer使用的静态分析引擎是一个Clang库，可以在不同的上下文和不同的客户端中重用。</p>
+
+<h4 id="需要考虑的情况">需要考虑的情况</h4>
+
+<p>虽然我们认为Clang Static Analyzer对于发现bug已经非常有用，但使用它时要记住几点。</p>
+
+<p>1、持续改进中
+Analyzer是一项持续不断的工作。有许多计划的增强功能可以提高其分析算法的精度和范围，以及它将发现的各种错误。</p>
+
+<p>2、比编译慢
+在操作上，使用静态分析自动查找深度程序错误是关于交换CPU时间以加强代码。由于使用最先进的静态分析工具进行深入分析，静态分析可能比编译慢得多。</p>
+
+<p>虽然Clang Static Analyzer的设计尽可能快，重量轻，但不要指望它与编译程序一样快（即使启用了优化）。发现bug所需的一些算法在最坏的情况下可能需要指数时间。</p>
+
+<p>Clang Static Analyzer在合理的时间内运行，既可以限制它将要执行的检查工作量，也可以使用聪明的算法来减少查找错误所必须做的工作量。</p>
+
+<p>3、误报
+静态分析并不完美。它可能错误地标记代码行为正确的程序中的错误。由于某些代码检查需要比其他检查更高的分析精度，因此误报的频率在不同检查之间可能会有很大差异。</p>
+
+<p>4、更多检查
+静态分析并不神奇，Analyzer只能找到一些指定的bug。如果您希望Clang Static Analyzer找到特定类型的错误，请随时提交功能请求或提供您自己的补丁。</p>
+
+<h3 id="二实际例子">二、实际例子</h3>
+
+<h4 id="1dead-store">1、Dead Store</h4>
+
+<p><img src="/img/Simple_8/34.png" alt="img" /></p>
+
+<p>值被赋予后未被使用。分为两种</p>
+
+<p><img src="/img/Simple_8/35.png" alt="img" /></p>
+
+<blockquote>
+  <p>Value stored to ‘result’ during its initialization is never read</p>
+</blockquote>
+
+<p>这里的result变量报蓝是因为result变量在下面被重新申请了内存，这里初始化的内存从来没有被使用过，造成内存泄漏</p>
+
+<p><code class="highlighter-rouge">修改</code>：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSMutableDictionary* result;
+</code></pre></div></div>
+
+<blockquote>
+  <p>Value stored to ‘result’ is never read</p>
+</blockquote>
+
+<p>result变量在之后的代码中从未被访问，造成内存泄漏</p>
+
+<p><code class="highlighter-rouge">修改</code>：将代码注释或者删除即可。</p>
+
+<h4 id="2coding-conventionsapple">2、Coding Conventions(Apple)</h4>
+
+<p><img src="/img/Simple_8/36.png" alt="img" /></p>
+
+<p>这是苹果的一些编码规范，照着提示进行修改即可，比如这里的在接受NSError**变量为参数的方法中应该返回一个non-void的值来表明这个error是否发生。</p>
+
+<h4 id="3core-foundationobjective-c">3、Core Foundation/Objective-C</h4>
+
+<p>Core Foundation/Objective-C的一些编码规范，比如在一些生命周期的方法中要调用父类的方法，会有一些操作</p>
+
+<p><img src="/img/Simple_8/38.png" alt="img" /></p>
+
+<h4 id="4memory-error">4、Memory error</h4>
+
+<blockquote>
+  <p>Null passed to a callee that requires a non-null 1st parameter</p>
+</blockquote>
+
+<p>这种是传值的时候传了一个空值</p>
+
+<p><img src="/img/Simple_8/40.png" alt="img" /></p>
+
+<blockquote>
+  <p>nil returned from a method that is expected to return a non-null value</p>
+</blockquote>
+
+<p>这种是返回的值返回了一个空值，一般在数据源返回的时候如果返回空值会报这个蓝</p>
+
+<p><img src="/img/Simple_8/37.png" alt="img" /></p>
+
+<h4 id="5memorycore-foundationobjective-c">5、Memory(Core Foundation/Objective-C)</h4>
+
+<p>代码逻辑导致的潜在的内存泄漏，因为现在是ARC，所以Core Foundation内存泄漏的可能性比较大</p>
+
+<p><img src="/img/Simple_8/39.png" alt="img" /></p>
+
+<h4 id="6logic-error">6、Logic Error</h4>
+
+<p><img src="/img/Simple_8/41.png" alt="img" /></p>
+
+<p>逻辑不严谨或者错误造成的问题</p>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/%E5%B7%A5%E5%85%B7/2018/08/07/MixCppObjeciveC/" data-toggle="tooltip" data-placement="top" title="C++与Objective-C混编">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

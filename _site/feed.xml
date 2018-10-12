@@ -1,4 +1,109 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-09-29T14:18:57+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">C++与Objective-C混编</title><link href="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/08/07/MixCppObjeciveC/" rel="alternate" type="text/html" title="C++与Objective-C混编" /><published>2018-08-07T20:00:00+08:00</published><updated>2018-08-07T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/08/07/MixCppObjeciveC</id><content type="html" xml:base="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/08/07/MixCppObjeciveC/">&lt;p&gt;在一些iOS开发中，经常有一些第三方的框架是用C++写的，有时候我们需要在C++文件中调用OC方法，或者在OC文件中调用C++函数，也就是C++与Objective-C混编。但是我们知道在纯OC文件中是不能编译C++代码的，在纯C++文件中又是不能编译Objective-C代码的。直接引入编译不过会报错&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-10-12T18:47:49+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">代码优化之Analyze检测</title><link href="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/08/07/Analysis/" rel="alternate" type="text/html" title="代码优化之Analyze检测" /><published>2018-08-07T20:00:00+08:00</published><updated>2018-08-07T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/08/07/Analysis</id><content type="html" xml:base="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/08/07/Analysis/">&lt;h3 id=&quot;一clang-static-analyzer简介&quot;&gt;一、Clang Static Analyzer简介&lt;/h3&gt;
+
+&lt;p&gt;https://clang-analyzer.llvm.org/&lt;/p&gt;
+
+&lt;p&gt;Clang Static Analyzer是一个源码分析工具用于在C, C++和Objective-C项目中查找bugs。现在它可以在&lt;a href=&quot;https://clang-analyzer.llvm.org/scan-build.html&quot;&gt;单独的工具&lt;/a&gt; 或者 &lt;a href=&quot;https://clang-analyzer.llvm.org/xcode.html&quot;&gt;Xcode中使用&lt;/a&gt;，如果是单独使用，通过过命令行，与代码构建一起。&lt;/p&gt;
+
+&lt;p&gt;Analyzer是100％开源的，是Clang项目的一部分。 与Clang的其余部分一样，Analyzer实现为一个C ++库，可以被其他工具或者应用使用。&lt;/p&gt;
+
+&lt;h4 id=&quot;静态分析&quot;&gt;静态分析&lt;/h4&gt;
+
+&lt;p&gt;术语“静态分析”有多种意思的，但在这里我们使用它来表示一些用于分析源代码以便自动发现bugs的算法和技术的集合。类似于编译器警告（这对于查找编码错误很有用），但更进一步，一般使用运行时调试技术（如测试）发现错误。&lt;/p&gt;
+
+&lt;p&gt;静态分析错误查找工具在过去几十年中已经从基本的句法检查器发展到那些通过推理代码语义来发现深层错误的工具。 Clang Static Analyzer的目标是提供工业级静态分析框架，用于分析C，C ++和Objective-C程序，这些程序是免费提供的，可扩展的，并且具有高质量的实现。&lt;/p&gt;
+
+&lt;p&gt;顾名思义，Clang Static Analyzer建立在Clang和LLVM之上。严格地说，Analyzer是Clang的一部分，因为Clang包含一组可重用的C ++库，用于构建强大的源代码级工具。 Clang Static Analyzer使用的静态分析引擎是一个Clang库，可以在不同的上下文和不同的客户端中重用。&lt;/p&gt;
+
+&lt;h4 id=&quot;需要考虑的情况&quot;&gt;需要考虑的情况&lt;/h4&gt;
+
+&lt;p&gt;虽然我们认为Clang Static Analyzer对于发现bug已经非常有用，但使用它时要记住几点。&lt;/p&gt;
+
+&lt;p&gt;1、持续改进中
+Analyzer是一项持续不断的工作。有许多计划的增强功能可以提高其分析算法的精度和范围，以及它将发现的各种错误。&lt;/p&gt;
+
+&lt;p&gt;2、比编译慢
+在操作上，使用静态分析自动查找深度程序错误是关于交换CPU时间以加强代码。由于使用最先进的静态分析工具进行深入分析，静态分析可能比编译慢得多。&lt;/p&gt;
+
+&lt;p&gt;虽然Clang Static Analyzer的设计尽可能快，重量轻，但不要指望它与编译程序一样快（即使启用了优化）。发现bug所需的一些算法在最坏的情况下可能需要指数时间。&lt;/p&gt;
+
+&lt;p&gt;Clang Static Analyzer在合理的时间内运行，既可以限制它将要执行的检查工作量，也可以使用聪明的算法来减少查找错误所必须做的工作量。&lt;/p&gt;
+
+&lt;p&gt;3、误报
+静态分析并不完美。它可能错误地标记代码行为正确的程序中的错误。由于某些代码检查需要比其他检查更高的分析精度，因此误报的频率在不同检查之间可能会有很大差异。&lt;/p&gt;
+
+&lt;p&gt;4、更多检查
+静态分析并不神奇，Analyzer只能找到一些指定的bug。如果您希望Clang Static Analyzer找到特定类型的错误，请随时提交功能请求或提供您自己的补丁。&lt;/p&gt;
+
+&lt;h3 id=&quot;二实际例子&quot;&gt;二、实际例子&lt;/h3&gt;
+
+&lt;h4 id=&quot;1dead-store&quot;&gt;1、Dead Store&lt;/h4&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/34.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;值被赋予后未被使用。分为两种&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/35.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Value stored to ‘result’ during its initialization is never read&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;这里的result变量报蓝是因为result变量在下面被重新申请了内存，这里初始化的内存从来没有被使用过，造成内存泄漏&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;修改&lt;/code&gt;：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSMutableDictionary* result;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Value stored to ‘result’ is never read&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;result变量在之后的代码中从未被访问，造成内存泄漏&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;修改&lt;/code&gt;：将代码注释或者删除即可。&lt;/p&gt;
+
+&lt;h4 id=&quot;2coding-conventionsapple&quot;&gt;2、Coding Conventions(Apple)&lt;/h4&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/36.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;这是苹果的一些编码规范，照着提示进行修改即可，比如这里的在接受NSError**变量为参数的方法中应该返回一个non-void的值来表明这个error是否发生。&lt;/p&gt;
+
+&lt;h4 id=&quot;3core-foundationobjective-c&quot;&gt;3、Core Foundation/Objective-C&lt;/h4&gt;
+
+&lt;p&gt;Core Foundation/Objective-C的一些编码规范，比如在一些生命周期的方法中要调用父类的方法，会有一些操作&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/38.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;4memory-error&quot;&gt;4、Memory error&lt;/h4&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Null passed to a callee that requires a non-null 1st parameter&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;这种是传值的时候传了一个空值&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/40.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;nil returned from a method that is expected to return a non-null value&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;这种是返回的值返回了一个空值，一般在数据源返回的时候如果返回空值会报这个蓝&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/37.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;5memorycore-foundationobjective-c&quot;&gt;5、Memory(Core Foundation/Objective-C)&lt;/h4&gt;
+
+&lt;p&gt;代码逻辑导致的潜在的内存泄漏，因为现在是ARC，所以Core Foundation内存泄漏的可能性比较大&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/39.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;6logic-error&quot;&gt;6、Logic Error&lt;/h4&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/41.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;逻辑不严谨或者错误造成的问题&lt;/p&gt;</content><author><name>Ted</name></author><category term="工具" /><summary type="html">一、Clang Static Analyzer简介</summary></entry><entry><title type="html">C++与Objective-C混编</title><link href="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/08/07/MixCppObjeciveC/" rel="alternate" type="text/html" title="C++与Objective-C混编" /><published>2018-08-07T20:00:00+08:00</published><updated>2018-08-07T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/08/07/MixCppObjeciveC</id><content type="html" xml:base="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/08/07/MixCppObjeciveC/">&lt;p&gt;在一些iOS开发中，经常有一些第三方的框架是用C++写的，有时候我们需要在C++文件中调用OC方法，或者在OC文件中调用C++函数，也就是C++与Objective-C混编。但是我们知道在纯OC文件中是不能编译C++代码的，在纯C++文件中又是不能编译Objective-C代码的。直接引入编译不过会报错&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/Simple_1/39.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 
@@ -1194,115 +1299,4 @@ lipo &lt;span class=&quot;nt&quot;&gt;-create&lt;/span&gt; &lt;span class=&quot;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;以上代码可以在&lt;a href=&quot;https://github.com/helloted/iOS_Demo/tree/master/RTMPDemo&quot;&gt;推流Demo&lt;/a&gt;下载&lt;/p&gt;</content><author><name>Ted</name></author><category term="直播" /><summary type="html">一、编译lib库</summary></entry><entry><title type="html">Mac上搭建直播服务器</title><link href="http://www.helloted.com/%E7%9B%B4%E6%92%AD/2018/05/01/vlclive/" rel="alternate" type="text/html" title="Mac上搭建直播服务器" /><published>2018-05-01T20:00:00+08:00</published><updated>2018-05-01T20:00:00+08:00</updated><id>http://www.helloted.com/%E7%9B%B4%E6%92%AD/2018/05/01/vlclive</id><content type="html" xml:base="http://www.helloted.com/%E7%9B%B4%E6%92%AD/2018/05/01/vlclive/">&lt;h4 id=&quot;1安装nginx&quot;&gt;1、安装Nginx&lt;/h4&gt;
-
-&lt;p&gt;通过homebrew来安装支持rtmp协议模块的nginx&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;brew install nginx-full --with-rtmp-module
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;通过下面的命令来查看安装位置&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;brew info nginx-full
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/22.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;通过浏览器访问&lt;a href=&quot;http://localhost:8080&quot;&gt;http://localhost:8080&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/23.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;在nginx.conf里配置&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;rtmp {
-    server {
-        listen 1935;
-        application zbcs {
-            live on;
-            record off;
-        }
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;重启&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nginx -s reload
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;2安装ffmpeg来推流本地视频&quot;&gt;2、安装ffmpeg来推流本地视频&lt;/h4&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;brew install ffmpeg
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;推流命令为&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ffmpeg -re -i /Users/imac/Documents/demo.mp4 -vcodec copy -f flv rtmp://127.0.0.1:1935/zbcs/room
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ffmpeg -re -i 你的视频文件的绝对路径 -vcodec copy -f flv rtmp://localhost:1935/nginx配置的application名称/room
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;这就开始推流了&lt;/p&gt;
-
-&lt;h4 id=&quot;3vlc直播&quot;&gt;3、VLC直播&lt;/h4&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;mac端&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;下载vlc播放器，在File-&amp;gt;open network输入&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;rtmp://127.0.0.1:1935/zbcs/room
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/24.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;iPhone&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;下载VLC播放器，同一局域网，打开网络流，输入&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;rtmp://电脑的本地IP:1935/zbcs/room
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/26.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;4推流桌面或者摄像头直播&quot;&gt;4、推流桌面或者摄像头直播&lt;/h4&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ffmpeg -f avfoundation -list_devices true -i &quot;&quot;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/25.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;可以看到在视频设备：&lt;/p&gt;
-
-&lt;p&gt;0：摄像头&lt;/p&gt;
-
-&lt;p&gt;1：桌面捕获&lt;/p&gt;
-
-&lt;p&gt;音频设备：&lt;/p&gt;
-
-&lt;p&gt;0：麦克风&lt;/p&gt;
-
-&lt;p&gt;所以如果要直播摄像头&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ffmpeg -f avfoundation -i &quot;0&quot; -vcodec libx264  -f flv rtmp://localhost:1935/zbcs/room
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;加上声音&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ffmpeg -f avfoundation -i &quot;0:0&quot; -vcodec libx264  -acodec libmp3lame -ar 44100 -ac 1 -f flv rtmp://localhost:1935/zbcs/room
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;还可以设置频率和分辨率&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// 设置帧率为30帧，图像大小为320x240
-ffmpeg -f avfoundation -framerate 30 -video_size 320x240 -i &quot;0&quot; -vcodec libx264 -f flv rtmp://localhost:1935/zbcs/room
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;如果要实现电脑屏幕和摄像头一起直播&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ffmpeg -f avfoundation  -framerate 30 -i &quot;1:0&quot; -f avfoundation -framerate 30 -video_size 320x240 -i &quot;0&quot; -vcodec libx264 -filter_complex 'overlay=main_w-overlay_w-10:main_h-overlay_h-10'  -acodec libmp3lame -ar 44100 -ac 1 -f flv rtmp://localhost:1935/zbcs/room
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Ted</name></author><category term="直播" /><summary type="html">1、安装Nginx</summary></entry></feed>
+&lt;p&gt;以上代码可以在&lt;a href=&quot;https://github.com/helloted/iOS_Demo/tree/master/RTMPDemo&quot;&gt;推流Demo&lt;/a&gt;下载&lt;/p&gt;</content><author><name>Ted</name></author><category term="直播" /><summary type="html">一、编译lib库</summary></entry></feed>
