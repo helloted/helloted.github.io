@@ -89,3 +89,11 @@ dispatch_async(dispatch_get_global_queue(0,0), ^{
 }
 ```
 
+#### 5、点击事件
+
+```objc
+    [ImageView setUserInteractionEnabled:YES];
+    UIGestureRecognizer* ges = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(ImageViewTapped)];
+    [ImageView addGestureRecognizer:ges];
+```
+

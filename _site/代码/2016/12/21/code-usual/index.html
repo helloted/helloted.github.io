@@ -205,6 +205,13 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
+<h4 id="5点击事件">5、点击事件</h4>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="p">[</span><span class="n">ImageView</span> <span class="nf">setUserInteractionEnabled</span><span class="p">:</span><span class="nb">YES</span><span class="p">];</span>
+    <span class="n">UIGestureRecognizer</span><span class="o">*</span> <span class="n">ges</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UITapGestureRecognizer</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithTarget</span><span class="p">:</span><span class="n">self</span> <span class="nf">action</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="n">ImageViewTapped</span><span class="p">)];</span>
+    <span class="p">[</span><span class="n">ImageView</span> <span class="nf">addGestureRecognizer</span><span class="p">:</span><span class="n">ges</span><span class="p">];</span>
+</code></pre></div></div>
+
 
 
                 <hr>
