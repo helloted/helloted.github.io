@@ -136,7 +136,11 @@
   <p>NSProxy is an abstract superclass defining an API for objects that act as stand-ins for other objects or for objects that don’t exist yet. Typically, a message to a proxy is forwarded to the real object or causes the proxy to load (or transform itself into) the real object. Subclasses of NSProxy can be used to implement transparent distributed messaging (for example, <a href="https://link.jianshu.com?t=https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSDistantObject_Class/index.html#//apple_ref/occ/cl/NSDistantObject">NSDistantObject</a>) or for lazy instantiation of objects that are expensive to create.</p>
 </blockquote>
 
-<p>NSProxy是与NSObject并列的一个类，它有两个运行时方法</p>
+<p>NSProxy是与NSObject并列的一个类，</p>
+
+<p><img src="/img/Simple_8/42.png" alt="img" /></p>
+
+<p>它有两个运行时方法</p>
 
 <div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">forwardInvocation</span><span class="p">:(</span><span class="n">NSInvocation</span> <span class="o">*</span><span class="p">)</span><span class="nv">anInvocation</span><span class="p">;</span>
 <span class="k">-</span> <span class="p">(</span><span class="n">NSMethodSignature</span> <span class="o">*</span><span class="p">)</span><span class="nf">methodSignatureForSelector</span><span class="p">:(</span><span class="n">SEL</span><span class="p">)</span><span class="nv">sel</span><span class="p">;</span>

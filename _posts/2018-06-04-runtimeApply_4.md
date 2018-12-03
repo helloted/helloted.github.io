@@ -14,7 +14,11 @@ header-img: "img/default.jpg"
 
 > NSProxy is an abstract superclass defining an API for objects that act as stand-ins for other objects or for objects that don’t exist yet. Typically, a message to a proxy is forwarded to the real object or causes the proxy to load (or transform itself into) the real object. Subclasses of NSProxy can be used to implement transparent distributed messaging (for example, [NSDistantObject](https://link.jianshu.com?t=https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSDistantObject_Class/index.html#//apple_ref/occ/cl/NSDistantObject)) or for lazy instantiation of objects that are expensive to create.
 
-NSProxy是与NSObject并列的一个类，它有两个运行时方法
+NSProxy是与NSObject并列的一个类，
+
+![img](/img/Simple_8/42.png)
+
+它有两个运行时方法
 
 ```objc
 - (void)forwardInvocation:(NSInvocation *)anInvocation;

@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
+
+    <title>Warning统计 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/ios/2018/11/21/Warning/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/app/">APP</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>Warning统计</h1>
+                    
+                    <h2 class="subheading">Warning的一些案例统计</h2>
+                    
+                    <span class="meta">Posted by Ted on November 21, 2018</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h4 id="1block导致的循环引用">1、Block导致的循环引用</h4>
+
+<p>去除一方强引用即可</p>
+
+<h4 id="2block引起的循环引用误报">2、Block引起的循环引用误报</h4>
+
+<p><img src="/img/Simple_7/35.png" alt="img" /></p>
+
+<p>查看Marsony源码</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="nf">mas_makeConstraints</span><span class="p">:(</span><span class="kt">void</span><span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">MASConstraintMaker</span> <span class="o">*</span><span class="p">))</span><span class="nv">block</span> <span class="p">{</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">translatesAutoresizingMaskIntoConstraints</span> <span class="o">=</span> <span class="nb">NO</span><span class="p">;</span>
+    <span class="n">MASConstraintMaker</span> <span class="o">*</span><span class="n">constraintMaker</span> <span class="o">=</span> <span class="p">[[</span><span class="n">MASConstraintMaker</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithView</span><span class="p">:</span><span class="n">self</span><span class="p">];</span>
+    <span class="n">block</span><span class="p">(</span><span class="n">constraintMaker</span><span class="p">);</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">constraintMaker</span> <span class="nf">install</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>self并没有持有block，不会构成引用循环，这是Xcode9.3之后的误报。同样还有这种情况的有遍历的block;GCG的block、UIView animationBlock;</p>
+
+<blockquote>
+  <p>解决方案</p>
+</blockquote>
+
+<p>2.1、将下划线形式_的实例变量变成点语法</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// make.left.mas_greaterThanOrEqualTo(_circleNameLabel.mas_right);
+   make.left.mas_greaterThanOrEqualTo(self.circleNameLabel.mas_right);
+</code></pre></div></div>
+
+<p>2.2、将这种类型的报警去除</p>
+
+<p><img src="/img/Simple_7/36.png" alt="img" /></p>
+
+<h4 id="3不带参数的block">3、不带参数的Block</h4>
+
+<p>Xcode 9之后如果定义一个不带参数的block，会有Warning</p>
+
+<blockquote>
+  <p>Warning:This block declaration is not a prototype</p>
+</blockquote>
+
+<p><img src="/img/Simple_7/41.png" alt="img" /></p>
+
+<blockquote>
+  <p>解决方案</p>
+</blockquote>
+
+<p>3.1、加一个void参数</p>
+
+<p>3.2、全部忽略</p>
+
+<p><img src="/img/Simple_7/42.png" alt="img" /></p>
+
+<h4 id="4未被使用的变量">4、未被使用的变量</h4>
+
+<blockquote>
+  <p>Unused variable ‘xxxx’</p>
+</blockquote>
+
+<p>减少此类Warning有利于节省内存</p>
+
+<h4 id="5指针未添加nullable标识">5、指针未添加nullable标识</h4>
+
+<blockquote>
+  <p>Warning:Pointer is missing a nullability type specifier (_Nonnull, _Nullable, or _Null_unspecified)</p>
+</blockquote>
+
+<p>其实这是由于Swift的加入引起的问题:</p>
+
+<p>我们都知道在swift中，可以使用!和?来表示一个对象是optional的还是non-optional，如view?和view!。而在Objective-C中则没有这一区分，view即可表示这个对象是optional，也可表示是non-optioanl。这样就会造成一个问题：在Swift与Objective-C混编时，Swift编译器并不知道一个Objective-C对象到底是optional还是non-optional，因此这种情况下编译器会隐式地将Objective-C的对象当成是non-optional。</p>
+
+<blockquote>
+  <p>解决方案</p>
+</blockquote>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NS_ASSUME_NONNULL_BEGIN 
+
+//代码
+
+NS_ASSUME_NONNULL_END
+</code></pre></div></div>
+
+<h4 id="6通过category来重写原类方法">6、通过Category来重写原类方法</h4>
+
+<blockquote>
+  <p>Warning:Category is implementing a method which will also be implemented by its primary class</p>
+</blockquote>
+
+<p>苹果的官方文档有写明</p>
+
+<blockquote>
+  <p>If the name of a method declared in a category is the same as a method in the original class, or a method in another category on the same class (or even a superclass), the behavior is undefined as to which method implementation is used at runtime。</p>
+</blockquote>
+
+<p>如果通过Category来重写原类方法可能造成调用方法的不可预知性。</p>
+
+<blockquote>
+  <p>解决方案</p>
+</blockquote>
+
+<p>6.1、如果是自定义类，用继承的方式父类方法；</p>
+
+<p>6.2、非自定义类，用runtime的method swizzling来进行方法交换处理。</p>
+
+<h4 id="7未定义方法">7、未定义方法</h4>
+
+<blockquote>
+  <p>Warning:Method definition for ‘showEmptyRolesView:’ not found</p>
+</blockquote>
+
+<p>如果在父类.h里声明某个方法，只在子类里重写实现，就会有这个Warning。应该在父类里也有一份实现，防止在使用父类时误用这个方法</p>
+
+<h4 id="8精度缺失">8、精度缺失</h4>
+
+<blockquote>
+  <p>implicit conversion loses integer precision ‘nsinteger’ (aka ‘long’) to ‘int’</p>
+</blockquote>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#if __LP64__ || TARGET_OS_EMBEDDED || TARGET_OS_IPHONE || TARGET_OS_WIN32 || NS_BUILD_32_LIKE_64
+typedef long NSInteger;
+typedef unsigned long NSUInteger;
+#else
+typedef int NSInteger;
+typedef unsigned int NSUInteger;
+#endif
+</code></pre></div></div>
+
+<p>在不同机器上，定义不一样，官方API是推荐使用NSInteger而不是int/long</p>
+
+<h4 id="9新的api">9、新的API</h4>
+
+<blockquote>
+  <p>Warning:’UIScrollViewContentInsetAdjustmentNever’ is only available on iOS 11.0 or newer</p>
+</blockquote>
+
+<p>加一个判断</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if (@available(iOS 11.0, *)){}
+else{}
+</code></pre></div></div>
+
+<h4 id="10库支持的版本过高">10、库支持的版本过高</h4>
+
+<blockquote>
+  <p>warning: object file …Classes/ProtocolBuffer/Libs/libprotobuff.a(java_message_field.o)) was built for newer iOS version (9.1) than being linked (8.0)</p>
+</blockquote>
+
+<p>引用文件支持的最低版本比项目编译版本高</p>
+
+<blockquote>
+  <p>解决方案</p>
+</blockquote>
+
+<p>10.1、重新编译库与项目编译版本匹配</p>
+
+<p>10.2、Build Settions Other links Flags 中添加-w忽略掉</p>
+
+<h3 id="二通过clang来忽略警告">二、通过Clang来忽略警告</h3>
+
+<p><img src="/img/Simple_7/39.png" alt="img" /></p>
+
+<p><img src="/img/Simple_7/40.png" alt="img" /></p>
+
+<p>1、忽略一段代码的警告</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wimplicit-retain-self"
+
+// 要忽略警告的代码
+
+#pragma clang diagnostic pop
+</code></pre></div></div>
+
+<p>常用的忽略警告类型</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>字段</th>
+      <th>警告类型</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>-Wimplicit-retain-self</td>
+      <td>循环引用</td>
+    </tr>
+    <tr>
+      <td>-Wstrict-prototypes</td>
+      <td>不带参数的block</td>
+    </tr>
+    <tr>
+      <td>-Wshorten-64-to-32</td>
+      <td>精度缺失</td>
+    </tr>
+    <tr>
+      <td>-Wnullability-completeness</td>
+      <td>未添加nullable标识</td>
+    </tr>
+    <tr>
+      <td>-Wobjc-protocol-method-implementation</td>
+      <td>Category重写原类方法</td>
+    </tr>
+    <tr>
+      <td>-Wdeprecated-implementations</td>
+      <td>方法被弃用</td>
+    </tr>
+    <tr>
+      <td>-Wdeprecated-declarations</td>
+      <td>字段被弃用</td>
+    </tr>
+    <tr>
+      <td>-W-documentation</td>
+      <td>注释有问题</td>
+    </tr>
+    <tr>
+      <td>-Wundeclared-selector</td>
+      <td>未定义方法</td>
+    </tr>
+    <tr>
+      <td>-Wincompatible-pointer-types</td>
+      <td>对象的指针类型不正确</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>2、忽略整个工程的警告类型</p>
+
+<p><img src="/img/Simple_7/38.png" alt="img" /></p>
+
+<p>要修改一下“-Wimplicit-retain-self”换成“-Wno-implicit-retain-self”</p>
+
+<p>3、忽略几个文件的警告：</p>
+
+<p>可以在pch等具有大范围作用域的头文件中包含： 
+￼#pragma clang diagnostic ignored “警告名称” 
+如果剔除了push与pop则后面所有的代码都具有强制消除警告作用</p>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/%E5%B7%A5%E5%85%B7/2018/10/09/Analysis/" data-toggle="tooltip" data-placement="top" title="代码优化之Analyze检测">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>
