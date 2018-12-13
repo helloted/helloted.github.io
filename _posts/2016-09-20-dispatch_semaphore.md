@@ -96,6 +96,6 @@ dispatch_semaphore_signal(dispatch_semaphore_t dsema);
 
 ### demo位置
 
-以上代码都放在[dispatch_semaphore demo](https://github.com/helloted/dispatch_semaphore) 
+以上代码都放在[dispatch_semaphore demo](https://github.com/helloted/Demo_for_WebSite/tree/master/dispatch_semaphore) 
 
 
