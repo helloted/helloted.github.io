@@ -58,7 +58,7 @@ dispatch_async(dispatch_get_global_queue(0,0), ^{
     return 50;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
 	UITableViewCell *cell =  [[UITableViewCell alloc]init];
 	return cell;
 }
