@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-12-20T18:23:30+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">现有iOS项目接入Flutter</title><link href="http://www.helloted.com/flutter/2018/11/21/HybridFlutter/" rel="alternate" type="text/html" title="现有iOS项目接入Flutter" /><published>2018-11-21T20:00:00+08:00</published><updated>2018-11-21T20:00:00+08:00</updated><id>http://www.helloted.com/flutter/2018/11/21/HybridFlutter</id><content type="html" xml:base="http://www.helloted.com/flutter/2018/11/21/HybridFlutter/">&lt;h4 id=&quot;1现有目录&quot;&gt;1、现有目录&lt;/h4&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-12-20T18:27:19+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">现有iOS项目接入Flutter</title><link href="http://www.helloted.com/flutter/2018/11/21/HybridFlutter/" rel="alternate" type="text/html" title="现有iOS项目接入Flutter" /><published>2018-11-21T20:00:00+08:00</published><updated>2018-11-21T20:00:00+08:00</updated><id>http://www.helloted.com/flutter/2018/11/21/HybridFlutter</id><content type="html" xml:base="http://www.helloted.com/flutter/2018/11/21/HybridFlutter/">&lt;h4 id=&quot;1现有目录&quot;&gt;1、现有目录&lt;/h4&gt;
 
 &lt;p&gt;现有一个最简单的iOS项目MyApp，将iOS项目和Android项目分别放入放入HybridApp文件夹中，目录结构如下：&lt;/p&gt;
 
@@ -8,7 +8,7 @@
     └── MyApp
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/43.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/43.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 
 &lt;h4 id=&quot;2建立flutter模块&quot;&gt;2、建立Flutter模块&lt;/h4&gt;
 
@@ -30,28 +30,28 @@
     └── MyApp			 // iOS项目
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/44.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/44.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 
 &lt;h4 id=&quot;3将flutter的相关信息导入ios项目&quot;&gt;3、将flutter的相关信息导入iOS项目&lt;/h4&gt;
 
 &lt;p&gt;在flutter_module目录下有个.iOS的隐藏文件夹，里面有个文件Flutter/Generated.xcconfig，里面有一些flutter的信息&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/45.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/45.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;将这个文件导入到iOS项目中&lt;/p&gt;
 
 &lt;p&gt;新建一个config文件，内容为导入Generated.xcconfig文件路径&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/46.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/46.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#include &quot;../../flutter_module/.ios/Flutter/Generated.xcconfig&quot;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/47.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/47.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;将FlutterDebug.xcconfig添加到iOS项目的Info-Configuration里：&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/48.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/48.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 
 &lt;h4 id=&quot;4添加脚本&quot;&gt;4、添加脚本&lt;/h4&gt;
 
@@ -59,13 +59,13 @@
 &quot;$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh&quot; embed
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/49.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/49.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;运行项目，在iOS项目文件夹内会生成一个Flutter的文件夹，将这个文件夹添加到项目中&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/50.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/50.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/51.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/51.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 
 &lt;h4 id=&quot;5改造appdelegate&quot;&gt;5、改造AppDelegate&lt;/h4&gt;
 
@@ -87,11 +87,11 @@
 
 &lt;h4 id=&quot;6新建一个flutter页面&quot;&gt;6、新建一个Flutter页面&lt;/h4&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/53.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/53.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;下面是效果&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/52.gif&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="Flutter" /><summary type="html">1、现有目录</summary></entry><entry><title type="html">Warning统计</title><link href="http://www.helloted.com/ios/2018/11/21/Warning/" rel="alternate" type="text/html" title="Warning统计" /><published>2018-11-21T20:00:00+08:00</published><updated>2018-11-21T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2018/11/21/Warning</id><content type="html" xml:base="http://www.helloted.com/ios/2018/11/21/Warning/">&lt;h4 id=&quot;1block导致的循环引用&quot;&gt;1、Block导致的循环引用&lt;/h4&gt;
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/52.gif&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="Flutter" /><summary type="html">1、现有目录</summary></entry><entry><title type="html">Warning统计</title><link href="http://www.helloted.com/ios/2018/11/21/Warning/" rel="alternate" type="text/html" title="Warning统计" /><published>2018-11-21T20:00:00+08:00</published><updated>2018-11-21T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2018/11/21/Warning</id><content type="html" xml:base="http://www.helloted.com/ios/2018/11/21/Warning/">&lt;h4 id=&quot;1block导致的循环引用&quot;&gt;1、Block导致的循环引用&lt;/h4&gt;
 
 &lt;p&gt;去除一方强引用即可&lt;/p&gt;
 

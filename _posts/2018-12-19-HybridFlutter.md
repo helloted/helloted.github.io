@@ -19,7 +19,7 @@ HybridApp
     └── MyApp
 ```
 
-![img](/img/Simple_7/43.png)
+![img](/img/Simple_8/43.png)
 
 #### 2、建立Flutter模块
 
@@ -44,29 +44,29 @@ HybridApp
     └── MyApp			 // iOS项目
 ```
 
-![img](/img/Simple_7/44.png)
+![img](/img/Simple_8/44.png)
 
 #### 3、将flutter的相关信息导入iOS项目
 
 在flutter_module目录下有个.iOS的隐藏文件夹，里面有个文件Flutter/Generated.xcconfig，里面有一些flutter的信息
 
-![img](/img/Simple_7/45.png)
+![img](/img/Simple_8/45.png)
 
 将这个文件导入到iOS项目中
 
 新建一个config文件，内容为导入Generated.xcconfig文件路径
 
-![img](/img/Simple_7/46.png)
+![img](/img/Simple_8/46.png)
 
 ```
 #include "../../flutter_module/.ios/Flutter/Generated.xcconfig"
 ```
 
-![img](/img/Simple_7/47.png)
+![img](/img/Simple_8/47.png)
 
 将FlutterDebug.xcconfig添加到iOS项目的Info-Configuration里：
 
-![img](/img/Simple_7/48.png)
+![img](/img/Simple_8/48.png)
 
 #### 4、添加脚本
 
@@ -75,13 +75,13 @@ HybridApp
 "$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh" embed
 ```
 
-![img](/img/Simple_7/49.png)
+![img](/img/Simple_8/49.png)
 
 运行项目，在iOS项目文件夹内会生成一个Flutter的文件夹，将这个文件夹添加到项目中
 
-![img](/img/Simple_7/50.png)
+![img](/img/Simple_8/50.png)
 
-![img](/img/Simple_7/51.png)
+![img](/img/Simple_8/51.png)
 
 #### 5、改造AppDelegate
 
@@ -105,8 +105,8 @@ AppDelegate.m
 
 #### 6、新建一个Flutter页面
 
-![img](/img/Simple_7/53.png)
+![img](/img/Simple_8/53.png)
 
 下面是效果
 
-![img](/img/Simple_7/52.gif)
+![img](/img/Simple_8/52.gif)
