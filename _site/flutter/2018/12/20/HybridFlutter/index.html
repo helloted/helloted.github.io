@@ -16,7 +16,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Write your site description here. It will be used as your sites meta description as well!">
 
-    <title>现有iOS项目接入Flutter - Helloted Blog</title>
+    <title>现有APP项目接入Flutter - Helloted Blog</title>
 
     <link rel="canonical" href="http://www.helloted.com/flutter/2018/12/20/HybridFlutter/">
 
@@ -111,9 +111,9 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <div class="post-heading">
-                    <h1>现有iOS项目接入Flutter</h1>
+                    <h1>现有APP项目接入Flutter</h1>
                     
-                    <h2 class="subheading">现有iOS项目接入Flutter进行混合开发</h2>
+                    <h2 class="subheading">iOS/Android项目接入Flutter进行混合开发</h2>
                     
                     <span class="meta">Posted by Ted on December 20, 2018</span>
                 </div>
@@ -128,17 +128,18 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
 
-				<h4 id="1现有目录">1、现有目录</h4>
+				<h3 id="一初始项目">一、初始项目</h3>
+
+<h4 id="1现有目录">1、现有目录</h4>
 
 <p>现有一个最简单的iOS项目MyApp，将iOS项目和Android项目分别放入放入HybridApp文件夹中，目录结构如下：</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HybridApp
 ├── Android
+	└── AndroidProject
 └── iOS
     └── MyApp
 </code></pre></div></div>
-
-<p><img src="/img/Simple_8/43.png" alt="img" /></p>
 
 <h4 id="2建立flutter模块">2、建立Flutter模块</h4>
 
@@ -155,6 +156,7 @@
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HybridApp
 ├── Android              //android相关
+	└── AndroidProject   //android项目
 ├── flutter_module       //flutter相关
 └── iOS					 // iOS相关
     └── MyApp			 // iOS项目
@@ -162,7 +164,9 @@
 
 <p><img src="/img/Simple_8/44.png" alt="img" /></p>
 
-<h4 id="3将flutter的相关信息导入ios项目">3、将flutter的相关信息导入iOS项目</h4>
+<h3 id="二ios接入">二、iOS接入</h3>
+
+<h4 id="1将flutter的相关信息导入ios项目">1、将flutter的相关信息导入iOS项目</h4>
 
 <p>在flutter_module目录下有个.iOS的隐藏文件夹，里面有个文件Flutter/Generated.xcconfig，里面有一些flutter的信息</p>
 
@@ -183,7 +187,7 @@
 
 <p><img src="/img/Simple_8/48.png" alt="img" /></p>
 
-<h4 id="4添加脚本">4、添加脚本</h4>
+<h4 id="2添加脚本">2、添加脚本</h4>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh" build
 "$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh" embed
@@ -197,7 +201,7 @@
 
 <p><img src="/img/Simple_8/51.png" alt="img" /></p>
 
-<h4 id="5改造appdelegate">5、改造AppDelegate</h4>
+<h4 id="3改造appdelegate">3、改造AppDelegate</h4>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>AppDelegate.h
 
@@ -215,13 +219,66 @@
 }
 </code></pre></div></div>
 
-<h4 id="6新建一个flutter页面">6、新建一个Flutter页面</h4>
+<h4 id="4新建一个flutter页面">4、新建一个Flutter页面</h4>
 
 <p><img src="/img/Simple_8/53.png" alt="img" /></p>
 
 <p>下面是效果</p>
 
 <p><img src="/img/Simple_8/52.gif" alt="img" /></p>
+
+<h3 id="三安卓接入">三、安卓接入</h3>
+
+<h4 id="1配置">1、配置</h4>
+
+<p>在setting.gradle中添加：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//加入下面配置
+setBinding(new Binding([gradle: this]))
+evaluate(new File(
+        settingsDir.parentFile.parentFile,
+        'flutter_module/.android/include_flutter.groovy'  //flutter_module路径
+))
+</code></pre></div></div>
+
+<p><img src="/img/Simple_8/55.png" alt="img" /></p>
+
+<p>在bulid.gradle中dependencies添加</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>implementation project(':flutter')
+</code></pre></div></div>
+
+<p>Gradle sync之后就成功导入了Flutter</p>
+
+<h4 id="2使用">2、使用</h4>
+
+<p>Flutter接入View</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">View</span> <span class="n">flutterView</span> <span class="o">=</span> <span class="n">Flutter</span><span class="o">.</span><span class="na">createView</span><span class="o">(</span><span class="n">MainActivity</span><span class="o">.</span><span class="na">this</span><span class="o">,</span><span class="n">getLifecycle</span><span class="o">(),</span><span class="s">"route1"</span><span class="o">);</span>
+<span class="n">FrameLayout</span><span class="o">.</span><span class="na">LayoutParams</span> <span class="n">layout</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FrameLayout</span><span class="o">.</span><span class="na">LayoutParams</span><span class="o">(</span><span class="mi">600</span><span class="o">,</span> <span class="mi">800</span><span class="o">);</span>
+<span class="n">layout</span><span class="o">.</span><span class="na">leftMargin</span> <span class="o">=</span> <span class="mi">100</span><span class="o">;</span>
+<span class="n">layout</span><span class="o">.</span><span class="na">topMargin</span> <span class="o">=</span> <span class="mi">200</span><span class="o">;</span>
+<span class="n">addContentView</span><span class="o">(</span><span class="n">flutterView</span><span class="o">,</span> <span class="n">layout</span><span class="o">);</span>
+</code></pre></div></div>
+
+<p><img src="/img/Simple_8/56.png" alt="img" /></p>
+
+<p>或者Activity形式</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">FlutterActivity</span> <span class="kd">extends</span> <span class="n">AppCompatActivity</span> <span class="o">{</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
+        <span class="n">setContentView</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">activity_flutter</span><span class="o">);</span>
+        <span class="n">View</span> <span class="n">flutterView</span> <span class="o">=</span> <span class="n">Flutter</span><span class="o">.</span><span class="na">createView</span><span class="o">(</span><span class="n">FlutterActivity</span><span class="o">.</span><span class="na">this</span><span class="o">,</span><span class="n">getLifecycle</span><span class="o">(),</span><span class="s">"route1"</span><span class="o">);</span>
+        <span class="n">FrameLayout</span><span class="o">.</span><span class="na">LayoutParams</span> <span class="n">layout</span> <span class="o">=</span> <span class="k">new</span>  <span class="n">FrameLayout</span><span class="o">.</span><span class="na">LayoutParams</span><span class="o">(</span><span class="n">FrameLayout</span><span class="o">.</span><span class="na">LayoutParams</span><span class="o">.</span><span class="na">MATCH_PARENT</span><span class="o">,</span> <span class="n">FrameLayout</span><span class="o">.</span><span class="na">LayoutParams</span><span class="o">.</span><span class="na">MATCH_PARENT</span><span class="o">);</span>
+        <span class="n">addContentView</span><span class="o">(</span><span class="n">flutterView</span><span class="o">,</span> <span class="n">layout</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p><img src="/img/Simple_8/57.png" alt="img" /></p>
 
 
                 <hr>

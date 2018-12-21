@@ -1,12 +1,14 @@
 ---
 layout:     post
 category:   Flutter
-title:      "现有iOS项目接入Flutter"
-subtitle:   "现有iOS项目接入Flutter进行混合开发"
+title:      "现有APP项目接入Flutter"
+subtitle:   "iOS/Android项目接入Flutter进行混合开发"
 date:       2018-12-20 12:00:00
 author:     "Ted"
 header-img: "img/default.jpg"
 ---
+
+### 一、初始项目
 
 #### 1、现有目录
 
@@ -15,11 +17,10 @@ header-img: "img/default.jpg"
 ```
 HybridApp
 ├── Android
+	└── AndroidProject
 └── iOS
     └── MyApp
 ```
-
-![img](/img/Simple_8/43.png)
 
 #### 2、建立Flutter模块
 
@@ -39,6 +40,7 @@ $ flutter create -t module flutter_module
 ```
 HybridApp
 ├── Android              //android相关
+	└── AndroidProject   //android项目
 ├── flutter_module       //flutter相关
 └── iOS					 // iOS相关
     └── MyApp			 // iOS项目
@@ -46,7 +48,9 @@ HybridApp
 
 ![img](/img/Simple_8/44.png)
 
-#### 3、将flutter的相关信息导入iOS项目
+### 二、iOS接入
+
+#### 1、将flutter的相关信息导入iOS项目
 
 在flutter_module目录下有个.iOS的隐藏文件夹，里面有个文件Flutter/Generated.xcconfig，里面有一些flutter的信息
 
@@ -68,7 +72,7 @@ HybridApp
 
 ![img](/img/Simple_8/48.png)
 
-#### 4、添加脚本
+#### 2、添加脚本
 
 ```
 "$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh" build
@@ -83,7 +87,7 @@ HybridApp
 
 ![img](/img/Simple_8/51.png)
 
-#### 5、改造AppDelegate
+#### 3、改造AppDelegate
 
 ```
 AppDelegate.h
@@ -103,10 +107,69 @@ AppDelegate.m
 }
 ```
 
-#### 6、新建一个Flutter页面
+#### 4、新建一个Flutter页面
 
 ![img](/img/Simple_8/53.png)
 
 下面是效果
 
 ![img](/img/Simple_8/52.gif)
+
+
+
+### 三、安卓接入
+
+#### 1、配置
+
+在setting.gradle中添加：
+
+```
+//加入下面配置
+setBinding(new Binding([gradle: this]))
+evaluate(new File(
+        settingsDir.parentFile.parentFile,
+        'flutter_module/.android/include_flutter.groovy'  //flutter_module路径
+))
+```
+
+![img](/img/Simple_8/55.png)
+
+在bulid.gradle中dependencies添加
+
+```
+implementation project(':flutter')
+```
+
+Gradle sync之后就成功导入了Flutter
+
+#### 2、使用
+
+Flutter接入View
+
+```java
+View flutterView = Flutter.createView(MainActivity.this,getLifecycle(),"route1");
+FrameLayout.LayoutParams layout = new FrameLayout.LayoutParams(600, 800);
+layout.leftMargin = 100;
+layout.topMargin = 200;
+addContentView(flutterView, layout);
+```
+
+![img](/img/Simple_8/56.png)
+
+或者Activity形式
+
+```java
+public class FlutterActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_flutter);
+        View flutterView = Flutter.createView(FlutterActivity.this,getLifecycle(),"route1");
+        FrameLayout.LayoutParams layout = new  FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
+        addContentView(flutterView, layout);
+    }
+}
+```
+
+![img](/img/Simple_8/57.png)
