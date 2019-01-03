@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter">
+
+    <title>iOS编码建议 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/ios/2019/01/02/code/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/app/">APP</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>iOS编码建议</h1>
+                    
+                    <h2 class="subheading">iOS编码建议</h2>
+                    
+                    <span class="meta">Posted by Ted on January 2, 2019</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h4 id="一命名">一、命名</h4>
+
+<p>1、变量和方法名：驼峰命名；</p>
+
+<p>2、宏和常量命名</p>
+
+<ul>
+  <li><code class="highlighter-rouge">#define</code> 预处理定义的常量全部大写，单词间用 _ 分隔</li>
+  <li>宏定义的本质是在编译时进行替换，所以宏定义中如果包含表达式或变量，表达式或变量必须用小括号括起来，防止与其他变量出现混合的情况。</li>
+</ul>
+
+<p>3、枚举：枚举类型参考系统应该写全类型：名称+类型</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">typedef</span> <span class="nf">NS_ENUM</span><span class="p">(</span><span class="n">NSInteger</span><span class="p">,</span> <span class="n">UIViewAnimationTransition</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">UIViewAnimationTransitionNone</span><span class="p">,</span>
+    <span class="n">UIViewAnimationTransitionFlipFromLeft</span><span class="p">,</span>
+    <span class="n">UIViewAnimationTransitionFlipFromRight</span><span class="p">,</span>
+    <span class="n">UIViewAnimationTransitionCurlUp</span><span class="p">,</span>
+    <span class="n">UIViewAnimationTransitionCurlDown</span><span class="p">,</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h4 id="二viewcontroller代码结构">二、ViewController代码结构</h4>
+
+<p>在函数分组和protocol/delegate实现中使用<code class="highlighter-rouge">#pragma mark -</code>来分类方法，遵循以下结构：</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">// 生命周期</span>
+<span class="cp">#pragma mark - Lifecycle
+</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="n">init</span> <span class="p">{}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">awakeFromNib</span> <span class="p">{}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">loadView</span> <span class="p">{}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">viewDidLoad</span> <span class="p">{}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">viewWillAppear</span><span class="o">:</span><span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="n">animated</span> <span class="p">{}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">viewWillLayoutSubviews</span> <span class="p">{}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">viewDidLayoutSubviews</span> <span class="p">{}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">viewDidAppear</span><span class="o">:</span><span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="n">animated</span> <span class="p">{}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">viewWillDisappear</span><span class="o">:</span><span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="n">animated</span> <span class="p">{}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">viewDidDisappear</span><span class="o">:</span><span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="n">animated</span> <span class="p">{}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">dealloc</span> <span class="p">{}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">didReceiveMemoryWarning</span> <span class="p">{}</span>
+
+
+<span class="c1">// 如果是Storyboard/Xib</span>
+<span class="cp">#pragma mark - IBActions
+</span>
+<span class="o">-</span> <span class="p">(</span><span class="n">IBAction</span><span class="p">)</span><span class="n">sendBtnClicked</span><span class="o">:</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">sender</span> <span class="p">{}</span>
+
+<span class="c1">// 公开方法</span>
+<span class="cp">#pragma mark - Public
+</span><span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">publicMethod</span> <span class="p">{}</span>
+
+<span class="c1">// 私有方法</span>
+<span class="cp">#pragma mark - Private
+</span><span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">privateMethod</span> <span class="p">{}</span>
+
+<span class="c1">// 各种代理和协议方法</span>
+<span class="cp">#pragma mark - Protocol
+#pragma mark - UITextFieldDelegate
+#pragma mark - UITableViewDataSource
+#pragma mark - UITableViewDelegate
+</span>
+<span class="c1">// 懒加载的Getter</span>
+<span class="cp">#pragma mark - Getter &amp;&amp; Setter
+</span>
+<span class="c1">// Copy协议和description较少</span>
+<span class="cp">#pragma mark - NSCopying/NSObject
+</span><span class="o">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">copyWithZone</span><span class="o">:</span><span class="p">(</span><span class="n">NSZone</span> <span class="o">*</span><span class="p">)</span><span class="n">zone</span> <span class="p">{}</span>
+<span class="o">-</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">description</span> <span class="p">{}</span>
+</code></pre></div></div>
+
+<h4 id="三字面编码">三、字面编码</h4>
+
+<p><code class="highlighter-rouge">NSString</code>, <code class="highlighter-rouge">NSDictionary</code>, <code class="highlighter-rouge">NSArray</code>, 和 <code class="highlighter-rouge">NSNumber</code>可以在创建不可变值时使用，注意不要传nil值，否则会崩溃。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSArray *names = @[@"Brian", @"Matt", @"Chris", @"Alex", @"Steve", @"Paul"];
+NSDictionary *productManagers = @{@"iPhone": @"Kate", @"iPad": @"Kamal", @"Mobile Web": @"Bill"};
+NSNumber *shouldUseLiterals = @YES;
+NSNumber *buildingStreetNumber = @10018;
+</code></pre></div></div>
+
+<h4 id="四变量和属性">四、变量和属性</h4>
+
+<p>建议使用属性而不是实例变量。</p>
+
+<p><strong>推荐:</strong></p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">RWTTutorial</span> <span class="p">:</span> <span class="nc">NSObject</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">tutorialName</span><span class="p">;</span>
+<span class="k">@end</span>
+    
+<span class="n">self</span><span class="p">.</span><span class="n">tutorialName</span>
+</code></pre></div></div>
+
+<p><strong>不推荐:</strong></p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">RWTTutorial</span> <span class="p">:</span> <span class="nc">NSObject</span> <span class="p">{</span>
+  <span class="n">NSString</span> <span class="o">*</span><span class="n">tutorialName</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">self</span><span class="o">-&gt;</span><span class="n">tutorialName</span>
+</code></pre></div></div>
+
+<ul>
+  <li>属性会自动有Setter和Getter，可以通过直接用点语法访问Setter和Getter方法。</li>
+  <li>虽然<img src="https://www.zhihu.com/equation?tex=%2A." alt="*." /> 和 -&gt;是等价的，或者说编译器优化后等价。但是在访问空指针和野指针时有差别——空指针会挂在*解引用，野指针会挂在.访问内存。</li>
+</ul>
+
+<h4 id="五常量">五、常量</h4>
+
+<p>共享一块内存空间，就算项目中N处用到，也不会分配N块内存空间，可以根据const修饰的位置设定能否修改，在编译阶段会执行类型检查</p>
+
+<p>推荐使用const来定义常量，如下</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSString *const kWEGMomentTopicNumberUpdateNotification = @"kWEGMomentTopicNumberUpdateNotification";
+</code></pre></div></div>
+
+<p>const不能满足的情况再考虑使用宏定义</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#define kWEGMomentTopicNumberUpdateNotification @"kWEGMomentTopicNumberUpdateNotification"
+</code></pre></div></div>
+
+<p>如果是需要外部共享，使用extern关键字，参考苹果官方</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>extern NSString * const UIApplicationDidEnterBackgroundNotification  
+extern NSString * const UIApplicationWillEnterForegroundNotification  
+extern NSString * const UIApplicationDidFinishLaunchingNotification;
+</code></pre></div></div>
+
+<h4 id="六整体架构">六、整体架构</h4>
+
+<p>推荐MVC+VM(也叫MVCS，S是Store的意思，数据处理逻辑)。</p>
+
+<p>MVC+VM：MVC是苹果官方推荐，V专注于视图构建，Model是瘦Model，专注于模型构建，仅持有数据；数据流动全部由Controller来传递，流向清晰，当Controller变复杂时，将数据处理逻辑剥离出来成为VM，模型数据流向仍由Controller负责，优点是数据流向清晰，业务耦合弱，缺点是不同Controller可能要生成各种不同VM适配。</p>
+
+<p>MVVM：主要优点数据绑定，做到数据一致性，同时也能做到给Controller瘦身目的，缺点是数据绑定导致数据流向不清晰，难以调试Bug，如果没有详细清晰文档，很可能成为一个天坑(助手里的聊天模块)。</p>
+
+<p>MVP：Presenter与Controller相互持有，通过接口，P层拥有了Controller的权利，所有的业务分配都在P层内完成，包括像tableView的数据源和代理。优点是MVC解耦，MVC成为平行；缺点是，有点特意为了解耦而解耦，初看会莫名其妙。</p>
+
+<p>一份分享</p>
+
+<p><a href="/sources/PDF/learn_list.pdf">Android代码整洁</a></p>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/flutter/2018/12/25/HybridFlutter-2/" data-toggle="tooltip" data-placement="top" title="Flutter与Native(二)">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2019</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

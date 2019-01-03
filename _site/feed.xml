@@ -1,4 +1,159 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2018-12-24T16:32:41+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>Write your site description here. It will be used as your sites meta description as well!</subtitle><entry><title type="html">现有APP项目接入Flutter</title><link href="http://www.helloted.com/flutter/2018/12/20/HybridFlutter/" rel="alternate" type="text/html" title="现有APP项目接入Flutter" /><published>2018-12-20T20:00:00+08:00</published><updated>2018-12-20T20:00:00+08:00</updated><id>http://www.helloted.com/flutter/2018/12/20/HybridFlutter</id><content type="html" xml:base="http://www.helloted.com/flutter/2018/12/20/HybridFlutter/">&lt;h3 id=&quot;一初始项目&quot;&gt;一、初始项目&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2019-01-03T15:32:45+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">iOS编码建议</title><link href="http://www.helloted.com/ios/2019/01/02/code/" rel="alternate" type="text/html" title="iOS编码建议" /><published>2019-01-02T20:00:00+08:00</published><updated>2019-01-02T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2019/01/02/code</id><content type="html" xml:base="http://www.helloted.com/ios/2019/01/02/code/">&lt;h4 id=&quot;一命名&quot;&gt;一、命名&lt;/h4&gt;
+
+&lt;p&gt;1、变量和方法名：驼峰命名；&lt;/p&gt;
+
+&lt;p&gt;2、宏和常量命名&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;#define&lt;/code&gt; 预处理定义的常量全部大写，单词间用 _ 分隔&lt;/li&gt;
+  &lt;li&gt;宏定义的本质是在编译时进行替换，所以宏定义中如果包含表达式或变量，表达式或变量必须用小括号括起来，防止与其他变量出现混合的情况。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;3、枚举：枚举类型参考系统应该写全类型：名称+类型&lt;/p&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;typedef&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;NS_ENUM&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSInteger&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;UIViewAnimationTransition&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;UIViewAnimationTransitionNone&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;UIViewAnimationTransitionFlipFromLeft&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;UIViewAnimationTransitionFlipFromRight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;UIViewAnimationTransitionCurlUp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;UIViewAnimationTransitionCurlDown&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;二viewcontroller代码结构&quot;&gt;二、ViewController代码结构&lt;/h4&gt;
+
+&lt;p&gt;在函数分组和protocol/delegate实现中使用&lt;code class=&quot;highlighter-rouge&quot;&gt;#pragma mark -&lt;/code&gt;来分类方法，遵循以下结构：&lt;/p&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+&lt;span class=&quot;c1&quot;&gt;// 生命周期&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;#pragma mark - Lifecycle
+&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;instancetype&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;init&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;awakeFromNib&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;loadView&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;viewDidLoad&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;viewWillAppear&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BOOL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;animated&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;viewWillLayoutSubviews&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;viewDidLayoutSubviews&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;viewDidAppear&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BOOL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;animated&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;viewWillDisappear&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BOOL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;animated&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;viewDidDisappear&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BOOL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;animated&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dealloc&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;didReceiveMemoryWarning&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+
+
+&lt;span class=&quot;c1&quot;&gt;// 如果是Storyboard/Xib&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;#pragma mark - IBActions
+&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;IBAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sendBtnClicked&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sender&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// 公开方法&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;#pragma mark - Public
+&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;publicMethod&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// 私有方法&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;#pragma mark - Private
+&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;privateMethod&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// 各种代理和协议方法&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;#pragma mark - Protocol
+#pragma mark - UITextFieldDelegate
+#pragma mark - UITableViewDataSource
+#pragma mark - UITableViewDelegate
+&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// 懒加载的Getter&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;#pragma mark - Getter &amp;amp;&amp;amp; Setter
+&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// Copy协议和description较少&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;#pragma mark - NSCopying/NSObject
+&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;copyWithZone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSZone&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zone&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;description&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;三字面编码&quot;&gt;三、字面编码&lt;/h4&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;NSString&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;NSDictionary&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;NSArray&lt;/code&gt;, 和 &lt;code class=&quot;highlighter-rouge&quot;&gt;NSNumber&lt;/code&gt;可以在创建不可变值时使用，注意不要传nil值，否则会崩溃。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSArray *names = @[@&quot;Brian&quot;, @&quot;Matt&quot;, @&quot;Chris&quot;, @&quot;Alex&quot;, @&quot;Steve&quot;, @&quot;Paul&quot;];
+NSDictionary *productManagers = @{@&quot;iPhone&quot;: @&quot;Kate&quot;, @&quot;iPad&quot;: @&quot;Kamal&quot;, @&quot;Mobile Web&quot;: @&quot;Bill&quot;};
+NSNumber *shouldUseLiterals = @YES;
+NSNumber *buildingStreetNumber = @10018;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;四变量和属性&quot;&gt;四、变量和属性&lt;/h4&gt;
+
+&lt;p&gt;建议使用属性而不是实例变量。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;推荐:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;@interface&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;RWTTutorial&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;NSObject&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;@property&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;strong&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nonatomic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tutorialName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;@end&lt;/span&gt;
+    
+&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tutorialName&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;不推荐:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;@interface&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;RWTTutorial&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;NSObject&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tutorialName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tutorialName&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;属性会自动有Setter和Getter，可以通过直接用点语法访问Setter和Getter方法。&lt;/li&gt;
+  &lt;li&gt;虽然&lt;img src=&quot;https://www.zhihu.com/equation?tex=%2A.&quot; alt=&quot;*.&quot; /&gt; 和 -&amp;gt;是等价的，或者说编译器优化后等价。但是在访问空指针和野指针时有差别——空指针会挂在*解引用，野指针会挂在.访问内存。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;五常量&quot;&gt;五、常量&lt;/h4&gt;
+
+&lt;p&gt;共享一块内存空间，就算项目中N处用到，也不会分配N块内存空间，可以根据const修饰的位置设定能否修改，在编译阶段会执行类型检查&lt;/p&gt;
+
+&lt;p&gt;推荐使用const来定义常量，如下&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSString *const kWEGMomentTopicNumberUpdateNotification = @&quot;kWEGMomentTopicNumberUpdateNotification&quot;;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;const不能满足的情况再考虑使用宏定义&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#define kWEGMomentTopicNumberUpdateNotification @&quot;kWEGMomentTopicNumberUpdateNotification&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;如果是需要外部共享，使用extern关键字，参考苹果官方&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;extern NSString * const UIApplicationDidEnterBackgroundNotification  
+extern NSString * const UIApplicationWillEnterForegroundNotification  
+extern NSString * const UIApplicationDidFinishLaunchingNotification;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;六整体架构&quot;&gt;六、整体架构&lt;/h4&gt;
+
+&lt;p&gt;推荐MVC+VM(也叫MVCS，S是Store的意思，数据处理逻辑)。&lt;/p&gt;
+
+&lt;p&gt;MVC+VM：MVC是苹果官方推荐，V专注于视图构建，Model是瘦Model，专注于模型构建，仅持有数据；数据流动全部由Controller来传递，流向清晰，当Controller变复杂时，将数据处理逻辑剥离出来成为VM，模型数据流向仍由Controller负责，优点是数据流向清晰，业务耦合弱，缺点是不同Controller可能要生成各种不同VM适配。&lt;/p&gt;
+
+&lt;p&gt;MVVM：主要优点数据绑定，做到数据一致性，同时也能做到给Controller瘦身目的，缺点是数据绑定导致数据流向不清晰，难以调试Bug，如果没有详细清晰文档，很可能成为一个天坑(助手里的聊天模块)。&lt;/p&gt;
+
+&lt;p&gt;MVP：Presenter与Controller相互持有，通过接口，P层拥有了Controller的权利，所有的业务分配都在P层内完成，包括像tableView的数据源和代理。优点是MVC解耦，MVC成为平行；缺点是，有点特意为了解耦而解耦，初看会莫名其妙。&lt;/p&gt;
+
+&lt;p&gt;一份分享&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/sources/PDF/learn_list.pdf&quot;&gt;Android代码整洁&lt;/a&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">一、命名</summary></entry><entry><title type="html">Flutter与Native(二)</title><link href="http://www.helloted.com/flutter/2018/12/25/HybridFlutter-2/" rel="alternate" type="text/html" title="Flutter与Native(二)" /><published>2018-12-25T20:00:00+08:00</published><updated>2018-12-25T20:00:00+08:00</updated><id>http://www.helloted.com/flutter/2018/12/25/HybridFlutter-2</id><content type="html" xml:base="http://www.helloted.com/flutter/2018/12/25/HybridFlutter-2/">&lt;h3 id=&quot;一ios&quot;&gt;一、iOS&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/57.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="Flutter" /><summary type="html">一、iOS</summary></entry><entry><title type="html">Flutter与Native(一)</title><link href="http://www.helloted.com/flutter/2018/12/20/HybridFlutter-1/" rel="alternate" type="text/html" title="Flutter与Native(一)" /><published>2018-12-20T20:00:00+08:00</published><updated>2018-12-20T20:00:00+08:00</updated><id>http://www.helloted.com/flutter/2018/12/20/HybridFlutter-1</id><content type="html" xml:base="http://www.helloted.com/flutter/2018/12/20/HybridFlutter-1/">&lt;h3 id=&quot;一初始项目&quot;&gt;一、初始项目&lt;/h3&gt;
 
 &lt;h4 id=&quot;1现有目录&quot;&gt;1、现有目录&lt;/h4&gt;
 
@@ -1102,155 +1257,4 @@ typedef void (*interface) (void* caller,void* parameter);
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;所有代码可以在&lt;a href=&quot;https://github.com/helloted/iOS_Demo/tree/master/HTMediator&quot;&gt;Github&lt;/a&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">1、解耦</summary></entry><entry><title type="html">发布库到cocoapod</title><link href="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/05/24/cocoapod/" rel="alternate" type="text/html" title="发布库到cocoapod" /><published>2018-05-24T20:00:00+08:00</published><updated>2018-05-24T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/05/24/cocoapod</id><content type="html" xml:base="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/05/24/cocoapod/">&lt;h4 id=&quot;1创建podspec文件&quot;&gt;1、创建podspec文件&lt;/h4&gt;
-
-&lt;p&gt;在你要发布的库的根目录下运行下面的👇的命令行&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pod spec create &amp;lt;pod_name&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;pod_name是你要发布的库的名称&lt;/p&gt;
-
-&lt;p&gt;命令行过后会在根目录生成一个podspec文件，接下来就是将podspec文件完善&lt;/p&gt;
-
-&lt;h4 id=&quot;2修改podspec文件&quot;&gt;2、修改podspec文件&lt;/h4&gt;
-
-&lt;p&gt;podspec文件里面的属性都有解释用途，不是所有的属性都必填，参考自己的需要&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;name：框架名
-version：当前版本（注意，是当前版本，假如你后续更新了新版本，需要修改此处）
-summary：简要描述，在pod search ZCPKit的时候会显示该信息。
-description：详细描述
-homepage：页面链接
-license：开源协议
-author：作者
-source：源码git地址
-platform：支持最低ios版本
-source_files：源文件（可以包含.h和.m）
-public_header_files：头文件(.h文件)
-resources：资源文件（配置的文件都会被放到mainBundle中）
-resource_bundles：资源文件（配置的文件会放到你自己指定的bundle中）
-frameworks：依赖的系统框架
-vendored_frameworks：依赖的非系统框架
-libraries：依赖的系统库
-vendored_libraries：依赖的非系统的静态库
-dependency：依赖的三方库
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;3校验podspec文件&quot;&gt;3、校验podspec文件&lt;/h4&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pod lib lint （从本地验证你的pod能否通过验证）
-pod spec lint （从本地和远程验证你的pod能否通过验证）
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;出现下面的图片说明校验成功，就可以发布到网上去了&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/23.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;4注册cocoapods-trunk账号&quot;&gt;4、注册CocoaPods Trunk账号&lt;/h4&gt;
-
-&lt;p&gt;运行命令&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pod trunk register helloted@live.com  'helloted'
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;之后会收到一封邮件，点击验证之后，运行命令可查看信息&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pod trunk me
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/24.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;5git打标签&quot;&gt;5、Git打标签&lt;/h4&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git tag '1.0.0' 
-git push --tags 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;6发布到cocoapods&quot;&gt;6、发布到CocoaPods&lt;/h4&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pod trunk push
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;7查看自己的库&quot;&gt;7、查看自己的库&lt;/h4&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pod setup
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;rm ~/Library/Caches/CocoaPods/search_index.json
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pod search HTLivePushKit
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Ted</name></author><category term="工具" /><summary type="html">1、创建podspec文件</summary></entry><entry><title type="html">Nginx添加第三方模块</title><link href="http://www.helloted.com/linux/2018/05/13/nginxThird/" rel="alternate" type="text/html" title="Nginx添加第三方模块" /><published>2018-05-13T20:00:00+08:00</published><updated>2018-05-13T20:00:00+08:00</updated><id>http://www.helloted.com/linux/2018/05/13/nginxThird</id><content type="html" xml:base="http://www.helloted.com/linux/2018/05/13/nginxThird/">&lt;p&gt;以下是在CentOS上适用&lt;/p&gt;
-
-&lt;h4 id=&quot;1查看版本和已经安装模块&quot;&gt;1、查看版本和已经安装模块&lt;/h4&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nginx -V
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;可以查看当前版本信息和已经安装的模块&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/34.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;2下载对应版本的的nginx源码&quot;&gt;2、下载对应版本的的nginx源码&lt;/h4&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cd /opt
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;wget http://nginx.org/download/nginx-1.12.1.tar.gz
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;3下载应的第三方模块&quot;&gt;3、下载应的第三方模块&lt;/h4&gt;
-
-&lt;p&gt;以ngx-fancyindex为例&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git clone https://github.com/aperezdc/ngx-fancyindex.git ngx-fancyindex
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;4查看对应的configure&quot;&gt;4、查看对应的configure&lt;/h4&gt;
-
-&lt;p&gt;解压nginx源码&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;tar xf nginx-1.12.2.tar.gz
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cd nginx-1.12.2
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;5添加对应的模块&quot;&gt;5、添加对应的模块&lt;/h4&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./configure --prefix=/etc/nginx \
-            --sbin-path=/usr/sbin/nginx \
-            --conf-path=/etc/nginx/nginx.conf \
-            ...
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;注意，这里可以copy之前对应的配置&lt;/p&gt;
-
-&lt;p&gt;添加命令&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;--add-module=../ngx-fancyindex
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;../ngx-fancyindex&lt;/code&gt;是模块下载的位置&lt;/p&gt;
-
-&lt;p&gt;所以整体的命令应该是&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./configure --prefix=/etc/nginx \
-            --sbin-path=/usr/sbin/nginx \
-            --conf-path=/etc/nginx/nginx.conf \
-            ...
-            --add-module=../ngx-fancyindex
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;6编译&quot;&gt;6、编译&lt;/h4&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;make &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; make &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;7备份替换&quot;&gt;7、备份替换&lt;/h4&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cp&lt;/span&gt; /usr/sbin/nginx /usr/sbin/nginx.bak &lt;span class=&quot;c&quot;&gt;#备份&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;cp&lt;/span&gt; /opt/nginx-1.12.1/objs/nginx /usr/sbin/nginx &lt;span class=&quot;c&quot;&gt;#替换&lt;/span&gt;
-systemctl restart nginx &lt;span class=&quot;c&quot;&gt;#重启 nginx 服务&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Ted</name></author><category term="Linux" /><summary type="html">以下是在CentOS上适用</summary></entry></feed>
+&lt;p&gt;所有代码可以在&lt;a href=&quot;https://github.com/helloted/iOS_Demo/tree/master/HTMediator&quot;&gt;Github&lt;/a&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">1、解耦</summary></entry></feed>

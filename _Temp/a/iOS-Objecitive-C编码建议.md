@@ -7,6 +7,18 @@
 - `#define` 预处理定义的常量全部大写，单词间用 _ 分隔
 - 宏定义的本质是在编译时进行替换，所以宏定义中如果包含表达式或变量，表达式或变量必须用小括号括起来，防止与其他变量出现混合的情况。
 
+3、枚举：枚举类型参考系统应该写全类型：名称+类型
+
+```objc
+typedef NS_ENUM(NSInteger, UIViewAnimationTransition) {
+    UIViewAnimationTransitionNone,
+    UIViewAnimationTransitionFlipFromLeft,
+    UIViewAnimationTransitionFlipFromRight,
+    UIViewAnimationTransitionCurlUp,
+    UIViewAnimationTransitionCurlDown,
+};
+```
+
 #### 二、ViewController代码结构
 
 在函数分组和protocol/delegate实现中使用`#pragma mark -`来分类方法，遵循以下结构：
@@ -80,39 +92,44 @@ NSNumber *shouldUseLiterals = @YES;
 NSNumber *buildingStreetNumber = @10018;
 ```
 
-#### 四、变量
+#### 四、变量和属性
 
-建议使用属性而不是实例变量，因为属性会自动有Setter和Getter
+建议使用属性而不是实例变量。
 
-**Preferred:**
+**推荐:**
 
-```
+```objc
 @interface RWTTutorial : NSObject
-
 @property (strong, nonatomic) NSString *tutorialName;
-
 @end
+    
+self.tutorialName
 ```
 
-**Not Preferred:**
+**不推荐:**
 
-```
+```objc
 @interface RWTTutorial : NSObject {
   NSString *tutorialName;
 }
+
+self->tutorialName
 ```
+
+- 属性会自动有Setter和Getter，可以通过直接用点语法访问Setter和Getter方法。
+- 虽然![*.](https://www.zhihu.com/equation?tex=%2A.) 和 ->是等价的，或者说编译器优化后等价。但是在访问空指针和野指针时有差别——空指针会挂在\*解引用，野指针会挂在.访问内存。
 
 #### 五、常量
 
 共享一块内存空间，就算项目中N处用到，也不会分配N块内存空间，可以根据const修饰的位置设定能否修改，在编译阶段会执行类型检查
 
-推荐定义常量来声明常量而不是使用`#define`，const不能满足的情况再考虑使用宏定义，如下
+推荐使用const来定义常量，如下
 
 ```
 NSString *const kWEGMomentTopicNumberUpdateNotification = @"kWEGMomentTopicNumberUpdateNotification";
 ```
 
-而不是
+const不能满足的情况再考虑使用宏定义
 
 ```
 #define kWEGMomentTopicNumberUpdateNotification @"kWEGMomentTopicNumberUpdateNotification"
