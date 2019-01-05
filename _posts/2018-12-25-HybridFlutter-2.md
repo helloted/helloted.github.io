@@ -78,8 +78,8 @@ Widget _widgetForRoute(String route) {
 
 ```objc
     // 要与main.dart中一致
-    NSString *channelName = @"com.pages.your/native_get";
-    FlutterMethodChannel *messageChannel = [FlutterMethodChannel methodChannelWithName:channelName binaryMessenger:flutterViewController];
+NSString *channelName = @"com.pages.your/native_get";
+FlutterMethodChannel *messageChannel = [FlutterMethodChannel methodChannelWithName:channelName binaryMessenger:flutterViewController];
 ```
 
 FlutterMethodChannel初始化时，要传入两个参数channelName和flutterViewController，channelName是消息通道的名称，这个是唯一的要与dart的channel保持一致，flutterViewController则是Flutter的VC；
@@ -127,11 +127,79 @@ _contactWithNative() async {
             NSLog(@"arguments = %@", dic);
             NSDictionary *map = @{@"key":@"从map里获取到的数据"};
             
-            // 给Flutter回传结果
+            // 给Flutter回传结果,这个block只能调用一次才有效
             if (result) {
                 result(map);
             }
         }
     }];
 ```
+
+如果要多次从Native回调给Flutter，就需要通过`EventChannel`来实现了
+
+#### 2、Native传值到Flutter
+
+在iOS端：
+
+```objc
+    FlutterViewController* flutterViewController = [FlutterViewController new];
+    [flutterViewController setInitialRoute:@"iOSSendToFlutter"];
+    flutterViewController.title = @"Native传值到Flutter";
+    [self.navigationController pushViewController:flutterViewController animated:YES];
+    
+    NSString *channelName = @"com.pages.your/native_post";
+    FlutterEventChannel *evenChannal = [FlutterEventChannel eventChannelWithName:channelName binaryMessenger:flutterViewController];
+    [evenChannal setStreamHandler:self];
+```
+
+设置代理
+
+```
+#pragma mark - <FlutterStreamHandler>
+// Flutter端开始监听这个channel时的回调，第二个参数 EventSink是用来传数据的载体。
+- (FlutterError* _Nullable)onListenWithArguments:(id _Nullable)arguments eventSink:(FlutterEventSink)events {
+	NSLog(@"Flutter开始接受数据并发来参数:%@",arguments);
+    // 用一个实例来指向，这样就可以多次调用
+    self.flutterEvents = events;
+    return nil;
+}
+
+// flutter不再接收
+- (FlutterError* _Nullable)onCancelWithArguments:(id _Nullable)arguments {
+    NSLog(@"Flutter停止接受并发来参数:%@",arguments);
+    return nil;
+}
+
+```
+
+这样就可以给Flutter端传递数据了
+
+```
+self.flutterEvents(@"给flutter传递的数据")
+```
+
+下面是Dart的代码
+
+```dart
+  // 注册一个通知
+  static const EventChannel eventChannel = const EventChannel('com.pages.your/native_post');
+  
+  // 向iOS端发送一个参数123456789并且开始接收iOS的广播来传递数据
+	eventChannel.receiveBroadcastStream(123456789).listen(_onEvent,onError: _onError);
+
+  // 回调事件
+  void _onEvent(Object event) {
+    setState(() {
+     //从iOS端接受的数据
+      String receive = event.toString();
+    });
+  }
+  
+  // 错误返回
+  void _onError(Object error) {
+
+  }
+```
+
+
 

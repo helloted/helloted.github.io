@@ -195,8 +195,8 @@
 <p>在iOS Native端初始化：</p>
 
 <div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">// 要与main.dart中一致</span>
-    <span class="n">NSString</span> <span class="o">*</span><span class="n">channelName</span> <span class="o">=</span> <span class="s">@"com.pages.your/native_get"</span><span class="p">;</span>
-    <span class="n">FlutterMethodChannel</span> <span class="o">*</span><span class="n">messageChannel</span> <span class="o">=</span> <span class="p">[</span><span class="n">FlutterMethodChannel</span> <span class="nf">methodChannelWithName</span><span class="p">:</span><span class="n">channelName</span> <span class="nf">binaryMessenger</span><span class="p">:</span><span class="n">flutterViewController</span><span class="p">];</span>
+<span class="n">NSString</span> <span class="o">*</span><span class="n">channelName</span> <span class="o">=</span> <span class="s">@"com.pages.your/native_get"</span><span class="p">;</span>
+<span class="n">FlutterMethodChannel</span> <span class="o">*</span><span class="n">messageChannel</span> <span class="o">=</span> <span class="p">[</span><span class="n">FlutterMethodChannel</span> <span class="nf">methodChannelWithName</span><span class="p">:</span><span class="n">channelName</span> <span class="nf">binaryMessenger</span><span class="p">:</span><span class="n">flutterViewController</span><span class="p">];</span>
 </code></pre></div></div>
 
 <p>FlutterMethodChannel初始化时，要传入两个参数channelName和flutterViewController，channelName是消息通道的名称，这个是唯一的要与dart的channel保持一致，flutterViewController则是Flutter的VC；</p>
@@ -263,12 +263,74 @@ _contactWithNative() async {
             <span class="n">NSLog</span><span class="p">(</span><span class="s">@"arguments = %@"</span><span class="p">,</span> <span class="n">dic</span><span class="p">);</span>
             <span class="n">NSDictionary</span> <span class="o">*</span><span class="n">map</span> <span class="o">=</span> <span class="p">@{</span><span class="s">@"key"</span><span class="o">:</span><span class="s">@"从map里获取到的数据"</span><span class="p">};</span>
             
-            <span class="c1">// 给Flutter回传结果</span>
+            <span class="c1">// 给Flutter回传结果,这个block只能调用一次才有效</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="p">{</span>
                 <span class="n">result</span><span class="p">(</span><span class="n">map</span><span class="p">);</span>
             <span class="p">}</span>
         <span class="p">}</span>
     <span class="p">}];</span>
+</code></pre></div></div>
+
+<p>如果要多次从Native回调给Flutter，就需要通过<code class="highlighter-rouge">EventChannel</code>来实现了</p>
+
+<h4 id="2native传值到flutter">2、Native传值到Flutter</h4>
+
+<p>在iOS端：</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="n">FlutterViewController</span><span class="o">*</span> <span class="n">flutterViewController</span> <span class="o">=</span> <span class="p">[</span><span class="n">FlutterViewController</span> <span class="nf">new</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">flutterViewController</span> <span class="nf">setInitialRoute</span><span class="p">:</span><span class="s">@"iOSSendToFlutter"</span><span class="p">];</span>
+    <span class="n">flutterViewController</span><span class="p">.</span><span class="n">title</span> <span class="o">=</span> <span class="s">@"Native传值到Flutter"</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">navigationController</span> <span class="nf">pushViewController</span><span class="p">:</span><span class="n">flutterViewController</span> <span class="nf">animated</span><span class="p">:</span><span class="nb">YES</span><span class="p">];</span>
+    
+    <span class="n">NSString</span> <span class="o">*</span><span class="n">channelName</span> <span class="o">=</span> <span class="s">@"com.pages.your/native_post"</span><span class="p">;</span>
+    <span class="n">FlutterEventChannel</span> <span class="o">*</span><span class="n">evenChannal</span> <span class="o">=</span> <span class="p">[</span><span class="n">FlutterEventChannel</span> <span class="nf">eventChannelWithName</span><span class="p">:</span><span class="n">channelName</span> <span class="nf">binaryMessenger</span><span class="p">:</span><span class="n">flutterViewController</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">evenChannal</span> <span class="nf">setStreamHandler</span><span class="p">:</span><span class="n">self</span><span class="p">];</span>
+</code></pre></div></div>
+
+<p>设置代理</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#pragma mark - &lt;FlutterStreamHandler&gt;
+// Flutter端开始监听这个channel时的回调，第二个参数 EventSink是用来传数据的载体。
+- (FlutterError* _Nullable)onListenWithArguments:(id _Nullable)arguments eventSink:(FlutterEventSink)events {
+	NSLog(@"Flutter开始接受数据并发来参数:%@",arguments);
+    // 用一个实例来指向，这样就可以多次调用
+    self.flutterEvents = events;
+    return nil;
+}
+
+// flutter不再接收
+- (FlutterError* _Nullable)onCancelWithArguments:(id _Nullable)arguments {
+    NSLog(@"Flutter停止接受并发来参数:%@",arguments);
+    return nil;
+}
+
+</code></pre></div></div>
+
+<p>这样就可以给Flutter端传递数据了</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>self.flutterEvents(@"给flutter传递的数据")
+</code></pre></div></div>
+
+<p>下面是Dart的代码</p>
+
+<div class="language-dart highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="c1">// 注册一个通知</span>
+  <span class="kd">static</span> <span class="kd">const</span> <span class="n">EventChannel</span> <span class="n">eventChannel</span> <span class="o">=</span> <span class="kd">const</span> <span class="n">EventChannel</span><span class="o">(</span><span class="s">'com.pages.your/native_post'</span><span class="o">);</span>
+  
+  <span class="c1">// 向iOS端发送一个参数123456789并且开始接收iOS的广播来传递数据</span>
+	<span class="n">eventChannel</span><span class="o">.</span><span class="na">receiveBroadcastStream</span><span class="o">(</span><span class="mi">123456789</span><span class="o">).</span><span class="na">listen</span><span class="o">(</span><span class="n">_onEvent</span><span class="o">,</span><span class="nl">onError:</span> <span class="n">_onError</span><span class="o">);</span>
+
+  <span class="c1">// 回调事件</span>
+  <span class="kt">void</span> <span class="n">_onEvent</span><span class="o">(</span><span class="kt">Object</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">setState</span><span class="o">(()</span> <span class="o">{</span>
+     <span class="c1">//从iOS端接受的数据</span>
+      <span class="kt">String</span> <span class="n">receive</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+    <span class="o">});</span>
+  <span class="o">}</span>
+  
+  <span class="c1">// 错误返回</span>
+  <span class="kt">void</span> <span class="n">_onError</span><span class="o">(</span><span class="kt">Object</span> <span class="n">error</span><span class="o">)</span> <span class="o">{</span>
+
+  <span class="o">}</span>
 </code></pre></div></div>
 
 
