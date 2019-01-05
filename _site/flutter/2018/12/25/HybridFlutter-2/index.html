@@ -128,9 +128,149 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
 
-				<h3 id="一ios">一、iOS</h3>
+				<h3 id="一native切换到flutter">一、Native切换到Flutter</h3>
 
-<p><img src="/img/Simple_8/57.png" alt="img" /></p>
+<h4 id="1ios">1、iOS</h4>
+
+<p>在iOS中，Flutter的Framework中，提供了一个FlutterViewController来切换到Flutter页面</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">FlutterViewController</span>
+    <span class="p">:</span> <span class="nc">UIViewController</span> <span class="o">&lt;</span><span class="n">FlutterBinaryMessenger</span><span class="p">,</span> <span class="n">FlutterTextureRegistry</span><span class="p">,</span> <span class="n">FlutterPluginRegistry</span><span class="o">&gt;</span>
+</code></pre></div></div>
+
+<p>可以看到FlutterViewController是继承自UIViewController，然后遵循了一些Flutter的相关协议。所以我们可以像正常使用UIViewController一样来使用Flutter页面</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#import &lt;Flutter/Flutter.h&gt;
+</span>
+<span class="n">FlutterViewController</span><span class="o">*</span> <span class="n">flutterViewController</span> <span class="o">=</span> <span class="p">[</span><span class="n">FlutterViewController</span> <span class="nf">new</span><span class="p">];</span>
+<span class="p">[</span><span class="n">flutterViewController</span> <span class="nf">setInitialRoute</span><span class="p">:</span><span class="s">@"initRoute"</span><span class="p">];</span>
+</code></pre></div></div>
+
+<h4 id="2andorid">2、Andorid</h4>
+
+<p>在Android中，Flutter提供了一个View来显示Flutter页面</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">View</span> <span class="n">flutterView</span> <span class="o">=</span> <span class="n">Flutter</span><span class="o">.</span><span class="na">createView</span><span class="o">(</span><span class="n">MainActivity</span><span class="o">.</span><span class="na">this</span><span class="o">,</span><span class="n">getLifecycle</span><span class="o">(),</span><span class="s">"initRoute"</span><span class="o">);</span>
+</code></pre></div></div>
+
+<h4 id="3flutter">3、Flutter</h4>
+
+<p>注意到在iOS和Android初始化时，都会传入一个值”initRoute”，这个就是Flutter初始化选择的页面，在Flutter中可以通过</p>
+
+<p><code class="highlighter-rouge">ui.window.defaultRouteName</code>来获取到，Dart中文档也写的很清楚：</p>
+
+<p><img src="/img/Simple_8/60.png" alt="img" /></p>
+
+<ul>
+  <li>如果没有被设置，将会默认是”/”</li>
+  <li>必须在runApp之前就赋好值</li>
+  <li>iOS调用的是[<code class="highlighter-rouge">FlutterViewController.setInitialRoute</code>]</li>
+  <li>Android代码中调用的是<code class="highlighter-rouge">FlutterView.setInitialRoute</code></li>
+</ul>
+
+<p>所以，在Flutter的初始化页面：</p>
+
+<div class="language-dart highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// ui.window.defaultRouteName是Native端初始化时传来的route</span>
+<span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="o">)</span> <span class="o">=&gt;</span> <span class="n">runApp</span><span class="o">(</span><span class="n">_widgetForRoute</span><span class="o">(</span><span class="n">ui</span><span class="o">.</span><span class="na">window</span><span class="o">.</span><span class="na">defaultRouteName</span><span class="o">));</span>
+
+<span class="c1">// 根据route跳转不同界面</span>
+<span class="n">Widget</span> <span class="nf">_widgetForRoute</span><span class="p">(</span><span class="kt">String</span> <span class="n">route</span><span class="o">)</span> <span class="o">{</span>
+  <span class="k">switch</span> <span class="o">(</span><span class="n">route</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="s">'initRoute'</span><span class="o">:</span>
+      <span class="k">return</span> <span class="k">new</span> <span class="n">initWidget</span><span class="o">();</span>
+    <span class="k">case</span> <span class="s">'home'</span><span class="o">:</span>
+      <span class="k">return</span> <span class="k">new</span> <span class="n">DefaultWidget</span><span class="o">();</span>
+    <span class="k">default</span><span class="o">:</span>
+      <span class="k">return</span> <span class="k">new</span> <span class="n">DefaultWidget</span><span class="o">();</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="二ios与flutter交互">二、iOS与Flutter交互</h3>
+
+<h4 id="1flutter传值native">1、Flutter传值Native</h4>
+
+<p>我们要借助FlutterMethodChannel来传递消息</p>
+
+<p>在iOS Native端初始化：</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">// 要与main.dart中一致</span>
+    <span class="n">NSString</span> <span class="o">*</span><span class="n">channelName</span> <span class="o">=</span> <span class="s">@"com.pages.your/native_get"</span><span class="p">;</span>
+    <span class="n">FlutterMethodChannel</span> <span class="o">*</span><span class="n">messageChannel</span> <span class="o">=</span> <span class="p">[</span><span class="n">FlutterMethodChannel</span> <span class="nf">methodChannelWithName</span><span class="p">:</span><span class="n">channelName</span> <span class="nf">binaryMessenger</span><span class="p">:</span><span class="n">flutterViewController</span><span class="p">];</span>
+</code></pre></div></div>
+
+<p>FlutterMethodChannel初始化时，要传入两个参数channelName和flutterViewController，channelName是消息通道的名称，这个是唯一的要与dart的channel保持一致，flutterViewController则是Flutter的VC；</p>
+
+<p>messageChannel通过回调Block的方式来与Flutter端进行交互。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[messageChannel setMethodCallHandler:^(FlutterMethodCall * _Nonnull call, FlutterResult  _Nonnull result) {
+
+}]; `FlutterMethodCall * _Nonnull call`用于接受Flutter端传递的数据，`FlutterResult  _Nonnull result`用于返回Flutter端数据
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// methodChannel保持与Native端一致
+static const methodChannel = const MethodChannel('com.pages.your/native_get');
+
+_contactWithNative() async {
+  Map&lt;String, dynamic&gt; map = {"code": "200", "data":[1,2,3]};
+  dynamic result; //result是Native端传递过来的结果，异步得到。
+  try {
+    result = await methodChannel.invokeMethod('flutter_method', map);
+  } on PlatformException {
+    result = "error";
+  }
+}
+</code></pre></div></div>
+
+<p>其中，<code class="highlighter-rouge">methodChannel.invokeMethod('flutter_method', map)</code>对应于Native端的<code class="highlighter-rouge">FlutterMethodCall * _Nonnull call</code>，第一个参数为方法名，对应<code class="highlighter-rouge">call.method</code>，必须为字符串类型；第二个参数为要传递给Native的参数，对应iOS端的<code class="highlighter-rouge">call.arguments</code>可以为基础类型，其中基础类型对应为</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Flutter</th>
+      <th>iOS</th>
+      <th>说明</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>String</td>
+      <td>NSString</td>
+      <td>字符串类型</td>
+    </tr>
+    <tr>
+      <td>数值类型</td>
+      <td>NSNumber</td>
+      <td>数值类型</td>
+    </tr>
+    <tr>
+      <td>Map</td>
+      <td>NSDictionary</td>
+      <td>key/Value</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>所以在iOS端，我们可以这样回调</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="p">[</span><span class="n">messageChannel</span> <span class="nf">setMethodCallHandler</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">FlutterMethodCall</span> <span class="o">*</span> <span class="n">_Nonnull</span> <span class="n">call</span><span class="p">,</span> <span class="n">FlutterResult</span>  <span class="n">_Nonnull</span> <span class="n">result</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// call.method 获取 flutter 给回到的方法名，要匹配到 channelName 对应的多个 发送方法名，一般需要判断区分</span>
+        <span class="c1">// call.arguments 获取到 flutter 给到的参数，（比如跳转到另一个页面所需要参数）</span>
+        <span class="c1">// result 是给flutter的回调， 该回调只能使用一次</span>
+        <span class="n">NSLog</span><span class="p">(</span><span class="s">@"method=%@ </span><span class="se">\n</span><span class="s">arguments = %@"</span><span class="p">,</span> <span class="n">call</span><span class="p">.</span><span class="n">method</span><span class="p">,</span> <span class="n">call</span><span class="p">.</span><span class="n">arguments</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">([</span><span class="n">call</span><span class="p">.</span><span class="n">method</span> <span class="nf">isEqualToString</span><span class="p">:</span><span class="s">@"iOSFlutter1"</span><span class="p">])</span> <span class="p">{</span>
+            <span class="n">NSDictionary</span> <span class="o">*</span><span class="n">dic</span> <span class="o">=</span> <span class="n">call</span><span class="p">.</span><span class="n">arguments</span><span class="p">;</span>
+            <span class="n">NSLog</span><span class="p">(</span><span class="s">@"arguments = %@"</span><span class="p">,</span> <span class="n">dic</span><span class="p">);</span>
+            <span class="n">NSDictionary</span> <span class="o">*</span><span class="n">map</span> <span class="o">=</span> <span class="p">@{</span><span class="s">@"key"</span><span class="o">:</span><span class="s">@"从map里获取到的数据"</span><span class="p">};</span>
+            
+            <span class="c1">// 给Flutter回传结果</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">result</span><span class="p">(</span><span class="n">map</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}];</span>
+</code></pre></div></div>
+
 
 
                 <hr>
