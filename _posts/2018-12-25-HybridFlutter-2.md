@@ -201,5 +201,9 @@ self.flutterEvents(@"给flutter传递的数据")
   }
 ```
 
+### 三、android
 
+Android与iOS一样，是通过两种不同类型的channel来达到Native与Flutter交互的效果。
+
+#### 1、Flutter传值Native
 

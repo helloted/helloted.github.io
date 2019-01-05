@@ -144,7 +144,9 @@ Gradle sync之后就成功导入了Flutter
 
 #### 2、使用
 
-Flutter接入View
+在iOS中，Flutter是以一整个页面ViewController的方式接入到Native中，而在android中，Flutter既可以在现有Activity内插入一个FlutterView作为一部分，也可以直接继承自一个FlutterActivity.
+
+作为一部分接入View
 
 ```java
 View flutterView = Flutter.createView(MainActivity.this,getLifecycle(),"route1");
@@ -170,6 +172,15 @@ public class FlutterActivity extends AppCompatActivity {
         addContentView(flutterView, layout);
     }
 }
+```
+
+这种情况如果要指定route的话，就要在前一个Activitiy跳转时传入参数，比如：
+
+```java
+Intent intent = new Intent(MainActivity.this, MyActivity.class);
+intent.setAction(Intent.ACTION_RUN);
+intent.putExtra("route", "initRoute");
+MainActivity.this.startActivity(intent);
 ```
 
 ![img](/img/Simple_8/57.png)

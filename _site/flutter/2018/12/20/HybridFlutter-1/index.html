@@ -252,7 +252,9 @@ evaluate(new File(
 
 <h4 id="2使用">2、使用</h4>
 
-<p>Flutter接入View</p>
+<p>在iOS中，Flutter是以一整个页面ViewController的方式接入到Native中，而在android中，Flutter既可以在现有Activity内插入一个FlutterView作为一部分，也可以直接继承自一个FlutterActivity.</p>
+
+<p>作为一部分接入View</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">View</span> <span class="n">flutterView</span> <span class="o">=</span> <span class="n">Flutter</span><span class="o">.</span><span class="na">createView</span><span class="o">(</span><span class="n">MainActivity</span><span class="o">.</span><span class="na">this</span><span class="o">,</span><span class="n">getLifecycle</span><span class="o">(),</span><span class="s">"route1"</span><span class="o">);</span>
 <span class="n">FrameLayout</span><span class="o">.</span><span class="na">LayoutParams</span> <span class="n">layout</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FrameLayout</span><span class="o">.</span><span class="na">LayoutParams</span><span class="o">(</span><span class="mi">600</span><span class="o">,</span> <span class="mi">800</span><span class="o">);</span>
@@ -276,6 +278,14 @@ evaluate(new File(
         <span class="n">addContentView</span><span class="o">(</span><span class="n">flutterView</span><span class="o">,</span> <span class="n">layout</span><span class="o">);</span>
     <span class="o">}</span>
 <span class="o">}</span>
+</code></pre></div></div>
+
+<p>这种情况如果要指定route的话，就要在前一个Activitiy跳转时传入参数，比如：</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Intent</span> <span class="n">intent</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Intent</span><span class="o">(</span><span class="n">MainActivity</span><span class="o">.</span><span class="na">this</span><span class="o">,</span> <span class="n">MyActivity</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="n">intent</span><span class="o">.</span><span class="na">setAction</span><span class="o">(</span><span class="n">Intent</span><span class="o">.</span><span class="na">ACTION_RUN</span><span class="o">);</span>
+<span class="n">intent</span><span class="o">.</span><span class="na">putExtra</span><span class="o">(</span><span class="s">"route"</span><span class="o">,</span> <span class="s">"initRoute"</span><span class="o">);</span>
+<span class="n">MainActivity</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">startActivity</span><span class="o">(</span><span class="n">intent</span><span class="o">);</span>
 </code></pre></div></div>
 
 <p><img src="/img/Simple_8/57.png" alt="img" /></p>
