@@ -184,7 +184,7 @@ self.flutterEvents(@"给flutter传递的数据")
   // 注册一个通知
   static const EventChannel eventChannel = const EventChannel('com.pages.your/native_post');
   
-  // 向iOS端发送一个参数123456789并且开始接收iOS的广播来传递数据
+  // 向iOS端发送一个参数123456789并且开始接收native的广播来传递数据
 	eventChannel.receiveBroadcastStream(123456789).listen(_onEvent,onError: _onError);
 
   // 回调事件
@@ -203,7 +203,60 @@ self.flutterEvents(@"给flutter传递的数据")
 
 ### 三、android
 
-Android与iOS一样，是通过两种不同类型的channel来达到Native与Flutter交互的效果。
-
 #### 1、Flutter传值Native
+
+通过注册MethodChannel来达到传递的目的
+
+```java
+  // 自定义插件
+  new MethodChannel(flutterView, ChannelName).setMethodCallHandler(new MethodCallHandler() 	{
+            @Override
+            public void onMethodCall(MethodCall call, MethodChannel.Result result) {
+            	// 传递过来的方法名称和参数
+                Log.d("LOGTAG_D",call.method);
+                Log.d("LOGTAG_D",call.arguments.toString());
+				
+				// 返回值给Flutter
+				result.success("messageReturnToFlutter");
+            }
+   });
+```
+
+要传入两个参数：
+
+- `flutterView`：如果是FlutterActivity的话用来获取getFlutterView()；
+- `ChannelName`：通道的名称，与Flutter端保持一致
+
+#### 2、Native传值到Flutter
+
+通过注册EventChannel来达到Native主动传值到Flutter的目的
+
+```java
+new EventChannel(flutterView, ChannelName).setStreamHandler(
+        new EventChannel.StreamHandler() {
+            @Override
+            // 这个onListen是Flutter端开始监听这个channel时的回调，第二个参数 EventSink是用来传数据的载体。
+            // arguments是Flutter发送过来的一个对象，可认为是标记
+            // events是用来给Flutter传递数据的载体
+            public void onListen(Object arguments, EventChannel.EventSink events) {
+                Log.d("LOGTAG_D",arguments.toString());
+				myEvents.success("给flutter发送的数据");
+            }
+
+            @Override
+            public void onCancel(Object arguments) {
+                // Flutter不再接收
+            }
+        }
+);
+```
+
+Dart的代码参见上面iOS部分文章
+
+### 四、总结
+
+Android与iOS一样，是通过两种不同类型的channel来达到Native与Flutter交互的效果。channel是Native与Flutter进行交互的通道，所以必须要注意的是，保持Native端与Flutter两端的ChannelName一致。
+
+- Flutter传值Native：Native端通过call的method/methodName来进行区分不同的调用，而传递的对象可以是基础数据，会有一个result一次性的返回参数。
+- Native传值Fluuter：在建立通道之后，可以通过arguments对象来区分通道，并且通过events作为载体来多次传递数据。
 

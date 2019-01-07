@@ -33,6 +33,12 @@ Button btn = (Button) findViewById(R.id.button);
 
 fv+Tab快捷键
 
+获取Activity当前rootView
+
+```java
+View rootView = getWindow().getDecorView().findViewById(android.R.id.content);
+```
+
 #### 3、Button
 
 两种写法
@@ -104,3 +110,9 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     Log.i(TAG, result);
 }
 ```
+
+
+
+5、自动导入包
+
+alt+enter

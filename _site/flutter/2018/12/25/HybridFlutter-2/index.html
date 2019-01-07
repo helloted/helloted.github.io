@@ -316,7 +316,7 @@ _contactWithNative() async {
 <div class="language-dart highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="c1">// 注册一个通知</span>
   <span class="kd">static</span> <span class="kd">const</span> <span class="n">EventChannel</span> <span class="n">eventChannel</span> <span class="o">=</span> <span class="kd">const</span> <span class="n">EventChannel</span><span class="o">(</span><span class="s">'com.pages.your/native_post'</span><span class="o">);</span>
   
-  <span class="c1">// 向iOS端发送一个参数123456789并且开始接收iOS的广播来传递数据</span>
+  <span class="c1">// 向iOS端发送一个参数123456789并且开始接收native的广播来传递数据</span>
 	<span class="n">eventChannel</span><span class="o">.</span><span class="na">receiveBroadcastStream</span><span class="o">(</span><span class="mi">123456789</span><span class="o">).</span><span class="na">listen</span><span class="o">(</span><span class="n">_onEvent</span><span class="o">,</span><span class="nl">onError:</span> <span class="n">_onError</span><span class="o">);</span>
 
   <span class="c1">// 回调事件</span>
@@ -335,9 +335,64 @@ _contactWithNative() async {
 
 <h3 id="三android">三、android</h3>
 
-<p>Android与iOS一样，是通过两种不同类型的channel来达到Native与Flutter交互的效果。</p>
-
 <h4 id="1flutter传值native-1">1、Flutter传值Native</h4>
+
+<p>通过注册MethodChannel来达到传递的目的</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="c1">// 自定义插件</span>
+  <span class="k">new</span> <span class="nf">MethodChannel</span><span class="o">(</span><span class="n">flutterView</span><span class="o">,</span> <span class="n">ChannelName</span><span class="o">).</span><span class="na">setMethodCallHandler</span><span class="o">(</span><span class="k">new</span> <span class="n">MethodCallHandler</span><span class="o">()</span> 	<span class="o">{</span>
+            <span class="nd">@Override</span>
+            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onMethodCall</span><span class="o">(</span><span class="n">MethodCall</span> <span class="n">call</span><span class="o">,</span> <span class="n">MethodChannel</span><span class="o">.</span><span class="na">Result</span> <span class="n">result</span><span class="o">)</span> <span class="o">{</span>
+            	<span class="c1">// 传递过来的方法名称和参数</span>
+                <span class="n">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="s">"LOGTAG_D"</span><span class="o">,</span><span class="n">call</span><span class="o">.</span><span class="na">method</span><span class="o">);</span>
+                <span class="n">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="s">"LOGTAG_D"</span><span class="o">,</span><span class="n">call</span><span class="o">.</span><span class="na">arguments</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+				
+				<span class="c1">// 返回值给Flutter</span>
+				<span class="n">result</span><span class="o">.</span><span class="na">success</span><span class="o">(</span><span class="s">"messageReturnToFlutter"</span><span class="o">);</span>
+            <span class="o">}</span>
+   <span class="o">});</span>
+</code></pre></div></div>
+
+<p>要传入两个参数：</p>
+
+<ul>
+  <li><code class="highlighter-rouge">flutterView</code>：如果是FlutterActivity的话用来获取getFlutterView()；</li>
+  <li><code class="highlighter-rouge">ChannelName</code>：通道的名称，与Flutter端保持一致</li>
+</ul>
+
+<h4 id="2native传值到flutter-1">2、Native传值到Flutter</h4>
+
+<p>通过注册EventChannel来达到Native主动传值到Flutter的目的</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">new</span> <span class="n">EventChannel</span><span class="o">(</span><span class="n">flutterView</span><span class="o">,</span> <span class="n">ChannelName</span><span class="o">).</span><span class="na">setStreamHandler</span><span class="o">(</span>
+        <span class="k">new</span> <span class="n">EventChannel</span><span class="o">.</span><span class="na">StreamHandler</span><span class="o">()</span> <span class="o">{</span>
+            <span class="nd">@Override</span>
+            <span class="c1">// 这个onListen是Flutter端开始监听这个channel时的回调，第二个参数 EventSink是用来传数据的载体。</span>
+            <span class="c1">// arguments是Flutter发送过来的一个对象，可认为是标记</span>
+            <span class="c1">// events是用来给Flutter传递数据的载体</span>
+            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onListen</span><span class="o">(</span><span class="n">Object</span> <span class="n">arguments</span><span class="o">,</span> <span class="n">EventChannel</span><span class="o">.</span><span class="na">EventSink</span> <span class="n">events</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="s">"LOGTAG_D"</span><span class="o">,</span><span class="n">arguments</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+				<span class="n">myEvents</span><span class="o">.</span><span class="na">success</span><span class="o">(</span><span class="s">"给flutter发送的数据"</span><span class="o">);</span>
+            <span class="o">}</span>
+
+            <span class="nd">@Override</span>
+            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onCancel</span><span class="o">(</span><span class="n">Object</span> <span class="n">arguments</span><span class="o">)</span> <span class="o">{</span>
+                <span class="c1">// Flutter不再接收</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+<span class="o">);</span>
+</code></pre></div></div>
+
+<p>Dart的代码参见上面iOS部分文章</p>
+
+<h3 id="四总结">四、总结</h3>
+
+<p>Android与iOS一样，是通过两种不同类型的channel来达到Native与Flutter交互的效果。channel是Native与Flutter进行交互的通道，所以必须要注意的是，保持Native端与Flutter两端的ChannelName一致。</p>
+
+<ul>
+  <li>Flutter传值Native：Native端通过call的method/methodName来进行区分不同的调用，而传递的对象可以是基础数据，会有一个result一次性的返回参数。</li>
+  <li>Native传值Fluuter：在建立通道之后，可以通过arguments对象来区分通道，并且通过events作为载体来多次传递数据。</li>
+</ul>
 
 
 

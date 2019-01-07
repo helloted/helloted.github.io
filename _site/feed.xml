@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2019-01-05T22:00:39+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">iOS编码建议</title><link href="http://www.helloted.com/ios/2019/01/02/code/" rel="alternate" type="text/html" title="iOS编码建议" /><published>2019-01-02T20:00:00+08:00</published><updated>2019-01-02T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2019/01/02/code</id><content type="html" xml:base="http://www.helloted.com/ios/2019/01/02/code/">&lt;h4 id=&quot;一命名&quot;&gt;一、命名&lt;/h4&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2019-01-07T16:48:55+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">iOS编码建议</title><link href="http://www.helloted.com/ios/2019/01/02/code/" rel="alternate" type="text/html" title="iOS编码建议" /><published>2019-01-02T20:00:00+08:00</published><updated>2019-01-02T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2019/01/02/code</id><content type="html" xml:base="http://www.helloted.com/ios/2019/01/02/code/">&lt;h4 id=&quot;一命名&quot;&gt;一、命名&lt;/h4&gt;
 
 &lt;p&gt;1、变量和方法名：驼峰命名；&lt;/p&gt;
 
@@ -339,7 +339,7 @@ _contactWithNative() async {
 &lt;div class=&quot;language-dart highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;c1&quot;&gt;// 注册一个通知&lt;/span&gt;
   &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;EventChannel&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;eventChannel&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;EventChannel&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'com.pages.your/native_post'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
   
-  &lt;span class=&quot;c1&quot;&gt;// 向iOS端发送一个参数123456789并且开始接收iOS的广播来传递数据&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;// 向iOS端发送一个参数123456789并且开始接收native的广播来传递数据&lt;/span&gt;
 	&lt;span class=&quot;n&quot;&gt;eventChannel&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;receiveBroadcastStream&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;123456789&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;listen&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_onEvent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;onError:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_onError&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
 
   &lt;span class=&quot;c1&quot;&gt;// 回调事件&lt;/span&gt;
@@ -358,9 +358,64 @@ _contactWithNative() async {
 
 &lt;h3 id=&quot;三android&quot;&gt;三、android&lt;/h3&gt;
 
-&lt;p&gt;Android与iOS一样，是通过两种不同类型的channel来达到Native与Flutter交互的效果。&lt;/p&gt;
+&lt;h4 id=&quot;1flutter传值native-1&quot;&gt;1、Flutter传值Native&lt;/h4&gt;
 
-&lt;h4 id=&quot;1flutter传值native-1&quot;&gt;1、Flutter传值Native&lt;/h4&gt;</content><author><name>Ted</name></author><category term="Flutter" /><summary type="html">一、Native切换到Flutter</summary></entry><entry><title type="html">Flutter与Native(一)</title><link href="http://www.helloted.com/flutter/2018/12/20/HybridFlutter-1/" rel="alternate" type="text/html" title="Flutter与Native(一)" /><published>2018-12-20T20:00:00+08:00</published><updated>2018-12-20T20:00:00+08:00</updated><id>http://www.helloted.com/flutter/2018/12/20/HybridFlutter-1</id><content type="html" xml:base="http://www.helloted.com/flutter/2018/12/20/HybridFlutter-1/">&lt;h3 id=&quot;一初始项目&quot;&gt;一、初始项目&lt;/h3&gt;
+&lt;p&gt;通过注册MethodChannel来达到传递的目的&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;c1&quot;&gt;// 自定义插件&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;MethodChannel&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flutterView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ChannelName&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setMethodCallHandler&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MethodCallHandler&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; 	&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+            &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;onMethodCall&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MethodCall&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MethodChannel&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;Result&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            	&lt;span class=&quot;c1&quot;&gt;// 传递过来的方法名称和参数&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;Log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;d&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;LOGTAG_D&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;method&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;Log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;d&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;LOGTAG_D&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;arguments&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;toString&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+				
+				&lt;span class=&quot;c1&quot;&gt;// 返回值给Flutter&lt;/span&gt;
+				&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;success&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;messageReturnToFlutter&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+   &lt;span class=&quot;o&quot;&gt;});&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;要传入两个参数：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;flutterView&lt;/code&gt;：如果是FlutterActivity的话用来获取getFlutterView()；&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ChannelName&lt;/code&gt;：通道的名称，与Flutter端保持一致&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;2native传值到flutter-1&quot;&gt;2、Native传值到Flutter&lt;/h4&gt;
+
+&lt;p&gt;通过注册EventChannel来达到Native主动传值到Flutter的目的&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;EventChannel&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flutterView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ChannelName&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setStreamHandler&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;EventChannel&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;StreamHandler&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+            &lt;span class=&quot;c1&quot;&gt;// 这个onListen是Flutter端开始监听这个channel时的回调，第二个参数 EventSink是用来传数据的载体。&lt;/span&gt;
+            &lt;span class=&quot;c1&quot;&gt;// arguments是Flutter发送过来的一个对象，可认为是标记&lt;/span&gt;
+            &lt;span class=&quot;c1&quot;&gt;// events是用来给Flutter传递数据的载体&lt;/span&gt;
+            &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;onListen&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;arguments&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;EventChannel&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;EventSink&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;events&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;Log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;d&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;LOGTAG_D&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arguments&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;toString&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+				&lt;span class=&quot;n&quot;&gt;myEvents&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;success&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;给flutter发送的数据&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+            &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+            &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;onCancel&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;arguments&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;c1&quot;&gt;// Flutter不再接收&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Dart的代码参见上面iOS部分文章&lt;/p&gt;
+
+&lt;h3 id=&quot;四总结&quot;&gt;四、总结&lt;/h3&gt;
+
+&lt;p&gt;Android与iOS一样，是通过两种不同类型的channel来达到Native与Flutter交互的效果。channel是Native与Flutter进行交互的通道，所以必须要注意的是，保持Native端与Flutter两端的ChannelName一致。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Flutter传值Native：Native端通过call的method/methodName来进行区分不同的调用，而传递的对象可以是基础数据，会有一个result一次性的返回参数。&lt;/li&gt;
+  &lt;li&gt;Native传值Fluuter：在建立通道之后，可以通过arguments对象来区分通道，并且通过events作为载体来多次传递数据。&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Ted</name></author><category term="Flutter" /><summary type="html">一、Native切换到Flutter</summary></entry><entry><title type="html">Flutter与Native(一)</title><link href="http://www.helloted.com/flutter/2018/12/20/HybridFlutter-1/" rel="alternate" type="text/html" title="Flutter与Native(一)" /><published>2018-12-20T20:00:00+08:00</published><updated>2018-12-20T20:00:00+08:00</updated><id>http://www.helloted.com/flutter/2018/12/20/HybridFlutter-1</id><content type="html" xml:base="http://www.helloted.com/flutter/2018/12/20/HybridFlutter-1/">&lt;h3 id=&quot;一初始项目&quot;&gt;一、初始项目&lt;/h3&gt;
 
 &lt;h4 id=&quot;1现有目录&quot;&gt;1、现有目录&lt;/h4&gt;
 
