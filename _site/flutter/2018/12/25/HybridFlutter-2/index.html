@@ -153,6 +153,29 @@
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">View</span> <span class="n">flutterView</span> <span class="o">=</span> <span class="n">Flutter</span><span class="o">.</span><span class="na">createView</span><span class="o">(</span><span class="n">MainActivity</span><span class="o">.</span><span class="na">this</span><span class="o">,</span><span class="n">getLifecycle</span><span class="o">(),</span><span class="s">"initRoute"</span><span class="o">);</span>
 </code></pre></div></div>
 
+<p>也提供了一个FlutterActivity来显示</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">FlutterMain</span><span class="o">.</span><span class="na">startInitialization</span><span class="o">(</span><span class="n">MainActivity</span><span class="o">.</span><span class="na">this</span><span class="o">);</span>
+<span class="n">Intent</span> <span class="n">intent</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Intent</span><span class="o">(</span><span class="n">MainActivity</span><span class="o">.</span><span class="na">this</span><span class="o">,</span> <span class="n">FlutterActivity</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="n">intent</span><span class="o">.</span><span class="na">putExtra</span><span class="o">(</span><span class="s">"route"</span><span class="o">,</span> <span class="s">"initRoute"</span><span class="o">);</span>
+<span class="n">MainActivity</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">startActivity</span><span class="o">(</span><span class="n">intent</span><span class="o">);</span>
+</code></pre></div></div>
+
+<p>首先在<code class="highlighter-rouge">AndroidManifest.xml</code>注册</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;activity</span>
+    <span class="na">android:name=</span><span class="s">"io.flutter.app.FlutterActivity"</span>
+ <span class="na">android:configChanges=</span><span class="s">"orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density"</span>
+    <span class="na">android:hardwareAccelerated=</span><span class="s">"true"</span>
+    <span class="na">android:windowSoftInputMode=</span><span class="s">"adjustResize"</span>
+    <span class="na">android:exported=</span><span class="s">"true"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;meta-data</span>
+        <span class="na">android:name=</span><span class="s">"io.flutter.app.android.SplashScreenUntilFirstFrame"</span>
+        <span class="na">android:value=</span><span class="s">"true"</span>
+        <span class="nt">/&gt;</span>
+<span class="nt">&lt;/activity&gt;</span>
+</code></pre></div></div>
+
 <h4 id="3flutter">3、Flutter</h4>
 
 <p>注意到在iOS和Android初始化时，都会传入一个值”initRoute”，这个就是Flutter初始化选择的页面，在Flutter中可以通过</p>

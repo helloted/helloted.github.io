@@ -36,6 +36,31 @@ FlutterViewController* flutterViewController = [FlutterViewController new];
 View flutterView = Flutter.createView(MainActivity.this,getLifecycle(),"initRoute");
 ```
 
+也提供了一个FlutterActivity来显示
+
+```java
+FlutterMain.startInitialization(MainActivity.this);
+Intent intent = new Intent(MainActivity.this, FlutterActivity.class);
+intent.putExtra("route", "initRoute");
+MainActivity.this.startActivity(intent);
+```
+
+首先在`AndroidManifest.xml`注册
+
+```xml
+<activity
+    android:name="io.flutter.app.FlutterActivity"
+ android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density"
+    android:hardwareAccelerated="true"
+    android:windowSoftInputMode="adjustResize"
+    android:exported="true">
+    <meta-data
+        android:name="io.flutter.app.android.SplashScreenUntilFirstFrame"
+        android:value="true"
+        />
+</activity>
+```
+
 #### 3、Flutter
 
 注意到在iOS和Android初始化时，都会传入一个值"initRoute"，这个就是Flutter初始化选择的页面，在Flutter中可以通过

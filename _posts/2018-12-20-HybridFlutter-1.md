@@ -161,24 +161,8 @@ addContentView(flutterView, layout);
 或者Activity形式
 
 ```java
-public class FlutterActivity extends AppCompatActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_flutter);
-        View flutterView = Flutter.createView(FlutterActivity.this,getLifecycle(),"route1");
-        FrameLayout.LayoutParams layout = new  FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
-        addContentView(flutterView, layout);
-    }
-}
-```
-
-这种情况如果要指定route的话，就要在前一个Activitiy跳转时传入参数，比如：
-
-```java
-Intent intent = new Intent(MainActivity.this, MyActivity.class);
-intent.setAction(Intent.ACTION_RUN);
+FlutterMain.startInitialization(MainActivity.this);
+Intent intent = new Intent(MainActivity.this, FlutterActivity.class);
 intent.putExtra("route", "initRoute");
 MainActivity.this.startActivity(intent);
 ```
