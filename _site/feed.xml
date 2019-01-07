@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2019-01-07T17:05:16+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">iOS编码建议</title><link href="http://www.helloted.com/ios/2019/01/02/code/" rel="alternate" type="text/html" title="iOS编码建议" /><published>2019-01-02T20:00:00+08:00</published><updated>2019-01-02T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2019/01/02/code</id><content type="html" xml:base="http://www.helloted.com/ios/2019/01/02/code/">&lt;h4 id=&quot;一命名&quot;&gt;一、命名&lt;/h4&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2019-01-07T17:27:14+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">iOS编码建议</title><link href="http://www.helloted.com/ios/2019/01/02/code/" rel="alternate" type="text/html" title="iOS编码建议" /><published>2019-01-02T20:00:00+08:00</published><updated>2019-01-02T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2019/01/02/code</id><content type="html" xml:base="http://www.helloted.com/ios/2019/01/02/code/">&lt;h4 id=&quot;一命名&quot;&gt;一、命名&lt;/h4&gt;
 
 &lt;p&gt;1、变量和方法名：驼峰命名；&lt;/p&gt;
 
@@ -171,12 +171,12 @@ extern NSString * const UIApplicationDidFinishLaunchingNotification;
 
 &lt;h4 id=&quot;2andorid&quot;&gt;2、Andorid&lt;/h4&gt;
 
-&lt;p&gt;在Android中，Flutter提供了一个View来显示Flutter页面&lt;/p&gt;
+&lt;p&gt;在Android中，Flutter提供了一个FluttreView来显示一部分&lt;/p&gt;
 
 &lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;View&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;flutterView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Flutter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;createView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MainActivity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getLifecycle&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(),&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;initRoute&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;也提供了一个FlutterActivity来显示&lt;/p&gt;
+&lt;p&gt;也提供了一个FlutterActivity：&lt;/p&gt;
 
 &lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;FlutterMain&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;startInitialization&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MainActivity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;Intent&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;intent&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Intent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MainActivity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FlutterActivity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
@@ -184,7 +184,7 @@ extern NSString * const UIApplicationDidFinishLaunchingNotification;
 &lt;span class=&quot;n&quot;&gt;MainActivity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;startActivity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;intent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;首先在&lt;code class=&quot;highlighter-rouge&quot;&gt;AndroidManifest.xml&lt;/code&gt;注册&lt;/p&gt;
+&lt;p&gt;使用Activity之前首先在&lt;code class=&quot;highlighter-rouge&quot;&gt;AndroidManifest.xml&lt;/code&gt;注册&lt;/p&gt;
 
 &lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;activity&lt;/span&gt;
     &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;io.flutter.app.FlutterActivity&quot;&lt;/span&gt;

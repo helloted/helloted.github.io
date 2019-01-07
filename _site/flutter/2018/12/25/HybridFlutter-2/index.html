@@ -148,12 +148,12 @@
 
 <h4 id="2andorid">2、Andorid</h4>
 
-<p>在Android中，Flutter提供了一个View来显示Flutter页面</p>
+<p>在Android中，Flutter提供了一个FluttreView来显示一部分</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">View</span> <span class="n">flutterView</span> <span class="o">=</span> <span class="n">Flutter</span><span class="o">.</span><span class="na">createView</span><span class="o">(</span><span class="n">MainActivity</span><span class="o">.</span><span class="na">this</span><span class="o">,</span><span class="n">getLifecycle</span><span class="o">(),</span><span class="s">"initRoute"</span><span class="o">);</span>
 </code></pre></div></div>
 
-<p>也提供了一个FlutterActivity来显示</p>
+<p>也提供了一个FlutterActivity：</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">FlutterMain</span><span class="o">.</span><span class="na">startInitialization</span><span class="o">(</span><span class="n">MainActivity</span><span class="o">.</span><span class="na">this</span><span class="o">);</span>
 <span class="n">Intent</span> <span class="n">intent</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Intent</span><span class="o">(</span><span class="n">MainActivity</span><span class="o">.</span><span class="na">this</span><span class="o">,</span> <span class="n">FlutterActivity</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
@@ -161,7 +161,7 @@
 <span class="n">MainActivity</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">startActivity</span><span class="o">(</span><span class="n">intent</span><span class="o">);</span>
 </code></pre></div></div>
 
-<p>首先在<code class="highlighter-rouge">AndroidManifest.xml</code>注册</p>
+<p>使用Activity之前首先在<code class="highlighter-rouge">AndroidManifest.xml</code>注册</p>
 
 <div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;activity</span>
     <span class="na">android:name=</span><span class="s">"io.flutter.app.FlutterActivity"</span>

@@ -30,13 +30,13 @@ FlutterViewController* flutterViewController = [FlutterViewController new];
 
 #### 2、Andorid
 
-在Android中，Flutter提供了一个View来显示Flutter页面
+在Android中，Flutter提供了一个FluttreView来显示一部分
 
 ```java
 View flutterView = Flutter.createView(MainActivity.this,getLifecycle(),"initRoute");
 ```
 
-也提供了一个FlutterActivity来显示
+也提供了一个FlutterActivity：
 
 ```java
 FlutterMain.startInitialization(MainActivity.this);
@@ -45,7 +45,7 @@ intent.putExtra("route", "initRoute");
 MainActivity.this.startActivity(intent);
 ```
 
-首先在`AndroidManifest.xml`注册
+使用Activity之前首先在`AndroidManifest.xml`注册
 
 ```xml
 <activity
