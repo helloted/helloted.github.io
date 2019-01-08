@@ -226,23 +226,24 @@
 
 <p>messageChannel通过回调Block的方式来与Flutter端进行交互。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[messageChannel setMethodCallHandler:^(FlutterMethodCall * _Nonnull call, FlutterResult  _Nonnull result) {
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="n">messageChannel</span> <span class="nf">setMethodCallHandler</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">FlutterMethodCall</span> <span class="o">*</span> <span class="n">_Nonnull</span> <span class="n">call</span><span class="p">,</span> <span class="n">FlutterResult</span>  <span class="n">_Nonnull</span> <span class="n">result</span><span class="p">)</span> <span class="p">{</span>
 
-}]; `FlutterMethodCall * _Nonnull call`用于接受Flutter端传递的数据，`FlutterResult  _Nonnull result`用于返回Flutter端数据
+<span class="p">}];</span>
 </code></pre></div></div>
+<p><code class="highlighter-rouge">FlutterMethodCall * _Nonnull call</code>用于接受Flutter端传递的数据，<code class="highlighter-rouge">FlutterResult  _Nonnull result</code>用于返回Flutter端数据</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// methodChannel保持与Native端一致
-static const methodChannel = const MethodChannel('com.pages.your/native_get');
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// methodChannel保持与Native端一致</span>
+<span class="k">static</span> <span class="k">const</span> <span class="n">methodChannel</span> <span class="o">=</span> <span class="k">const</span> <span class="n">MethodChannel</span><span class="p">(</span><span class="err">'</span><span class="n">com</span><span class="p">.</span><span class="n">pages</span><span class="p">.</span><span class="n">your</span><span class="o">/</span><span class="n">native_get</span><span class="err">'</span><span class="p">);</span>
 
-_contactWithNative() async {
-  Map&lt;String, dynamic&gt; map = {"code": "200", "data":[1,2,3]};
-  dynamic result; //result是Native端传递过来的结果，异步得到。
-  try {
-    result = await methodChannel.invokeMethod('flutter_method', map);
-  } on PlatformException {
-    result = "error";
-  }
-}
+<span class="n">_contactWithNative</span><span class="p">()</span> <span class="n">async</span> <span class="p">{</span>
+  <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span> <span class="n">dynamic</span><span class="o">&gt;</span> <span class="n">map</span> <span class="o">=</span> <span class="p">{</span><span class="s">"code"</span><span class="o">:</span> <span class="s">"200"</span><span class="p">,</span> <span class="s">"data"</span><span class="o">:</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]};</span>
+  <span class="n">dynamic</span> <span class="n">result</span><span class="p">;</span> <span class="c1">//result是Native端传递过来的结果，异步得到。</span>
+  <span class="n">try</span> <span class="p">{</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">await</span> <span class="n">methodChannel</span><span class="p">.</span><span class="n">invokeMethod</span><span class="p">(</span><span class="err">'</span><span class="n">flutter_method</span><span class="err">'</span><span class="p">,</span> <span class="n">map</span><span class="p">);</span>
+  <span class="p">}</span> <span class="n">on</span> <span class="n">PlatformException</span> <span class="p">{</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="s">"error"</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 </code></pre></div></div>
 
 <p>其中，<code class="highlighter-rouge">methodChannel.invokeMethod('flutter_method', map)</code>对应于Native端的<code class="highlighter-rouge">FlutterMethodCall * _Nonnull call</code>，第一个参数为方法名，对应<code class="highlighter-rouge">call.method</code>，必须为字符串类型；第二个参数为要传递给Native的参数，对应iOS端的<code class="highlighter-rouge">call.arguments</code>可以为基础类型，其中基础类型对应为</p>

@@ -52,15 +52,17 @@ HybridApp
 
 #### 1、将flutter的相关信息导入iOS项目
 
-在flutter_module目录下有个.iOS的隐藏文件夹，里面有个文件Flutter/Generated.xcconfig，里面有一些flutter的信息
+在flutter_module目录下有个.iOS的隐藏文件夹，里面有个文件Flutter/Generated.xcconfig，查看可以看到里面有一些flutter的信息
 
 ![img](/img/Simple_8/45.png)
 
-将这个文件导入到iOS项目中
+我们需要将将这个文件里的一些信息导入到iOS项目中，做法如下：
 
-新建一个config文件，内容为导入Generated.xcconfig文件路径
+==>新建一个FlutterDebug.config的文件，
 
 ![img](/img/Simple_8/46.png)
+
+内容为导入Generated.xcconfig文件路径：
 
 ```
 #include "../../flutter_module/.ios/Flutter/Generated.xcconfig"
@@ -68,7 +70,7 @@ HybridApp
 
 ![img](/img/Simple_8/47.png)
 
-将FlutterDebug.xcconfig添加到iOS项目的Info-Configuration里：
+==>将FlutterDebug.xcconfig添加到iOS项目的Info-Configuration里：
 
 ![img](/img/Simple_8/48.png)
 
@@ -80,6 +82,8 @@ HybridApp
 ```
 
 ![img](/img/Simple_8/49.png)
+
+注意将Run Scrpt移到列表的前方
 
 运行项目，在iOS项目文件夹内会生成一个Flutter的文件夹，将这个文件夹添加到项目中
 

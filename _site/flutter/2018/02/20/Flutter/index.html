@@ -134,12 +134,15 @@
 
 <span class="kd">class</span> <span class="nc">FirstWidget</span> <span class="kd">extends</span> <span class="n">StatelessWidget</span> <span class="o">{</span>
   <span class="n">Widget</span> <span class="n">first</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MaterialApp</span><span class="o">(</span>
-    <span class="nl">title:</span> <span class="s">'Flutter Demo'</span><span class="o">,</span>
-    <span class="nl">theme:</span> <span class="k">new</span> <span class="n">ThemeData</span><span class="o">(</span>
-      <span class="nl">primarySwatch:</span> <span class="n">Colors</span><span class="o">.</span><span class="na">green</span><span class="o">,</span>
-    <span class="o">),</span>
-    <span class="nl">home:</span> <span class="k">new</span> <span class="n">MyHomePage</span><span class="o">(</span><span class="nl">title:</span> <span class="s">'Flutter Demo Home Page update'</span><span class="o">),</span>
-  <span class="o">);</span>
+                <span class="nl">theme:</span> <span class="k">new</span> <span class="n">ThemeData</span><span class="o">(</span>
+                  <span class="nl">primarySwatch:</span> <span class="n">Colors</span><span class="o">.</span><span class="na">green</span><span class="o">,</span>
+                <span class="o">),</span>
+                <span class="nl">home:</span> <span class="n">Scaffold</span><span class="o">(</span>
+        			    <span class="nl">appBar:</span> <span class="n">AppBar</span><span class="o">(</span><span class="nl">title:</span> <span class="n">Center</span><span class="o">(</span><span class="nl">child:</span> <span class="n">Text</span><span class="o">(</span><span class="s">'我是标题'</span><span class="o">))),</span>
+        				<span class="nl">drawer:</span> <span class="n">Text</span><span class="o">(</span><span class="s">'这是抽屉栏'</span><span class="o">),</span>
+        				<span class="nl">body:</span> <span class="n">Text</span><span class="o">(</span><span class="s">'你好,这是一个简单的页面'</span><span class="o">),</span>
+                <span class="o">),</span>
+          <span class="o">);</span>
 
   <span class="nd">@override</span>
   <span class="n">Widget</span> <span class="n">build</span><span class="o">(</span><span class="n">BuildContext</span> <span class="n">context</span><span class="o">)</span> <span class="o">=&gt;</span> <span class="n">first</span><span class="o">;</span>
@@ -150,14 +153,119 @@
 
 <p>所以初始化函数实际上是</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void main(){
-    return runApp(new FirstWidget());
-}
+<div class="language-dart highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="o">){</span>
+    <span class="k">return</span> <span class="n">runApp</span><span class="o">(</span><span class="k">new</span> <span class="n">MyApp</span><span class="o">());</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">MyApp</span> <span class="kd">extends</span> <span class="n">StatelessWidget</span> <span class="o">{</span>
+  <span class="nd">@override</span>
+  <span class="n">Widget</span> <span class="n">build</span><span class="o">(</span><span class="n">BuildContext</span> <span class="n">context</span><span class="o">){</span>
+  <span class="k">return</span>   <span class="k">new</span> <span class="n">MaterialApp</span><span class="o">(</span>
+                <span class="nl">theme:</span> <span class="k">new</span> <span class="n">ThemeData</span><span class="o">(</span>
+                  <span class="nl">primarySwatch:</span> <span class="n">Colors</span><span class="o">.</span><span class="na">green</span><span class="o">,</span>
+                <span class="o">),</span>
+                <span class="nl">home:</span> <span class="n">Scaffold</span><span class="o">(</span>
+        			    <span class="nl">appBar:</span> <span class="n">AppBar</span><span class="o">(</span><span class="nl">title:</span> <span class="n">Center</span><span class="o">(</span><span class="nl">child:</span> <span class="n">Text</span><span class="o">(</span><span class="s">'我是标题'</span><span class="o">))),</span>
+        				<span class="nl">drawer:</span> <span class="n">Text</span><span class="o">(</span><span class="s">'这是抽屉栏'</span><span class="o">),</span>
+        				<span class="nl">body:</span> <span class="n">Text</span><span class="o">(</span><span class="s">'你好,这是一个简单的页面'</span><span class="o">),</span>
+                <span class="o">),</span>
+          <span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
 </code></pre></div></div>
 
-<p>该<a href="https://docs.flutter.io/flutter/widgets/runApp.html"><code class="highlighter-rouge">runApp</code></a>函数接受给定的<a href="https://docs.flutter.io/flutter/widgets/Widget-class.html"><code class="highlighter-rouge">Widget</code></a>并使其成为widget树的根，框架强制根widget覆盖整个屏幕。</p>
+<blockquote>
+  <p>在编写应用程序时，通常会创建新的widget，这些widget是无状态的<a href="https://docs.flutter.io/flutter/widgets/StatelessWidget-class.html"><code class="highlighter-rouge">StatelessWidget</code></a>或者是有状态的<a href="https://docs.flutter.io/flutter/widgets/StatefulWidget-class.html"><code class="highlighter-rouge">StatefulWidget</code></a>， 具体的选择取决于您的widget是否需要管理一些状态。widget的主要工作是实现一个<a href="https://docs.flutter.io/flutter/widgets/StatelessWidget/build.html"><code class="highlighter-rouge">build</code></a>函数，用以构建自身。一个widget通常由一些较低级别widget组成。Flutter框架将依次构建这些widget，直到构建到最底层的子widget时，这些最低层的widget通常为<a href="https://docs.flutter.io/flutter/rendering/RenderObject-class.html"><code class="highlighter-rouge">RenderObject</code></a>，它会计算并描述widget的几何形状。</p>
 
-<p>在编写应用程序时，通常会创建新的widget，这些widget是无状态的<a href="https://docs.flutter.io/flutter/widgets/StatelessWidget-class.html"><code class="highlighter-rouge">StatelessWidget</code></a>或者是有状态的<a href="https://docs.flutter.io/flutter/widgets/StatefulWidget-class.html"><code class="highlighter-rouge">StatefulWidget</code></a>， 具体的选择取决于您的widget是否需要管理一些状态。widget的主要工作是实现一个<a href="https://docs.flutter.io/flutter/widgets/StatelessWidget/build.html"><code class="highlighter-rouge">build</code></a>函数，用以构建自身。一个widget通常由一些较低级别widget组成。Flutter框架将依次构建这些widget，直到构建到最底层的子widget时，这些最低层的widget通常为<a href="https://docs.flutter.io/flutter/rendering/RenderObject-class.html"><code class="highlighter-rouge">RenderObject</code></a>，它会计算并描述widget的几何形状。</p>
+  <p><strong>StatefulWidget</strong> 拥有 <strong>StatelessWidget</strong> 的所有功能，也就是说 <strong>StatelessWidget</strong> 是他的子集，每个<strong>StateFulWidget</strong> 维护一个 State 对象，当我们对 相关数据更新后 并且 调用了** setState(() {})** 方法，这样就吧 该 <strong>Widget</strong> 标记为 dirty ，因此会触发控件的更新、替换、删除 等。</p>
+</blockquote>
+
+<p>上面的<a href="https://docs.flutter.io/flutter/widgets/runApp.html"><code class="highlighter-rouge">runApp</code></a>函数接受给定的<a href="https://docs.flutter.io/flutter/widgets/Widget-class.html"><code class="highlighter-rouge">Widget</code></a>并使其成为widget树的根，框架强制根widget覆盖整个屏幕。所以官方不推荐把Widget层的控件来作为根控件，而是以<strong>MaterialApp</strong>或者<strong>WidgetApp</strong>作为父节点，上面的MyApp使用build函数构建了一个MaterialApp，将一个Scaffold脚手架包裹在里面，Scaffold显示的才是整个页面</p>
+
+<p><img src="/img/Simple_8/62.png" alt="img" /></p>
+
+<h4 id="2materialappwidgetapp">2、MaterialApp/WidgetApp</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class MaterialApp extends StatefulWidget
+</code></pre></div></div>
+
+<p>MaterialApp的主要作用是定义一些整体的风格，设置一些整体属性。构建一个material design风格的App。</p>
+
+<ul>
+  <li><strong>MaterialApp</strong> 引入了 <strong>Material Design</strong>，还是相当漂亮的，开发者几乎不需要做额外的布局、样式 编码就能达到产品级视觉效果， 当然可以根据需求进行微调。</li>
+  <li><strong>MaterialApp</strong> 提供了大量的美观、功能丰富的控件，放弃<strong>MaterialApp</strong>等于放弃了一整片森林。</li>
+</ul>
+
+<p>MaterialApp 主要属性如下：</p>
+
+<ul>
+  <li>title ： 在任务管理窗口中所显示的应用名字</li>
+  <li>theme ： 应用各种 UI 所使用的主题颜色</li>
+  <li>color ： 应用的主要颜色值（primary color），也就是安卓任务管理窗口中所显示的应用颜色</li>
+  <li>home ： 应用默认所显示的界面 Widget</li>
+  <li>routes ： 应用的顶级导航表格，这个是多页面应用用来控制页面跳转的，类似于网页的网址</li>
+  <li>initialRoute ：第一个显示的路由名字，默认值为 Window.defaultRouteName</li>
+  <li>onGenerateRoute ： 生成路由的回调函数，当导航的命名路由的时候，会使用这个来生成界面</li>
+  <li>onLocaleChanged ： 当系统修改语言的时候，会触发这个回调</li>
+  <li>navigatorObservers ： 应用 Navigator 的监听器</li>
+  <li>debugShowMaterialGrid ： 是否显示 纸墨设计 基础布局网格，用来调试 UI 的工具</li>
+  <li>showPerformanceOverlay ： 显示性能标签，https://flutter.io/debugging/#performanceoverlay</li>
+  <li>checkerboardRasterCacheImages 、showSemanticsDebugger、debugShowCheckedModeBanner 各种调试开关</li>
+</ul>
+
+<h4 id="3scaffold">3、Scaffold</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Scaffold extends StatefulWidget 
+</code></pre></div></div>
+
+<p>Scaffold中文名脚手架，如果说MaterialApp是定义整个App主体、主题之类的角色，Scaffold就是针对当前页面的一个架构了，其中的提供了一些组件属性</p>
+
+<p>appBar：顶部标题栏</p>
+
+<p>body：用来展示 APP 的主体部分。主体部分大部分是通过组合 <strong>Container</strong> ，<strong>Column</strong>，<strong>Row</strong>，<strong>Stack</strong>来实现的</p>
+
+<p>floatingActionButton：悬浮按钮</p>
+
+<p>bottomNavigationBar：底部类Tab导航栏</p>
+
+<p>drawer：左边侧边栏控件</p>
+
+<p>endDrawer：右边侧滑栏</p>
+
+<p>backgroundColor： 内容的背景颜色，默认使用的是 ThemeData.scaffoldBackgroundColor 的值</p>
+
+<h4 id="4布局">4、布局</h4>
+
+<p>flutter采用Flex布局</p>
+
+<h4 id="5添加图片">5、添加图片</h4>
+
+<p>在根目录下新建文件夹，命名为images，将lake.png图片放入</p>
+
+<p>在pubspec.yam中添加</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>flutter:
+  assets:
+    - images/lake.png
+    - images/background.png
+</code></pre></div></div>
+
+<p>如果要，包含images文件夹下的所有文件，可以简化为</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>flutter:
+  assets:
+    - images/
+</code></pre></div></div>
+
+<p>在代码中访问，比如：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Image.asset(
+  'images/lake.jpeg',
+  width: 600.0,
+  height: 340.0,
+  fit: BoxFit.cover,
+)
+</code></pre></div></div>
 
 
                 <hr>

@@ -111,12 +111,14 @@ FlutterMethodChannel初始化时，要传入两个参数channelName和flutterVie
 
 messageChannel通过回调Block的方式来与Flutter端进行交互。
 
-    [messageChannel setMethodCallHandler:^(FlutterMethodCall * _Nonnull call, FlutterResult  _Nonnull result) {
-    
-    }];
+```objc
+[messageChannel setMethodCallHandler:^(FlutterMethodCall * _Nonnull call, FlutterResult  _Nonnull result) {
+
+}];
+```
 `FlutterMethodCall * _Nonnull call`用于接受Flutter端传递的数据，`FlutterResult  _Nonnull result`用于返回Flutter端数据
 
-```
+```objc
 // methodChannel保持与Native端一致
 static const methodChannel = const MethodChannel('com.pages.your/native_get');
 

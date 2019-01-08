@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2019-01-07T17:27:14+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">iOS编码建议</title><link href="http://www.helloted.com/ios/2019/01/02/code/" rel="alternate" type="text/html" title="iOS编码建议" /><published>2019-01-02T20:00:00+08:00</published><updated>2019-01-02T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2019/01/02/code</id><content type="html" xml:base="http://www.helloted.com/ios/2019/01/02/code/">&lt;h4 id=&quot;一命名&quot;&gt;一、命名&lt;/h4&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2019-01-08T17:28:58+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">iOS编码建议</title><link href="http://www.helloted.com/ios/2019/01/02/code/" rel="alternate" type="text/html" title="iOS编码建议" /><published>2019-01-02T20:00:00+08:00</published><updated>2019-01-02T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2019/01/02/code</id><content type="html" xml:base="http://www.helloted.com/ios/2019/01/02/code/">&lt;h4 id=&quot;一命名&quot;&gt;一、命名&lt;/h4&gt;
 
 &lt;p&gt;1、变量和方法名：驼峰命名；&lt;/p&gt;
 
@@ -249,23 +249,24 @@ extern NSString * const UIApplicationDidFinishLaunchingNotification;
 
 &lt;p&gt;messageChannel通过回调Block的方式来与Flutter端进行交互。&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[messageChannel setMethodCallHandler:^(FlutterMethodCall * _Nonnull call, FlutterResult  _Nonnull result) {
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;messageChannel&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;setMethodCallHandler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FlutterMethodCall&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_Nonnull&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FlutterResult&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;_Nonnull&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
 
-}]; `FlutterMethodCall * _Nonnull call`用于接受Flutter端传递的数据，`FlutterResult  _Nonnull result`用于返回Flutter端数据
+&lt;span class=&quot;p&quot;&gt;}];&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;FlutterMethodCall * _Nonnull call&lt;/code&gt;用于接受Flutter端传递的数据，&lt;code class=&quot;highlighter-rouge&quot;&gt;FlutterResult  _Nonnull result&lt;/code&gt;用于返回Flutter端数据&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// methodChannel保持与Native端一致
-static const methodChannel = const MethodChannel('com.pages.your/native_get');
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// methodChannel保持与Native端一致&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;methodChannel&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MethodChannel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;com&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pages&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;your&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;native_get&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
 
-_contactWithNative() async {
-  Map&amp;lt;String, dynamic&amp;gt; map = {&quot;code&quot;: &quot;200&quot;, &quot;data&quot;:[1,2,3]};
-  dynamic result; //result是Native端传递过来的结果，异步得到。
-  try {
-    result = await methodChannel.invokeMethod('flutter_method', map);
-  } on PlatformException {
-    result = &quot;error&quot;;
-  }
-}
+&lt;span class=&quot;n&quot;&gt;_contactWithNative&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Map&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dynamic&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;map&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;code&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;200&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;data&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]};&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;dynamic&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//result是Native端传递过来的结果，异步得到。&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;methodChannel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;invokeMethod&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flutter_method&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;on&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PlatformException&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;error&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;其中，&lt;code class=&quot;highlighter-rouge&quot;&gt;methodChannel.invokeMethod('flutter_method', map)&lt;/code&gt;对应于Native端的&lt;code class=&quot;highlighter-rouge&quot;&gt;FlutterMethodCall * _Nonnull call&lt;/code&gt;，第一个参数为方法名，对应&lt;code class=&quot;highlighter-rouge&quot;&gt;call.method&lt;/code&gt;，必须为字符串类型；第二个参数为要传递给Native的参数，对应iOS端的&lt;code class=&quot;highlighter-rouge&quot;&gt;call.arguments&lt;/code&gt;可以为基础类型，其中基础类型对应为&lt;/p&gt;
@@ -478,22 +479,24 @@ _contactWithNative() async {
 
 &lt;h4 id=&quot;1将flutter的相关信息导入ios项目&quot;&gt;1、将flutter的相关信息导入iOS项目&lt;/h4&gt;
 
-&lt;p&gt;在flutter_module目录下有个.iOS的隐藏文件夹，里面有个文件Flutter/Generated.xcconfig，里面有一些flutter的信息&lt;/p&gt;
+&lt;p&gt;在flutter_module目录下有个.iOS的隐藏文件夹，里面有个文件Flutter/Generated.xcconfig，查看可以看到里面有一些flutter的信息&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/Simple_8/45.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;将这个文件导入到iOS项目中&lt;/p&gt;
+&lt;p&gt;我们需要将将这个文件里的一些信息导入到iOS项目中，做法如下：&lt;/p&gt;
 
-&lt;p&gt;新建一个config文件，内容为导入Generated.xcconfig文件路径&lt;/p&gt;
+&lt;p&gt;==&amp;gt;新建一个FlutterDebug.config的文件，&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/Simple_8/46.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;内容为导入Generated.xcconfig文件路径：&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#include &quot;../../flutter_module/.ios/Flutter/Generated.xcconfig&quot;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/Simple_8/47.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;将FlutterDebug.xcconfig添加到iOS项目的Info-Configuration里：&lt;/p&gt;
+&lt;p&gt;==&amp;gt;将FlutterDebug.xcconfig添加到iOS项目的Info-Configuration里：&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/Simple_8/48.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 
@@ -504,6 +507,8 @@ _contactWithNative() async {
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/Simple_8/49.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;注意将Run Scrpt移到列表的前方&lt;/p&gt;
 
 &lt;p&gt;运行项目，在iOS项目文件夹内会生成一个Flutter的文件夹，将这个文件夹添加到项目中&lt;/p&gt;
 
