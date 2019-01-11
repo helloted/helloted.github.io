@@ -128,29 +128,7 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
 
-				<h4 id="一命名">一、命名</h4>
-
-<p>1、变量和方法名：驼峰命名；</p>
-
-<p>2、宏和常量命名</p>
-
-<ul>
-  <li><code class="highlighter-rouge">#define</code> 预处理定义的常量全部大写，单词间用 _ 分隔</li>
-  <li>宏定义的本质是在编译时进行替换，所以宏定义中如果包含表达式或变量，表达式或变量必须用小括号括起来，防止与其他变量出现混合的情况。</li>
-</ul>
-
-<p>3、枚举：枚举类型参考系统应该写全类型：名称+类型</p>
-
-<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">typedef</span> <span class="nf">NS_ENUM</span><span class="p">(</span><span class="n">NSInteger</span><span class="p">,</span> <span class="n">UIViewAnimationTransition</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">UIViewAnimationTransitionNone</span><span class="p">,</span>
-    <span class="n">UIViewAnimationTransitionFlipFromLeft</span><span class="p">,</span>
-    <span class="n">UIViewAnimationTransitionFlipFromRight</span><span class="p">,</span>
-    <span class="n">UIViewAnimationTransitionCurlUp</span><span class="p">,</span>
-    <span class="n">UIViewAnimationTransitionCurlDown</span><span class="p">,</span>
-<span class="p">};</span>
-</code></pre></div></div>
-
-<h4 id="二viewcontroller代码结构">二、ViewController代码结构</h4>
+				<h4 id="一viewcontroller代码结构">一、ViewController代码结构</h4>
 
 <p>在函数分组和protocol/delegate实现中使用<code class="highlighter-rouge">#pragma mark -</code>来分类方法，遵循以下结构：</p>
 
@@ -211,7 +189,51 @@
 <span class="o">-</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">description</span> <span class="p">{}</span>
 </code></pre></div></div>
 
-<h4 id="三字面编码">三、字面编码</h4>
+<h4 id="二命名">二、命名</h4>
+
+<p>1、变量和方法名：驼峰命名；</p>
+
+<p>2、宏和常量命名</p>
+
+<ul>
+  <li>
+    <p><code class="highlighter-rouge">#define</code> 预处理定义的常量全部大写，单词间用 _ 分隔</p>
+
+    <p>例子: #define THIS_IS_AN_MACRO @”THIS_IS_AN_MACRO”</p>
+  </li>
+  <li>
+    <p>宏定义的本质是在编译时进行替换，所以宏定义中如果包含表达式或变量，表达式或变量必须用小括号括起来，防止与其他变量出现混合的情况。</p>
+  </li>
+</ul>
+
+<p>3、枚举：枚举类型参考系统应该写全类型：名称+类型</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">typedef</span> <span class="nf">NS_ENUM</span><span class="p">(</span><span class="n">NSInteger</span><span class="p">,</span> <span class="n">UIViewAnimationTransition</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">UIViewAnimationTransitionNone</span><span class="p">,</span>
+    <span class="n">UIViewAnimationTransitionFlipFromLeft</span><span class="p">,</span>
+    <span class="n">UIViewAnimationTransitionFlipFromRight</span><span class="p">,</span>
+    <span class="n">UIViewAnimationTransitionCurlUp</span><span class="p">,</span>
+    <span class="n">UIViewAnimationTransitionCurlDown</span><span class="p">,</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>当在switch使用枚举类型时，’default’是不需要的</p>
+
+<p>4、类的命名：　</p>
+
+<p>ViewController: 使用ViewController做后缀，例子: XXHomeViewController</p>
+
+<p>View: 使用View做后缀，例子: XXAlertView</p>
+
+<p>UITableCell:使用Cell做后缀，例子: XXNewsCell</p>
+
+<p>Protocol: 使用Delegate或者DataSource作为后缀，例子: UITableViewDelegate</p>
+
+<p>UI控件依次类推</p>
+
+<h4 id="三编码">三、编码</h4>
+
+<h4 id="1字面编码">1、字面编码</h4>
 
 <p><code class="highlighter-rouge">NSString</code>, <code class="highlighter-rouge">NSDictionary</code>, <code class="highlighter-rouge">NSArray</code>, 和 <code class="highlighter-rouge">NSNumber</code>可以在创建不可变值时使用，注意不要传nil值，否则会崩溃。</p>
 
@@ -219,6 +241,35 @@
 NSDictionary *productManagers = @{@"iPhone": @"Kate", @"iPad": @"Kamal", @"Mobile Web": @"Bill"};
 NSNumber *shouldUseLiterals = @YES;
 NSNumber *buildingStreetNumber = @10018;
+</code></pre></div></div>
+
+<h4 id="2条件语句">2、条件语句</h4>
+
+<p>条件语句主体为了防止出错应该使用大括号包围，即使条件语句主体能够不用大括号编写(如，只用一行代码)。这些错误包括添加第二行代码和期望它成为if语句；还有，可能发生在if语句里面一行代码被注释了，然后下一行代码不知不觉地成为if语句的一部分。除此之外，这种风格与其他条件语句的风格保持一致，所以更加容易阅读。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// 应该
+if (!error) {
+  return success;
+}
+
+// 而不是
+if (!error)
+  return success;
+// 或者
+if (!error) return success;
+</code></pre></div></div>
+
+<h4 id="3构造方法init方法">3、构造方法/init方法</h4>
+
+<p>当构造方法被使用时，虽然用id也可以通过编译，但它应该返回类型是<code class="highlighter-rouge">instancetype</code>而不是<code class="highlighter-rouge">id</code>。这样确保编译器正确地推断结果类型。</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="n">init</span> <span class="p">{</span>
+  <span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nf">init</span><span class="p">];</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+<span class="p">}</span>
 </code></pre></div></div>
 
 <h4 id="四变量和属性">四、变量和属性</h4>
@@ -292,6 +343,10 @@ extern NSString * const UIApplicationDidFinishLaunchingNotification;
                         <a href="/flutter/2018/12/25/HybridFlutter-2/" data-toggle="tooltip" data-placement="top" title="Flutter与Native(二)">&larr; 上一篇</a>
                     </li>
                     
+                    
+                    <li class="next">
+                        <a href="/others/2019/01/10/PMP/" data-toggle="tooltip" data-placement="top" title="项目管理PMP考试备考经验">下一篇 &rarr;</a>
+                    </li>
                     
                 </ul>
 

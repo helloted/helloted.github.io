@@ -1,26 +1,117 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2019-01-10T10:12:53+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">iOS编码建议</title><link href="http://www.helloted.com/ios/2019/01/02/code/" rel="alternate" type="text/html" title="iOS编码建议" /><published>2019-01-02T20:00:00+08:00</published><updated>2019-01-02T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2019/01/02/code</id><content type="html" xml:base="http://www.helloted.com/ios/2019/01/02/code/">&lt;h4 id=&quot;一命名&quot;&gt;一、命名&lt;/h4&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2019-01-11T11:22:42+08:00</updated><id>http://www.helloted.com/</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">项目管理PMP考试备考经验</title><link href="http://www.helloted.com/others/2019/01/10/PMP/" rel="alternate" type="text/html" title="项目管理PMP考试备考经验" /><published>2019-01-10T20:00:00+08:00</published><updated>2019-01-10T20:00:00+08:00</updated><id>http://www.helloted.com/others/2019/01/10/PMP</id><content type="html" xml:base="http://www.helloted.com/others/2019/01/10/PMP/">&lt;p&gt;我在腾讯的岗位是一名程序员客户端开发，之所以报考PMP是因为在上家公司从事了项目管理的工作，接触了一些项目管理的知识，感觉项目管理的一些理论对于管理水平提升很有用，所以打算系统的学习一下项目管理并且考取证书。&lt;/p&gt;
 
-&lt;p&gt;1、变量和方法名：驼峰命名；&lt;/p&gt;
+&lt;h4 id=&quot;1pmp简介&quot;&gt;1、PMP简介&lt;/h4&gt;
 
-&lt;p&gt;2、宏和常量命名&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;PMP（Project Management Professional）指&lt;a href=&quot;https://baike.baidu.com/item/%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86%E4%B8%93%E4%B8%9A&quot;&gt;项目管理专业&lt;/a&gt;人士（人事）&lt;a href=&quot;https://baike.baidu.com/item/%E8%B5%84%E6%A0%BC%E8%AE%A4%E8%AF%81&quot;&gt;资格认证&lt;/a&gt;。&lt;a href=&quot;https://baike.baidu.com/item/%E7%BE%8E%E5%9B%BD%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86%E5%8D%8F%E4%BC%9A&quot;&gt;美国项目管理协会&lt;/a&gt;（PMI）举办的项目管理专业人员（PMP）认证考试在全球190多个国家和地区推广，是目前项目管理领域含金量最高的认证。获取PMP证书，不仅提升项目经理的项目管理水平，也直接体现项目经理的个人竞争力，是项目管理专业人士身份的象征。&lt;/p&gt;
+&lt;/blockquote&gt;
 
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;#define&lt;/code&gt; 预处理定义的常量全部大写，单词间用 _ 分隔&lt;/li&gt;
-  &lt;li&gt;宏定义的本质是在编译时进行替换，所以宏定义中如果包含表达式或变量，表达式或变量必须用小括号括起来，防止与其他变量出现混合的情况。&lt;/li&gt;
-&lt;/ul&gt;
+&lt;p&gt;以上来自百度百科，简单来说PMP就是项目管理的一个资质认证。&lt;/p&gt;
 
-&lt;p&gt;3、枚举：枚举类型参考系统应该写全类型：名称+类型&lt;/p&gt;
+&lt;h4 id=&quot;2考试简介&quot;&gt;2、考试简介&lt;/h4&gt;
 
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;typedef&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;NS_ENUM&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSInteger&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;UIViewAnimationTransition&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;UIViewAnimationTransitionNone&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;UIViewAnimationTransitionFlipFromLeft&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;UIViewAnimationTransitionFlipFromRight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;UIViewAnimationTransitionCurlUp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;UIViewAnimationTransitionCurlDown&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;报名条件：报名考生必须具备35小时以上项目管理&lt;a href=&quot;https://baike.baidu.com/item/PMBOK&quot;&gt;PMBOK&lt;/a&gt;学习或培训经历。就跟驾照考试一样，是要有一个培训机构来帮忙。&lt;/p&gt;
 
-&lt;h4 id=&quot;二viewcontroller代码结构&quot;&gt;二、ViewController代码结构&lt;/h4&gt;
+&lt;p&gt;PMP考试报名：要在PMI的官方网站上，填写之前工作的一些项目管理经验，全英文的，有点麻烦，另外有10%的几率会被抽中审查，据说抽中审查之后要邮寄资料到美国去审核。。。祝好运&lt;/p&gt;
+
+&lt;p&gt;考试安排：PMP考试在国内一年开展四次，分别在每年的3月、6月、9月和12月，一般会选择一个周六的上午来考试。由国家外国专家局培训中心负责组织实施。&lt;/p&gt;
+
+&lt;p&gt;考点：深圳有罗湖和龙岗考点，报名满即截止，建议在开放报名的凌晨0点之后就抓紧在网上选考场，我就是在早上9点之后才选考场，结果罗湖以及没有名额，只好选择龙岗，提前一晚去那边住宿。浪费时间和精力。&lt;/p&gt;
+
+&lt;h4 id=&quot;3考试内容&quot;&gt;3、考试内容&lt;/h4&gt;
+
+&lt;p&gt;PMP考试内容主要包括项目管理五个过程：&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;过程组&lt;/th&gt;
+      &lt;th&gt;内容&lt;/th&gt;
+      &lt;th&gt;百分比&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;启动&lt;/td&gt;
+      &lt;td&gt;确立一个项目或一个项目阶段。&lt;/td&gt;
+      &lt;td&gt;13%&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;规划&lt;/td&gt;
+      &lt;td&gt;为完成项目，制定和维护一个可操作的计划。&lt;/td&gt;
+      &lt;td&gt;24%&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;执行&lt;/td&gt;
+      &lt;td&gt;协调人力和其他资源以执行计划&lt;/td&gt;
+      &lt;td&gt;30%&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;监控&lt;/td&gt;
+      &lt;td&gt;通过监控和进度测量及必要时采取纠正措施以确保项目目标的实现。&lt;/td&gt;
+      &lt;td&gt;25%&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;收尾&lt;/td&gt;
+      &lt;td&gt;正式验收项目或项目阶段并使其有条不紊地圆满结束&lt;/td&gt;
+      &lt;td&gt;8%&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&quot;4pmp考题&quot;&gt;4、PMP考题&lt;/h4&gt;
+
+&lt;p&gt;PMP考试是由200道情景选择题，从09:00到13:00四个小时不间断考试，在考后一个月左右出成绩。考试题目是由中英文组成，一道英文题，对应有一个翻译后的中文题，所以有些概念如果理解不准可以直接看英文来作答。&lt;/p&gt;
+
+&lt;p&gt;200道题目装订成一个小册子，为防止作弊，分为ABCDEF六个类型，每个类型的题目一样，但是题目排序不一样。&lt;/p&gt;
+
+&lt;p&gt;考题样式：单项选择题&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;1、&lt;/strong&gt;某长期项目己在A公司开展了近两年，项目因发生延迟，需额外增加一年方能完工，此时B公司收购了公司A。B公司的新产品系列和战略计划并不包括本项目的预期产品成果。项目经理应该怎么做？
+A．继续项目直至产品完成，之后做出关闭项目决定
+B．向董事会提交该项目，请求将项目产品纳入公司产品
+C．立即解散所有资源，因为项目即将关闭
+D．根据正式决策终止，并记录项目&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h4 id=&quot;5考试成绩&quot;&gt;5、考试成绩&lt;/h4&gt;
+
+&lt;p&gt;在考试后一个月左右会收到可以查询成绩的邮件，登录PMI官网可以查询成绩。&lt;/p&gt;
+
+&lt;p&gt;200道题目，60%正确率为通过，PMI会抽取20道题目(正确率过低或过高的题目)为无效，剩余的180道题目里面要做对180*0.6=108道题目，所以，理论上来说，要做对128道题目就能确保一定可以通过考试。&lt;/p&gt;
+
+&lt;p&gt;这个是我的成绩单：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/64.jpeg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;可以看到，不会提供具体成绩，只有一个PASS以及每个过程组的排布。俗称的5A就是5个过程组都是Above Target。&lt;/p&gt;
+
+&lt;h4 id=&quot;6备考经验&quot;&gt;6、备考经验&lt;/h4&gt;
+
+&lt;p&gt;有一本官方教材《项目管理知识体系指南》，将近800页，是英译中翻译版。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_8/65.jpeg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;看了很多前辈的经验，以及培训班老师的说明，都是说需要把这本教材看至少两遍以上，考试通过可能性比较大。我拿到书后，看了一章感觉官方教材过于晦涩难懂，所以就果断放弃了通读教材这条路线。转而购买了一本教材辅导书《汪博士解读PMP考试》以及一本习题册《汪博士详解PMP模拟题》准备走题目路线。（辅导书个人感觉质量一般，但是好在相比于教材提炼了一些知识点，有利于我预习，未读过其他教材，不知道效果咋样）。&lt;/p&gt;
+
+&lt;p&gt;在参加了培训班之后，每个礼拜周末参加一天的课程，持续6个周末。&lt;/p&gt;
+
+&lt;p&gt;我的备考路线是：紧跟培训班老师的节奏，在周末上课之前，概览一下教材参考书和老师的讲义(实际上就是上课的PPT打印)，对周末要讲解的内容做到心中有数，大概知道知识难点和重点，在上课的时候认真听课，争取在课堂上就对所有的知识点理解透彻。以及在讲义上做好课堂笔记，而在上课之后，充分利用模拟题那本书进行知识点查缺补漏。每个礼拜花的时间也不多，课前二个小时，课后三四个小时，预习+听课+复习，基本上能够把知识点理解并且有一定的印象。&lt;/p&gt;
+
+&lt;p&gt;考前一个月，培训机构会发模拟题，这个模拟题实际上是历次考试的真题，由考生考后回忆整理得到，含金量极高(PMP没有官方题库这一说法)，所以要充分利用好这些模拟真题。两套题目，我都做了两遍。并且建议抽时间，从头到尾做一次，模拟一下考试，也体验一下四个小时的考试过程。&lt;/p&gt;
+
+&lt;p&gt;在做题的过程中，重点是总结题目的一些思路，培养出题感，在我们中学读书阶段都会有一些经验，不再赘述。&lt;/p&gt;
+
+&lt;p&gt;在考试当天，因为对于真题已经比较适应，整个考试过程比较轻松，提前半个小时做完题目并且涂好答题卡。&lt;/p&gt;
+
+&lt;p&gt;以上，便是我2018年12月份的PMP备考路线，如果不喜欢官方教材，也可以选择走”题海“路线，整个备考过程，大概做了2000+题目。&lt;/p&gt;
+
+&lt;h4 id=&quot;7考后感想&quot;&gt;7、考后感想&lt;/h4&gt;
+
+&lt;p&gt;我本身是研发岗位，PMP证书对于我的平时工作，可以说是没有什么直接的加分效果。但是在备考PMP的过程中，系统地学习了项目管理的理论知识，加上之前的一些项目管理经验，可以说是对于项目管理有一个比较深的认识，而项目管理的5个过程组，启动、规划、执行、监控、收尾。对于平时工作的也有一个指导作用，在生活上也是贯穿其中。所以，于证书的价值而言，虽然于研发岗位没有直接作用，但是项目管理的知识更为重要，能够很好地扩大知识领域以及提高管理能力。&lt;/p&gt;
+
+&lt;p&gt;总结：备考PMP，项目启动于2018年8月，中间花费近6千元左右(培训费+考试费)，6个休息日，另有50+的学时，结束于2018年12月，取得4A+成绩，PMP证书一份。&lt;/p&gt;</content><author><name>Ted</name></author><category term="Others" /><summary type="html">我在腾讯的岗位是一名程序员客户端开发，之所以报考PMP是因为在上家公司从事了项目管理的工作，接触了一些项目管理的知识，感觉项目管理的一些理论对于管理水平提升很有用，所以打算系统的学习一下项目管理并且考取证书。</summary></entry><entry><title type="html">iOS编码建议</title><link href="http://www.helloted.com/ios/2019/01/02/code/" rel="alternate" type="text/html" title="iOS编码建议" /><published>2019-01-02T20:00:00+08:00</published><updated>2019-01-02T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2019/01/02/code</id><content type="html" xml:base="http://www.helloted.com/ios/2019/01/02/code/">&lt;h4 id=&quot;一viewcontroller代码结构&quot;&gt;一、ViewController代码结构&lt;/h4&gt;
 
 &lt;p&gt;在函数分组和protocol/delegate实现中使用&lt;code class=&quot;highlighter-rouge&quot;&gt;#pragma mark -&lt;/code&gt;来分类方法，遵循以下结构：&lt;/p&gt;
 
@@ -81,7 +172,51 @@
 &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;description&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h4 id=&quot;三字面编码&quot;&gt;三、字面编码&lt;/h4&gt;
+&lt;h4 id=&quot;二命名&quot;&gt;二、命名&lt;/h4&gt;
+
+&lt;p&gt;1、变量和方法名：驼峰命名；&lt;/p&gt;
+
+&lt;p&gt;2、宏和常量命名&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;#define&lt;/code&gt; 预处理定义的常量全部大写，单词间用 _ 分隔&lt;/p&gt;
+
+    &lt;p&gt;例子: #define THIS_IS_AN_MACRO @”THIS_IS_AN_MACRO”&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;宏定义的本质是在编译时进行替换，所以宏定义中如果包含表达式或变量，表达式或变量必须用小括号括起来，防止与其他变量出现混合的情况。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;3、枚举：枚举类型参考系统应该写全类型：名称+类型&lt;/p&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;typedef&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;NS_ENUM&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSInteger&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;UIViewAnimationTransition&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;UIViewAnimationTransitionNone&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;UIViewAnimationTransitionFlipFromLeft&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;UIViewAnimationTransitionFlipFromRight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;UIViewAnimationTransitionCurlUp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;UIViewAnimationTransitionCurlDown&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;当在switch使用枚举类型时，’default’是不需要的&lt;/p&gt;
+
+&lt;p&gt;4、类的命名：　&lt;/p&gt;
+
+&lt;p&gt;ViewController: 使用ViewController做后缀，例子: XXHomeViewController&lt;/p&gt;
+
+&lt;p&gt;View: 使用View做后缀，例子: XXAlertView&lt;/p&gt;
+
+&lt;p&gt;UITableCell:使用Cell做后缀，例子: XXNewsCell&lt;/p&gt;
+
+&lt;p&gt;Protocol: 使用Delegate或者DataSource作为后缀，例子: UITableViewDelegate&lt;/p&gt;
+
+&lt;p&gt;UI控件依次类推&lt;/p&gt;
+
+&lt;h4 id=&quot;三编码&quot;&gt;三、编码&lt;/h4&gt;
+
+&lt;h4 id=&quot;1字面编码&quot;&gt;1、字面编码&lt;/h4&gt;
 
 &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;NSString&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;NSDictionary&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;NSArray&lt;/code&gt;, 和 &lt;code class=&quot;highlighter-rouge&quot;&gt;NSNumber&lt;/code&gt;可以在创建不可变值时使用，注意不要传nil值，否则会崩溃。&lt;/p&gt;
 
@@ -89,6 +224,35 @@
 NSDictionary *productManagers = @{@&quot;iPhone&quot;: @&quot;Kate&quot;, @&quot;iPad&quot;: @&quot;Kamal&quot;, @&quot;Mobile Web&quot;: @&quot;Bill&quot;};
 NSNumber *shouldUseLiterals = @YES;
 NSNumber *buildingStreetNumber = @10018;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;2条件语句&quot;&gt;2、条件语句&lt;/h4&gt;
+
+&lt;p&gt;条件语句主体为了防止出错应该使用大括号包围，即使条件语句主体能够不用大括号编写(如，只用一行代码)。这些错误包括添加第二行代码和期望它成为if语句；还有，可能发生在if语句里面一行代码被注释了，然后下一行代码不知不觉地成为if语句的一部分。除此之外，这种风格与其他条件语句的风格保持一致，所以更加容易阅读。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// 应该
+if (!error) {
+  return success;
+}
+
+// 而不是
+if (!error)
+  return success;
+// 或者
+if (!error) return success;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;3构造方法init方法&quot;&gt;3、构造方法/init方法&lt;/h4&gt;
+
+&lt;p&gt;当构造方法被使用时，虽然用id也可以通过编译，但它应该返回类型是&lt;code class=&quot;highlighter-rouge&quot;&gt;instancetype&lt;/code&gt;而不是&lt;code class=&quot;highlighter-rouge&quot;&gt;id&lt;/code&gt;。这样确保编译器正确地推断结果类型。&lt;/p&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;instancetype&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;init&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;super&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// ...&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h4 id=&quot;四变量和属性&quot;&gt;四、变量和属性&lt;/h4&gt;
@@ -151,7 +315,7 @@ extern NSString * const UIApplicationDidFinishLaunchingNotification;
 
 &lt;p&gt;一份分享&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;/sources/PDF/learn_list.pdf&quot;&gt;Android代码整洁&lt;/a&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">一、命名</summary></entry><entry><title type="html">Flutter与Native(二)</title><link href="http://www.helloted.com/flutter/2018/12/25/HybridFlutter-2/" rel="alternate" type="text/html" title="Flutter与Native(二)" /><published>2018-12-25T20:00:00+08:00</published><updated>2018-12-25T20:00:00+08:00</updated><id>http://www.helloted.com/flutter/2018/12/25/HybridFlutter-2</id><content type="html" xml:base="http://www.helloted.com/flutter/2018/12/25/HybridFlutter-2/">&lt;h3 id=&quot;一native切换到flutter&quot;&gt;一、Native切换到Flutter&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;/sources/PDF/learn_list.pdf&quot;&gt;Android代码整洁&lt;/a&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">一、ViewController代码结构</summary></entry><entry><title type="html">Flutter与Native(二)</title><link href="http://www.helloted.com/flutter/2018/12/25/HybridFlutter-2/" rel="alternate" type="text/html" title="Flutter与Native(二)" /><published>2018-12-25T20:00:00+08:00</published><updated>2018-12-25T20:00:00+08:00</updated><id>http://www.helloted.com/flutter/2018/12/25/HybridFlutter-2</id><content type="html" xml:base="http://www.helloted.com/flutter/2018/12/25/HybridFlutter-2/">&lt;h3 id=&quot;一native切换到flutter&quot;&gt;一、Native切换到Flutter&lt;/h3&gt;
 
 &lt;h4 id=&quot;1ios&quot;&gt;1、iOS&lt;/h4&gt;
 
@@ -1406,140 +1570,4 @@ typedef void (*interface) (void* caller,void* parameter);
 
 &lt;p&gt;可以看到虽然，没有实现workHard和teachStudent两个方法，我们依旧可以调用者两个其他类的方法，模拟成了多继承。&lt;/p&gt;
 
-&lt;p&gt;完整代码，可以在&lt;a href=&quot;https://github.com/helloted/iOS_Demo/tree/master/NSProxy&quot;&gt;github&lt;/a&gt;下载&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">1、继承</summary></entry><entry><title type="html">Runtime应用(三)：NSInvocation</title><link href="http://www.helloted.com/ios/2018/05/30/runtimeApply_3/" rel="alternate" type="text/html" title="Runtime应用(三)：NSInvocation" /><published>2018-05-30T20:00:00+08:00</published><updated>2018-05-30T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2018/05/30/runtimeApply_3</id><content type="html" xml:base="http://www.helloted.com/ios/2018/05/30/runtimeApply_3/">&lt;h4 id=&quot;1解耦&quot;&gt;1、解耦&lt;/h4&gt;
-
-&lt;p&gt;一个大的APP里有多个模块，很多时候模块之间要相互调用、通信，通常情况下，我们都是讲要调用的模块引入进来，然后生成对象，调用其方法。这种情况下，一旦模块比较多，相互调用也比较多，就会出现下图的这种关系，复杂，错乱，耦合比较严重&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_8/10.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;一个解决思路就是，建立一个中间件Meditor，所有的模块都只有Meditor相互通信，如果要调用其他类，也是通过Meditor来调用，从而达到解耦的目的&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_8/11.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;2调用&quot;&gt;2、调用&lt;/h4&gt;
-
-&lt;p&gt;在 iOS中不通过类可以直接调用某个对象的消息方式有两种:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;一种是&lt;code class=&quot;highlighter-rouge&quot;&gt;performSelector:withObject;&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;另外一种就是&lt;code class=&quot;highlighter-rouge&quot;&gt;NSInvocation。&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;我们先来看&lt;code class=&quot;highlighter-rouge&quot;&gt;performSelector:withObject;&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;如果我们有一个类HTOtherModule，并有一个方法如下&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@implementation HTOtherModule
-
-- (void)doSomethingWithParameter:(NSString *)para{
-    NSLog(@&quot;done some with:%@&quot;,para);
-}
-
-@end
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;我们在其他类中，不通过类而是通过runtime的方式来调用这个方法，我们可以这样做：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    Class cls = NSClassFromString(@&quot;HTOtherModule&quot;);
-    id obj = [[cls alloc]init];
-    [obj performSelector:NSSelectorFromString(@&quot;doSomethingWithParameter:&quot;) withObject:@&quot;this is the value&quot;];
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;performSelector虽然能达到调用方法的目的，但是传递的参数最多只能由两个，也许可以通过封装进字典来传递，但是这样就徒增了工作。我们可以用NSInvocation的特性来达到这个目的&lt;/p&gt;
-
-&lt;h4 id=&quot;3nsinvocation&quot;&gt;3、NSInvocation&lt;/h4&gt;
-
-&lt;p&gt;我们知道，iOS的方法调用实际上就是消息转发&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;objc_msgSend(Class receiver,SEL selector, arg1, arg2, ...)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;而NSInvocation就是用来制造消息发送的类。&lt;/p&gt;
-
-&lt;p&gt;NSInvocation与其他NSObject类不一样，不会通过alloc/init来生成，它需要通过一个方法签名NSMethodSignature来生成&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSInvocation *invocatin = [NSInvocation invocationWithMethodSignature:sig];
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;而NSMethodSignature由类的selector来形成的&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSMethodSignature *sig  = [cls instanceMethodSignatureForSelector:aSelecotor];
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;依次填补参数，&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    [invocatin setTarget:obj];
-    [invocatin setSelector:aSelecotor];
-    NSString *para = @&quot;this is the value&quot;;
-    [invocatin setArgument:&amp;amp;para atIndex:2];
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;触发，就可以发送一条消息&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[invocatin invoke];
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;下面是调用HTOtherModule类的方法的完整代码：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    SEL aSelecotor = NSSelectorFromString(@&quot;doSomethingWithParameter:&quot;);
-    Class cls = NSClassFromString(@&quot;HTOtherModule&quot;);
-    id obj = [[cls alloc]init];
-    NSMethodSignature * sig  = [cls instanceMethodSignatureForSelector:aSelecotor];
-    NSInvocation * invocatin = [NSInvocation invocationWithMethodSignature:sig];
-    [invocatin setTarget:obj];
-    [invocatin setSelector:aSelecotor];
-    NSString *para = @&quot;this is the value&quot;;
-    [invocatin setArgument:&amp;amp;para atIndex:2];
-    [invocatin invoke];
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;4中间件的考虑&quot;&gt;4、中间件的考虑&lt;/h4&gt;
-
-&lt;p&gt;如果把所有跨模块的调用都写到一个类里，那么这个类肯定会变得臃肿，所以，建议是在一个类里写下核心代码，而对于某个模块需要被调用的方法，则通过Category的形式，整合到一起。&lt;/p&gt;
-
-&lt;p&gt;Categroy&lt;/p&gt;
-
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;@interface&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;HTMediator&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;HTOtherModule&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;otherModulePerform&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;targetName&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;actionName&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;hour&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSUInteger&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hour&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;place&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;palce&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;doSomething&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;doSomething&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;@end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;这是核心代码&lt;/p&gt;
-
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;performTarget&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;targetName&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;actionName&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;parameters&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSArray&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;parameters&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;Class&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tagetClass&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NSClassFromString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;targetName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;NSObject&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tagert&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tagetClass&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;SEL&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;aSelector&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NSSelectorFromString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;actionName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;NSMethodSignature&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;methodSignature&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tagetClass&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;instanceMethodSignatureForSelector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;aSelector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;methodSignature&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 方法签名找不到，异常情况自己处理&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;NSLog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;找不到这个方法&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;NSInvocation&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;invocation&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSInvocation&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;invocationWithMethodSignature&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;methodSignature&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;invocation&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;setTarget&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tagert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;invocation&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;setSelector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;aSelector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-        
-        &lt;span class=&quot;c1&quot;&gt;//消息发送的参数，签名两个是class和selector，所以方法参数从第3个开始&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parameters&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;enumerateObjectsUsingBlock&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;_Nonnull&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NSUInteger&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;idx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BOOL&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_Nonnull&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;stop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;invocation&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;setArgument&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;atIndex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;idx&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}];&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;invocation&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;invoke&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-        
-        &lt;span class=&quot;c1&quot;&gt;//返回值处理&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;__autoreleasing&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;callBackObject&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;methodSignature&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;methodReturnLength&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;invocation&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;getReturnValue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;callBackObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;callBackObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;所有代码可以在&lt;a href=&quot;https://github.com/helloted/iOS_Demo/tree/master/HTMediator&quot;&gt;Github&lt;/a&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">1、解耦</summary></entry></feed>
+&lt;p&gt;完整代码，可以在&lt;a href=&quot;https://github.com/helloted/iOS_Demo/tree/master/NSProxy&quot;&gt;github&lt;/a&gt;下载&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">1、继承</summary></entry></feed>
