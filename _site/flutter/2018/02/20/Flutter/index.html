@@ -243,14 +243,16 @@
 
 <p>flutter采用Flex布局。</p>
 
+<p><code class="highlighter-rouge">child</code>可承载单个子控件，<code class="highlighter-rouge">children</code>可承载多个子控</p>
+
 <p><a href="https://flutterchina.club/widgets/layout/">一些常用的布局Widget</a>:</p>
 
 <ul>
   <li>Container：如果要添加填充，边距，边框或背景色，请使用Container来设置，只有Container有这些属性</li>
   <li>Row：child在水平(左右)方向上进行布局</li>
   <li>Colomn：child在竖直(上下)方向上进行布局</li>
-  <li>Expanded：填充剩余空间</li>
-  <li><code class="highlighter-rouge">child</code>可承载单个子控件，<code class="highlighter-rouge">children</code>可承载多个子控</li>
+  <li>Expanded：填充剩余空间,必须放置于Row, Column或Flex内,</li>
+  <li>Stack+Positoned:Stack与Row和Clomn类似，只不过适用于子Wight没那么规则化的布局，可以允许其子widget简单的堆叠在一起</li>
 </ul>
 
 <h4 id="5添加本地资源">5、添加本地资源</h4>
@@ -290,6 +292,69 @@
 <h4 id="6定位alignment">6、定位/Alignment</h4>
 
 <p>在Widget内设置alignment属性，是为了给child/children定位，</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>alignment: Alignment.center,
+</code></pre></div></div>
+
+<h4 id="7stack">7、Stack</h4>
+
+<p>Stack可用于一些位置没有那么比例化的Row以及Cloumn</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  child: Stack(
+      children: &lt;Widget&gt;[
+        Positioned(
+          right: 10.0,
+          top: 24.0,
+          width: 20,
+          height: 20,
+          child: new Container(
+            color: Colors.blue,
+          ),
+        )],
+</code></pre></div></div>
+
+<p><img src="/img/Simple_8/66.png" alt="img" /></p>
+
+<p>这种情况还有一个方法是用Row来布局，Row内先加一个Expand来拓张，然后接一个所需要的控件，再接一个控件用来与边界的距离</p>
+
+<p><img src="/img/Simple_8/67.png" alt="img" /></p>
+
+<p>8、Tabbar使用</p>
+
+<div class="language-dart highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">_tabController</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TabController</span><span class="o">(</span><span class="nl">vsync:</span> <span class="k">this</span><span class="o">,</span> <span class="nl">length:</span> <span class="mi">3</span><span class="o">);</span> 
+
+<span class="n">Widget</span> <span class="nf">actionCountBar</span><span class="p">(</span><span class="o">)</span> <span class="o">=&gt;</span> <span class="k">new</span> <span class="n">Container</span><span class="o">(</span>
+    <span class="nl">height:</span> <span class="mi">50</span><span class="o">,</span>
+    <span class="nl">child:</span> <span class="k">new</span> <span class="n">TabBar</span><span class="o">(</span>
+      <span class="nl">controller:</span> <span class="n">_tabController</span><span class="o">,</span>
+      <span class="nl">tabs:</span> <span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;[</span>
+        <span class="k">new</span> <span class="n">Tab</span><span class="o">(</span>
+          <span class="nl">text:</span> <span class="s">'转发0'</span><span class="o">,</span>
+        <span class="o">),</span>
+        <span class="k">new</span> <span class="n">Tab</span><span class="o">(</span>
+          <span class="nl">text:</span> <span class="s">'评论5'</span><span class="o">,</span>
+        <span class="o">),</span>
+        <span class="k">new</span> <span class="n">Tab</span><span class="o">(</span>
+          <span class="nl">text:</span> <span class="s">'点赞1'</span><span class="o">,</span>
+        <span class="o">),</span>
+      <span class="o">],</span>
+    <span class="o">),</span>
+  <span class="o">);</span>
+
+  <span class="n">Widget</span> <span class="n">actionTabView</span><span class="o">()=&gt;</span> <span class="k">new</span> <span class="n">Container</span><span class="o">(</span>
+    <span class="nl">height:</span> <span class="mi">500</span><span class="o">,</span>
+    <span class="nl">child:</span> <span class="k">new</span> <span class="n">TabBarView</span><span class="o">(</span> <span class="c1">// 这是不同的页面</span>
+      <span class="nl">controller:</span> <span class="n">_tabController</span><span class="o">,</span>
+      <span class="nl">children:</span> <span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;[</span>
+        <span class="k">new</span> <span class="n">Center</span><span class="o">(</span><span class="nl">child:</span> <span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">'转发'</span><span class="o">)),</span>
+        <span class="k">new</span> <span class="n">Center</span><span class="o">(</span><span class="nl">child:</span> <span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">'评论'</span><span class="o">)),</span>
+        <span class="k">new</span> <span class="n">Center</span><span class="o">(</span><span class="nl">child:</span> <span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">'点赞'</span><span class="o">)),</span>
+      <span class="o">],</span>
+    <span class="o">),</span>
+  <span class="o">);</span>
+</code></pre></div></div>
+
+<p>需要注意的是，controller要预先生成</p>
 
 
                 <hr>
