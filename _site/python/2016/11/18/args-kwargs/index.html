@@ -154,7 +154,7 @@ another arg through *argv: test
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">greet_me</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="k">print</span><span class="p">(</span><span class="s">"{0} = {1}"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">"{0} = {1}"</span><span class="o">.</span><span class="nb">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
 
 <span class="o">&gt;&gt;&gt;</span> <span class="n">greet_me</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">"yasoob"</span><span class="p">)</span>
 <span class="n">name</span> <span class="o">=</span> <span class="n">yasoob</span>
@@ -174,16 +174,16 @@ another arg through *argv: test
 
 <p>现在你可以使用<code class="highlighter-rouge">*args</code> 和<code class="highlighter-rouge">**kwargs</code>来传递参数到这个函数</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># first with *args</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="s">"two"</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># first with *args
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="s">"two"</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">test_args_kwargs</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
 <span class="n">arg1</span><span class="p">:</span> <span class="n">two</span>
 <span class="n">arg2</span><span class="p">:</span> <span class="mi">3</span>
 <span class="n">arg3</span><span class="p">:</span> <span class="mi">5</span>
 </code></pre></div></div>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># now with **kwargs:</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s">"arg3"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s">"arg2"</span><span class="p">:</span> <span class="s">"two"</span><span class="p">,</span> <span class="s">"arg1"</span><span class="p">:</span> <span class="mi">5</span><span class="p">}</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># now with **kwargs:
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s">"arg3"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s">"arg2"</span><span class="p">:</span> <span class="s">"two"</span><span class="p">,</span> <span class="s">"arg1"</span><span class="p">:</span> <span class="mi">5</span><span class="p">}</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">test_args_kwargs</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 <span class="n">arg1</span><span class="p">:</span> <span class="mi">5</span>
 <span class="n">arg2</span><span class="p">:</span> <span class="n">two</span>

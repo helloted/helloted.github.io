@@ -132,29 +132,29 @@
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">foo</span> <span class="o">=</span> <span class="p">[</span><span class="s">'hi'</span><span class="p">]</span>
 <span class="k">print</span><span class="p">(</span><span class="n">foo</span><span class="p">)</span>
-<span class="c"># Output: ['hi']</span>
-
+<span class="c1"># Output: ['hi']
+</span>
 <span class="n">bar</span> <span class="o">=</span> <span class="n">foo</span>
 <span class="n">bar</span> <span class="o">+=</span> <span class="p">[</span><span class="s">'bye'</span><span class="p">]</span>
 <span class="k">print</span><span class="p">(</span><span class="n">foo</span><span class="p">)</span>
-<span class="c"># Output: ['hi', 'bye']</span>
-</code></pre></div></div>
+<span class="c1"># Output: ['hi', 'bye']
+</span></code></pre></div></div>
 
 <p>发生了什么?这个结果不是我们期望的，我们希望的是下面这种👇</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">foo</span> <span class="o">=</span> <span class="p">[</span><span class="s">'hi'</span><span class="p">]</span>
 <span class="k">print</span><span class="p">(</span><span class="n">foo</span><span class="p">)</span>
-<span class="c"># Output: ['hi']</span>
-
+<span class="c1"># Output: ['hi']
+</span>
 <span class="n">bar</span> <span class="o">=</span> <span class="n">foo</span>
 <span class="n">bar</span> <span class="o">+=</span> <span class="p">[</span><span class="s">'bye'</span><span class="p">]</span>
 
 <span class="k">print</span><span class="p">(</span><span class="n">foo</span><span class="p">)</span>
-<span class="c"># Output: ['hi']</span>
-
+<span class="c1"># Output: ['hi']
+</span>
 <span class="k">print</span><span class="p">(</span><span class="n">bar</span><span class="p">)</span>
-<span class="c"># Output: ['hi', 'bye']</span>
-</code></pre></div></div>
+<span class="c1"># Output: ['hi', 'bye']
+</span></code></pre></div></div>
 
 <p>这不是一个bug。 这是可变的操作。 每当将变量赋值给另一个可变数据类型的变量时，数据的任何变化都会被这两个变量反映出来。 新变量只是旧变量的别名。 这只适用于可变数据类型。 这是一个涉及函数与可变数据类型之间的问题：</p>
 
@@ -163,14 +163,14 @@
     <span class="k">return</span> <span class="n">target</span>
 
 <span class="n">add_to</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="c"># Output: [1]</span>
-
+<span class="c1"># Output: [1]
+</span>
 <span class="n">add_to</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-<span class="c"># Output: [1, 2]</span>
-
+<span class="c1"># Output: [1, 2]
+</span>
 <span class="n">add_to</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-<span class="c"># Output: [1, 2, 3]</span>
-</code></pre></div></div>
+<span class="c1"># Output: [1, 2, 3]
+</span></code></pre></div></div>
 
 <p>再次，是list的可变性引起的痛苦。 在Python中，默认参数是在定义函数时计算一次的，而不是每次函数被调用都会计算一次。 除非你知道你在做什么，否则你不应该定义可变类型的默认参数。 你应该这样做：</p>
 
@@ -184,14 +184,14 @@
 <p>现在，就OK了：</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">add_to</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
-<span class="c"># Output: [42]</span>
-
+<span class="c1"># Output: [42]
+</span>
 <span class="n">add_to</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
-<span class="c"># Output: [42]</span>
-
+<span class="c1"># Output: [42]
+</span>
 <span class="n">add_to</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
-<span class="c"># Output: [42]</span>
-</code></pre></div></div>
+<span class="c1"># Output: [42]
+</span></code></pre></div></div>
 
 
                 <hr>

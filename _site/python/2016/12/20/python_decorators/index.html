@@ -140,23 +140,23 @@
     <span class="k">return</span> <span class="s">"hi "</span> <span class="o">+</span> <span class="n">name</span>
 
 <span class="k">print</span><span class="p">(</span><span class="n">hi</span><span class="p">())</span>
-<span class="c"># output: 'hi yasoob'</span>
-
-<span class="c"># 我们可以把一个函数赋值给一个变量</span>
-<span class="n">greet</span> <span class="o">=</span> <span class="n">hi</span>
-<span class="c"># 我们这里没有用圆括号，因为我们没有调用hi函数，我们只是把它放入了greet变量</span>
-
+<span class="c1"># output: 'hi yasoob'
+</span>
+<span class="c1"># 我们可以把一个函数赋值给一个变量
+</span><span class="n">greet</span> <span class="o">=</span> <span class="n">hi</span>
+<span class="c1"># 我们这里没有用圆括号，因为我们没有调用hi函数，我们只是把它放入了greet变量
+</span>
 <span class="k">print</span><span class="p">(</span><span class="n">greet</span><span class="p">())</span>
-<span class="c"># output: 'hi yasoob'</span>
-
-<span class="c"># 让我们看看如果删除hi这个函数会怎么样!</span>
-<span class="k">del</span> <span class="n">hi</span>
+<span class="c1"># output: 'hi yasoob'
+</span>
+<span class="c1"># 让我们看看如果删除hi这个函数会怎么样!
+</span><span class="k">del</span> <span class="n">hi</span>
 <span class="k">print</span><span class="p">(</span><span class="n">hi</span><span class="p">())</span>
-<span class="c">#outputs: NameError</span>
-
+<span class="c1">#outputs: NameError
+</span>
 <span class="k">print</span><span class="p">(</span><span class="n">greet</span><span class="p">())</span>
-<span class="c">#outputs: 'hi yasoob'</span>
-</code></pre></div></div>
+<span class="c1">#outputs: 'hi yasoob'
+</span></code></pre></div></div>
 
 <h4 id="用函数来定义函数">用函数来定义函数</h4>
 
@@ -176,18 +176,18 @@
     <span class="k">print</span><span class="p">(</span><span class="s">"now you are back in the hi() function"</span><span class="p">)</span>
 
 <span class="n">hi</span><span class="p">()</span>
-<span class="c">#output:now you are inside the hi() function</span>
-<span class="c">#       now you are in the greet() function</span>
-<span class="c">#       now you are in the welcome() function</span>
-<span class="c">#       now you are back in the hi() function</span>
-
-<span class="c"># This shows that whenever you call hi(), greet() and welcome()</span>
-<span class="c"># are also called. However the greet() and welcome() functions</span>
-<span class="c"># are not available outside the hi() function e.g:</span>
-
+<span class="c1">#output:now you are inside the hi() function
+#       now you are in the greet() function
+#       now you are in the welcome() function
+#       now you are back in the hi() function
+</span>
+<span class="c1"># This shows that whenever you call hi(), greet() and welcome()
+# are also called. However the greet() and welcome() functions
+# are not available outside the hi() function e.g:
+</span>
 <span class="n">greet</span><span class="p">()</span>
-<span class="c">#outputs: NameError: name 'greet' is not defined</span>
-</code></pre></div></div>
+<span class="c1">#outputs: NameError: name 'greet' is not defined
+</span></code></pre></div></div>
 
 <p>所以现在我们知道我们可以在其他函数中定义函数了。 换句话说：我们可以做嵌套函数。 现在你需要再学习一点，函数也可以返回函数。</p>
 
@@ -209,14 +209,14 @@
 
 <span class="n">a</span> <span class="o">=</span> <span class="n">hi</span><span class="p">()</span>
 <span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
-<span class="c">#outputs: &lt;function greet at 0x7f2143c01500&gt;</span>
-
-<span class="c">#This clearly shows that `a` now points to the greet() function in hi()</span>
-<span class="c">#Now try this</span>
-
+<span class="c1">#outputs: &lt;function greet at 0x7f2143c01500&gt;
+</span>
+<span class="c1">#This clearly shows that `a` now points to the greet() function in hi()
+#Now try this
+</span>
 <span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="p">())</span>
-<span class="c">#outputs: now you are in the greet() function</span>
-</code></pre></div></div>
+<span class="c1">#outputs: now you are in the greet() function
+</span></code></pre></div></div>
 
 <p>再看看代码。 在<code class="highlighter-rouge">if/else</code>子句中，我们将返回<code class="highlighter-rouge">greet</code>和<code class="highlighter-rouge">welcome</code>，而不是<code class="highlighter-rouge">greet()</code>和<code class="highlighter-rouge">welcome()</code>。 这是为什么？ 这是因为当你在它后面加一对括号时，函数会被执行; 而如果不在后面加括号，那么它可以被传递并且可以被分配给其他变量而不执行它。 你明白了吗？ 让我稍微详细地解释一下。 当我们写a = hi()时，hi()得到执行，并且由于默认名称是yasoob，所以返回函数<code class="highlighter-rouge">greet</code>。 如果我们把语句改成a = hi(name =“ali”)，那么welcome函数将被返回。 我们也可以打印hi()()，现在输出greet()函数。</p>
 
@@ -230,9 +230,9 @@
     <span class="k">print</span><span class="p">(</span><span class="n">func</span><span class="p">())</span>
 
 <span class="n">doSomethingBeforeHi</span><span class="p">(</span><span class="n">hi</span><span class="p">)</span>
-<span class="c">#outputs:I am doing some boring work before executing hi()</span>
-<span class="c">#        hi yasoob!</span>
-</code></pre></div></div>
+<span class="c1">#outputs:I am doing some boring work before executing hi()
+#        hi yasoob!
+</span></code></pre></div></div>
 
 <p>现在你需要知道什么是装饰器了，装饰器就是在函数之前或者之后可以执行一段代码。</p>
 
@@ -268,26 +268,26 @@ a_function_requiring_decoration()
 
 <p>你明白了吗？ 我们只是应用了以前学过的原理。 这正是装饰器在Python中所做的！ 它们包装一个函数并以某种方式修改它的行为。 现在你可能想知道我们没有在我们的代码中使用任何@ 这只是构成装饰功能的简短方法。 以下是我们如何使用@运行以前的代码示例。</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@a_new_decorator</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">@</span><span class="n">a_new_decorator</span>
 <span class="k">def</span> <span class="nf">a_function_requiring_decoration</span><span class="p">():</span>
     <span class="s">"""Hey you! Decorate me!"""</span>
     <span class="k">print</span><span class="p">(</span><span class="s">"I am the function which needs some decoration to "</span>
           <span class="s">"remove my foul smell"</span><span class="p">)</span>
 
 <span class="n">a_function_requiring_decoration</span><span class="p">()</span>
-<span class="c">#outputs: I am doing some boring work before executing a_func()</span>
-<span class="c">#         I am the function which needs some decoration to remove my foul smell</span>
-<span class="c">#         I am doing some boring work after executing a_func()</span>
-
-<span class="c">#the @a_new_decorator is just a short way of saying:</span>
-<span class="n">a_function_requiring_decoration</span> <span class="o">=</span> <span class="n">a_new_decorator</span><span class="p">(</span><span class="n">a_function_requiring_decoration</span><span class="p">)</span>
+<span class="c1">#outputs: I am doing some boring work before executing a_func()
+#         I am the function which needs some decoration to remove my foul smell
+#         I am doing some boring work after executing a_func()
+</span>
+<span class="c1">#the @a_new_decorator is just a short way of saying:
+</span><span class="n">a_function_requiring_decoration</span> <span class="o">=</span> <span class="n">a_new_decorator</span><span class="p">(</span><span class="n">a_function_requiring_decoration</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>现在代码里有个问题，如果我们：</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="n">a_function_requiring_decoration</span><span class="o">.</span><span class="n">__name__</span><span class="p">)</span>
-<span class="c"># Output: wrapTheFunction</span>
-</code></pre></div></div>
+<span class="c1"># Output: wrapTheFunction
+</span></code></pre></div></div>
 
 <p>这不是我们所期望的！ 它的名字是“a_function_requiring_decoration”。 我们的函数被wrapTheFunction所取代。 它覆盖了我们函数的名称的文档字符串。 幸运的是，Python为我们提供了一个简单的函数来解决这个问题，那就是functools.wraps。 让我们修改我们以前的例子来使用functools.wraps：</p>
 
@@ -316,25 +316,25 @@ print(a_function_requiring_decoration.__name__)
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
 <span class="k">def</span> <span class="nf">decorator_name</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
-    <span class="nd">@wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="o">@</span><span class="n">wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">decorated</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">can_run</span><span class="p">:</span>
             <span class="k">return</span> <span class="s">"Function will not run"</span>
         <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">decorated</span>
 
-<span class="nd">@decorator_name</span>
+<span class="o">@</span><span class="n">decorator_name</span>
 <span class="k">def</span> <span class="nf">func</span><span class="p">():</span>
     <span class="k">return</span><span class="p">(</span><span class="s">"Function is running"</span><span class="p">)</span>
 
 <span class="n">can_run</span> <span class="o">=</span> <span class="bp">True</span>
 <span class="k">print</span><span class="p">(</span><span class="n">func</span><span class="p">())</span>
-<span class="c"># Output: Function is running</span>
-
+<span class="c1"># Output: Function is running
+</span>
 <span class="n">can_run</span> <span class="o">=</span> <span class="bp">False</span>
 <span class="k">print</span><span class="p">(</span><span class="n">func</span><span class="p">())</span>
-<span class="c"># Output: Function will not run</span>
-</code></pre></div></div>
+<span class="c1"># Output: Function will not run
+</span></code></pre></div></div>
 
 <h4 id="授权">授权</h4>
 
@@ -343,7 +343,7 @@ print(a_function_requiring_decoration.__name__)
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
 
 <span class="k">def</span> <span class="nf">requires_auth</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
-    <span class="nd">@wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="o">@</span><span class="n">wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">decorated</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">auth</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">authorization</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">auth</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">check_auth</span><span class="p">(</span><span class="n">auth</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">auth</span><span class="o">.</span><span class="n">password</span><span class="p">):</span>
@@ -357,21 +357,21 @@ print(a_function_requiring_decoration.__name__)
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
 
 <span class="k">def</span> <span class="nf">logit</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-    <span class="nd">@wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+    <span class="o">@</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">with_logging</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">print</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">__name__</span> <span class="o">+</span> <span class="s">" was called"</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">with_logging</span>
 
-<span class="nd">@logit</span>
+<span class="o">@</span><span class="n">logit</span>
 <span class="k">def</span> <span class="nf">addition_func</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
    <span class="s">"""Do some math."""</span>
    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">x</span>
 
 
 <span class="n">result</span> <span class="o">=</span> <span class="n">addition_func</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-<span class="c"># Output: addition_func was called</span>
-</code></pre></div></div>
+<span class="c1"># Output: addition_func was called
+</span></code></pre></div></div>
 
 <h4 id="用参数装饰">用参数装饰</h4>
 
@@ -424,16 +424,16 @@ myfunc2()
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
         <span class="n">log_string</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">__name__</span> <span class="o">+</span> <span class="s">" was called"</span>
         <span class="k">print</span><span class="p">(</span><span class="n">log_string</span><span class="p">)</span>
-        <span class="c"># Open the logfile and append</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logfile</span><span class="p">,</span> <span class="s">'a'</span><span class="p">)</span> <span class="k">as</span> <span class="n">opened_file</span><span class="p">:</span>
-            <span class="c"># Now we log to the specified logfile</span>
-            <span class="n">opened_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">log_string</span> <span class="o">+</span> <span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
-        <span class="c"># Now, send a notification</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">()</span>
+        <span class="c1"># Open the logfile and append
+</span>        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logfile</span><span class="p">,</span> <span class="s">'a'</span><span class="p">)</span> <span class="k">as</span> <span class="n">opened_file</span><span class="p">:</span>
+            <span class="c1"># Now we log to the specified logfile
+</span>            <span class="n">opened_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">log_string</span> <span class="o">+</span> <span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
+        <span class="c1"># Now, send a notification
+</span>        <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">notify</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c"># logit only logs, no more</span>
-        <span class="k">pass</span>
+        <span class="c1"># logit only logs, no more
+</span>        <span class="k">pass</span>
 </code></pre></div></div>
 
 <p>这个实现有一个额外的好处，就是比嵌套函数方法更简洁，包装一个函数仍然会使用和以前一样的语法：</p>
@@ -455,9 +455,9 @@ def myfunc1():
         <span class="nb">super</span><span class="p">(</span><span class="n">email_logit</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">notify</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c"># Send an email to self.email</span>
-        <span class="c"># Will not be implemented here</span>
-        <span class="k">pass</span>
+        <span class="c1"># Send an email to self.email
+</span>        <span class="c1"># Will not be implemented here
+</span>        <span class="k">pass</span>
 </code></pre></div></div>
 
 <p>从这里, <code class="highlighter-rouge">@email_logit</code> 工作就像 <code class="highlighter-rouge">@logit</code> 但是发送了一个email给admin.</p>

@@ -149,8 +149,8 @@
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">multiples</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
 <span class="k">print</span><span class="p">(</span><span class="n">multiples</span><span class="p">)</span>
-<span class="c"># Output: [0, 3, 6, 9, 12, 15, 18, 21, 24, 27]</span>
-</code></pre></div></div>
+<span class="c1"># Output: [0, 3, 6, 9, 12, 15, 18, 21, 24, 27]
+</span></code></pre></div></div>
 
 <p>这对于快速创建list非常有用。 它甚至是一些替代<code class="highlighter-rouge">filter</code>功能的首选。 列表推导真正的亮点，当你想提供一个方法或函数的列表，通过在for循环的每个迭代中附加一项来创建一个新的列表。 例如，你通常会做这样的事情：</p>
 
@@ -173,8 +173,8 @@
     <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">mcase</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
 <span class="p">}</span>
 
-<span class="c"># mcase_frequency == {'a': 17, 'z': 3, 'b': 34}</span>
-</code></pre></div></div>
+<span class="c1"># mcase_frequency == {'a': 17, 'z': 3, 'b': 34}
+</span></code></pre></div></div>
 
 <p>在上面的例子中，我们把key相同但是类型不同的联合到一起，可以有更快的方式</p>
 
@@ -185,8 +185,8 @@
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">squared</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]}</span>
 <span class="k">print</span><span class="p">(</span><span class="n">squared</span><span class="p">)</span>
-<span class="c"># Output: {1, 4}</span>
-</code></pre></div></div>
+<span class="c1"># Output: {1, 4}
+</span></code></pre></div></div>
 
 
 

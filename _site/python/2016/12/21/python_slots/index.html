@@ -139,8 +139,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="n">identifier</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_up</span><span class="p">()</span>
-    <span class="c"># ...</span>
-</code></pre></div></div>
+    <span class="c1"># ...
+</span></code></pre></div></div>
 
 <p>有<code class="highlighter-rouge">__slots__</code></p>
 
@@ -206,17 +206,17 @@ In [6] used 22.6680 MiB RAM in 0.80s, peaked 0.00 MiB above current, total RAM u
 <p>如果在定义class时，定义了<code class="highlighter-rouge">__slots__</code>变量，可以用来现在属性</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">Student</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<span class="o">...</span>     <span class="n">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s">'name'</span><span class="p">,</span> <span class="s">'age'</span><span class="p">)</span> <span class="c"># 用tuple定义允许绑定的属性名称</span>
-<span class="o">...</span>
+<span class="o">...</span>     <span class="n">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s">'name'</span><span class="p">,</span> <span class="s">'age'</span><span class="p">)</span> <span class="c1"># 用tuple定义允许绑定的属性名称
+</span><span class="o">...</span>
 </code></pre></div></div>
 
 <p>试试</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">s</span> <span class="o">=</span> <span class="n">Student</span><span class="p">()</span> <span class="c"># 创建新的实例</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">s</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">'Michael'</span> <span class="c"># 绑定属性'name'</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">s</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">25</span> <span class="c"># 绑定属性'age'</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">s</span><span class="o">.</span><span class="n">score</span> <span class="o">=</span> <span class="mi">99</span> <span class="c"># 绑定属性'score'</span>
-<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">s</span> <span class="o">=</span> <span class="n">Student</span><span class="p">()</span> <span class="c1"># 创建新的实例
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">s</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">'Michael'</span> <span class="c1"># 绑定属性'name'
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">s</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">25</span> <span class="c1"># 绑定属性'age'
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">s</span><span class="o">.</span><span class="n">score</span> <span class="o">=</span> <span class="mi">99</span> <span class="c1"># 绑定属性'score'
+</span><span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
   <span class="n">File</span> <span class="s">"&lt;stdin&gt;"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
 <span class="nb">AttributeError</span><span class="p">:</span> <span class="s">'Student'</span> <span class="nb">object</span> <span class="n">has</span> <span class="n">no</span> <span class="n">attribute</span> <span class="s">'score'</span>
 </code></pre></div></div>

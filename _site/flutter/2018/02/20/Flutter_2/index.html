@@ -18,7 +18,7 @@
 
     <title>Flutter基础(一) - Helloted Blog</title>
 
-    <link rel="canonical" href="http://www.helloted.com/flutter/2018/02/20/Flutter/">
+    <link rel="canonical" href="http://www.helloted.com/flutter/2018/02/20/Flutter_2/">
 
     <link rel="shortcut icon" href="/img/favicon.ico">
    
@@ -319,7 +319,7 @@
 
 <p><img src="/img/Simple_8/67.png" alt="img" /></p>
 
-<p>8、Tabbar使用</p>
+<h4 id="8tabbar使用">8、Tabbar使用</h4>
 
 <div class="language-dart highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">_tabController</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TabController</span><span class="o">(</span><span class="nl">vsync:</span> <span class="k">this</span><span class="o">,</span> <span class="nl">length:</span> <span class="mi">3</span><span class="o">);</span> 
 
@@ -356,13 +356,38 @@
 
 <p>需要注意的是，controller要预先生成</p>
 
+<h4 id="9nestedscrollview嵌套scrollview">9、NestedScrollView嵌套ScrollView</h4>
+
+<div class="language-dart highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">NestedScrollView</span><span class="o">(</span>
+          <span class="nl">headerSliverBuilder:</span> <span class="o">(</span><span class="n">BuildContext</span> <span class="n">context</span><span class="o">,</span> <span class="kt">bool</span> <span class="n">innerBoxIsScrolled</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;[</span>
+              <span class="n">SliverToBoxAdapter</span><span class="o">(</span>
+                <span class="nl">child:</span> <span class="n">listHeaderView</span><span class="o">(),</span>
+              <span class="o">),</span>
+            <span class="o">];</span>
+          <span class="o">},</span>
+          <span class="nl">body:</span> <span class="n">Column</span><span class="o">(</span>
+            <span class="nl">children:</span> <span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;[</span>
+              <span class="n">actionCountBar</span><span class="o">(),</span>
+              <span class="n">actionTabView</span><span class="o">(</span><span class="n">items</span><span class="o">),</span>
+            <span class="o">],</span>
+          <span class="o">)),</span>
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">headerSliverBuilder</code>:头部，相当于UITableView的HeadView</p>
+
+<p><code class="highlighter-rouge">SliverToBoxAdapter</code>：新建普通的</p>
+
+<p><code class="highlighter-rouge">body</code>:放置ScrollView</p>
+
+
 
                 <hr>
 
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/java/2018/02/05/Java-Tomcat/" data-toggle="tooltip" data-placement="top" title="Tomcat+Servlet">&larr; 上一篇</a>
+                        <a href="/flutter/2018/02/20/Flutter_1/" data-toggle="tooltip" data-placement="top" title="Flutter基础(一)">&larr; 上一篇</a>
                     </li>
                     
                     

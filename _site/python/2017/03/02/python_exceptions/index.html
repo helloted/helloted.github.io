@@ -133,7 +133,7 @@
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">try</span><span class="p">:</span>
     <span class="nb">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">'test.txt'</span><span class="p">,</span> <span class="s">'rb'</span><span class="p">)</span>
 <span class="k">except</span> <span class="nb">IOError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="k">print</span><span class="p">(</span><span class="s">'An IOError occurred. {}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'An IOError occurred. {}'</span><span class="o">.</span><span class="nb">format</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
 </code></pre></div></div>
 
 <p>在上面的例子中，我们只处理IOError异常。 大多数初学者不知道的是，我们可以处理多个异常。</p>
@@ -145,7 +145,7 @@
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">try</span><span class="p">:</span>
     <span class="nb">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">'test.txt'</span><span class="p">,</span> <span class="s">'rb'</span><span class="p">)</span>
 <span class="k">except</span> <span class="p">(</span><span class="nb">IOError</span><span class="p">,</span> <span class="nb">EOFError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="k">print</span><span class="p">(</span><span class="s">"An error occurred. {}"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"An error occurred. {}"</span><span class="o">.</span><span class="nb">format</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
 </code></pre></div></div>
 
 <p>另一种方法是处理单独的<code class="highlighter-rouge">except</code>块中的个别异常。 我们可以有尽可能多的<code class="highlighter-rouge">except</code>块。 这里是一个例子：</p>
@@ -167,8 +167,8 @@
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">try</span><span class="p">:</span>
     <span class="nb">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">'test.txt'</span><span class="p">,</span> <span class="s">'rb'</span><span class="p">)</span>
 <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
-    <span class="c"># Some logging if you want</span>
-    <span class="k">raise</span>
+    <span class="c1"># Some logging if you want
+</span>    <span class="k">raise</span>
 </code></pre></div></div>
 
 <p>当您不知道程序可能抛出的异常时，可以这样做。</p>
@@ -180,13 +180,13 @@
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">try</span><span class="p">:</span>
     <span class="nb">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">'test.txt'</span><span class="p">,</span> <span class="s">'rb'</span><span class="p">)</span>
 <span class="k">except</span> <span class="nb">IOError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="k">print</span><span class="p">(</span><span class="s">'An IOError occurred. {}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'An IOError occurred. {}'</span><span class="o">.</span><span class="nb">format</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
 <span class="k">finally</span><span class="p">:</span>
     <span class="k">print</span><span class="p">(</span><span class="s">"This would be printed whether or not an exception occurred!"</span><span class="p">)</span>
 
-<span class="c"># Output: An IOError occurred. No such file or directory</span>
-<span class="c"># This would be printed whether or not an exception occurred!</span>
-</code></pre></div></div>
+<span class="c1"># Output: An IOError occurred. No such file or directory
+# This would be printed whether or not an exception occurred!
+</span></code></pre></div></div>
 
 <h4 id="3tryelse">3、try/else</h4>
 
@@ -197,17 +197,17 @@
 <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
     <span class="k">print</span><span class="p">(</span><span class="s">'exception'</span><span class="p">)</span>
 <span class="k">else</span><span class="p">:</span>
-    <span class="c"># any code that should only run if no exception occurs in the try,</span>
-    <span class="c"># but for which exceptions should NOT be caught</span>
-    <span class="k">print</span><span class="p">(</span><span class="s">'This would only run if no exception occurs. And an error here '</span>
+    <span class="c1"># any code that should only run if no exception occurs in the try,
+</span>    <span class="c1"># but for which exceptions should NOT be caught
+</span>    <span class="k">print</span><span class="p">(</span><span class="s">'This would only run if no exception occurs. And an error here '</span>
           <span class="s">'would NOT be caught.'</span><span class="p">)</span>
 <span class="k">finally</span><span class="p">:</span>
     <span class="k">print</span><span class="p">(</span><span class="s">'This would be printed in every case.'</span><span class="p">)</span>
 
-<span class="c"># Output: I am sure no exception is going to occur!</span>
-<span class="c"># This would only run if no exception occurs.</span>
-<span class="c"># This would be printed in every case.</span>
-</code></pre></div></div>
+<span class="c1"># Output: I am sure no exception is going to occur!
+# This would only run if no exception occurs.
+# This would be printed in every case.
+</span></code></pre></div></div>
 
 <p><code class="highlighter-rouge">else</code> 块将会在没有异常发生时执行，并且在<code class="highlighter-rouge">finally</code>块之前执行。</p>
 

@@ -135,8 +135,8 @@
 
 <span class="n">result</span> <span class="o">=</span> <span class="n">add</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-<span class="c"># Output: 8</span>
-</code></pre></div></div>
+<span class="c1"># Output: 8
+</span></code></pre></div></div>
 
 <p>这个函数式两个值相加返回和，我们同样可以这样做</p>
 
@@ -146,31 +146,31 @@
 
 <span class="n">add</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-<span class="c"># Output: 8</span>
-</code></pre></div></div>
+<span class="c1"># Output: 8
+</span></code></pre></div></div>
 
 <p>让我们首先谈谈涉及<code class="highlighter-rouge">return</code>关键字的第一段代码。 这个函数做的是把值赋给正在调用该函数的变量，在我们的例子中就是<code class="highlighter-rouge">result</code>。 在大多数情况下，您不需要使用<code class="highlighter-rouge">global</code>关键字。 然而，让我们看看来包含<code class="highlighter-rouge">global</code>关键字的代码做了什么，它是创建了一个全局变量的<code class="highlighter-rouge">result</code>。 全局在这里意味着什么？ 全局变量意味着我们可以在该函数的范围之外访问该变量。 让我用一个例子来演示它：</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># first without the global variable</span>
-<span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">value1</span><span class="p">,</span> <span class="n">value2</span><span class="p">):</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># first without the global variable
+</span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">value1</span><span class="p">,</span> <span class="n">value2</span><span class="p">):</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">value1</span> <span class="o">+</span> <span class="n">value2</span>
 
 <span class="n">add</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 
-<span class="c"># Oh crap, we encountered an exception. Why is it so?</span>
-<span class="c"># the python interpreter is telling us that we do not</span>
-<span class="c"># have any variable with the name of result. It is so</span>
-<span class="c"># because the result variable is only accessible inside</span>
-<span class="c"># the function in which it is created if it is not global.</span>
-<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+<span class="c1"># Oh crap, we encountered an exception. Why is it so?
+# the python interpreter is telling us that we do not
+# have any variable with the name of result. It is so
+# because the result variable is only accessible inside
+# the function in which it is created if it is not global.
+</span><span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
   <span class="n">File</span> <span class="s">""</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span>
     <span class="n">result</span>
 <span class="nb">NameError</span><span class="p">:</span> <span class="n">name</span> <span class="s">'result'</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">defined</span>
 
-<span class="c"># Now lets run the same code but after making the result</span>
-<span class="c"># variable global</span>
-<span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">value1</span><span class="p">,</span> <span class="n">value2</span><span class="p">):</span>
+<span class="c1"># Now lets run the same code but after making the result
+# variable global
+</span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">value1</span><span class="p">,</span> <span class="n">value2</span><span class="p">):</span>
     <span class="k">global</span> <span class="n">result</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">value1</span> <span class="o">+</span> <span class="n">value2</span>
 
@@ -193,11 +193,11 @@
 
 <span class="n">profile</span><span class="p">()</span>
 <span class="k">print</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-<span class="c"># Output: Danny</span>
-
+<span class="c1"># Output: Danny
+</span>
 <span class="k">print</span><span class="p">(</span><span class="n">age</span><span class="p">)</span>
-<span class="c"># Output: 30</span>
-</code></pre></div></div>
+<span class="c1"># Output: 30
+</span></code></pre></div></div>
 
 <p>注意，不要试图用上面这种方法。</p>
 
@@ -210,11 +210,11 @@
 
 <span class="n">profile_data</span> <span class="o">=</span> <span class="n">profile</span><span class="p">()</span>
 <span class="k">print</span><span class="p">(</span><span class="n">profile_data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="c"># Output: Danny</span>
-
+<span class="c1"># Output: Danny
+</span>
 <span class="k">print</span><span class="p">(</span><span class="n">profile_data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-<span class="c"># Output: 30</span>
-</code></pre></div></div>
+<span class="c1"># Output: 30
+</span></code></pre></div></div>
 
 <p>或者用一种更常用的方法</p>
 
@@ -225,10 +225,10 @@
 
 <span class="n">profile_name</span><span class="p">,</span> <span class="n">profile_age</span> <span class="o">=</span> <span class="n">profile</span><span class="p">()</span>
 <span class="k">print</span><span class="p">(</span><span class="n">profile_name</span><span class="p">)</span>
-<span class="c"># Output: Danny</span>
-<span class="k">print</span><span class="p">(</span><span class="n">profile_age</span><span class="p">)</span>
-<span class="c"># Output: 30</span>
-</code></pre></div></div>
+<span class="c1"># Output: Danny
+</span><span class="k">print</span><span class="p">(</span><span class="n">profile_age</span><span class="p">)</span>
+<span class="c1"># Output: 30
+</span></code></pre></div></div>
 
 
 

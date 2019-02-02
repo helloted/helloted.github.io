@@ -161,13 +161,13 @@
     <span class="n">value</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">funcs</span><span class="p">))</span>
     <span class="k">print</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
-<span class="c"># Output:</span>
-<span class="c"># [0, 0]</span>
-<span class="c"># [1, 2]</span>
-<span class="c"># [4, 4]</span>
-<span class="c"># [9, 6]</span>
-<span class="c"># [16, 8]</span>
-</code></pre></div></div>
+<span class="c1"># Output:
+# [0, 0]
+# [1, 2]
+# [4, 4]
+# [9, 6]
+# [16, 8]
+</span></code></pre></div></div>
 
 <h4 id="filter">Filter</h4>
 
@@ -177,8 +177,8 @@
 <span class="n">less_than_zero</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">number_list</span><span class="p">))</span>
 <span class="k">print</span><span class="p">(</span><span class="n">less_than_zero</span><span class="p">)</span>
 
-<span class="c"># Output: [-5, -4, -3, -2, -1]</span>
-</code></pre></div></div>
+<span class="c1"># Output: [-5, -4, -3, -2, -1]
+</span></code></pre></div></div>
 
 <p><code class="highlighter-rouge">filter</code>类似于for循环，但它是一个内置函数，速度更快。</p>
 
@@ -191,16 +191,16 @@
 <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">:</span>
     <span class="n">product</span> <span class="o">=</span> <span class="n">product</span> <span class="o">*</span> <span class="n">num</span>
 
-<span class="c"># product = 24</span>
-</code></pre></div></div>
+<span class="c1"># product = 24
+</span></code></pre></div></div>
 
 <p>用reduce来试试</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="nb">reduce</span>
 <span class="n">product</span> <span class="o">=</span> <span class="nb">reduce</span><span class="p">((</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">),</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
 
-<span class="c"># Output: 24</span>
-</code></pre></div></div>
+<span class="c1"># Output: 24
+</span></code></pre></div></div>
 
 <p>参考资料：<a href="http://book.pythontips.com/en/latest/map_filter.html">map_filter</a></p>
 

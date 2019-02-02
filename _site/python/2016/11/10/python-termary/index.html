@@ -155,8 +155,8 @@
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fat</span> <span class="o">=</span> <span class="bp">True</span>
 <span class="n">fitness</span> <span class="o">=</span> <span class="p">(</span><span class="s">"skinny"</span><span class="p">,</span> <span class="s">"fat"</span><span class="p">)[</span><span class="n">fat</span><span class="p">]</span>
 <span class="k">print</span><span class="p">(</span><span class="s">"Ali is "</span><span class="p">,</span> <span class="n">fitness</span><span class="p">)</span>
-<span class="c"># Output: Ali is fat</span>
-</code></pre></div></div>
+<span class="c1"># Output: Ali is fat
+</span></code></pre></div></div>
 
 <p>这只是因为True == 1和False == 0，所以可以用元组和列表来完成。</p>
 
@@ -164,11 +164,11 @@
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">condition</span> <span class="o">=</span> <span class="bp">True</span>
 <span class="k">print</span><span class="p">(</span><span class="mi">2</span> <span class="k">if</span> <span class="n">condition</span> <span class="k">else</span> <span class="mi">1</span><span class="o">/</span><span class="mi">0</span><span class="p">)</span>
-<span class="c">#Output is 2</span>
-
+<span class="c1">#Output is 2
+</span>
 <span class="k">print</span><span class="p">((</span><span class="mi">1</span><span class="o">/</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)[</span><span class="n">condition</span><span class="p">])</span>
-<span class="c">#ZeroDivisionError is raised</span>
-</code></pre></div></div>
+<span class="c1">#ZeroDivisionError is raised
+</span></code></pre></div></div>
 
 <p>使用tupled三元技术，首先构建元组，然后找到索引。 对于if-else三元运算符，它遵循正常的if-else逻辑树。 因此，如果有一种情况可以根据条件引发异常，或者两种情况都是计算量大的方法，那么最好避免使用元组。</p>
 
