@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2019-02-02T14:40:35+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">项目管理PMP考试备考经验</title><link href="http://www.helloted.com/others/2019/01/10/PMP/" rel="alternate" type="text/html" title="项目管理PMP考试备考经验" /><published>2019-01-10T20:00:00+08:00</published><updated>2019-01-10T20:00:00+08:00</updated><id>http://www.helloted.com/others/2019/01/10/PMP</id><content type="html" xml:base="http://www.helloted.com/others/2019/01/10/PMP/">&lt;p&gt;我在腾讯的岗位是一名程序员客户端开发，之所以报考PMP是因为在上家公司从事了项目管理的工作，接触了一些项目管理的知识，感觉项目管理的一些理论对于管理水平提升很有用，所以打算系统的学习一下项目管理并且考取证书。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2019-02-12T12:37:15+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">项目管理PMP考试备考经验</title><link href="http://www.helloted.com/others/2019/01/10/PMP/" rel="alternate" type="text/html" title="项目管理PMP考试备考经验" /><published>2019-01-10T20:00:00+08:00</published><updated>2019-01-10T20:00:00+08:00</updated><id>http://www.helloted.com/others/2019/01/10/PMP</id><content type="html" xml:base="http://www.helloted.com/others/2019/01/10/PMP/">&lt;p&gt;我在腾讯的岗位是一名程序员客户端开发，之所以报考PMP是因为在上家公司从事了项目管理的工作，接触了一些项目管理的知识，感觉项目管理的一些理论对于管理水平提升很有用，所以打算系统的学习一下项目管理并且考取证书。&lt;/p&gt;
 
 &lt;h4 id=&quot;1pmp简介&quot;&gt;1、PMP简介&lt;/h4&gt;
 
@@ -642,6 +642,24 @@ extern NSString * const UIApplicationDidFinishLaunchingNotification;
 &lt;h3 id=&quot;二ios接入&quot;&gt;二、iOS接入&lt;/h3&gt;
 
 &lt;h4 id=&quot;1将flutter的相关信息导入ios项目&quot;&gt;1、将flutter的相关信息导入iOS项目&lt;/h4&gt;
+
+&lt;p&gt;更新，新版本接入，通过cocoapod比较简单&lt;/p&gt;
+
+&lt;p&gt;在PodFile内加入：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;platform :ios, '10.0'
+
+target &quot;NewHybrid&quot; do
+
+flutter_application_path = '../flutter_module'
+eval(File.read(File.join(flutter_application_path, '.ios', 'Flutter', 'podhelper.rb')), binding)
+
+
+end
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;==================================👇为旧版本接入=======================&lt;/p&gt;
 
 &lt;p&gt;在flutter_module目录下有个.iOS的隐藏文件夹，里面有个文件Flutter/Generated.xcconfig，查看可以看到里面有一些flutter的信息&lt;/p&gt;
 

@@ -50,7 +50,30 @@ HybridApp
 
 ### 二、iOS接入
 
+
+
 #### 1、将flutter的相关信息导入iOS项目
+
+更新，新版本接入，通过cocoapod比较简单
+
+在PodFile内加入：
+
+```
+platform :ios, '10.0'
+
+target "NewHybrid" do
+
+flutter_application_path = '../flutter_module'
+eval(File.read(File.join(flutter_application_path, '.ios', 'Flutter', 'podhelper.rb')), binding)
+
+
+end
+
+```
+
+
+
+==================================👇为旧版本接入=======================
 
 在flutter_module目录下有个.iOS的隐藏文件夹，里面有个文件Flutter/Generated.xcconfig，查看可以看到里面有一些flutter的信息
 
