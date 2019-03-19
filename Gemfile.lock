@@ -4,7 +4,7 @@ GEM
     addressable (2.6.0)
       public_suffix (>= 2.0.2, < 4.0)
     colorator (1.1.0)
-    concurrent-ruby (1.1.4)
+    concurrent-ruby (1.0.5)
     em-websocket (0.5.1)
       eventmachine (>= 0.12.9)
       http_parser.rb (~> 0.6.0)
@@ -60,9 +60,10 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  concurrent-ruby (~> 1.0.5)
   jekyll
   jekyll-feed
   jekyll-paginate
 
 BUNDLED WITH
-   1.16.2
+   1.17.2
