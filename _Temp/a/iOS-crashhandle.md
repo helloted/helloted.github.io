@@ -42,7 +42,7 @@
     }
 ```
 
-3、大图片的硬解
+#### 3、大图片的硬解
 
 [bugly-大图片硬解](https://bugly.qq.com/v2/crash-reporting/crashes/900019386/240919?pid=2&crashDataType=unSystemExit)
 
@@ -51,3 +51,31 @@
 这是iOS11的系统bug，解决方案
 
 https://github.com/SDWebImage/SDWebImage/issues/2226
+
+#### 4、OpenGL ES渲染问题
+
+> libGPUSupportMercury.dylib  _gpus_ReturnNotPermittedKillClient
+
+Open GL在渲染时，如果按Home键让App进入后台，会导致crash。原因是禁止在后台渲染GL。
+
+解决方案就是在App进入后台的时通知停止渲染。
+
+#### 5、未遵守Copy协议
+
+> -[WEGBaseUserInfoModel copyWithZone:]: unrecognized selector sent to instance 0x281f9bf00
+
+实例调用copy方法，却未尊重copy协议
+
+解决方案：
+
+遵守NSCopy协议，并实现下面方法
+
+\- (id)copyWithZone:(NSZone *)zone{
+
+​    WEGBaseUserInfoModel* newObject = [[WEGBaseUserInfoModel allocWithZone:zone] init];
+
+​    newObject.avatar = self.avatar;
+
+​    return newObject;
+
+}
