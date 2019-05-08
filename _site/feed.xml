@@ -1,4 +1,202 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2019-05-07T14:41:50+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">Debugging with Xcode</title><link href="http://www.helloted.com/others/2019/05/06/debugXcode/" rel="alternate" type="text/html" title="Debugging with Xcode" /><published>2019-05-06T20:00:00+08:00</published><updated>2019-05-06T20:00:00+08:00</updated><id>http://www.helloted.com/others/2019/05/06/debugXcode</id><content type="html" xml:base="http://www.helloted.com/others/2019/05/06/debugXcode/"></content><author><name>Ted</name></author><category term="Others" /><summary type="html"></summary></entry><entry><title type="html">Flutter基础(一)</title><link href="http://www.helloted.com/flutter/2019/03/11/Flutter_3/" rel="alternate" type="text/html" title="Flutter基础(一)" /><published>2019-03-11T20:00:00+08:00</published><updated>2019-03-11T20:00:00+08:00</updated><id>http://www.helloted.com/flutter/2019/03/11/Flutter_3</id><content type="html" xml:base="http://www.helloted.com/flutter/2019/03/11/Flutter_3/">&lt;h4 id=&quot;1自定义控件&quot;&gt;1、自定义控件&lt;/h4&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2019-05-08T17:12:06+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">Dart异步与并发</title><link href="http://www.helloted.com/flutter/2019/03/18/DartAsync/" rel="alternate" type="text/html" title="Dart异步与并发" /><published>2019-03-18T20:00:00+08:00</published><updated>2019-03-18T20:00:00+08:00</updated><id>http://www.helloted.com/flutter/2019/03/18/DartAsync</id><content type="html" xml:base="http://www.helloted.com/flutter/2019/03/18/DartAsync/">&lt;h3 id=&quot;一异步&quot;&gt;一、异步&lt;/h3&gt;
+
+&lt;h4 id=&quot;1单线程执行&quot;&gt;1、单线程执行&lt;/h4&gt;
+
+&lt;p&gt;Dart是单线程执行，也就是说一旦Dart函数开始执行，就会一直持续直到结束，Dart函数不能被其他Dart代码中断。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;注意：Dart命令行应用程序可以通过创建isolate来并行运行代码（Dart Web应用程序目前无法创建其他ioslate，但它们可以创建web worker）。&lt;/p&gt;
+
+  &lt;p&gt;isolate不共享内存,它们就像是通过传递消息相互通信的独立应用程序。 除了应用程序明确在其他isolate或工作程序中运行的代码之外，所有应用程序的代码都在应用程序的main isolate中运行。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Html5 中的web worker&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;传统页面中（HTML5 之前）的 JavaScript 的运行都是以单线程的方式工作的，虽然有多种方式实现了对多线程的模拟（例如：JavaScript 中的 setinterval 方法，setTimeout 方法等），但是在本质上程序的运行仍然是由 JavaScript 引擎以单线程调度的方式进行的。在 HTML5 中引入的工作线程使得浏览器端的 JavaScript 引擎可以并发地执行 JavaScript 代码，从而实现了对浏览器端多线程编程的良好支持。&lt;/p&gt;
+
+  &lt;p&gt;传统上的线程可以解释为轻量级进程，它和进程一样拥有独立的执行控制，一般情况下由操作系统负责调度。而在 HTML5 中的Web worker是这样一种机制，它允许在 Web 程序中并发执行多个 JavaScript 脚本，每个脚本执行流都称为一个线程，彼此间互相独立，并且有浏览器中的 JavaScript 引擎负责管理。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h4 id=&quot;2event-loops-and-queues&quot;&gt;2、Event loops and queues&lt;/h4&gt;
+
+&lt;p&gt;Event loops and queues能够确保同时处理多个图形操作或者事件。event loops的工作就是从event queue内拿一个event然后处理它，一直重复这个操作直到queue里全部处理完毕。event queue内的event有可能是用户输入事件、文件I/O通知、timers等等&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_7/45.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;如下图，Dart应用程序在其main isolate执行应用程序的main()函数时开始执行。 main()退出后，main isolate的线程开始逐个处理应用程序events queues的项目。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_7/44.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;3event处理步骤&quot;&gt;3、Event处理步骤&lt;/h4&gt;
+
+&lt;p&gt;一个Dart应用程序只有一个event loop，但是有两个Queue：event queue和microtask queue:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Event queue:包含所有的外部事件，I/O、用户交互事件、绘制事件、timers、两个isolates之间的消息等等&lt;/li&gt;
+  &lt;li&gt;Microtask queue:存在的必要是因为事件处理代码有时需要稍后完成任务，但在将控制权返回给event loop之前(处理下一个事件之前)。例如，当可观察对象发生更改时，它会将多个突变更改组合在一起并以异步方式报告它们。 Microtask queue允许可观察对象在DOM显示不一致状态之前报告这些突变变化。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Event queue包含来自Dart和系统中其他的事件。 目前，Microtask queue仅包含源自Dart代码的内容。&lt;/p&gt;
+
+&lt;p&gt;如下图所示，当main()退出时，Event loop开始工作。 首先，它按FIFO顺序执行所有microtasks。 然后它出列并处理event queue中的第一项。 然后它重复循环：执行所有microtasks，然后处理event queue中的下一项。 一旦两个队列都为空并且不再需要更多事件，应用程序的embedder（例如浏览器或测试框架）就可以dispose该应用程序。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_7/46.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;注意：当Event Looper正在处理Microtask Queue中的Event时候，Event Queue中的Event就停止了处理了，此时App不能绘制任何图形，不能处理任何鼠标点击，不能处理文件IO等等&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;虽然可以预测task执行的顺序，但您无法准确预测event loop何时将任务从队列中删除。 Dart事件处理系统基于单线程循环; 它不是基于刻度或任何其他类型的时间测量。 例如，在创建延迟任务时，event会在您指定时排队。 但是，直到处理队列中的所有内容（以及Microtask Queue中的每个task）之后，才能处理该事件。&lt;/p&gt;
+
+&lt;h4 id=&quot;4调度任务&quot;&gt;4、调度任务&lt;/h4&gt;
+
+&lt;p&gt;调度任务有两种方式&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;使用Future类，可以将任务加入到Event Queue的队尾&lt;/li&gt;
+  &lt;li&gt;使用scheduleMicrotask函数，将任务加入到Microtask Queue队尾&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;选择合适的队列(一般选择event queue):&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;尽可能使用Future在event queue上安排任务。 使用event queue有助于缩短microtask queue的长度，从而降低微microtask queue使event queue匮乏的可能性。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;如果在处理event queue中的任何项之前绝对必须完成任务，那么通常应该立即执行该函数。 如果不能，则使用scheduleMicrotask()将项添加到microtask queue。 例如，在Web应用程序中使用微任务来避免过早释放js-interop代理或结束IndexedDB事务或事件处理程序。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Future案例&lt;/p&gt;
+
+&lt;div class=&quot;language-dart highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;){&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Future&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;futureTask&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;//  异步任务的函数&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;futueTask execute result:&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;$m&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;//   任务执行完后的子任务&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;//  其中m为上个任务执行完后的返回的结果&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;printLength&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;whenComplete&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;whenTaskCompelete&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;//  当所有任务完成后的回调函数&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;futureTask&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;21&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; 
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;printLength&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Text Length:&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;$length&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;whenTaskCompelete&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Task Complete&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;延迟执行&lt;/p&gt;
+
+&lt;div class=&quot;language-dart highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Future&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;delayed&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Duration&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;seconds:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;futureTask&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//延迟执行1秒，但是除非queue内部是空的，否则不止1秒&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;scheduleMicrotask案例&lt;/p&gt;
+
+&lt;div class=&quot;language-dart highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;async&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;scheduleMicrotask&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;microtask&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+
+&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;microtask&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;){&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;//  doing something&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;二并发&quot;&gt;二、并发&lt;/h3&gt;
+
+&lt;h4 id=&quot;1isolate&quot;&gt;1、isolate&lt;/h4&gt;
+
+&lt;p&gt;如果要运行计算密集型任务，该怎么办？为了使您的应用程序保持响应，您应该将任务放入其自己的isolates或worker。isolate可能在单独的进程或线程中运行，具体取决于Dart实现(目前来看是在线程中运行)。&lt;/p&gt;
+
+&lt;p&gt;isolate是Dart对actor并发模式的实现。运行中的Dart程序由一个或多个actor组成，这些actor也就是Dart概念里面的isolate。isolate是有自己的内存和单线程控制的运行实体。isolate本身的意思是“隔离”，因为isolate之间的内存在逻辑上是隔离的。isolate中的代码是按顺序执行的，任何Dart程序的并发都是运行多个isolate的结果。因为Dart没有共享内存的并发，没有竞争的可能性所以不需要锁，也就不用担心死锁的问题。&lt;/p&gt;
+
+&lt;h4 id=&quot;2isolate特性&quot;&gt;2、isolate特性&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;isolate是类似于线程(thread)但不共享内存的独立运行的worker，是一个独立的Dart程序执行环境。其实默认环境就是一个main isolate；&lt;/li&gt;
+  &lt;li&gt;我们可以看到isolate神似Thread，但实际上两者有本质的区别。操作系统内内的线程之间是可以有共享内存的而isolate没有，这是最为关键的区别。&lt;/li&gt;
+  &lt;li&gt;isolate在它自己的event loop中执行代码，每个事件都可以在该isolate的微任务队列(microtask queue)中执行更小的任务。&lt;/li&gt;
+  &lt;li&gt;由于isolate之间没有共享内存，所以他们之间的通信唯一方式只能是通过Port进行，而且Dart中的消息传递总是异步的。&lt;/li&gt;
+  &lt;li&gt;在Dart语言中，所有的Dart代码都运行在某个isolate中，代码只能使用所属isolate的类和值。不同的isolate可以通过port发送message进行交流；&lt;/li&gt;
+  &lt;li&gt;首字母大写的Isolate代表Isolate对象，小写的isolate代表一个独立的Dart代码执行环境。一个Isolate对象就是一个isolate(执行环境)的引用，通常不是当前代码所在的isolate，也就是说，当你使用Isolate对象时，你的目的应该是控制其他isolate，而不是当前的isolate。 当你要spawn(产生)一个新isolate时，如果操作成功，当前isolate会接收到一个代表新isolate的Isolate对象。&lt;/li&gt;
+  &lt;li&gt;Isolate对象允许其他isolate控制、监听它所代表的isolate的事件循环，例如当这个isolate发生未捕获错误时，可以暂停(pause)此isolate或获取(addErrorListener)错误信息。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;3使用多少个isolates&quot;&gt;3、使用多少个isolates？&lt;/h4&gt;
+
+&lt;p&gt;对于计算密集型任务，通常应该使用尽可能多的isolate来提供可用的CPUs。如果它们纯粹是计算的话，任何额外的isolate都会被浪费掉。但是，如果isolate执行异步调用 - 例如执行I / O  - 那么它们将不会在CPU上花费太多时间，因此拥有比CPU更多的isolate是有意义的。&lt;/p&gt;
+
+&lt;p&gt;如果这是一个适合您的应用程序的良好架构，您还可以使用比CPU更多的isolate。例如，您可以为每个功能使用单独的isolate，或者在需要确保不共享数据时使用。&lt;/p&gt;
+
+&lt;h4 id=&quot;4isolate代码示例&quot;&gt;4、isolate代码示例&lt;/h4&gt;
+
+&lt;div class=&quot;language-dart highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'dart:async'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'dart:isolate'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;receivePort&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ReceivePort&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Isolate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;spawn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;echo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;receivePort&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;sendPort&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;// 'echo'发送的第一个message，是它的SendPort&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sendPort&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;receivePort&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+  &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;msg&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sendReceive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sendPort&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;foo&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'received &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;$msg&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;msg&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sendReceive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sendPort&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;bar&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'received &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;$msg&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;/// 新isolate的入口函数&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;echo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SendPort&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sendPort&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;// 实例化一个ReceivePort 以接收消息&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ReceivePort&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;// 把它的sendPort发送给宿主isolate，以便宿主可以给它发送消息&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;sendPort&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;send&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;sendPort&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;// 监听消息&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;msg&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;msg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;SendPort&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;replyTo&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;msg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;replyTo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;send&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;bar&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;close&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;/// 对某个port发送消息，并接收结果&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;Future&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;sendReceive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SendPort&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;msg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;ReceivePort&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ReceivePort&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;send&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;msg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;sendPort&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]);&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;总结&lt;/p&gt;
+
+&lt;h3 id=&quot;三总结&quot;&gt;三、总结&lt;/h3&gt;
+
+&lt;p&gt;关于event loop:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Dart事件循环执行两个队列里的事件：event队列和microtask队列。&lt;/li&gt;
+  &lt;li&gt;event队列的事件来自dart（future，timer，isolate message等）和系统（用户输入，I/O等）。&lt;/li&gt;
+  &lt;li&gt;目前为止，microtask队列的事件只来自dart。&lt;/li&gt;
+  &lt;li&gt;事件循环会优先清空microtask队列，然后才会去处理event队列。&lt;/li&gt;
+  &lt;li&gt;当两个队列都清空后，dart就会退出。&lt;/li&gt;
+  &lt;li&gt;main方法，来自event队列和microtask队列的所有事件都运行在Dart的main isolate中。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;当你要安排一个task时，请遵守以下规则：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;如果可以，尽量将任务放入event队列中。&lt;/li&gt;
+  &lt;li&gt;使用Future的then方法或whenComplete方法来指定任务顺序。&lt;/li&gt;
+  &lt;li&gt;为了保持你app的可响应性，尽量不要将大计算量的任务放入这两个队列。&lt;/li&gt;
+  &lt;li&gt;大计算量的任务放入额外的isolate中。&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Ted</name></author><category term="Flutter" /><summary type="html">一、异步</summary></entry><entry><title type="html">Flutter基础(三)</title><link href="http://www.helloted.com/flutter/2019/03/11/Flutter_3/" rel="alternate" type="text/html" title="Flutter基础(三)" /><published>2019-03-11T20:00:00+08:00</published><updated>2019-03-11T20:00:00+08:00</updated><id>http://www.helloted.com/flutter/2019/03/11/Flutter_3</id><content type="html" xml:base="http://www.helloted.com/flutter/2019/03/11/Flutter_3/">&lt;h4 id=&quot;1自定义控件&quot;&gt;1、自定义控件&lt;/h4&gt;
 
 &lt;div class=&quot;language-dart highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;CustomComponent&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;StatefulWidget&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;IconData&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;icons&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
