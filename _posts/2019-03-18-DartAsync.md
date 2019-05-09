@@ -47,11 +47,39 @@ Event queue包含来自Dart和系统中其他的事件。 目前，Microtask que
 
 ![](/img/Simple_7/46.png)
 
+这就是app运行时一个isolate中的正常运行流程。
+
+1. 启动app。
+2. 首先执行main方法。
+3. 在main方法执行完后，开始处理microtask queue，从中取出microtask执行，直到microtask queue为空。这里可以看到event loop在运行时是优先处理microtask queue的。
+4. 当microtask queue为空才会开始处理event queue，如果event queue不为空则从中取出一个event执行。这里要注意的是event queue并不会一直遍历完，而是一次取出一个event执行，执行完后就回到前面去重新判断microtask queue是否为空。所以这里可以看到microtask queue存在的一个重要意义是由它的运行时机决定的，当我们想要在处理当前的event之后，并且在处理下一个event之前做一些事情，或者我们想要在处理所有event之前做一些事情，这时候可以将这些事情放到microtask queue中。
+5. 当microtask queue和event queue都为空时，app可以正常退出。
+
 **注意：当Event Looper正在处理Microtask Queue中的Event时候，Event Queue中的Event就停止了处理了，此时App不能绘制任何图形，不能处理任何鼠标点击，不能处理文件IO等等**
 
 虽然可以预测task执行的顺序，但您无法准确预测event loop何时将任务从队列中删除。 Dart事件处理系统基于单线程循环; 它不是基于刻度或任何其他类型的时间测量。 例如，在创建延迟任务时，event会在您指定时排队。 但是，直到处理队列中的所有内容（以及Microtask Queue中的每个task）之后，才能处理该事件。
 
-#### 4、调度任务
+#### 4、async与await
+
+在Dart中我们可以通过async关键字来声明一个异步方法，异步方法会在调用后立即返回给调用者一个Future对象，而异步方法的方法体将会在后续被执行（应该也是通过协程的方式实现）。在异步方法中可以使用await表达式挂起该异步方法中的某些步骤从而实现等待某步骤完成的目的，await表达式的表达式部分通常是一个Future类型，即在await处挂起后交出代码的执行权限直到该Future完成。在Future完成后将包含在Future内部的数据类型作为整个await表达式的返回值，接着异步方法继续从await表达式挂起点后继续执行
+
+- async修饰的异步方法需要声明返回一个Future类型，如果方法体内没有主动的返回一个Future类型，系统会将返回值包含到一个Future中返回。
+- await表达式的表达式部分需要返回一个Future对象。
+- await表达式需要在一个async修饰的方法中使用才会生效。
+
+```dart
+loadData() async {
+  String dataURL = "https://www.test.url";
+  http.Response response = await http.get(dataURL);
+  setState(() {
+    widgets = JSON.decode(response.body);
+  });
+}
+```
+
+这里首先将loadData方法声明为异步方法，然后用await表达式在http.get(dataURL)处挂起等待，http是Dart提供的一个网络请求库。在请求完成时会返回一个Future<http.Response>对象，所以await表达式的表达式部分返回的是一个Future<http.Response>类型，整个await表达式返回的就是一个http.Response类型。接下来通过setState改变一个StatefulWidget的State来触发系统重新调用其build方法更新Widget。
+
+#### 5、调度任务
 
 调度任务有两种方式
 
@@ -104,7 +132,7 @@ void microtask(){
 }
 ```
 
-### 二、并发
+### 二、isolate
 
 #### 1、isolate
 
