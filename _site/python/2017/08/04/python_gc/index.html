@@ -16,9 +16,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter">
 
-    <title>For-Else - Helloted Blog</title>
+    <title>Python垃圾回收机制 - Helloted Blog</title>
 
-    <link rel="canonical" href="http://www.helloted.com/python/2017/08/02/python_for_else/">
+    <link rel="canonical" href="http://www.helloted.com/python/2017/08/04/python_gc/">
 
     <link rel="shortcut icon" href="/img/favicon.ico">
    
@@ -111,11 +111,11 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <div class="post-heading">
-                    <h1>For-Else</h1>
+                    <h1>Python垃圾回收机制</h1>
                     
-                    <h2 class="subheading">Python进阶之For-Else</h2>
+                    <h2 class="subheading">Python进阶之垃圾回收机制</h2>
                     
-                    <span class="meta">Posted by Ted on August 2, 2017</span>
+                    <span class="meta">Posted by Ted on August 4, 2017</span>
                 </div>
             </div>
         </div>
@@ -128,57 +128,39 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
 
-				<p>循环是任何语言的组成部分。 同样，for循环是Python的重要组成部分。</p>
+				<p>Python GC主要使用引用计数（reference counting）来跟踪和回收垃圾。在引用计数的基础上，通过“标记-清除”（mark and sweep）解决容器对象可能产生的循环引用问题，通过“分代回收”（generation collection）以空间换时间的方法提高垃圾回收效率。</p>
 
-<p>这是我们常用的一种循环：</p>
+<h4 id="1引用计数">1、引用计数</h4>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fruits</span> <span class="o">=</span> <span class="p">[</span><span class="s">'apple'</span><span class="p">,</span> <span class="s">'banana'</span><span class="p">,</span> <span class="s">'mango'</span><span class="p">]</span>
-<span class="k">for</span> <span class="n">fruit</span> <span class="ow">in</span> <span class="n">fruits</span><span class="p">:</span>
-    <span class="k">print</span><span class="p">(</span><span class="n">fruit</span><span class="o">.</span><span class="n">capitalize</span><span class="p">())</span>
+<p>PyObject是每个对象必有的内容，其中ob_refcnt就是做为引用计数。当一个对象有新的引用时，它的ob_refcnt就会增加，当引用它的对象被删除，它的ob_refcnt就会减少.引用计数为0时，该对象生命就结束了。</p>
 
-<span class="c1"># Output: Apple
-#         Banana
-#         Mango
-</span></code></pre></div></div>
+<p>优点</p>
 
-<h4 id="else语句">else语句</h4>
+<ul>
+  <li>简单</li>
+  <li>实时性</li>
+</ul>
 
-<p>For循环也有一个我们大多数人都不熟悉的<code class="highlighter-rouge">else</code>子句。<code class="highlighter-rouge"> else</code>子句在循环正常完成时执行。 这意味着循环没有遇到任何<code class="highlighter-rouge">break</code>。</p>
+<p>缺点:</p>
 
-<p>常见的构造是运行一个循环并搜索一个项目。 如果找到该项目，我们使用<code class="highlighter-rouge">break</code>来断开循环。 有两种情况下，循环可能会结束：第一个是找到该项目并遇到<code class="highlighter-rouge">break</code>，第二种情况是循环结束。 现在我们可能想知道哪一个是循环完成的原因： 一种方法是设置一个标志，然后在循环结束时检查它。 另一个是使用else子句。</p>
+<ul>
+  <li>维护引用计数消耗资源</li>
+  <li>循环引用</li>
+</ul>
 
-<p><code class="highlighter-rouge">for/else</code> 循环的基本结构:</p>
+<h4 id="2标记-清除机制">2、标记-清除机制</h4>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">container</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">search_something</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
-        <span class="c1"># Found it!
-</span>        <span class="n">process</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-        <span class="k">break</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="c1"># Didn't find anything..
-</span>    <span class="n">not_found_in_container</span><span class="p">()</span>
-</code></pre></div></div>
+<p>基本思路是先按需分配，等到没有空闲内存的时候从寄存器和程序栈上的引用出发，遍历以对象为节点、以引用为边构成的图，把所有可以访问到的对象打上标记，然后清扫一遍内存空间，把所有没标记的对象释放。</p>
 
-<p>考虑一下我从官方文档中得到的这个简单的例子：</p>
+<h4 id="3分代技术">3、分代技术</h4>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">print</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="s">'equals'</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s">'*'</span><span class="p">,</span> <span class="n">n</span><span class="o">/</span><span class="n">x</span><span class="p">)</span>
-            <span class="k">break</span>
-</code></pre></div></div>
+<p>分代回收的整体思想是：将系统中的所有内存块根据其存活时间划分为不同的集合，每个集合就成为一个“代”，垃圾收集频率随着“代”的存活时间的增大而减小，存活时间通常利用经过几次垃圾回收来度量。</p>
 
-<p>它找到2到10之间的数字的合数。现在是比较有意思的部分。 我们可以添加一个额外的块来捕捉质数并告诉我们：</p>
+<p>Python默认定义了三代对象集合，索引数越大，对象存活时间越长。</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">print</span><span class="p">(</span> <span class="n">n</span><span class="p">,</span> <span class="s">'equals'</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s">'*'</span><span class="p">,</span> <span class="n">n</span><span class="o">/</span><span class="n">x</span><span class="p">)</span>
-            <span class="k">break</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="c1"># loop fell through without finding a factor
-</span>        <span class="k">print</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="s">'is a prime number'</span><span class="p">)</span>
-</code></pre></div></div>
+<p>举例：</p>
+
+<p>当某些内存块M经过了3次垃圾收集的清洗之后还存活时，我们就将内存块M划到一个集合A中去，而新分配的内存都划分到集合B中去。当垃圾收集开始工作时，大多数情况都只对集合B进行垃圾回收，而对集合A进行垃圾回收要隔相当长一段时间后才进行，这就使得垃圾收集机制需要处理的内存少了，效率自然就提高了。在这个过程中，集合B中的某些内存块由于存活时间长而会被转移到集合A中，当然，集合A中实际上也存在一些垃圾，这些垃圾的回收会因为这种分代的机制而被延迟。</p>
 
 
                 <hr>
@@ -186,12 +168,12 @@
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/python/2017/08/02/python_onew_liner/" data-toggle="tooltip" data-placement="top" title="小功能">&larr; 上一篇</a>
+                        <a href="/python/2017/08/02/python_for_else/" data-toggle="tooltip" data-placement="top" title="For-Else">&larr; 上一篇</a>
                     </li>
                     
                     
                     <li class="next">
-                        <a href="/python/2017/08/04/python_gc/" data-toggle="tooltip" data-placement="top" title="Python垃圾回收机制">下一篇 &rarr;</a>
+                        <a href="/%E5%9F%BA%E7%A1%80/2017/08/08/designPatten/" data-toggle="tooltip" data-placement="top" title="设计模式">下一篇 &rarr;</a>
                     </li>
                     
                 </ul>
