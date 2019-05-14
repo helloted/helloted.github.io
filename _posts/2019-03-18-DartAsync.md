@@ -2,7 +2,7 @@
 layout:     post
 category:   Flutter
 title:      "Dart异步与并发"
-subtitle:   "自定义控件"
+subtitle:   "Dart异步与并发"
 date:       2019-03-18 12:00:00
 author:     "Ted"
 header-img: "img/default.jpg"
