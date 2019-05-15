@@ -191,6 +191,45 @@
 
 <p>这么做是没有必要的，首先<code class="highlighter-rouge">Widget</code>是一个很轻量级的对象，它的创建和回收并不会占用很多资源，真正占用资源的是<code class="highlighter-rouge">Element</code>和<code class="highlighter-rouge">RenderObject</code>。其次<code class="highlighter-rouge">dart</code> 的GC机制能够快速有效的进行对象回收，不用担心<code class="highlighter-rouge">Widget</code>创建过多导致<code class="highlighter-rouge">OOM</code>出现。</p>
 
+<h3 id="三dart-garbage-collector">三、Dart Garbage Collector</h3>
+
+<p>Dart的垃圾回收是分代的：年轻代和老年代</p>
+
+<h4 id="1调度">1、调度</h4>
+
+<p>为了最小化GC对应用程序和UI性能的影响（因为dart的GC有一种类似于JVM中stop the world的机制，导致APP对事件无响应、UI无法刷新），GC与Flutter engine建立联系，当engine检测到应用程序处于空闲状态且没有用户交互时，它会发出通知。这样就使得GC有了收集的窗口从而不影响性能。</p>
+
+<p>GC还可以在这些空闲的窗口期运行滑动压缩，从而通过减少内存碎片来最小化内存开销。</p>
+
+<h4 id="2年轻代">2、年轻代</h4>
+
+<p>这个阶段旨在清除寿命较短的短暂对象，例如stateless widgets。虽然它是阻塞的，但它比老年代mark-sweep快得多，并且当与调度结合使用时，几乎不会影响程序的运行。</p>
+
+<p>实际上，对象被分配给内存中的连续空间，并且在创建对象时，它们被分配下一个可用空间，直到分配的内存被填充完毕。 <code class="highlighter-rouge">dart</code>使用指针碰撞的方式来给这些对象分配空间(之所以没有空闲列表的方法是因为<code class="highlighter-rouge">dart</code>在GC之后都会采用滑动压缩的方式来把内存碎片清除掉)，这个过程非常迅速。</p>
+
+<p>分配给新对象的连续空间由两部分组成。任何时候只使用一半：一半处于活动状态(活动空间)，另一半处于非活动状态(非活动空间)。新生成对象在活动空间那一半中分配，一旦那一半填充完毕，不可回收对象将被从活动空间复制到非活动空间(忽略可被回收的对象)。这样，非活动空间转变变为活动状态，开始为新对象分配内存，并重复该过程。</p>
+
+<p>要确定哪些对象是否可被回收，收集器将以root对象（例如堆栈变量）开始，并检查它们引用的对象。然后把引用的对象移动到另一半空间。在那里它检查这些移动的对象指向的内容，并移动这些引用的对象。如此反复，直到移动所有活动对象到另一半空间。始终没有被引用的对象将被回收。</p>
+
+<p><img src="/img/Simple_7/50.png" alt="img" /></p>
+
+<h4 id="3老年代并行标记和并发扫描">3、老年代(并行标记和并发扫描)</h4>
+
+<p>当对象经历过一定次数的GC仍然存在，或者其生命周期较长(个人猜测类似于<code class="highlighter-rouge">element</code>和<code class="highlighter-rouge">RenderObject</code>这种需要多次复用，可变且创建比较耗费性能)，将其放入老年代区域中。老年代采用标记整理的方法来回收对象。</p>
+
+<p>这种GC技术有两个阶段：首先遍历对象图，并标记仍在使用的对象。在第二阶段期间，扫描整个存储器，并且回收未标记的任何对象。然后清除所有标志。</p>
+
+<p><img src="/img/Simple_7/51.png" alt="img" /></p>
+
+<p>在标记的时候，该线程中内存区域是处于不可修改的状态，类似于JVM中<code class="highlighter-rouge">stop the world</code>，所以这个时候可能会导致<code class="highlighter-rouge">ANR</code>(只是类似于<code class="highlighter-rouge">ANR</code>的表现，其产生原因还是不一样的)，但是由于<code class="highlighter-rouge">dart</code>优秀的<code class="highlighter-rouge">schedule</code>机制和老年代GC频率很低的原因，基本上不会出现这个问题。</p>
+
+<p>需要注意的是，如果APP不支持弱年代假设(即大多数对象的生命期都很短；从年老对象到年轻对象的引用非常少)，上面的分代设计就不那么有效了，但是考虑到Flutter中的<code class="highlighter-rouge">Widget</code>、<code class="highlighter-rouge">Element</code>、<code class="highlighter-rouge">RenderObject</code>关系，我们不需要担心这个问题。</p>
+
+<h4 id="4根据ioslate特性来优化">4、根据ioslate特性来优化</h4>
+
+<p>与JVM内存模型不同的是，<code class="highlighter-rouge">dart</code>中每个<code class="highlighter-rouge">isolate</code>都有自己的独立的堆栈内存空间，其各自的GC不会影响到其他<code class="highlighter-rouge">isolate</code>的。所以我们可以通过把部分占用内存空间较大且生命周期较短的对象方法其他<code class="highlighter-rouge">isolate</code>中，这样即使另外一个<code class="highlighter-rouge">isolate</code> GC了，并不会对我们显示UI的<code class="highlighter-rouge">isolate</code>造成影响。</p>
+
+
 
                 <hr>
 
