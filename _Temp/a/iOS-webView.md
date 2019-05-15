@@ -30,6 +30,11 @@ newObj.readyEventName = @"GameJoyRoomReady";
 
 ```objc
 
+// 通过聊天页面打开的网页，如果支持分享的话，需要通过外部来设置分享数据源
+- (void)setLinksItem:(ShareMessageLinksItem *)item shareTypes:(NSArray *)shareTypes;
+
+#pragma mark - WebView Js Interfaces
+
 /** 重新登录主账号
  */
 - (void)relogin;
@@ -377,5 +382,40 @@ newObj.readyEventName = @"GameJoyRoomReady";
 ```
 [self _setWebViewCookie:accountId key:@"unionid" domain:@".qq.com"];
 [self _setWebViewCookie:accountId key:@"unionid" domain:@"qq.com"];
+```
+
+#### 4、H5游戏一个Crash的解决方案
+
+> libGPUSupportMercury.dylib  _gpus_ReturnNotPermittedKillClient
+
+Open GL在渲染时，如果按Home键让App进入后台，会导致crash。原因是禁止在后台渲染GL。
+
+解决方案就是在App进入后台的时通知停止渲染，具体如下
+
+由H5端调用gamehelper.needAddApplicationCycleObserver()来开启监听，然后监听gamehelper_onresume()表示需要暂停，gamehelper_onresume()表示回复
+
+案例:
+
+```javascript
+    function gamehelper_onpause(){
+        if (cc && cc.director) {
+            cc.director.stopAnimation();
+        }
+    }
+    function gamehelper_onresume() {
+        if (cc && cc.director) {
+            cc.director.startAnimation();
+        }
+    }
+    var total = 0;
+    var timer = setInterval(function(){
+        if (typeof(GameHelper) != 'undefined' && typeof(GameHelper.needAddApplicationCycleObserver) != 'undefined') {
+            GameHelper.needAddApplicationCycleObserver('gamehelper_onresume', 'gamehelper_onpause');
+            clearInterval(timer);
+        } else if (total > 10000) {
+            clearInterval(timer);
+        }
+        total += 200;
+    }, 200);
 ```
 

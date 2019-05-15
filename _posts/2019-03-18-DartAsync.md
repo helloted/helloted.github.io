@@ -148,7 +148,7 @@ isolate是Dart对actor并发模式的实现。运行中的Dart程序由一个或
 - 由于isolate之间没有共享内存，所以他们之间的通信唯一方式只能是通过Port进行，而且Dart中的消息传递总是异步的。
 - 在Dart语言中，所有的Dart代码都运行在某个isolate中，代码只能使用所属isolate的类和值。不同的isolate可以通过port发送message进行交流；
 - 首字母大写的Isolate代表Isolate对象，小写的isolate代表一个独立的Dart代码执行环境。一个Isolate对象就是一个isolate(执行环境)的引用，通常不是当前代码所在的isolate，也就是说，当你使用Isolate对象时，你的目的应该是控制其他isolate，而不是当前的isolate。 当你要spawn(产生)一个新isolate时，如果操作成功，当前isolate会接收到一个代表新isolate的Isolate对象。
-- Isolate对象允许其他isolate控制、监听它所代表的isolate的事件循环，例如当这个isolate发生未捕获错误时，可以暂停(pause)此isolate或获取(addErrorListener)错误信息。
+- isolate对象允许其他isolate控制、监听它所代表的isolate的事件循环，例如当这个isolate发生未捕获错误时，可以暂停(pause)此isolate或获取(addErrorListener)错误信息。
 
 #### 3、使用多少个isolates？
 
@@ -156,7 +156,13 @@ isolate是Dart对actor并发模式的实现。运行中的Dart程序由一个或
 
 如果这是一个适合您的应用程序的良好架构，您还可以使用比CPU更多的isolate。例如，您可以为每个功能使用单独的isolate，或者在需要确保不共享数据时使用。
 
-#### 4、isolate代码示例
+#### 4、JVM vs Dart VM
+
+与JVM内存模型不同的是，`dart`中每个`isolate`都有自己的独立的堆栈内存空间，其各自的GC不会影响到其他`isolate`的。所以我们可以通过把部分占用内存空间较大且生命周期较短的对象方法其他`isolate`中，这样即使另外一个`isolate` GC了，并不会对我们显示UI的`isolate`造成影响。
+
+![](/img/Simple_7/49.jpg)
+
+#### 5、isolate代码示例
 
 ```dart
 import 'dart:async';
@@ -200,8 +206,6 @@ Future sendReceive(SendPort port, msg) {
 }
 
 ```
-
-总结
 
 ### 三、总结
 
