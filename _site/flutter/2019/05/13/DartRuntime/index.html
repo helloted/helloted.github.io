@@ -219,7 +219,7 @@
 
 <p>这种GC技术有两个阶段：首先遍历对象图，并标记仍在使用的对象。在第二阶段期间，扫描整个存储器，并且回收未标记的任何对象。然后清除所有标志。</p>
 
-<p><img src="/img/Simple_7/51.png" alt="img" /></p>
+<p><img src="/img/Simple_7/51.jpg" alt="img" /></p>
 
 <p>在标记的时候，该线程中内存区域是处于不可修改的状态，类似于JVM中<code class="highlighter-rouge">stop the world</code>，所以这个时候可能会导致<code class="highlighter-rouge">ANR</code>(只是类似于<code class="highlighter-rouge">ANR</code>的表现，其产生原因还是不一样的)，但是由于<code class="highlighter-rouge">dart</code>优秀的<code class="highlighter-rouge">schedule</code>机制和老年代GC频率很低的原因，基本上不会出现这个问题。</p>
 

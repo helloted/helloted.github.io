@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2019-05-15T16:12:36+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">Dart内存机制</title><link href="http://www.helloted.com/flutter/2019/05/13/DartRuntime/" rel="alternate" type="text/html" title="Dart内存机制" /><published>2019-05-13T20:00:00+08:00</published><updated>2019-05-13T20:00:00+08:00</updated><id>http://www.helloted.com/flutter/2019/05/13/DartRuntime</id><content type="html" xml:base="http://www.helloted.com/flutter/2019/05/13/DartRuntime/">&lt;h3 id=&quot;一移动端的内存回收机制&quot;&gt;一、移动端的内存回收机制&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2019-05-18T15:26:08+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">Dart内存机制</title><link href="http://www.helloted.com/flutter/2019/05/13/DartRuntime/" rel="alternate" type="text/html" title="Dart内存机制" /><published>2019-05-13T20:00:00+08:00</published><updated>2019-05-13T20:00:00+08:00</updated><id>http://www.helloted.com/flutter/2019/05/13/DartRuntime</id><content type="html" xml:base="http://www.helloted.com/flutter/2019/05/13/DartRuntime/">&lt;h3 id=&quot;一移动端的内存回收机制&quot;&gt;一、移动端的内存回收机制&lt;/h3&gt;
 
 &lt;p&gt;GC(Garbage Collection)，垃圾回收机制，简单地说就是程序中及时处理废弃不用的内存对象的机制，防止内存中废弃对象堆积过多造成内存泄漏&lt;/p&gt;
 
@@ -89,7 +89,7 @@
 
 &lt;p&gt;这种GC技术有两个阶段：首先遍历对象图，并标记仍在使用的对象。在第二阶段期间，扫描整个存储器，并且回收未标记的任何对象。然后清除所有标志。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/51.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/img/Simple_7/51.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;在标记的时候，该线程中内存区域是处于不可修改的状态，类似于JVM中&lt;code class=&quot;highlighter-rouge&quot;&gt;stop the world&lt;/code&gt;，所以这个时候可能会导致&lt;code class=&quot;highlighter-rouge&quot;&gt;ANR&lt;/code&gt;(只是类似于&lt;code class=&quot;highlighter-rouge&quot;&gt;ANR&lt;/code&gt;的表现，其产生原因还是不一样的)，但是由于&lt;code class=&quot;highlighter-rouge&quot;&gt;dart&lt;/code&gt;优秀的&lt;code class=&quot;highlighter-rouge&quot;&gt;schedule&lt;/code&gt;机制和老年代GC频率很低的原因，基本上不会出现这个问题。&lt;/p&gt;
 
