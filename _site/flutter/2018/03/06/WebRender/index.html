@@ -16,9 +16,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter">
 
-    <title>Flutter UI原理 - Helloted Blog</title>
+    <title>Web渲染和虚拟Dom - Helloted Blog</title>
 
-    <link rel="canonical" href="http://www.helloted.com/flutter/2019/05/18/FlutterUI/">
+    <link rel="canonical" href="http://www.helloted.com/flutter/2018/03/06/WebRender/">
 
     <link rel="shortcut icon" href="/img/favicon.ico">
    
@@ -111,11 +111,11 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <div class="post-heading">
-                    <h1>Flutter UI原理</h1>
+                    <h1>Web渲染和虚拟Dom</h1>
                     
-                    <h2 class="subheading">Flutter UI原理</h2>
+                    <h2 class="subheading">Web渲染过程以及虚拟Dom的优势</h2>
                     
-                    <span class="meta">Posted by Ted on May 18, 2019</span>
+                    <span class="meta">Posted by Ted on March 6, 2018</span>
                 </div>
             </div>
         </div>
@@ -128,9 +128,7 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
 
-				<h3 id="一web前端渲染原理">一、Web前端渲染原理</h3>
-
-<h4 id="1初次渲染">1、初次渲染</h4>
+				<h4 id="1web渲染">1、Web渲染</h4>
 
 <p>前端渲染大致分为5步：</p>
 
@@ -146,7 +144,7 @@
 
 <p><img src="/img/Simple_7/54.png" alt="img" /></p>
 
-<h4 id="2更新dom">2、更新Dom</h4>
+<h4 id="2更新dom造成的问题">2、更新Dom造成的问题</h4>
 
 <p>原生JS或JQ操作更新DOM时，浏览器会从构建DOM树开始从头到尾执行一遍流程。在一次操作中，我需要更新10个DOM节点，浏览器收到第一个DOM请求后并不知道还有9次更新操作，因此会马上执行流程，最终执行10次。例如，第一次计算完，紧接着下一个DOM更新请求，这个节点的坐标值就变了，前一次计算为无用功。计算DOM节点坐标值等都是白白浪费的性能。即使计算机硬件一直在迭代更新，操作DOM的代价仍旧是昂贵的，频繁操作还是会出现页面卡顿，影响用户体验。</p>
 
@@ -154,53 +152,36 @@
 
 <p>虚拟DOM就是为了解决浏览器性能问题而被设计出来的。如前，若一次操作中有10次更新DOM的动作，虚拟DOM不会立即操作DOM，而是将这10次更新的diff内容保存到本地一个JS对象中，最终将这个JS对象一次性attch到DOM树上，再进行后续操作，避免大量无谓的计算量。所以，用JS对象模拟DOM节点的好处是，页面的更新可以先全部反映在JS对象(虚拟DOM)上，操作内存中的JS对象的速度显然要更快，等更新完成后，再将最终的JS对象映射成真实的DOM，交由浏览器去绘制。</p>
 
-<p>Vue的编译器在编译模板之后，会把这些模板编译成一个渲染函数。而函数被调用的时候就会渲染并且返回一个虚拟DOM的树。这个树非常轻量，它的职责就是描述当前界面所应处的状态。当我们有了这个虚拟的树之后，再交给一个patch函数，负责把这些虚拟DOM真正施加到真实的DOM上。在这个过程中，Vue有自身的响应式系统来侦测在渲染过程中所依赖到的数据来源。在渲染过程中，侦测到的数据来源之后，之后就可以精确感知数据源的变动。到时候就可以根据需要重新进行渲染。当重新进行渲染之后，会生成一个新的树，将新树与旧树进行对比，就可以最终得出应施加到真实DOM上的改动。最后再通过patch函数施加改动。</p>
-
-<p><img src="/img/Simple_7/55.jpeg" alt="img" /></p>
-
-<p>总而言之，在Vue中，每一个组件都精确地知道自己是否需要重绘，系统准确地知道哪些组件实际上需要重新渲染，在不需要手动优化的基础上更小粒度上更新DOM。</p>
-
-<h3 id="二万物皆widget">二、万物皆Widget</h3>
-
-<h4 id="1widget">1、Widget</h4>
-
-<p>Widgets是Flutter App用户交互的基础构成，每个widget代表的是用户交互的一部分(不可变的)，不像其他frameworks会分开views，viewControllers，layout或者其他属性，Flutter有一个统一的对象模型：widget。</p>
-
-<p>Widget可以定义：</p>
+<h4 id="4react的虚拟dom">4、React的虚拟Dom</h4>
 
 <ul>
-  <li>一个控件元素(比如button或者menu)</li>
-  <li>一个样式元素(比如字体或者颜色)</li>
-  <li>一个布局(比如padding)</li>
-  <li>等等…</li>
+  <li>React通过component来构建整个页面，每个大的component可以由很多小的component组合构成。每个component有着自己的生命周期。</li>
+  <li>State是每个component内部的动态数据，也是由开发者维护管理的页面数据。凡是页面需要动态显示的地方都会有state来负责数据存储。</li>
 </ul>
 
-<p>Widgets基于组合形成层次结构。 每个wiget都嵌套在其内部，并从其父级继承属性。 没有单独的“application”对象。 取而代之的是，root widget担任此角色。</p>
+<p>当state变化了，调用<code class="highlighter-rouge">setState</code>的时候，component才会带着新的state重新渲染页面</p>
 
-<p>您可以通过将层次结构中的widget替换为另一个widget来响应事件，例如用户交互。 然后，框架比较新旧widget并有效地更新用户界面。</p>
+<p>Virtual DOM其实就是在这时发挥作用的，它是用javascript写的一个拥有DOM层级关系的一个数据结构。可以想成一个简化的DOM。当state变化时，component会重新触发render，那么Virtual DOM也会变化。 Virtual DOM会根据Diff算法来计算出哪里有变化，然后把新的Virtual DOM转换为真实的DOM，触发浏览器的渲染。</p>
 
-<p>Widgets本身通常由许多小的，单一用途的Widget组成，这些Widgets组合起来产生强大的效果。 例如，Container是一个常用的Widget，由几个负责布局，绘制，定位和大小调整的小部件组成。 具体来说，Container由LimitedBox，ConstrainedBox，Align，Padding，DecoratedBox和Transform小部件组成。 您可以用新颖的方式组合这些以及其他简单的小部件，而不是将Container子类化以生成自定义效果。</p>
+<p>那这时就有一个问题，如果我只是更改一个<code class="highlighter-rouge">&lt;label&gt;</code>标签的值，那我直接DOM操作是不是更快一点呢？</p>
 
-<p>类层次结构浅而宽，以最大化可能的组合数。</p>
+<p>答案是肯定的，因为只修改一个值，React还要经过render，Diff算法，DOM操作。这显然要比直接DOM修改一个节点的值要慢。</p>
 
-<p><img src="/img/Simple_7/52.png" alt="img" /></p>
+<p>那么Virtual DOM的优势在哪里呢？</p>
 
-<p>您还可以通过将Widget与其他Widget组合来控制Widget的布局。 例如，要将Widget居中，请将其包含在 Center Widegt中。 有填充，对齐，行，列和网格的Widget。 这些布局Widget没有自己的可视化表示。 相反，他们唯一的目的是控制另一个Widget布局的某些方面。 要了解Widget以某种方式呈现的原因，检查相邻Widget通常很有帮助。</p>
+<p>试想，在一个Component中，开发者要一次修改state中的很多属性，属性可能是对象，数组，每一个属性都会对应到页面中的一个节点的值。</p>
 
-<h4 id="2layer层级">2、Layer层级</h4>
+<p>那么在这个时候，如果我们直接用DOM操作就显得不那么方便与高效了，比如根据state要更改一个样式，还有要根据state更改页面结构等等。</p>
 
-<p><img src="/img/Simple_7/53.png" alt="img" /></p>
+<p>不同的直接DOM操作会触发浏览器不同的repaint和reflow，这时，Virtual DOM的优势就来了。</p>
 
-<h4 id="3widget与element">3、Widget与Element</h4>
+<p>在用<code class="highlighter-rouge">setState</code>顺利触发了component的render后，react会对Virtual DOM进行操作，而这些操作并不会触发浏览器的reflow和repaint，因为Virtual DOM它只是存在内存中的一个有着DOM层级关系的数据而已。 当最终形成了新的Virtual DOM后，转换成真实的DOM这一步才会触发浏览器的reflow和repaint。这是不是就突显出Virtual DOM的优势了。</p>
 
-<p>在Flutter中，Widget的功能是“描述一个UI元素的配置数据”，它就是说，Widget其实并不是表示最终绘制在设备屏幕上的显示元素，而只是显示元素的一个配置数据。实际上，Flutter中真正代表屏幕上显示元素的类是<code class="highlighter-rouge">Element</code>，也就是说Widget只是描述<code class="highlighter-rouge">Element</code>的一个配置，有关<code class="highlighter-rouge">Element</code>的详细介绍我们将在本书后面的高级部分深入介绍，读者现在只需要知道，Widget只是UI元素的一个配置数据，并且一个Widget可以对应多个<code class="highlighter-rouge">Element</code>，这是因为同一个Widget对象可以被添加到UI树的不同部分，而真正渲染时，UI树的每一个<code class="highlighter-rouge">Element</code>节点都会对应一个Widget对象。总结一下：</p>
+<p>它优化了触发浏览器reflow和repaint的步骤，把众多页面节点改动集中到一次来进行触发。</p>
 
-<ul>
-  <li>Widget实际上就是Element的配置数据，Widget树实际上是一个配置树，而真正的UI渲染树是由Element构成；不过，由于Element是通过Widget生成，所以它们之间有对应关系，所以在大多数场景，我们可以宽泛地认为Widget树就是指UI控件树或UI渲染树。</li>
-  <li>一个Widget对象可以对应多个Element对象。这很好理解，根据同一份配置（Widget），可以创建多个实例（Element）。</li>
-</ul>
+<p>简单来说，<strong>它减少了同一时间内的页面多处内容修改所触发的浏览器reflow和repaint的次数，可能把多个不同的DOM操作集中减少到了几次甚至一次，优化了触发浏览器reflow和repaint的次数。</strong>。</p>
 
-<h3 id="三层级树">三、层级树</h3>
+<p>这才是React真正高效的地方，而且高效也是分情况的，绝不是网上说的在某个Diff时间片内，把DOM操作收集起来，集中到1次，变更到Virtual DOM上。 当一个component只有一个地方要更改时，显然直接DOM操作要比React的这一套要有效率的多。</p>
 
 
 
@@ -209,9 +190,13 @@
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/flutter/2019/05/13/DartRuntime/" data-toggle="tooltip" data-placement="top" title="Dart内存机制">&larr; 上一篇</a>
+                        <a href="/flutter/2018/02/25/Flutter_2/" data-toggle="tooltip" data-placement="top" title="Flutter基础(二)">&larr; 上一篇</a>
                     </li>
                     
+                    
+                    <li class="next">
+                        <a href="/%E5%9F%BA%E7%A1%80/2018/03/11/OpenCV_1/" data-toggle="tooltip" data-placement="top" title="OpenCV学习简介">下一篇 &rarr;</a>
+                    </li>
                     
                 </ul>
 
