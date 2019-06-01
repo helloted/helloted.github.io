@@ -8,37 +8,7 @@ author:     "Ted"
 header-img: "img/default.jpg"
 ---
 
-### 一、Web前端渲染原理
-
-#### 1、初次渲染
-
-前端渲染大致分为5步：
-
-**创建DOM树——创建StyleRules——创建Render树——布局Layout——绘制Painting**
-
-1. 用HTML分析器，分析HTML元素，**构建一颗DOM树**(标记化和树构建)。
-2. 用CSS分析器，分析CSS文件和元素上的inline样式，生成页面的样式表。
-3. 将DOM树和样式表，关联起来，构建一颗Render树(这一过程又称为Attachment)。每个DOM节点都有**attach方法，接受样式信息**，返回一个render对象(又名renderer)。这些render对象最终会被构建成一颗Render树。
-4. 有了Render树，浏览器开始布局，为每个Render树上的节点确定一个在显示屏上出现的精确坐标。
-5. Render树和节点显示坐标都有了，就调用每个节点**paint方法，把它们绘制**出来。 
-
-![img](/img/Simple_7/54.png)
-
-#### 2、更新Dom
-
-原生JS或JQ操作更新DOM时，浏览器会从构建DOM树开始从头到尾执行一遍流程。在一次操作中，我需要更新10个DOM节点，浏览器收到第一个DOM请求后并不知道还有9次更新操作，因此会马上执行流程，最终执行10次。例如，第一次计算完，紧接着下一个DOM更新请求，这个节点的坐标值就变了，前一次计算为无用功。计算DOM节点坐标值等都是白白浪费的性能。即使计算机硬件一直在迭代更新，操作DOM的代价仍旧是昂贵的，频繁操作还是会出现页面卡顿，影响用户体验。
-
-#### 3、虚拟树
-
-虚拟DOM就是为了解决浏览器性能问题而被设计出来的。如前，若一次操作中有10次更新DOM的动作，虚拟DOM不会立即操作DOM，而是将这10次更新的diff内容保存到本地一个JS对象中，最终将这个JS对象一次性attch到DOM树上，再进行后续操作，避免大量无谓的计算量。所以，用JS对象模拟DOM节点的好处是，页面的更新可以先全部反映在JS对象(虚拟DOM)上，操作内存中的JS对象的速度显然要更快，等更新完成后，再将最终的JS对象映射成真实的DOM，交由浏览器去绘制。
-
-Vue的编译器在编译模板之后，会把这些模板编译成一个渲染函数。而函数被调用的时候就会渲染并且返回一个虚拟DOM的树。这个树非常轻量，它的职责就是描述当前界面所应处的状态。当我们有了这个虚拟的树之后，再交给一个patch函数，负责把这些虚拟DOM真正施加到真实的DOM上。在这个过程中，Vue有自身的响应式系统来侦测在渲染过程中所依赖到的数据来源。在渲染过程中，侦测到的数据来源之后，之后就可以精确感知数据源的变动。到时候就可以根据需要重新进行渲染。当重新进行渲染之后，会生成一个新的树，将新树与旧树进行对比，就可以最终得出应施加到真实DOM上的改动。最后再通过patch函数施加改动。
-
-![img](/img/Simple_7/55.jpeg)
-
-总而言之，在Vue中，每一个组件都精确地知道自己是否需要重绘，系统准确地知道哪些组件实际上需要重新渲染，在不需要手动优化的基础上更小粒度上更新DOM。
-
-### 二、万物皆Widget
+### 一、万物皆Widget
 
 #### 1、Widget
 
@@ -74,5 +44,148 @@ Widgets本身通常由许多小的，单一用途的Widget组成，这些Widgets
 - Widget实际上就是Element的配置数据，Widget树实际上是一个配置树，而真正的UI渲染树是由Element构成；不过，由于Element是通过Widget生成，所以它们之间有对应关系，所以在大多数场景，我们可以宽泛地认为Widget树就是指UI控件树或UI渲染树。
 - 一个Widget对象可以对应多个Element对象。这很好理解，根据同一份配置（Widget），可以创建多个实例（Element）。
 
-### 三、层级树
+### 二、层级
 
+看下面这张图
+
+![img](/img/Simple_7/56.png)
+
+1. 在顶部是一些常用的Material和Cupertino风格的Widget；
+2. 接下来是一些通用的Widget层，大部分时间我们都只会使用上面的两层就足够使用；
+3. 在Widgets层下面是render渲染层，这层的主要作用是简化了布局和绘制过程，是底部的`dart:ui库`的另一个抽象；
+4. `dart:ui`是最后一个Dart层，它基本上处理与Flutter引擎的通信。
+
+简而言之，可以说较高级别更易于使用，而较低级别则可以为您提供更多的API，更复杂的细粒度控制。
+
+#### 1、dart:ui库
+
+dart:ui库显示了Flutter框架用于引导应用的最低层级服务，例如用于驱动输入，图形文本，布局和渲染等子系统。
+
+所以基本上你可以通过利用dart:ui包中的类（例如Canvas，Paint和TextBox）来编写一个'Flutter'应用程序。但是，不仅要考虑绘画，还要考虑编排布局和对应用程序元素进行测试，这将是一个难以管理的事情。
+
+这意味着您必须手动计算布局中使用的所有坐标。然后混合一些绘画和hit test来捕捉用户输入。为每一帧做到这一点并跟踪它。如果你只是你打算构建一个简单的应用程序，它只显示一个蓝色框内的文本，那倒有可能。但如果你试图建立更复杂的布局，如购物应用程序甚至小游戏，那么这种方法就不那么好了。甚至不敢想动画，滚动或其他我们都喜欢的花哨的UI东西。
+
+#### 2、render渲染层
+
+> Flutter Widgets库使用RenderObject层次结构来实现其布局和绘制。通常情况下，虽然可以在应用程序中使用自定义RenderBox类来实现特定效果，但大多数情况下，调试布局问题的时候才需要与RenderObject打交道。
+
+Render渲染库是dart:ui库之上的第一个抽象层，可以为您完成所有繁重的数学运算（例如，跟踪计算的坐标等）。由RenderObjects组成的树稍后将由Flutter绘制并绘制。为了优化这个复杂的过程，Flutter使用智能算法换成繁杂的计算已优化性能。
+
+大多数情况下，你会发现Flutter使用RenderBox而不是RenderObject。一个简单的box layout协议非常适合构建高性能的UI。每个widget都被放置在它自己的box当中，这个box被计算出来，然后与其他预先布置好的box一起排列。因此，如果布局中只有一个widget发生更改（例如按钮或开关），则系统只需要重新计算这个相对较小的box。
+
+#### 3、Widgts库
+
+这一层抽象提供了现成的UI组件，我们可以直接放入我们的应用中。有三种类别：
+
+- `layout布局`： 例如。 列和行小部件使我们可以轻松地将其他小部件垂直或水平对齐。
+- `Paiting绘画`： 例如。 文本和图像小部件允许我们在屏幕上显示（“绘制”）一些内容。
+- `Hit-Testing`：例如。 GestureDetector允许我们识别不同的手势，例如点击（用于检测按下按钮）和拖动（用于滑动列表）。
+
+通常情况，我们使用许多基础基本的widget，并构建自己的widget。 例如，您可以在Container中构建一个按钮，将其包装到GestureDetector中以检测按钮被按下的动作。
+
+但是，Flutter团队不是自己构建每个UI组件，而是创建了两个库，其中包含Material和Cupertino（类似iOS）样式中常用的Widget。
+
+#### 4、Material & Cupertino
+
+最上面一层包含了Material设计规范中的预构建元素(比如AlertDialog，Switch和FloatingActionButton)和一些重新创建的iOS样式的Widgets(例如CupertinoAlertDialog，CupertinoButton和CupertinoSwitch)；
+
+### 三、渲染过程
+
+先来看一个简单的Wiget树
+
+```dart
+class SimpleApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SimpleContainer(
+      color: Colors.white,
+      child: SimpleText('Flutter is awesome!', color: Colors.blue),
+    );
+  }
+}
+```
+
+很简单的一个应用只包含三个widgets: `SimpleApp`, `SimpleContainer` and `SimpleText`.
+
+当调用runApp()之后，会有下面的步骤：
+
+1. Flutter将构建包含三个statless widget的widget树。
+2. Flutter沿着小部件树向下走，并通过在小部件上调用createElement()来创建第二个包含相应Element对象的树。
+3. 创建第三个树并使用相应的RenderObjects填充，这些RenderObject由Element调用相应小部件上的createRenderObject()方法创建。
+
+如下图的三种树：
+
+![img](/img/Simple_7/58.png)
+
+可以看到，Flutter框架创建了三个不同的树，一个用于Widgets，一个用于Element，一个用于RenderObject。每个Element都包含对Widget和RenderObject的引用。
+
+RenderObject用来包含用于呈现对应Widget的所有逻辑，RenderObject实例化非常昂贵，它负责布局，绘画和Hit-test。最好尽可能长时间地将这些对象保存在内存中或者可以回收它们（因为实例化成本非常高）。
+
+Elements是**不可变Widget树**和**可变RenderObject树**之间的粘合剂。Element代表着Widget的配置和在树中的特定位置，并保留对相关Widget和RenderObject的引用。
+
+为什么要有三棵树？因为高效，每次更改Widgets树时，Flutter都使用Elements树来比较Widgets树和现有的RenderObjects。当Widget的类型与以前相同时，Flutter不需要重新创建昂贵的RenderObject，只需更新其可变配置即可。由于Widgets非常轻量级且实例化成本低廉，因此它们非常适合描述应用程序的当前状态（也称为“配置”）。 “重量级”RenderObjects（创建起来很昂贵）不会每次都重新创建而是尽可能重用。
+
+在框架中，Elements很好地“抽象出来”，因此您不必经常处理它们。在每个构建（BuildContext上下文）函数中传递的BuildContext实际上是包含在BuildContext接口中的相应Element，这就是为什么它对于每个Widget都不同。
+
+#### 1、更新同类型Widget
+
+```dart
+class SimpleApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SimpleContainer(
+      color: Colors.red,  // SimpleContainer颜色变更
+      child: SimpleText('Flutter is awesome!', color: Colors.blue),
+    );
+  }
+}
+```
+
+由于Widget是不可变的，因此每次配置更改时都需要重建Widget树。 当我们将Container的颜色更改为红色时，框架将触发重建，这将重新创建整个Widget树，因为它是不可变的。 接下来，借助Elements树中Elements的帮助，Flutter将新Widgets树与旧的Widegt树进行比较。
+
+> 比较的基本规则：检查旧Widget和新Widget是否来自同一类型。 如果不是，从树中删除Widget，Element和RenderObject（包括子树）并创建新对象。 如果它们来自相同类型，则只需更新RenderObject的配置以表示Widget的新配置。
+
+在我们的示例中，
+
+1. SimpleApp与以前的类型相同，并且具有与相应的SimpleAppRender对象相同的配置，因此不会有任何更改。 
+2. Widget树中的下一个是SimpleContainer窗口小部件，但具有不同的颜色配置。因此更新SimpleContainerRender对象上的颜色属性并要求重绘。 
+3. 其他对象将保持不变。
+
+![img](/img/Simple_7/59.png)
+
+注意更新之后，Element和RenderObjects仍然是相同的实例对象。这个过程很快，因为Widegt的配置很轻量级。 而重量级对象将保持不变。
+
+#### 2、不同类型的Widget
+
+```dart
+class SimpleApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SimpleContainer(
+      color: Colors.red,  
+      child: SimpleButton( // Widget由SimpleText变更为SimpleButton
+        child: SimpleText('Click me'),
+        color: Colors.blue),
+      	onPressed:()=>print('Yay!'),
+    );
+  }
+}
+```
+
+同样的，Flutter会重建Widget树并且对比之前的Element树和RenderObject树进行比较
+
+![img](/img/Simple_7/60.png)
+
+因为SimpleButton和SimpleText类型不同，Flutter将会把SimpleText对应的Element和SimpleTextRender从树中移除，而SimpleButton没有对应的Element，所以会根据Widget树，创建对应的Element和RenderObjects
+
+![img](/img/Simple_7/61.png)
+
+这样新的渲染树就被建立然后被布局会绘制到屏幕上。
+
+
+
+参考：
+
+ https://medium.com/flutter-community/the-layer-cake-widgets-elements-renderobjects-7644c3142401
+
+https://www.youtube.com/watch?v=dkyY9WCGMi0
