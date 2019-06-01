@@ -1,6 +1,6 @@
 ---
 layout:     post
-category:   React
+category:   前端
 title:      "React Native(二)：react-navigation"
 subtitle:   "第三方导航栏react-navigation的使用"
 date:       2017-11-21 12:00:00
