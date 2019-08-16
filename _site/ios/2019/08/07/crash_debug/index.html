@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter">
+
+    <title>无源调试 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/ios/2019/08/07/crash_debug/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/app/">APP</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>无源调试</h1>
+                    
+                    <h2 class="subheading">系统栈的crash调试</h2>
+                    
+                    <span class="meta">Posted by Ted on August 7, 2019</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<p>一般App都会接入第三方的Crash报告SDK，比如友盟SDK，或者腾讯的bugly，当有crash的时候，SDK记录的crash记录的堆栈一般情况下可以很清晰地定位到源码的具体某一行，根据代码处理即可。但是有小部分情况下，crash记录的堆栈是系统堆栈，没有开发者的源码。</p>
+
+<h4 id="1objc_msgsend16的crash">1、objc_msgSend+16的crash</h4>
+
+<p><img src="/img/Simple_7/62.png" alt="img" /></p>
+
+<p><img src="/img/Simple_7/63.png" alt="img" /></p>
+
+<p>上面的crash堆栈中，唯一跟App源码相关的就是main函数，其他的都是系统堆栈，显然没有办法直接定位到源码。</p>
+
+<p>objc_msgSend函数是runtime中核心的函数，为什么会崩溃在这，怎么处理这种crash？</p>
+
+<h4 id="2objc_msgsend原理">2、objc_msgSend原理</h4>
+
+<p>每一个OC对象有一个类，每一个OC类都有一个方法列表。每一个方法都有一个selector，一个指向方法实现的函数指针，以及一些元数据。objc_msgSend的工作就是传入对象和selector，查找相应方法的函数指针，然后跳到函数指针所指向的位置。</p>
+
+<p>查找方法的过程可能是非常复杂的。如果在一个类里没有找到这个方法，那么它会继续到superclass里去查找。如果在所有的superclass中都没有找到，就会调用运行时的消息转发代码。当一个类第一次收到消息时，他会去调用类的 +initialize方法。</p>
+
+<p>通常查找一个方法必须是迅速的，因为每次消息的调用都需要有这个过程。这就和复杂的查找过程有冲突了，复杂但是要快。</p>
+
+<p>OC解决这个冲突的方案是做方法缓存。每一个类有一个cache，用于存储方法的selectors和函数指针，也就是所谓的IMP。他们被组成一个哈希表，所以查找的时候是非常快的。当查找一个方法时，运行时首先询问cache。如果cache里没有这个方法，后续就会有一个缓慢而又复杂的过程，最后会把找到的结果放到cache里，这样下次查找该方法的时候就会很快了。</p>
+
+<p>objc_msgSend是用汇编写的。有两个原因：一是因为在C语言中不可能通过写一个函数来保留未知的参数并且跳转到一个任意的函数指针。C语言没有满足做这件事情的必要特性。另一个原因是objc_msgSend必须够快。</p>
+
+<p>当然，谁都不会想要用汇编写下整个复杂的消息查找过程。这没必要。消息发送的代码可以被分为两部分：objc_msgSend中有一个快速路径，是用汇编写的，还有一个慢速的路径，是用C实现的。汇编部分主要实现的是在缓存中查找方法，并且如果找到的话就跳转过去的一个过程。如果在缓存中没有找到方法的实现，就会调用C的代码来处理后续的事情。</p>
+
+<p>因此，objc_msgSend主要有以下几个步骤：</p>
+
+<ol>
+  <li>获取传入的对象的类</li>
+  <li>获取这个类的方法缓存</li>
+  <li>通过传入的selector，在缓存中查找方法</li>
+  <li>如果缓存中没有，调用C代码</li>
+  <li>跳到这个方法的IMP</li>
+</ol>
+
+<h4 id="3objc_msgsend的汇编指令">3、objc_msgSend的汇编指令</h4>
+
+<blockquote>
+  <p>ARM64架构下有31个通用寄存器，每个都是64位宽的。他们被标记为x0~x30。同样也有可能使用<code class="highlighter-rouge">w0</code>到<code class="highlighter-rouge">w30</code>来访问寄存器的低32位。寄存器x0x7被用于函数入参的前8个参数。这就表示objc_msgSend收到的self参数是保存在x0中，selector _cmd参数在x1里。</p>
+
+  <p><img src="/img/Simple_7/65.png" alt="img" /></p>
+
+  <p>x0到x7用来做参数传递，以及从子函数返回结果（通常通过x0返回，如果是一个比较大的结构体则结果会存在x8的执行地址上）</p>
+
+  <p>LR：即x30寄存器，也叫链接寄存器，一般是保存返回上一层调用的地址</p>
+
+  <p>FP：即r29，栈底寄存器</p>
+
+  <p>外加一个栈顶寄存器SP</p>
+</blockquote>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">objc_msgSend</span><span class="p">(</span><span class="n">Class</span> <span class="n">receiver</span><span class="p">,</span><span class="n">SEL</span> <span class="n">selector</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="p">...)</span>
+</code></pre></div></div>
+
+<p>回顾objc_msgSend函数我们可以知道：</p>
+
+<ul>
+  <li>x0 寄存器中的保存receiver。</li>
+  <li>x1 寄存器中保存的selector。</li>
+</ul>
+
+<p>使用符号断点，我们可以查看objc_msgSend的符号指令</p>
+
+<p><img src="/img/Simple_7/64.png" alt="img" /></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>libobjc.A.dylib`objc_msgSend:
+    0x1931bb6a0 &lt;+0&gt;:   cmp    x0, #0x0                  ; // 将receiver与0进行比较
+    0x1931bb6a4 &lt;+4&gt;:   b.le   0x1931bb714               ; // nil对象处理或者tagged pointer对象处理
+    0x1931bb6a8 &lt;+8&gt;:   ldr    x13, [x0]    // 取出receiver的isa指针赋值给x13
+    0x1931bb6ac &lt;+12&gt;:  and    x16, x13, #0xffffffff8 // 得到receiver的Class对象指针赋值给x16
+-&gt;  0x1931bb6b0 &lt;+16&gt;:  ldp    x10, x11, [x16, #0x10] // 取出Class对象的cache成员分别保存到x10,x11寄存器中
+</code></pre></div></div>
+
+<p>+16的地方crash，名称是SIGV_ACCERR，内存访问错误，野指针，class对象的内存应该是在整个App生命周期都是可行的，为什么会出现访问错误呢？</p>
+
+<h4 id="4objc_msgsend-crash原因">4、objc_msgSend crash原因</h4>
+
+<p><img src="/img/Simple_7/66.png" alt="img" /></p>
+
+<p>如上图，对象在堆内存区，在还没有被销毁之前，isa指针会指向其Class对象的内存地址，此时objc_msgSend是没有问题的，而对象被销毁之后，堆内存被回收，很有可能这部分内存就被覆盖，一个已经释放了的OC对象继续调用实例方法时，在objc_msgSend函数内部读取到obj的isa指针得到的将是一个未知或者有可能无效的指针值，指向的内存错误，出现野指针的错误。</p>
+
+<p>也就是在读取x16地址的时候，导致内存读取错误，导致崩溃。</p>
+
+<p>实际上，在前两条指令</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    0x1931bb6a0 &lt;+0&gt;:   cmp    x0, #0x0 
+    0x1931bb6a4 &lt;+4&gt;:   b.le   0x1931bb714  
+</code></pre></div></div>
+
+<p>只是进行比较，不会crash。</p>
+
+<p>而第三条指令，访问receiver的isa指针赋值给x13</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0x1931bb6a8 &lt;+8&gt;:   ldr    x13, [x0]
+</code></pre></div></div>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">NSObject</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="n">Class</span> <span class="n">isa</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>虽然，receiver已经被销毁，但是OC对象都是从堆内存区域中分配内存的，所以当某个OC对象被销毁后，其所占用的内存仍然会放回堆内存区域中进行管理，而堆内存区域的地址是可以进行任意的读写访问的，所以即使对象被销毁释放，其isa指针仍然是可以正常访问，虽然值可能被覆盖，但不会crash。</p>
+
+<h4 id="5objc_msgsend-crash解决方案">5、objc_msgSend crash解决方案</h4>
+
+<p>从上面可以知道，寄存器中的值：</p>
+
+<ul>
+  <li>x0 寄存器中的保存的就是receiver。</li>
+  <li>x1 寄存器中保存的就是receiver的selector。</li>
+  <li>x13 寄存器中保存的就是receiver的isa指针。</li>
+  <li>x16 寄存器中保存的就是isa指向的Class指针对象。</li>
+</ul>
+
+<p>因为对象已经被销毁，所以x0,x13,x16的值都是不准确的，我们不能通过这个来获取对象的信息，但是x1中存储的selector是准确的，如果可以找到selector也许也可以找到崩溃的对象的类，从而定位源码。</p>
+
+<p>根据地址找到对应Binary Image，如果是App的地址范围，用IDA或者命令行来解析：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>符号包位置：
+XXX.app.dSYM/Contents/Resources/DWARF/XXX
+
+首先查询UUID，判断符号文件是正确的
+xcrun dwarfdump --uuid &lt;SymbolAddress&gt;
+eg:
+xcrun dwarfdump --uuid /Users/haozhicao/Downloads/dnf
+UUID: 82E51E16-AA1D-39AA-BDBD-AB0AD6A13BC0 (armv7) /Users/haozhicao/Downloads/dnf
+UUID: C8865298-02A3-33E4-A3F4-C68A6DC50D3A (arm64) /Users/haozhicao/Downloads/dnf
+
+用atos命令
+atos -o XXX -l &lt;SymbolAddress&gt; &lt;Address&gt;
+eg:
+atos -o /Users/haozhicao/Downloads/dnf -l 0x0000000102a2c000 0x0000000102f3ea48
+-[GHPDnfIPUserHeaderView avatarClicked] (in dnf) (GHPDnfIPUserHeaderView.m:362)
+</code></pre></div></div>
+
+<p>如果是系统SDK，用IDA或者命令otool解析</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>otool -v -arch arm64e -s __TEXT __objc_methname &lt;KitAddress&gt; &lt;Address&gt;
+
+eg:
+otool -v -arch arm64e -s __TEXT __objc_methname /Users/haozhicao/Library/Developer/Xcode/iOS\ DeviceSupport/12.4\ \(16G77\)\ arm64e/Symbols/System/Library/Frameworks/UIKit.framework/UIKit 0x00000001880c17ec
+-[_UIWebViewScrollViewDelegateForwarder forwardInvocation:](in UIKit)
+</code></pre></div></div>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/flutter/2019/05/18/FlutterUI/" data-toggle="tooltip" data-placement="top" title="Flutter UI原理">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2019</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

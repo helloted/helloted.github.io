@@ -1,4 +1,147 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2019-08-02T18:01:31+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">Flutter UI原理</title><link href="http://www.helloted.com/flutter/2019/05/18/FlutterUI/" rel="alternate" type="text/html" title="Flutter UI原理" /><published>2019-05-18T20:00:00+08:00</published><updated>2019-05-18T20:00:00+08:00</updated><id>http://www.helloted.com/flutter/2019/05/18/FlutterUI</id><content type="html" xml:base="http://www.helloted.com/flutter/2019/05/18/FlutterUI/">&lt;h3 id=&quot;一万物皆widget&quot;&gt;一、万物皆Widget&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2019-08-16T15:08:58+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">无源调试</title><link href="http://www.helloted.com/ios/2019/08/07/crash_debug/" rel="alternate" type="text/html" title="无源调试" /><published>2019-08-07T20:00:00+08:00</published><updated>2019-08-07T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2019/08/07/crash_debug</id><content type="html" xml:base="http://www.helloted.com/ios/2019/08/07/crash_debug/">&lt;p&gt;一般App都会接入第三方的Crash报告SDK，比如友盟SDK，或者腾讯的bugly，当有crash的时候，SDK记录的crash记录的堆栈一般情况下可以很清晰地定位到源码的具体某一行，根据代码处理即可。但是有小部分情况下，crash记录的堆栈是系统堆栈，没有开发者的源码。&lt;/p&gt;
+
+&lt;h4 id=&quot;1objc_msgsend16的crash&quot;&gt;1、objc_msgSend+16的crash&lt;/h4&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_7/62.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_7/63.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;上面的crash堆栈中，唯一跟App源码相关的就是main函数，其他的都是系统堆栈，显然没有办法直接定位到源码。&lt;/p&gt;
+
+&lt;p&gt;objc_msgSend函数是runtime中核心的函数，为什么会崩溃在这，怎么处理这种crash？&lt;/p&gt;
+
+&lt;h4 id=&quot;2objc_msgsend原理&quot;&gt;2、objc_msgSend原理&lt;/h4&gt;
+
+&lt;p&gt;每一个OC对象有一个类，每一个OC类都有一个方法列表。每一个方法都有一个selector，一个指向方法实现的函数指针，以及一些元数据。objc_msgSend的工作就是传入对象和selector，查找相应方法的函数指针，然后跳到函数指针所指向的位置。&lt;/p&gt;
+
+&lt;p&gt;查找方法的过程可能是非常复杂的。如果在一个类里没有找到这个方法，那么它会继续到superclass里去查找。如果在所有的superclass中都没有找到，就会调用运行时的消息转发代码。当一个类第一次收到消息时，他会去调用类的 +initialize方法。&lt;/p&gt;
+
+&lt;p&gt;通常查找一个方法必须是迅速的，因为每次消息的调用都需要有这个过程。这就和复杂的查找过程有冲突了，复杂但是要快。&lt;/p&gt;
+
+&lt;p&gt;OC解决这个冲突的方案是做方法缓存。每一个类有一个cache，用于存储方法的selectors和函数指针，也就是所谓的IMP。他们被组成一个哈希表，所以查找的时候是非常快的。当查找一个方法时，运行时首先询问cache。如果cache里没有这个方法，后续就会有一个缓慢而又复杂的过程，最后会把找到的结果放到cache里，这样下次查找该方法的时候就会很快了。&lt;/p&gt;
+
+&lt;p&gt;objc_msgSend是用汇编写的。有两个原因：一是因为在C语言中不可能通过写一个函数来保留未知的参数并且跳转到一个任意的函数指针。C语言没有满足做这件事情的必要特性。另一个原因是objc_msgSend必须够快。&lt;/p&gt;
+
+&lt;p&gt;当然，谁都不会想要用汇编写下整个复杂的消息查找过程。这没必要。消息发送的代码可以被分为两部分：objc_msgSend中有一个快速路径，是用汇编写的，还有一个慢速的路径，是用C实现的。汇编部分主要实现的是在缓存中查找方法，并且如果找到的话就跳转过去的一个过程。如果在缓存中没有找到方法的实现，就会调用C的代码来处理后续的事情。&lt;/p&gt;
+
+&lt;p&gt;因此，objc_msgSend主要有以下几个步骤：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;获取传入的对象的类&lt;/li&gt;
+  &lt;li&gt;获取这个类的方法缓存&lt;/li&gt;
+  &lt;li&gt;通过传入的selector，在缓存中查找方法&lt;/li&gt;
+  &lt;li&gt;如果缓存中没有，调用C代码&lt;/li&gt;
+  &lt;li&gt;跳到这个方法的IMP&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4 id=&quot;3objc_msgsend的汇编指令&quot;&gt;3、objc_msgSend的汇编指令&lt;/h4&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;ARM64架构下有31个通用寄存器，每个都是64位宽的。他们被标记为x0~x30。同样也有可能使用&lt;code class=&quot;highlighter-rouge&quot;&gt;w0&lt;/code&gt;到&lt;code class=&quot;highlighter-rouge&quot;&gt;w30&lt;/code&gt;来访问寄存器的低32位。寄存器x0x7被用于函数入参的前8个参数。这就表示objc_msgSend收到的self参数是保存在x0中，selector _cmd参数在x1里。&lt;/p&gt;
+
+  &lt;p&gt;&lt;img src=&quot;/img/Simple_7/65.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+  &lt;p&gt;x0到x7用来做参数传递，以及从子函数返回结果（通常通过x0返回，如果是一个比较大的结构体则结果会存在x8的执行地址上）&lt;/p&gt;
+
+  &lt;p&gt;LR：即x30寄存器，也叫链接寄存器，一般是保存返回上一层调用的地址&lt;/p&gt;
+
+  &lt;p&gt;FP：即r29，栈底寄存器&lt;/p&gt;
+
+  &lt;p&gt;外加一个栈顶寄存器SP&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;objc_msgSend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Class&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;receiver&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SEL&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;selector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;arg1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;arg2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;...)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;回顾objc_msgSend函数我们可以知道：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;x0 寄存器中的保存receiver。&lt;/li&gt;
+  &lt;li&gt;x1 寄存器中保存的selector。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;使用符号断点，我们可以查看objc_msgSend的符号指令&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_7/64.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;libobjc.A.dylib`objc_msgSend:
+    0x1931bb6a0 &amp;lt;+0&amp;gt;:   cmp    x0, #0x0                  ; // 将receiver与0进行比较
+    0x1931bb6a4 &amp;lt;+4&amp;gt;:   b.le   0x1931bb714               ; // nil对象处理或者tagged pointer对象处理
+    0x1931bb6a8 &amp;lt;+8&amp;gt;:   ldr    x13, [x0]    // 取出receiver的isa指针赋值给x13
+    0x1931bb6ac &amp;lt;+12&amp;gt;:  and    x16, x13, #0xffffffff8 // 得到receiver的Class对象指针赋值给x16
+-&amp;gt;  0x1931bb6b0 &amp;lt;+16&amp;gt;:  ldp    x10, x11, [x16, #0x10] // 取出Class对象的cache成员分别保存到x10,x11寄存器中
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;+16的地方crash，名称是SIGV_ACCERR，内存访问错误，野指针，class对象的内存应该是在整个App生命周期都是可行的，为什么会出现访问错误呢？&lt;/p&gt;
+
+&lt;h4 id=&quot;4objc_msgsend-crash原因&quot;&gt;4、objc_msgSend crash原因&lt;/h4&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_7/66.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;如上图，对象在堆内存区，在还没有被销毁之前，isa指针会指向其Class对象的内存地址，此时objc_msgSend是没有问题的，而对象被销毁之后，堆内存被回收，很有可能这部分内存就被覆盖，一个已经释放了的OC对象继续调用实例方法时，在objc_msgSend函数内部读取到obj的isa指针得到的将是一个未知或者有可能无效的指针值，指向的内存错误，出现野指针的错误。&lt;/p&gt;
+
+&lt;p&gt;也就是在读取x16地址的时候，导致内存读取错误，导致崩溃。&lt;/p&gt;
+
+&lt;p&gt;实际上，在前两条指令&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    0x1931bb6a0 &amp;lt;+0&amp;gt;:   cmp    x0, #0x0 
+    0x1931bb6a4 &amp;lt;+4&amp;gt;:   b.le   0x1931bb714  
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;只是进行比较，不会crash。&lt;/p&gt;
+
+&lt;p&gt;而第三条指令，访问receiver的isa指针赋值给x13&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;0x1931bb6a8 &amp;lt;+8&amp;gt;:   ldr    x13, [x0]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;@interface&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;NSObject&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSObject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Class&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;isa&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;虽然，receiver已经被销毁，但是OC对象都是从堆内存区域中分配内存的，所以当某个OC对象被销毁后，其所占用的内存仍然会放回堆内存区域中进行管理，而堆内存区域的地址是可以进行任意的读写访问的，所以即使对象被销毁释放，其isa指针仍然是可以正常访问，虽然值可能被覆盖，但不会crash。&lt;/p&gt;
+
+&lt;h4 id=&quot;5objc_msgsend-crash解决方案&quot;&gt;5、objc_msgSend crash解决方案&lt;/h4&gt;
+
+&lt;p&gt;从上面可以知道，寄存器中的值：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;x0 寄存器中的保存的就是receiver。&lt;/li&gt;
+  &lt;li&gt;x1 寄存器中保存的就是receiver的selector。&lt;/li&gt;
+  &lt;li&gt;x13 寄存器中保存的就是receiver的isa指针。&lt;/li&gt;
+  &lt;li&gt;x16 寄存器中保存的就是isa指向的Class指针对象。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;因为对象已经被销毁，所以x0,x13,x16的值都是不准确的，我们不能通过这个来获取对象的信息，但是x1中存储的selector是准确的，如果可以找到selector也许也可以找到崩溃的对象的类，从而定位源码。&lt;/p&gt;
+
+&lt;p&gt;根据地址找到对应Binary Image，如果是App的地址范围，用IDA或者命令行来解析：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;符号包位置：
+XXX.app.dSYM/Contents/Resources/DWARF/XXX
+
+首先查询UUID，判断符号文件是正确的
+xcrun dwarfdump --uuid &amp;lt;SymbolAddress&amp;gt;
+eg:
+xcrun dwarfdump --uuid /Users/haozhicao/Downloads/dnf
+UUID: 82E51E16-AA1D-39AA-BDBD-AB0AD6A13BC0 (armv7) /Users/haozhicao/Downloads/dnf
+UUID: C8865298-02A3-33E4-A3F4-C68A6DC50D3A (arm64) /Users/haozhicao/Downloads/dnf
+
+用atos命令
+atos -o XXX -l &amp;lt;SymbolAddress&amp;gt; &amp;lt;Address&amp;gt;
+eg:
+atos -o /Users/haozhicao/Downloads/dnf -l 0x0000000102a2c000 0x0000000102f3ea48
+-[GHPDnfIPUserHeaderView avatarClicked] (in dnf) (GHPDnfIPUserHeaderView.m:362)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;如果是系统SDK，用IDA或者命令otool解析&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;otool -v -arch arm64e -s __TEXT __objc_methname &amp;lt;KitAddress&amp;gt; &amp;lt;Address&amp;gt;
+
+eg:
+otool -v -arch arm64e -s __TEXT __objc_methname /Users/haozhicao/Library/Developer/Xcode/iOS\ DeviceSupport/12.4\ \(16G77\)\ arm64e/Symbols/System/Library/Frameworks/UIKit.framework/UIKit 0x00000001880c17ec
+-[_UIWebViewScrollViewDelegateForwarder forwardInvocation:](in UIKit)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">一般App都会接入第三方的Crash报告SDK，比如友盟SDK，或者腾讯的bugly，当有crash的时候，SDK记录的crash记录的堆栈一般情况下可以很清晰地定位到源码的具体某一行，根据代码处理即可。但是有小部分情况下，crash记录的堆栈是系统堆栈，没有开发者的源码。</summary></entry><entry><title type="html">Flutter UI原理</title><link href="http://www.helloted.com/flutter/2019/05/18/FlutterUI/" rel="alternate" type="text/html" title="Flutter UI原理" /><published>2019-05-18T20:00:00+08:00</published><updated>2019-05-18T20:00:00+08:00</updated><id>http://www.helloted.com/flutter/2019/05/18/FlutterUI</id><content type="html" xml:base="http://www.helloted.com/flutter/2019/05/18/FlutterUI/">&lt;h3 id=&quot;一万物皆widget&quot;&gt;一、万物皆Widget&lt;/h3&gt;
 
 &lt;h4 id=&quot;1widget&quot;&gt;1、Widget&lt;/h4&gt;
 
@@ -1588,109 +1731,4 @@ else{}
 
 &lt;p&gt;可以在pch等具有大范围作用域的头文件中包含： 
 ￼#pragma clang diagnostic ignored “警告名称” 
-如果剔除了push与pop则后面所有的代码都具有强制消除警告作用&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">1、Block导致的循环引用</summary></entry><entry><title type="html">代码优化之Analyze检测</title><link href="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/10/09/Analysis/" rel="alternate" type="text/html" title="代码优化之Analyze检测" /><published>2018-10-09T20:00:00+08:00</published><updated>2018-10-09T20:00:00+08:00</updated><id>http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/10/09/Analysis</id><content type="html" xml:base="http://www.helloted.com/%E5%B7%A5%E5%85%B7/2018/10/09/Analysis/">&lt;h3 id=&quot;一clang-static-analyzer简介&quot;&gt;一、Clang Static Analyzer简介&lt;/h3&gt;
-
-&lt;p&gt;https://clang-analyzer.llvm.org/&lt;/p&gt;
-
-&lt;p&gt;Clang Static Analyzer是一个源码分析工具用于在C, C++和Objective-C项目中查找bugs。现在它可以在&lt;a href=&quot;https://clang-analyzer.llvm.org/scan-build.html&quot;&gt;单独的工具&lt;/a&gt; 或者 &lt;a href=&quot;https://clang-analyzer.llvm.org/xcode.html&quot;&gt;Xcode中使用&lt;/a&gt;，如果是单独使用，通过过命令行，与代码构建一起。&lt;/p&gt;
-
-&lt;p&gt;Analyzer是100％开源的，是Clang项目的一部分。 与Clang的其余部分一样，Analyzer实现为一个C ++库，可以被其他工具或者应用使用。&lt;/p&gt;
-
-&lt;h4 id=&quot;静态分析&quot;&gt;静态分析&lt;/h4&gt;
-
-&lt;p&gt;术语“静态分析”有多种意思的，但在这里我们使用它来表示一些用于分析源代码以便自动发现bugs的算法和技术的集合。类似于编译器警告（这对于查找编码错误很有用），但更进一步，一般使用运行时调试技术（如测试）发现错误。&lt;/p&gt;
-
-&lt;p&gt;静态分析错误查找工具在过去几十年中已经从基本的句法检查器发展到那些通过推理代码语义来发现深层错误的工具。 Clang Static Analyzer的目标是提供工业级静态分析框架，用于分析C，C ++和Objective-C程序，这些程序是免费提供的，可扩展的，并且具有高质量的实现。&lt;/p&gt;
-
-&lt;p&gt;顾名思义，Clang Static Analyzer建立在Clang和LLVM之上。严格地说，Analyzer是Clang的一部分，因为Clang包含一组可重用的C ++库，用于构建强大的源代码级工具。 Clang Static Analyzer使用的静态分析引擎是一个Clang库，可以在不同的上下文和不同的客户端中重用。&lt;/p&gt;
-
-&lt;h4 id=&quot;需要考虑的情况&quot;&gt;需要考虑的情况&lt;/h4&gt;
-
-&lt;p&gt;虽然我们认为Clang Static Analyzer对于发现bug已经非常有用，但使用它时要记住几点。&lt;/p&gt;
-
-&lt;p&gt;1、持续改进中
-Analyzer是一项持续不断的工作。有许多计划的增强功能可以提高其分析算法的精度和范围，以及它将发现的各种错误。&lt;/p&gt;
-
-&lt;p&gt;2、比编译慢
-在操作上，使用静态分析自动查找深度程序错误是关于交换CPU时间以加强代码。由于使用最先进的静态分析工具进行深入分析，静态分析可能比编译慢得多。&lt;/p&gt;
-
-&lt;p&gt;虽然Clang Static Analyzer的设计尽可能快，重量轻，但不要指望它与编译程序一样快（即使启用了优化）。发现bug所需的一些算法在最坏的情况下可能需要指数时间。&lt;/p&gt;
-
-&lt;p&gt;Clang Static Analyzer在合理的时间内运行，既可以限制它将要执行的检查工作量，也可以使用聪明的算法来减少查找错误所必须做的工作量。&lt;/p&gt;
-
-&lt;p&gt;3、误报
-静态分析并不完美。它可能错误地标记代码行为正确的程序中的错误。由于某些代码检查需要比其他检查更高的分析精度，因此误报的频率在不同检查之间可能会有很大差异。&lt;/p&gt;
-
-&lt;p&gt;4、更多检查
-静态分析并不神奇，Analyzer只能找到一些指定的bug。如果您希望Clang Static Analyzer找到特定类型的错误，请随时提交功能请求或提供您自己的补丁。&lt;/p&gt;
-
-&lt;h3 id=&quot;二实际例子&quot;&gt;二、实际例子&lt;/h3&gt;
-
-&lt;h4 id=&quot;1dead-store&quot;&gt;1、Dead Store&lt;/h4&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_8/34.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;值被赋予后未被使用。分为两种&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_8/35.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Value stored to ‘result’ during its initialization is never read&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;这里的result变量报蓝是因为result变量在下面被重新申请了内存，这里初始化的内存从来没有被使用过，造成内存泄漏&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;修改&lt;/code&gt;：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSMutableDictionary* result;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Value stored to ‘result’ is never read&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;result变量在之后的代码中从未被访问，造成内存泄漏&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;修改&lt;/code&gt;：将代码注释或者删除即可。&lt;/p&gt;
-
-&lt;h4 id=&quot;2coding-conventionsapple&quot;&gt;2、Coding Conventions(Apple)&lt;/h4&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_8/36.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;这是苹果的一些编码规范，照着提示进行修改即可，比如这里的在接受NSError**变量为参数的方法中应该返回一个non-void的值来表明这个error是否发生。&lt;/p&gt;
-
-&lt;h4 id=&quot;3core-foundationobjective-c&quot;&gt;3、Core Foundation/Objective-C&lt;/h4&gt;
-
-&lt;p&gt;Core Foundation/Objective-C的一些编码规范，比如在一些生命周期的方法中要调用父类的方法，会有一些操作&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_8/38.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;4memory-error&quot;&gt;4、Memory error&lt;/h4&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Null passed to a callee that requires a non-null 1st parameter&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;这种是传值的时候传了一个空值&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_8/40.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;nil returned from a method that is expected to return a non-null value&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;这种是返回的值返回了一个空值，一般在数据源返回的时候如果返回空值会报这个蓝&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_8/37.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;5memorycore-foundationobjective-c&quot;&gt;5、Memory(Core Foundation/Objective-C)&lt;/h4&gt;
-
-&lt;p&gt;代码逻辑导致的潜在的内存泄漏，因为现在是ARC，所以Core Foundation内存泄漏的可能性比较大&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_8/39.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;6logic-error&quot;&gt;6、Logic Error&lt;/h4&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_8/41.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;逻辑不严谨或者错误造成的问题&lt;/p&gt;</content><author><name>Ted</name></author><category term="工具" /><summary type="html">一、Clang Static Analyzer简介</summary></entry></feed>
+如果剔除了push与pop则后面所有的代码都具有强制消除警告作用&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">1、Block导致的循环引用</summary></entry></feed>
