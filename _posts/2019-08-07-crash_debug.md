@@ -144,6 +144,12 @@ atos -o /Users/haozhicao/Downloads/dnf -l 0x0000000102a2c000 0x0000000102f3ea48
 
 如果是系统SDK，用IDA或者命令otool解析
 
+系统符号表存储位置
+
+```
+~/Library/Developer/Xcode/iOS\ DeviceSupport/
+```
+
 ```
 otool -v -arch arm64e -s __TEXT __objc_methname <KitAddress> <Address>
 
