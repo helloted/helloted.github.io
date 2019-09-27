@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter">
+
+    <title>模块解耦的三种方案 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/ios/2019/08/26/moudle/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/app/">APP</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>模块解耦的三种方案</h1>
+                    
+                    <h2 class="subheading">模块解耦的三种方案</h2>
+                    
+                    <span class="meta">Posted by Ted on August 26, 2019</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h3 id="1urlrouter">1、URLRouter</h3>
+
+<p>URLRouter：将不同的模块定义成为不同的URL，通过URL的形式进行跨模块调用。</p>
+
+<p>传递一串参数URL就可以进行页面间的跳转，通过分解URL的字段来获取要跳转的页面和携带的参数，指向不同的页面，也可以支持多级页面跳转。URL的通用性也适用于跨平台实现，iOS, Android,Flutter都可以按照URL来进行路由。</p>
+
+<p>同时可以兼容APP间跳转URL Scheme进行进程间的通信，同App外面打开App中的某个页面。</p>
+
+<p>当然这种方案缺点也是很明显的，基于URL的设计只适合与UI界面，功能性的模块是不能采用这种方案的，所以这种方案只适用于视图驱动的模块。</p>
+
+<p>参考URL</p>
+
+<p><img src="/img/Simple_6/25.png" alt="img" /></p>
+
+<p>根据URI进行拆分就能得到需要跳转的路径和参数</p>
+
+<p>示例代码</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    [URLRouter openRoute:@"dnfgamehelper://MomentModule/vc/MomentDetailViewController?momentId=10018&amp;show=1" onVC:self handler:^(NSDictionary * _Nonnull callback) {
+        
+    }];
+</code></pre></div></div>
+
+<p>通过url可以获取要跳转的VC：MomentDetailViewController以及参数：momentId=10018&amp;show=1</p>
+
+<h4 id="2protocolclass">2、ProtocolClass</h4>
+
+<p>Protocol（协议）的声明看起来类似一个类的接口，不同的是Protocol没有父类也不能定义实例变量。Protocol是一种特殊的程序设计结构，用于声明专门被别的类实现的方法。因为OC是单继承的，由于不支持多继承，所以很多时候都是用Protocol和Category来代替实现多继承。Protocol只能定义公用的一套接口，但不能提供具体的实现方法。</p>
+
+<p>Protocol的基本用途：</p>
+
+<ul>
+  <li>可以用来声明一大堆方法（不能直接声明成员变量，但是利用setter和getter方法可以达到相同效果）</li>
+  <li>只要某个类遵守了这个协议，就相当于拥有这个协议中的所有方法声明</li>
+  <li>只要父类遵守了某个协议，就相当于子类也遵守了</li>
+</ul>
+
+<p>原理：</p>
+
+<p><img src="/img/Simple_6/26.png" alt="img" /></p>
+
+<h4 id="3target-action">3、Target-Action</h4>
+
+<p>利用OC的runtime能力，动态的调用指定Target的action.</p>
+
+<p>核心代码</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    Class cls = NSClassFromString(@"TargetClassName");
+    id obj = [[cls alloc]init];
+    SEL aSelector = NSSelectorFromString(@"doSomethingWithParam1:param2:");
+    NSMethodSignature *sig  = [cls instanceMethodSignatureForSelector:aSelector];
+    NSInvocation *msgInvocation = [NSInvocation invocationWithMethodSignature:sig];
+    [msgInvocation setTarget:obj];
+    [msgInvocation setSelector:aSelector];
+    [msgInvocation setArgument:&amp;para1 atIndex:2];
+    [msgInvocation setArgument:&amp;para2 atIndex:3];
+    [msgInvocation invoke];
+    [msgInvocation getReturnValue:&amp;callBackValue];
+</code></pre></div></div>
+
+<p>原理如下</p>
+
+<p><img src="/img/Simple_6/27.png" alt="img" /></p>
+
+<h4 id="4对比">4、对比</h4>
+
+<p>URLRoute优点</p>
+
+<ul>
+  <li>通过URL来请求资源。不管是H5，RN，Weex，Flutter、iOS、Android界面或者组件请求资源的方式就都统一了；</li>
+  <li>服务器可以动态地控制页面跳转，对于一些业务变化比较快的应用很适合。</li>
+</ul>
+
+<p>URLRoute缺点</p>
+
+<ul>
+  <li>Map规则是需要注册的，它们会在load方法里面写。写在load方法里面是会影响App启动速度的；</li>
+  <li>URL链接里面关于组件和页面的名字都是硬编码，参数也都是硬编码。 而且每个URL最好要有一个文档进行维护；</li>
+  <li>URL的参数传递是不够友好的，它最多是传递一个字典。</li>
+</ul>
+
+<p>Target-Action优点</p>
+
+<ul>
+  <li>充分的利用Runtime的特性，无需注册。</li>
+  <li>每个category对应一个Target，Category中的方法对应Action场景。Target-Action方案也统一了所有组件间调用入口</li>
+</ul>
+
+<p>Target-Action缺点</p>
+
+<ul>
+  <li>Runtime编译的时候无法报错，容易造成没有Selector的crash;</li>
+  <li>每个Target去写一个Category编码量大。</li>
+</ul>
+
+<p>ProtocolClass优点</p>
+
+<ul>
+  <li>没有硬编码。Class的interface与Protocol类似，快速生成，对于已有项目的改造比较方便。</li>
+  <li>传递参数类型无限制,调用方法就跟普通对象调用方法一样</li>
+</ul>
+
+<p>ProtocolClass缺点</p>
+
+<ul>
+  <li>Protocol要在当前类向Manager进行注册（如果通过NSProtocolFromString硬编码维护不友好，且有一个固定内存来进行map），注册分散不好管理。没法做组件不存在时或者出现错误时的统一处理。</li>
+  <li>与Protocol的原始定义不符合，从代码编程规范来看不友好。</li>
+</ul>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/ios/2019/08/07/crash_debug/" data-toggle="tooltip" data-placement="top" title="无源调试">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2019</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>
