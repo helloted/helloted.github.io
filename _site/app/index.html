@@ -137,6 +137,9 @@ body{ text-align:center}
    <h1style="font-size:80pt">如果点击无法下载安装，请复制超链接到浏览器中打开<h1/>
    <h1 style="font-size:50pt">
    <a title="iPhone"href="itms-services://?action=download-manifest&url=https://raw.githubusercontent.com/helloted/app/master/ladder.plist">点击下载        </a><h1/>
+      <h1 style="font-size:50pt">
+   <a title="iPhone" id='mainBtn'>点击测试        </a><h1/>
+
 </body>
 </html>
 
@@ -151,7 +154,8 @@ body{ text-align:center}
   window.onload = function(){
         var obj = document.getElementById('mainBtn');
         obj.onclick=function(){  
-        window.location.href="http://www.swindtech.com";            
+          alert('helloworld');
+        // window.location.href="https://www.baidu.com";            
      }
 
         var ano = document.getElementById('anoBtn');
