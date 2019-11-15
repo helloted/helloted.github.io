@@ -16,9 +16,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter">
 
-    <title>debugging - Helloted Blog</title>
+    <title>Mac App - Helloted Blog</title>
 
-    <link rel="canonical" href="http://www.helloted.com/python/2016/11/19/python_debugging/">
+    <link rel="canonical" href="http://www.helloted.com/mac_app/">
 
     <link rel="shortcut icon" href="/img/favicon.ico">
    
@@ -111,85 +111,76 @@
 </nav>
 
 
-    <!-- Post Header -->
-<header class="intro-header" style="background-image: url('/img/bg_01.jpg')">
+    <!-- Page Header -->
+<header class="intro-header" style="background-image: url('/img/about-bg.jpg')">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="post-heading">
-                    <h1>debugging</h1>
-                    
-                    <h2 class="subheading">Python进阶之debugging的理解和使用</h2>
-                    
-                    <span class="meta">Posted by Ted on November 19, 2016</span>
+                <div class="site-heading">
+                    <h1>Mac App</h1>
+                    <hr class="small">
+                    <span class="subheading">Mac应用下载</span>
                 </div>
             </div>
         </div>
     </div>
 </header>
 
-<!-- Post Content -->
-<article>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<!-- Main Content -->
+<div class="container">
+	<div class="row">
+		<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+			<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<htmlxmlns="http://www.w3.org/1999/xhtml">
+<head>
+<metahttp-equiv="Content-Type"content="text/html; charset=utf-8"/>
+<title>Mac应用下载</title>
+<style> 
+body{ text-align:center} 
+</style> 
+</head>
+<body>
+      <h1 style="font-size:50pt">
+        Mac遥控器电脑端
+      </h1>
+      <p style="font-size:15pt">Supported by Haozhicao(helloted@live.com)</p>
+      <h2 style="font-size:30pt">
+        <a href="http://www.helloted.com/download/control.dmg"><u>点此下载</u></a>
+      </h2>
 
-				<p>Debugging是一项掌握之后就能极大提高你的bug捕获能力的技能，大部分新手忽略了Python的debugger(<code class="highlighter-rouge">pdb</code>).</p>
-
-<h4 id="用命令行">用命令行</h4>
-
-<p>你可以用命令行的形式来使用debugger来跑一个脚本，例如</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ python -m pdb my_script.py
-</code></pre></div></div>
-
-<p>这将导致调试器找到的第一个语句就停止执行。 如果您的脚本很短，这会很有帮助。 然后，您可以检查这些变量并继续逐行执行。</p>
-
-<h4 id="在脚本内部执行">在脚本内部执行</h4>
-
-<p>您可以在脚本中设置断点，以便您可以检查特定点处的变量和内容。 这可以使用<code class="highlighter-rouge">pdb.set_trace()</code>方法。 这里是一个例子：</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">pdb</span>
-
-<span class="k">def</span> <span class="nf">make_bread</span><span class="p">():</span>
-    <span class="n">pdb</span><span class="o">.</span><span class="n">set_trace</span><span class="p">()</span>
-    <span class="k">return</span> <span class="s">"I don't have time"</span>
-
-<span class="k">print</span><span class="p">(</span><span class="n">make_bread</span><span class="p">())</span>
-</code></pre></div></div>
-
-<h4 id="命令">命令</h4>
-
-<ul>
-  <li><code class="highlighter-rouge">c</code>: 继续执行</li>
-  <li><code class="highlighter-rouge">w</code>: 显示当前执行行的上下文</li>
-  <li><code class="highlighter-rouge">a</code>: 打印当前行数的参数list</li>
-  <li><code class="highlighter-rouge">s</code>: 执行当前行并在第一个可能的情况下停止.</li>
-  <li><code class="highlighter-rouge">n</code>: 继续执行，直到到达当前函数的下一行或返回。</li>
-</ul>
-
-<p><code class="highlighter-rouge">n</code>ext和<code class="highlighter-rouge">s</code>tep之间的区别在于，<code class="highlighter-rouge">s</code>在一个被调用的函数内部停止，而<code class="highlighter-rouge">n</code>（几乎）全速下执行被调用函数，只停留在当前函数的下一行。</p>
+</body>
+</html>
 
 
-                <hr>
+<!-- <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
 
-                <ul class="pager">
-                    
-                    <li class="previous">
-                        <a href="/python/2016/11/18/args-kwargs/" data-toggle="tooltip" data-placement="top" title="*args和**kwargs">&larr; 上一篇</a>
-                    </li>
-                    
-                    
-                    <li class="next">
-                        <a href="/ios/2016/12/01/coredata/" data-toggle="tooltip" data-placement="top" title="CoreData简介以及第三方框架MagicRecord源码解析">下一篇 &rarr;</a>
-                    </li>
-                    
-                </ul>
+  window.onload = function(){
+        var obj = document.getElementById('mainBtn');
+        obj.onclick=function(){  
+          alert('helloworld');
+        // window.location.href="https://www.baidu.com";            
+     }
 
-            </div>
-        </div>
-    </div>
-</article>
+        var ano = document.getElementById('anoBtn');
+        ano.onclick=function(){  
+        window.location.href="http://www.swindtech.com:8006/?name=xundaili&supply_id=2";            
+     }
+
+
+        var ano = document.getElementById('pushBtn');
+        ano.onclick=function(){  
+        window.location.href="http://www.swindtech.com/statistics/push.html";            
+     }
+ }
+</script> -->
+		</div>
+	</div>
+</div>
 
 <hr>
 
