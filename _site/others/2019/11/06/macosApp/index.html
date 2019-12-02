@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter">
+
+    <title>macOS APP从零到上架 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/others/2019/11/06/macosApp/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/app/">APP</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/mac_app/">Mac App</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>macOS APP从零到上架</h1>
+                    
+                    <h2 class="subheading">macOS APP从零到上架</h2>
+                    
+                    <span class="meta">Posted by Ted on November 6, 2019</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<p>有一款软件叫SimPholders，可以访问iOS开发模拟器的沙盒文件位置，最近，模仿这个功能，开发了一个小型的macOS APP可以一键访问沙盒位置，已经上架到APP Store，记录一下开发过程和上架过程。</p>
+
+<p>一键直达沙盒：<a href="https://apps.apple.com/cn/app/isandbox/id1488446005?mt=12">iSandBox-APP Store</a></p>
+
+<p><img src="/img/Simple_5/05.png" alt="img" /></p>
+
+<h4 id="0初始化">0、初始化</h4>
+
+<p>xcode新建工程，并且run起来，会发现和iOS项目结构类似</p>
+
+<p><img src="/img/Simple_5/06.png" alt="img" /></p>
+
+<p>AppDelegate：里面有App启动和终止的代理方法：</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">applicationDidFinishLaunching</span><span class="p">:(</span><span class="n">NSNotification</span> <span class="o">*</span><span class="p">)</span><span class="nv">aNotification</span> <span class="p">{</span>
+    <span class="c1">// Insert code here to initialize your application</span>
+<span class="p">}</span>
+
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">applicationWillTerminate</span><span class="p">:(</span><span class="n">NSNotification</span> <span class="o">*</span><span class="p">)</span><span class="nv">aNotification</span> <span class="p">{</span>
+    <span class="c1">// Insert code here to tear down your application</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>ViewController：继承自NSViewController，是项目启动后的第一个窗口视图。</p>
+
+<h4 id="1nsviewcontrollernswindowcontorller">1、NSViewController/NSWindowContorller</h4>
+
+<p>在iOS上，APP只有一个Window，所有的View都在这个唯一的Window上，所以我们不需要管理Window，但是，在macOS上可以有多个窗口Window，所以相对应的有NSWindow和NSWindowContorller这样的类来管理Window。这里的Window指的是左上角有扩大缩小关闭按钮的窗口。</p>
+
+<p>通过Main.storybord的箭头导向，指向的是主Window，然后将第一个页面指向为ViewController。我们一般在ViewController内管理我们自己的View</p>
+
+<p><img src="/img/Simple_5/07.png" alt="img" /></p>
+
+<p>可以通过代码的方式自定义WindowController和ViewController</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">applicationDidFinishLaunching</span><span class="p">:(</span><span class="n">NSNotification</span> <span class="o">*</span><span class="p">)</span><span class="nv">aNotification</span> <span class="p">{</span>
+     <span class="n">FirstWindowController</span> <span class="o">*</span><span class="n">firstWindowC</span> <span class="o">=</span> <span class="p">[[</span><span class="n">FirstWindowController</span> <span class="nf">alloc</span><span class="p">]</span><span class="nf">init</span><span class="p">];</span>
+     <span class="n">NSUInteger</span> <span class="n">style</span> <span class="o">=</span> <span class="n">NSWindowStyleMaskTitled</span> <span class="o">|</span> <span class="n">NSWindowStyleMaskClosable</span> <span class="o">|</span> <span class="n">NSWindowStyleMaskMiniaturizable</span> <span class="o">|</span> <span class="n">NSWindowStyleMaskResizable</span> <span class="p">;</span>
+     <span class="n">NSWindow</span> <span class="o">*</span><span class="n">window0</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSWindow</span> <span class="nf">alloc</span><span class="p">]</span><span class="nf">initWithContentRect</span><span class="p">:</span><span class="n">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span> <span class="nf">styleMask</span><span class="p">:</span><span class="n">style</span> <span class="n">backing</span><span class="o">:</span><span class="n">NSBackingStoreBuffered</span> <span class="n">defer</span><span class="o">:</span><span class="nb">YES</span><span class="p">];</span>
+    <span class="n">firstWindowC</span> <span class="o">=</span> <span class="p">[[</span><span class="n">FirstWindowController</span> <span class="nf">alloc</span><span class="p">]</span><span class="nf">initWithWindow</span><span class="p">:</span><span class="n">window0</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">firstWindowC</span><span class="p">.</span><span class="n">window</span> <span class="nf">center</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">firstWindowC</span><span class="p">.</span><span class="n">window</span> <span class="nf">orderFront</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span>
+    <span class="n">firstWindowC</span><span class="p">.</span><span class="n">window</span><span class="p">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSColor</span> <span class="nf">redColor</span><span class="p">];</span>
+    
+    <span class="n">MainViewController</span> <span class="o">*</span><span class="n">vc</span> <span class="o">=</span> <span class="p">[[</span><span class="n">MainViewController</span> <span class="nf">alloc</span><span class="p">]</span><span class="nf">init</span><span class="p">];</span>
+    <span class="n">NSView</span> <span class="o">*</span><span class="n">view</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSView</span> <span class="nf">alloc</span><span class="p">]</span><span class="nf">initWithFrame</span><span class="p">:</span><span class="n">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">100</span><span class="p">)];</span>
+    <span class="n">view</span><span class="p">.</span><span class="n">wantsLayer</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span>
+    <span class="n">view</span><span class="p">.</span><span class="n">layer</span><span class="p">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSColor</span> <span class="nf">yellowColor</span><span class="p">].</span><span class="n">CGColor</span><span class="p">;</span>
+    <span class="n">vc</span><span class="p">.</span><span class="n">view</span> <span class="o">=</span> <span class="n">view</span><span class="p">;</span>
+    <span class="n">firstWindowC</span><span class="p">.</span><span class="n">window</span><span class="p">.</span><span class="n">contentViewController</span> <span class="o">=</span> <span class="n">vc</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>有一点需要注意的是，如果MainViewController的初始化不是通过☑️Xib来初始化，会报错：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> -[NSNib _initWithNibNamed:bundle:options:] could not load the nibName: MainViewController in bundle (null).
+</code></pre></div></div>
+
+<p>尝试在控制台打印这个 VC 的 view，也无法得到相关信息。原因在于macOS 中创建 NSViewController 不会自动创建 view.View默认也不会创建layer，所以需要自定义View.</p>
+
+<p><img src="/img/Simple_5/08.png" alt="img" /></p>
+
+<p>我这个App需要的窗口只有一个，所以不再详细阐述NSViewController/NSWindowContorller的用法</p>
+
+<h4 id="2dock菜单">2、Dock菜单</h4>
+
+<p>在info.plist里加LSUIElement为YES可以让App启动后，图标不出现在Dock栏。</p>
+
+<p>右击Dock栏会有默认菜单列表</p>
+
+<p><img src="/img/Simple_5/09.png" alt="img" /></p>
+
+<p>如果要自定义右键的菜单列表，则在appdelegate里面添加方法</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-(NSMenu *)applicationDockMenu:(NSApplication *)sender{
+    NSMenu * menu = [[NSMenu alloc]initWithTitle:@"Menu"];
+    
+    // title是名称，action是点击后操作,keyEquivalent是快捷键
+    NSMenuItem * item1 = [[NSMenuItem alloc]initWithTitle:@"菜单1" action:@selector(click) keyEquivalent:@""];
+    item1.target = self;
+    NSMenuItem * item2 = [[NSMenuItem alloc]initWithTitle:@"菜单2" action:@selector(click) keyEquivalent:@""];
+    item2.target = self;
+    NSMenuItem * item3 = [[NSMenuItem alloc]initWithTitle:@"菜单3" action:@selector(click) keyEquivalent:@""];
+    NSMenu * subMenu = [[NSMenu alloc]initWithTitle:@"subMenu"];
+    NSMenuItem * item4 = [[NSMenuItem alloc]initWithTitle:@"菜单4" action:@selector(click) keyEquivalent:@""];
+    item4.target = self;
+    [subMenu addItem:item4];
+    [menu addItem:item1];
+    [menu addItem:item2];
+    [menu addItem:item3];
+    [menu setSubmenu:subMenu forItem:item3];
+    return menu;
+}
+
+- (void)click{
+    NSLog(@"did click");
+}
+</code></pre></div></div>
+
+<p>效果如下</p>
+
+<p><img src="/img/Simple_5/10.png" alt="img" /></p>
+
+<h4 id="3状态栏">3、状态栏</h4>
+
+<p>状态栏的菜单是我这个APP最重要的UI，因为沙盒APP都要显示在这里。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@property (nonatomic, strong) NSStatusItem *statusItem;  // 状态栏配置
+@property (nonatomic, strong) NSMenu *mainMenu; // 状态栏图标点击后的菜单显示
+</code></pre></div></div>
+
+<p>状态栏图标的配置</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)customStatusItem{
+    _statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength];
+    
+    // status栏的图片，16*16pt
+    _statusItem.button.image = [NSImage imageNamed:@"status_bar"];
+    
+    // 点击后的status栏的图片，一般用白色的
+    _statusItem.button.alternateImage = [NSImage imageNamed:@"status_bar_white"];
+    
+    _statusItem.menu = self.mainMenu;
+}
+</code></pre></div></div>
+
+<p>菜单栏配置</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    NSMenuItem *aboutItem  = [[NSMenuItem alloc] initWithTitle:@"关于iSandBox" action:@selector(appAbout) keyEquivalent:@""];
+    aboutItem.tag = about_Tag;
+    aboutItem.target = self;
+    [self.mainMenu addItem:aboutItem];
+  
+    [self.mainMenu addItem:[NSMenuItem separatorItem]];
+    
+    [self.mainMenu addItemWithTitle:@"退出" action:@selector(terminate:) keyEquivalent:@"q"];
+</code></pre></div></div>
+
+<p>效果如下</p>
+
+<p><img src="/img/Simple_5/11.png" alt="img" /></p>
+
+<h4 id="4获取模拟器">4、获取模拟器</h4>
+
+<p>在mac的终端执行</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>xcrun simctl list -j devices
+</code></pre></div></div>
+
+<p>能够获取到如下的信息</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  "devices" : {
+    "com.apple.CoreSimulator.SimRuntime.iOS-13-1" : [
+      {
+        "state" : "Shutdown",
+        "isAvailable" : true,
+        "name" : "iPhone 8",
+        "udid" : "12BD0613-9BFF-4305-B20B-898A8221A9FB"
+      },
+      {
+        "state" : "Shutdown",
+        "isAvailable" : true,
+        "name" : "iPhone 8 Plus",
+        "udid" : "4F454B1A-5CE6-4CAD-A47F-6CFE7DFDBA1D"
+      },
+      {
+        "state" : "Shutdown",
+        "isAvailable" : true,
+        "name" : "iPhone 11",
+        "udid" : "6A579513-24EF-4983-BB68-644F4195551D"
+      },
+      {
+        "state" : "Booted",
+        "isAvailable" : true,
+        "name" : "iPhone 11 Pro",
+        "udid" : "433B9894-56CC-430E-A9FB-C16A773551C9"
+      },
+      {
+        "state" : "Shutdown",
+        "isAvailable" : true,
+        ...
+</code></pre></div></div>
+
+<p>能够获取到模拟器的状态和Udid。</p>
+
+<p>在代码中，我们不能使用这样的命令来获取，因为xcrun实际上相当于是快捷方式，必现找到xcode路径，找到simctl的实际path</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        NSTask *task = [NSTask new];
+        NSString *path = [NSString stringWithFormat:@"%@/Contents/Developer/usr/bin/simctl",xcodeURL.path];
+        
+        [task setLaunchPath:path];
+        [task setArguments: @[@"list", @"-j", @"devices"]];
+        
+        NSPipe *output = [NSPipe new];
+        task.standardOutput = output;
+
+        [task launch];
+        [task waitUntilExit];
+
+        NSData *data = output.fileHandleForReading.readDataToEndOfFile;
+        NSDictionary *resultJson = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
+</code></pre></div></div>
+
+<p>resultJson就是模拟器列表的字典数据。</p>
+
+<h4 id="5获取应用">5、获取应用</h4>
+
+<p>udid有什么用呢，通过udid我们就能获取到应用列表，应用列表在下面这个路径</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>file:///Users/haozhicao/Library/Developer/CoreSimulator/Devices/4F454B1A-5CE6-4CAD-A47F-6CFE7DFDBA1D/data/Containers/Bundle/Application/
+</code></pre></div></div>
+
+<p>其中，4F454B1A-5CE6-4CAD-A47F-6CFE7DFDBA1D就是udid，通过拼接路径，可以获取到应用列表</p>
+
+<p><img src="/img/Simple_5/12.png" alt="img" /></p>
+
+<p>有了应用的path，我们就能获取到应用的info.pliset，从而获取相关信息</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        NSURL *appInfoPath = [_url URLByAppendingPathComponent:@"Info.plist"];
+        NSDictionary *infoDict = [NSDictionary dictionaryWithContentsOfURL:appInfoPath];
+        NSString *bundleId = infoDict[@"CFBundleIdentifier"];
+        NSString *bundleDisplayName = infoDict[@"CFBundleDisplayName"] ?: infoDict[@"CFBundleName"] ;
+        NSString *bundleShortVersion = infoDict[@"CFBundleShortVersionString"];
+        NSString *bundleVersion = infoDict[@"CFBundleVersion"];
+        NSString *icon = ((NSArray *)infoDict[@"CFBundleIcons"][@"CFBundlePrimaryIcon"][@"CFBundleIconFiles"]).firstObject;
+</code></pre></div></div>
+
+<p>图标、应用名称、版本号都可以获取到。</p>
+
+<p>将获取到的信息，自定义一个NSMenuItem插入到mainMenu里，如下显示</p>
+
+<p><img src="/img/Simple_5/13.png" alt="img" /></p>
+
+<p>点击跳转到沙盒目录</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)openAppDocument:(ApplicationMenuItem *)menu
+{
+    HTAppInfo *appInfo = menu.app;
+    NSURL *appUrl = [self getAppDocumentUrl:appInfo];
+    if (appUrl) {
+        [[NSWorkspace sharedWorkspace] openURL:appUrl];
+    }
+}
+</code></pre></div></div>
+
+<p><img src="/img/Simple_5/14.png" alt="img" /></p>
+
+<h4 id="6上架篇">6、上架篇</h4>
+
+<p>向App Store的提审过程，被拒了两次，第一次是因为上架的APP必须是沙盒App，所以在项目内要添加沙盒相关配置</p>
+
+<p><img src="/img/Simple_5/15.png" alt="img" /></p>
+
+<p>另外一个原因，是因为macOS从mojava版本后，有了深色模式，所以状态栏必须要有深色模式的图标</p>
+
+<p><img src="/img/Simple_5/16.png" alt="img" /></p>
+
+<p>将以上问题处理完毕后顺利上架，整个提审上架过程与iOS差不多。</p>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/ios/2019/08/26/moudle/" data-toggle="tooltip" data-placement="top" title="模块解耦的三种方案">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2019</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

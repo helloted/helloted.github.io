@@ -1,4 +1,263 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2019-11-19T15:53:38+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">模块解耦的三种方案</title><link href="http://www.helloted.com/ios/2019/08/26/moudle/" rel="alternate" type="text/html" title="模块解耦的三种方案" /><published>2019-08-26T20:00:00+08:00</published><updated>2019-08-26T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2019/08/26/moudle</id><content type="html" xml:base="http://www.helloted.com/ios/2019/08/26/moudle/">&lt;h3 id=&quot;1urlrouter&quot;&gt;1、URLRouter&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2019-12-02T16:57:00+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">macOS APP从零到上架</title><link href="http://www.helloted.com/others/2019/11/06/macosApp/" rel="alternate" type="text/html" title="macOS APP从零到上架" /><published>2019-11-06T20:00:00+08:00</published><updated>2019-11-06T20:00:00+08:00</updated><id>http://www.helloted.com/others/2019/11/06/macosApp</id><content type="html" xml:base="http://www.helloted.com/others/2019/11/06/macosApp/">&lt;p&gt;有一款软件叫SimPholders，可以访问iOS开发模拟器的沙盒文件位置，最近，模仿这个功能，开发了一个小型的macOS APP可以一键访问沙盒位置，已经上架到APP Store，记录一下开发过程和上架过程。&lt;/p&gt;
+
+&lt;p&gt;一键直达沙盒：&lt;a href=&quot;https://apps.apple.com/cn/app/isandbox/id1488446005?mt=12&quot;&gt;iSandBox-APP Store&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_5/05.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;0初始化&quot;&gt;0、初始化&lt;/h4&gt;
+
+&lt;p&gt;xcode新建工程，并且run起来，会发现和iOS项目结构类似&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_5/06.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;AppDelegate：里面有App启动和终止的代理方法：&lt;/p&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;applicationDidFinishLaunching&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSNotification&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;aNotification&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// Insert code here to initialize your application&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+
+&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;applicationWillTerminate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSNotification&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;aNotification&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// Insert code here to tear down your application&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;ViewController：继承自NSViewController，是项目启动后的第一个窗口视图。&lt;/p&gt;
+
+&lt;h4 id=&quot;1nsviewcontrollernswindowcontorller&quot;&gt;1、NSViewController/NSWindowContorller&lt;/h4&gt;
+
+&lt;p&gt;在iOS上，APP只有一个Window，所有的View都在这个唯一的Window上，所以我们不需要管理Window，但是，在macOS上可以有多个窗口Window，所以相对应的有NSWindow和NSWindowContorller这样的类来管理Window。这里的Window指的是左上角有扩大缩小关闭按钮的窗口。&lt;/p&gt;
+
+&lt;p&gt;通过Main.storybord的箭头导向，指向的是主Window，然后将第一个页面指向为ViewController。我们一般在ViewController内管理我们自己的View&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_5/07.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;可以通过代码的方式自定义WindowController和ViewController&lt;/p&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;applicationDidFinishLaunching&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSNotification&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;aNotification&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+     &lt;span class=&quot;n&quot;&gt;FirstWindowController&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;firstWindowC&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FirstWindowController&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+     &lt;span class=&quot;n&quot;&gt;NSUInteger&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;style&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NSWindowStyleMaskTitled&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NSWindowStyleMaskClosable&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NSWindowStyleMaskMiniaturizable&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NSWindowStyleMaskResizable&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+     &lt;span class=&quot;n&quot;&gt;NSWindow&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;window0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSWindow&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;initWithContentRect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CGRectMake&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;500&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;styleMask&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;style&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;backing&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSBackingStoreBuffered&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;defer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;YES&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;firstWindowC&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FirstWindowController&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;initWithWindow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;window0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;firstWindowC&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;window&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;center&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;firstWindowC&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;window&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;orderFront&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;firstWindowC&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;backgroundColor&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSColor&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;redColor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    
+    &lt;span class=&quot;n&quot;&gt;MainViewController&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vc&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MainViewController&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;NSView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSView&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;initWithFrame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CGRectMake&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)];&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;view&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;wantsLayer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;YES&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;view&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;layer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;backgroundColor&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSColor&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;yellowColor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CGColor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;vc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;view&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;firstWindowC&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;contentViewController&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;有一点需要注意的是，如果MainViewController的初始化不是通过☑️Xib来初始化，会报错：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; -[NSNib _initWithNibNamed:bundle:options:] could not load the nibName: MainViewController in bundle (null).
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;尝试在控制台打印这个 VC 的 view，也无法得到相关信息。原因在于macOS 中创建 NSViewController 不会自动创建 view.View默认也不会创建layer，所以需要自定义View.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_5/08.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;我这个App需要的窗口只有一个，所以不再详细阐述NSViewController/NSWindowContorller的用法&lt;/p&gt;
+
+&lt;h4 id=&quot;2dock菜单&quot;&gt;2、Dock菜单&lt;/h4&gt;
+
+&lt;p&gt;在info.plist里加LSUIElement为YES可以让App启动后，图标不出现在Dock栏。&lt;/p&gt;
+
+&lt;p&gt;右击Dock栏会有默认菜单列表&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_5/09.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;如果要自定义右键的菜单列表，则在appdelegate里面添加方法&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;-(NSMenu *)applicationDockMenu:(NSApplication *)sender{
+    NSMenu * menu = [[NSMenu alloc]initWithTitle:@&quot;Menu&quot;];
+    
+    // title是名称，action是点击后操作,keyEquivalent是快捷键
+    NSMenuItem * item1 = [[NSMenuItem alloc]initWithTitle:@&quot;菜单1&quot; action:@selector(click) keyEquivalent:@&quot;&quot;];
+    item1.target = self;
+    NSMenuItem * item2 = [[NSMenuItem alloc]initWithTitle:@&quot;菜单2&quot; action:@selector(click) keyEquivalent:@&quot;&quot;];
+    item2.target = self;
+    NSMenuItem * item3 = [[NSMenuItem alloc]initWithTitle:@&quot;菜单3&quot; action:@selector(click) keyEquivalent:@&quot;&quot;];
+    NSMenu * subMenu = [[NSMenu alloc]initWithTitle:@&quot;subMenu&quot;];
+    NSMenuItem * item4 = [[NSMenuItem alloc]initWithTitle:@&quot;菜单4&quot; action:@selector(click) keyEquivalent:@&quot;&quot;];
+    item4.target = self;
+    [subMenu addItem:item4];
+    [menu addItem:item1];
+    [menu addItem:item2];
+    [menu addItem:item3];
+    [menu setSubmenu:subMenu forItem:item3];
+    return menu;
+}
+
+- (void)click{
+    NSLog(@&quot;did click&quot;);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;效果如下&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_5/10.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;3状态栏&quot;&gt;3、状态栏&lt;/h4&gt;
+
+&lt;p&gt;状态栏的菜单是我这个APP最重要的UI，因为沙盒APP都要显示在这里。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@property (nonatomic, strong) NSStatusItem *statusItem;  // 状态栏配置
+@property (nonatomic, strong) NSMenu *mainMenu; // 状态栏图标点击后的菜单显示
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;状态栏图标的配置&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (void)customStatusItem{
+    _statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength];
+    
+    // status栏的图片，16*16pt
+    _statusItem.button.image = [NSImage imageNamed:@&quot;status_bar&quot;];
+    
+    // 点击后的status栏的图片，一般用白色的
+    _statusItem.button.alternateImage = [NSImage imageNamed:@&quot;status_bar_white&quot;];
+    
+    _statusItem.menu = self.mainMenu;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;菜单栏配置&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    NSMenuItem *aboutItem  = [[NSMenuItem alloc] initWithTitle:@&quot;关于iSandBox&quot; action:@selector(appAbout) keyEquivalent:@&quot;&quot;];
+    aboutItem.tag = about_Tag;
+    aboutItem.target = self;
+    [self.mainMenu addItem:aboutItem];
+  
+    [self.mainMenu addItem:[NSMenuItem separatorItem]];
+    
+    [self.mainMenu addItemWithTitle:@&quot;退出&quot; action:@selector(terminate:) keyEquivalent:@&quot;q&quot;];
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;效果如下&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_5/11.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;4获取模拟器&quot;&gt;4、获取模拟器&lt;/h4&gt;
+
+&lt;p&gt;在mac的终端执行&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;xcrun simctl list -j devices
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;能够获取到如下的信息&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;{
+  &quot;devices&quot; : {
+    &quot;com.apple.CoreSimulator.SimRuntime.iOS-13-1&quot; : [
+      {
+        &quot;state&quot; : &quot;Shutdown&quot;,
+        &quot;isAvailable&quot; : true,
+        &quot;name&quot; : &quot;iPhone 8&quot;,
+        &quot;udid&quot; : &quot;12BD0613-9BFF-4305-B20B-898A8221A9FB&quot;
+      },
+      {
+        &quot;state&quot; : &quot;Shutdown&quot;,
+        &quot;isAvailable&quot; : true,
+        &quot;name&quot; : &quot;iPhone 8 Plus&quot;,
+        &quot;udid&quot; : &quot;4F454B1A-5CE6-4CAD-A47F-6CFE7DFDBA1D&quot;
+      },
+      {
+        &quot;state&quot; : &quot;Shutdown&quot;,
+        &quot;isAvailable&quot; : true,
+        &quot;name&quot; : &quot;iPhone 11&quot;,
+        &quot;udid&quot; : &quot;6A579513-24EF-4983-BB68-644F4195551D&quot;
+      },
+      {
+        &quot;state&quot; : &quot;Booted&quot;,
+        &quot;isAvailable&quot; : true,
+        &quot;name&quot; : &quot;iPhone 11 Pro&quot;,
+        &quot;udid&quot; : &quot;433B9894-56CC-430E-A9FB-C16A773551C9&quot;
+      },
+      {
+        &quot;state&quot; : &quot;Shutdown&quot;,
+        &quot;isAvailable&quot; : true,
+        ...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;能够获取到模拟器的状态和Udid。&lt;/p&gt;
+
+&lt;p&gt;在代码中，我们不能使用这样的命令来获取，因为xcrun实际上相当于是快捷方式，必现找到xcode路径，找到simctl的实际path&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;        NSTask *task = [NSTask new];
+        NSString *path = [NSString stringWithFormat:@&quot;%@/Contents/Developer/usr/bin/simctl&quot;,xcodeURL.path];
+        
+        [task setLaunchPath:path];
+        [task setArguments: @[@&quot;list&quot;, @&quot;-j&quot;, @&quot;devices&quot;]];
+        
+        NSPipe *output = [NSPipe new];
+        task.standardOutput = output;
+
+        [task launch];
+        [task waitUntilExit];
+
+        NSData *data = output.fileHandleForReading.readDataToEndOfFile;
+        NSDictionary *resultJson = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;resultJson就是模拟器列表的字典数据。&lt;/p&gt;
+
+&lt;h4 id=&quot;5获取应用&quot;&gt;5、获取应用&lt;/h4&gt;
+
+&lt;p&gt;udid有什么用呢，通过udid我们就能获取到应用列表，应用列表在下面这个路径&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;file:///Users/haozhicao/Library/Developer/CoreSimulator/Devices/4F454B1A-5CE6-4CAD-A47F-6CFE7DFDBA1D/data/Containers/Bundle/Application/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;其中，4F454B1A-5CE6-4CAD-A47F-6CFE7DFDBA1D就是udid，通过拼接路径，可以获取到应用列表&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_5/12.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;有了应用的path，我们就能获取到应用的info.pliset，从而获取相关信息&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;        NSURL *appInfoPath = [_url URLByAppendingPathComponent:@&quot;Info.plist&quot;];
+        NSDictionary *infoDict = [NSDictionary dictionaryWithContentsOfURL:appInfoPath];
+        NSString *bundleId = infoDict[@&quot;CFBundleIdentifier&quot;];
+        NSString *bundleDisplayName = infoDict[@&quot;CFBundleDisplayName&quot;] ?: infoDict[@&quot;CFBundleName&quot;] ;
+        NSString *bundleShortVersion = infoDict[@&quot;CFBundleShortVersionString&quot;];
+        NSString *bundleVersion = infoDict[@&quot;CFBundleVersion&quot;];
+        NSString *icon = ((NSArray *)infoDict[@&quot;CFBundleIcons&quot;][@&quot;CFBundlePrimaryIcon&quot;][@&quot;CFBundleIconFiles&quot;]).firstObject;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;图标、应用名称、版本号都可以获取到。&lt;/p&gt;
+
+&lt;p&gt;将获取到的信息，自定义一个NSMenuItem插入到mainMenu里，如下显示&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_5/13.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;点击跳转到沙盒目录&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- (void)openAppDocument:(ApplicationMenuItem *)menu
+{
+    HTAppInfo *appInfo = menu.app;
+    NSURL *appUrl = [self getAppDocumentUrl:appInfo];
+    if (appUrl) {
+        [[NSWorkspace sharedWorkspace] openURL:appUrl];
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_5/14.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;6上架篇&quot;&gt;6、上架篇&lt;/h4&gt;
+
+&lt;p&gt;向App Store的提审过程，被拒了两次，第一次是因为上架的APP必须是沙盒App，所以在项目内要添加沙盒相关配置&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_5/15.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;另外一个原因，是因为macOS从mojava版本后，有了深色模式，所以状态栏必须要有深色模式的图标&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_5/16.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;将以上问题处理完毕后顺利上架，整个提审上架过程与iOS差不多。&lt;/p&gt;</content><author><name>Ted</name></author><category term="Others" /><summary type="html">有一款软件叫SimPholders，可以访问iOS开发模拟器的沙盒文件位置，最近，模仿这个功能，开发了一个小型的macOS APP可以一键访问沙盒位置，已经上架到APP Store，记录一下开发过程和上架过程。</summary></entry><entry><title type="html">模块解耦的三种方案</title><link href="http://www.helloted.com/ios/2019/08/26/moudle/" rel="alternate" type="text/html" title="模块解耦的三种方案" /><published>2019-08-26T20:00:00+08:00</published><updated>2019-08-26T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2019/08/26/moudle</id><content type="html" xml:base="http://www.helloted.com/ios/2019/08/26/moudle/">&lt;h3 id=&quot;1urlrouter&quot;&gt;1、URLRouter&lt;/h3&gt;
 
 &lt;p&gt;URLRouter：将不同的模块定义成为不同的URL，通过URL的形式进行跨模块调用。&lt;/p&gt;
 
@@ -1439,171 +1698,4 @@ extern NSString * const UIApplicationDidFinishLaunchingNotification;
 &lt;ul&gt;
   &lt;li&gt;Flutter传值Native：Native端通过call的method/methodName来进行区分不同的调用，而传递的对象可以是基础数据，会有一个result一次性的返回参数。&lt;/li&gt;
   &lt;li&gt;Native传值Fluuter：在建立通道之后，可以通过arguments对象来区分通道，并且通过events作为载体来多次传递数据。&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Ted</name></author><category term="Flutter" /><summary type="html">一、Native切换到Flutter</summary></entry><entry><title type="html">Flutter与Native(一)</title><link href="http://www.helloted.com/flutter/2018/12/20/HybridFlutter-1/" rel="alternate" type="text/html" title="Flutter与Native(一)" /><published>2018-12-20T20:00:00+08:00</published><updated>2018-12-20T20:00:00+08:00</updated><id>http://www.helloted.com/flutter/2018/12/20/HybridFlutter-1</id><content type="html" xml:base="http://www.helloted.com/flutter/2018/12/20/HybridFlutter-1/">&lt;h3 id=&quot;一初始项目&quot;&gt;一、初始项目&lt;/h3&gt;
-
-&lt;h4 id=&quot;1现有目录&quot;&gt;1、现有目录&lt;/h4&gt;
-
-&lt;p&gt;现有一个最简单的iOS项目MyApp，将iOS项目和Android项目分别放入放入HybridApp文件夹中，目录结构如下：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;HybridApp
-├── Android
-	└── AndroidProject
-└── iOS
-    └── MyApp
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;2建立flutter模块&quot;&gt;2、建立Flutter模块&lt;/h4&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;flutter create &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; module xxx
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;在HybridApp文件夹的根目录执行以下命令&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;HybridApp
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;flutter create &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; module flutter_module
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;现在目录变成&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;HybridApp
-├── Android              //android相关
-	└── AndroidProject   //android项目
-├── flutter_module       //flutter相关
-└── iOS					 // iOS相关
-    └── MyApp			 // iOS项目
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_8/44.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;二ios接入&quot;&gt;二、iOS接入&lt;/h3&gt;
-
-&lt;h4 id=&quot;1将flutter的相关信息导入ios项目&quot;&gt;1、将flutter的相关信息导入iOS项目&lt;/h4&gt;
-
-&lt;p&gt;更新，新版本接入，通过cocoapod比较简单&lt;/p&gt;
-
-&lt;p&gt;在PodFile内加入：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;platform :ios, '10.0'
-
-target &quot;NewHybrid&quot; do
-
-flutter_application_path = '../flutter_module'
-eval(File.read(File.join(flutter_application_path, '.ios', 'Flutter', 'podhelper.rb')), binding)
-
-
-end
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;==================================👇为旧版本接入=======================&lt;/p&gt;
-
-&lt;p&gt;在flutter_module目录下有个.iOS的隐藏文件夹，里面有个文件Flutter/Generated.xcconfig，查看可以看到里面有一些flutter的信息&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_8/45.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;我们需要将将这个文件里的一些信息导入到iOS项目中，做法如下：&lt;/p&gt;
-
-&lt;p&gt;==&amp;gt;新建一个FlutterDebug.config的文件，&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_8/46.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;内容为导入Generated.xcconfig文件路径：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#include &quot;../../flutter_module/.ios/Flutter/Generated.xcconfig&quot;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_8/47.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;==&amp;gt;将FlutterDebug.xcconfig添加到iOS项目的Info-Configuration里：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_8/48.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;2添加脚本&quot;&gt;2、添加脚本&lt;/h4&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&quot;$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh&quot; build
-&quot;$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh&quot; embed
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_8/49.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;注意将Run Scrpt移到列表的前方&lt;/p&gt;
-
-&lt;p&gt;运行项目，在iOS项目文件夹内会生成一个Flutter的文件夹，将这个文件夹添加到项目中&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_8/50.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_8/51.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;3改造appdelegate&quot;&gt;3、改造AppDelegate&lt;/h4&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;AppDelegate.h
-
-#import &amp;lt;UIKit/UIKit.h&amp;gt;
-#import &amp;lt;Flutter/Flutter.h&amp;gt;
-
-@interface AppDelegate : FlutterAppDelegate
-@end
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;AppDelegate.m
-
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    return [super application:application didFinishLaunchingWithOptions:launchOptions];
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;4新建一个flutter页面&quot;&gt;4、新建一个Flutter页面&lt;/h4&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_8/53.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;下面是效果&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_8/52.gif&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;三安卓接入&quot;&gt;三、安卓接入&lt;/h3&gt;
-
-&lt;h4 id=&quot;1配置&quot;&gt;1、配置&lt;/h4&gt;
-
-&lt;p&gt;在setting.gradle中添加：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//加入下面配置
-setBinding(new Binding([gradle: this]))
-evaluate(new File(
-        settingsDir.parentFile.parentFile,
-        'flutter_module/.android/include_flutter.groovy'  //flutter_module路径
-))
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_8/55.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;在bulid.gradle中dependencies添加&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;implementation project(':flutter')
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Gradle sync之后就成功导入了Flutter&lt;/p&gt;
-
-&lt;h4 id=&quot;2使用&quot;&gt;2、使用&lt;/h4&gt;
-
-&lt;p&gt;在iOS中，Flutter是以一整个页面ViewController的方式接入到Native中，而在android中，Flutter既可以在现有Activity内插入一个FlutterView作为一部分，也可以直接继承自一个FlutterActivity.&lt;/p&gt;
-
-&lt;p&gt;作为一部分接入View&lt;/p&gt;
-
-&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;View&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;flutterView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Flutter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;createView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MainActivity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getLifecycle&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(),&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;route1&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;FrameLayout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;LayoutParams&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;layout&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FrameLayout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;LayoutParams&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;600&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;800&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;layout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;leftMargin&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;layout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;topMargin&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;addContentView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flutterView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;layout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_8/56.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;或者Activity形式&lt;/p&gt;
-
-&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;FlutterMain&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;startInitialization&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MainActivity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;Intent&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;intent&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Intent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MainActivity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FlutterActivity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;intent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;putExtra&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;route&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;initRoute&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;MainActivity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;startActivity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;intent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_8/57.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="Flutter" /><summary type="html">一、初始项目</summary></entry></feed>
+&lt;/ul&gt;</content><author><name>Ted</name></author><category term="Flutter" /><summary type="html">一、Native切换到Flutter</summary></entry></feed>
