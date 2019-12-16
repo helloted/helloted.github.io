@@ -267,13 +267,34 @@
   <p>3、NSCondition</p>
 </blockquote>
 
-<p>条件不是锁，但是与锁一样是同步工具</p>
-
 <div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">wait</span><span class="p">;</span>
 <span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">waitUntilDate</span><span class="p">:(</span><span class="n">NSDate</span> <span class="o">*</span><span class="p">)</span><span class="nv">limit</span><span class="p">;</span>
 <span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">signal</span><span class="p">;</span>
 <span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">broadcast</span><span class="p">;</span>
 </code></pre></div></div>
+
+<p>使用案例</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void) method1 {
+
+    [myCondition lock];
+    while (!someCheckIsTrue)
+        [myCondition wait];
+    // Do something.
+    [myCondition unlock];
+}
+
+- (void) method2 {
+
+    [myCondition lock];
+    // Do something.
+    someCheckIsTrue = YES;
+    [myCondition signal];
+    [myCondition unlock];
+}
+</code></pre></div></div>
+
+<p>method1锁住了，需要其他线程的method2里改变条件someCheckIsTrue并且发出signal来解锁</p>
 
 <blockquote>
   <p>4、NSConditionLock</p>
