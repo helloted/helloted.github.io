@@ -18,7 +18,7 @@
 
     <title>Xcode编译过程 - Helloted Blog</title>
 
-    <link rel="canonical" href="http://www.helloted.com/ios/2019/01/03/xcode/">
+    <link rel="canonical" href="http://www.helloted.com/ios/2019/06/03/xcode/">
 
     <link rel="shortcut icon" href="/img/favicon.ico">
    
@@ -121,7 +121,7 @@
                     
                     <h2 class="subheading">Xcode编译过程</h2>
                     
-                    <span class="meta">Posted by Ted on January 3, 2019</span>
+                    <span class="meta">Posted by Ted on June 3, 2019</span>
                 </div>
             </div>
         </div>
@@ -168,6 +168,10 @@
 
 <p><img src="/img/Simple_2/29.png" alt="img" /></p>
 
+<p>再具体一些的话：</p>
+
+<p><img src="/img/Simple_2/31.png" alt="img" /></p>
+
 <p>具体来说，在<code class="highlighter-rouge">Xcode</code>按下<code class="highlighter-rouge">CMD+B</code>之后，一个源文件的编译过程如下</p>
 
 <p><img src="/img/Simple_2/30.png" alt="img" /></p>
@@ -191,7 +195,7 @@
     <p><strong>中间代码生成(Code Generation)</strong>：生成中间代码 IR，CodeGen 会负责将语法树自顶向下遍历逐步翻译成 LLVM IR，IR 是编译过程的前端的输出，后端的输入。</p>
   </li>
   <li>
-    <p><strong>优化(Optimize)</strong>：LLVM 会去做些优化工作，在 Xcode 的编译设置里也可以设置优化级别<code class="highlighter-rouge">-O1</code>、<code class="highlighter-rouge">-O3</code>、<code class="highlighter-rouge">-Os</code>…还可以写些自己的 Pass，官方有比较完整的 Pass 教程： <a href="http://llvm.org/docs/WritingAnLLVMPass.html">Writing an LLVM Pass</a> 。如果开启了<code class="highlighter-rouge">Bitcode</code>苹果会做进一步的优化，有新的后端架构还是可以用这份优化过的<code class="highlighter-rouge">Bitcode</code>去生成。</p>
+    <p><strong>优化(Optimize)</strong>：LLVM 会去做些优化工作，在 Xcode 的编译设置里也可以设置优化级别<code class="highlighter-rouge">-O1</code>、<code class="highlighter-rouge">-O3</code>、<code class="highlighter-rouge">-Os</code>…还可以写些自己的 Pass，官方有比较完整的 Pass 教程： <a href="http://llvm.org/docs/WritingAnLLVMPass.html">Writing an LLVM Pass</a> 。如果开启了<code class="highlighter-rouge">Bitcode</code>苹果会做进一步的优化，有新的后端架构还是可以用这份优化过的<code class="highlighter-rouge">Bitcode</code>去生成。可以在这一层自定义Pass对IR代码做代码混淆</p>
   </li>
   <li>
     <p><strong>生成目标文件(Assemble)</strong>：生成<code class="highlighter-rouge">Target</code>相关<code class="highlighter-rouge">Object</code>(Mach-o)。</p>
@@ -208,12 +212,12 @@
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/ios/2019/01/02/code/" data-toggle="tooltip" data-placement="top" title="iOS编码建议">&larr; 上一篇</a>
+                        <a href="/flutter/2019/05/18/FlutterUI/" data-toggle="tooltip" data-placement="top" title="Flutter UI原理">&larr; 上一篇</a>
                     </li>
                     
                     
                     <li class="next">
-                        <a href="/others/2019/01/10/PMP/" data-toggle="tooltip" data-placement="top" title="项目管理PMP考试备考经验">下一篇 &rarr;</a>
+                        <a href="/ios/2019/08/07/crash_debug/" data-toggle="tooltip" data-placement="top" title="无源调试">下一篇 &rarr;</a>
                     </li>
                     
                 </ul>
