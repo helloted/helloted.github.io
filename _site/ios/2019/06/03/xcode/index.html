@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter">
+
+    <title>Xcode编译过程 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/ios/2019/06/03/xcode/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/app/">APP</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/mac_app/">Mac App</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>Xcode编译过程</h1>
+                    
+                    <h2 class="subheading">Xcode编译过程</h2>
+                    
+                    <span class="meta">Posted by Ted on June 3, 2019</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h3 id="1编译简介">1、编译简介</h3>
+
+<p>编译器的作用便是把我们的高级编程语言(Objective-C)通过一系列的操作转化成可被计算机执行的机器语言(MachineCode)。</p>
+
+<p>经典的<strong>三段式</strong>设计（three phase design）：前端(Frontend)–优化器(Optimizer)–后端(Backend)</p>
+
+<p><img src="/img/Simple_2/27.png" alt="img" /></p>
+
+<ul>
+  <li><strong>前端</strong>：负责分析源代码，可以检查语法级错误，并构建针对该语言的抽象语法树（AST），生成中间代码(Intermediate Representation )，在这个过程中，会进行类型检查，如果发现错误或者警告会标注出来在哪一行。</li>
+  <li><strong>优化</strong>：此时进行与机器类型无关的优化</li>
+  <li><strong>后端</strong>：根据不同的机器和架构，进行优化并且生成不同的机器码</li>
+</ul>
+
+<p>这种三段式架构的优势在于：假如你需要增加一种语言，只需要增加一种前端；假如你需要增加一种处理器架构，也只需要增加一种后端；通过共享优化器的中转，其他的地方都不需要改动。</p>
+
+<p><img src="/img/Simple_2/28.png" alt="img" /></p>
+
+<h4 id="2xcode编译器发展过程">2、Xcode编译器发展过程</h4>
+
+<ul>
+  <li>Xcode3 以前： GCC；</li>
+  <li>Xcode3：增加LLVM，GCC(前端) + LLVM(后端)；</li>
+  <li>Xcode4.2：出现Clang - LLVM 3.0成为默认编译器；</li>
+  <li>Xcode4.6：LLVM 升级到4.2版本；</li>
+  <li>Xcode5：GCC被废弃，新的编译器是LLVM 5.0，从GCC过渡到Clang-LLVM的时代正式完成，<code class="highlighter-rouge">Objective-C</code>与<code class="highlighter-rouge">swift</code>都采用<code class="highlighter-rouge">Clang</code>作为编译器前端</li>
+</ul>
+
+<h4 id="3clang-llvm架构">3、Clang-LLVM架构</h4>
+
+<p>Clang-LLVM架构中，Clang作为前端生成中间代码IR，LLVM优化器进行优化，LLVM机器码生成器生成不同的机器码</p>
+
+<p><img src="/img/Simple_2/29.png" alt="img" /></p>
+
+<p>再具体一些的话：</p>
+
+<p><img src="/img/Simple_2/31.png" alt="img" /></p>
+
+<p>具体来说，在<code class="highlighter-rouge">Xcode</code>按下<code class="highlighter-rouge">CMD+B</code>之后，一个源文件的编译过程如下</p>
+
+<p><img src="/img/Simple_2/30.png" alt="img" /></p>
+
+<p>如上图所示，</p>
+
+<ul>
+  <li>
+    <p><strong>预处理(Pre-process)</strong>：他的主要工作就是将宏替换，删除注释展开头文件，生成<code class="highlighter-rouge">.i</code>文件。</p>
+  </li>
+  <li>
+    <p><strong>词法分析(Lexical Analysis)</strong>：将代码切成一个个 token，比如大小括号，等于号还有字符串等。是计算机科学中将字符序列转换为标记序列的过程。</p>
+  </li>
+  <li>
+    <p><strong>语义分析(Semantic Analysis)</strong>：验证语法是否正确，然后将所有节点组成抽象语法树 AST 。由 Clang 中 Parser 和 Sema 配合完成。</p>
+  </li>
+  <li>
+    <p><strong>静态分析(Static Analysis)</strong>：使用它来表示用于分析源代码以便自动发现错误。</p>
+  </li>
+  <li>
+    <p><strong>中间代码生成(Code Generation)</strong>：生成中间代码 IR，CodeGen 会负责将语法树自顶向下遍历逐步翻译成 LLVM IR，IR 是编译过程的前端的输出，后端的输入。</p>
+  </li>
+  <li>
+    <p><strong>优化(Optimize)</strong>：LLVM 会去做些优化工作，在 Xcode 的编译设置里也可以设置优化级别<code class="highlighter-rouge">-O1</code>、<code class="highlighter-rouge">-O3</code>、<code class="highlighter-rouge">-Os</code>…还可以写些自己的 Pass，官方有比较完整的 Pass 教程： <a href="http://llvm.org/docs/WritingAnLLVMPass.html">Writing an LLVM Pass</a> 。如果开启了<code class="highlighter-rouge">Bitcode</code>苹果会做进一步的优化，有新的后端架构还是可以用这份优化过的<code class="highlighter-rouge">Bitcode</code>去生成。可以在这一层自定义Pass对IR代码做代码混淆</p>
+  </li>
+  <li>
+    <p><strong>生成目标文件(Assemble)</strong>：生成<code class="highlighter-rouge">Target</code>相关<code class="highlighter-rouge">Object</code>(Mach-o)。</p>
+  </li>
+  <li>
+    <p><strong>链接(Link)</strong>：生成<code class="highlighter-rouge">Executable</code>可执行文件。</p>
+  </li>
+</ul>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/flutter/2019/05/18/FlutterUI/" data-toggle="tooltip" data-placement="top" title="Flutter UI原理">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/ios/2019/08/07/crash_debug/" data-toggle="tooltip" data-placement="top" title="无源调试">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2020</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>
