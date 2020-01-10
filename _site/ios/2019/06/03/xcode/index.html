@@ -179,31 +179,99 @@
 <p>如上图所示，</p>
 
 <ul>
-  <li>
-    <p><strong>预处理(Pre-process)</strong>：他的主要工作就是将宏替换，删除注释展开头文件，生成<code class="highlighter-rouge">.i</code>文件。</p>
-  </li>
-  <li>
-    <p><strong>词法分析(Lexical Analysis)</strong>：将代码切成一个个 token，比如大小括号，等于号还有字符串等。是计算机科学中将字符序列转换为标记序列的过程。</p>
-  </li>
-  <li>
-    <p><strong>语义分析(Semantic Analysis)</strong>：验证语法是否正确，然后将所有节点组成抽象语法树 AST 。由 Clang 中 Parser 和 Sema 配合完成。</p>
-  </li>
-  <li>
-    <p><strong>静态分析(Static Analysis)</strong>：使用它来表示用于分析源代码以便自动发现错误。</p>
-  </li>
-  <li>
-    <p><strong>中间代码生成(Code Generation)</strong>：生成中间代码 IR，CodeGen 会负责将语法树自顶向下遍历逐步翻译成 LLVM IR，IR 是编译过程的前端的输出，后端的输入。</p>
-  </li>
-  <li>
-    <p><strong>优化(Optimize)</strong>：LLVM 会去做些优化工作，在 Xcode 的编译设置里也可以设置优化级别<code class="highlighter-rouge">-O1</code>、<code class="highlighter-rouge">-O3</code>、<code class="highlighter-rouge">-Os</code>…还可以写些自己的 Pass，官方有比较完整的 Pass 教程： <a href="http://llvm.org/docs/WritingAnLLVMPass.html">Writing an LLVM Pass</a> 。如果开启了<code class="highlighter-rouge">Bitcode</code>苹果会做进一步的优化，有新的后端架构还是可以用这份优化过的<code class="highlighter-rouge">Bitcode</code>去生成。可以在这一层自定义Pass对IR代码做代码混淆</p>
-  </li>
-  <li>
-    <p><strong>生成目标文件(Assemble)</strong>：生成<code class="highlighter-rouge">Target</code>相关<code class="highlighter-rouge">Object</code>(Mach-o)。</p>
-  </li>
-  <li>
-    <p><strong>链接(Link)</strong>：生成<code class="highlighter-rouge">Executable</code>可执行文件。</p>
-  </li>
+  <li><strong>预处理(Pre-process)</strong>：他的主要工作就是将宏替换，删除注释展开头文件，生成<code class="highlighter-rouge">.i</code>文件。</li>
+  <li><strong>词法分析(Lexical Analysis)</strong>：将代码切成一个个 token，比如大小括号，等于号还有字符串等。是计算机科学中将字符序列转换为标记序列的过程。</li>
+  <li><strong>语义分析(Semantic Analysis)</strong>：验证语法是否正确，然后将所有节点组成抽象语法树 AST 。由 Clang 中 Parser 和 Sema 配合完成。</li>
+  <li><strong>静态分析(Static Analysis)</strong>：使用它来表示用于分析源代码以便自动发现错误。</li>
+  <li><strong>中间代码生成(Code Generation)</strong>：生成中间代码 IR，CodeGen 会负责将语法树自顶向下遍历逐步翻译成 LLVM IR，IR 是编译过程的前端的输出，后端的输入。</li>
+  <li><strong>优化(Optimize)</strong>：LLVM 会去做些优化工作，在 Xcode 的编译设置里也可以设置优化级别<code class="highlighter-rouge">-O1</code>、<code class="highlighter-rouge">-O3</code>、<code class="highlighter-rouge">-Os</code>…还可以写些自己的 Pass，官方有比较完整的 Pass 教程： <a href="http://llvm.org/docs/WritingAnLLVMPass.html">Writing an LLVM Pass</a> 。如果开启了<code class="highlighter-rouge">Bitcode</code>苹果会做进一步的优化，有新的后端架构还是可以用这份优化过的<code class="highlighter-rouge">Bitcode</code>去生成。可以在这一层自定义Pass对IR代码做代码混淆</li>
+  <li><strong>生成目标文件(Assemble)</strong>：生成<code class="highlighter-rouge">Target</code>相关<code class="highlighter-rouge">Object</code>(Mach-o)。</li>
+  <li><strong>链接(Link)</strong>：生成<code class="highlighter-rouge">Executable</code>可执行文件。</li>
 </ul>
+
+<h4 id="4编写自己的pass">4、编写自己的PASS</h4>
+
+<p>新建PASS目录</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd /llvm/lib/Transforms/
+mkdir MyPass
+cd MyPass
+</code></pre></div></div>
+
+<p>创建文件</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkfile -nv 0 MyPass.cpp
+mkfile -nv 0 CMakeLists.txt
+</code></pre></div></div>
+
+<p>在 CMakeLists.txt中输入如下内容，这些内容用于标记模块名称和源文件信息，以及声明依赖关系。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>add_llvm_loadable_module( MyPass
+  MyPass.cpp
+
+  DEPENDS
+  intrinsics_gen
+  PLUGIN_TOOL
+  opt
+  )
+</code></pre></div></div>
+
+<p>在MyPass.cpp内编写自己的Pass</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include "llvm/ADT/Statistic.h"
+#include "llvm/IR/Function.h"
+#include "llvm/Pass.h"
+#include "llvm/Support/raw_ostream.h"
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">llvm</span><span class="p">;</span>
+<span class="k">namespace</span> <span class="p">{</span>
+    <span class="c1">// 使用空的名空间避免冲突</span>
+    <span class="k">struct</span> <span class="n">mypass</span> <span class="o">:</span> <span class="k">public</span> <span class="n">FunctionPass</span> <span class="p">{</span><span class="c1">// 继承FunctionPass用于处理IR中的方法</span>
+        <span class="k">static</span> <span class="kt">char</span> <span class="n">ID</span><span class="p">;</span> <span class="c1">// Pass identification, replacement for typeid</span>
+        <span class="n">mypass</span><span class="p">()</span> <span class="o">:</span> <span class="n">FunctionPass</span><span class="p">(</span><span class="n">ID</span><span class="p">)</span> <span class="p">{}</span>
+        
+        <span class="c1">// 遍历IR，每当遇到方法定义则调用该函数</span>
+        <span class="kt">bool</span> <span class="n">runOnFunction</span><span class="p">(</span><span class="n">Function</span> <span class="o">&amp;</span><span class="n">F</span><span class="p">)</span> <span class="k">override</span> <span class="p">{</span>
+            <span class="c1">// 输出方法名</span>
+            <span class="n">errs</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"funcName: "</span><span class="p">;</span>
+            <span class="n">errs</span><span class="p">().</span><span class="n">write_escaped</span><span class="p">(</span><span class="n">F</span><span class="p">.</span><span class="n">getName</span><span class="p">())</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">// 注册pass</span>
+<span class="kt">char</span> <span class="n">mypass</span><span class="o">::</span><span class="n">ID</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="k">static</span> <span class="n">RegisterPass</span><span class="o">&lt;</span><span class="n">mypass</span><span class="o">&gt;</span>
+<span class="n">Y</span><span class="p">(</span><span class="s">"MyPass"</span><span class="p">,</span> <span class="s">"MyPass"</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>返回上级<code class="highlighter-rouge">/llvm/lib/Transforms/</code>，修改这一层的CMakeLists.txt文件，注意不是MyPass文件夹里的CMakeListst.txt文件</p>
+
+<p>在末尾加上</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>add_subdirectory(MyPass)
+</code></pre></div></div>
+
+<p>到xcode目录，运行cmake重新编译配置文件</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd /llvm_xcode/
+cmake -G Xcode ../llvm
+</code></pre></div></div>
+
+<p>打开LLVM.xcodeproj</p>
+
+<p>找到MyPass Target运行，会得到MyPass.dylib</p>
+
+<p>首先</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>clang -c -emit-llvm code.c
+</code></pre></div></div>
+
+<p>运行LLVM Pass的两种方式</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>opt -load MyPass.dylib -MyPass code.bc
+clang -Xclang -load -Xclang MyPass.dylib code.c
+</code></pre></div></div>
 
 
 

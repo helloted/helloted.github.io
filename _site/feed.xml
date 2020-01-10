@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2020-01-08T17:04:27+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">macOS APP从零到上架</title><link href="http://www.helloted.com/others/2019/11/06/macosApp/" rel="alternate" type="text/html" title="macOS APP从零到上架" /><published>2019-11-06T20:00:00+08:00</published><updated>2019-11-06T20:00:00+08:00</updated><id>http://www.helloted.com/others/2019/11/06/macosApp</id><content type="html" xml:base="http://www.helloted.com/others/2019/11/06/macosApp/">&lt;p&gt;有一款软件叫SimPholders，可以访问iOS开发模拟器的沙盒文件位置，最近，模仿这个功能，开发了一个小型的macOS APP可以一键访问沙盒位置，已经上架到APP Store，记录一下开发过程和上架过程。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2020-01-10T14:44:58+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">macOS APP从零到上架</title><link href="http://www.helloted.com/others/2019/11/06/macosApp/" rel="alternate" type="text/html" title="macOS APP从零到上架" /><published>2019-11-06T20:00:00+08:00</published><updated>2019-11-06T20:00:00+08:00</updated><id>http://www.helloted.com/others/2019/11/06/macosApp</id><content type="html" xml:base="http://www.helloted.com/others/2019/11/06/macosApp/">&lt;p&gt;有一款软件叫SimPholders，可以访问iOS开发模拟器的沙盒文件位置，最近，模仿这个功能，开发了一个小型的macOS APP可以一键访问沙盒位置，已经上架到APP Store，记录一下开发过程和上架过程。&lt;/p&gt;
 
 &lt;p&gt;一键直达沙盒：&lt;a href=&quot;https://apps.apple.com/cn/app/isandbox/id1488446005?mt=12&quot;&gt;iSandBox-APP Store&lt;/a&gt;&lt;/p&gt;
 
@@ -557,31 +557,99 @@ otool -v -arch arm64e -s __TEXT __objc_methname /Users/haozhicao/Library/Develop
 &lt;p&gt;如上图所示，&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;strong&gt;预处理(Pre-process)&lt;/strong&gt;：他的主要工作就是将宏替换，删除注释展开头文件，生成&lt;code class=&quot;highlighter-rouge&quot;&gt;.i&lt;/code&gt;文件。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;strong&gt;词法分析(Lexical Analysis)&lt;/strong&gt;：将代码切成一个个 token，比如大小括号，等于号还有字符串等。是计算机科学中将字符序列转换为标记序列的过程。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;strong&gt;语义分析(Semantic Analysis)&lt;/strong&gt;：验证语法是否正确，然后将所有节点组成抽象语法树 AST 。由 Clang 中 Parser 和 Sema 配合完成。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;strong&gt;静态分析(Static Analysis)&lt;/strong&gt;：使用它来表示用于分析源代码以便自动发现错误。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;strong&gt;中间代码生成(Code Generation)&lt;/strong&gt;：生成中间代码 IR，CodeGen 会负责将语法树自顶向下遍历逐步翻译成 LLVM IR，IR 是编译过程的前端的输出，后端的输入。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;strong&gt;优化(Optimize)&lt;/strong&gt;：LLVM 会去做些优化工作，在 Xcode 的编译设置里也可以设置优化级别&lt;code class=&quot;highlighter-rouge&quot;&gt;-O1&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;-O3&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;-Os&lt;/code&gt;…还可以写些自己的 Pass，官方有比较完整的 Pass 教程： &lt;a href=&quot;http://llvm.org/docs/WritingAnLLVMPass.html&quot;&gt;Writing an LLVM Pass&lt;/a&gt; 。如果开启了&lt;code class=&quot;highlighter-rouge&quot;&gt;Bitcode&lt;/code&gt;苹果会做进一步的优化，有新的后端架构还是可以用这份优化过的&lt;code class=&quot;highlighter-rouge&quot;&gt;Bitcode&lt;/code&gt;去生成。可以在这一层自定义Pass对IR代码做代码混淆&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;strong&gt;生成目标文件(Assemble)&lt;/strong&gt;：生成&lt;code class=&quot;highlighter-rouge&quot;&gt;Target&lt;/code&gt;相关&lt;code class=&quot;highlighter-rouge&quot;&gt;Object&lt;/code&gt;(Mach-o)。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;strong&gt;链接(Link)&lt;/strong&gt;：生成&lt;code class=&quot;highlighter-rouge&quot;&gt;Executable&lt;/code&gt;可执行文件。&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">1、编译简介</summary></entry><entry><title type="html">Flutter UI原理</title><link href="http://www.helloted.com/flutter/2019/05/18/FlutterUI/" rel="alternate" type="text/html" title="Flutter UI原理" /><published>2019-05-18T20:00:00+08:00</published><updated>2019-05-18T20:00:00+08:00</updated><id>http://www.helloted.com/flutter/2019/05/18/FlutterUI</id><content type="html" xml:base="http://www.helloted.com/flutter/2019/05/18/FlutterUI/">&lt;h3 id=&quot;一万物皆widget&quot;&gt;一、万物皆Widget&lt;/h3&gt;
+  &lt;li&gt;&lt;strong&gt;预处理(Pre-process)&lt;/strong&gt;：他的主要工作就是将宏替换，删除注释展开头文件，生成&lt;code class=&quot;highlighter-rouge&quot;&gt;.i&lt;/code&gt;文件。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;词法分析(Lexical Analysis)&lt;/strong&gt;：将代码切成一个个 token，比如大小括号，等于号还有字符串等。是计算机科学中将字符序列转换为标记序列的过程。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;语义分析(Semantic Analysis)&lt;/strong&gt;：验证语法是否正确，然后将所有节点组成抽象语法树 AST 。由 Clang 中 Parser 和 Sema 配合完成。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;静态分析(Static Analysis)&lt;/strong&gt;：使用它来表示用于分析源代码以便自动发现错误。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;中间代码生成(Code Generation)&lt;/strong&gt;：生成中间代码 IR，CodeGen 会负责将语法树自顶向下遍历逐步翻译成 LLVM IR，IR 是编译过程的前端的输出，后端的输入。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;优化(Optimize)&lt;/strong&gt;：LLVM 会去做些优化工作，在 Xcode 的编译设置里也可以设置优化级别&lt;code class=&quot;highlighter-rouge&quot;&gt;-O1&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;-O3&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;-Os&lt;/code&gt;…还可以写些自己的 Pass，官方有比较完整的 Pass 教程： &lt;a href=&quot;http://llvm.org/docs/WritingAnLLVMPass.html&quot;&gt;Writing an LLVM Pass&lt;/a&gt; 。如果开启了&lt;code class=&quot;highlighter-rouge&quot;&gt;Bitcode&lt;/code&gt;苹果会做进一步的优化，有新的后端架构还是可以用这份优化过的&lt;code class=&quot;highlighter-rouge&quot;&gt;Bitcode&lt;/code&gt;去生成。可以在这一层自定义Pass对IR代码做代码混淆&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;生成目标文件(Assemble)&lt;/strong&gt;：生成&lt;code class=&quot;highlighter-rouge&quot;&gt;Target&lt;/code&gt;相关&lt;code class=&quot;highlighter-rouge&quot;&gt;Object&lt;/code&gt;(Mach-o)。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;链接(Link)&lt;/strong&gt;：生成&lt;code class=&quot;highlighter-rouge&quot;&gt;Executable&lt;/code&gt;可执行文件。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;4编写自己的pass&quot;&gt;4、编写自己的PASS&lt;/h4&gt;
+
+&lt;p&gt;新建PASS目录&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cd /llvm/lib/Transforms/
+mkdir MyPass
+cd MyPass
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;创建文件&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mkfile -nv 0 MyPass.cpp
+mkfile -nv 0 CMakeLists.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;在 CMakeLists.txt中输入如下内容，这些内容用于标记模块名称和源文件信息，以及声明依赖关系。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;add_llvm_loadable_module( MyPass
+  MyPass.cpp
+
+  DEPENDS
+  intrinsics_gen
+  PLUGIN_TOOL
+  opt
+  )
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;在MyPass.cpp内编写自己的Pass&lt;/p&gt;
+
+&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;#include &quot;llvm/ADT/Statistic.h&quot;
+#include &quot;llvm/IR/Function.h&quot;
+#include &quot;llvm/Pass.h&quot;
+#include &quot;llvm/Support/raw_ostream.h&quot;
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;namespace&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;llvm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;namespace&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// 使用空的名空间避免冲突&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mypass&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FunctionPass&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;// 继承FunctionPass用于处理IR中的方法&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ID&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Pass identification, replacement for typeid&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;mypass&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FunctionPass&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ID&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+        
+        &lt;span class=&quot;c1&quot;&gt;// 遍历IR，每当遇到方法定义则调用该函数&lt;/span&gt;
+        &lt;span class=&quot;kt&quot;&gt;bool&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;runOnFunction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Function&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;override&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;c1&quot;&gt;// 输出方法名&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;errs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;funcName: &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;errs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;write_escaped&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;'\n'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// 注册pass&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mypass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ID&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RegisterPass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mypass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;Y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;MyPass&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;MyPass&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;返回上级&lt;code class=&quot;highlighter-rouge&quot;&gt;/llvm/lib/Transforms/&lt;/code&gt;，修改这一层的CMakeLists.txt文件，注意不是MyPass文件夹里的CMakeListst.txt文件&lt;/p&gt;
+
+&lt;p&gt;在末尾加上&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;add_subdirectory(MyPass)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;到xcode目录，运行cmake重新编译配置文件&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cd /llvm_xcode/
+cmake -G Xcode ../llvm
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;打开LLVM.xcodeproj&lt;/p&gt;
+
+&lt;p&gt;找到MyPass Target运行，会得到MyPass.dylib&lt;/p&gt;
+
+&lt;p&gt;首先&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;clang -c -emit-llvm code.c
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;运行LLVM Pass的两种方式&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;opt -load MyPass.dylib -MyPass code.bc
+clang -Xclang -load -Xclang MyPass.dylib code.c
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">1、编译简介</summary></entry><entry><title type="html">Flutter UI原理</title><link href="http://www.helloted.com/flutter/2019/05/18/FlutterUI/" rel="alternate" type="text/html" title="Flutter UI原理" /><published>2019-05-18T20:00:00+08:00</published><updated>2019-05-18T20:00:00+08:00</updated><id>http://www.helloted.com/flutter/2019/05/18/FlutterUI</id><content type="html" xml:base="http://www.helloted.com/flutter/2019/05/18/FlutterUI/">&lt;h3 id=&quot;一万物皆widget&quot;&gt;一、万物皆Widget&lt;/h3&gt;
 
 &lt;h4 id=&quot;1widget&quot;&gt;1、Widget&lt;/h4&gt;
 
