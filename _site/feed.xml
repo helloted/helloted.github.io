@@ -1,4 +1,174 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2020-01-10T14:44:58+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">macOS APP从零到上架</title><link href="http://www.helloted.com/others/2019/11/06/macosApp/" rel="alternate" type="text/html" title="macOS APP从零到上架" /><published>2019-11-06T20:00:00+08:00</published><updated>2019-11-06T20:00:00+08:00</updated><id>http://www.helloted.com/others/2019/11/06/macosApp</id><content type="html" xml:base="http://www.helloted.com/others/2019/11/06/macosApp/">&lt;p&gt;有一款软件叫SimPholders，可以访问iOS开发模拟器的沙盒文件位置，最近，模仿这个功能，开发了一个小型的macOS APP可以一键访问沙盒位置，已经上架到APP Store，记录一下开发过程和上架过程。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2020-05-01T16:46:13+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">RPC</title><link href="http://www.helloted.com/others/2020/04/26/protocolbuffers/" rel="alternate" type="text/html" title="RPC" /><published>2020-04-26T20:00:00+08:00</published><updated>2020-04-26T20:00:00+08:00</updated><id>http://www.helloted.com/others/2020/04/26/protocolbuffers</id><content type="html" xml:base="http://www.helloted.com/others/2020/04/26/protocolbuffers/">&lt;p&gt;RPC(Remote Procedure Call)：远程过程调用，它是一种通过网络从远程计算机程序上请求服务，而不需要了解底层网络技术的思想。&lt;/p&gt;
+
+&lt;h4 id=&quot;0完整的rpc框架&quot;&gt;0、完整的RPC框架&lt;/h4&gt;
+
+&lt;p&gt;在一个典型 RPC 的使用场景中，包含了服务发现、负载、容错、网络传输、序列化等组件&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_3/31.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;一个 RPC 的核心功能主要有 5 个部分组成，分别是：客户端、客户端 Stub、网络传输模块、服务端 Stub、服务端等。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;客户端(Client)：服务调用方。&lt;/li&gt;
+  &lt;li&gt;客户端存根(Client Stub)：存放服务端地址信息，将客户端的请求参数数据信息打包成网络消息，再通过网络传输发送给服务端。&lt;/li&gt;
+  &lt;li&gt;服务端存根(Server Stub)：接收客户端发送过来的请求消息并进行解包，然后再调用本地服务进行处理。&lt;/li&gt;
+  &lt;li&gt;服务端(Server)：服务的真正提供者。&lt;/li&gt;
+  &lt;li&gt;Network Service：底层传输，可以是 TCP 或 HTTP。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_3/32.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;1一次-rpc-调用流程&quot;&gt;1、一次 RPC 调用流程&lt;/h4&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;服务消费者(Client 客户端)通过本地调用的方式调用服务。&lt;/li&gt;
+  &lt;li&gt;客户端存根(Client Stub)接收到调用请求后负责将方法、入参等信息序列化(组装)成能够进行网络传输的消息体。&lt;/li&gt;
+  &lt;li&gt;客户端存根(Client Stub)找到远程的服务地址，并且将消息通过网络发送给服务端。&lt;/li&gt;
+  &lt;li&gt;服务端存根(Server Stub)收到消息后进行解码(反序列化操作)。&lt;/li&gt;
+  &lt;li&gt;服务端存根(Server Stub)根据解码结果调用本地的服务进行相关处理&lt;/li&gt;
+  &lt;li&gt;服务端(Server)本地服务业务处理。&lt;/li&gt;
+  &lt;li&gt;处理结果返回给服务端存根(Server Stub)。&lt;/li&gt;
+  &lt;li&gt;服务端存根(Server Stub)序列化结果。&lt;/li&gt;
+  &lt;li&gt;服务端存根(Server Stub)将结果通过网络发送至消费方。&lt;/li&gt;
+  &lt;li&gt;客户端存根(Client Stub)接收到消息，并进行解码(反序列化)。&lt;/li&gt;
+  &lt;li&gt;服务消费方得到最终结果。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_3/33.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;RPC 的核心功能主要由 5 个模块组成，如果想要自己实现一个 RPC，最简单的方式要实现三个技术点，分别是：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;服务寻址&lt;/li&gt;
+  &lt;li&gt;数据流的序列化和反序列化&lt;/li&gt;
+  &lt;li&gt;网络传输&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;2服务寻址&quot;&gt;2、服务寻址&lt;/h4&gt;
+
+&lt;p&gt;服务寻址可以使用 Call ID 映射。在本地调用中，函数体是直接通过函数指针来指定的，但是在远程调用中，函数指针是不行的，因为两个进程的地址空间是完全不一样的。&lt;/p&gt;
+
+&lt;p&gt;所以在 RPC 中，所有的函数都必须有自己的一个 ID。这个 ID 在所有进程中都是唯一确定的。&lt;/p&gt;
+
+&lt;p&gt;客户端在做远程过程调用时，必须附上这个 ID。然后我们还需要在客户端和服务端分别维护一个函数和Call ID的对应表。&lt;/p&gt;
+
+&lt;p&gt;当客户端需要进行远程调用时，它就查一下这个表，找出相应的 Call ID，然后把它传给服务端，服务端也通过查表，来确定客户端需要调用的函数，然后执行相应函数的代码。&lt;/p&gt;
+
+&lt;h4 id=&quot;3序列化和反序列化&quot;&gt;3、序列化和反序列化&lt;/h4&gt;
+
+&lt;p&gt;客户端怎么把参数值传给远程的函数呢?在本地调用中，我们只需要把参数压到栈里，然后让函数自己去栈里读就行。&lt;/p&gt;
+
+&lt;p&gt;但是在远程过程调用时，客户端跟服务端是不同的进程，不能通过内存来传递参数。&lt;/p&gt;
+
+&lt;p&gt;这时候就需要客户端把参数先转成一个字节流，传给服务端后，再把字节流转成自己能读取的格式。&lt;/p&gt;
+
+&lt;p&gt;只有二进制数据才能在网络中传输，序列化和反序列化的定义是：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;将对象转换成二进制流的过程叫做序列化&lt;/li&gt;
+  &lt;li&gt;将二进制流转换成对象的过程叫做反序列化&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;这个过程叫序列化和反序列化。同理，从服务端返回的值也需要序列化反序列化的过程。&lt;/p&gt;
+
+&lt;h4 id=&quot;4网络传输&quot;&gt;4、网络传输&lt;/h4&gt;
+
+&lt;p&gt;网络传输：远程调用往往用在网络上，客户端和服务端是通过网络连接的。&lt;/p&gt;
+
+&lt;p&gt;所有的数据都需要通过网络传输，因此就需要有一个网络传输层。网络传输层需要把 Call ID 和序列化后的参数字节流传给服务端，然后再把序列化后的调用结果传回客户端。&lt;/p&gt;
+
+&lt;p&gt;只要能完成这两者的，都可以作为传输层使用。因此，它所使用的协议其实是不限的，能完成传输就行。&lt;/p&gt;
+
+&lt;p&gt;尽管大部分 RPC 框架都使用 TCP 协议，但其实 UDP 也可以，而 gRPC 干脆就用了 HTTP2。&lt;/p&gt;
+
+&lt;p&gt;TCP 的连接是最常见的，简要分析基于 TCP 的连接：通常 TCP 连接可以是按需连接(需要调用的时候就先建立连接，调用结束后就立马断掉)，也可以是长连接(客户端和服务器建立起连接之后保持长期持有，不管此时有无数据包的发送，可以配合心跳检测机制定期检测建立的连接是否存活有效)，多个远程过程调用共享同一个连接。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;基于 TCP 协议的 RPC 调用&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;由服务的调用方与服务的提供方建立 Socket 连接，并由服务的调用方通过 Socket 将需要调用的接口名称、方法名称和参数序列化后传递给服务的提供方，服务的提供方反序列化后再利用反射调用相关的方法。将结果返回给服务的调用方，整个基于 TCP 协议的 RPC 调用大致如此。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;基于 HTTP 协议的 RPC 调用&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;该方法更像是访问网页一样，只是它的返回结果更加单一简单。&lt;/p&gt;
+
+&lt;p&gt;其大致流程为：由服务的调用者向服务的提供者发送请求，这种请求的方式可能是 GET、POST、PUT、DELETE 等中的一种，服务的提供者可能会根据不同的请求方式做出不同的处理，或者某个方法只允许某种请求方式。&lt;/p&gt;
+
+&lt;p&gt;而调用的具体方法则是根据 URL 进行方法调用，而方法所需要的参数可能是对服务调用方传输过去的 XML 数据或者 JSON 数据解析后的结果，返回 JOSN 或者 XML 的数据结果。&lt;/p&gt;
+
+&lt;p&gt;由于目前有很多开源的 Web 服务器，如 Tomcat，所以其实现起来更加容易，就像做 Web 项目一样。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;两种方式对比&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;基于 TCP 的协议实现的 RPC 调用，由于 TCP 协议处于协议栈的下层，能够更加灵活地对协议字段进行定制，减少网络开销，提高性能，实现更大的吞吐量和并发数。&lt;/p&gt;
+
+&lt;p&gt;但是需要更多关注底层复杂的细节，实现的代价更高。同时对不同平台，如安卓，iOS 等，需要重新开发出不同的工具包来进行请求发送和相应解析，工作量大，难以快速响应和满足用户需求。&lt;/p&gt;
+
+&lt;p&gt;基于 HTTP 协议实现的 RPC 则可以使用 JSON 和 XML 格式的请求或响应数据。&lt;/p&gt;
+
+&lt;p&gt;而 JSON 和 XML 作为通用的格式标准(使用 HTTP 协议也需要序列化和反序列化，不过这不是该协议下关心的内容，成熟的 Web 程序已经做好了序列化内容)，开源的解析工具已经相当成熟，在其上进行二次开发会非常便捷和简单。&lt;/p&gt;
+
+&lt;p&gt;但是由于 HTTP 协议是上层协议，发送包含同等内容的信息，使用 HTTP 协议传输所占用的字节数会比使用 TCP 协议传输所占用的字节数更高。&lt;/p&gt;
+
+&lt;p&gt;因此在同等网络下，通过 HTTP 协议传输相同内容，效率会比基于 TCP 协议的数据效率要低，信息传输所占用的时间也会更长，当然压缩数据，能够缩小这一差距。&lt;/p&gt;
+
+&lt;h4 id=&quot;5restful-api-架构&quot;&gt;5、RESTful API 架构&lt;/h4&gt;
+
+&lt;p&gt;RESTful的几个特点为：资源、统一接口、URI 和无状态。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;资源所谓”资源”，就是网络上的一个实体，或者说是网络上的一个具体信息。它可以是一段文本、一张图片、一首歌曲、一种服务，就是一个具体的实在。&lt;/li&gt;
+  &lt;li&gt;统一接口：RESTful 架构风格规定，数据的元操作，即 CRUD(Create，Read，Update 和 Delete，即数据的增删查改)操作，分别对应于 HTTP 方法：GET 用来获取资源，POST 用来新建资源(也可以用于更新资源)，PUT 用来更新资源，DELETE 用来删除资源，这样就统一了数据操作的接口，仅通过 HTTP 方法，就可以完成对数据的所有增删查改工作。&lt;/li&gt;
+  &lt;li&gt;URL：可以用一个 URI(统一资源定位符)指向资源，即每个 URI 都对应一个特定的资源。要获取这个资源，访问它的 URI 就可以，因此 URI 就成了每一个资源的地址或识别符。&lt;/li&gt;
+  &lt;li&gt;无状态：所谓无状态的，即所有的资源，都可以通过 URI 定位，而且这个定位与其他资源无关，也不会因为其他资源的变化而改变。有状态和无状态的区别。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;6rpc-vs-rest&quot;&gt;6、RPC VS REST&lt;/h4&gt;
+
+&lt;p&gt;&lt;strong&gt;面对对象不同：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;RPC 更侧重于动作。&lt;/li&gt;
+  &lt;li&gt;REST 的主体是资源。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;RESTful 是面向资源的设计架构，但在系统中有很多对象不能抽象成资源，比如登录，修改密码等而 RPC 可以通过动作去操作资源。所以在操作的全面性上 RPC 大于 RESTful。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;传输效率：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;RPC 效率更高。RPC，使用自定义的 TCP 协议，可以让请求报文体积更小，或者使用 HTTP2 协议，也可以很好的减少报文的体积，提高传输效率。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;复杂度：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;RPC 实现复杂，流程繁琐。&lt;/li&gt;
+  &lt;li&gt;REST 调用及测试都很方便。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;RPC 实现需要实现编码，序列化，网络传输等。而 RESTful 不要关注这些，RESTful 实现更简单。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;灵活性：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;HTTP 相对更规范，更标准，更通用，无论哪种语言都支持 HTTP 协议。&lt;/li&gt;
+  &lt;li&gt;RPC 可以实现跨语言调用，但整体灵活性不如 RESTful。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;总结&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;RPC 主要用于公司内部的服务调用，性能消耗低，传输效率高，实现复杂。&lt;/p&gt;
+
+&lt;p&gt;HTTP 主要用于对外的异构环境，浏览器接口调用，App 接口调用，第三方接口调用等。&lt;/p&gt;
+
+&lt;p&gt;RPC 使用场景(大型的网站，内部子系统较多、接口非常多的情况下适合使用 RPC)：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;长链接。不必每次通信都要像 HTTP 一样去 3 次握手，减少了网络开销。&lt;/li&gt;
+  &lt;li&gt;注册发布机制。RPC 框架一般都有注册中心，有丰富的监控管理;发布、下线接口、动态扩展等，对调用方来说是无感知、统一化的操作。&lt;/li&gt;
+  &lt;li&gt;安全性，没有暴露资源操作。&lt;/li&gt;
+  &lt;li&gt;微服务支持。就是最近流行的服务化架构、服务化治理，RPC 框架是一个强力的支撑。&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Ted</name></author><category term="Others" /><summary type="html">RPC(Remote Procedure Call)：远程过程调用，它是一种通过网络从远程计算机程序上请求服务，而不需要了解底层网络技术的思想。</summary></entry><entry><title type="html">macOS APP从零到上架</title><link href="http://www.helloted.com/others/2019/11/06/macosApp/" rel="alternate" type="text/html" title="macOS APP从零到上架" /><published>2019-11-06T20:00:00+08:00</published><updated>2019-11-06T20:00:00+08:00</updated><id>http://www.helloted.com/others/2019/11/06/macosApp</id><content type="html" xml:base="http://www.helloted.com/others/2019/11/06/macosApp/">&lt;p&gt;有一款软件叫SimPholders，可以访问iOS开发模拟器的沙盒文件位置，最近，模仿这个功能，开发了一个小型的macOS APP可以一键访问沙盒位置，已经上架到APP Store，记录一下开发过程和上架过程。&lt;/p&gt;
 
 &lt;p&gt;一键直达沙盒：&lt;a href=&quot;https://apps.apple.com/cn/app/isandbox/id1488446005?mt=12&quot;&gt;iSandBox-APP Store&lt;/a&gt;&lt;/p&gt;
 
@@ -1343,208 +1513,4 @@ D．根据正式决策终止，并记录项目&lt;/p&gt;
 
 &lt;p&gt;我本身是研发岗位，PMP证书对于我的平时工作，可以说是没有什么直接的加分效果。但是在备考PMP的过程中，系统地学习了项目管理的理论知识，加上之前的一些项目管理经验，可以说是对于项目管理有一个比较深的认识，而项目管理的5个过程组，启动、规划、执行、监控、收尾。对于平时工作的也有一个指导作用，在生活上也是贯穿其中。所以，于证书的价值而言，虽然于研发岗位没有直接作用，但是项目管理的知识更为重要，能够很好地扩大知识领域以及提高管理能力。&lt;/p&gt;
 
-&lt;p&gt;总结：备考PMP，项目启动于2018年8月，中间花费近6千元左右(培训费+考试费)，6个休息日，另有50+的学时，结束于2018年12月，取得4A+成绩，PMP证书一份。&lt;/p&gt;</content><author><name>Ted</name></author><category term="Others" /><summary type="html">作为一名程序员客户端开发，之所以报考PMP是因为在上家公司从事了项目管理的工作，接触了一些项目管理的知识，感觉项目管理的一些理论对于管理水平提升很有用，所以打算系统的学习一下项目管理并且考取证书。</summary></entry><entry><title type="html">iOS编码建议</title><link href="http://www.helloted.com/ios/2019/01/02/code/" rel="alternate" type="text/html" title="iOS编码建议" /><published>2019-01-02T20:00:00+08:00</published><updated>2019-01-02T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2019/01/02/code</id><content type="html" xml:base="http://www.helloted.com/ios/2019/01/02/code/">&lt;h4 id=&quot;一viewcontroller代码结构&quot;&gt;一、ViewController代码结构&lt;/h4&gt;
-
-&lt;p&gt;在函数分组和protocol/delegate实现中使用&lt;code class=&quot;highlighter-rouge&quot;&gt;#pragma mark -&lt;/code&gt;来分类方法，遵循以下结构：&lt;/p&gt;
-
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;c1&quot;&gt;// 生命周期&lt;/span&gt;
-&lt;span class=&quot;cp&quot;&gt;#pragma mark - Lifecycle
-&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;instancetype&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;init&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
-
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;awakeFromNib&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
-
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;loadView&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
-
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;viewDidLoad&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
-
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;viewWillAppear&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BOOL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;animated&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
-
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;viewWillLayoutSubviews&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
-
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;viewDidLayoutSubviews&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
-
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;viewDidAppear&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BOOL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;animated&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
-
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;viewWillDisappear&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BOOL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;animated&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
-
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;viewDidDisappear&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BOOL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;animated&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
-
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dealloc&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
-
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;didReceiveMemoryWarning&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
-
-
-&lt;span class=&quot;c1&quot;&gt;// 如果是Storyboard/Xib&lt;/span&gt;
-&lt;span class=&quot;cp&quot;&gt;#pragma mark - IBActions
-&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;IBAction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sendBtnClicked&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sender&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// 公开方法&lt;/span&gt;
-&lt;span class=&quot;cp&quot;&gt;#pragma mark - Public
-&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;publicMethod&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// 私有方法&lt;/span&gt;
-&lt;span class=&quot;cp&quot;&gt;#pragma mark - Private
-&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;privateMethod&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// 各种代理和协议方法&lt;/span&gt;
-&lt;span class=&quot;cp&quot;&gt;#pragma mark - Protocol
-#pragma mark - UITextFieldDelegate
-#pragma mark - UITableViewDataSource
-#pragma mark - UITableViewDelegate
-&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;// 懒加载的Getter&lt;/span&gt;
-&lt;span class=&quot;cp&quot;&gt;#pragma mark - Getter &amp;amp;&amp;amp; Setter
-&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;// Copy协议和description较少&lt;/span&gt;
-&lt;span class=&quot;cp&quot;&gt;#pragma mark - NSCopying/NSObject
-&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;copyWithZone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSZone&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zone&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;description&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;二命名&quot;&gt;二、命名&lt;/h4&gt;
-
-&lt;p&gt;1、变量和方法名：驼峰命名；&lt;/p&gt;
-
-&lt;p&gt;2、宏和常量命名&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;#define&lt;/code&gt; 预处理定义的常量全部大写，单词间用 _ 分隔&lt;/p&gt;
-
-    &lt;p&gt;例子: #define THIS_IS_AN_MACRO @”THIS_IS_AN_MACRO”&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;宏定义的本质是在编译时进行替换，所以宏定义中如果包含表达式或变量，表达式或变量必须用小括号括起来，防止与其他变量出现混合的情况。&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;3、枚举：枚举类型参考系统应该写全类型：名称+类型&lt;/p&gt;
-
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;typedef&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;NS_ENUM&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSInteger&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;UIViewAnimationTransition&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;UIViewAnimationTransitionNone&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;UIViewAnimationTransitionFlipFromLeft&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;UIViewAnimationTransitionFlipFromRight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;UIViewAnimationTransitionCurlUp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;UIViewAnimationTransitionCurlDown&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;当在switch使用枚举类型时，’default’是不需要的&lt;/p&gt;
-
-&lt;p&gt;4、类的命名：　&lt;/p&gt;
-
-&lt;p&gt;ViewController: 使用ViewController做后缀，例子: XXHomeViewController&lt;/p&gt;
-
-&lt;p&gt;View: 使用View做后缀，例子: XXAlertView&lt;/p&gt;
-
-&lt;p&gt;UITableCell:使用Cell做后缀，例子: XXNewsCell&lt;/p&gt;
-
-&lt;p&gt;Protocol: 使用Delegate或者DataSource作为后缀，例子: UITableViewDelegate&lt;/p&gt;
-
-&lt;p&gt;UI控件依次类推&lt;/p&gt;
-
-&lt;h4 id=&quot;三编码&quot;&gt;三、编码&lt;/h4&gt;
-
-&lt;h4 id=&quot;1字面编码&quot;&gt;1、字面编码&lt;/h4&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;NSString&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;NSDictionary&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;NSArray&lt;/code&gt;, 和 &lt;code class=&quot;highlighter-rouge&quot;&gt;NSNumber&lt;/code&gt;可以在创建不可变值时使用，注意不要传nil值，否则会崩溃。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSArray *names = @[@&quot;Brian&quot;, @&quot;Matt&quot;, @&quot;Chris&quot;, @&quot;Alex&quot;, @&quot;Steve&quot;, @&quot;Paul&quot;];
-NSDictionary *productManagers = @{@&quot;iPhone&quot;: @&quot;Kate&quot;, @&quot;iPad&quot;: @&quot;Kamal&quot;, @&quot;Mobile Web&quot;: @&quot;Bill&quot;};
-NSNumber *shouldUseLiterals = @YES;
-NSNumber *buildingStreetNumber = @10018;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;2条件语句&quot;&gt;2、条件语句&lt;/h4&gt;
-
-&lt;p&gt;条件语句主体为了防止出错应该使用大括号包围，即使条件语句主体能够不用大括号编写(如，只用一行代码)。这些错误包括添加第二行代码和期望它成为if语句；还有，可能发生在if语句里面一行代码被注释了，然后下一行代码不知不觉地成为if语句的一部分。除此之外，这种风格与其他条件语句的风格保持一致，所以更加容易阅读。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// 应该
-if (!error) {
-  return success;
-}
-
-// 而不是
-if (!error)
-  return success;
-// 或者
-if (!error) return success;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;3构造方法init方法&quot;&gt;3、构造方法/init方法&lt;/h4&gt;
-
-&lt;p&gt;当构造方法被使用时，虽然用id也可以通过编译，但它应该返回类型是&lt;code class=&quot;highlighter-rouge&quot;&gt;instancetype&lt;/code&gt;而不是&lt;code class=&quot;highlighter-rouge&quot;&gt;id&lt;/code&gt;。这样确保编译器正确地推断结果类型。&lt;/p&gt;
-
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;instancetype&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;init&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;super&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// ...&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;四变量和属性&quot;&gt;四、变量和属性&lt;/h4&gt;
-
-&lt;p&gt;建议使用属性而不是实例变量。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;推荐:&lt;/strong&gt;&lt;/p&gt;
-
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;@interface&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;RWTTutorial&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;NSObject&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;@property&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;strong&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nonatomic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tutorialName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;@end&lt;/span&gt;
-    
-&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tutorialName&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;不推荐:&lt;/strong&gt;&lt;/p&gt;
-
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;@interface&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;RWTTutorial&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;NSObject&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tutorialName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tutorialName&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;属性会自动有Setter和Getter，可以通过直接用点语法访问Setter和Getter方法。&lt;/li&gt;
-  &lt;li&gt;虽然&lt;img src=&quot;https://www.zhihu.com/equation?tex=%2A.&quot; alt=&quot;*.&quot; /&gt; 和 -&amp;gt;是等价的，或者说编译器优化后等价。但是在访问空指针和野指针时有差别——空指针会挂在*解引用，野指针会挂在.访问内存。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;五常量&quot;&gt;五、常量&lt;/h4&gt;
-
-&lt;p&gt;共享一块内存空间，就算项目中N处用到，也不会分配N块内存空间，可以根据const修饰的位置设定能否修改，在编译阶段会执行类型检查&lt;/p&gt;
-
-&lt;p&gt;推荐使用const来定义常量，如下&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NSString *const kWEGMomentTopicNumberUpdateNotification = @&quot;kWEGMomentTopicNumberUpdateNotification&quot;;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;const不能满足的情况再考虑使用宏定义&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#define kWEGMomentTopicNumberUpdateNotification @&quot;kWEGMomentTopicNumberUpdateNotification&quot;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;如果是需要外部共享，使用extern关键字，参考苹果官方&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;extern NSString * const UIApplicationDidEnterBackgroundNotification  
-extern NSString * const UIApplicationWillEnterForegroundNotification  
-extern NSString * const UIApplicationDidFinishLaunchingNotification;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;六整体架构&quot;&gt;六、整体架构&lt;/h4&gt;
-
-&lt;p&gt;推荐MVC+VM(也叫MVCS，S是Store的意思，数据处理逻辑)。&lt;/p&gt;
-
-&lt;p&gt;MVC+VM：MVC是苹果官方推荐，V专注于视图构建，Model是瘦Model，专注于模型构建，仅持有数据；数据流动全部由Controller来传递，流向清晰，当Controller变复杂时，将数据处理逻辑剥离出来成为VM，模型数据流向仍由Controller负责，优点是数据流向清晰，业务耦合弱，缺点是不同Controller可能要生成各种不同VM适配。&lt;/p&gt;
-
-&lt;p&gt;MVVM：主要优点数据绑定，做到数据一致性，同时也能做到给Controller瘦身目的，缺点是数据绑定导致数据流向不清晰，难以调试Bug，如果没有详细清晰文档，很可能成为一个天坑(助手里的聊天模块)。&lt;/p&gt;
-
-&lt;p&gt;MVP：Presenter与Controller相互持有，通过接口，P层拥有了Controller的权利，所有的业务分配都在P层内完成，包括像tableView的数据源和代理。优点是MVC解耦，MVC成为平行；缺点是，有点特意为了解耦而解耦，初看会莫名其妙。&lt;/p&gt;
-
-&lt;p&gt;一份分享&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/sources/PDF/learn_list.pdf&quot;&gt;Android代码整洁&lt;/a&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">一、ViewController代码结构</summary></entry></feed>
+&lt;p&gt;总结：备考PMP，项目启动于2018年8月，中间花费近6千元左右(培训费+考试费)，6个休息日，另有50+的学时，结束于2018年12月，取得4A+成绩，PMP证书一份。&lt;/p&gt;</content><author><name>Ted</name></author><category term="Others" /><summary type="html">作为一名程序员客户端开发，之所以报考PMP是因为在上家公司从事了项目管理的工作，接触了一些项目管理的知识，感觉项目管理的一些理论对于管理水平提升很有用，所以打算系统的学习一下项目管理并且考取证书。</summary></entry></feed>
