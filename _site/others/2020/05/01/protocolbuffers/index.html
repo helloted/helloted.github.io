@@ -248,14 +248,14 @@
       <td>已废弃</td>
     </tr>
     <tr>
-      <td> </td>
+      <td>5</td>
       <td>32位长度</td>
       <td>fixed32 sfixed32 float</td>
     </tr>
   </tbody>
 </table>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>`(field_number &lt;&lt; 3) | wire_type`
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(field_number &lt;&lt; 3) | wire_type
 </code></pre></div></div>
 
 <p>低三位表示wire type，其他的位表示field number(编号)。</p>
@@ -275,17 +275,23 @@
 
 <p>先看最简单的数值1，一个字节足以表示它，所以它的标记位置0：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>`0000 0001`
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0000 0001
 </code></pre></div></div>
 
 <p>再看数值300，经过Varints编码后的序列：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>`1010 1100 0000 0010`
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1010 1100 0000 0010
 </code></pre></div></div>
 
 <p>换算的时候，从左到右，依次将每个字节的高位（标志位）去掉，Protocol Buffer是低位在前，转换后拼接</p>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="sb">`</span>1010 1100 0000 0010→ 010 1100  000 0010<span class="sb">`</span>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	1010 1100 0000 0010
+	(去除标志位)
+→  010 1100  000 0010
+  (转换拼接)
+→  000 0010  010 1100
+	(进制)
+→	 300
 </code></pre></div></div>
 
 <p>可变长度编码唯一的缺点就是当数很大的时候int32需要占用5个字节，但是从统计学角度来说，一般不会有这么大的数。</p>
@@ -296,17 +302,19 @@
 
 <h4 id="6编码">6、编码</h4>
 
-<div class="language-protobuf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">`</span><span class="kd">message</span> <span class="nc">Test1</span><span class="p">{</span>    <span class="k">required</span> <span class="kt">int32</span> <span class="na">id</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;}</span><span class="err">`</span>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>message Test1{    
+		required int32 id = 1;
+}
 </code></pre></div></div>
 
 <p>如果我们将number赋值为300，则Message进行编码序列化以后以16进制输出为</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>`08 96 01`
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>08 96 01
 </code></pre></div></div>
 
 <p>其中第一个字节08</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>`0000 1000`
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0000 1000
 </code></pre></div></div>
 
 <p>wire type为0，field name为1。符合id的类型是int32，编码方式是Varints，field是1的这一情况。</p>
@@ -321,7 +329,7 @@
 
 <p>如果将str赋值为’testing’，然后把经过protobuf编码序列化后的数据以16进制的方式输出</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>`12 07 74 65 73 74 69 6e 67`
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>12 07 74 65 73 74 69 6e 67
 </code></pre></div></div>
 
 <p>第一个字节0x12表示field name为2，wire type为2。第二个字节0x07表示数据长度为7，所以后面7个字节就是使用UTF8编码的testing。</p>

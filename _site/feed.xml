@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2020-05-02T18:14:40+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">gRPC &amp;amp; Protocol Buffers</title><link href="http://www.helloted.com/others/2020/05/01/protocolbuffers/" rel="alternate" type="text/html" title="gRPC &amp; Protocol Buffers" /><published>2020-05-01T20:00:00+08:00</published><updated>2020-05-01T20:00:00+08:00</updated><id>http://www.helloted.com/others/2020/05/01/protocolbuffers</id><content type="html" xml:base="http://www.helloted.com/others/2020/05/01/protocolbuffers/">&lt;h4 id=&quot;0grpc&quot;&gt;0、gRPC&lt;/h4&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2020-05-02T18:23:46+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">gRPC &amp;amp; Protocol Buffers</title><link href="http://www.helloted.com/others/2020/05/01/protocolbuffers/" rel="alternate" type="text/html" title="gRPC &amp; Protocol Buffers" /><published>2020-05-01T20:00:00+08:00</published><updated>2020-05-01T20:00:00+08:00</updated><id>http://www.helloted.com/others/2020/05/01/protocolbuffers</id><content type="html" xml:base="http://www.helloted.com/others/2020/05/01/protocolbuffers/">&lt;h4 id=&quot;0grpc&quot;&gt;0、gRPC&lt;/h4&gt;
 
 &lt;p&gt;gRPC 是一个高性能、开源、通用的RPC框架，由Google推出，基于HTTP/2协议标准设计开发，默认采用Protocol Buffers数据序列化协议，支持多种开发语言。gRPC提供了一种简单的方法来精确的定义服务，并且为客户端和服务端自动生成可靠的功能库。&lt;/p&gt;
 
@@ -112,14 +112,14 @@
       &lt;td&gt;已废弃&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
-      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt;5&lt;/td&gt;
       &lt;td&gt;32位长度&lt;/td&gt;
       &lt;td&gt;fixed32 sfixed32 float&lt;/td&gt;
     &lt;/tr&gt;
   &lt;/tbody&gt;
 &lt;/table&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`(field_number &amp;lt;&amp;lt; 3) | wire_type`
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;(field_number &amp;lt;&amp;lt; 3) | wire_type
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;低三位表示wire type，其他的位表示field number(编号)。&lt;/p&gt;
@@ -139,17 +139,23 @@
 
 &lt;p&gt;先看最简单的数值1，一个字节足以表示它，所以它的标记位置0：&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`0000 0001`
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;0000 0001
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;再看数值300，经过Varints编码后的序列：&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`1010 1100 0000 0010`
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1010 1100 0000 0010
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;换算的时候，从左到右，依次将每个字节的高位（标志位）去掉，Protocol Buffer是低位在前，转换后拼接&lt;/p&gt;
 
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;1010 1100 0000 0010→ 010 1100  000 0010&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	1010 1100 0000 0010
+	(去除标志位)
+→  010 1100  000 0010
+  (转换拼接)
+→  000 0010  010 1100
+	(进制)
+→	 300
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;可变长度编码唯一的缺点就是当数很大的时候int32需要占用5个字节，但是从统计学角度来说，一般不会有这么大的数。&lt;/p&gt;
@@ -160,17 +166,19 @@
 
 &lt;h4 id=&quot;6编码&quot;&gt;6、编码&lt;/h4&gt;
 
-&lt;div class=&quot;language-protobuf highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;err&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;message&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Test1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;    &lt;span class=&quot;k&quot;&gt;required&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int32&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;}&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;`&lt;/span&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;message Test1{    
+		required int32 id = 1;
+}
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;如果我们将number赋值为300，则Message进行编码序列化以后以16进制输出为&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`08 96 01`
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;08 96 01
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;其中第一个字节08&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`0000 1000`
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;0000 1000
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;wire type为0，field name为1。符合id的类型是int32，编码方式是Varints，field是1的这一情况。&lt;/p&gt;
@@ -185,7 +193,7 @@
 
 &lt;p&gt;如果将str赋值为’testing’，然后把经过protobuf编码序列化后的数据以16进制的方式输出&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`12 07 74 65 73 74 69 6e 67`
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;12 07 74 65 73 74 69 6e 67
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;第一个字节0x12表示field name为2，wire type为2。第二个字节0x07表示数据长度为7，所以后面7个字节就是使用UTF8编码的testing。&lt;/p&gt;
