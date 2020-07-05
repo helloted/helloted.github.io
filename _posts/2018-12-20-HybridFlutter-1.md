@@ -195,3 +195,21 @@ MainActivity.this.startActivity(intent);
 ```
 
 ![img](/img/Simple_8/57.png)
+
+#### 3、调试
+
+Q : 如何在原生项目中调试flutter?
+
+A : 首先在命令行启动flutter的监听
+
+```
+flutter attach
+```
+
+如果有多台设备，需要选择一下设备
+
+```
+flutter attach -d 设备标志
+```
+
+然后就可以在xcode中启动调试运行项目

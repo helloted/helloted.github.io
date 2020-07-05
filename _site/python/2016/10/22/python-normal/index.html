@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter">
+
+    <title>Python常用API - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/python/2016/10/22/python-normal/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/app/">APP</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/mac_app/">Mac App</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/bg_01.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>Python常用API</h1>
+                    
+                    <h2 class="subheading">Python常用API</h2>
+                    
+                    <span class="meta">Posted by Ted on October 22, 2016</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h3 id="1string">1、String</h3>
+
+<h4 id="11字符串拼接">1.1字符串拼接</h4>
+
+<p>Python使用’+’进行拼接字符串</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">first_name</span> <span class="o">=</span> <span class="s">'oliver'</span>
+<span class="n">last_name</span> <span class="o">=</span> <span class="s">'smith'</span>
+<span class="n">full_name</span> <span class="o">=</span> <span class="n">first_name</span> <span class="o">+</span> <span class="s">' '</span> <span class="o">+</span> <span class="n">last_name</span>
+<span class="k">print</span><span class="p">(</span><span class="n">full_name</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">oliver</span> <span class="n">smith</span>
+</code></pre></div></div>
+
+<h4 id="12字符串截取">1.2字符串截取</h4>
+
+<p>Python 截取字符串使用 变量[头下标:尾下标]，就可以截取相应的字符串，其中下标是从0开始算起，可以是正数或负数(从右向左)，下标可以为空表示取到头或尾。</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">myStr</span> <span class="o">=</span> <span class="s">'abcdefg'</span>
+<span class="k">print</span> <span class="n">myStr</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># 输出myStr位置0开始到位置1以前的字符
+</span><span class="o">&gt;&gt;</span> <span class="n">a</span>   
+
+<span class="k">print</span> <span class="n">myStr</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span>  <span class="c1">#输出myStr从头开始到位置5以前的字符
+</span><span class="o">&gt;&gt;</span> <span class="n">abcde</span>
+
+<span class="k">print</span> <span class="n">myStr</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>  <span class="c1">#输出myStr位置3开始到结尾的字符
+</span><span class="o">&gt;&gt;</span> <span class="n">defg</span>
+
+<span class="k">print</span> <span class="n">myStr</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">:]</span>  <span class="c1"># 输出字符串，开始位置从右开始数位置为5，到结尾
+</span><span class="o">&gt;&gt;</span> <span class="n">cdefg</span>
+
+<span class="k">print</span> <span class="n">myStr</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="c1"># 输出字符串从0开始，终止位置从右开始数位置2
+</span><span class="o">&gt;&gt;</span> <span class="n">abcde</span>
+</code></pre></div></div>
+
+<h4 id="13字符串替换">1.3字符串替换</h4>
+
+<p>Python 替换字符串使用 变量.replace(“被替换的内容”，”替换后的内容”，次数)，替换次数可以为空，即表示替换所有。要注意的是使用replace替换字符串后仅为临时变量，需重新赋值才能保存。</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">myStr</span> <span class="o">=</span> <span class="s">'akakak'</span>
+<span class="n">myStr</span> <span class="o">=</span> <span class="n">myStr</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">'k'</span><span class="p">,</span><span class="s">'8'</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>  <span class="c1">#将字符串里的k替换为8,前两个
+</span><span class="k">print</span> <span class="n">myStr</span>
+<span class="o">&gt;&gt;</span> <span class="n">a8a8ak</span>
+</code></pre></div></div>
+
+<h4 id="14字符串查找">1.4字符串查找</h4>
+
+<p>Python 查找字符串使用 变量.find(“要查找的内容”，[开始位置，结束位置])，开始位置和结束位置，表示要查找的范围，为空则表示查找所有。查找到第一个匹配的字符串后会返回位置，位置从0开始算，如果没找到则返回-1。</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">myStr</span> <span class="o">=</span> <span class="s">'akakak'</span>
+<span class="k">print</span> <span class="n">myStr</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">'k'</span><span class="p">)</span>
+<span class="o">&gt;&gt;</span> <span class="mi">1</span>
+</code></pre></div></div>
+
+<h4 id="15字符串分割成数组">1.5字符串分割成数组</h4>
+
+<p>Python 分割字符串使用 变量.split(“分割标示符号”[分割次数])，分割次数表示分割最大次数，为空则分割所有。</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">myStr</span> <span class="o">=</span> <span class="s">'a,b,c,d'</span>
+<span class="n">myStrlist</span> <span class="o">=</span> <span class="n">myStr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">','</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># 用逗号分割myStr字符串，并保存到列表
+</span><span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">myStrlist</span><span class="p">:</span> <span class="c1"># 循环输出列表值
+</span><span class="k">print</span> <span class="n">value</span>
+<span class="o">&gt;&gt;</span> <span class="n">a</span>   <span class="c1"># 输出结果
+</span><span class="o">&gt;&gt;</span> <span class="n">b</span>
+<span class="o">&gt;&gt;</span> <span class="n">c</span><span class="p">,</span><span class="n">d</span>
+</code></pre></div></div>
+
+<h4 id="16其他">1.6其他</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sStr1</span> <span class="o">=</span> <span class="s">'strlen'</span>
+<span class="k">print</span> <span class="nb">len</span><span class="p">(</span><span class="n">sStr1</span><span class="p">)</span> <span class="c1">#字符串长度
+</span><span class="o">&gt;&gt;</span> <span class="mi">6</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">b</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="c1"># 数字转字符串
+</span>
+<span class="n">sStr1</span> <span class="o">=</span> <span class="s">'JCstrlwr'</span>
+<span class="n">sStr1</span> <span class="o">=</span> <span class="n">sStr1</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="c1">#转大写
+</span><span class="n">sStr1</span> <span class="o">=</span> <span class="n">sStr1</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="c1">#转小写
+</span>
+<span class="n">sStr1</span> <span class="o">=</span> <span class="s">'abcdefg'</span>
+<span class="n">sStr1</span> <span class="o">=</span> <span class="n">sStr1</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># 字符串翻转
+</span><span class="k">print</span> <span class="n">sStr1</span>
+<span class="o">&gt;&gt;</span> <span class="n">gfedcba</span>
+</code></pre></div></div>
+
+<h3 id="2list">2、List</h3>
+
+<h4 id="21数组拼接">2.1数组拼接</h4>
+
+<p>append可以在列表后方添加一个元素:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">member</span> <span class="o">=</span> <span class="p">[</span><span class="s">'a'</span><span class="p">,</span><span class="s">'b'</span><span class="p">,</span><span class="s">'c'</span><span class="p">,</span><span class="s">'1'</span><span class="p">,</span><span class="s">'2'</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">member</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">"python"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">member</span><span class="p">)</span>
+<span class="o">&gt;&gt;</span> <span class="p">[</span><span class="s">'a'</span><span class="p">,</span> <span class="s">'b'</span><span class="p">,</span> <span class="s">'c'</span><span class="p">,</span> <span class="s">'1'</span><span class="p">,</span> <span class="s">'2'</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s">'python'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>extend可以在列表后方添加一个列表：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">member</span> <span class="o">=</span> <span class="p">[</span><span class="s">'a'</span><span class="p">,</span><span class="s">'b'</span><span class="p">,</span><span class="s">'c'</span><span class="p">,</span><span class="s">'1'</span><span class="p">,</span><span class="s">'2'</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">member1</span> <span class="o">=</span> <span class="p">[</span><span class="s">'one'</span><span class="p">,</span><span class="s">'two'</span><span class="p">,</span><span class="s">'three'</span><span class="p">]</span>
+<span class="n">member</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">member1</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">member</span><span class="p">)</span>
+<span class="o">&gt;&gt;</span> <span class="p">[</span><span class="s">'a'</span><span class="p">,</span> <span class="s">'b'</span><span class="p">,</span> <span class="s">'c'</span><span class="p">,</span> <span class="s">'1'</span><span class="p">,</span> <span class="s">'2'</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s">'one'</span><span class="p">,</span> <span class="s">'two'</span><span class="p">,</span> <span class="s">'three'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h4 id="22数组插入">2.2数组插入</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">member</span> <span class="o">=</span> <span class="p">[</span><span class="s">'a'</span><span class="p">,</span><span class="s">'b'</span><span class="p">,</span><span class="s">'c'</span><span class="p">,</span><span class="s">'1'</span><span class="p">,</span><span class="s">'2'</span><span class="p">]</span>
+<span class="n">member</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">member</span>
+<span class="n">member1</span> <span class="o">=</span> <span class="p">[</span><span class="s">'one'</span><span class="p">,</span><span class="s">'two'</span><span class="p">,</span><span class="s">'three'</span><span class="p">]</span>
+<span class="n">member</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">member1</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">member</span><span class="p">)</span>
+<span class="o">&gt;&gt;</span> <span class="p">[</span><span class="s">'a'</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s">'b'</span><span class="p">,</span> <span class="s">'c'</span><span class="p">,</span> <span class="s">'1'</span><span class="p">,</span> <span class="s">'2'</span><span class="p">]</span>
+<span class="o">&gt;&gt;</span> <span class="p">[</span><span class="s">'a'</span><span class="p">,</span> <span class="p">[</span><span class="s">'one'</span><span class="p">,</span> <span class="s">'two'</span><span class="p">,</span> <span class="s">'three'</span><span class="p">],</span> <span class="mi">3</span><span class="p">,</span> <span class="s">'b'</span><span class="p">,</span> <span class="s">'c'</span><span class="p">,</span> <span class="s">'1'</span><span class="p">,</span> <span class="s">'2'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h4 id="23数组移除">2.3数组移除</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">member</span> <span class="o">=</span> <span class="p">[</span><span class="s">'a'</span><span class="p">,</span><span class="s">'b'</span><span class="p">,</span><span class="s">'c'</span><span class="p">,</span><span class="s">'1'</span><span class="p">,</span><span class="s">'2'</span><span class="p">,</span><span class="s">'a'</span><span class="p">]</span>
+<span class="n">member</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s">'a'</span><span class="p">)</span> <span class="c1"># 根据元素值，移除第一个'a'，如果没有'a'会报错
+</span><span class="k">print</span> <span class="n">member</span>
+<span class="k">del</span> <span class="n">member</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># 根据索引，删除0位置的元素
+</span><span class="k">print</span> <span class="n">member</span>
+<span class="o">&gt;&gt;</span> <span class="p">[</span><span class="s">'b'</span><span class="p">,</span> <span class="s">'c'</span><span class="p">,</span> <span class="s">'1'</span><span class="p">,</span> <span class="s">'2'</span><span class="p">,</span> <span class="s">'a'</span><span class="p">]</span>
+<span class="o">&gt;&gt;</span> <span class="p">[</span><span class="s">'c'</span><span class="p">,</span> <span class="s">'1'</span><span class="p">,</span> <span class="s">'2'</span><span class="p">,</span> <span class="s">'a'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h4 id="24遍历删除">2.4遍历删除</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#filter() 函数用于过滤序列，过滤掉不符合条件的元素，返回由符合条件元素组成的新列表。
+</span><span class="n">lst</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span>
+<span class="n">lst</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">lst</span><span class="p">)</span> 
+<span class="k">print</span> <span class="n">lst</span>
+<span class="o">&gt;&gt;</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span>
+
+<span class="c1">#倒叙删除，不能正序是因为
+</span><span class="n">lst</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lst</span><span class="p">))[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+  <span class="k">if</span> <span class="n">lst</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">del</span> <span class="n">lst</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="k">print</span> <span class="n">lst</span>
+<span class="o">&gt;&gt;</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h4 id="25遍历">2.5遍历</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">member</span> <span class="o">=</span> <span class="p">[</span><span class="s">'a'</span><span class="p">,</span><span class="s">'b'</span><span class="p">,</span><span class="s">'c'</span><span class="p">,</span><span class="s">'1'</span><span class="p">,</span><span class="s">'2'</span><span class="p">,</span><span class="s">'a'</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">member</span><span class="p">:</span>
+	<span class="k">print</span> <span class="n">item</span>
+  
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">)):</span>
+  <span class="k">print</span> <span class="n">member</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h3 id="3字典map">3、字典Map</h3>
+
+<h4 id="31修改字典">3.1修改字典</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">dict</span> <span class="o">=</span> <span class="p">{</span><span class="s">'Name'</span><span class="p">:</span> <span class="s">'Zara'</span><span class="p">,</span> <span class="s">'Age'</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span> <span class="s">'Class'</span><span class="p">:</span> <span class="s">'First'</span><span class="p">};</span>
+<span class="nb">dict</span><span class="p">[</span><span class="s">'Age'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span> <span class="c1"># update existing entry
+</span><span class="nb">dict</span><span class="p">[</span><span class="s">'School'</span><span class="p">]</span> <span class="o">=</span> <span class="s">"DPS School"</span><span class="p">;</span> <span class="c1"># Add new entry
+</span><span class="k">print</span> <span class="nb">dict</span>
+<span class="o">&gt;&gt;</span> <span class="p">{</span><span class="s">'School'</span><span class="p">:</span> <span class="s">'DPS School'</span><span class="p">,</span> <span class="s">'Age'</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s">'Name'</span><span class="p">:</span> <span class="s">'Zara'</span><span class="p">,</span> <span class="s">'Class'</span><span class="p">:</span> <span class="s">'First'</span><span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="32删除">3.2删除</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dict = {'Name': 'Zara', 'Age': 7, 'Class': 'First'};
+
+del dict['Name']; # 删除键是'Name'的条目
+dict.clear();     # 清空词典所有条目
+</code></pre></div></div>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/ios/2016/10/19/keychain/" data-toggle="tooltip" data-placement="top" title="iOS Keychain编程指南">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/python/2016/11/10/python-termary/" data-toggle="tooltip" data-placement="top" title="三元运算符">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2020</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>
