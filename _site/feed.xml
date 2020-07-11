@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2020-06-30T12:32:02+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">二进制重排</title><link href="http://www.helloted.com/ios/2020/06/28/byteorder/" rel="alternate" type="text/html" title="二进制重排" /><published>2020-06-28T20:00:00+08:00</published><updated>2020-06-28T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2020/06/28/byteorder</id><content type="html" xml:base="http://www.helloted.com/ios/2020/06/28/byteorder/">&lt;h4 id=&quot;0ios应用的内存布局&quot;&gt;0、iOS应用的内存布局&lt;/h4&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2020-07-11T15:49:04+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">二进制重排</title><link href="http://www.helloted.com/ios/2020/06/28/byteorder/" rel="alternate" type="text/html" title="二进制重排" /><published>2020-06-28T20:00:00+08:00</published><updated>2020-06-28T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2020/06/28/byteorder</id><content type="html" xml:base="http://www.helloted.com/ios/2020/06/28/byteorder/">&lt;h4 id=&quot;0ios应用的内存布局&quot;&gt;0、iOS应用的内存布局&lt;/h4&gt;
 
 &lt;p&gt;应用的内存布局从低到高如下排布：&lt;/p&gt;
 
@@ -1168,16 +1168,18 @@ otool -v -arch arm64e -s __TEXT __objc_methname /Users/haozhicao/Library/Develop
 
 &lt;p&gt;如上图所示，&lt;/p&gt;
 
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;预处理(Pre-process)&lt;/strong&gt;：他的主要工作就是将宏替换，删除注释展开头文件，生成&lt;code class=&quot;highlighter-rouge&quot;&gt;.i&lt;/code&gt;文件。&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;词法分析(Lexical Analysis)&lt;/strong&gt;：将代码切成一个个 token，比如大小括号，等于号还有字符串等。是计算机科学中将字符序列转换为标记序列的过程。&lt;/li&gt;
+&lt;ol&gt;
+  &lt;li&gt;&lt;strong&gt;预处理(Pre-process)&lt;/strong&gt;：他的主要工作就是将宏替换，删除注释展开头文件，生成.i文件。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;词法解析(Lexical Analysis)&lt;/strong&gt;：将代码切成一个个 token，比如大小括号，等于号还有字符串等。是计算机科学中将字符序列转换为标记序列的过程。这一步把源文件中的代码转化为特殊的标记流，源码被分割成一个一个的字符和单词，在行尾Loc中都标记出了源码所在的对应源文件和具体行数，方便在报错时定位问题。&lt;/li&gt;
   &lt;li&gt;&lt;strong&gt;语义分析(Semantic Analysis)&lt;/strong&gt;：验证语法是否正确，然后将所有节点组成抽象语法树 AST 。由 Clang 中 Parser 和 Sema 配合完成。&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;静态分析(Static Analysis)&lt;/strong&gt;：使用它来表示用于分析源代码以便自动发现错误。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;静态分析(Static Analysis)&lt;/strong&gt;：静态分析会对代码进行错误检查，如出现方法被调用但是未定义、定义但是未使用的变量等，以此提高代码质量。&lt;/li&gt;
   &lt;li&gt;&lt;strong&gt;中间代码生成(Code Generation)&lt;/strong&gt;：生成中间代码 IR，CodeGen 会负责将语法树自顶向下遍历逐步翻译成 LLVM IR，IR 是编译过程的前端的输出，后端的输入。&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;优化(Optimize)&lt;/strong&gt;：LLVM 会去做些优化工作，在 Xcode 的编译设置里也可以设置优化级别&lt;code class=&quot;highlighter-rouge&quot;&gt;-O1&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;-O3&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;-Os&lt;/code&gt;…还可以写些自己的 Pass，官方有比较完整的 Pass 教程： &lt;a href=&quot;http://llvm.org/docs/WritingAnLLVMPass.html&quot;&gt;Writing an LLVM Pass&lt;/a&gt; 。如果开启了&lt;code class=&quot;highlighter-rouge&quot;&gt;Bitcode&lt;/code&gt;苹果会做进一步的优化，有新的后端架构还是可以用这份优化过的&lt;code class=&quot;highlighter-rouge&quot;&gt;Bitcode&lt;/code&gt;去生成。可以在这一层自定义Pass对IR代码做代码混淆&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;生成目标文件(Assemble)&lt;/strong&gt;：生成&lt;code class=&quot;highlighter-rouge&quot;&gt;Target&lt;/code&gt;相关&lt;code class=&quot;highlighter-rouge&quot;&gt;Object&lt;/code&gt;(Mach-o)。&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;链接(Link)&lt;/strong&gt;：生成&lt;code class=&quot;highlighter-rouge&quot;&gt;Executable&lt;/code&gt;可执行文件。&lt;/li&gt;
-&lt;/ul&gt;
+  &lt;li&gt;&lt;strong&gt;优化(Optimize)&lt;/strong&gt;：LLVM 会去做些优化工作，在 Xcode 的编译设置里也可以设置优化级别-O1、-O3、-Os…还可以写些自己的 Pass，官方有比较完整的 Pass 教程： &lt;a href=&quot;http://llvm.org/docs/WritingAnLLVMPass.html&quot;&gt;Writing an LLVM Pass&lt;/a&gt; 。如果开启了Bitcode苹果会做进一步的优化，有新的后端架构还是可以用这份优化过的Bitcode去生成。可以在这一层自定义Pass对IR代码做代码混淆&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;生成目标文件(Assemble)-后端&lt;/strong&gt;：在这一阶段，也是汇编阶段，汇编器将上一步生成的可读的汇编代码转化为机器代码。最终产物就是 以 .o 结尾的目标文件。使用Xcode构建的程序会在DerivedData目录中找到这个文件。。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;链接(Link)&lt;/strong&gt;：上个阶段生成的目标文件和引用的静态库链接起来，最终生成可执行文件(Mach-O 类型),链接器解决了目标文件和库之间的链接。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;其中，12345属于前端，6属于优化，78属于后端&lt;/p&gt;
 
 &lt;h4 id=&quot;4编写自己的pass&quot;&gt;4、编写自己的PASS&lt;/h4&gt;
 
