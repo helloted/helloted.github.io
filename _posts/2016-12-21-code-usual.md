@@ -50,6 +50,18 @@ dispatch_async(dispatch_get_global_queue(0,0), ^{
 #### 3、Tableview Delegate & DataSource
 
 ```objc
+- (UITableView *)historyTableView{
+    if (!_historyTableView) {
+        _historyTableView = [[UITableView alloc]initWithFrame:CGRectMake(achieveMargin, 0, BaseViewWidth, 50) style:UITableViewStyleGrouped];
+        _historyTableView.delegate = self;
+        _historyTableView.dataSource = self;
+        _historyTableView.scrollEnabled = NO;
+        _historyTableView.showsVerticalScrollIndicator = NO;
+        _historyTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    }
+    return _historyTableView;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return 10;
 }
@@ -87,6 +99,7 @@ dispatch_async(dispatch_get_global_queue(0,0), ^{
     }
     return self;
 }
+
 ```
 
 #### 5、点击事件
