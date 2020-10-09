@@ -1,220 +1,154 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2020-08-20T12:39:58+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">Clang插桩</title><link href="http://www.helloted.com/ios/2020/06/28/clang/" rel="alternate" type="text/html" title="Clang插桩" /><published>2020-06-28T20:00:00+08:00</published><updated>2020-06-28T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2020/06/28/clang</id><content type="html" xml:base="http://www.helloted.com/ios/2020/06/28/clang/">&lt;h4 id=&quot;0clang插桩原理&quot;&gt;0、Clang插桩原理&lt;/h4&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2020-10-09T14:28:13+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">Clang插件统计方法耗时</title><link href="http://www.helloted.com/ios/2020/09/22/clang-time/" rel="alternate" type="text/html" title="Clang插件统计方法耗时" /><published>2020-09-22T20:00:00+08:00</published><updated>2020-09-22T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2020/09/22/clang-time</id><content type="html" xml:base="http://www.helloted.com/ios/2020/09/22/clang-time/">&lt;h4 id=&quot;0统计函数耗时原理&quot;&gt;0、统计函数耗时原理&lt;/h4&gt;
 
-&lt;p&gt;Clang-LLVM编译过程如下:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;预处理(Pre-process)：他的主要工作就是将宏替换，删除注释展开头文件，生成.i文件。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;词法分析(Lexical Analysis)：将代码切成一个个 token，比如大小括号，等于号还有字符串等。是计算机科学中将字符序列转换为标记序列的过程。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;语法分析(Semantic Analysis)：验证语法是否正确，然后将所有节点组成 AST(Abstract Syntax Tree抽象语法树) 。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;静态分析(Static Analysis)：使用它来表示用于分析源代码以便自动发现错误。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;中间代码生成(Code Generation)：生成中间代码 IR(Intermediate Representation)，Code Generation 会负责将语法树自顶向下遍历逐步翻译成 LLVM IR，IR 是编译过程的前端的输出，后端的输入。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;优化(Optimize)：LLVM 会去做些优化工作，在 Xcode 的编译设置里也可以设置优化级别-O1、-O3、-Os…还可以写些自己的 Pass&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;生成目标文件(Assemble)：生成Target相关Object(Mach-o)。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;链接(Link)：生成Executable可执行文件。&lt;/p&gt;
-
-    &lt;p&gt;&lt;img src=&quot;/img/Simple_2/30.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;而在优化过程中，可以自己定义Pass来优化代码&lt;/p&gt;
+&lt;p&gt;LLVM的优化和转换工作就需要通过PASS来进行，就像下面这种图，PASS就像流水线上的操作工一样对中间代码IR进行优化，每个PASS完成特定的优化工作。&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/Simple_3/36.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 
-&lt;h4 id=&quot;1编译插件的工具准备&quot;&gt;1、编译插件的工具准备&lt;/h4&gt;
+&lt;p&gt;所有的pass都是llvm的Pass类的子类，通过重写继承的虚函数来实现特定的功能。根据pass不同的功能分类，继承的类也不同，比如：ModulePass , CallGraphSCCPass, FunctionPass , LoopPass, RegionPass, BasicBlockPass，llvm系统会根据实例的类别来判断pass的功能，然后将其整合到现有的优化体系中去。&lt;/p&gt;
 
-&lt;p&gt;1.1 新建文件夹llvm，下载LLVM（预计大小 648.2 M）&lt;/p&gt;
+&lt;p&gt;FunctionPASS会遍历我们编译的每个函数，在遍历编译的函数过程中，在函数运行之前获取当前时间，在函数运行之后获取当前时间，二者相减，可以得到函数的运行时间。&lt;/p&gt;
 
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git clone https://git.llvm.org/git/llvm.git/
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h4 id=&quot;1整体过程&quot;&gt;1、整体过程&lt;/h4&gt;
 
-&lt;p&gt;1.2 在llvm/tools文件夹下载clang（预计大小 240.6 M）&lt;/p&gt;
+&lt;p&gt;待插入函数&lt;/p&gt;
 
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;llvm/tools
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git clone https://git.llvm.org/git/clang.git/
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/37.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;1.3 安装编译工具ninja和cmake&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;cmake
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;ninja
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;1.4 在llvm同级目录下新建llvm_build和llvm_release两个文件夹，llvm是编译起始文件夹，llvm_release则是编译结果文件夹&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/38.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;1.5 在llvm_build文件夹下设定编译结果路径&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;llvm_build
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;cmake &lt;span class=&quot;nt&quot;&gt;-G&lt;/span&gt; Ninja ../llvm &lt;span class=&quot;nt&quot;&gt;-DCMAKE_INSTALL_PREFIX&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;’编译结果路径，也就是llvm_release文件夹’
-（参考：cmake &lt;span class=&quot;nt&quot;&gt;-G&lt;/span&gt; Ninja ../llvm &lt;span class=&quot;nt&quot;&gt;-DCMAKE_INSTALL_PREFIX&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;‘/Users/xxxx/LLVMProject/llvm_release’）
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;1.6 在llvm_build路径下依次执行编译和安装命令&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ninja
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ninja install
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;1.7 在llvm源码同级目录下新建文件夹llvm_xcode&lt;/p&gt;
-
-&lt;p&gt;1.8 在llvm_xcode路径下，编译xcode&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cd llvm_xcode
-$ cmake -G Xcode ../llvm
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;最终效果：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/39.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;1.9 打开LLVM.xcodeproj并用Automaticallly Create Schemes&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/40.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;1.10 然后选择ALL_BUILD进行编译，编译过程需要几十分钟不等。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/41.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;2编写pass插件&quot;&gt;2、编写PASS插件&lt;/h4&gt;
-
-&lt;p&gt;在$LLVM_SOURCE/lib/Transforms/ 目录下有一个Hello的自带Demo，可以仿照Hello编写我们自己的PASS&lt;/p&gt;
-
-&lt;p&gt;2.1 在Hello同级目录下创建文件夹MyPass，并在MyPass文件夹下创建CMakeLists.txt和MyPass.cpp两个文件&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/42.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;2.2 在$LLVM_SOURCE/lib/Transforms/MyPass/CMakeLists.txt内添加内容，需要注意的是add_llvm_library后面的MyPass是将要生成的Target的名称，自带的Hello文件夹内添加的是LLVMHello名称，所以Target是LLVMHello。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;add_llvm_library( MyPass MODULE BUILDTREE_ONLY
-  MyPass.cpp  
-  DEPENDS
-  intrinsics_gen
-  PLUGIN_TOOL
-  opt
-)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;2.3 在$LLVM_SOURCE/lib/Transforms/CMakeLists.txt内把我们的pass添加进去&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;add_subdirectory&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;MyPass&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/43.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;2.4 回到llvm_xcode文件夹重新生成xcode&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cmake -G Xcode ../llvm
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;2.5 再次打开LLVM.xcodeproj就能找到MyPass的Target。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/44.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;2.6 在MyPass.cpp内编写PASS内容&lt;/p&gt;
-
-&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;#include &quot;llvm/Pass.h&quot;
-#include &quot;llvm/Support/raw_ostream.h&quot;
-#include &quot;llvm/IR/LegacyPassManager.h&quot;
-#include &quot;llvm/Transforms/IPO/PassManagerBuilder.h&quot;
-#include &quot;llvm/IR/Module.h&quot;
-#include &quot;llvm/IR/Function.h&quot;
-#include &quot;llvm/IR/IRBuilder.h&quot;
-#include &quot;llvm/IR/Instructions.h&quot;
-#include &quot;llvm/IR/DebugLoc.h&quot;
-#include &quot;llvm/IR/DebugInfo.h&quot;
-#include &amp;lt;string&amp;gt;
+&lt;div class=&quot;language-c highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;#include &amp;lt;stdio.h&amp;gt;
+#include &amp;lt;sys/time.h&amp;gt;
 &lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;namespace&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;llvm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 
-&lt;span class=&quot;k&quot;&gt;namespace&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MyFunctionPass&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FunctionPass&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ID&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;MyFunctionPass&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FunctionPass&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ID&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
-        &lt;span class=&quot;kt&quot;&gt;bool&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;runOnFunction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Function&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;override&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;startswith&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;my_mark_executed_func&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)){&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 如果已经插入则不用再次插入&lt;/span&gt;
-                  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;LLVMContext&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getParent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getContext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;BasicBlock&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bb&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getEntryBlock&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;IRBuilder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bbBuilder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;IRBuilder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;contextBuilder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-            
-            &lt;span class=&quot;n&quot;&gt;Instruction&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;beginInst&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dyn_cast&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Instruction&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;begin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 所有函数的起始位置&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;FunctionType&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FunctionType&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getVoidTy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getInt8PtrTy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),},&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 函数的返回类型和参数类型&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;FunctionCallee&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;beginFun&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getParent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getOrInsertFunction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;my_mark_executed_func&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 获取函数&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;CallInst&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;inst&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;contextBuilder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CreateCall&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;beginFun&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bbBuilder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CreateGlobalStringPtr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())});&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 构造函数&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;inst&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;insertBefore&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;beginInst&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 插入标记函数&lt;/span&gt;
-            
-            &lt;span class=&quot;k&quot;&gt;auto&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SP&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getSubprogram&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;DebugLoc&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DL&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DebugLoc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SP&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getScopeLine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SP&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;inst&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;setDebugLoc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//设置DebugLoc，给debugger使用&lt;/span&gt;
-            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;my_fun_b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;timeval&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;star&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;gettimeofday&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;star&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;star&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tv_sec&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1000000&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;star&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tv_usec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 
-&lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MyFunctionPass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ID&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RegisterPass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MyFunctionPass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;func-coverage&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;A pass that can check function coverage.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RegisterStandardPasses&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;PassManagerBuilder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;EP_EarlyAsPossible&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;[](&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PassManagerBuilder&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Builder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-       &lt;span class=&quot;n&quot;&gt;legacy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PassManagerBase&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PM&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PM&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MyFunctionPass&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;my_fun_e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;timeval&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;gettimeofday&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tv_sec&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1000000&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tv_usec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;%s %ld us&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;2.7 build MyPass可以得到Mypass.dylib&lt;/p&gt;
+&lt;p&gt;my_fun_b是函数的最开始，插入并用于记录当前时间；&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/45.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;my_fun_e则是在函数的最末尾插入，用于记录当前时间并与之前函数开始记录的时间做差值，把函数名称和耗时打印出来。&lt;/p&gt;
 
-&lt;h4 id=&quot;3使用pass&quot;&gt;3、使用PASS&lt;/h4&gt;
+&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;kt&quot;&gt;bool&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;runOnFunction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Function&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;override&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;c1&quot;&gt;// 1. 已经插入的不需要再次插入&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;startswith&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;my_fun_&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 
-&lt;p&gt;3.1 新建一个普通xcode project，并添加一个hook.c的文件，里面是刚才在pass里添加的标记函数&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;void my_mark_executed_func(char *name ) {
-    printf(&quot;方法 %s \n&quot;,name);
-}
+      &lt;span class=&quot;c1&quot;&gt;// 2. 记录开始时间&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;Value&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;beginTime&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;nullptr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;insert_begin_inst&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;beginTime&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+      
+      &lt;span class=&quot;c1&quot;&gt;// 3. 方法结束时统计方法耗时，开始的时间记录作为参数&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;insert_return_inst&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;beginTime&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;3.2 将bulid system改为旧版构建方法，File-Project Setting-Build System&lt;/p&gt;
+&lt;h4 id=&quot;2函数开始&quot;&gt;2、函数开始&lt;/h4&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/46.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;kt&quot;&gt;bool&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;insert_begin_inst&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Function&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Value&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;beginTime&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;c1&quot;&gt;// 0.函数最开始的BasicBlock&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;LLVMContext&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getParent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getContext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;BasicBlock&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bb&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getEntryBlock&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+      
+      &lt;span class=&quot;c1&quot;&gt;// 1. 获取要插入的函数&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;FunctionCallee&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;beginFun&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getParent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getOrInsertFunction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;my_fun_b&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FunctionType&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getInt64Ty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{},&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
 
-&lt;p&gt;3.3 在build setting里添加MyPass.dylib。&lt;/p&gt;
+      &lt;span class=&quot;c1&quot;&gt;// 2. 构造函数&lt;/span&gt;
+      &lt;span class=&quot;c1&quot;&gt;// Value *beginTime = nullptr;&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;CallInst&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;inst&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;nullptr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;IRBuilder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;builder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;inst&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;builder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CreateCall&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;beginFun&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;-Xclang -load -Xclang Pass路径
+      &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;inst&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;llvm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;errs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Create First CallInst Failed&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+      &lt;span class=&quot;c1&quot;&gt;// 3. 获取函数开始的第一条指令&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;Instruction&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;beginInst&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dyn_cast&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Instruction&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;begin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+
+      &lt;span class=&quot;c1&quot;&gt;// 4. 将inst插入&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;inst&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;insertBefore&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;beginInst&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+      
+      &lt;span class=&quot;c1&quot;&gt;// 5.根据返回值记录开始时间&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;beginTime&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;inst&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+      &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/47.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+&lt;h4 id=&quot;3函数结束&quot;&gt;3、函数结束&lt;/h4&gt;
 
-&lt;p&gt;3.4 在User-Defined内添加CC和CXX，值分别是刚刚构建的clang的路径&lt;/p&gt;
+&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;        &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;insert_return_inst&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Function&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Value&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;beginTime&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;LLVMContext&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getParent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getContext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Function&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;iterator&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;I&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;begin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;E&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;I&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;E&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;I&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+          
+        &lt;span class=&quot;c1&quot;&gt;//  函数结尾的BasicBlock&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;BasicBlock&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BB&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;I&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BasicBlock&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;iterator&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;I&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BB&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;begin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;E&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BB&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;I&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;E&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;I&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+          &lt;span class=&quot;n&quot;&gt;ReturnInst&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;IST&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dyn_cast&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ReturnInst&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;I&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+          &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;IST&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;continue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+          
+          &lt;span class=&quot;c1&quot;&gt;// end_func 类型&lt;/span&gt;
+          &lt;span class=&quot;n&quot;&gt;FunctionType&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;endFuncType&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FunctionType&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;Type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getVoidTy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getInt8PtrTy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getInt64Ty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)},&lt;/span&gt;
+            &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
 
-&lt;p&gt;3.5 将Enable Index-While-Building Functionality值改为NO，否则会报错&lt;/p&gt;
+          &lt;span class=&quot;c1&quot;&gt;// end_func&lt;/span&gt;
+          &lt;span class=&quot;n&quot;&gt;FunctionCallee&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;endFunc&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BB&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getModule&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getOrInsertFunction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;my_fun_e&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;endFuncType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/49.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+          &lt;span class=&quot;c1&quot;&gt;// 构造end_func&lt;/span&gt;
+          &lt;span class=&quot;n&quot;&gt;IRBuilder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;builder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BB&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+          &lt;span class=&quot;n&quot;&gt;IRBuilder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;callBuilder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+          &lt;span class=&quot;n&quot;&gt;CallInst&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;endCI&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;callBuilder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CreateCall&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;endFunc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+              &lt;span class=&quot;n&quot;&gt;builder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CreateGlobalStringPtr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BB&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getParent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()),&lt;/span&gt;
+              &lt;span class=&quot;n&quot;&gt;beginTime&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
 
-&lt;p&gt;3.6 执行可以获取到log输出方法执行情况&lt;/p&gt;
+          &lt;span class=&quot;c1&quot;&gt;// 插入end_func(struction)&lt;/span&gt;
+          &lt;span class=&quot;n&quot;&gt;endCI&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;insertBefore&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;IST&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/48.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">0、Clang插桩原理</summary></entry><entry><title type="html">二进制重排</title><link href="http://www.helloted.com/ios/2020/06/28/byteorder/" rel="alternate" type="text/html" title="二进制重排" /><published>2020-06-28T20:00:00+08:00</published><updated>2020-06-28T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2020/06/28/byteorder</id><content type="html" xml:base="http://www.helloted.com/ios/2020/06/28/byteorder/">&lt;h4 id=&quot;0ios应用的内存布局&quot;&gt;0、iOS应用的内存布局&lt;/h4&gt;
+&lt;h4 id=&quot;4运行效果&quot;&gt;4、运行效果&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;-[AppDelegate application:didFinishLaunchingWithOptions:] 5 us
+-[AppDelegate application:configurationForConnectingSceneSession:options:] 63 us
+-[SceneDelegate window] 0 us
+-[SceneDelegate setWindow:] 0 us
+-[SceneDelegate window] 0 us
+-[SceneDelegate window] 0 us
+-[SceneDelegate scene:willConnectToSession:options:] 0 us
+-[SceneDelegate window] 0 us
+-[SceneDelegate window] 0 us
+-[SceneDelegate window] 0 us
+-[ViewController viewDidLoad] 0 us
+-[SceneDelegate sceneWillEnterForeground:] 0 us
+-[SceneDelegate sceneDidBecomeActive:] 0 us
+-[SceneDelegate window] 0 us
+-[SceneDelegate window] 0 us
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">0、统计函数耗时原理</summary></entry><entry><title type="html">二进制重排</title><link href="http://www.helloted.com/ios/2020/06/28/byteorder/" rel="alternate" type="text/html" title="二进制重排" /><published>2020-06-28T20:00:00+08:00</published><updated>2020-06-28T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2020/06/28/byteorder</id><content type="html" xml:base="http://www.helloted.com/ios/2020/06/28/byteorder/">&lt;h4 id=&quot;0ios应用的内存布局&quot;&gt;0、iOS应用的内存布局&lt;/h4&gt;
 
 &lt;p&gt;应用的内存布局从低到高如下排布：&lt;/p&gt;
 
@@ -447,7 +381,225 @@ extern void AppOrderFiles(void(^completion)(NSString *orderFilePath));
 
 &lt;p&gt;&lt;strong&gt;Build Settings&lt;/strong&gt;中修改&lt;strong&gt;Write Link Map File&lt;/strong&gt;为&lt;code class=&quot;highlighter-rouge&quot;&gt;YES&lt;/code&gt;编译后会生成一个&lt;strong&gt;Link Map&lt;/strong&gt;符号表&lt;code class=&quot;highlighter-rouge&quot;&gt;txt&lt;/code&gt;文件。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/37.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">0、iOS应用的内存布局</summary></entry><entry><title type="html">gRPC &amp;amp; Protocol Buffers</title><link href="http://www.helloted.com/others/2020/05/01/protocolbuffers/" rel="alternate" type="text/html" title="gRPC &amp; Protocol Buffers" /><published>2020-05-01T20:00:00+08:00</published><updated>2020-05-01T20:00:00+08:00</updated><id>http://www.helloted.com/others/2020/05/01/protocolbuffers</id><content type="html" xml:base="http://www.helloted.com/others/2020/05/01/protocolbuffers/">&lt;h4 id=&quot;0grpc&quot;&gt;0、gRPC&lt;/h4&gt;
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/37.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">0、iOS应用的内存布局</summary></entry><entry><title type="html">Clang插桩</title><link href="http://www.helloted.com/ios/2020/06/28/clang/" rel="alternate" type="text/html" title="Clang插桩" /><published>2020-06-28T20:00:00+08:00</published><updated>2020-06-28T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2020/06/28/clang</id><content type="html" xml:base="http://www.helloted.com/ios/2020/06/28/clang/">&lt;h4 id=&quot;0clang插桩原理&quot;&gt;0、Clang插桩原理&lt;/h4&gt;
+
+&lt;p&gt;Clang-LLVM编译过程如下:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;预处理(Pre-process)：他的主要工作就是将宏替换，删除注释展开头文件，生成.i文件。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;词法分析(Lexical Analysis)：将代码切成一个个 token，比如大小括号，等于号还有字符串等。是计算机科学中将字符序列转换为标记序列的过程。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;语法分析(Semantic Analysis)：验证语法是否正确，然后将所有节点组成 AST(Abstract Syntax Tree抽象语法树) 。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;静态分析(Static Analysis)：使用它来表示用于分析源代码以便自动发现错误。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;中间代码生成(Code Generation)：生成中间代码 IR(Intermediate Representation)，Code Generation 会负责将语法树自顶向下遍历逐步翻译成 LLVM IR，IR 是编译过程的前端的输出，后端的输入。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;优化(Optimize)：LLVM 会去做些优化工作，在 Xcode 的编译设置里也可以设置优化级别-O1、-O3、-Os…还可以写些自己的 Pass&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;生成目标文件(Assemble)：生成Target相关Object(Mach-o)。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;链接(Link)：生成Executable可执行文件。&lt;/p&gt;
+
+    &lt;p&gt;&lt;img src=&quot;/img/Simple_2/30.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+    &lt;p&gt;&lt;img src=&quot;/img/Simple_3/50.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;而在优化过程中，可以自己定义Pass来优化代码&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_3/36.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;1编译插件的工具准备&quot;&gt;1、编译插件的工具准备&lt;/h4&gt;
+
+&lt;p&gt;1.1 新建文件夹llvm，下载LLVM（预计大小 648.2 M）&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git clone https://git.llvm.org/git/llvm.git/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;1.2 在llvm/tools文件夹下载clang（预计大小 240.6 M）&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;llvm/tools
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git clone https://git.llvm.org/git/clang.git/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_3/37.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;1.3 安装编译工具ninja和cmake&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;cmake
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;ninja
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;1.4 在llvm同级目录下新建llvm_build和llvm_release两个文件夹，llvm是编译起始文件夹，llvm_release则是编译结果文件夹&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_3/38.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;1.5 在llvm_build文件夹下设定编译结果路径&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;llvm_build
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;cmake &lt;span class=&quot;nt&quot;&gt;-G&lt;/span&gt; Ninja ../llvm &lt;span class=&quot;nt&quot;&gt;-DCMAKE_INSTALL_PREFIX&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;’编译结果路径，也就是llvm_release文件夹’
+（参考：cmake &lt;span class=&quot;nt&quot;&gt;-G&lt;/span&gt; Ninja ../llvm &lt;span class=&quot;nt&quot;&gt;-DCMAKE_INSTALL_PREFIX&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;‘/Users/xxxx/LLVMProject/llvm_release’）
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;1.6 在llvm_build路径下依次执行编译和安装命令&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ninja
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ninja install
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;1.7 在llvm源码同级目录下新建文件夹llvm_xcode&lt;/p&gt;
+
+&lt;p&gt;1.8 在llvm_xcode路径下，编译xcode&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cd llvm_xcode
+$ cmake -G Xcode ../llvm
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;最终效果：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_3/39.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;1.9 打开LLVM.xcodeproj并用Automaticallly Create Schemes&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_3/40.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;1.10 然后选择ALL_BUILD进行编译，编译过程需要几十分钟不等。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_3/41.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;2编写pass插件&quot;&gt;2、编写PASS插件&lt;/h4&gt;
+
+&lt;p&gt;在$LLVM_SOURCE/lib/Transforms/ 目录下有一个Hello的自带Demo，可以仿照Hello编写我们自己的PASS&lt;/p&gt;
+
+&lt;p&gt;2.1 在Hello同级目录下创建文件夹MyPass，并在MyPass文件夹下创建CMakeLists.txt和MyPass.cpp两个文件&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_3/42.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;2.2 在$LLVM_SOURCE/lib/Transforms/MyPass/CMakeLists.txt内添加内容，需要注意的是add_llvm_library后面的MyPass是将要生成的Target的名称，自带的Hello文件夹内添加的是LLVMHello名称，所以Target是LLVMHello。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;add_llvm_library( MyPass MODULE BUILDTREE_ONLY
+  MyPass.cpp  
+  DEPENDS
+  intrinsics_gen
+  PLUGIN_TOOL
+  opt
+)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;2.3 在$LLVM_SOURCE/lib/Transforms/CMakeLists.txt内把我们的pass添加进去&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;add_subdirectory&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;MyPass&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_3/43.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;2.4 回到llvm_xcode文件夹重新生成xcode&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cmake -G Xcode ../llvm
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;2.5 再次打开LLVM.xcodeproj就能找到MyPass的Target。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_3/44.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;2.6 在MyPass.cpp内编写PASS内容&lt;/p&gt;
+
+&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;#include &quot;llvm/Pass.h&quot;
+#include &quot;llvm/Support/raw_ostream.h&quot;
+#include &quot;llvm/IR/LegacyPassManager.h&quot;
+#include &quot;llvm/Transforms/IPO/PassManagerBuilder.h&quot;
+#include &quot;llvm/IR/Module.h&quot;
+#include &quot;llvm/IR/Function.h&quot;
+#include &quot;llvm/IR/IRBuilder.h&quot;
+#include &quot;llvm/IR/Instructions.h&quot;
+#include &quot;llvm/IR/DebugLoc.h&quot;
+#include &quot;llvm/IR/DebugInfo.h&quot;
+#include &amp;lt;string&amp;gt;
+&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;namespace&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;llvm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;namespace&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MyFunctionPass&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FunctionPass&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ID&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;MyFunctionPass&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FunctionPass&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ID&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+        &lt;span class=&quot;kt&quot;&gt;bool&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;runOnFunction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Function&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;override&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;startswith&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;my_mark_executed_func&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)){&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 如果已经插入则不用再次插入&lt;/span&gt;
+                  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;LLVMContext&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getParent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getContext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;BasicBlock&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bb&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getEntryBlock&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;IRBuilder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bbBuilder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;IRBuilder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;contextBuilder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+            
+            &lt;span class=&quot;n&quot;&gt;Instruction&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;beginInst&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dyn_cast&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Instruction&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;begin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 所有函数的起始位置&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;FunctionType&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FunctionType&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getVoidTy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getInt8PtrTy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),},&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 函数的返回类型和参数类型&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;FunctionCallee&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;beginFun&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getParent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getOrInsertFunction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;my_mark_executed_func&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 获取函数&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;CallInst&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;inst&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;contextBuilder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CreateCall&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;beginFun&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bbBuilder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CreateGlobalStringPtr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())});&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 构造函数&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;inst&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;insertBefore&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;beginInst&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 插入标记函数&lt;/span&gt;
+            
+            &lt;span class=&quot;k&quot;&gt;auto&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SP&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getSubprogram&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;DebugLoc&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DL&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DebugLoc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SP&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getScopeLine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SP&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;inst&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;setDebugLoc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//设置DebugLoc，给debugger使用&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MyFunctionPass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ID&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RegisterPass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MyFunctionPass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;func-coverage&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;A pass that can check function coverage.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RegisterStandardPasses&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;PassManagerBuilder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;EP_EarlyAsPossible&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[](&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PassManagerBuilder&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Builder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+       &lt;span class=&quot;n&quot;&gt;legacy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PassManagerBase&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PM&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PM&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MyFunctionPass&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;2.7 build MyPass可以得到Mypass.dylib&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_3/45.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;3使用pass&quot;&gt;3、使用PASS&lt;/h4&gt;
+
+&lt;p&gt;3.1 新建一个普通xcode project，并添加一个hook.c的文件，里面是刚才在pass里添加的标记函数&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;void my_mark_executed_func(char *name ) {
+    printf(&quot;方法 %s \n&quot;,name);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;3.2 将bulid system改为旧版构建方法，File-Project Setting-Build System&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_3/46.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;3.3 在build setting里添加MyPass.dylib。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;-Xclang -load -Xclang Pass路径
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_3/47.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;3.4 在User-Defined内添加CC和CXX，值分别是刚刚构建的clang的路径，让xode使用clang的替代版本&lt;/p&gt;
+
+&lt;p&gt;3.5 将Enable Index-While-Building Functionality值改为NO，否则会报错&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_3/49.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;3.6 执行可以获取到log输出方法执行情况&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_3/48.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">0、Clang插桩原理</summary></entry><entry><title type="html">gRPC &amp;amp; Protocol Buffers</title><link href="http://www.helloted.com/others/2020/05/01/protocolbuffers/" rel="alternate" type="text/html" title="gRPC &amp; Protocol Buffers" /><published>2020-05-01T20:00:00+08:00</published><updated>2020-05-01T20:00:00+08:00</updated><id>http://www.helloted.com/others/2020/05/01/protocolbuffers</id><content type="html" xml:base="http://www.helloted.com/others/2020/05/01/protocolbuffers/">&lt;h4 id=&quot;0grpc&quot;&gt;0、gRPC&lt;/h4&gt;
 
 &lt;p&gt;gRPC 是一个高性能、开源、通用的RPC框架，由Google推出，基于HTTP/2协议标准设计开发，默认采用Protocol Buffers数据序列化协议，支持多种开发语言。gRPC提供了一种简单的方法来精确的定义服务，并且为客户端和服务端自动生成可靠的功能库。&lt;/p&gt;
 
@@ -1670,105 +1822,4 @@ clang -Xclang -load -Xclang MyPass.dylib code.c
 
 &lt;p&gt;https://medium.com/flutter-community/the-layer-cake-widgets-elements-renderobjects-7644c3142401&lt;/p&gt;
 
-&lt;p&gt;https://www.youtube.com/watch?v=dkyY9WCGMi0&lt;/p&gt;</content><author><name>Ted</name></author><category term="Flutter" /><summary type="html">一、万物皆Widget</summary></entry><entry><title type="html">Dart内存机制</title><link href="http://www.helloted.com/flutter/2019/05/13/DartRuntime/" rel="alternate" type="text/html" title="Dart内存机制" /><published>2019-05-13T20:00:00+08:00</published><updated>2019-05-13T20:00:00+08:00</updated><id>http://www.helloted.com/flutter/2019/05/13/DartRuntime</id><content type="html" xml:base="http://www.helloted.com/flutter/2019/05/13/DartRuntime/">&lt;h3 id=&quot;一移动端的内存回收机制&quot;&gt;一、移动端的内存回收机制&lt;/h3&gt;
-
-&lt;p&gt;GC(Garbage Collection)，垃圾回收机制，简单地说就是程序中及时处理废弃不用的内存对象的机制，防止内存中废弃对象堆积过多造成内存泄漏&lt;/p&gt;
-
-&lt;p&gt;常见的垃圾回收算法有引用计数法（Reference Counting）、标注并清理（Mark and Sweep GC）、拷贝（Copying GC）和逐代回收（Generational GC）等算法。&lt;/p&gt;
-
-&lt;h4 id=&quot;1ios端&quot;&gt;1、iOS端&lt;/h4&gt;
-
-&lt;p&gt;Objective-C语言本身是支持垃圾回收机制的，但有平台局限性，仅限于Mac桌面系统开发中，而在iPhone和iPad等苹果移动终端设备中是不支持垃圾回收机制的。在移动设备开发中的内存管理是采用MRC(Manual Reference Counting)以及iOS5以后的ARC(Automatic Reference Counting)，本质都是RC引用计数，通过引用计数的方式来管理内存的分配与释放，从而防止内存泄漏。&lt;/p&gt;
-
-&lt;p&gt;iOS采用引用计数算法回收内存，当对象引用计数为0时，对象会执行反初始化方法并被回收。如果两个对象互相引用对方，就会造成循环强引用，导致内存泄漏。&lt;/p&gt;
-
-&lt;h4 id=&quot;2android端&quot;&gt;2、Android端&lt;/h4&gt;
-
-&lt;p&gt;Android系统采用的是标注并删除和拷贝GC，并不是大多数JVM实现里采用的逐代回收算法，根搜索算法回收内存，该算法通过GC Roots作为起点搜索，搜索通过的路径称为引用链，当一个对象没有被GC Roots的引用链连接的时候，这个对象就会被回收。即使A和B两个对象互相引用对方，只要A和B都不在引用链上，这两个对象都会被回收。&lt;/p&gt;
-
-&lt;p&gt;下图中的每个圆节点代表对象，箭头代表可达路径，当圆节点与 GC Roots 存在可达路径时，表示无法回收(黄色圆节点)，反之则可以回收(蓝色圆节点)。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/47.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;h5 id=&quot;gc-root&quot;&gt;GC Root&lt;/h5&gt;
-
-  &lt;ul&gt;
-    &lt;li&gt;虚拟机栈（栈帧中的局部变量）中的引用的对象。&lt;/li&gt;
-    &lt;li&gt;方法区域中的类静态属性引用的对象。&lt;/li&gt;
-    &lt;li&gt;方法区域中常量引用的对象。&lt;/li&gt;
-    &lt;li&gt;本地方法栈中 JNI（Native 方法）的引用的对象。&lt;/li&gt;
-    &lt;li&gt;运行中线程引用的对象&lt;/li&gt;
-  &lt;/ul&gt;
-&lt;/blockquote&gt;
-
-&lt;h4 id=&quot;3gc与引用计数rc的区别&quot;&gt;3、GC与引用计数RC的区别&lt;/h4&gt;
-
-&lt;p&gt;另外引用计数RC和垃圾回收GC是有区别的。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;GC垃圾回收是宏观的，对整体进行内存管理，将所有对象看做一个集合，然后在GC循环中定时检测活动对象和非活动对象，及时将用不到的非活动对象释放掉来避免内存泄漏，也就是说用不到的垃圾对象是交给GC来管理释放的，而无需开发者关心，比如Java中的垃圾回收机制；&lt;/li&gt;
-  &lt;li&gt;引用计数是局部性的，开发者要管理控制每个对象的引用计数，单个对象引用计数为0后会马上被释放掉。ARC自动引用计数则是一种改进，由编译器帮助开发者自动管理控制引用计数(自动在合适的时机发送release和retain消息)。另外自动释放池autorelease pool则像是一个局部的垃圾回收，将部分垃圾对象集中释放，相对于单个释放会有一定延迟。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;二flutter的runtime&quot;&gt;二、Flutter的runtime&lt;/h3&gt;
-
-&lt;p&gt;Flutter使用&lt;code class=&quot;highlighter-rouge&quot;&gt;dart&lt;/code&gt;语言作为其开发语言和运行环境。&lt;code class=&quot;highlighter-rouge&quot;&gt;dart&lt;/code&gt;的&lt;code class=&quot;highlighter-rouge&quot;&gt;runtime&lt;/code&gt;是一直存在的，但是在&lt;code class=&quot;highlighter-rouge&quot;&gt;debug&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;release&lt;/code&gt;模式下有一些区别。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;在&lt;code class=&quot;highlighter-rouge&quot;&gt;debug&lt;/code&gt;模式下，&lt;code class=&quot;highlighter-rouge&quot;&gt;dart&lt;/code&gt;大部分组件都放在设备上，例如&lt;code class=&quot;highlighter-rouge&quot;&gt;runtime&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;JIT(Android)&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;interpreter(iOS)&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;debug&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;profile&lt;/code&gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;services&lt;/code&gt;。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;在&lt;code class=&quot;highlighter-rouge&quot;&gt;release&lt;/code&gt;模式下，只剩下&lt;code class=&quot;highlighter-rouge&quot;&gt;runtime&lt;/code&gt;，而这也是Flutter App能够运行起来的最基本组件。&lt;/p&gt;
-
-    &lt;p&gt;&lt;img src=&quot;/img/Simple_7/48.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;在&lt;code class=&quot;highlighter-rouge&quot;&gt;runtime&lt;/code&gt;中，存在一个在初始化对象时为其分配内存，对象不再被使用的时候回收内存的组件，即GC。
-在&lt;code class=&quot;highlighter-rouge&quot;&gt;Flutter&lt;/code&gt;中存在很多对象。以&lt;code class=&quot;highlighter-rouge&quot;&gt;Stateless&lt;/code&gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;Widget&lt;/code&gt;为例，其在&lt;code class=&quot;highlighter-rouge&quot;&gt;State&lt;/code&gt;发生变化或者&lt;code class=&quot;highlighter-rouge&quot;&gt;Widget&lt;/code&gt;不可见的时候不断地发生重建和销毁(&lt;strong&gt;注意，此处是指Widget树中的Widget，对于Element树和RenderObject树来说，element和renderObject是可变的，而且其初始化生成需要消耗很多资源。因此在大多数情况下他们是会被回收利用的&lt;/strong&gt;)。这些&lt;code class=&quot;highlighter-rouge&quot;&gt;Widget&lt;/code&gt;的生命周期都很短，对于一个UI比较复杂的APP来说，可能会有数千个&lt;code class=&quot;highlighter-rouge&quot;&gt;Widget&lt;/code&gt;需要被经常回收创建。&lt;/p&gt;
-
-&lt;p&gt;所以有些开发者可能会采取一些措施来避免太过频繁的GC。比如为了保持一个引用的&lt;code class=&quot;highlighter-rouge&quot;&gt;Widget&lt;/code&gt;对象不会被回收，将其放在&lt;code class=&quot;highlighter-rouge&quot;&gt;state&lt;/code&gt;中(&lt;strong&gt;这样并不是说真的不会被回收，只是创建回收的频率被降低了，因为state是属于element的，而element的生命周期是比较长的&lt;/strong&gt;)。&lt;/p&gt;
-
-&lt;p&gt;这么做是没有必要的，首先&lt;code class=&quot;highlighter-rouge&quot;&gt;Widget&lt;/code&gt;是一个很轻量级的对象，它的创建和回收并不会占用很多资源，真正占用资源的是&lt;code class=&quot;highlighter-rouge&quot;&gt;Element&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;RenderObject&lt;/code&gt;。其次&lt;code class=&quot;highlighter-rouge&quot;&gt;dart&lt;/code&gt; 的GC机制能够快速有效的进行对象回收，不用担心&lt;code class=&quot;highlighter-rouge&quot;&gt;Widget&lt;/code&gt;创建过多导致&lt;code class=&quot;highlighter-rouge&quot;&gt;OOM&lt;/code&gt;出现。&lt;/p&gt;
-
-&lt;h3 id=&quot;三dart-garbage-collector&quot;&gt;三、Dart Garbage Collector&lt;/h3&gt;
-
-&lt;p&gt;Dart的垃圾回收是分代的：年轻代和老年代&lt;/p&gt;
-
-&lt;h4 id=&quot;1调度&quot;&gt;1、调度&lt;/h4&gt;
-
-&lt;p&gt;为了最小化GC对应用程序和UI性能的影响（因为dart的GC有一种类似于JVM中stop the world的机制，导致APP对事件无响应、UI无法刷新），GC与Flutter engine建立联系，当engine检测到应用程序处于空闲状态且没有用户交互时，它会发出通知。这样就使得GC有了收集的窗口从而不影响性能。&lt;/p&gt;
-
-&lt;p&gt;GC还可以在这些空闲的窗口期运行滑动压缩，从而通过减少内存碎片来最小化内存开销。&lt;/p&gt;
-
-&lt;h4 id=&quot;2年轻代&quot;&gt;2、年轻代&lt;/h4&gt;
-
-&lt;p&gt;这个阶段旨在清除寿命较短的短暂对象，例如stateless widgets。虽然它是阻塞的，但它比老年代mark-sweep快得多，并且当与调度结合使用时，几乎不会影响程序的运行。&lt;/p&gt;
-
-&lt;p&gt;实际上，对象被分配给内存中的连续空间，并且在创建对象时，它们被分配下一个可用空间，直到分配的内存被填充完毕。 &lt;code class=&quot;highlighter-rouge&quot;&gt;dart&lt;/code&gt;使用指针碰撞的方式来给这些对象分配空间(之所以没有空闲列表的方法是因为&lt;code class=&quot;highlighter-rouge&quot;&gt;dart&lt;/code&gt;在GC之后都会采用滑动压缩的方式来把内存碎片清除掉)，这个过程非常迅速。&lt;/p&gt;
-
-&lt;p&gt;分配给新对象的连续空间由两部分组成。任何时候只使用一半：一半处于活动状态(活动空间)，另一半处于非活动状态(非活动空间)。新生成对象在活动空间那一半中分配，一旦那一半填充完毕，不可回收对象将被从活动空间复制到非活动空间(忽略可被回收的对象)。这样，非活动空间转变变为活动状态，开始为新对象分配内存，并重复该过程。&lt;/p&gt;
-
-&lt;p&gt;要确定哪些对象是否可被回收，收集器将以root对象（例如堆栈变量）开始，并检查它们引用的对象。然后把引用的对象移动到另一半空间。在那里它检查这些移动的对象指向的内容，并移动这些引用的对象。如此反复，直到移动所有活动对象到另一半空间。始终没有被引用的对象将被回收。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/50.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;3老年代并行标记和并发扫描&quot;&gt;3、老年代(并行标记和并发扫描)&lt;/h4&gt;
-
-&lt;p&gt;当对象经历过一定次数的GC仍然存在，或者其生命周期较长(个人猜测类似于&lt;code class=&quot;highlighter-rouge&quot;&gt;element&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;RenderObject&lt;/code&gt;这种需要多次复用，可变且创建比较耗费性能)，将其放入老年代区域中。老年代采用标记整理的方法来回收对象。&lt;/p&gt;
-
-&lt;p&gt;这种GC技术有两个阶段：首先遍历对象图，并标记仍在使用的对象。在第二阶段期间，扫描整个存储器，并且回收未标记的任何对象。然后清除所有标志。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/51.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;在标记的时候，该线程中内存区域是处于不可修改的状态，类似于JVM中&lt;code class=&quot;highlighter-rouge&quot;&gt;stop the world&lt;/code&gt;，所以这个时候可能会导致&lt;code class=&quot;highlighter-rouge&quot;&gt;ANR&lt;/code&gt;(只是类似于&lt;code class=&quot;highlighter-rouge&quot;&gt;ANR&lt;/code&gt;的表现，其产生原因还是不一样的)，但是由于&lt;code class=&quot;highlighter-rouge&quot;&gt;dart&lt;/code&gt;优秀的&lt;code class=&quot;highlighter-rouge&quot;&gt;schedule&lt;/code&gt;机制和老年代GC频率很低的原因，基本上不会出现这个问题。&lt;/p&gt;
-
-&lt;p&gt;需要注意的是，如果APP不支持弱年代假设(即大多数对象的生命期都很短；从年老对象到年轻对象的引用非常少)，上面的分代设计就不那么有效了，但是考虑到Flutter中的&lt;code class=&quot;highlighter-rouge&quot;&gt;Widget&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;Element&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;RenderObject&lt;/code&gt;关系，我们不需要担心这个问题。&lt;/p&gt;
-
-&lt;h4 id=&quot;4根据ioslate特性来优化&quot;&gt;4、根据ioslate特性来优化&lt;/h4&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/49.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;与JVM内存模型不同的是，&lt;code class=&quot;highlighter-rouge&quot;&gt;dart&lt;/code&gt;中每个&lt;code class=&quot;highlighter-rouge&quot;&gt;isolate&lt;/code&gt;都有自己的独立的堆栈内存空间，其各自的GC不会影响到其他&lt;code class=&quot;highlighter-rouge&quot;&gt;isolate&lt;/code&gt;的。所以我们可以通过把部分占用内存空间较大且生命周期较短的对象方法其他&lt;code class=&quot;highlighter-rouge&quot;&gt;isolate&lt;/code&gt;中，这样即使另外一个&lt;code class=&quot;highlighter-rouge&quot;&gt;isolate&lt;/code&gt; GC了，并不会对我们显示UI的&lt;code class=&quot;highlighter-rouge&quot;&gt;isolate&lt;/code&gt;造成影响。&lt;/p&gt;</content><author><name>Ted</name></author><category term="Flutter" /><summary type="html">一、移动端的内存回收机制</summary></entry></feed>
+&lt;p&gt;https://www.youtube.com/watch?v=dkyY9WCGMi0&lt;/p&gt;</content><author><name>Ted</name></author><category term="Flutter" /><summary type="html">一、万物皆Widget</summary></entry></feed>

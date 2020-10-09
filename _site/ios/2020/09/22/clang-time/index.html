@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter">
+
+    <title>Clang插件统计方法耗时 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/ios/2020/09/22/clang-time/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/app/">APP</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/mac_app/">Mac App</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>Clang插件统计方法耗时</h1>
+                    
+                    <h2 class="subheading">Clnag插件统计方法耗时</h2>
+                    
+                    <span class="meta">Posted by Ted on September 22, 2020</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h4 id="0统计函数耗时原理">0、统计函数耗时原理</h4>
+
+<p>LLVM的优化和转换工作就需要通过PASS来进行，就像下面这种图，PASS就像流水线上的操作工一样对中间代码IR进行优化，每个PASS完成特定的优化工作。</p>
+
+<p><img src="/img/Simple_3/36.png" alt="img" /></p>
+
+<p>所有的pass都是llvm的Pass类的子类，通过重写继承的虚函数来实现特定的功能。根据pass不同的功能分类，继承的类也不同，比如：ModulePass , CallGraphSCCPass, FunctionPass , LoopPass, RegionPass, BasicBlockPass，llvm系统会根据实例的类别来判断pass的功能，然后将其整合到现有的优化体系中去。</p>
+
+<p>FunctionPASS会遍历我们编译的每个函数，在遍历编译的函数过程中，在函数运行之前获取当前时间，在函数运行之后获取当前时间，二者相减，可以得到函数的运行时间。</p>
+
+<h4 id="1整体过程">1、整体过程</h4>
+
+<p>待插入函数</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
+#include &lt;sys/time.h&gt;
+</span>
+
+<span class="kt">long</span> <span class="n">my_fun_b</span><span class="p">(){</span>
+    <span class="k">struct</span> <span class="n">timeval</span> <span class="n">star</span><span class="p">;</span>
+    <span class="n">gettimeofday</span><span class="p">(</span><span class="o">&amp;</span><span class="n">star</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="kt">long</span> <span class="n">b</span> <span class="o">=</span> <span class="n">star</span><span class="p">.</span><span class="n">tv_sec</span> <span class="o">*</span> <span class="mi">1000000</span> <span class="o">+</span> <span class="n">star</span><span class="p">.</span><span class="n">tv_usec</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">b</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">my_fun_e</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">,</span> <span class="kt">long</span> <span class="n">b</span><span class="p">){</span>
+    <span class="k">struct</span> <span class="n">timeval</span> <span class="n">end</span><span class="p">;</span>
+    <span class="n">gettimeofday</span><span class="p">(</span><span class="o">&amp;</span><span class="n">end</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="kt">long</span> <span class="n">e</span> <span class="o">=</span> <span class="n">end</span><span class="p">.</span><span class="n">tv_sec</span> <span class="o">*</span> <span class="mi">1000000</span> <span class="o">+</span> <span class="n">end</span><span class="p">.</span><span class="n">tv_usec</span><span class="p">;</span>
+    <span class="kt">long</span> <span class="n">t</span> <span class="o">=</span> <span class="n">e</span> <span class="o">-</span> <span class="n">b</span><span class="p">;</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"%s %ld us</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">name</span><span class="p">,</span> <span class="n">t</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>my_fun_b是函数的最开始，插入并用于记录当前时间；</p>
+
+<p>my_fun_e则是在函数的最末尾插入，用于记录当前时间并与之前函数开始记录的时间做差值，把函数名称和耗时打印出来。</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="kt">bool</span> <span class="n">runOnFunction</span><span class="p">(</span><span class="n">Function</span> <span class="o">&amp;</span><span class="n">F</span><span class="p">)</span> <span class="k">override</span>
+    <span class="p">{</span>
+      <span class="c1">// 1. 已经插入的不需要再次插入</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">F</span><span class="p">.</span><span class="n">getName</span><span class="p">().</span><span class="n">startswith</span><span class="p">(</span><span class="s">"my_fun_"</span><span class="p">))</span>
+        <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+
+      <span class="c1">// 2. 记录开始时间</span>
+      <span class="n">Value</span><span class="o">*</span> <span class="n">beginTime</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">insert_begin_inst</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">beginTime</span><span class="p">))</span>
+        <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+      
+      <span class="c1">// 3. 方法结束时统计方法耗时，开始的时间记录作为参数</span>
+      <span class="n">insert_return_inst</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">beginTime</span><span class="p">);</span>
+      <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="2函数开始">2、函数开始</h4>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="kt">bool</span> <span class="nf">insert_begin_inst</span><span class="p">(</span><span class="n">Function</span> <span class="o">&amp;</span><span class="n">F</span><span class="p">,</span> <span class="n">Value</span><span class="o">*&amp;</span> <span class="n">beginTime</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="c1">// 0.函数最开始的BasicBlock</span>
+      <span class="n">LLVMContext</span> <span class="o">&amp;</span><span class="n">context</span> <span class="o">=</span> <span class="n">F</span><span class="p">.</span><span class="n">getParent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getContext</span><span class="p">();</span>
+      <span class="n">BasicBlock</span> <span class="o">&amp;</span><span class="n">bb</span> <span class="o">=</span> <span class="n">F</span><span class="p">.</span><span class="n">getEntryBlock</span><span class="p">();</span>
+      
+      <span class="c1">// 1. 获取要插入的函数</span>
+      <span class="n">FunctionCallee</span> <span class="n">beginFun</span> <span class="o">=</span> <span class="n">F</span><span class="p">.</span><span class="n">getParent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getOrInsertFunction</span><span class="p">(</span><span class="s">"my_fun_b"</span><span class="p">,</span><span class="n">FunctionType</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="n">Type</span><span class="o">::</span><span class="n">getInt64Ty</span><span class="p">(</span><span class="n">context</span><span class="p">),</span> <span class="p">{},</span> <span class="nb">false</span><span class="p">));</span>
+
+      <span class="c1">// 2. 构造函数</span>
+      <span class="c1">// Value *beginTime = nullptr;</span>
+      <span class="n">CallInst</span> <span class="o">*</span><span class="n">inst</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
+      <span class="n">IRBuilder</span><span class="o">&lt;&gt;</span> <span class="n">builder</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+      <span class="n">inst</span> <span class="o">=</span> <span class="n">builder</span><span class="p">.</span><span class="n">CreateCall</span><span class="p">(</span><span class="n">beginFun</span><span class="p">);</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">inst</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">llvm</span><span class="o">::</span><span class="n">errs</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"Create First CallInst Failed</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="c1">// 3. 获取函数开始的第一条指令</span>
+      <span class="n">Instruction</span> <span class="o">*</span><span class="n">beginInst</span> <span class="o">=</span> <span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">Instruction</span><span class="o">&gt;</span><span class="p">(</span><span class="n">bb</span><span class="p">.</span><span class="n">begin</span><span class="p">());</span>
+
+      <span class="c1">// 4. 将inst插入</span>
+      <span class="n">inst</span><span class="o">-&gt;</span><span class="n">insertBefore</span><span class="p">(</span><span class="n">beginInst</span><span class="p">);</span>
+      
+      <span class="c1">// 5.根据返回值记录开始时间</span>
+      <span class="n">beginTime</span> <span class="o">=</span> <span class="n">inst</span><span class="p">;</span>
+
+      <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="3函数结束">3、函数结束</h4>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        <span class="kt">void</span> <span class="nf">insert_return_inst</span><span class="p">(</span><span class="n">Function</span> <span class="o">&amp;</span><span class="n">F</span><span class="p">,</span> <span class="n">Value</span><span class="o">*</span> <span class="n">beginTime</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="n">LLVMContext</span> <span class="o">&amp;</span><span class="n">context</span> <span class="o">=</span> <span class="n">F</span><span class="p">.</span><span class="n">getParent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getContext</span><span class="p">();</span>
+      <span class="k">for</span> <span class="p">(</span><span class="n">Function</span><span class="o">::</span><span class="n">iterator</span> <span class="n">I</span> <span class="o">=</span> <span class="n">F</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">E</span> <span class="o">=</span> <span class="n">F</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="n">I</span> <span class="o">!=</span> <span class="n">E</span><span class="p">;</span> <span class="o">++</span><span class="n">I</span><span class="p">)</span>
+      <span class="p">{</span>
+          
+        <span class="c1">//  函数结尾的BasicBlock</span>
+        <span class="n">BasicBlock</span> <span class="o">&amp;</span><span class="n">BB</span> <span class="o">=</span> <span class="o">*</span><span class="n">I</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">BasicBlock</span><span class="o">::</span><span class="n">iterator</span> <span class="n">I</span> <span class="o">=</span> <span class="n">BB</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">E</span> <span class="o">=</span> <span class="n">BB</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="n">I</span> <span class="o">!=</span> <span class="n">E</span><span class="p">;</span> <span class="o">++</span><span class="n">I</span><span class="p">)</span>
+        <span class="p">{</span>
+          <span class="n">ReturnInst</span> <span class="o">*</span><span class="n">IST</span> <span class="o">=</span> <span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">ReturnInst</span><span class="o">&gt;</span><span class="p">(</span><span class="n">I</span><span class="p">);</span>
+          <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">IST</span><span class="p">)</span>
+            <span class="k">continue</span><span class="p">;</span>
+          
+          <span class="c1">// end_func 类型</span>
+          <span class="n">FunctionType</span> <span class="o">*</span><span class="n">endFuncType</span> <span class="o">=</span> <span class="n">FunctionType</span><span class="o">::</span><span class="n">get</span><span class="p">(</span>
+            <span class="n">Type</span><span class="o">::</span><span class="n">getVoidTy</span><span class="p">(</span><span class="n">context</span><span class="p">),</span>
+            <span class="p">{</span><span class="n">Type</span><span class="o">::</span><span class="n">getInt8PtrTy</span><span class="p">(</span><span class="n">context</span><span class="p">),</span><span class="n">Type</span><span class="o">::</span><span class="n">getInt64Ty</span><span class="p">(</span><span class="n">context</span><span class="p">)},</span>
+            <span class="nb">false</span>
+          <span class="p">);</span>
+
+          <span class="c1">// end_func</span>
+          <span class="n">FunctionCallee</span> <span class="n">endFunc</span> <span class="o">=</span> <span class="n">BB</span><span class="p">.</span><span class="n">getModule</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getOrInsertFunction</span><span class="p">(</span><span class="s">"my_fun_e"</span><span class="p">,</span> <span class="n">endFuncType</span><span class="p">);</span>
+
+          <span class="c1">// 构造end_func</span>
+          <span class="n">IRBuilder</span><span class="o">&lt;&gt;</span> <span class="n">builder</span><span class="p">(</span><span class="o">&amp;</span><span class="n">BB</span><span class="p">);</span>
+          <span class="n">IRBuilder</span><span class="o">&lt;&gt;</span> <span class="n">callBuilder</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+          <span class="n">CallInst</span><span class="o">*</span> <span class="n">endCI</span> <span class="o">=</span> <span class="n">callBuilder</span><span class="p">.</span><span class="n">CreateCall</span><span class="p">(</span><span class="n">endFunc</span><span class="p">,</span>
+            <span class="p">{</span>
+              <span class="n">builder</span><span class="p">.</span><span class="n">CreateGlobalStringPtr</span><span class="p">(</span><span class="n">BB</span><span class="p">.</span><span class="n">getParent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getName</span><span class="p">()),</span>
+              <span class="n">beginTime</span>
+            <span class="p">}</span>
+          <span class="p">);</span>
+
+          <span class="c1">// 插入end_func(struction)</span>
+          <span class="n">endCI</span><span class="o">-&gt;</span><span class="n">insertBefore</span><span class="p">(</span><span class="n">IST</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="4运行效果">4、运行效果</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-[AppDelegate application:didFinishLaunchingWithOptions:] 5 us
+-[AppDelegate application:configurationForConnectingSceneSession:options:] 63 us
+-[SceneDelegate window] 0 us
+-[SceneDelegate setWindow:] 0 us
+-[SceneDelegate window] 0 us
+-[SceneDelegate window] 0 us
+-[SceneDelegate scene:willConnectToSession:options:] 0 us
+-[SceneDelegate window] 0 us
+-[SceneDelegate window] 0 us
+-[SceneDelegate window] 0 us
+-[ViewController viewDidLoad] 0 us
+-[SceneDelegate sceneWillEnterForeground:] 0 us
+-[SceneDelegate sceneDidBecomeActive:] 0 us
+-[SceneDelegate window] 0 us
+-[SceneDelegate window] 0 us
+</code></pre></div></div>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/ios/2020/06/28/clang/" data-toggle="tooltip" data-placement="top" title="Clang插桩">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2020</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>
