@@ -1,14 +1,14 @@
 ---
 layout:     post
 category:   iOS
-title:      "Xcode编译过程"
-subtitle:   "Xcode编译过程"
-date:       2019-06-03 12:00:00
+title:      "LLVM编译过程"
+subtitle:   "LLVM编译过程"
+date:       2020-06-03 12:00:00
 author:     "Ted"
 header-img: "img/default.jpg"
 ---
 
-### 1、编译简介
+#### 1、编译以及LLVM简介
 
 编译器的作用便是把我们的高级编程语言(Objective-C)通过一系列的操作转化成可被计算机执行的机器语言(MachineCode)。
 
@@ -24,7 +24,45 @@ header-img: "img/default.jpg"
 
 ![img](/img/Simple_2/28.png)
 
-#### 2、Xcode编译器发展过程
+#### 2、LLVM
+
+> LLVM 是一个开源的，模块化和可重用的编译器和工具链技术的集合，或者说是一个编译器套件。
+>
+> 可以使用 LLVM 来编译 Kotlin，Ruby，Python，Haskell，Java，D，PHP，Pure，Lua 和许多其他语言
+>
+> LLVM 核心库还提供一个优化器，对流行的 CPU 做代码生成支持。
+>
+> LLVM 同时支持 AOT 预先编译和 JIT 即时编译
+>
+> 2012年，LLVM 获得美国计算机学会 ACM 的软件系统大奖，和 UNIX，WWW，TCP/IP，Tex，JAVA 等齐名。
+
+LLVM的中间代码LLVM IR 的三种格式：
+
+- 内存中的编译中间语言
+- 硬盘上存储的可读中间格式（以 `.ll` 结尾）
+- 硬盘上存储的二进制中间语言（以 `.bc` 结尾）
+
+这三种中间格式是完全等价的。
+
+iOS中的Bitcode 第三种，即存储在磁盘上的二进制文件（以 `.bc` 结尾）。
+
+从 Xcode 7 开始，Apple 支持在提交 App 编译产物的同时提交 App 的 Bitcode (非强制)，并且之后对提交了 Bitcode 的 App 都单独进行了云端编译打包。也就是说，即便在提交时已经将本地编译好的 ipa 提交到 App Store，Apple 最终还是会使用 Bitcode 在云端再次打包，并且最终用户下载到手机上的版本也是由 Apple 在云端编译出来的版本，而非开发人员在本地编译的版本。
+
+Apple 之所以这么做，一是因为 Apple 可以在云端编译过程中做一些额外的针对性优化工作，而这些额外的优化是本地环境所无法实现的。二是 Apple 可以为安装 App 的目标设备进行二进制优化，减少安装包的下载大小。
+
+由于 Bitcode 是无关设备架构的，它可以被转化为任何被支持的 CPU 架构，包括现在还没被发明的 CPU 架构。以后如果苹果新出了一款新手机并且 CPU 也是全新设计的，在苹果后台服务器一样可以从这个 App 的 Bitcode 开始编译转化为新 CPU 上的可执行程序，可供新手机用户下载运行这个 App ，而无需开发人员重新在本地编译打包上传。
+
+#### 3、Xcode编译器发展过程
+
+> Clang 是 LLVM 的子项目，是 C、C++ 和 Objective-C 编译器，目标是替代传统编译器 GCC 。Clang 在整个 Objective-C 编译过程中扮演了编译器前端的角色，同时也参与到了 Swift 编译过程中的 Objective-C API 映射阶段。
+>
+> Clang 的主要功能是输出代码对应的抽象语法树（ AST ），针对用户发生的编译错误准确地给出建议，并将代码编译成 LLVM IR。
+>
+> Clang 的特点是编译速度快，模块化，代码简单易懂，诊断信息可读性强，占用内存小以及容易扩展和重用等。
+>
+> 我们以 Xcode 为例，Clang 编译 Objective-C 代码的速度是 Xcode 5 版本前使用的 GCC 的3倍，其生成的 AST 所耗用掉的内存仅仅是 GCC 的五分之一左右。
+
+![img](/img/Simple_2/38.png)
 
 - Xcode3 以前： GCC；
 - Xcode3：增加LLVM，GCC(前端) + LLVM(后端)；
@@ -32,7 +70,7 @@ header-img: "img/default.jpg"
 - Xcode4.6：LLVM 升级到4.2版本；
 - Xcode5：GCC被废弃，新的编译器是LLVM 5.0，从GCC过渡到Clang-LLVM的时代正式完成，`Objective-C`与`swift`都采用`Clang`作为编译器前端
 
-#### 3、Clang-LLVM架构
+#### 4、Clang-LLVM架构
 
 Clang-LLVM架构中，Clang作为前端生成中间代码IR，LLVM优化器进行优化，LLVM机器码生成器生成不同的机器码
 
@@ -41,6 +79,8 @@ Clang-LLVM架构中，Clang作为前端生成中间代码IR，LLVM优化器进�
 再具体一些的话：
 
 ![img](/img/Simple_2/31.png)
+
+#### 5、Xcode中的编译过程
 
 具体来说，在`Xcode`按下`CMD+B`之后，一个源文件的编译过程如下
 
@@ -57,99 +97,5 @@ Clang-LLVM架构中，Clang作为前端生成中间代码IR，LLVM优化器进�
 7. **生成目标文件(Assemble)-后端**：在这一阶段，也是汇编阶段，汇编器将上一步生成的可读的汇编代码转化为机器代码。最终产物就是 以 .o 结尾的目标文件。使用Xcode构建的程序会在DerivedData目录中找到这个文件。。
 8. **链接(Link)**：上个阶段生成的目标文件和引用的静态库链接起来，最终生成可执行文件(Mach-O 类型),链接器解决了目标文件和库之间的链接。
 
-其中，12345属于前端，6属于优化，78属于后端
-
-#### 4、编写自己的PASS
-
-新建PASS目录
-
-```
-cd /llvm/lib/Transforms/
-mkdir MyPass
-cd MyPass
-```
-
-创建文件
-
-```
-mkfile -nv 0 MyPass.cpp
-mkfile -nv 0 CMakeLists.txt
-```
-
-在 CMakeLists.txt中输入如下内容，这些内容用于标记模块名称和源文件信息，以及声明依赖关系。
-
-```
-add_llvm_loadable_module( MyPass
-  MyPass.cpp
-
-  DEPENDS
-  intrinsics_gen
-  PLUGIN_TOOL
-  opt
-  )
-```
-
-在MyPass.cpp内编写自己的Pass
-
-```c++
-#include "llvm/ADT/Statistic.h"
-#include "llvm/IR/Function.h"
-#include "llvm/Pass.h"
-#include "llvm/Support/raw_ostream.h"
-using namespace llvm;
-namespace {
-    // 使用空的名空间避免冲突
-    struct mypass : public FunctionPass {// 继承FunctionPass用于处理IR中的方法
-        static char ID; // Pass identification, replacement for typeid
-        mypass() : FunctionPass(ID) {}
-        
-        // 遍历IR，每当遇到方法定义则调用该函数
-        bool runOnFunction(Function &F) override {
-            // 输出方法名
-            errs() << "funcName: ";
-            errs().write_escaped(F.getName()) << '\n';
-            return false;
-        }
-    };
-}
-
-// 注册pass
-char mypass::ID = 0;
-static RegisterPass<mypass>
-Y("MyPass", "MyPass");
-```
-
-返回上级`/llvm/lib/Transforms/`，修改这一层的CMakeLists.txt文件，注意不是MyPass文件夹里的CMakeListst.txt文件
-
-在末尾加上
-
-```
-add_subdirectory(MyPass)
-```
-
-到xcode目录，运行cmake重新编译配置文件
-
-```
-cd /llvm_xcode/
-cmake -G Xcode ../llvm
-```
-
-打开LLVM.xcodeproj
-
-找到MyPass Target运行，会得到MyPass.dylib
-
-首先
-
-```
-clang -c -emit-llvm code.c
-```
-
-运行LLVM Pass的两种方式
-
-```
-opt -load MyPass.dylib -MyPass code.bc
-clang -Xclang -load -Xclang MyPass.dylib code.c
-```
-
-
+其中，12345属于前端，6属于优化，78属于后端。
 

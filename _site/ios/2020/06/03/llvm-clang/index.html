@@ -16,9 +16,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter">
 
-    <title>Xcode编译过程 - Helloted Blog</title>
+    <title>LLVM编译过程 - Helloted Blog</title>
 
-    <link rel="canonical" href="http://www.helloted.com/ios/2019/06/03/xcode/">
+    <link rel="canonical" href="http://www.helloted.com/ios/2020/06/03/llvm-clang/">
 
     <link rel="shortcut icon" href="/img/favicon.ico">
    
@@ -117,11 +117,11 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <div class="post-heading">
-                    <h1>Xcode编译过程</h1>
+                    <h1>LLVM编译过程</h1>
                     
-                    <h2 class="subheading">Xcode编译过程</h2>
+                    <h2 class="subheading">LLVM编译过程</h2>
                     
-                    <span class="meta">Posted by Ted on June 3, 2019</span>
+                    <span class="meta">Posted by Ted on June 3, 2020</span>
                 </div>
             </div>
         </div>
@@ -134,7 +134,7 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
 
-				<h3 id="1编译简介">1、编译简介</h3>
+				<h4 id="1编译以及llvm简介">1、编译以及LLVM简介</h4>
 
 <p>编译器的作用便是把我们的高级编程语言(Objective-C)通过一系列的操作转化成可被计算机执行的机器语言(MachineCode)。</p>
 
@@ -152,7 +152,51 @@
 
 <p><img src="/img/Simple_2/28.png" alt="img" /></p>
 
-<h4 id="2xcode编译器发展过程">2、Xcode编译器发展过程</h4>
+<h4 id="2llvm">2、LLVM</h4>
+
+<blockquote>
+  <p>LLVM 是一个开源的，模块化和可重用的编译器和工具链技术的集合，或者说是一个编译器套件。</p>
+
+  <p>可以使用 LLVM 来编译 Kotlin，Ruby，Python，Haskell，Java，D，PHP，Pure，Lua 和许多其他语言</p>
+
+  <p>LLVM 核心库还提供一个优化器，对流行的 CPU 做代码生成支持。</p>
+
+  <p>LLVM 同时支持 AOT 预先编译和 JIT 即时编译</p>
+
+  <p>2012年，LLVM 获得美国计算机学会 ACM 的软件系统大奖，和 UNIX，WWW，TCP/IP，Tex，JAVA 等齐名。</p>
+</blockquote>
+
+<p>LLVM的中间代码LLVM IR 的三种格式：</p>
+
+<ul>
+  <li>内存中的编译中间语言</li>
+  <li>硬盘上存储的可读中间格式（以 <code class="highlighter-rouge">.ll</code> 结尾）</li>
+  <li>硬盘上存储的二进制中间语言（以 <code class="highlighter-rouge">.bc</code> 结尾）</li>
+</ul>
+
+<p>这三种中间格式是完全等价的。</p>
+
+<p>iOS中的Bitcode 第三种，即存储在磁盘上的二进制文件（以 <code class="highlighter-rouge">.bc</code> 结尾）。</p>
+
+<p>从 Xcode 7 开始，Apple 支持在提交 App 编译产物的同时提交 App 的 Bitcode (非强制)，并且之后对提交了 Bitcode 的 App 都单独进行了云端编译打包。也就是说，即便在提交时已经将本地编译好的 ipa 提交到 App Store，Apple 最终还是会使用 Bitcode 在云端再次打包，并且最终用户下载到手机上的版本也是由 Apple 在云端编译出来的版本，而非开发人员在本地编译的版本。</p>
+
+<p>Apple 之所以这么做，一是因为 Apple 可以在云端编译过程中做一些额外的针对性优化工作，而这些额外的优化是本地环境所无法实现的。二是 Apple 可以为安装 App 的目标设备进行二进制优化，减少安装包的下载大小。</p>
+
+<p>由于 Bitcode 是无关设备架构的，它可以被转化为任何被支持的 CPU 架构，包括现在还没被发明的 CPU 架构。以后如果苹果新出了一款新手机并且 CPU 也是全新设计的，在苹果后台服务器一样可以从这个 App 的 Bitcode 开始编译转化为新 CPU 上的可执行程序，可供新手机用户下载运行这个 App ，而无需开发人员重新在本地编译打包上传。</p>
+
+<h4 id="3xcode编译器发展过程">3、Xcode编译器发展过程</h4>
+
+<blockquote>
+  <p>Clang 是 LLVM 的子项目，是 C、C++ 和 Objective-C 编译器，目标是替代传统编译器 GCC 。Clang 在整个 Objective-C 编译过程中扮演了编译器前端的角色，同时也参与到了 Swift 编译过程中的 Objective-C API 映射阶段。</p>
+
+  <p>Clang 的主要功能是输出代码对应的抽象语法树（ AST ），针对用户发生的编译错误准确地给出建议，并将代码编译成 LLVM IR。</p>
+
+  <p>Clang 的特点是编译速度快，模块化，代码简单易懂，诊断信息可读性强，占用内存小以及容易扩展和重用等。</p>
+
+  <p>我们以 Xcode 为例，Clang 编译 Objective-C 代码的速度是 Xcode 5 版本前使用的 GCC 的3倍，其生成的 AST 所耗用掉的内存仅仅是 GCC 的五分之一左右。</p>
+</blockquote>
+
+<p><img src="/img/Simple_2/38.png" alt="img" /></p>
 
 <ul>
   <li>Xcode3 以前： GCC；</li>
@@ -162,7 +206,7 @@
   <li>Xcode5：GCC被废弃，新的编译器是LLVM 5.0，从GCC过渡到Clang-LLVM的时代正式完成，<code class="highlighter-rouge">Objective-C</code>与<code class="highlighter-rouge">swift</code>都采用<code class="highlighter-rouge">Clang</code>作为编译器前端</li>
 </ul>
 
-<h4 id="3clang-llvm架构">3、Clang-LLVM架构</h4>
+<h4 id="4clang-llvm架构">4、Clang-LLVM架构</h4>
 
 <p>Clang-LLVM架构中，Clang作为前端生成中间代码IR，LLVM优化器进行优化，LLVM机器码生成器生成不同的机器码</p>
 
@@ -171,6 +215,8 @@
 <p>再具体一些的话：</p>
 
 <p><img src="/img/Simple_2/31.png" alt="img" /></p>
+
+<h4 id="5xcode中的编译过程">5、Xcode中的编译过程</h4>
 
 <p>具体来说，在<code class="highlighter-rouge">Xcode</code>按下<code class="highlighter-rouge">CMD+B</code>之后，一个源文件的编译过程如下</p>
 
@@ -189,91 +235,7 @@
   <li><strong>链接(Link)</strong>：上个阶段生成的目标文件和引用的静态库链接起来，最终生成可执行文件(Mach-O 类型),链接器解决了目标文件和库之间的链接。</li>
 </ol>
 
-<p>其中，12345属于前端，6属于优化，78属于后端</p>
-
-<h4 id="4编写自己的pass">4、编写自己的PASS</h4>
-
-<p>新建PASS目录</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd /llvm/lib/Transforms/
-mkdir MyPass
-cd MyPass
-</code></pre></div></div>
-
-<p>创建文件</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkfile -nv 0 MyPass.cpp
-mkfile -nv 0 CMakeLists.txt
-</code></pre></div></div>
-
-<p>在 CMakeLists.txt中输入如下内容，这些内容用于标记模块名称和源文件信息，以及声明依赖关系。</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>add_llvm_loadable_module( MyPass
-  MyPass.cpp
-
-  DEPENDS
-  intrinsics_gen
-  PLUGIN_TOOL
-  opt
-  )
-</code></pre></div></div>
-
-<p>在MyPass.cpp内编写自己的Pass</p>
-
-<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include "llvm/ADT/Statistic.h"
-#include "llvm/IR/Function.h"
-#include "llvm/Pass.h"
-#include "llvm/Support/raw_ostream.h"
-</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">llvm</span><span class="p">;</span>
-<span class="k">namespace</span> <span class="p">{</span>
-    <span class="c1">// 使用空的名空间避免冲突</span>
-    <span class="k">struct</span> <span class="n">mypass</span> <span class="o">:</span> <span class="k">public</span> <span class="n">FunctionPass</span> <span class="p">{</span><span class="c1">// 继承FunctionPass用于处理IR中的方法</span>
-        <span class="k">static</span> <span class="kt">char</span> <span class="n">ID</span><span class="p">;</span> <span class="c1">// Pass identification, replacement for typeid</span>
-        <span class="n">mypass</span><span class="p">()</span> <span class="o">:</span> <span class="n">FunctionPass</span><span class="p">(</span><span class="n">ID</span><span class="p">)</span> <span class="p">{}</span>
-        
-        <span class="c1">// 遍历IR，每当遇到方法定义则调用该函数</span>
-        <span class="kt">bool</span> <span class="n">runOnFunction</span><span class="p">(</span><span class="n">Function</span> <span class="o">&amp;</span><span class="n">F</span><span class="p">)</span> <span class="k">override</span> <span class="p">{</span>
-            <span class="c1">// 输出方法名</span>
-            <span class="n">errs</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"funcName: "</span><span class="p">;</span>
-            <span class="n">errs</span><span class="p">().</span><span class="n">write_escaped</span><span class="p">(</span><span class="n">F</span><span class="p">.</span><span class="n">getName</span><span class="p">())</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
-        <span class="p">}</span>
-    <span class="p">};</span>
-<span class="p">}</span>
-
-<span class="c1">// 注册pass</span>
-<span class="kt">char</span> <span class="n">mypass</span><span class="o">::</span><span class="n">ID</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="k">static</span> <span class="n">RegisterPass</span><span class="o">&lt;</span><span class="n">mypass</span><span class="o">&gt;</span>
-<span class="n">Y</span><span class="p">(</span><span class="s">"MyPass"</span><span class="p">,</span> <span class="s">"MyPass"</span><span class="p">);</span>
-</code></pre></div></div>
-
-<p>返回上级<code class="highlighter-rouge">/llvm/lib/Transforms/</code>，修改这一层的CMakeLists.txt文件，注意不是MyPass文件夹里的CMakeListst.txt文件</p>
-
-<p>在末尾加上</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>add_subdirectory(MyPass)
-</code></pre></div></div>
-
-<p>到xcode目录，运行cmake重新编译配置文件</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd /llvm_xcode/
-cmake -G Xcode ../llvm
-</code></pre></div></div>
-
-<p>打开LLVM.xcodeproj</p>
-
-<p>找到MyPass Target运行，会得到MyPass.dylib</p>
-
-<p>首先</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>clang -c -emit-llvm code.c
-</code></pre></div></div>
-
-<p>运行LLVM Pass的两种方式</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>opt -load MyPass.dylib -MyPass code.bc
-clang -Xclang -load -Xclang MyPass.dylib code.c
-</code></pre></div></div>
+<p>其中，12345属于前端，6属于优化，78属于后端。</p>
 
 
 
@@ -282,12 +244,12 @@ clang -Xclang -load -Xclang MyPass.dylib code.c
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/flutter/2019/05/18/FlutterUI/" data-toggle="tooltip" data-placement="top" title="Flutter UI原理">&larr; 上一篇</a>
+                        <a href="/others/2020/05/01/protocolbuffers/" data-toggle="tooltip" data-placement="top" title="gRPC & Protocol Buffers">&larr; 上一篇</a>
                     </li>
                     
                     
                     <li class="next">
-                        <a href="/ios/2019/08/07/crash_debug/" data-toggle="tooltip" data-placement="top" title="无源调试">下一篇 &rarr;</a>
+                        <a href="/ios/2020/06/28/clang/" data-toggle="tooltip" data-placement="top" title="LLVM-插桩">下一篇 &rarr;</a>
                     </li>
                     
                 </ul>

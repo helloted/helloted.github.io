@@ -3,7 +3,7 @@ layout:     post
 category:   iOS
 title:      "二进制重排"
 subtitle:   "Page-fault、二进制重排"
-date:       2020-06-28 12:00:00
+date:       2020-07-28 12:00:00
 author:     "Ted"
 header-img: "img/default.jpg"
 ---

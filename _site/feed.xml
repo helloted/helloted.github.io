@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2020-10-09T14:28:13+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">Clang插件统计方法耗时</title><link href="http://www.helloted.com/ios/2020/09/22/clang-time/" rel="alternate" type="text/html" title="Clang插件统计方法耗时" /><published>2020-09-22T20:00:00+08:00</published><updated>2020-09-22T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2020/09/22/clang-time</id><content type="html" xml:base="http://www.helloted.com/ios/2020/09/22/clang-time/">&lt;h4 id=&quot;0统计函数耗时原理&quot;&gt;0、统计函数耗时原理&lt;/h4&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2020-11-23T14:14:38+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">Clang插件统计方法耗时</title><link href="http://www.helloted.com/ios/2020/09/22/clang-time/" rel="alternate" type="text/html" title="Clang插件统计方法耗时" /><published>2020-09-22T20:00:00+08:00</published><updated>2020-09-22T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2020/09/22/clang-time</id><content type="html" xml:base="http://www.helloted.com/ios/2020/09/22/clang-time/">&lt;h4 id=&quot;0统计函数耗时原理&quot;&gt;0、统计函数耗时原理&lt;/h4&gt;
 
 &lt;p&gt;LLVM的优化和转换工作就需要通过PASS来进行，就像下面这种图，PASS就像流水线上的操作工一样对中间代码IR进行优化，每个PASS完成特定的优化工作。&lt;/p&gt;
 
@@ -148,7 +148,7 @@
 -[SceneDelegate sceneDidBecomeActive:] 0 us
 -[SceneDelegate window] 0 us
 -[SceneDelegate window] 0 us
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">0、统计函数耗时原理</summary></entry><entry><title type="html">二进制重排</title><link href="http://www.helloted.com/ios/2020/06/28/byteorder/" rel="alternate" type="text/html" title="二进制重排" /><published>2020-06-28T20:00:00+08:00</published><updated>2020-06-28T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2020/06/28/byteorder</id><content type="html" xml:base="http://www.helloted.com/ios/2020/06/28/byteorder/">&lt;h4 id=&quot;0ios应用的内存布局&quot;&gt;0、iOS应用的内存布局&lt;/h4&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">0、统计函数耗时原理</summary></entry><entry><title type="html">二进制重排</title><link href="http://www.helloted.com/ios/2020/07/28/byteorder/" rel="alternate" type="text/html" title="二进制重排" /><published>2020-07-28T20:00:00+08:00</published><updated>2020-07-28T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2020/07/28/byteorder</id><content type="html" xml:base="http://www.helloted.com/ios/2020/07/28/byteorder/">&lt;h4 id=&quot;0ios应用的内存布局&quot;&gt;0、iOS应用的内存布局&lt;/h4&gt;
 
 &lt;p&gt;应用的内存布局从低到高如下排布：&lt;/p&gt;
 
@@ -381,42 +381,9 @@ extern void AppOrderFiles(void(^completion)(NSString *orderFilePath));
 
 &lt;p&gt;&lt;strong&gt;Build Settings&lt;/strong&gt;中修改&lt;strong&gt;Write Link Map File&lt;/strong&gt;为&lt;code class=&quot;highlighter-rouge&quot;&gt;YES&lt;/code&gt;编译后会生成一个&lt;strong&gt;Link Map&lt;/strong&gt;符号表&lt;code class=&quot;highlighter-rouge&quot;&gt;txt&lt;/code&gt;文件。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/37.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">0、iOS应用的内存布局</summary></entry><entry><title type="html">Clang插桩</title><link href="http://www.helloted.com/ios/2020/06/28/clang/" rel="alternate" type="text/html" title="Clang插桩" /><published>2020-06-28T20:00:00+08:00</published><updated>2020-06-28T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2020/06/28/clang</id><content type="html" xml:base="http://www.helloted.com/ios/2020/06/28/clang/">&lt;h4 id=&quot;0clang插桩原理&quot;&gt;0、Clang插桩原理&lt;/h4&gt;
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/37.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">0、iOS应用的内存布局</summary></entry><entry><title type="html">LLVM-插桩</title><link href="http://www.helloted.com/ios/2020/06/28/clang/" rel="alternate" type="text/html" title="LLVM-插桩" /><published>2020-06-28T20:00:00+08:00</published><updated>2020-06-28T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2020/06/28/clang</id><content type="html" xml:base="http://www.helloted.com/ios/2020/06/28/clang/">&lt;h4 id=&quot;0clang插桩原理&quot;&gt;0、Clang插桩原理&lt;/h4&gt;
 
-&lt;p&gt;Clang-LLVM编译过程如下:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;预处理(Pre-process)：他的主要工作就是将宏替换，删除注释展开头文件，生成.i文件。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;词法分析(Lexical Analysis)：将代码切成一个个 token，比如大小括号，等于号还有字符串等。是计算机科学中将字符序列转换为标记序列的过程。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;语法分析(Semantic Analysis)：验证语法是否正确，然后将所有节点组成 AST(Abstract Syntax Tree抽象语法树) 。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;静态分析(Static Analysis)：使用它来表示用于分析源代码以便自动发现错误。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;中间代码生成(Code Generation)：生成中间代码 IR(Intermediate Representation)，Code Generation 会负责将语法树自顶向下遍历逐步翻译成 LLVM IR，IR 是编译过程的前端的输出，后端的输入。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;优化(Optimize)：LLVM 会去做些优化工作，在 Xcode 的编译设置里也可以设置优化级别-O1、-O3、-Os…还可以写些自己的 Pass&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;生成目标文件(Assemble)：生成Target相关Object(Mach-o)。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;链接(Link)：生成Executable可执行文件。&lt;/p&gt;
-
-    &lt;p&gt;&lt;img src=&quot;/img/Simple_2/30.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-    &lt;p&gt;&lt;img src=&quot;/img/Simple_3/50.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;而在优化过程中，可以自己定义Pass来优化代码&lt;/p&gt;
+&lt;p&gt;Clang在优化过程中，可以自己定义Pass来优化代码&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/Simple_3/36.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 
@@ -599,7 +566,166 @@ $ cmake -G Xcode ../llvm
 
 &lt;p&gt;3.6 执行可以获取到log输出方法执行情况&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/48.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">0、Clang插桩原理</summary></entry><entry><title type="html">gRPC &amp;amp; Protocol Buffers</title><link href="http://www.helloted.com/others/2020/05/01/protocolbuffers/" rel="alternate" type="text/html" title="gRPC &amp; Protocol Buffers" /><published>2020-05-01T20:00:00+08:00</published><updated>2020-05-01T20:00:00+08:00</updated><id>http://www.helloted.com/others/2020/05/01/protocolbuffers</id><content type="html" xml:base="http://www.helloted.com/others/2020/05/01/protocolbuffers/">&lt;h4 id=&quot;0grpc&quot;&gt;0、gRPC&lt;/h4&gt;
+&lt;p&gt;&lt;img src=&quot;/img/Simple_3/48.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;4插桩的其他思路sanitizercoverage&quot;&gt;4、插桩的其他思路：SanitizerCoverage&lt;/h4&gt;
+
+&lt;p&gt;LLVM本身提供了一种覆盖函数的方案：&lt;a href=&quot;http://clang.llvm.org/docs/SanitizerCoverage.html&quot;&gt;SanitizerCoverage&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_3/51.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;在官方文档中就有说明，如果在编译配置里有-fsantize-cover等参数，就会在每个函数的边缘插入一个sanitizer-cov—trace-guard函数，也就是说，每个方法函数执行的时候，都会调用一次这个插入的函数，所以我们可以通过这个插入函数，来获取方法函数名，从而获取启动过程中的符号顺序。&lt;/p&gt;
+
+&lt;h4 id=&quot;5插桩的其他思路sanitizercoverage&quot;&gt;5、插桩的其他思路：SanitizerCoverage&lt;/h4&gt;
+
+&lt;p&gt;OC 的方法调用在底层都是objc_msgSend函数。所以，如果能够Hook它，获取每个调用objc_msgSend的方法名，也能够达到插桩效果。objc_msgSend是C函数而且是系统函数，C 函数在编译链接时就确定了函数指针的地址偏移量（Offset），虽然这个偏移量在编译好的可执行文件中是固定的，但是可执行文件每次被重新装载到内存中时被系统分配的起始地址（在 lldb 中用命令image List获取）是不断变化的。所以，我们就可以借助facebook公司的一个开源库fishhook来达到系统函数与自己定义的函数进行了交换；&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;苹果采用了PIC（Position-independent code）技术成功让 C 的底层也能有动态的表现：&lt;/p&gt;
+
+  &lt;ul&gt;
+    &lt;li&gt;编译时在 Mach-O 文件 _DATA 段的符号表中为每一个被引用的系统 C 函数建立一个指针（8字节的数据，放的全是0），这个指针用于动态绑定时重定位到共享库中的函数实现。&lt;/li&gt;
+    &lt;li&gt;在运行时当系统 C 函数被第一次调用时会动态绑定一次，然后将 Mach-O 中的 _DATA 段符号表中对应的指针，指向外部函数（其在共享库中的实际内存地址）。&lt;/li&gt;
+  &lt;/ul&gt;
+
+  &lt;p&gt;fishhook 正是利用了 PIC 技术做了这么两个操作：&lt;/p&gt;
+
+  &lt;ul&gt;
+    &lt;li&gt;将指向系统方法（外部函数）的指针重新进行绑定指向内部函数/自定义 C 函数。&lt;/li&gt;
+    &lt;li&gt;将内部函数的指针在动态链接时指向系统方法的地址。&lt;/li&gt;
+  &lt;/ul&gt;
+
+  &lt;p&gt;这样就把系统方法与自己定义的方法进行了交换，达到 HOOK 系统 C 函数（共享库中的）的目的。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;下面是是我们的hook大概过程&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;static void hook_objc_msgSend() {
+    /// begin之前保存objc_msgSend的参数
+    save()
+    /// 将objc_msgSend执行的下一个函数地址传递给beginHook的第二个参数x0 self, x1 _cmd, x2: lr address
+    __asm volatile (&quot;mov x2, lr\n&quot;);
+    /// 执行beginHook
+    call(blr, &amp;amp; beginHook)
+    /// 恢复objc_msgSend参数
+    load()
+    // 执行
+    call(blr, orig_objc_msgSend)
+    /// after之前保存objc_msgSend执行完成的参数----------
+    save()
+    /// 调用 endHook----------
+    call(blr, &amp;amp; endHook)
+    /// 将endHook返回的参数放入lr,恢复调用beginHook前的lr地址
+    __asm volatile (&quot;mov lr, x0\n&quot;);
+    /// 恢复objc_msgSend执行完成的参数
+    load()
+    /// 方法结束,继续执行lr
+    ret()
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;我们需要使用汇编指令对寄存器进行存取和执行，stp存储原参数，blr调用执行，ldp加载指令。这个过程与OC方法的Method-Swilling类似。最终可以达到hook_objc_msgSend函数与原来的objc_msgsend函数进行调换的目的。&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">0、Clang插桩原理</summary></entry><entry><title type="html">LLVM编译过程</title><link href="http://www.helloted.com/ios/2020/06/03/llvm-clang/" rel="alternate" type="text/html" title="LLVM编译过程" /><published>2020-06-03T20:00:00+08:00</published><updated>2020-06-03T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2020/06/03/llvm-clang</id><content type="html" xml:base="http://www.helloted.com/ios/2020/06/03/llvm-clang/">&lt;h4 id=&quot;1编译以及llvm简介&quot;&gt;1、编译以及LLVM简介&lt;/h4&gt;
+
+&lt;p&gt;编译器的作用便是把我们的高级编程语言(Objective-C)通过一系列的操作转化成可被计算机执行的机器语言(MachineCode)。&lt;/p&gt;
+
+&lt;p&gt;经典的&lt;strong&gt;三段式&lt;/strong&gt;设计（three phase design）：前端(Frontend)–优化器(Optimizer)–后端(Backend)&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/27.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;前端&lt;/strong&gt;：负责分析源代码，可以检查语法级错误，并构建针对该语言的抽象语法树（AST），生成中间代码(Intermediate Representation )，在这个过程中，会进行类型检查，如果发现错误或者警告会标注出来在哪一行。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;优化&lt;/strong&gt;：此时进行与机器类型无关的优化&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;后端&lt;/strong&gt;：根据不同的机器和架构，进行优化并且生成不同的机器码&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;这种三段式架构的优势在于：假如你需要增加一种语言，只需要增加一种前端；假如你需要增加一种处理器架构，也只需要增加一种后端；通过共享优化器的中转，其他的地方都不需要改动。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/28.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;2llvm&quot;&gt;2、LLVM&lt;/h4&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;LLVM 是一个开源的，模块化和可重用的编译器和工具链技术的集合，或者说是一个编译器套件。&lt;/p&gt;
+
+  &lt;p&gt;可以使用 LLVM 来编译 Kotlin，Ruby，Python，Haskell，Java，D，PHP，Pure，Lua 和许多其他语言&lt;/p&gt;
+
+  &lt;p&gt;LLVM 核心库还提供一个优化器，对流行的 CPU 做代码生成支持。&lt;/p&gt;
+
+  &lt;p&gt;LLVM 同时支持 AOT 预先编译和 JIT 即时编译&lt;/p&gt;
+
+  &lt;p&gt;2012年，LLVM 获得美国计算机学会 ACM 的软件系统大奖，和 UNIX，WWW，TCP/IP，Tex，JAVA 等齐名。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;LLVM的中间代码LLVM IR 的三种格式：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;内存中的编译中间语言&lt;/li&gt;
+  &lt;li&gt;硬盘上存储的可读中间格式（以 &lt;code class=&quot;highlighter-rouge&quot;&gt;.ll&lt;/code&gt; 结尾）&lt;/li&gt;
+  &lt;li&gt;硬盘上存储的二进制中间语言（以 &lt;code class=&quot;highlighter-rouge&quot;&gt;.bc&lt;/code&gt; 结尾）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;这三种中间格式是完全等价的。&lt;/p&gt;
+
+&lt;p&gt;iOS中的Bitcode 第三种，即存储在磁盘上的二进制文件（以 &lt;code class=&quot;highlighter-rouge&quot;&gt;.bc&lt;/code&gt; 结尾）。&lt;/p&gt;
+
+&lt;p&gt;从 Xcode 7 开始，Apple 支持在提交 App 编译产物的同时提交 App 的 Bitcode (非强制)，并且之后对提交了 Bitcode 的 App 都单独进行了云端编译打包。也就是说，即便在提交时已经将本地编译好的 ipa 提交到 App Store，Apple 最终还是会使用 Bitcode 在云端再次打包，并且最终用户下载到手机上的版本也是由 Apple 在云端编译出来的版本，而非开发人员在本地编译的版本。&lt;/p&gt;
+
+&lt;p&gt;Apple 之所以这么做，一是因为 Apple 可以在云端编译过程中做一些额外的针对性优化工作，而这些额外的优化是本地环境所无法实现的。二是 Apple 可以为安装 App 的目标设备进行二进制优化，减少安装包的下载大小。&lt;/p&gt;
+
+&lt;p&gt;由于 Bitcode 是无关设备架构的，它可以被转化为任何被支持的 CPU 架构，包括现在还没被发明的 CPU 架构。以后如果苹果新出了一款新手机并且 CPU 也是全新设计的，在苹果后台服务器一样可以从这个 App 的 Bitcode 开始编译转化为新 CPU 上的可执行程序，可供新手机用户下载运行这个 App ，而无需开发人员重新在本地编译打包上传。&lt;/p&gt;
+
+&lt;h4 id=&quot;3xcode编译器发展过程&quot;&gt;3、Xcode编译器发展过程&lt;/h4&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Clang 是 LLVM 的子项目，是 C、C++ 和 Objective-C 编译器，目标是替代传统编译器 GCC 。Clang 在整个 Objective-C 编译过程中扮演了编译器前端的角色，同时也参与到了 Swift 编译过程中的 Objective-C API 映射阶段。&lt;/p&gt;
+
+  &lt;p&gt;Clang 的主要功能是输出代码对应的抽象语法树（ AST ），针对用户发生的编译错误准确地给出建议，并将代码编译成 LLVM IR。&lt;/p&gt;
+
+  &lt;p&gt;Clang 的特点是编译速度快，模块化，代码简单易懂，诊断信息可读性强，占用内存小以及容易扩展和重用等。&lt;/p&gt;
+
+  &lt;p&gt;我们以 Xcode 为例，Clang 编译 Objective-C 代码的速度是 Xcode 5 版本前使用的 GCC 的3倍，其生成的 AST 所耗用掉的内存仅仅是 GCC 的五分之一左右。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/38.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Xcode3 以前： GCC；&lt;/li&gt;
+  &lt;li&gt;Xcode3：增加LLVM，GCC(前端) + LLVM(后端)；&lt;/li&gt;
+  &lt;li&gt;Xcode4.2：出现Clang - LLVM 3.0成为默认编译器；&lt;/li&gt;
+  &lt;li&gt;Xcode4.6：LLVM 升级到4.2版本；&lt;/li&gt;
+  &lt;li&gt;Xcode5：GCC被废弃，新的编译器是LLVM 5.0，从GCC过渡到Clang-LLVM的时代正式完成，&lt;code class=&quot;highlighter-rouge&quot;&gt;Objective-C&lt;/code&gt;与&lt;code class=&quot;highlighter-rouge&quot;&gt;swift&lt;/code&gt;都采用&lt;code class=&quot;highlighter-rouge&quot;&gt;Clang&lt;/code&gt;作为编译器前端&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;4clang-llvm架构&quot;&gt;4、Clang-LLVM架构&lt;/h4&gt;
+
+&lt;p&gt;Clang-LLVM架构中，Clang作为前端生成中间代码IR，LLVM优化器进行优化，LLVM机器码生成器生成不同的机器码&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/29.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;再具体一些的话：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/31.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;5xcode中的编译过程&quot;&gt;5、Xcode中的编译过程&lt;/h4&gt;
+
+&lt;p&gt;具体来说，在&lt;code class=&quot;highlighter-rouge&quot;&gt;Xcode&lt;/code&gt;按下&lt;code class=&quot;highlighter-rouge&quot;&gt;CMD+B&lt;/code&gt;之后，一个源文件的编译过程如下&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/30.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;如上图所示，&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;strong&gt;预处理(Pre-process)&lt;/strong&gt;：他的主要工作就是将宏替换，删除注释展开头文件，生成.i文件。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;词法解析(Lexical Analysis)&lt;/strong&gt;：将代码切成一个个 token，比如大小括号，等于号还有字符串等。是计算机科学中将字符序列转换为标记序列的过程。这一步把源文件中的代码转化为特殊的标记流，源码被分割成一个一个的字符和单词，在行尾Loc中都标记出了源码所在的对应源文件和具体行数，方便在报错时定位问题。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;语义分析(Semantic Analysis)&lt;/strong&gt;：验证语法是否正确，然后将所有节点组成抽象语法树 AST 。由 Clang 中 Parser 和 Sema 配合完成。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;静态分析(Static Analysis)&lt;/strong&gt;：静态分析会对代码进行错误检查，如出现方法被调用但是未定义、定义但是未使用的变量等，以此提高代码质量。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;中间代码生成(Code Generation)&lt;/strong&gt;：生成中间代码 IR，CodeGen 会负责将语法树自顶向下遍历逐步翻译成 LLVM IR，IR 是编译过程的前端的输出，后端的输入。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;优化(Optimize)&lt;/strong&gt;：LLVM 会去做些优化工作，在 Xcode 的编译设置里也可以设置优化级别-O1、-O3、-Os…还可以写些自己的 Pass，官方有比较完整的 Pass 教程： &lt;a href=&quot;http://llvm.org/docs/WritingAnLLVMPass.html&quot;&gt;Writing an LLVM Pass&lt;/a&gt; 。如果开启了Bitcode苹果会做进一步的优化，有新的后端架构还是可以用这份优化过的Bitcode去生成。可以在这一层自定义Pass对IR代码做代码混淆&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;生成目标文件(Assemble)-后端&lt;/strong&gt;：在这一阶段，也是汇编阶段，汇编器将上一步生成的可读的汇编代码转化为机器代码。最终产物就是 以 .o 结尾的目标文件。使用Xcode构建的程序会在DerivedData目录中找到这个文件。。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;链接(Link)&lt;/strong&gt;：上个阶段生成的目标文件和引用的静态库链接起来，最终生成可执行文件(Mach-O 类型),链接器解决了目标文件和库之间的链接。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;其中，12345属于前端，6属于优化，78属于后端。&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">1、编译以及LLVM简介</summary></entry><entry><title type="html">gRPC &amp;amp; Protocol Buffers</title><link href="http://www.helloted.com/others/2020/05/01/protocolbuffers/" rel="alternate" type="text/html" title="gRPC &amp; Protocol Buffers" /><published>2020-05-01T20:00:00+08:00</published><updated>2020-05-01T20:00:00+08:00</updated><id>http://www.helloted.com/others/2020/05/01/protocolbuffers</id><content type="html" xml:base="http://www.helloted.com/others/2020/05/01/protocolbuffers/">&lt;h4 id=&quot;0grpc&quot;&gt;0、gRPC&lt;/h4&gt;
 
 &lt;p&gt;gRPC 是一个高性能、开源、通用的RPC框架，由Google推出，基于HTTP/2协议标准设计开发，默认采用Protocol Buffers数据序列化协议，支持多种开发语言。gRPC提供了一种简单的方法来精确的定义服务，并且为客户端和服务端自动生成可靠的功能库。&lt;/p&gt;
 
@@ -1492,146 +1618,7 @@ atos -o /Users/haozhicao/Downloads/dnf -l 0x0000000102a2c000 0x0000000102f3ea48
 eg:
 otool -v -arch arm64e -s __TEXT __objc_methname /Users/haozhicao/Library/Developer/Xcode/iOS\ DeviceSupport/12.4\ \(16G77\)\ arm64e/Symbols/System/Library/Frameworks/UIKit.framework/UIKit 0x00000001880c17ec
 -[_UIWebViewScrollViewDelegateForwarder forwardInvocation:](in UIKit)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">一般App都会接入第三方的Crash报告SDK，比如友盟SDK，或者腾讯的bugly，当有crash的时候，SDK记录的crash记录的堆栈一般情况下可以很清晰地定位到源码的具体某一行，根据代码处理即可。但是有小部分情况下，crash记录的堆栈是系统堆栈，没有开发者的源码。</summary></entry><entry><title type="html">Xcode编译过程</title><link href="http://www.helloted.com/ios/2019/06/03/xcode/" rel="alternate" type="text/html" title="Xcode编译过程" /><published>2019-06-03T20:00:00+08:00</published><updated>2019-06-03T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2019/06/03/xcode</id><content type="html" xml:base="http://www.helloted.com/ios/2019/06/03/xcode/">&lt;h3 id=&quot;1编译简介&quot;&gt;1、编译简介&lt;/h3&gt;
-
-&lt;p&gt;编译器的作用便是把我们的高级编程语言(Objective-C)通过一系列的操作转化成可被计算机执行的机器语言(MachineCode)。&lt;/p&gt;
-
-&lt;p&gt;经典的&lt;strong&gt;三段式&lt;/strong&gt;设计（three phase design）：前端(Frontend)–优化器(Optimizer)–后端(Backend)&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/27.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;前端&lt;/strong&gt;：负责分析源代码，可以检查语法级错误，并构建针对该语言的抽象语法树（AST），生成中间代码(Intermediate Representation )，在这个过程中，会进行类型检查，如果发现错误或者警告会标注出来在哪一行。&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;优化&lt;/strong&gt;：此时进行与机器类型无关的优化&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;后端&lt;/strong&gt;：根据不同的机器和架构，进行优化并且生成不同的机器码&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;这种三段式架构的优势在于：假如你需要增加一种语言，只需要增加一种前端；假如你需要增加一种处理器架构，也只需要增加一种后端；通过共享优化器的中转，其他的地方都不需要改动。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/28.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;2xcode编译器发展过程&quot;&gt;2、Xcode编译器发展过程&lt;/h4&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Xcode3 以前： GCC；&lt;/li&gt;
-  &lt;li&gt;Xcode3：增加LLVM，GCC(前端) + LLVM(后端)；&lt;/li&gt;
-  &lt;li&gt;Xcode4.2：出现Clang - LLVM 3.0成为默认编译器；&lt;/li&gt;
-  &lt;li&gt;Xcode4.6：LLVM 升级到4.2版本；&lt;/li&gt;
-  &lt;li&gt;Xcode5：GCC被废弃，新的编译器是LLVM 5.0，从GCC过渡到Clang-LLVM的时代正式完成，&lt;code class=&quot;highlighter-rouge&quot;&gt;Objective-C&lt;/code&gt;与&lt;code class=&quot;highlighter-rouge&quot;&gt;swift&lt;/code&gt;都采用&lt;code class=&quot;highlighter-rouge&quot;&gt;Clang&lt;/code&gt;作为编译器前端&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;3clang-llvm架构&quot;&gt;3、Clang-LLVM架构&lt;/h4&gt;
-
-&lt;p&gt;Clang-LLVM架构中，Clang作为前端生成中间代码IR，LLVM优化器进行优化，LLVM机器码生成器生成不同的机器码&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/29.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;再具体一些的话：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/31.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;具体来说，在&lt;code class=&quot;highlighter-rouge&quot;&gt;Xcode&lt;/code&gt;按下&lt;code class=&quot;highlighter-rouge&quot;&gt;CMD+B&lt;/code&gt;之后，一个源文件的编译过程如下&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/30.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;如上图所示，&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;&lt;strong&gt;预处理(Pre-process)&lt;/strong&gt;：他的主要工作就是将宏替换，删除注释展开头文件，生成.i文件。&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;词法解析(Lexical Analysis)&lt;/strong&gt;：将代码切成一个个 token，比如大小括号，等于号还有字符串等。是计算机科学中将字符序列转换为标记序列的过程。这一步把源文件中的代码转化为特殊的标记流，源码被分割成一个一个的字符和单词，在行尾Loc中都标记出了源码所在的对应源文件和具体行数，方便在报错时定位问题。&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;语义分析(Semantic Analysis)&lt;/strong&gt;：验证语法是否正确，然后将所有节点组成抽象语法树 AST 。由 Clang 中 Parser 和 Sema 配合完成。&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;静态分析(Static Analysis)&lt;/strong&gt;：静态分析会对代码进行错误检查，如出现方法被调用但是未定义、定义但是未使用的变量等，以此提高代码质量。&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;中间代码生成(Code Generation)&lt;/strong&gt;：生成中间代码 IR，CodeGen 会负责将语法树自顶向下遍历逐步翻译成 LLVM IR，IR 是编译过程的前端的输出，后端的输入。&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;优化(Optimize)&lt;/strong&gt;：LLVM 会去做些优化工作，在 Xcode 的编译设置里也可以设置优化级别-O1、-O3、-Os…还可以写些自己的 Pass，官方有比较完整的 Pass 教程： &lt;a href=&quot;http://llvm.org/docs/WritingAnLLVMPass.html&quot;&gt;Writing an LLVM Pass&lt;/a&gt; 。如果开启了Bitcode苹果会做进一步的优化，有新的后端架构还是可以用这份优化过的Bitcode去生成。可以在这一层自定义Pass对IR代码做代码混淆&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;生成目标文件(Assemble)-后端&lt;/strong&gt;：在这一阶段，也是汇编阶段，汇编器将上一步生成的可读的汇编代码转化为机器代码。最终产物就是 以 .o 结尾的目标文件。使用Xcode构建的程序会在DerivedData目录中找到这个文件。。&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;链接(Link)&lt;/strong&gt;：上个阶段生成的目标文件和引用的静态库链接起来，最终生成可执行文件(Mach-O 类型),链接器解决了目标文件和库之间的链接。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;其中，12345属于前端，6属于优化，78属于后端&lt;/p&gt;
-
-&lt;h4 id=&quot;4编写自己的pass&quot;&gt;4、编写自己的PASS&lt;/h4&gt;
-
-&lt;p&gt;新建PASS目录&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cd /llvm/lib/Transforms/
-mkdir MyPass
-cd MyPass
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;创建文件&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mkfile -nv 0 MyPass.cpp
-mkfile -nv 0 CMakeLists.txt
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;在 CMakeLists.txt中输入如下内容，这些内容用于标记模块名称和源文件信息，以及声明依赖关系。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;add_llvm_loadable_module( MyPass
-  MyPass.cpp
-
-  DEPENDS
-  intrinsics_gen
-  PLUGIN_TOOL
-  opt
-  )
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;在MyPass.cpp内编写自己的Pass&lt;/p&gt;
-
-&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;#include &quot;llvm/ADT/Statistic.h&quot;
-#include &quot;llvm/IR/Function.h&quot;
-#include &quot;llvm/Pass.h&quot;
-#include &quot;llvm/Support/raw_ostream.h&quot;
-&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;namespace&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;llvm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;namespace&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// 使用空的名空间避免冲突&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mypass&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FunctionPass&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;// 继承FunctionPass用于处理IR中的方法&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ID&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Pass identification, replacement for typeid&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;mypass&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FunctionPass&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ID&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
-        
-        &lt;span class=&quot;c1&quot;&gt;// 遍历IR，每当遇到方法定义则调用该函数&lt;/span&gt;
-        &lt;span class=&quot;kt&quot;&gt;bool&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;runOnFunction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Function&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;override&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;c1&quot;&gt;// 输出方法名&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;errs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;funcName: &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;errs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;write_escaped&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;'\n'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// 注册pass&lt;/span&gt;
-&lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mypass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ID&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RegisterPass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mypass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;Y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;MyPass&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;MyPass&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;返回上级&lt;code class=&quot;highlighter-rouge&quot;&gt;/llvm/lib/Transforms/&lt;/code&gt;，修改这一层的CMakeLists.txt文件，注意不是MyPass文件夹里的CMakeListst.txt文件&lt;/p&gt;
-
-&lt;p&gt;在末尾加上&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;add_subdirectory(MyPass)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;到xcode目录，运行cmake重新编译配置文件&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cd /llvm_xcode/
-cmake -G Xcode ../llvm
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;打开LLVM.xcodeproj&lt;/p&gt;
-
-&lt;p&gt;找到MyPass Target运行，会得到MyPass.dylib&lt;/p&gt;
-
-&lt;p&gt;首先&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;clang -c -emit-llvm code.c
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;运行LLVM Pass的两种方式&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;opt -load MyPass.dylib -MyPass code.bc
-clang -Xclang -load -Xclang MyPass.dylib code.c
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">1、编译简介</summary></entry><entry><title type="html">Flutter UI原理</title><link href="http://www.helloted.com/flutter/2019/05/18/FlutterUI/" rel="alternate" type="text/html" title="Flutter UI原理" /><published>2019-05-18T20:00:00+08:00</published><updated>2019-05-18T20:00:00+08:00</updated><id>http://www.helloted.com/flutter/2019/05/18/FlutterUI</id><content type="html" xml:base="http://www.helloted.com/flutter/2019/05/18/FlutterUI/">&lt;h3 id=&quot;一万物皆widget&quot;&gt;一、万物皆Widget&lt;/h3&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">一般App都会接入第三方的Crash报告SDK，比如友盟SDK，或者腾讯的bugly，当有crash的时候，SDK记录的crash记录的堆栈一般情况下可以很清晰地定位到源码的具体某一行，根据代码处理即可。但是有小部分情况下，crash记录的堆栈是系统堆栈，没有开发者的源码。</summary></entry><entry><title type="html">Flutter UI原理</title><link href="http://www.helloted.com/flutter/2019/05/18/FlutterUI/" rel="alternate" type="text/html" title="Flutter UI原理" /><published>2019-05-18T20:00:00+08:00</published><updated>2019-05-18T20:00:00+08:00</updated><id>http://www.helloted.com/flutter/2019/05/18/FlutterUI</id><content type="html" xml:base="http://www.helloted.com/flutter/2019/05/18/FlutterUI/">&lt;h3 id=&quot;一万物皆widget&quot;&gt;一、万物皆Widget&lt;/h3&gt;
 
 &lt;h4 id=&quot;1widget&quot;&gt;1、Widget&lt;/h4&gt;
 
