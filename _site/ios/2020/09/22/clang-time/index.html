@@ -286,6 +286,40 @@
 -[SceneDelegate window] 0 us
 </code></pre></div></div>
 
+<h4 id="5统计方法耗时的其他方案">5、统计方法耗时的其他方案</h4>
+<p>可以通过hook objc_msgSend：</p>
+
+<ol>
+  <li>
+    <p>复制栈帧，debug时候（或crash时候），可以看到调用堆栈。</p>
+  </li>
+  <li>
+    <p>保存寄存器。</p>
+  </li>
+  <li>
+    <p>调用hook_objc_msgSend_before （保存lr和记录函数调用开始时间）</p>
+  </li>
+  <li>
+    <p>恢复寄存器。</p>
+  </li>
+  <li>
+    <p>调用objc_msgSend</p>
+  </li>
+  <li>
+    <p>保存寄存器。</p>
+  </li>
+  <li>
+    <p>调用hook_objc_msgSend_after （返回lr和函数结束时间减去开始时间，得到函数耗时）</p>
+  </li>
+  <li>
+    <p>恢复寄存器。</p>
+  </li>
+  <li>
+    <p>ret。</p>
+
+    <p>参考<a href="https://github.com/maniackk/TimeProfiler">TimeProfiler</a></p>
+  </li>
+</ol>
 
 
                 <hr>
@@ -296,6 +330,10 @@
                         <a href="/ios/2020/07/28/byteorder/" data-toggle="tooltip" data-placement="top" title="二进制重排">&larr; 上一篇</a>
                     </li>
                     
+                    
+                    <li class="next">
+                        <a href="/ios/2020/11/26/sklearn/" data-toggle="tooltip" data-placement="top" title="机器学习在APP启动耗时统计的应用">下一篇 &rarr;</a>
+                    </li>
                     
                 </ul>
 

@@ -1,4 +1,144 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2020-11-23T14:14:38+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">Clang插件统计方法耗时</title><link href="http://www.helloted.com/ios/2020/09/22/clang-time/" rel="alternate" type="text/html" title="Clang插件统计方法耗时" /><published>2020-09-22T20:00:00+08:00</published><updated>2020-09-22T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2020/09/22/clang-time</id><content type="html" xml:base="http://www.helloted.com/ios/2020/09/22/clang-time/">&lt;h4 id=&quot;0统计函数耗时原理&quot;&gt;0、统计函数耗时原理&lt;/h4&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2020-11-27T11:15:58+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">机器学习在APP启动耗时统计的应用</title><link href="http://www.helloted.com/ios/2020/11/26/sklearn/" rel="alternate" type="text/html" title="机器学习在APP启动耗时统计的应用" /><published>2020-11-26T20:00:00+08:00</published><updated>2020-11-26T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2020/11/26/sklearn</id><content type="html" xml:base="http://www.helloted.com/ios/2020/11/26/sklearn/">&lt;h4 id=&quot;0统计方案&quot;&gt;0、统计方案&lt;/h4&gt;
+
+&lt;p&gt;应用启动耗时统计除了有通过代码来计算，还有一种方案就是通过录屏，然后查看视频，一帧一帧的人工识别启动帧和加载完成的帧，并且用时间戳相减，从而得到启动耗时时间。&lt;/p&gt;
+
+&lt;div align=&quot;center&quot;&gt;
+&lt;img src=&quot;/img/Simple_3/53.jpg&quot; style=&quot;width:300px; float:left&quot; /&gt;&lt;img src=&quot;/img/Simple_3/54.jpg&quot; style=&quot;width:300px;margin-left:16px&quot; /&gt;  
+&lt;/div&gt;
+
+&lt;p&gt;这种方案如果多次人工识别就很繁琐，所以我们引入机器学习&lt;/p&gt;
+
+&lt;h4 id=&quot;1机器学习自动识别过程&quot;&gt;1、机器学习自动识别过程&lt;/h4&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_3/55.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;这是一个典型的图像识别，因此选择了SVM模型训练数据，通过有监督学习，建立图像和labal之间的对应关系。&lt;/p&gt;
+
+&lt;p&gt;框架选择方面，这是传统的机器学习，所以用的是Scikit-learn框架&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_3/57.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;2准备训练数据&quot;&gt;2、准备训练数据&lt;/h4&gt;
+
+&lt;p&gt;iOS的启动过程：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;启动前&lt;/li&gt;
+  &lt;li&gt;点击启动iCon&lt;/li&gt;
+  &lt;li&gt;默认LaunchScreen&lt;/li&gt;
+  &lt;li&gt;广告页&lt;/li&gt;
+  &lt;li&gt;首页出现&lt;/li&gt;
+  &lt;li&gt;首页加载完毕&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;cut_video&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i_video&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;o_video&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'cuting...'&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;videoCap&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cv2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;VideoCapture&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i_video&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;videoCap&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;isOpened&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i_video&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot; 该输入路径视频不存在，请检查&quot;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;success&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;videoCap&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;read&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;success&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cv2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;waitKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;27&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;success&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;videoCap&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;read&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;cv2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;imwrite&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;o_video&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'o_'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'.jpg'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;videoCap&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;release&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;将训练视频按帧分割，这里用的是cv2的库&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;make_dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;folder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;feature_dir&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getcwd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;folder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;exists&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;feature_dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;makedirs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;feature_dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; 
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;make_all_folder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;make_dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'mark_data/0_pre'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 桌面前
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;make_dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'mark_data/1_home'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 桌面状态
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;make_dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'mark_data/2_icon_click'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 点击icon
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;make_dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'mark_data/3_default_show'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 默认启动图
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;make_dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'mark_data/4_ad_show'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 广告页
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;make_dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'mark_data/5_first_screen'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 首页
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;make_dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'mark_data/6_finish'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 完成
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;生成几个阶段的文件夹，然后将分割好的图片放入对应的阶段&lt;/p&gt;
+
+&lt;h4 id=&quot;3模型训练&quot;&gt;3、模型训练&lt;/h4&gt;
+
+&lt;p&gt;减少数据大小，将图片缩小10倍，导入标签&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;pre_train_datas&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;global&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;img_w&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;global&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;img_h&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;label_list&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;image_list&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;image_classes&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;listdir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;mark_data&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;classes&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;image_classes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;image_dir&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getcwd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'/mark_data/'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;classes&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;isdir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;image_dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;continue&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;image_path&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;listdir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;image_dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)[:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]:&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;image_path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;endswith&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;.jpg&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;img&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Image&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;open&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;image_dir&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;image_path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;img_w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;img_h&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;thumbnail&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;img_w&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;img_h&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;image_list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;asarray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flatten&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;label_list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;classes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;image_list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;label_list&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;用SVM训练，得到model&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;def training_model():
+    train_img, train_label = pre_train_datas()
+
+    linear_svc = svm.LinearSVC()
+    linear_svc.fit(train_img, train_label)
+    model_name = 'model/' + str(img_w) + '_' + str (img_h) + '_model'
+    joblib.dump(linear_svc, model_name)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;4测试&quot;&gt;4、测试&lt;/h4&gt;
+
+&lt;p&gt;将测试视频输入后按帧分割，进行识别，记录启动时和加载完成的时间戳，将时间戳一减便能得到启动时间&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;check_video&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i_video&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;videoCap&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cv2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;VideoCapture&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i_video&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;videoCap&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;isOpened&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i_video&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot; 该输入路径视频不存在，请检查&quot;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    
+    &lt;span class=&quot;n&quot;&gt;width&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;videoCap&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cv2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CAP_PROP_FRAME_WIDTH&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;height&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;videoCap&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cv2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CAP_PROP_FRAME_HEIGHT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;model_name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'model/'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;width&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'_'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;height&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'_model'&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;clf&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;joblib&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;load&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;model_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;success&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;start&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.0&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.0&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;success&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;success&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;videoCap&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;read&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;success&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;milliseconds&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;videoCap&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cv2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CAP_PROP_POS_MSEC&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;img&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Image&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fromarray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cv2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cvtColor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cv2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;COLOR_BGR2RGB&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;  
+            &lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;thumbnail&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;width&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;height&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reshape&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;predicts&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;predict&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;predicts&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;predicts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'2_icon_click'&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;start&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;start&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;milliseconds&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;predicts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'6_finish'&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;milliseconds&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;duration&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;start&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'本次启动时间:'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;duration&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'ms'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_3/56.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">0、统计方案</summary></entry><entry><title type="html">Clang插件统计方法耗时</title><link href="http://www.helloted.com/ios/2020/09/22/clang-time/" rel="alternate" type="text/html" title="Clang插件统计方法耗时" /><published>2020-09-22T20:00:00+08:00</published><updated>2020-09-22T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2020/09/22/clang-time</id><content type="html" xml:base="http://www.helloted.com/ios/2020/09/22/clang-time/">&lt;h4 id=&quot;0统计函数耗时原理&quot;&gt;0、统计函数耗时原理&lt;/h4&gt;
 
 &lt;p&gt;LLVM的优化和转换工作就需要通过PASS来进行，就像下面这种图，PASS就像流水线上的操作工一样对中间代码IR进行优化，每个PASS完成特定的优化工作。&lt;/p&gt;
 
@@ -148,7 +288,42 @@
 -[SceneDelegate sceneDidBecomeActive:] 0 us
 -[SceneDelegate window] 0 us
 -[SceneDelegate window] 0 us
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">0、统计函数耗时原理</summary></entry><entry><title type="html">二进制重排</title><link href="http://www.helloted.com/ios/2020/07/28/byteorder/" rel="alternate" type="text/html" title="二进制重排" /><published>2020-07-28T20:00:00+08:00</published><updated>2020-07-28T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2020/07/28/byteorder</id><content type="html" xml:base="http://www.helloted.com/ios/2020/07/28/byteorder/">&lt;h4 id=&quot;0ios应用的内存布局&quot;&gt;0、iOS应用的内存布局&lt;/h4&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;5统计方法耗时的其他方案&quot;&gt;5、统计方法耗时的其他方案&lt;/h4&gt;
+&lt;p&gt;可以通过hook objc_msgSend：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;复制栈帧，debug时候（或crash时候），可以看到调用堆栈。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;保存寄存器。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;调用hook_objc_msgSend_before （保存lr和记录函数调用开始时间）&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;恢复寄存器。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;调用objc_msgSend&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;保存寄存器。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;调用hook_objc_msgSend_after （返回lr和函数结束时间减去开始时间，得到函数耗时）&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;恢复寄存器。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;ret。&lt;/p&gt;
+
+    &lt;p&gt;参考&lt;a href=&quot;https://github.com/maniackk/TimeProfiler&quot;&gt;TimeProfiler&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">0、统计函数耗时原理</summary></entry><entry><title type="html">二进制重排</title><link href="http://www.helloted.com/ios/2020/07/28/byteorder/" rel="alternate" type="text/html" title="二进制重排" /><published>2020-07-28T20:00:00+08:00</published><updated>2020-07-28T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2020/07/28/byteorder</id><content type="html" xml:base="http://www.helloted.com/ios/2020/07/28/byteorder/">&lt;h4 id=&quot;0ios应用的内存布局&quot;&gt;0、iOS应用的内存布局&lt;/h4&gt;
 
 &lt;p&gt;应用的内存布局从低到高如下排布：&lt;/p&gt;
 
@@ -1618,195 +1793,4 @@ atos -o /Users/haozhicao/Downloads/dnf -l 0x0000000102a2c000 0x0000000102f3ea48
 eg:
 otool -v -arch arm64e -s __TEXT __objc_methname /Users/haozhicao/Library/Developer/Xcode/iOS\ DeviceSupport/12.4\ \(16G77\)\ arm64e/Symbols/System/Library/Frameworks/UIKit.framework/UIKit 0x00000001880c17ec
 -[_UIWebViewScrollViewDelegateForwarder forwardInvocation:](in UIKit)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">一般App都会接入第三方的Crash报告SDK，比如友盟SDK，或者腾讯的bugly，当有crash的时候，SDK记录的crash记录的堆栈一般情况下可以很清晰地定位到源码的具体某一行，根据代码处理即可。但是有小部分情况下，crash记录的堆栈是系统堆栈，没有开发者的源码。</summary></entry><entry><title type="html">Flutter UI原理</title><link href="http://www.helloted.com/flutter/2019/05/18/FlutterUI/" rel="alternate" type="text/html" title="Flutter UI原理" /><published>2019-05-18T20:00:00+08:00</published><updated>2019-05-18T20:00:00+08:00</updated><id>http://www.helloted.com/flutter/2019/05/18/FlutterUI</id><content type="html" xml:base="http://www.helloted.com/flutter/2019/05/18/FlutterUI/">&lt;h3 id=&quot;一万物皆widget&quot;&gt;一、万物皆Widget&lt;/h3&gt;
-
-&lt;h4 id=&quot;1widget&quot;&gt;1、Widget&lt;/h4&gt;
-
-&lt;p&gt;Widgets是Flutter App用户交互的基础构成，每个widget代表的是用户交互的一部分(不可变的)，不像其他frameworks会分开views，viewControllers，layout或者其他属性，Flutter有一个统一的对象模型：widget。&lt;/p&gt;
-
-&lt;p&gt;Widget可以定义：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;一个控件元素(比如button或者menu)&lt;/li&gt;
-  &lt;li&gt;一个样式元素(比如字体或者颜色)&lt;/li&gt;
-  &lt;li&gt;一个布局(比如padding)&lt;/li&gt;
-  &lt;li&gt;等等…&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Widgets基于组合形成层次结构。 每个wiget都嵌套在其内部，并从其父级继承属性。 没有单独的“application”对象。 取而代之的是，root widget担任此角色。&lt;/p&gt;
-
-&lt;p&gt;您可以通过将层次结构中的widget替换为另一个widget来响应事件，例如用户交互。 然后，框架比较新旧widget并有效地更新用户界面。&lt;/p&gt;
-
-&lt;p&gt;Widgets本身通常由许多小的，单一用途的Widget组成，这些Widgets组合起来产生强大的效果。 例如，Container是一个常用的Widget，由几个负责布局，绘制，定位和大小调整的小部件组成。 具体来说，Container由LimitedBox，ConstrainedBox，Align，Padding，DecoratedBox和Transform小部件组成。 您可以用新颖的方式组合这些以及其他简单的小部件，而不是将Container子类化以生成自定义效果。&lt;/p&gt;
-
-&lt;p&gt;类层次结构浅而宽，以最大化可能的组合数。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/52.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;您还可以通过将Widget与其他Widget组合来控制Widget的布局。 例如，要将Widget居中，请将其包含在 Center Widegt中。 有填充，对齐，行，列和网格的Widget。 这些布局Widget没有自己的可视化表示。 相反，他们唯一的目的是控制另一个Widget布局的某些方面。 要了解Widget以某种方式呈现的原因，检查相邻Widget通常很有帮助。&lt;/p&gt;
-
-&lt;h4 id=&quot;2layer层级&quot;&gt;2、Layer层级&lt;/h4&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/53.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;3widget与element&quot;&gt;3、Widget与Element&lt;/h4&gt;
-
-&lt;p&gt;在Flutter中，Widget的功能是“描述一个UI元素的配置数据”，它就是说，Widget其实并不是表示最终绘制在设备屏幕上的显示元素，而只是显示元素的一个配置数据。实际上，Flutter中真正代表屏幕上显示元素的类是&lt;code class=&quot;highlighter-rouge&quot;&gt;Element&lt;/code&gt;，也就是说Widget只是描述&lt;code class=&quot;highlighter-rouge&quot;&gt;Element&lt;/code&gt;的一个配置，有关&lt;code class=&quot;highlighter-rouge&quot;&gt;Element&lt;/code&gt;的详细介绍我们将在本书后面的高级部分深入介绍，读者现在只需要知道，Widget只是UI元素的一个配置数据，并且一个Widget可以对应多个&lt;code class=&quot;highlighter-rouge&quot;&gt;Element&lt;/code&gt;，这是因为同一个Widget对象可以被添加到UI树的不同部分，而真正渲染时，UI树的每一个&lt;code class=&quot;highlighter-rouge&quot;&gt;Element&lt;/code&gt;节点都会对应一个Widget对象。总结一下：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Widget实际上就是Element的配置数据，Widget树实际上是一个配置树，而真正的UI渲染树是由Element构成；不过，由于Element是通过Widget生成，所以它们之间有对应关系，所以在大多数场景，我们可以宽泛地认为Widget树就是指UI控件树或UI渲染树。&lt;/li&gt;
-  &lt;li&gt;一个Widget对象可以对应多个Element对象。这很好理解，根据同一份配置（Widget），可以创建多个实例（Element）。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;二层级&quot;&gt;二、层级&lt;/h3&gt;
-
-&lt;p&gt;看下面这张图&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/56.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;在顶部是一些常用的Material和Cupertino风格的Widget；&lt;/li&gt;
-  &lt;li&gt;接下来是一些通用的Widget层，大部分时间我们都只会使用上面的两层就足够使用；&lt;/li&gt;
-  &lt;li&gt;在Widgets层下面是render渲染层，这层的主要作用是简化了布局和绘制过程，是底部的&lt;code class=&quot;highlighter-rouge&quot;&gt;dart:ui库&lt;/code&gt;的另一个抽象；&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;dart:ui&lt;/code&gt;是最后一个Dart层，它基本上处理与Flutter引擎的通信。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;简而言之，可以说较高级别更易于使用，而较低级别则可以为您提供更多的API，更复杂的细粒度控制。&lt;/p&gt;
-
-&lt;h4 id=&quot;1dartui库&quot;&gt;1、dart:ui库&lt;/h4&gt;
-
-&lt;p&gt;dart:ui库显示了Flutter框架用于引导应用的最低层级服务，例如用于驱动输入，图形文本，布局和渲染等子系统。&lt;/p&gt;
-
-&lt;p&gt;所以基本上你可以通过利用dart:ui包中的类（例如Canvas，Paint和TextBox）来编写一个’Flutter’应用程序。但是，不仅要考虑绘画，还要考虑编排布局和对应用程序元素进行测试，这将是一个难以管理的事情。&lt;/p&gt;
-
-&lt;p&gt;这意味着您必须手动计算布局中使用的所有坐标。然后混合一些绘画和hit test来捕捉用户输入。为每一帧做到这一点并跟踪它。如果你只是你打算构建一个简单的应用程序，它只显示一个蓝色框内的文本，那倒有可能。但如果你试图建立更复杂的布局，如购物应用程序甚至小游戏，那么这种方法就不那么好了。甚至不敢想动画，滚动或其他我们都喜欢的花哨的UI东西。&lt;/p&gt;
-
-&lt;h4 id=&quot;2render渲染层&quot;&gt;2、render渲染层&lt;/h4&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Flutter Widgets库使用RenderObject层次结构来实现其布局和绘制。通常情况下，虽然可以在应用程序中使用自定义RenderBox类来实现特定效果，但大多数情况下，调试布局问题的时候才需要与RenderObject打交道。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Render渲染库是dart:ui库之上的第一个抽象层，可以为您完成所有繁重的数学运算（例如，跟踪计算的坐标等）。由RenderObjects组成的树稍后将由Flutter绘制并绘制。为了优化这个复杂的过程，Flutter使用智能算法换成繁杂的计算已优化性能。&lt;/p&gt;
-
-&lt;p&gt;大多数情况下，你会发现Flutter使用RenderBox而不是RenderObject。一个简单的box layout协议非常适合构建高性能的UI。每个widget都被放置在它自己的box当中，这个box被计算出来，然后与其他预先布置好的box一起排列。因此，如果布局中只有一个widget发生更改（例如按钮或开关），则系统只需要重新计算这个相对较小的box。&lt;/p&gt;
-
-&lt;h4 id=&quot;3widgts库&quot;&gt;3、Widgts库&lt;/h4&gt;
-
-&lt;p&gt;这一层抽象提供了现成的UI组件，我们可以直接放入我们的应用中。有三种类别：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;layout布局&lt;/code&gt;： 例如。 列和行小部件使我们可以轻松地将其他小部件垂直或水平对齐。&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Paiting绘画&lt;/code&gt;： 例如。 文本和图像小部件允许我们在屏幕上显示（“绘制”）一些内容。&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Hit-Testing&lt;/code&gt;：例如。 GestureDetector允许我们识别不同的手势，例如点击（用于检测按下按钮）和拖动（用于滑动列表）。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;通常情况，我们使用许多基础基本的widget，并构建自己的widget。 例如，您可以在Container中构建一个按钮，将其包装到GestureDetector中以检测按钮被按下的动作。&lt;/p&gt;
-
-&lt;p&gt;但是，Flutter团队不是自己构建每个UI组件，而是创建了两个库，其中包含Material和Cupertino（类似iOS）样式中常用的Widget。&lt;/p&gt;
-
-&lt;h4 id=&quot;4material--cupertino&quot;&gt;4、Material &amp;amp; Cupertino&lt;/h4&gt;
-
-&lt;p&gt;最上面一层包含了Material设计规范中的预构建元素(比如AlertDialog，Switch和FloatingActionButton)和一些重新创建的iOS样式的Widgets(例如CupertinoAlertDialog，CupertinoButton和CupertinoSwitch)；&lt;/p&gt;
-
-&lt;h3 id=&quot;三渲染过程&quot;&gt;三、渲染过程&lt;/h3&gt;
-
-&lt;p&gt;先来看一个简单的Wiget树&lt;/p&gt;
-
-&lt;div class=&quot;language-dart highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;SimpleApp&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;StatelessWidget&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;nd&quot;&gt;@override&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;Widget&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BuildContext&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SimpleContainer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
-      &lt;span class=&quot;nl&quot;&gt;color:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Colors&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;white&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;
-      &lt;span class=&quot;nl&quot;&gt;child:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SimpleText&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'Flutter is awesome!'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;color:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Colors&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;),&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;很简单的一个应用只包含三个widgets: &lt;code class=&quot;highlighter-rouge&quot;&gt;SimpleApp&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;SimpleContainer&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;SimpleText&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;当调用runApp()之后，会有下面的步骤：&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Flutter将构建包含三个statless widget的widget树。&lt;/li&gt;
-  &lt;li&gt;Flutter沿着小部件树向下走，并通过在小部件上调用createElement()来创建第二个包含相应Element对象的树。&lt;/li&gt;
-  &lt;li&gt;创建第三个树并使用相应的RenderObjects填充，这些RenderObject由Element调用相应小部件上的createRenderObject()方法创建。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;如下图的三种树：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/58.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;可以看到，Flutter框架创建了三个不同的树，一个用于Widgets，一个用于Element，一个用于RenderObject。每个Element都包含对Widget和RenderObject的引用。&lt;/p&gt;
-
-&lt;p&gt;RenderObject用来包含用于呈现对应Widget的所有逻辑，RenderObject实例化非常昂贵，它负责布局，绘画和Hit-test。最好尽可能长时间地将这些对象保存在内存中或者可以回收它们（因为实例化成本非常高）。&lt;/p&gt;
-
-&lt;p&gt;Elements是&lt;strong&gt;不可变Widget树&lt;/strong&gt;和&lt;strong&gt;可变RenderObject树&lt;/strong&gt;之间的粘合剂。Element代表着Widget的配置和在树中的特定位置，并保留对相关Widget和RenderObject的引用。&lt;/p&gt;
-
-&lt;p&gt;为什么要有三棵树？因为高效，每次更改Widgets树时，Flutter都使用Elements树来比较Widgets树和现有的RenderObjects。当Widget的类型与以前相同时，Flutter不需要重新创建昂贵的RenderObject，只需更新其可变配置即可。由于Widgets非常轻量级且实例化成本低廉，因此它们非常适合描述应用程序的当前状态（也称为“配置”）。 “重量级”RenderObjects（创建起来很昂贵）不会每次都重新创建而是尽可能重用。&lt;/p&gt;
-
-&lt;p&gt;在框架中，Elements很好地“抽象出来”，因此您不必经常处理它们。在每个构建（BuildContext上下文）函数中传递的BuildContext实际上是包含在BuildContext接口中的相应Element，这就是为什么它对于每个Widget都不同。&lt;/p&gt;
-
-&lt;h4 id=&quot;1更新同类型widget&quot;&gt;1、更新同类型Widget&lt;/h4&gt;
-
-&lt;div class=&quot;language-dart highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;SimpleApp&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;StatelessWidget&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;nd&quot;&gt;@override&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;Widget&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BuildContext&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SimpleContainer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
-      &lt;span class=&quot;nl&quot;&gt;color:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Colors&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;red&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;// SimpleContainer颜色变更&lt;/span&gt;
-      &lt;span class=&quot;nl&quot;&gt;child:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SimpleText&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'Flutter is awesome!'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;color:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Colors&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;),&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;由于Widget是不可变的，因此每次配置更改时都需要重建Widget树。 当我们将Container的颜色更改为红色时，框架将触发重建，这将重新创建整个Widget树，因为它是不可变的。 接下来，借助Elements树中Elements的帮助，Flutter将新Widgets树与旧的Widegt树进行比较。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;比较的基本规则：检查旧Widget和新Widget是否来自同一类型。 如果不是，从树中删除Widget，Element和RenderObject（包括子树）并创建新对象。 如果它们来自相同类型，则只需更新RenderObject的配置以表示Widget的新配置。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;在我们的示例中，&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;SimpleApp与以前的类型相同，并且具有与相应的SimpleAppRender对象相同的配置，因此不会有任何更改。&lt;/li&gt;
-  &lt;li&gt;Widget树中的下一个是SimpleContainer窗口小部件，但具有不同的颜色配置。因此更新SimpleContainerRender对象上的颜色属性并要求重绘。&lt;/li&gt;
-  &lt;li&gt;其他对象将保持不变。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/59.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;注意更新之后，Element和RenderObjects仍然是相同的实例对象。这个过程很快，因为Widegt的配置很轻量级。 而重量级对象将保持不变。&lt;/p&gt;
-
-&lt;h4 id=&quot;2不同类型的widget&quot;&gt;2、不同类型的Widget&lt;/h4&gt;
-
-&lt;div class=&quot;language-dart highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;SimpleApp&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;StatelessWidget&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;nd&quot;&gt;@override&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;Widget&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BuildContext&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SimpleContainer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
-      &lt;span class=&quot;nl&quot;&gt;color:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Colors&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;red&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;  
-      &lt;span class=&quot;nl&quot;&gt;child:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SimpleButton&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Widget由SimpleText变更为SimpleButton&lt;/span&gt;
-        &lt;span class=&quot;nl&quot;&gt;child:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SimpleText&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'Click me'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;),&lt;/span&gt;
-        &lt;span class=&quot;nl&quot;&gt;color:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Colors&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;),&lt;/span&gt;
-      	&lt;span class=&quot;nl&quot;&gt;onPressed:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()=&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'Yay!'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;),&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;同样的，Flutter会重建Widget树并且对比之前的Element树和RenderObject树进行比较&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/60.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;因为SimpleButton和SimpleText类型不同，Flutter将会把SimpleText对应的Element和SimpleTextRender从树中移除，而SimpleButton没有对应的Element，所以会根据Widget树，创建对应的Element和RenderObjects&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/61.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;这样新的渲染树就被建立然后被布局会绘制到屏幕上。&lt;/p&gt;
-
-&lt;p&gt;参考：&lt;/p&gt;
-
-&lt;p&gt;https://medium.com/flutter-community/the-layer-cake-widgets-elements-renderobjects-7644c3142401&lt;/p&gt;
-
-&lt;p&gt;https://www.youtube.com/watch?v=dkyY9WCGMi0&lt;/p&gt;</content><author><name>Ted</name></author><category term="Flutter" /><summary type="html">一、万物皆Widget</summary></entry></feed>
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">一般App都会接入第三方的Crash报告SDK，比如友盟SDK，或者腾讯的bugly，当有crash的时候，SDK记录的crash记录的堆栈一般情况下可以很清晰地定位到源码的具体某一行，根据代码处理即可。但是有小部分情况下，crash记录的堆栈是系统堆栈，没有开发者的源码。</summary></entry></feed>

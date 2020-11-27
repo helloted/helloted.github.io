@@ -165,3 +165,25 @@ my_fun_e则是在函数的最末尾插入，用于记录当前时间并与之前
 -[SceneDelegate window] 0 us
 ```
 
+#### 5、统计方法耗时的其他方案
+可以通过hook objc_msgSend：
+
+1. 复制栈帧，debug时候（或crash时候），可以看到调用堆栈。
+
+2. 保存寄存器。
+
+3. 调用hook_objc_msgSend_before （保存lr和记录函数调用开始时间）
+
+4. 恢复寄存器。
+
+5. 调用objc_msgSend
+
+6. 保存寄存器。
+
+7. 调用hook_objc_msgSend_after （返回lr和函数结束时间减去开始时间，得到函数耗时）
+
+8. 恢复寄存器。
+
+9. ret。
+
+   参考[TimeProfiler](https://github.com/maniackk/TimeProfiler)
