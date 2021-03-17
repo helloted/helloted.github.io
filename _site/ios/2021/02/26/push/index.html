@@ -153,7 +153,7 @@
   <li>iOS 6 － 通知中心与iCloud同步</li>
   <li>iOS 7 － 后台靜默推送</li>
   <li>iOS 8 － 重新設定了通知许可权，可互动通知</li>
-  <li>iOS 9 － 支援在通知中回复信息，<code class="highlighter-rouge">Provider API</code> 等等</li>
+  <li>iOS 9 － 支援在通知中回复信息，Provider API 等等</li>
   <li>iOS 10 － 新增了UserNotificationKit框架，整合了关于通知的方法，新增了图片音频视频等格式</li>
   <li>iOS 12 － 新增了通知分组、隐式推送、通知内容拓展</li>
 </ul>
@@ -174,9 +174,9 @@
 
 <h4 id="2详细过程">2、详细过程</h4>
 
-<p><img src="/img/Simple_1/47.png" alt="img" /></p>
-
 <p><img src="/img/Simple_1/48.png" alt="img" /></p>
+
+<p><img src="/img/Simple_1/47.png" alt="img" /></p>
 
 <p>过程如下：</p>
 
@@ -192,16 +192,16 @@
 
 <p>APNs使用两个“信任”来实施端到端、密码验证和身份验证：连接信任和设备令牌信任（<em>connection trust</em> and <em>device token trust</em>.）。</p>
 
-<p><em>连接信任</em>(<em>connection trust</em>)在消息Providers和APN之间、APN和设备device之间起作用。</p>
+<p><code class="highlighter-rouge">连接信任(connection trust)</code>在消息Providers和APN之间、APN和设备device之间起作用。</p>
 
 <ul>
   <li><strong>提供程序到APN的连接信任</strong>:确保提供程序和APN之间的连接仅适用于与Apple达成推送通知传递协议的公司拥有的授权提供程序。通过签名证书来保证授权。</li>
   <li><strong>APN到设备的连接信任</strong>:可确保只有授权的设备才能连接到APN来接收通知。APNs会自动强制与每个设备建立连接信任，以确保设备的合法性。</li>
 </ul>
 
-<p><em>设备令牌信任</em>(<em>device token trust</em>)对于每个远程通知都是端到端的。它确保仅在正确的起点（提供者）和终点（设备）之间路由通知。</p>
+<p><code class="highlighter-rouge">设备令牌信任(device token trust)</code>对于每个远程通知都是端到端的。它确保仅在正确的起点（提供者）和终点（设备）之间路由通知。</p>
 
-<p>deviceToken是不透明的<code class="highlighter-rouge">NSData</code>实例，其中包含Apple分配给特定设备上特定应用程序的唯一标识符。只有APN才能解码和读取deviceToken的内容。每个应用程序实例在向APN注册时都会收到其唯一的deviceToken，然后必须将token转发给它的提供者，推送通知请求中包含设备令牌；APN使用设备令牌来确保仅将通知传递给预期的唯一应用程序设备组合。</p>
+<p>deviceToken是不透明的NSData实例，其中包含Apple分配给特定设备上特定应用程序的唯一标识符。只有APN才能解码和读取deviceToken的内容。每个应用程序实例在向APN注册时都会收到其唯一的deviceToken，然后必须将token转发给它的提供者，推送通知请求中包含设备令牌；APN使用设备令牌来确保仅将通知传递给预期的唯一应用程序设备组合。</p>
 
 <p>APN可以出于多种原因发行新的deviceToken：</p>
 
@@ -231,8 +231,8 @@
 <ul>
   <li>安装应用后第一次打开APP获取deviceToken时必须联网。如果在获取时没有网络，在重新连接网络后会第一时间返回deviceToken。</li>
   <li>不需要缓存DeviceToken。如果已经生成了有效的DeviceToken，系统或有缓存，在 重新安装App、重装系统、或者从备份还原系统时，会重新生成DeviceToken并更新缓存。</li>
-  <li>debug环境下是向开发环境的APNs服务器申请DeviceToken，而release环境是向生产环境的APNs服务器申请的。如果环境不匹配，则会出现<code class="highlighter-rouge">Bad deviceToken</code>错误。</li>
-  <li>deviceToken与bundleId存在着关联。如果deviceToken与证书中的bundleId不匹配，会返回<code class="highlighter-rouge">DeviceTokenNotForTopic</code></li>
+  <li>debug环境下是向开发环境的APNs服务器申请DeviceToken，而release环境是向生产环境的APNs服务器申请的。如果环境不匹配，则会出现Bad deviceToken错误。</li>
+  <li>deviceToken与bundleId存在着关联。如果deviceToken与证书中的bundleId不匹配，会返回DeviceTokenNotForTopic</li>
 </ul>
 
 

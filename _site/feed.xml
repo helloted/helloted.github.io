@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2021-03-17T19:50:42+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">iOS推送APNs</title><link href="http://www.helloted.com/ios/2021/02/26/push/" rel="alternate" type="text/html" title="iOS推送APNs" /><published>2021-02-26T20:00:00+08:00</published><updated>2021-02-26T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2021/02/26/push</id><content type="html" xml:base="http://www.helloted.com/ios/2021/02/26/push/">&lt;h4 id=&quot;0通知&quot;&gt;0、通知&lt;/h4&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2021-03-17T19:55:36+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">iOS推送APNs</title><link href="http://www.helloted.com/ios/2021/02/26/push/" rel="alternate" type="text/html" title="iOS推送APNs" /><published>2021-02-26T20:00:00+08:00</published><updated>2021-02-26T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2021/02/26/push</id><content type="html" xml:base="http://www.helloted.com/ios/2021/02/26/push/">&lt;h4 id=&quot;0通知&quot;&gt;0、通知&lt;/h4&gt;
 
 &lt;p&gt;iOS中的推送通知，主要有以下几种推送：&lt;/p&gt;
 
@@ -17,7 +17,7 @@
   &lt;li&gt;iOS 6 － 通知中心与iCloud同步&lt;/li&gt;
   &lt;li&gt;iOS 7 － 后台靜默推送&lt;/li&gt;
   &lt;li&gt;iOS 8 － 重新設定了通知许可权，可互动通知&lt;/li&gt;
-  &lt;li&gt;iOS 9 － 支援在通知中回复信息，&lt;code class=&quot;highlighter-rouge&quot;&gt;Provider API&lt;/code&gt; 等等&lt;/li&gt;
+  &lt;li&gt;iOS 9 － 支援在通知中回复信息，Provider API 等等&lt;/li&gt;
   &lt;li&gt;iOS 10 － 新增了UserNotificationKit框架，整合了关于通知的方法，新增了图片音频视频等格式&lt;/li&gt;
   &lt;li&gt;iOS 12 － 新增了通知分组、隐式推送、通知内容拓展&lt;/li&gt;
 &lt;/ul&gt;
@@ -38,9 +38,9 @@
 
 &lt;h4 id=&quot;2详细过程&quot;&gt;2、详细过程&lt;/h4&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/Simple_1/47.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&quot;/img/Simple_1/48.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_1/47.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;过程如下：&lt;/p&gt;
 
@@ -56,16 +56,16 @@
 
 &lt;p&gt;APNs使用两个“信任”来实施端到端、密码验证和身份验证：连接信任和设备令牌信任（&lt;em&gt;connection trust&lt;/em&gt; and &lt;em&gt;device token trust&lt;/em&gt;.）。&lt;/p&gt;
 
-&lt;p&gt;&lt;em&gt;连接信任&lt;/em&gt;(&lt;em&gt;connection trust&lt;/em&gt;)在消息Providers和APN之间、APN和设备device之间起作用。&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;连接信任(connection trust)&lt;/code&gt;在消息Providers和APN之间、APN和设备device之间起作用。&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;&lt;strong&gt;提供程序到APN的连接信任&lt;/strong&gt;:确保提供程序和APN之间的连接仅适用于与Apple达成推送通知传递协议的公司拥有的授权提供程序。通过签名证书来保证授权。&lt;/li&gt;
   &lt;li&gt;&lt;strong&gt;APN到设备的连接信任&lt;/strong&gt;:可确保只有授权的设备才能连接到APN来接收通知。APNs会自动强制与每个设备建立连接信任，以确保设备的合法性。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;&lt;em&gt;设备令牌信任&lt;/em&gt;(&lt;em&gt;device token trust&lt;/em&gt;)对于每个远程通知都是端到端的。它确保仅在正确的起点（提供者）和终点（设备）之间路由通知。&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;设备令牌信任(device token trust)&lt;/code&gt;对于每个远程通知都是端到端的。它确保仅在正确的起点（提供者）和终点（设备）之间路由通知。&lt;/p&gt;
 
-&lt;p&gt;deviceToken是不透明的&lt;code class=&quot;highlighter-rouge&quot;&gt;NSData&lt;/code&gt;实例，其中包含Apple分配给特定设备上特定应用程序的唯一标识符。只有APN才能解码和读取deviceToken的内容。每个应用程序实例在向APN注册时都会收到其唯一的deviceToken，然后必须将token转发给它的提供者，推送通知请求中包含设备令牌；APN使用设备令牌来确保仅将通知传递给预期的唯一应用程序设备组合。&lt;/p&gt;
+&lt;p&gt;deviceToken是不透明的NSData实例，其中包含Apple分配给特定设备上特定应用程序的唯一标识符。只有APN才能解码和读取deviceToken的内容。每个应用程序实例在向APN注册时都会收到其唯一的deviceToken，然后必须将token转发给它的提供者，推送通知请求中包含设备令牌；APN使用设备令牌来确保仅将通知传递给预期的唯一应用程序设备组合。&lt;/p&gt;
 
 &lt;p&gt;APN可以出于多种原因发行新的deviceToken：&lt;/p&gt;
 
@@ -95,8 +95,8 @@
 &lt;ul&gt;
   &lt;li&gt;安装应用后第一次打开APP获取deviceToken时必须联网。如果在获取时没有网络，在重新连接网络后会第一时间返回deviceToken。&lt;/li&gt;
   &lt;li&gt;不需要缓存DeviceToken。如果已经生成了有效的DeviceToken，系统或有缓存，在 重新安装App、重装系统、或者从备份还原系统时，会重新生成DeviceToken并更新缓存。&lt;/li&gt;
-  &lt;li&gt;debug环境下是向开发环境的APNs服务器申请DeviceToken，而release环境是向生产环境的APNs服务器申请的。如果环境不匹配，则会出现&lt;code class=&quot;highlighter-rouge&quot;&gt;Bad deviceToken&lt;/code&gt;错误。&lt;/li&gt;
-  &lt;li&gt;deviceToken与bundleId存在着关联。如果deviceToken与证书中的bundleId不匹配，会返回&lt;code class=&quot;highlighter-rouge&quot;&gt;DeviceTokenNotForTopic&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;debug环境下是向开发环境的APNs服务器申请DeviceToken，而release环境是向生产环境的APNs服务器申请的。如果环境不匹配，则会出现Bad deviceToken错误。&lt;/li&gt;
+  &lt;li&gt;deviceToken与bundleId存在着关联。如果deviceToken与证书中的bundleId不匹配，会返回DeviceTokenNotForTopic&lt;/li&gt;
 &lt;/ul&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">0、通知</summary></entry><entry><title type="html">机器学习在APP启动耗时统计的应用</title><link href="http://www.helloted.com/ios/2020/11/26/sklearn/" rel="alternate" type="text/html" title="机器学习在APP启动耗时统计的应用" /><published>2020-11-26T20:00:00+08:00</published><updated>2020-11-26T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2020/11/26/sklearn</id><content type="html" xml:base="http://www.helloted.com/ios/2020/11/26/sklearn/">&lt;h4 id=&quot;0统计方案&quot;&gt;0、统计方案&lt;/h4&gt;
 
 &lt;p&gt;应用启动耗时统计除了有通过代码来计算，还有一种方案就是通过录屏，然后查看视频，一帧一帧的人工识别启动帧和加载完成的帧，并且用时间戳相减，从而得到启动耗时时间。&lt;/p&gt;
