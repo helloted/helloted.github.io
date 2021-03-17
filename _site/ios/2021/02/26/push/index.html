@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter">
+
+    <title>iOS推送APNs - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/ios/2021/02/26/push/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/app/">APP</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/mac_app/">Mac App</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>iOS推送APNs</h1>
+                    
+                    <h2 class="subheading">iOS推送APNs</h2>
+                    
+                    <span class="meta">Posted by Ted on February 26, 2021</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h4 id="0通知">0、通知</h4>
+
+<p>iOS中的推送通知，主要有以下几种推送：</p>
+
+<ul>
+  <li><strong>本地通知：</strong>iOS在本地发出的通知，功能开发集成在UserNotifications.framework内，常见应用：闹钟提醒。</li>
+  <li><strong>在线推送：</strong>APP在前台时，消息通过自建的网络长连接从服务器推送到应用，常见应用：微信在前台时的消息推送。</li>
+  <li><strong>APNs：</strong>APP未被唤起或者处于后台，通过苹果服务器远程推送消息给应用。</li>
+</ul>
+
+<h5 id="notifications-回顾">Notifications 回顾</h5>
+
+<ul>
+  <li>iOS 3 － Apple 引入推送通知</li>
+  <li>iOS 4 － 引入本地通知</li>
+  <li>iOS 5 － 有了通知中心</li>
+  <li>iOS 6 － 通知中心与iCloud同步</li>
+  <li>iOS 7 － 后台靜默推送</li>
+  <li>iOS 8 － 重新設定了通知许可权，可互动通知</li>
+  <li>iOS 9 － 支援在通知中回复信息，<code class="highlighter-rouge">Provider API</code> 等等</li>
+  <li>iOS 10 － 新增了UserNotificationKit框架，整合了关于通知的方法，新增了图片音频视频等格式</li>
+  <li>iOS 12 － 新增了通知分组、隐式推送、通知内容拓展</li>
+</ul>
+
+<h4 id="1apns">1、APNs</h4>
+
+<p>APNs，即 Apple Push Notification Service，依托一个或几个系统常驻进程运作，是全局的（接管所有应用的消息推送），可看作是独立于应用之外，设备与苹果的服务器之间维持一个长连接进行消息传递。</p>
+
+<p><img src="/img/Simple_1/46.png" alt="img" /></p>
+
+<p>主要流程为：</p>
+
+<ol>
+  <li>服务器端将消息先发送到苹果的APNs；</li>
+  <li>由苹果的APNs将消息推送到客户的设备端；</li>
+  <li>由iOS系统将接收到的消息分发给相应的App。</li>
+</ol>
+
+<h4 id="2详细过程">2、详细过程</h4>
+
+<p><img src="/img/Simple_1/47.png" alt="img" /></p>
+
+<p><img src="/img/Simple_1/48.png" alt="img" /></p>
+
+<p>过程如下：</p>
+
+<ol>
+  <li>首先是设备与APNS Server建立连接；</li>
+  <li>APP首次启动向APNS Server注册deviceToken。APNS Server返回deviceToken给APP；</li>
+  <li>APP将deviceToken发送给PUSH服务端程序；</li>
+  <li>服务端程序向APNS服务发送消息；</li>
+  <li>APNS服务将消息发送给设备，设备转发给对应的APP。</li>
+</ol>
+
+<h4 id="3apns的安全架构">3、APNs的安全架构</h4>
+
+<p>APNs使用两个“信任”来实施端到端、密码验证和身份验证：连接信任和设备令牌信任（<em>connection trust</em> and <em>device token trust</em>.）。</p>
+
+<p><em>连接信任</em>(<em>connection trust</em>)在消息Providers和APN之间、APN和设备device之间起作用。</p>
+
+<ul>
+  <li><strong>提供程序到APN的连接信任</strong>:确保提供程序和APN之间的连接仅适用于与Apple达成推送通知传递协议的公司拥有的授权提供程序。通过签名证书来保证授权。</li>
+  <li><strong>APN到设备的连接信任</strong>:可确保只有授权的设备才能连接到APN来接收通知。APNs会自动强制与每个设备建立连接信任，以确保设备的合法性。</li>
+</ul>
+
+<p><em>设备令牌信任</em>(<em>device token trust</em>)对于每个远程通知都是端到端的。它确保仅在正确的起点（提供者）和终点（设备）之间路由通知。</p>
+
+<p>deviceToken是不透明的<code class="highlighter-rouge">NSData</code>实例，其中包含Apple分配给特定设备上特定应用程序的唯一标识符。只有APN才能解码和读取deviceToken的内容。每个应用程序实例在向APN注册时都会收到其唯一的deviceToken，然后必须将token转发给它的提供者，推送通知请求中包含设备令牌；APN使用设备令牌来确保仅将通知传递给预期的唯一应用程序设备组合。</p>
+
+<p>APN可以出于多种原因发行新的deviceToken：</p>
+
+<ul>
+  <li>用户在新设备上安装您的应用</li>
+  <li>用户从备份中还原设备</li>
+  <li>用户重新安装操作系统</li>
+  <li>其他系统定义的事件</li>
+</ul>
+
+<h4 id="4devicetoken">4、DeviceToken</h4>
+
+<blockquote>
+  <p>device token: APNs uses device tokens to identify each unique app and device combination. It also uses them to authenticate the routing of remote notifications sent to a device.(device token是APNs用于区分识别每个iOS设备和设备上不同app的一个标识符，还可以用于APNs通过它将推送消息路由到指定设备上)</p>
+</blockquote>
+
+<p>deviceToken注意事项：</p>
+
+<ul>
+  <li>获取deviceToken跟app是否申请了推送权限无关，即使是禁用了远程推送，也可以正确获取deviceToken。如果没有申请权限，会以静默推送形式呈现。</li>
+</ul>
+
+<blockquote>
+  <p>If you do not request and receive authorization for your app’s interactions, the system delivers all remote notifications to your app silently.</p>
+</blockquote>
+
+<ul>
+  <li>安装应用后第一次打开APP获取deviceToken时必须联网。如果在获取时没有网络，在重新连接网络后会第一时间返回deviceToken。</li>
+  <li>不需要缓存DeviceToken。如果已经生成了有效的DeviceToken，系统或有缓存，在 重新安装App、重装系统、或者从备份还原系统时，会重新生成DeviceToken并更新缓存。</li>
+  <li>debug环境下是向开发环境的APNs服务器申请DeviceToken，而release环境是向生产环境的APNs服务器申请的。如果环境不匹配，则会出现<code class="highlighter-rouge">Bad deviceToken</code>错误。</li>
+  <li>deviceToken与bundleId存在着关联。如果deviceToken与证书中的bundleId不匹配，会返回<code class="highlighter-rouge">DeviceTokenNotForTopic</code></li>
+</ul>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/ios/2020/11/26/sklearn/" data-toggle="tooltip" data-placement="top" title="机器学习在APP启动耗时统计的应用">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2021</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

@@ -1,4 +1,103 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2020-11-27T11:15:58+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">机器学习在APP启动耗时统计的应用</title><link href="http://www.helloted.com/ios/2020/11/26/sklearn/" rel="alternate" type="text/html" title="机器学习在APP启动耗时统计的应用" /><published>2020-11-26T20:00:00+08:00</published><updated>2020-11-26T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2020/11/26/sklearn</id><content type="html" xml:base="http://www.helloted.com/ios/2020/11/26/sklearn/">&lt;h4 id=&quot;0统计方案&quot;&gt;0、统计方案&lt;/h4&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2021-03-17T19:50:42+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">iOS推送APNs</title><link href="http://www.helloted.com/ios/2021/02/26/push/" rel="alternate" type="text/html" title="iOS推送APNs" /><published>2021-02-26T20:00:00+08:00</published><updated>2021-02-26T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2021/02/26/push</id><content type="html" xml:base="http://www.helloted.com/ios/2021/02/26/push/">&lt;h4 id=&quot;0通知&quot;&gt;0、通知&lt;/h4&gt;
+
+&lt;p&gt;iOS中的推送通知，主要有以下几种推送：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;本地通知：&lt;/strong&gt;iOS在本地发出的通知，功能开发集成在UserNotifications.framework内，常见应用：闹钟提醒。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;在线推送：&lt;/strong&gt;APP在前台时，消息通过自建的网络长连接从服务器推送到应用，常见应用：微信在前台时的消息推送。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;APNs：&lt;/strong&gt;APP未被唤起或者处于后台，通过苹果服务器远程推送消息给应用。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h5 id=&quot;notifications-回顾&quot;&gt;Notifications 回顾&lt;/h5&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;iOS 3 － Apple 引入推送通知&lt;/li&gt;
+  &lt;li&gt;iOS 4 － 引入本地通知&lt;/li&gt;
+  &lt;li&gt;iOS 5 － 有了通知中心&lt;/li&gt;
+  &lt;li&gt;iOS 6 － 通知中心与iCloud同步&lt;/li&gt;
+  &lt;li&gt;iOS 7 － 后台靜默推送&lt;/li&gt;
+  &lt;li&gt;iOS 8 － 重新設定了通知许可权，可互动通知&lt;/li&gt;
+  &lt;li&gt;iOS 9 － 支援在通知中回复信息，&lt;code class=&quot;highlighter-rouge&quot;&gt;Provider API&lt;/code&gt; 等等&lt;/li&gt;
+  &lt;li&gt;iOS 10 － 新增了UserNotificationKit框架，整合了关于通知的方法，新增了图片音频视频等格式&lt;/li&gt;
+  &lt;li&gt;iOS 12 － 新增了通知分组、隐式推送、通知内容拓展&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;1apns&quot;&gt;1、APNs&lt;/h4&gt;
+
+&lt;p&gt;APNs，即 Apple Push Notification Service，依托一个或几个系统常驻进程运作，是全局的（接管所有应用的消息推送），可看作是独立于应用之外，设备与苹果的服务器之间维持一个长连接进行消息传递。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_1/46.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;主要流程为：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;服务器端将消息先发送到苹果的APNs；&lt;/li&gt;
+  &lt;li&gt;由苹果的APNs将消息推送到客户的设备端；&lt;/li&gt;
+  &lt;li&gt;由iOS系统将接收到的消息分发给相应的App。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4 id=&quot;2详细过程&quot;&gt;2、详细过程&lt;/h4&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_1/47.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_1/48.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;过程如下：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;首先是设备与APNS Server建立连接；&lt;/li&gt;
+  &lt;li&gt;APP首次启动向APNS Server注册deviceToken。APNS Server返回deviceToken给APP；&lt;/li&gt;
+  &lt;li&gt;APP将deviceToken发送给PUSH服务端程序；&lt;/li&gt;
+  &lt;li&gt;服务端程序向APNS服务发送消息；&lt;/li&gt;
+  &lt;li&gt;APNS服务将消息发送给设备，设备转发给对应的APP。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4 id=&quot;3apns的安全架构&quot;&gt;3、APNs的安全架构&lt;/h4&gt;
+
+&lt;p&gt;APNs使用两个“信任”来实施端到端、密码验证和身份验证：连接信任和设备令牌信任（&lt;em&gt;connection trust&lt;/em&gt; and &lt;em&gt;device token trust&lt;/em&gt;.）。&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;连接信任&lt;/em&gt;(&lt;em&gt;connection trust&lt;/em&gt;)在消息Providers和APN之间、APN和设备device之间起作用。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;提供程序到APN的连接信任&lt;/strong&gt;:确保提供程序和APN之间的连接仅适用于与Apple达成推送通知传递协议的公司拥有的授权提供程序。通过签名证书来保证授权。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;APN到设备的连接信任&lt;/strong&gt;:可确保只有授权的设备才能连接到APN来接收通知。APNs会自动强制与每个设备建立连接信任，以确保设备的合法性。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;em&gt;设备令牌信任&lt;/em&gt;(&lt;em&gt;device token trust&lt;/em&gt;)对于每个远程通知都是端到端的。它确保仅在正确的起点（提供者）和终点（设备）之间路由通知。&lt;/p&gt;
+
+&lt;p&gt;deviceToken是不透明的&lt;code class=&quot;highlighter-rouge&quot;&gt;NSData&lt;/code&gt;实例，其中包含Apple分配给特定设备上特定应用程序的唯一标识符。只有APN才能解码和读取deviceToken的内容。每个应用程序实例在向APN注册时都会收到其唯一的deviceToken，然后必须将token转发给它的提供者，推送通知请求中包含设备令牌；APN使用设备令牌来确保仅将通知传递给预期的唯一应用程序设备组合。&lt;/p&gt;
+
+&lt;p&gt;APN可以出于多种原因发行新的deviceToken：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;用户在新设备上安装您的应用&lt;/li&gt;
+  &lt;li&gt;用户从备份中还原设备&lt;/li&gt;
+  &lt;li&gt;用户重新安装操作系统&lt;/li&gt;
+  &lt;li&gt;其他系统定义的事件&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;4devicetoken&quot;&gt;4、DeviceToken&lt;/h4&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;device token: APNs uses device tokens to identify each unique app and device combination. It also uses them to authenticate the routing of remote notifications sent to a device.(device token是APNs用于区分识别每个iOS设备和设备上不同app的一个标识符，还可以用于APNs通过它将推送消息路由到指定设备上)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;deviceToken注意事项：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;获取deviceToken跟app是否申请了推送权限无关，即使是禁用了远程推送，也可以正确获取deviceToken。如果没有申请权限，会以静默推送形式呈现。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;If you do not request and receive authorization for your app’s interactions, the system delivers all remote notifications to your app silently.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;安装应用后第一次打开APP获取deviceToken时必须联网。如果在获取时没有网络，在重新连接网络后会第一时间返回deviceToken。&lt;/li&gt;
+  &lt;li&gt;不需要缓存DeviceToken。如果已经生成了有效的DeviceToken，系统或有缓存，在 重新安装App、重装系统、或者从备份还原系统时，会重新生成DeviceToken并更新缓存。&lt;/li&gt;
+  &lt;li&gt;debug环境下是向开发环境的APNs服务器申请DeviceToken，而release环境是向生产环境的APNs服务器申请的。如果环境不匹配，则会出现&lt;code class=&quot;highlighter-rouge&quot;&gt;Bad deviceToken&lt;/code&gt;错误。&lt;/li&gt;
+  &lt;li&gt;deviceToken与bundleId存在着关联。如果deviceToken与证书中的bundleId不匹配，会返回&lt;code class=&quot;highlighter-rouge&quot;&gt;DeviceTokenNotForTopic&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">0、通知</summary></entry><entry><title type="html">机器学习在APP启动耗时统计的应用</title><link href="http://www.helloted.com/ios/2020/11/26/sklearn/" rel="alternate" type="text/html" title="机器学习在APP启动耗时统计的应用" /><published>2020-11-26T20:00:00+08:00</published><updated>2020-11-26T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2020/11/26/sklearn</id><content type="html" xml:base="http://www.helloted.com/ios/2020/11/26/sklearn/">&lt;h4 id=&quot;0统计方案&quot;&gt;0、统计方案&lt;/h4&gt;
 
 &lt;p&gt;应用启动耗时统计除了有通过代码来计算，还有一种方案就是通过录屏，然后查看视频，一帧一帧的人工识别启动帧和加载完成的帧，并且用时间戳相减，从而得到启动耗时时间。&lt;/p&gt;
 
@@ -1645,152 +1744,4 @@ $ cmake -G Xcode ../llvm
 &lt;ul&gt;
   &lt;li&gt;Protocol要在当前类向Manager进行注册（如果通过NSProtocolFromString硬编码维护不友好，且有一个固定内存来进行map），注册分散不好管理。没法做组件不存在时或者出现错误时的统一处理。&lt;/li&gt;
   &lt;li&gt;与Protocol的原始定义不符合，从代码编程规范来看不友好。&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">1、URLRouter</summary></entry><entry><title type="html">无源调试</title><link href="http://www.helloted.com/ios/2019/08/07/crash_debug/" rel="alternate" type="text/html" title="无源调试" /><published>2019-08-07T20:00:00+08:00</published><updated>2019-08-07T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2019/08/07/crash_debug</id><content type="html" xml:base="http://www.helloted.com/ios/2019/08/07/crash_debug/">&lt;p&gt;一般App都会接入第三方的Crash报告SDK，比如友盟SDK，或者腾讯的bugly，当有crash的时候，SDK记录的crash记录的堆栈一般情况下可以很清晰地定位到源码的具体某一行，根据代码处理即可。但是有小部分情况下，crash记录的堆栈是系统堆栈，没有开发者的源码。&lt;/p&gt;
-
-&lt;h4 id=&quot;1objc_msgsend16的crash&quot;&gt;1、objc_msgSend+16的crash&lt;/h4&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/62.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/63.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;上面的crash堆栈中，唯一跟App源码相关的就是main函数，其他的都是系统堆栈，显然没有办法直接定位到源码。&lt;/p&gt;
-
-&lt;p&gt;objc_msgSend函数是runtime中核心的函数，为什么会崩溃在这，怎么处理这种crash？&lt;/p&gt;
-
-&lt;h4 id=&quot;2objc_msgsend原理&quot;&gt;2、objc_msgSend原理&lt;/h4&gt;
-
-&lt;p&gt;每一个OC对象有一个类，每一个OC类都有一个方法列表。每一个方法都有一个selector，一个指向方法实现的函数指针，以及一些元数据。objc_msgSend的工作就是传入对象和selector，查找相应方法的函数指针，然后跳到函数指针所指向的位置。&lt;/p&gt;
-
-&lt;p&gt;查找方法的过程可能是非常复杂的。如果在一个类里没有找到这个方法，那么它会继续到superclass里去查找。如果在所有的superclass中都没有找到，就会调用运行时的消息转发代码。当一个类第一次收到消息时，他会去调用类的 +initialize方法。&lt;/p&gt;
-
-&lt;p&gt;通常查找一个方法必须是迅速的，因为每次消息的调用都需要有这个过程。这就和复杂的查找过程有冲突了，复杂但是要快。&lt;/p&gt;
-
-&lt;p&gt;OC解决这个冲突的方案是做方法缓存。每一个类有一个cache，用于存储方法的selectors和函数指针，也就是所谓的IMP。他们被组成一个哈希表，所以查找的时候是非常快的。当查找一个方法时，运行时首先询问cache。如果cache里没有这个方法，后续就会有一个缓慢而又复杂的过程，最后会把找到的结果放到cache里，这样下次查找该方法的时候就会很快了。&lt;/p&gt;
-
-&lt;p&gt;objc_msgSend是用汇编写的。有两个原因：一是因为在C语言中不可能通过写一个函数来保留未知的参数并且跳转到一个任意的函数指针。C语言没有满足做这件事情的必要特性。另一个原因是objc_msgSend必须够快。&lt;/p&gt;
-
-&lt;p&gt;当然，谁都不会想要用汇编写下整个复杂的消息查找过程。这没必要。消息发送的代码可以被分为两部分：objc_msgSend中有一个快速路径，是用汇编写的，还有一个慢速的路径，是用C实现的。汇编部分主要实现的是在缓存中查找方法，并且如果找到的话就跳转过去的一个过程。如果在缓存中没有找到方法的实现，就会调用C的代码来处理后续的事情。&lt;/p&gt;
-
-&lt;p&gt;因此，objc_msgSend主要有以下几个步骤：&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;获取传入的对象的类&lt;/li&gt;
-  &lt;li&gt;获取这个类的方法缓存&lt;/li&gt;
-  &lt;li&gt;通过传入的selector，在缓存中查找方法&lt;/li&gt;
-  &lt;li&gt;如果缓存中没有，调用C代码&lt;/li&gt;
-  &lt;li&gt;跳到这个方法的IMP&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4 id=&quot;3objc_msgsend的汇编指令&quot;&gt;3、objc_msgSend的汇编指令&lt;/h4&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;ARM64架构下有31个通用寄存器，每个都是64位宽的。他们被标记为x0~x30。同样也有可能使用&lt;code class=&quot;highlighter-rouge&quot;&gt;w0&lt;/code&gt;到&lt;code class=&quot;highlighter-rouge&quot;&gt;w30&lt;/code&gt;来访问寄存器的低32位。寄存器x0x7被用于函数入参的前8个参数。这就表示objc_msgSend收到的self参数是保存在x0中，selector _cmd参数在x1里。&lt;/p&gt;
-
-  &lt;p&gt;&lt;img src=&quot;/img/Simple_7/65.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-  &lt;p&gt;x0到x7用来做参数传递，以及从子函数返回结果（通常通过x0返回，如果是一个比较大的结构体则结果会存在x8的执行地址上）&lt;/p&gt;
-
-  &lt;p&gt;LR：即x30寄存器，也叫链接寄存器，一般是保存返回上一层调用的地址&lt;/p&gt;
-
-  &lt;p&gt;FP：即r29，栈底寄存器&lt;/p&gt;
-
-  &lt;p&gt;外加一个栈顶寄存器SP&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;objc_msgSend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Class&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;receiver&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SEL&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;selector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;arg1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;arg2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;...)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;回顾objc_msgSend函数我们可以知道：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;x0 寄存器中的保存receiver。&lt;/li&gt;
-  &lt;li&gt;x1 寄存器中保存的selector。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;使用符号断点，我们可以查看objc_msgSend的符号指令&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/64.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;libobjc.A.dylib`objc_msgSend:
-    0x1931bb6a0 &amp;lt;+0&amp;gt;:   cmp    x0, #0x0                  ; // 将receiver与0进行比较
-    0x1931bb6a4 &amp;lt;+4&amp;gt;:   b.le   0x1931bb714               ; // nil对象处理或者tagged pointer对象处理
-    0x1931bb6a8 &amp;lt;+8&amp;gt;:   ldr    x13, [x0]    // 取出receiver的isa指针赋值给x13
-    0x1931bb6ac &amp;lt;+12&amp;gt;:  and    x16, x13, #0xffffffff8 // 得到receiver的Class对象指针赋值给x16
--&amp;gt;  0x1931bb6b0 &amp;lt;+16&amp;gt;:  ldp    x10, x11, [x16, #0x10] // 取出Class对象的cache成员分别保存到x10,x11寄存器中
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;+16的地方crash，名称是SIGV_ACCERR，内存访问错误，野指针，class对象的内存应该是在整个App生命周期都是可行的，为什么会出现访问错误呢？&lt;/p&gt;
-
-&lt;h4 id=&quot;4objc_msgsend-crash原因&quot;&gt;4、objc_msgSend crash原因&lt;/h4&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_7/66.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;如上图，对象在堆内存区，在还没有被销毁之前，isa指针会指向其Class对象的内存地址，此时objc_msgSend是没有问题的，而对象被销毁之后，堆内存被回收，很有可能这部分内存就被覆盖，一个已经释放了的OC对象继续调用实例方法时，在objc_msgSend函数内部读取到obj的isa指针得到的将是一个未知或者有可能无效的指针值，指向的内存错误，出现野指针的错误。&lt;/p&gt;
-
-&lt;p&gt;也就是在读取x16地址的时候，导致内存读取错误，导致崩溃。&lt;/p&gt;
-
-&lt;p&gt;实际上，在前两条指令&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    0x1931bb6a0 &amp;lt;+0&amp;gt;:   cmp    x0, #0x0 
-    0x1931bb6a4 &amp;lt;+4&amp;gt;:   b.le   0x1931bb714  
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;只是进行比较，不会crash。&lt;/p&gt;
-
-&lt;p&gt;而第三条指令，访问receiver的isa指针赋值给x13&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;0x1931bb6a8 &amp;lt;+8&amp;gt;:   ldr    x13, [x0]
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;@interface&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;NSObject&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSObject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;Class&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;isa&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;虽然，receiver已经被销毁，但是OC对象都是从堆内存区域中分配内存的，所以当某个OC对象被销毁后，其所占用的内存仍然会放回堆内存区域中进行管理，而堆内存区域的地址是可以进行任意的读写访问的，所以即使对象被销毁释放，其isa指针仍然是可以正常访问，虽然值可能被覆盖，但不会crash。&lt;/p&gt;
-
-&lt;h4 id=&quot;5objc_msgsend-crash解决方案&quot;&gt;5、objc_msgSend crash解决方案&lt;/h4&gt;
-
-&lt;p&gt;从上面可以知道，寄存器中的值：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;x0 寄存器中的保存的就是receiver。&lt;/li&gt;
-  &lt;li&gt;x1 寄存器中保存的就是receiver的selector。&lt;/li&gt;
-  &lt;li&gt;x13 寄存器中保存的就是receiver的isa指针。&lt;/li&gt;
-  &lt;li&gt;x16 寄存器中保存的就是isa指向的Class指针对象。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;因为对象已经被销毁，所以x0,x13,x16的值都是不准确的，我们不能通过这个来获取对象的信息，但是x1中存储的selector是准确的，如果可以找到selector也许也可以找到崩溃的对象的类，从而定位源码。&lt;/p&gt;
-
-&lt;p&gt;根据地址找到对应Binary Image，如果是App的地址范围，用IDA或者命令行来解析：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;符号包位置：
-XXX.app.dSYM/Contents/Resources/DWARF/XXX
-
-首先查询UUID，判断符号文件是正确的
-xcrun dwarfdump --uuid &amp;lt;SymbolAddress&amp;gt;
-eg:
-xcrun dwarfdump --uuid /Users/haozhicao/Downloads/dnf
-UUID: 82E51E16-AA1D-39AA-BDBD-AB0AD6A13BC0 (armv7) /Users/haozhicao/Downloads/dnf
-UUID: C8865298-02A3-33E4-A3F4-C68A6DC50D3A (arm64) /Users/haozhicao/Downloads/dnf
-
-用atos命令
-atos -o XXX -l &amp;lt;SymbolAddress&amp;gt; &amp;lt;Address&amp;gt;
-eg:
-atos -o /Users/haozhicao/Downloads/dnf -l 0x0000000102a2c000 0x0000000102f3ea48
--[GHPDnfIPUserHeaderView avatarClicked] (in dnf) (GHPDnfIPUserHeaderView.m:362)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;如果是系统SDK，用IDA或者命令otool解析&lt;/p&gt;
-
-&lt;p&gt;系统符号表存储位置&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~/Library/Developer/Xcode/iOS\ DeviceSupport/
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;otool -v -arch arm64e -s __TEXT __objc_methname &amp;lt;KitAddress&amp;gt; &amp;lt;Address&amp;gt;
-
-eg:
-otool -v -arch arm64e -s __TEXT __objc_methname /Users/haozhicao/Library/Developer/Xcode/iOS\ DeviceSupport/12.4\ \(16G77\)\ arm64e/Symbols/System/Library/Frameworks/UIKit.framework/UIKit 0x00000001880c17ec
--[_UIWebViewScrollViewDelegateForwarder forwardInvocation:](in UIKit)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">一般App都会接入第三方的Crash报告SDK，比如友盟SDK，或者腾讯的bugly，当有crash的时候，SDK记录的crash记录的堆栈一般情况下可以很清晰地定位到源码的具体某一行，根据代码处理即可。但是有小部分情况下，crash记录的堆栈是系统堆栈，没有开发者的源码。</summary></entry></feed>
+&lt;/ul&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">1、URLRouter</summary></entry></feed>
