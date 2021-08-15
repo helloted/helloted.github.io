@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2021-08-14T15:44:13+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">Objective-C代码规范检测</title><link href="http://www.helloted.com/ios/2021/07/15/ocCheck/" rel="alternate" type="text/html" title="Objective-C代码规范检测" /><published>2021-07-15T20:00:00+08:00</published><updated>2021-07-15T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2021/07/15/ocCheck</id><content type="html" xml:base="http://www.helloted.com/ios/2021/07/15/ocCheck/">&lt;h4 id=&quot;1抽象语法树ast&quot;&gt;1、抽象语法树AST&lt;/h4&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2021-08-15T19:45:52+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">Objective-C代码规范检测</title><link href="http://www.helloted.com/ios/2021/07/15/ocCheck/" rel="alternate" type="text/html" title="Objective-C代码规范检测" /><published>2021-07-15T20:00:00+08:00</published><updated>2021-07-15T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2021/07/15/ocCheck</id><content type="html" xml:base="http://www.helloted.com/ios/2021/07/15/ocCheck/">&lt;h4 id=&quot;1抽象语法树ast&quot;&gt;1、抽象语法树AST&lt;/h4&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/Simple_2/30.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 
@@ -518,7 +518,7 @@ endif()
 
 &lt;p&gt;&lt;img src=&quot;/img/Simple_2/45.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">1、抽象语法树AST</summary></entry><entry><title type="html">减包-删除无用的代码</title><link href="http://www.helloted.com/ios/2021/07/13/unusedMethod/" rel="alternate" type="text/html" title="减包-删除无用的代码" /><published>2021-07-13T20:00:00+08:00</published><updated>2021-07-13T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2021/07/13/unusedMethod</id><content type="html" xml:base="http://www.helloted.com/ios/2021/07/13/unusedMethod/">&lt;h3 id=&quot;一减包的措施&quot;&gt;一、减包的措施&lt;/h3&gt;
 
-&lt;h5 id=&quot;1资源&quot;&gt;1、资源:&lt;/h5&gt;
+&lt;h4 id=&quot;1资源&quot;&gt;1、资源:&lt;/h4&gt;
 
 &lt;ul&gt;
   &lt;li&gt;无用资源的删除&lt;/li&gt;
@@ -552,7 +552,7 @@ endif()
 
 &lt;p&gt;字体文件一般都很大，如果项目中使用了多种字体文件，可以删掉不常用的字体文件。&lt;/p&gt;
 
-&lt;h5 id=&quot;2编译选项处理&quot;&gt;2、编译选项处理&lt;/h5&gt;
+&lt;h4 id=&quot;2编译选项处理&quot;&gt;2、编译选项处理&lt;/h4&gt;
 
 &lt;ul&gt;
   &lt;li&gt;Generate Debug Symbols 设置为NO，设置成NO就不会在断点处停下。减少符号生成，这个待确认。&lt;/li&gt;
@@ -563,11 +563,216 @@ endif()
   &lt;li&gt;Strip Linked Product：DEBUG下设为NO，RELEASE下设为YES，用于RELEASE模式下缩减app的大小；&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;3、代码处理&lt;/p&gt;
+&lt;h3 id=&quot;二mach-o简介&quot;&gt;二、Mach-o简介&lt;/h3&gt;
 
-&lt;h4 id=&quot;二通过编译结果mach-o文件分析&quot;&gt;二、通过编译结果Mach-o文件分析&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;Mach-O&lt;/strong&gt; 为 Mach Object 文件格式的缩写，它是一种用于可执行文件、目标代码、动态库、内核转储的文件格式。作为 a.out 格式的替代，Mach-O 提供了更强的扩展性，并提升了 符号表 中信息的访问速度。&lt;/p&gt;
 
-&lt;h4 id=&quot;三编译过程中分析&quot;&gt;三、编译过程中分析&lt;/h4&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">一、减包的措施</summary></entry><entry><title type="html">CND加速原理和游戏加速原理</title><link href="http://www.helloted.com/ios/2021/03/13/cdn/" rel="alternate" type="text/html" title="CND加速原理和游戏加速原理" /><published>2021-03-13T20:00:00+08:00</published><updated>2021-03-13T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2021/03/13/cdn</id><content type="html" xml:base="http://www.helloted.com/ios/2021/03/13/cdn/">&lt;h3 id=&quot;一普通的http请求&quot;&gt;一、普通的HTTP请求&lt;/h3&gt;
+&lt;p&gt;MachO 是一种文件规范，是一类文件的统称，包括但不限于以下几种常见的文件类型：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;.o（目标文件）&lt;/li&gt;
+  &lt;li&gt;.a（静态库文件 ）&lt;/li&gt;
+  &lt;li&gt;.dylib（动态库文件 ）&lt;/li&gt;
+  &lt;li&gt;.framework（库文件）&lt;/li&gt;
+  &lt;li&gt;.dSYM（XCode 调试符号文件）&lt;/li&gt;
+  &lt;li&gt;可执行文件（没有扩展名）&lt;/li&gt;
+  &lt;li&gt;dyld（动态链接器，一个特殊的可执行文件）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/48.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;macho-查看工具otool-与-machoview&quot;&gt;MachO 查看工具：OTool 与 MachOView:&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;OTool 是 macOS 自带的 MachO 文件查看工具，基于命令行，可以通过不同的命令参数快速地查看 MachO 文件各个方面的信息，OTool 位于（/Library/Developer/CommandLineTools/usr/bin/otool）&lt;/li&gt;
+  &lt;li&gt;MachOView 是一款开源的 MachO 文件查看工具，基于图形界面，它为查看和编辑（基于 Intel 和 ARM 架构的）MachO 文件提供了完整的解决方案&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;1header&quot;&gt;1、Header&lt;/h4&gt;
+
+&lt;p&gt;Header是文件的头部信息，包括CPU信息、文件类型、Command条数及Size信息。总体来说，作为开发者Header使用的较少，比较常用的是(uintptr_t)&amp;amp;_mh_execute_header获取header地址进行计算用。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/49.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;2commands&quot;&gt;2、Commands&lt;/h4&gt;
+
+&lt;p&gt;Load Commands描述的是文件的加载信息，加载信息有很多，加载的段、符号表、动态库信息等都在Commands中取到。这个部分信息还是比较有用的，我们可以从这里获取到符号表和字符串表的偏移量&lt;/p&gt;
+
+&lt;h4 id=&quot;3data&quot;&gt;3、Data&lt;/h4&gt;
+
+&lt;p&gt;Header 区域主要用于存储 MachO 文件的一般信息，并且描述了 LoadCommands 区域
+而 LoadCommands 区域则详细描述了 Data 区域
+如果说 Header 区域和 LoadCommands 区域的主要作用是：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;让系统内核加载器知道如何读取 MachO 文件&lt;/li&gt;
+  &lt;li&gt;并指定动态链接器来完成 MachO 文件后续的动态库加载&lt;/li&gt;
+  &lt;li&gt;然后设置好程序入口等一些列程序启动前的信息&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;那么，Data 区域的作用，就是当程序运行起来后，为每一个映射到虚拟内存中的指令操作提供真实的物理存储支持&lt;/p&gt;
+
+&lt;p&gt;Data 区域通常是 MachO 文件中最大的部分，主要包含：代码段、数据段，链接信息等
+注意：不要把 Data 区域与数据段搞混掉了，Data 区域指的是广义上的数据，而不是特指数据段的数据&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Section&lt;/th&gt;
+      &lt;th&gt;用途&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;__TEXT.__text&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;主程序代码,存放的是汇编后的代码&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;__TEXT.__cstring&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;C 语言字符串&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;__TEXT.__const&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;const&lt;/code&gt; 关键字修饰的常量&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;__TEXT.__stubs&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;用于 Stub 的占位代码，很多地方称之为&lt;em&gt;桩代码&lt;/em&gt;。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;__TEXT.__stubs_helper&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;当 Stub 无法找到真正的符号地址后的最终指向&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;__TEXT.__objc_methname&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;Objective-C 方法名称&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;__TEXT.__objc_methtype&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;Objective-C 方法类型&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;__TEXT.__objc_classname&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;Objective-C 类名称&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;__DATA.__data&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;初始化过的可变数据&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;__DATA.__la_symbol_ptr&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;lazy binding 的指针表，表中的指针一开始都指向 &lt;code class=&quot;highlighter-rouge&quot;&gt;__stub_helper&lt;/code&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;__DATA.nl_symbol_ptr&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;非 lazy binding 的指针表，每个表项中的指针都指向一个在装载过程中，被动态链机器搜索完成的符号&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;__DATA.__const&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;没有初始化过的常量&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;__DATA.__cfstring&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;程序中使用的 Core Foundation 字符串（&lt;code class=&quot;highlighter-rouge&quot;&gt;CFStringRefs&lt;/code&gt;）&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;__DATA.__bss&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;BSS，存放为初始化的全局变量，即常说的静态内存分配&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;__DATA.__common&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;没有初始化过的符号声明&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;__DATA.__objc_classlist&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;Objective-C 类列表&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;__DATA.__objc_protolist&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;Objective-C 原型&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;__DATA.__objc_imginfo&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;Objective-C 镜像信息&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;__DATA.__objc_selfrefs&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;Objective-C &lt;code class=&quot;highlighter-rouge&quot;&gt;self&lt;/code&gt; 引用&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;__DATA.__objc_protorefs&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;Objective-C 原型引用&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;__DATA.__objc_superrefs&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;Objective-C 超类引用&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&quot;三利用otool工具查找无用代码&quot;&gt;三、利用Otool工具查找无用代码&lt;/h3&gt;
+
+&lt;p&gt;OTool 是 macOS 自带的 MachO 文件查看工具，基于命令行，可以通过不同的命令参数快速地查看 MachO 文件各个方面的信息，OTool 位于（/Library/Developer/CommandLineTools/usr/bin/otool）&lt;/p&gt;
+
+&lt;h4 id=&quot;1所有方法&quot;&gt;1、所有方法&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; “otool - ov $path”将输出Objective - C类结构及其定义的方法。
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/50.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;通过匹配可以和筛选，可以将获取所有的方法，除了setter and getter方法…&lt;/p&gt;
+
+&lt;p&gt;代码&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;def imp_selectors(path):
+    re_sel_imp = re.compile('\s*imp\s*0x\w+ ([+|-]\[.+\s(.+)\])')
+    re_properties_start = re.compile('\s*baseProperties 0x\w{9}')
+    re_properties_end = re.compile('\w{16} 0x\w{9} _OBJC_CLASS_\$_(.+)')
+    re_property = re.compile('\s*name\s*0x\w+ (.+)')
+    imp_sels = {}
+    is_properties_area = False
+
+    for line in os.popen('/usr/bin/otool -oV %s' % path).readlines():
+        results = re_sel_imp.findall(line)
+        if results:
+            (class_sel, sel) = results[0]
+            if sel in imp_sels:
+                imp_sels[sel].add(class_sel)
+            else:
+                imp_sels[sel] = set([class_sel])
+        else:
+            # delete setter and getter methods as ivar assignment will not trigger them
+            # 删除相关的set方法
+            if re_properties_start.findall(line):
+                is_properties_area = True
+            if re_properties_end.findall(line):
+                is_properties_area = False
+            if is_properties_area:
+                property_result = re_property.findall(line)
+                if property_result:
+                    property_name = property_result[0]
+                    if property_name and property_name in imp_sels:
+                        # properties layout in mach-o is after func imp
+                        imp_sels.pop(property_name)
+                        # 拼接set方法
+                        setter = 'set' + property_name[0].upper() + property_name[1:] + ':'
+                        # 干掉set方法
+                        if setter in imp_sels:
+                            imp_sels.pop(setter)
+    return imp_sels
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;2引用的方法&quot;&gt;2、引用的方法&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;otool -v -s __DATA __objc_selrefs $path
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/50.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;3找出未引用代码&quot;&gt;3、找出未引用代码&lt;/h4&gt;
+
+&lt;p&gt;所有代码与引用的代码的差集即为未使用代码&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">一、减包的措施</summary></entry><entry><title type="html">CND加速原理和游戏加速原理</title><link href="http://www.helloted.com/ios/2021/03/13/cdn/" rel="alternate" type="text/html" title="CND加速原理和游戏加速原理" /><published>2021-03-13T20:00:00+08:00</published><updated>2021-03-13T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2021/03/13/cdn</id><content type="html" xml:base="http://www.helloted.com/ios/2021/03/13/cdn/">&lt;h3 id=&quot;一普通的http请求&quot;&gt;一、普通的HTTP请求&lt;/h3&gt;
 
 &lt;h4 id=&quot;11http请求&quot;&gt;1.1HTTP请求&lt;/h4&gt;
 
