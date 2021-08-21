@@ -79,3 +79,19 @@ Open GL在渲染时，如果按Home键让App进入后台，会导致crash。原�
 ​    return newObject;
 
 }
+
+
+
+
+
+| Git Hook           | 调用时机                           | 说明                                |
+| ------------------ | ---------------------------------- | ----------------------------------- |
+| pre-applypatch     | `git am`执行前                     |                                     |
+| applypatch-msg     | `git am`执行前                     |                                     |
+| post-applypatch    | `git am`执行后                     | 不影响`git am`的结果                |
+| **pre-commit**     | `git commit`执行前                 | 可以用`git commit --no-verify`绕过  |
+| **commit-msg**     | `git commit`执行前                 | 可以用`git commit --no-verify`绕过  |
+| post-commit        | `git commit`执行后                 | 不影响`git commit`的结果            |
+| pre-merge-commit   | `git merge`执行前                  | 可以用`git merge --no-verify`绕过。 |
+| prepare-commit-msg | `git commit`执行后，编辑器打开之前 |                                     |
+
