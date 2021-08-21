@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2021-08-15T19:45:52+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">Objective-C代码规范检测</title><link href="http://www.helloted.com/ios/2021/07/15/ocCheck/" rel="alternate" type="text/html" title="Objective-C代码规范检测" /><published>2021-07-15T20:00:00+08:00</published><updated>2021-07-15T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2021/07/15/ocCheck</id><content type="html" xml:base="http://www.helloted.com/ios/2021/07/15/ocCheck/">&lt;h4 id=&quot;1抽象语法树ast&quot;&gt;1、抽象语法树AST&lt;/h4&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2021-08-21T17:18:37+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">Objective-C代码规范检测</title><link href="http://www.helloted.com/ios/2021/07/15/ocCheck/" rel="alternate" type="text/html" title="Objective-C代码规范检测" /><published>2021-07-15T20:00:00+08:00</published><updated>2021-07-15T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2021/07/15/ocCheck</id><content type="html" xml:base="http://www.helloted.com/ios/2021/07/15/ocCheck/">&lt;h4 id=&quot;1抽象语法树ast&quot;&gt;1、抽象语法树AST&lt;/h4&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/Simple_2/30.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 
@@ -58,6 +58,57 @@
 第三个框名称为 &lt;a href=&quot;https://link.juejin.cn?target=https%3A%2F%2Fclang.llvm.org%2Fdoxygen%2Fclassclang_1_1ObjCMessageExpr.html&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ObjCMessageExpr&lt;/code&gt;&lt;/a&gt;，说明该节点是一个标准的 objc 消息发送表达式（[obj foo]）。&lt;/p&gt;
 
 &lt;p&gt;在&lt;a href=&quot;https://clang.llvm.org/doxygen/namespaceclang.html&quot;&gt;clang-namespaceclang&lt;/a&gt;官网可以查询到这些&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: left&quot;&gt;节点&lt;/th&gt;
+      &lt;th style=&quot;text-align: left&quot;&gt;描述&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;ObjcCategoryDecl&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;分类声明节点&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;ObjcCategoryImplDecl&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;分类实现节点&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;ObjcImplementationDecl&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;类实现节点&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;ObjcInterfaceDecl&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;类声明节点&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;ObjcIvarDecl&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;实例变量声明节点&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;ObjcMethodDecl&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;实例方法声明&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;ObjcPropertyDecl&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;属性声明节点&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;ObjcProtocolDecl&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;协议声明节点&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;ParmVarDecl&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;参数节点&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;…&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;…&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
 
 &lt;h4 id=&quot;3添加访问节点的插件&quot;&gt;3、添加访问节点的插件&lt;/h4&gt;
 
