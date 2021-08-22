@@ -7,6 +7,14 @@
 #2019养老保险基数最大为广大最大19014*0.08=1521
 
 
+
+#2020医保31938*0.02=638.76
+#失业6.6
+#2020养老保险基数最大为广大最大20268*0.08=1621
+#社保=医保基数*2% + 6.60(失业) + 1387.68(养老保险)=638+6.6+1621=2265
+#住房公积金2020年最高为为31938*0.12=3832
+
+
 def cau_total(pre_toal):
     if pre_toal <= 36000:
         return [0.03,0]
@@ -39,6 +47,8 @@ def year_total(pay):
         tax = pay * 0.10 - 210
     elif mon_pay > 12000 and mon_pay <= 25000:
         tax = pay * 0.20 - 1410
+    elif mon_pay > 25000 and mon_pay <= 35000:
+        tax = pay * 0.25 - 2660
     
     my_get = pay - tax
 
@@ -116,25 +126,49 @@ if __name__ == "__main__":
 
     print '<=======>'
 
-    pay_arr_2020 = [35220,35220]
-    jijin_arr_2020 = [5436,5436]
-    tax_arr_2020 = []
-    for i in range(0,len(pay_arr_2020)):
+    # pay_arr_2020 = [34200,34110]
+    # jijin_arr_2020 = [6049,6049]
+    # tax_arr_2020 = []
+    # for i in range(0,len(pay_arr_2020)):
+    #     mon = i + 1
+    #     pay = pay_arr_2020[i] # 当月工资
+    #     jijin = jijin_arr_2020[i] # 当月公积金和社保
+    #     pay_toal = sum_arr(pay_arr_2020,mon) # 年度总税前
+    #     jijin_total = sum_arr(jijin_arr_2020,mon) # 公积金社保年度总税前
+    #     pre_total = pay_toal - jijin_total - 6500 * mon
+    #     index = cau_total(pre_total)
+    #     tax = pre_total * index[0] - index[1] - sum_arr(tax_arr_2020,len(tax_arr_2020))
+    #     my_input = pay - jijin - tax
+    #     tax_arr_2020.append(tax)
+    #     all = all + my_input
+    #     # print '2020年{}月 税:'.format(mon) + str(tax) + ' 税后收入:' + str(my_input) + ' 税前:' + str(pay)
+    #     print '2019年{}月 收入:'.format(mon) + str(my_input)
+    #
+    # print '工资总收入:' + str(all)
+    # year_my =  year_total(358000)
+    # all = all + year_my
+    # print '最近一年总收入:' + str(all)
+
+
+    pay_arr_2021 = [39210,39210]
+    jijin_arr_2021 = [6097,6097]
+    tax_arr_2021 = []
+    for i in range(0,len(pay_arr_2021)):
         mon = i + 1
-        pay = pay_arr_2020[i]
-        jijin = jijin_arr_2020[i]
-        pay_toal = sum_arr(pay_arr_2020,mon)
-        jijin_total = sum_arr(jijin_arr_2020,mon)
+        pay = pay_arr_2021[i] # 当月工资
+        jijin = jijin_arr_2021[i] # 当月公积金和社保
+        pay_toal = sum_arr(pay_arr_2021,mon) # 年度总税前
+        jijin_total = sum_arr(jijin_arr_2021,mon) # 公积金社保年度总税前
         pre_total = pay_toal - jijin_total - 6500 * mon
         index = cau_total(pre_total)
-        tax = pre_total * index[0] - index[1] - sum_arr(tax_arr_2020,len(tax_arr_2020))
+        tax = pre_total * index[0] - index[1] - sum_arr(tax_arr_2021,len(tax_arr_2021))
         my_input = pay - jijin - tax
-        tax_arr_2020.append(tax)
+        tax_arr_2021.append(tax)
         all = all + my_input
         # print '2020年{}月 税:'.format(mon) + str(tax) + ' 税后收入:' + str(my_input) + ' 税前:' + str(pay)
-        print '2019年{}月 收入:'.format(mon) + str(my_input)
+        print '2021年{}月 收入:'.format(mon) + str(my_input)
 
     print '工资总收入:' + str(all)
-    year_my =  year_total(221538)
+    year_my =  year_total(325000)
     all = all + year_my
     print '最近一年总收入:' + str(all)
