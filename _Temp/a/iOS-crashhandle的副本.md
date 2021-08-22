@@ -84,14 +84,26 @@ Open GL在渲染时，如果按Home键让App进入后台，会导致crash。原�
 
 
 
-| Git Hook           | 调用时机                           | 说明                                |
-| ------------------ | ---------------------------------- | ----------------------------------- |
-| pre-applypatch     | `git am`执行前                     |                                     |
-| applypatch-msg     | `git am`执行前                     |                                     |
-| post-applypatch    | `git am`执行后                     | 不影响`git am`的结果                |
-| **pre-commit**     | `git commit`执行前                 | 可以用`git commit --no-verify`绕过  |
-| **commit-msg**     | `git commit`执行前                 | 可以用`git commit --no-verify`绕过  |
-| post-commit        | `git commit`执行后                 | 不影响`git commit`的结果            |
-| pre-merge-commit   | `git merge`执行前                  | 可以用`git merge --no-verify`绕过。 |
-| prepare-commit-msg | `git commit`执行后，编辑器打开之前 |                                     |
+| Git Hook        | 调用时机           | 说明                               |
+| --------------- | ------------------ | ---------------------------------- |
+| pre-applypatch  | `git am`执行前     |                                    |
+| applypatch-msg  | `git am`执行前     |                                    |
+| post-applypatch | `git am`执行后     | 不影响`git am`的结果               |
+| **pre-commit**  | `git commit`执行前 | 可以用`git commit --no-verify`绕过 |
+| **commit-msg**  | `git commit`执行前 | 可以用`git commit --no-verify`绕过 |
+| post-commit     | `git commit`执行后 | 不影响`git commit`的结果           |
+| ...             | ...                |                                    |
 
+
+
+| 工具            | 单文件检测 | 1000行文件 |
+| --------------- | ---------- | ---------- |
+| OCCheck_Python3 | 支持       | 7.1s左右   |
+| OCCheck_Java    | 支持       | 1.3s左右   |
+| ClangCodeCheck  | 支持       | 0.6s左右   |
+
+
+
+| ClangCodeCheck                                             |      | OCCheck_Java                    |
+| ---------------------------------------------------------- | ---- | ------------------------------- |
+| 通过Clang生成AST，需要Clang环境Clang生成AST，需要Clang环境 |      | 通过ANTLR4生成AST，需要java环境 |
