@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter">
+
+    <title>减包-删除无用的代码 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/ios/2021/07/13/unusedMethod/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/app/">APP</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/mac_app/">Mac App</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>减包-删除无用的代码</h1>
+                    
+                    <h2 class="subheading">减包-删除无用的代码</h2>
+                    
+                    <span class="meta">Posted by Ted on July 13, 2021</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h3 id="一减包的措施">一、减包的措施</h3>
+
+<h4 id="1资源">1、资源:</h4>
+
+<ul>
+  <li>无用资源的删除</li>
+  <li>重复文件的删除</li>
+  <li>大文件压缩</li>
+  <li>图片管理方式规范</li>
+  <li>on-Demand Resource动态下载</li>
+</ul>
+
+<p><strong>1.1. 删除无用图片</strong></p>
+
+<p>使用开源工具 <a href="https://github.com/tinymind/LSUnusedResources"><strong>LSUnusedResources</strong></a> 检查重复图片，但是可能会有误报，比如 [@”image%d”, index] 这种引用方式无法检查到，需要人工在核对一边。</p>
+
+<p>1.1.1重复文件删除</p>
+
+<p>借助 <a href="https://link.segmentfault.com/?url=https%3A%2F%2Fgithub.com%2Fadrianlopezroche%2Ffdupes">fdupes</a> 这个开源工具，校验各资源的 MD5。</p>
+
+<p><strong>1.2. 图片文件压缩</strong></p>
+
+<p>使用开源工具 <a href="https://github.com/ImageOptim/ImageOptim"><strong>imageOptim</strong></a> 对所有图片压缩一遍。此工具会使用 git 上主流的图片压缩方法尝试一遍，选择最优方案。</p>
+
+<p><strong>1.3. 纯色图片使用代码生成</strong></p>
+
+<p>如果项目中纯色的图片比较多，可以考虑使用代码替代，生成后缓存到本地以供后期使用。</p>
+
+<p><strong>1.4. 不常用图片后台下发</strong></p>
+
+<p>对于项目中不常用的图片可以考虑由后台下发，但是此项收益可能不高，而且会影响使用体验，酌情使用。</p>
+
+<p><strong>1.5. 字体文件</strong></p>
+
+<p>字体文件一般都很大，如果项目中使用了多种字体文件，可以删掉不常用的字体文件。</p>
+
+<h4 id="2编译选项处理">2、编译选项处理</h4>
+
+<ul>
+  <li>Generate Debug Symbols 设置为NO，设置成NO就不会在断点处停下。减少符号生成，这个待确认。</li>
+  <li>舍弃架构armv7和armv7s，去除不必要的指令集</li>
+  <li>DEAD_CODE_STRIPPING = YES（好像默认就是YES）。 确定 dead code（代码被定义但从未被调用）被剥离，去掉冗余的代码</li>
+  <li>Optimization Level有几个编译优化选项，release版应该选择Fastest, Smalllest[-Os]，这个选项会开启那些不增加代码大小的全部优化，并让可执行文件尽可能小。</li>
+  <li>Strip Debug Symbols During Copy 和 Symbols Hidden by Default 在release版本应该设为yes，可以去除不必要的调试符号。Symbols Hidden by Default会把所有符号都定义成”private extern”，设了后会减小体积。</li>
+  <li>Strip Linked Product：DEBUG下设为NO，RELEASE下设为YES，用于RELEASE模式下缩减app的大小；</li>
+</ul>
+
+<h3 id="二mach-o简介">二、Mach-o简介</h3>
+
+<p><strong>Mach-O</strong> 为 Mach Object 文件格式的缩写，它是一种用于可执行文件、目标代码、动态库、内核转储的文件格式。作为 a.out 格式的替代，Mach-O 提供了更强的扩展性，并提升了 符号表 中信息的访问速度。</p>
+
+<p>MachO 是一种文件规范，是一类文件的统称，包括但不限于以下几种常见的文件类型：</p>
+
+<ul>
+  <li>.o（目标文件）</li>
+  <li>.a（静态库文件 ）</li>
+  <li>.dylib（动态库文件 ）</li>
+  <li>.framework（库文件）</li>
+  <li>.dSYM（XCode 调试符号文件）</li>
+  <li>可执行文件（没有扩展名）</li>
+  <li>dyld（动态链接器，一个特殊的可执行文件）</li>
+</ul>
+
+<p><img src="/img/Simple_2/48.png" alt="img" /></p>
+
+<h4 id="macho-查看工具otool-与-machoview">MachO 查看工具：OTool 与 MachOView:</h4>
+
+<ul>
+  <li>OTool 是 macOS 自带的 MachO 文件查看工具，基于命令行，可以通过不同的命令参数快速地查看 MachO 文件各个方面的信息，OTool 位于（/Library/Developer/CommandLineTools/usr/bin/otool）</li>
+  <li>MachOView 是一款开源的 MachO 文件查看工具，基于图形界面，它为查看和编辑（基于 Intel 和 ARM 架构的）MachO 文件提供了完整的解决方案</li>
+</ul>
+
+<h4 id="1header">1、Header</h4>
+
+<p>Header是文件的头部信息，包括CPU信息、文件类型、Command条数及Size信息。总体来说，作为开发者Header使用的较少，比较常用的是(uintptr_t)&amp;_mh_execute_header获取header地址进行计算用。</p>
+
+<p><img src="/img/Simple_2/49.jpg" alt="img" /></p>
+
+<h4 id="2commands">2、Commands</h4>
+
+<p>Load Commands描述的是文件的加载信息，加载信息有很多，加载的段、符号表、动态库信息等都在Commands中取到。这个部分信息还是比较有用的，我们可以从这里获取到符号表和字符串表的偏移量</p>
+
+<h4 id="3data">3、Data</h4>
+
+<p>Header 区域主要用于存储 MachO 文件的一般信息，并且描述了 LoadCommands 区域
+而 LoadCommands 区域则详细描述了 Data 区域
+如果说 Header 区域和 LoadCommands 区域的主要作用是：</p>
+
+<ol>
+  <li>让系统内核加载器知道如何读取 MachO 文件</li>
+  <li>并指定动态链接器来完成 MachO 文件后续的动态库加载</li>
+  <li>然后设置好程序入口等一些列程序启动前的信息</li>
+</ol>
+
+<p>那么，Data 区域的作用，就是当程序运行起来后，为每一个映射到虚拟内存中的指令操作提供真实的物理存储支持</p>
+
+<p>Data 区域通常是 MachO 文件中最大的部分，主要包含：代码段、数据段，链接信息等
+注意：不要把 Data 区域与数据段搞混掉了，Data 区域指的是广义上的数据，而不是特指数据段的数据</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Section</th>
+      <th>用途</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">__TEXT.__text</code></td>
+      <td>主程序代码,存放的是汇编后的代码</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">__TEXT.__cstring</code></td>
+      <td>C 语言字符串</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">__TEXT.__const</code></td>
+      <td><code class="highlighter-rouge">const</code> 关键字修饰的常量</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">__TEXT.__stubs</code></td>
+      <td>用于 Stub 的占位代码，很多地方称之为<em>桩代码</em>。</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">__TEXT.__stubs_helper</code></td>
+      <td>当 Stub 无法找到真正的符号地址后的最终指向</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">__TEXT.__objc_methname</code></td>
+      <td>Objective-C 方法名称</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">__TEXT.__objc_methtype</code></td>
+      <td>Objective-C 方法类型</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">__TEXT.__objc_classname</code></td>
+      <td>Objective-C 类名称</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">__DATA.__data</code></td>
+      <td>初始化过的可变数据</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">__DATA.__la_symbol_ptr</code></td>
+      <td>lazy binding 的指针表，表中的指针一开始都指向 <code class="highlighter-rouge">__stub_helper</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">__DATA.nl_symbol_ptr</code></td>
+      <td>非 lazy binding 的指针表，每个表项中的指针都指向一个在装载过程中，被动态链机器搜索完成的符号</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">__DATA.__const</code></td>
+      <td>没有初始化过的常量</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">__DATA.__cfstring</code></td>
+      <td>程序中使用的 Core Foundation 字符串（<code class="highlighter-rouge">CFStringRefs</code>）</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">__DATA.__bss</code></td>
+      <td>BSS，存放为初始化的全局变量，即常说的静态内存分配</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">__DATA.__common</code></td>
+      <td>没有初始化过的符号声明</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">__DATA.__objc_classlist</code></td>
+      <td>Objective-C 类列表</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">__DATA.__objc_protolist</code></td>
+      <td>Objective-C 原型</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">__DATA.__objc_imginfo</code></td>
+      <td>Objective-C 镜像信息</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">__DATA.__objc_selfrefs</code></td>
+      <td>Objective-C <code class="highlighter-rouge">self</code> 引用</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">__DATA.__objc_protorefs</code></td>
+      <td>Objective-C 原型引用</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">__DATA.__objc_superrefs</code></td>
+      <td>Objective-C 超类引用</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="三利用otool工具查找无用代码">三、利用Otool工具查找无用代码</h3>
+
+<p>OTool 是 macOS 自带的 MachO 文件查看工具，基于命令行，可以通过不同的命令参数快速地查看 MachO 文件各个方面的信息，OTool 位于（/Library/Developer/CommandLineTools/usr/bin/otool）</p>
+
+<h4 id="1所有方法">1、所有方法</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> “otool - ov $path”将输出Objective - C类结构及其定义的方法。
+</code></pre></div></div>
+
+<p><img src="/img/Simple_2/50.jpg" alt="img" /></p>
+
+<p>通过匹配可以和筛选，可以将获取所有的方法，除了setter and getter方法…</p>
+
+<p>代码</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def imp_selectors(path):
+    re_sel_imp = re.compile('\s*imp\s*0x\w+ ([+|-]\[.+\s(.+)\])')
+    re_properties_start = re.compile('\s*baseProperties 0x\w{9}')
+    re_properties_end = re.compile('\w{16} 0x\w{9} _OBJC_CLASS_\$_(.+)')
+    re_property = re.compile('\s*name\s*0x\w+ (.+)')
+    imp_sels = {}
+    is_properties_area = False
+
+    for line in os.popen('/usr/bin/otool -oV %s' % path).readlines():
+        results = re_sel_imp.findall(line)
+        if results:
+            (class_sel, sel) = results[0]
+            if sel in imp_sels:
+                imp_sels[sel].add(class_sel)
+            else:
+                imp_sels[sel] = set([class_sel])
+        else:
+            # delete setter and getter methods as ivar assignment will not trigger them
+            # 删除相关的set方法
+            if re_properties_start.findall(line):
+                is_properties_area = True
+            if re_properties_end.findall(line):
+                is_properties_area = False
+            if is_properties_area:
+                property_result = re_property.findall(line)
+                if property_result:
+                    property_name = property_result[0]
+                    if property_name and property_name in imp_sels:
+                        # properties layout in mach-o is after func imp
+                        imp_sels.pop(property_name)
+                        # 拼接set方法
+                        setter = 'set' + property_name[0].upper() + property_name[1:] + ':'
+                        # 干掉set方法
+                        if setter in imp_sels:
+                            imp_sels.pop(setter)
+    return imp_sels
+</code></pre></div></div>
+
+<h4 id="2引用的方法">2、引用的方法</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>otool -v -s __DATA __objc_selrefs $path
+</code></pre></div></div>
+
+<p><img src="/img/Simple_2/50.jpg" alt="img" /></p>
+
+<h4 id="3找出未引用代码">3、找出未引用代码</h4>
+
+<p>所有代码与引用的代码的差集即为未使用代码</p>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/ios/2021/03/13/cdn/" data-toggle="tooltip" data-placement="top" title="CND加速原理和游戏加速原理">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/ios/2021/07/15/ocCheck/" data-toggle="tooltip" data-placement="top" title="Objective-C代码规范检测">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2021</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

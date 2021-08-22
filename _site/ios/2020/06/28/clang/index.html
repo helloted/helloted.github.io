@@ -16,7 +16,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter">
 
-    <title>Clang插桩 - Helloted Blog</title>
+    <title>LLVM-插桩 - Helloted Blog</title>
 
     <link rel="canonical" href="http://www.helloted.com/ios/2020/06/28/clang/">
 
@@ -117,7 +117,7 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <div class="post-heading">
-                    <h1>Clang插桩</h1>
+                    <h1>LLVM-插桩</h1>
                     
                     <h2 class="subheading">Clnag插件编写教程</h2>
                     
@@ -136,38 +136,7 @@
 
 				<h4 id="0clang插桩原理">0、Clang插桩原理</h4>
 
-<p>Clang-LLVM编译过程如下:</p>
-
-<ul>
-  <li>
-    <p>预处理(Pre-process)：他的主要工作就是将宏替换，删除注释展开头文件，生成.i文件。</p>
-  </li>
-  <li>
-    <p>词法分析(Lexical Analysis)：将代码切成一个个 token，比如大小括号，等于号还有字符串等。是计算机科学中将字符序列转换为标记序列的过程。</p>
-  </li>
-  <li>
-    <p>语法分析(Semantic Analysis)：验证语法是否正确，然后将所有节点组成 AST(Abstract Syntax Tree抽象语法树) 。</p>
-  </li>
-  <li>
-    <p>静态分析(Static Analysis)：使用它来表示用于分析源代码以便自动发现错误。</p>
-  </li>
-  <li>
-    <p>中间代码生成(Code Generation)：生成中间代码 IR(Intermediate Representation)，Code Generation 会负责将语法树自顶向下遍历逐步翻译成 LLVM IR，IR 是编译过程的前端的输出，后端的输入。</p>
-  </li>
-  <li>
-    <p>优化(Optimize)：LLVM 会去做些优化工作，在 Xcode 的编译设置里也可以设置优化级别-O1、-O3、-Os…还可以写些自己的 Pass</p>
-  </li>
-  <li>
-    <p>生成目标文件(Assemble)：生成Target相关Object(Mach-o)。</p>
-  </li>
-  <li>
-    <p>链接(Link)：生成Executable可执行文件。</p>
-
-    <p><img src="/img/Simple_2/30.png" alt="img" /></p>
-  </li>
-</ul>
-
-<p>而在优化过程中，可以自己定义Pass来优化代码</p>
+<p>Clang在优化过程中，可以自己定义Pass来优化代码</p>
 
 <p><img src="/img/Simple_3/36.png" alt="img" /></p>
 
@@ -342,7 +311,7 @@ $ cmake -G Xcode ../llvm
 
 <p><img src="/img/Simple_3/47.png" alt="img" /></p>
 
-<p>3.4 在User-Defined内添加CC和CXX，值分别是刚刚构建的clang的路径</p>
+<p>3.4 在User-Defined内添加CC和CXX，值分别是刚刚构建的clang的路径，让xode使用clang的替代版本</p>
 
 <p>3.5 将Enable Index-While-Building Functionality值改为NO，否则会报错</p>
 
@@ -352,6 +321,63 @@ $ cmake -G Xcode ../llvm
 
 <p><img src="/img/Simple_3/48.png" alt="img" /></p>
 
+<h4 id="4插桩的其他思路sanitizercoverage">4、插桩的其他思路：SanitizerCoverage</h4>
+
+<p>LLVM本身提供了一种覆盖函数的方案：<a href="http://clang.llvm.org/docs/SanitizerCoverage.html">SanitizerCoverage</a></p>
+
+<p><img src="/img/Simple_3/51.png" alt="img" /></p>
+
+<p>在官方文档中就有说明，如果在编译配置里有-fsantize-cover等参数，就会在每个函数的边缘插入一个sanitizer-cov—trace-guard函数，也就是说，每个方法函数执行的时候，都会调用一次这个插入的函数，所以我们可以通过这个插入函数，来获取方法函数名，从而获取启动过程中的符号顺序。</p>
+
+<h4 id="5插桩的其他思路sanitizercoverage">5、插桩的其他思路：SanitizerCoverage</h4>
+
+<p>OC 的方法调用在底层都是objc_msgSend函数。所以，如果能够Hook它，获取每个调用objc_msgSend的方法名，也能够达到插桩效果。objc_msgSend是C函数而且是系统函数，C 函数在编译链接时就确定了函数指针的地址偏移量（Offset），虽然这个偏移量在编译好的可执行文件中是固定的，但是可执行文件每次被重新装载到内存中时被系统分配的起始地址（在 lldb 中用命令image List获取）是不断变化的。所以，我们就可以借助facebook公司的一个开源库fishhook来达到系统函数与自己定义的函数进行了交换；</p>
+
+<blockquote>
+  <p>苹果采用了PIC（Position-independent code）技术成功让 C 的底层也能有动态的表现：</p>
+
+  <ul>
+    <li>编译时在 Mach-O 文件 _DATA 段的符号表中为每一个被引用的系统 C 函数建立一个指针（8字节的数据，放的全是0），这个指针用于动态绑定时重定位到共享库中的函数实现。</li>
+    <li>在运行时当系统 C 函数被第一次调用时会动态绑定一次，然后将 Mach-O 中的 _DATA 段符号表中对应的指针，指向外部函数（其在共享库中的实际内存地址）。</li>
+  </ul>
+
+  <p>fishhook 正是利用了 PIC 技术做了这么两个操作：</p>
+
+  <ul>
+    <li>将指向系统方法（外部函数）的指针重新进行绑定指向内部函数/自定义 C 函数。</li>
+    <li>将内部函数的指针在动态链接时指向系统方法的地址。</li>
+  </ul>
+
+  <p>这样就把系统方法与自己定义的方法进行了交换，达到 HOOK 系统 C 函数（共享库中的）的目的。</p>
+</blockquote>
+
+<p>下面是是我们的hook大概过程</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>static void hook_objc_msgSend() {
+    /// begin之前保存objc_msgSend的参数
+    save()
+    /// 将objc_msgSend执行的下一个函数地址传递给beginHook的第二个参数x0 self, x1 _cmd, x2: lr address
+    __asm volatile ("mov x2, lr\n");
+    /// 执行beginHook
+    call(blr, &amp; beginHook)
+    /// 恢复objc_msgSend参数
+    load()
+    // 执行
+    call(blr, orig_objc_msgSend)
+    /// after之前保存objc_msgSend执行完成的参数----------
+    save()
+    /// 调用 endHook----------
+    call(blr, &amp; endHook)
+    /// 将endHook返回的参数放入lr,恢复调用beginHook前的lr地址
+    __asm volatile ("mov lr, x0\n");
+    /// 恢复objc_msgSend执行完成的参数
+    load()
+    /// 方法结束,继续执行lr
+    ret()
+}
+</code></pre></div></div>
+
+<p>我们需要使用汇编指令对寄存器进行存取和执行，stp存储原参数，blr调用执行，ldp加载指令。这个过程与OC方法的Method-Swilling类似。最终可以达到hook_objc_msgSend函数与原来的objc_msgsend函数进行调换的目的。</p>
 
 
                 <hr>
@@ -359,9 +385,13 @@ $ cmake -G Xcode ../llvm
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/ios/2020/06/28/byteorder/" data-toggle="tooltip" data-placement="top" title="二进制重排">&larr; 上一篇</a>
+                        <a href="/ios/2020/06/03/llvm-clang/" data-toggle="tooltip" data-placement="top" title="LLVM编译过程">&larr; 上一篇</a>
                     </li>
                     
+                    
+                    <li class="next">
+                        <a href="/ios/2020/07/28/byteorder/" data-toggle="tooltip" data-placement="top" title="二进制重排">下一篇 &rarr;</a>
+                    </li>
                     
                 </ul>
 
@@ -410,7 +440,7 @@ $ cmake -G Xcode ../llvm
                     </li>
                     
                 </ul>
-                <p class="copyright text-muted">Copyright &copy; Helloted 2020</p>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2021</p>
             </div>
         </div>
     </div>

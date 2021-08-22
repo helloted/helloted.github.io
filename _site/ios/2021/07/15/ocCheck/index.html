@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter">
+
+    <title>Objective-C代码规范检测 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/ios/2021/07/15/ocCheck/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/app/">APP</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/mac_app/">Mac App</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>Objective-C代码规范检测</h1>
+                    
+                    <h2 class="subheading">Objective-C代码规范检测</h2>
+                    
+                    <span class="meta">Posted by Ted on July 15, 2021</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h4 id="1抽象语法树ast">1、抽象语法树AST</h4>
+
+<p><img src="/img/Simple_2/30.png" alt="img" /></p>
+
+<p>在编译过程中，第三步<strong>语义分析(Semantic Analysis)</strong>：验证语法是否正确，然后将所有节点组成抽象语法树 AST 。</p>
+
+<p>抽象语法树（abstract syntax code，AST）是源代码的抽象语法结构的树状表示，树上的每个节点都表示源代码中的一种结构，之所以说是抽象的，是因为抽象语法树并不会表示出真实语法出现的每一个细节，比如说，嵌套括号被隐含在树的结构中，并没有以节点的形式呈现。抽象语法树并不依赖于源语言的语法，也就是说语法分析阶段所采用的上下文无关文法，因为在写文法时，经常会对文法进行等价的转换（消除左递归，回溯，二义性等），这样会给文法分析引入一些多余的成分，对后续阶段造成不利影响，甚至会使合个阶段变得混乱。因些，很多编译器经常要独立地构造语法分析树，为前端，后端建立一个清晰的接口。基于AST的不依赖具体文法和不依赖语言细节的特点，使得其在很多领域有广泛的应用，比如浏览器，智能编辑器，编译器。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">while </span>b <span class="o">!=</span> 0
+<span class="o">{</span>
+     <span class="k">if </span>a <span class="o">&gt;</span> b
+         a <span class="o">=</span> a-b
+     <span class="k">else
+         </span>b <span class="o">=</span> b-a
+<span class="o">}</span>
+
+<span class="k">return </span>a
+</code></pre></div></div>
+
+<p>上面的一个while循环，经过Clang分析所产生的AST如下图所示：</p>
+
+<p><img src="/img/Simple_2/39.png" alt="img" /></p>
+
+<p>通过上面的语法树可以看到其描述代码的具体结构，而在Clang对代码编译时会进入一个语法树的解析阶段，则这个阶段中语法树的每个节点都会被遍历到，因此借助此阶段可以检测程序中所有代码的书写格式是否符合规范，甚至是对代码编写的质量作出分析。</p>
+
+<h4 id="2oc语言的语法树">2、OC语言的语法树</h4>
+
+<p>创建一个简单的类HelloAST</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@interface HelloAST : NSObject
+
+@end
+
+@implementation HelloAST
+
+- (void)hello{
+    [self print:@"hello!"];
+}
+
+- (void)print:(NSString *)msg{
+    NSLog(@"%@",msg);
+}
+
+@end                                                  
+</code></pre></div></div>
+
+<p>可以通过以下命令查看它的语法树结构</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>clang -fmodules -fsyntax-only -Xclang -ast-dump HelloAST.m
+</code></pre></div></div>
+
+<p><img src="/img/Simple_2/40.png" alt="img" /></p>
+
+<p>我们可以看到自己的类定义、方法定义、方法调用在 AST 中所对应的节点。</p>
+
+<p>其中第一个框为类定义，可以看到该节点名称为 <a href="https://link.juejin.cn?target=https%3A%2F%2Fclang.llvm.org%2Fdoxygen%2Fclassclang_1_1ObjCInterfaceDecl.html"><code class="highlighter-rouge">ObjCInterfaceDecl</code></a>，该类型节点为 objc 类定义（声明）。
+第二个框名称为 <a href="https://link.juejin.cn?target=https%3A%2F%2Fclang.llvm.org%2Fdoxygen%2Fclassclang_1_1ObjCMethodDecl.html"><code class="highlighter-rouge">ObjCMethodDecl</code></a>，说明该节点定义了一个    objc 方法（包含类、实例方法，包含普通方法和协议方法）。
+第三个框名称为 <a href="https://link.juejin.cn?target=https%3A%2F%2Fclang.llvm.org%2Fdoxygen%2Fclassclang_1_1ObjCMessageExpr.html"><code class="highlighter-rouge">ObjCMessageExpr</code></a>，说明该节点是一个标准的 objc 消息发送表达式（[obj foo]）。</p>
+
+<p>在<a href="https://clang.llvm.org/doxygen/namespaceclang.html">clang-namespaceclang</a>官网可以查询到这些</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">节点</th>
+      <th style="text-align: left">描述</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">ObjcCategoryDecl</td>
+      <td style="text-align: left">分类声明节点</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">ObjcCategoryImplDecl</td>
+      <td style="text-align: left">分类实现节点</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">ObjcImplementationDecl</td>
+      <td style="text-align: left">类实现节点</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">ObjcInterfaceDecl</td>
+      <td style="text-align: left">类声明节点</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">ObjcIvarDecl</td>
+      <td style="text-align: left">实例变量声明节点</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">ObjcMethodDecl</td>
+      <td style="text-align: left">实例方法声明</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">ObjcPropertyDecl</td>
+      <td style="text-align: left">属性声明节点</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">ObjcProtocolDecl</td>
+      <td style="text-align: left">协议声明节点</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">ParmVarDecl</td>
+      <td style="text-align: left">参数节点</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">…</td>
+      <td style="text-align: left">…</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="3添加访问节点的插件">3、添加访问节点的插件</h4>
+
+<p>要实现自定义的clang插件(以C++ API为例)，应按照以下步骤:</p>
+
+<ol>
+  <li>自定义继承自
+<code class="highlighter-rouge">clang::PluginASTAction</code>(基于consumer的抽象语法树(Abstract Syntax Tree/AST)前端Action抽象基类)
+<code class="highlighter-rouge">clang::ASTConsumer</code>(用于客户读取抽象语法树的抽象基类)，
+<code class="highlighter-rouge">clang::RecursiveASTVisitor</code>(前序或后续地深度优先搜索整个抽象语法树，并访问每一个节点的基类)等基类。</li>
+  <li>根据自身需要重载
+<code class="highlighter-rouge">PluginASTAction::CreateASTConsumer</code>
+<code class="highlighter-rouge">PluginASTAction::ParseArgs</code>
+<code class="highlighter-rouge">ASTConsumer::HandleTranslationUnit</code>
+<code class="highlighter-rouge">RecursiveASTVisitor::VisitDecl</code>
+<code class="highlighter-rouge">RecursiveASTVisitor::VisitStmt</code>
+等方法，实现自定义的分析逻辑。</li>
+  <li>注册插件
+<code class="highlighter-rouge">static FrontendPluginRegistry::Add&lt;MyPlugin&gt; X("my-plugin- name", "my-plugin-description");</code></li>
+</ol>
+
+<p>添加一个简单的测试插件</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include "clang/Frontend/FrontendPluginRegistry.h"
+#include "clang/AST/AST.h"
+#include "clang/AST/ASTConsumer.h"
+#include "clang/Frontend/CompilerInstance.h"
+
+using namespace clang;
+
+namespace
+{
+    class MyPluginConsumer : public ASTConsumer
+    {
+    CompilerInstance &amp;Instance;
+    std::set&lt;std::string&gt; ParsedTemplates;
+    public:
+        MyPluginConsumer(CompilerInstance &amp;Instance,
+                               std::set&lt;std::string&gt; ParsedTemplates)
+        : Instance(Instance), ParsedTemplates(ParsedTemplates) {}
+    };
+    
+    class MyPluginASTAction : public PluginASTAction
+    {
+    std::set&lt;std::string&gt; ParsedTemplates;
+    protected:
+        std::unique_ptr&lt;ASTConsumer&gt; CreateASTConsumer(CompilerInstance &amp;CI,
+                                                       llvm::StringRef) override
+        {
+            return llvm::make_unique&lt;MyPluginConsumer&gt;(CI, ParsedTemplates);
+        }
+        
+        bool ParseArgs(const CompilerInstance &amp;CI,
+                       const std::vector&lt;std::string&gt; &amp;args) override {
+            
+            DiagnosticsEngine &amp;D = ci.getDiagnostics();
+            D.Report(D.getCustomDiagID(DiagnosticsEngine::Error,
+                                       "OCCheck Test AST Error"));
+            return true;
+        }
+    };
+}
+
+static clang::FrontendPluginRegistry::Add&lt;MyPluginASTAction&gt;
+X("VisitAST", "My plugin");
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">clang::PluginASTAction</code>是一个基于consumer的AST前端Action抽象基类。</p>
+
+<p><code class="highlighter-rouge">clang::ASTConsumer</code>则是用于客户读取AST的抽象基类。它们之间的关系是<code class="highlighter-rouge">clang::PluginASTAction</code>作为一个关于AST的插件，同时也是访问<code class="highlighter-rouge">clang::ASTConsumer</code>的入口；而<code class="highlighter-rouge">clang::ASTConsumer</code>则是用于定义如何取得AST相关内容。</p>
+
+<p>定义继承于<code class="highlighter-rouge">clang::PluginASTAction</code>和<code class="highlighter-rouge">clang::ASTConsumer</code>类的子类后，通过<code class="highlighter-rouge">static clang::FrontendPluginRegistry::Add&lt;MyPluginASTAction&gt; X("VisitAST", "My plugin”);</code>就可以把插件注册到Clang中。</p>
+
+<p>Build之后能够得到VisitAST插件，可以添加到我们的项目配置中。配置方式参考前面文章Pass配置</p>
+
+<p><img src="/img/Simple_2/42.png" alt="img" /></p>
+
+<p>这个Plugin的作用是在编译过程中报一个Error。由此可见，我们可以在编译过程中插入一些我们的逻辑。</p>
+
+<h4 id="4实现编译时语法检测">4、实现编译时语法检测</h4>
+
+<p>添加一个入口</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">// 入口</span>
+    <span class="k">class</span> <span class="nc">CodeCheckASTAction</span><span class="o">:</span> <span class="k">public</span> <span class="n">PluginASTAction</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">ParsedTemplates</span><span class="p">;</span>
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">ASTConsumer</span><span class="o">&gt;</span> <span class="n">CreateASTConsumer</span><span class="p">(</span><span class="n">CompilerInstance</span> <span class="o">&amp;</span><span class="n">ci</span><span class="p">,</span> <span class="n">StringRef</span> <span class="n">iFile</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">CodeCheckASTConsumer</span><span class="o">&gt;</span> <span class="p">(</span><span class="k">new</span> <span class="n">CodeCheckASTConsumer</span><span class="p">(</span><span class="n">ci</span><span class="p">));</span><span class="c1">//使用自定义的处理工具</span>
+        <span class="p">}</span>
+        
+        <span class="kt">bool</span> <span class="n">ParseArgs</span><span class="p">(</span><span class="k">const</span> <span class="n">CompilerInstance</span> <span class="o">&amp;</span><span class="n">ci</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">args</span><span class="p">)</span> <span class="p">{</span>
+<span class="c1">//            DiagnosticsEngine &amp;D = ci.getDiagnostics();</span>
+<span class="c1">//            D.Report(D.getCustomDiagID(DiagnosticsEngine::Error,</span>
+<span class="c1">//                                       "OCCheck Test AST Error"));</span>
+            <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">};</span>
+</code></pre></div></div>
+
+<p>添加自定义工具</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">//自定义的处理工具</span>
+    <span class="k">class</span> <span class="nc">CodeCheckASTConsumer</span><span class="o">:</span> <span class="k">public</span> <span class="n">ASTConsumer</span> <span class="p">{</span>
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">MatchFinder</span> <span class="n">matcher</span><span class="p">;</span>
+        <span class="n">CodeCheckHandler</span> <span class="n">handler</span><span class="p">;</span>
+    <span class="k">public</span><span class="o">:</span>
+        <span class="c1">//调用CreateASTConsumer方法后就会加载Consumer里面的方法</span>
+        <span class="n">CodeCheckASTConsumer</span><span class="p">(</span><span class="n">CompilerInstance</span> <span class="o">&amp;</span><span class="n">ci</span><span class="p">)</span> <span class="o">:</span><span class="n">handler</span><span class="p">(</span><span class="n">ci</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">matcher</span><span class="p">.</span><span class="n">addMatcher</span><span class="p">(</span><span class="n">objcInterfaceDecl</span><span class="p">().</span><span class="n">bind</span><span class="p">(</span><span class="s">"ObjCInterfaceDecl"</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">handler</span><span class="p">);</span>
+            <span class="n">matcher</span><span class="p">.</span><span class="n">addMatcher</span><span class="p">(</span><span class="n">objcMethodDecl</span><span class="p">().</span><span class="n">bind</span><span class="p">(</span><span class="s">"ObjCMethodDecl"</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">handler</span><span class="p">);</span>
+            <span class="n">matcher</span><span class="p">.</span><span class="n">addMatcher</span><span class="p">(</span><span class="n">objcPropertyDecl</span><span class="p">().</span><span class="n">bind</span><span class="p">(</span><span class="s">"ObjcPropertyDecl"</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">handler</span><span class="p">);</span>
+        <span class="p">}</span>
+        
+        <span class="c1">//遍历完一次语法树就会调用一次下面方法</span>
+        <span class="kt">void</span> <span class="n">HandleTranslationUnit</span><span class="p">(</span><span class="n">ASTContext</span> <span class="o">&amp;</span><span class="n">context</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">matcher</span><span class="p">.</span><span class="n">matchAST</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">};</span>
+</code></pre></div></div>
+
+<p>在MatchFinder的run方法中，可以找到对应的节点进行处理</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// 自定义 handler
+class CodeCheckHandler : public MatchFinder::MatchCallback {
+private:
+    CompilerInstance &amp;ci;//编译器实例
+public:
+    CodeCheckHandler(CompilerInstance &amp;ci) :ci(ci) {}
+            //主要方法，分配 类、方法、属性 做不同处理
+    void run(const MatchFinder::MatchResult &amp;Result) {
+    // 类
+				const ObjCInterfaceDecl *interfaceDecl = Result.Nodes.getNodeAs&lt;ObjCInterfaceDecl&gt;("ObjCInterfaceDecl");
+        // 属性
+				const ObjCPropertyDecl *propertyDecl = Result.Nodes.getNodeAs&lt;ObjCPropertyDecl&gt;("ObjcPropertyDecl");
+        // 方法
+				const ObjCMethodDecl *methodDecl = Result.Nodes.getNodeAs&lt;ObjCMethodDecl&gt;("ObjCMethodDecl");
+      // 变量
+       const VarDecl var = Result.Nodes.getNodeAs&lt;VarDecl&gt;("var")
+    }
+} 举例，检测类名是否是小写
+</code></pre></div></div>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/**
+  检测类名是否存在小写开头
+
+  @param decl 类声明
+ */</span>
+<span class="kt">void</span> <span class="nf">checkClassNameForLowercaseName</span><span class="p">(</span><span class="n">ObjCInterfaceDecl</span> <span class="o">*</span><span class="n">decl</span><span class="p">)</span>
+<span class="p">{</span>
+      <span class="n">StringRef</span> <span class="n">className</span> <span class="o">=</span> <span class="n">decl</span> <span class="o">-&gt;</span> <span class="n">getName</span><span class="p">();</span>
+        
+      <span class="c1">//类名称必须以大写字母开头</span>
+      <span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="n">className</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">isLowercase</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+      <span class="p">{</span>
+           <span class="c1">//修正提示</span>
+           <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">tempName</span> <span class="o">=</span> <span class="n">className</span><span class="p">;</span>
+           <span class="n">tempName</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">toUppercase</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
+           <span class="n">StringRef</span> <span class="n">replacement</span><span class="p">(</span><span class="n">tempName</span><span class="p">);</span>
+           <span class="n">SourceLocation</span> <span class="n">nameStart</span> <span class="o">=</span> <span class="n">decl</span><span class="o">-&gt;</span><span class="n">getLocation</span><span class="p">();</span>
+           <span class="n">SourceLocation</span> <span class="n">nameEnd</span> <span class="o">=</span> <span class="n">nameStart</span><span class="p">.</span><span class="n">getLocWithOffset</span><span class="p">(</span><span class="n">className</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+           <span class="n">FixItHint</span> <span class="n">fixItHint</span> <span class="o">=</span> <span class="n">FixItHint</span><span class="o">::</span><span class="n">CreateReplacement</span><span class="p">(</span><span class="n">SourceRange</span><span class="p">(</span><span class="n">nameStart</span><span class="p">,</span> <span class="n">nameEnd</span><span class="p">),</span> <span class="n">replacement</span><span class="p">);</span>
+                
+           <span class="c1">//报告警告</span>
+           <span class="n">DiagnosticsEngine</span> <span class="o">&amp;</span><span class="n">D</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">.</span><span class="n">getDiagnostics</span><span class="p">();</span>
+           <span class="kt">int</span> <span class="n">diagID</span> <span class="o">=</span> <span class="n">D</span><span class="p">.</span><span class="n">getCustomDiagID</span><span class="p">(</span><span class="n">DiagnosticsEngine</span><span class="o">::</span><span class="n">Error</span><span class="p">,</span> <span class="s">"Class name should not start with lowercase letter"</span><span class="p">);</span>
+           <span class="n">SourceLocation</span> <span class="n">location</span> <span class="o">=</span> <span class="n">decl</span><span class="o">-&gt;</span><span class="n">getLocation</span><span class="p">();</span>
+           <span class="n">D</span><span class="p">.</span><span class="n">Report</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">diagID</span><span class="p">).</span><span class="n">AddFixItHint</span><span class="p">(</span><span class="n">fixItHint</span><span class="p">);</span>
+       <span class="p">}</span>
+<span class="p">}</span>
+  
+</code></pre></div></div>
+
+<p>完整代码</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+#include &lt;iostream&gt;
+#include "clang/AST/AST.h"
+#include "clang/AST/ASTConsumer.h"
+#include "clang/ASTMatchers/ASTMatchers.h"
+#include "clang/ASTMatchers/ASTMatchFinder.h"
+#include "clang/Frontend/CompilerInstance.h"
+#include "clang/Frontend/FrontendPluginRegistry.h"
+
+#include "llvm/Support/raw_ostream.h"
+#include "clang/Sema/Sema.h"
+#include "clang/AST/RecursiveASTVisitor.h"
+
+#include "clang/Basic/Diagnostic.h"
+
+#include "clang/AST/DeclObjC.h"
+
+using namespace clang;
+using namespace std;
+using namespace llvm;
+using namespace clang::ast_matchers;
+
+
+namespace CodeCheck {
+    
+    // MARK: - my handler
+    class CodeCheckHandler : public MatchFinder::MatchCallback {
+    private:
+        CompilerInstance &amp;ci;
+        
+    public:
+        CodeCheckHandler(CompilerInstance &amp;ci) :ci(ci) {}
+        
+        void checkInterfaceDecl(const ObjCInterfaceDecl *decl){
+            StringRef className = decl-&gt;getName();
+            //类名称必须以大写字母开头
+            char c = className[0];
+            if (isLowercase(c))
+            {
+                 //修正提示
+                 std::string tempName = className;
+                 tempName[0] = toUppercase(c);
+                 StringRef replacement(tempName);
+                 SourceLocation nameStart = decl-&gt;getLocation();
+                 SourceLocation nameEnd = nameStart.getLocWithOffset(className.size() - 1);
+                 FixItHint fixItHint = FixItHint::CreateReplacement(SourceRange(nameStart, nameEnd), replacement);
+
+                 //报告警告
+                 DiagnosticsEngine &amp;D = ci.getDiagnostics();
+                 int diagID = D.getCustomDiagID(DiagnosticsEngine::Error, "编码提示: 类名必须以大写字母开头");
+                 SourceLocation location = decl-&gt;getLocation();
+                 D.Report(location, diagID).AddFixItHint(fixItHint);
+             }
+        }
+        
+        void checkPropertyDecl(const clang::ObjCPropertyDecl *decl)
+        {
+            checkOtherPropertyDecl(decl);
+            StringRef name = decl -&gt; getName();
+              if (name.size() == 1)
+              {
+                   //不需要检测
+                   return;
+              }
+
+              //属性中不包含下划线
+              size_t underscorePos = name.find('_', 1);
+              if (underscorePos != StringRef::npos)
+              {
+                   //修正提示
+                   std::string tempName = name;
+                   std::string::iterator end_pos = std::remove(tempName.begin() + 1, tempName.end(), '_');
+                   tempName.erase(end_pos, tempName.end());
+                   StringRef replacement(tempName);
+                   SourceLocation nameStart = decl-&gt;getLocation();
+                   SourceLocation nameEnd = nameStart.getLocWithOffset(name.size() - 1);
+                   FixItHint fixItHint = FixItHint::CreateReplacement(SourceRange(nameStart, nameEnd), replacement);
+
+                   //报告错误
+                   DiagnosticsEngine &amp;diagEngine = ci.getDiagnostics();
+                   unsigned diagID = diagEngine.getCustomDiagID(DiagnosticsEngine::Warning, "编码提示: 属性名称中不要包含`_`");
+                   SourceLocation location = decl-&gt;getLocation().getLocWithOffset(underscorePos);
+                   diagEngine.Report(location, diagID).AddFixItHint(fixItHint);
+              }
+        }
+        
+        void checkOtherPropertyDecl(const clang::ObjCPropertyDecl *propertyDecl)
+        {
+            ObjCPropertyDecl::PropertyAttributeKind attrKind = propertyDecl-&gt;getPropertyAttributes();
+            SourceLocation location = propertyDecl-&gt;getLocation();
+            string typeStr = propertyDecl-&gt;getType().getAsString();
+            
+            if (propertyDecl-&gt;getTypeSourceInfo()) {
+                if(!(attrKind &amp; ObjCPropertyDecl::OBJC_PR_nonatomic)){
+                    diagWaringReport(location, "Are you sure to use atomic which might reduce the performance.", NULL);
+                }
+                
+                if ((typeStr.find("NSString")!=string::npos)&amp;&amp; !(attrKind &amp; ObjCPropertyDecl::OBJC_PR_copy)) {
+                    diagWaringReport(location, "NSString建议使用copy代替strong.", NULL);
+                } else if ((typeStr.find("NSArray")!=string::npos)&amp;&amp; !(attrKind &amp; ObjCPropertyDecl::OBJC_PR_copy)) {
+                    diagWaringReport(location, "NSArray建议使用copy代替strong.", NULL);
+                }
+                
+                if(!typeStr.compare("int")){
+                    diagWaringReport(location, "Use the built-in NSInteger instead of int.", NULL);
+                } else if ((typeStr.find("&lt;")!=string::npos &amp;&amp; typeStr.find("&gt;")!=string::npos) &amp;&amp; !(attrKind &amp; ObjCPropertyDecl::OBJC_PR_weak)) {
+                    diagWaringReport(location, "建议使用weak定义Delegate.", NULL);
+                }
+            }
+        }
+        
+
+        // 检测属性名是否存在大写开头
+        void checkPropertyNameForUppercaseName(const clang::ObjCPropertyDecl *decl)
+        {
+              bool checkUppercaseNameIndex = 0;
+              StringRef name = decl -&gt; getName();
+              if (name.find('_') == 0)
+              {
+                   //表示以下划线开头
+                   checkUppercaseNameIndex = 1;
+              }
+
+              //名称必须以小写字母开头
+              char c = name[checkUppercaseNameIndex];
+              if (isUppercase(c))
+              {
+                   //修正提示
+                   std::string tempName = name;
+                   tempName[checkUppercaseNameIndex] = toLowercase(c);
+                   StringRef replacement(tempName);
+                   SourceLocation nameStart = decl-&gt;getLocation();
+                   SourceLocation nameEnd = nameStart.getLocWithOffset(name.size() - 1);
+                   FixItHint fixItHint = FixItHint::CreateReplacement(SourceRange(nameStart, nameEnd), replacement);
+
+                   //报告错误
+                   DiagnosticsEngine &amp;D = ci.getDiagnostics();
+                   int diagID = D.getCustomDiagID(DiagnosticsEngine::Error, "Property name should not start with uppercase letter");
+                   SourceLocation location = decl-&gt;getLocation();
+                   D.Report(location, diagID).AddFixItHint(fixItHint);
+               }
+        }
+        
+        
+        template &lt;unsigned N&gt;
+        void diagWaringReport(SourceLocation Loc, const char (&amp;FormatString)[N], FixItHint *Hint)
+        {
+            DiagnosticsEngine &amp;diagEngine = ci.getDiagnostics();
+            unsigned DiagID = diagEngine.getCustomDiagID(clang::DiagnosticsEngine::Warning, FormatString);
+            (Hint!=NULL) ? diagEngine.Report(Loc, DiagID) &lt;&lt; *Hint : diagEngine.Report(Loc, DiagID);
+        }
+        
+        void run(const MatchFinder::MatchResult &amp;Result) {
+            
+            if (const ObjCInterfaceDecl *interfaceDecl = Result.Nodes.getNodeAs&lt;ObjCInterfaceDecl&gt;("ObjCInterfaceDecl")) {
+                //类的检测
+                checkInterfaceDecl(interfaceDecl);
+            }
+            
+            if (const ObjCPropertyDecl *propertyDecl = Result.Nodes.getNodeAs&lt;ObjCPropertyDecl&gt;("objcPropertyDecl")) {
+                //属性的检测
+                checkPropertyDecl(propertyDecl);
+            }
+
+        }
+        
+    };
+    
+    class CodeCheckASTConsumer: public ASTConsumer {
+    private:
+        MatchFinder matcher;
+        CodeCheckHandler handler;
+    public:
+        //调用CreateASTConsumer方法后就会加载Consumer里面的方法
+        CodeCheckASTConsumer(CompilerInstance &amp;ci) :handler(ci) {
+            matcher.addMatcher(objcInterfaceDecl().bind("ObjCInterfaceDecl"), &amp;handler); // 类
+            matcher.addMatcher(objcMethodDecl().bind("ObjCMethodDecl"), &amp;handler); // 方法
+            matcher.addMatcher(objcPropertyDecl().bind("objcPropertyDecl"), &amp;handler); // 属性
+        }
+        
+        //遍历完一次语法树就会调用一次下面方法
+        void HandleTranslationUnit(ASTContext &amp;context) {
+            matcher.matchAST(context);
+        }
+    };
+    
+    class CodeCheckASTAction: public PluginASTAction {
+    public:
+        unique_ptr&lt;ASTConsumer&gt; CreateASTConsumer(CompilerInstance &amp;ci, StringRef iFile) {
+            return unique_ptr&lt;CodeCheckASTConsumer&gt; (new CodeCheckASTConsumer(ci));
+        }
+        
+        bool ParseArgs(const CompilerInstance &amp;ci, const std::vector&lt;std::string&gt; &amp;args) {
+            return true;
+        }
+    };
+}
+
+
+
+static FrontendPluginRegistry::Add&lt;CodeCheck::CodeCheckASTAction&gt;
+X("CodeCheck", "The CodeCheck is my first clang-plugin.");
+
+</code></pre></div></div>
+
+<p>其中</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FixItHint fixItHint = FixItHint::CreateReplacement(SourceRange(nameStart, nameEnd), replacement);
+</code></pre></div></div>
+
+<p>FixItHint可用于修复改动，将想要的格式替换原有的格式</p>
+
+<p>Waring效果</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        template &lt;unsigned N&gt;
+        /// 抛出警告
+        /// @param Loc 位置
+        /// @param Hint 修改提示
+        void diagWaringReport(SourceLocation Loc, const char (&amp;FormatString)[N], FixItHint *Hint)
+        {
+            DiagnosticsEngine &amp;diagEngine = ci.getDiagnostics();
+            unsigned DiagID = diagEngine.getCustomDiagID(clang::DiagnosticsEngine::Warning, FormatString);
+            (Hint!=NULL) ? diagEngine.Report(Loc, DiagID) &lt;&lt; *Hint : diagEngine.Report(Loc, DiagID);
+        }
+</code></pre></div></div>
+
+<p><img src="/img/Simple_2/46.png" alt="img" /></p>
+
+<p>Error效果</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        template &lt;unsigned N&gt;
+        void diagERRorReport(SourceLocation Loc, const char (&amp;FormatString)[N], FixItHint *Hint)
+        {
+            DiagnosticsEngine &amp;diagEngine = ci.getDiagnostics();
+            unsigned DiagID = diagEngine.getCustomDiagID(clang::DiagnosticsEngine::Error, FormatString);
+            (Hint!=NULL) ? diagEngine.Report(Loc, DiagID) &lt;&lt; *Hint : diagEngine.Report(Loc, DiagID);
+        }
+</code></pre></div></div>
+
+<p><img src="/img/Simple_2/47.png" alt="img" /></p>
+
+<h5 id="配置过程">配置过程</h5>
+
+<p>1、源码添加位置是在</p>
+
+<p><img src="/img/Simple_2/41.png" alt="img" /></p>
+
+<p>2、CodeCheck文件夹平级的CMakeList.txt要添加</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>add_clang_subdirectory(CodeCheck)
+</code></pre></div></div>
+
+<p><img src="/img/Simple_2/43.png" alt="img" /></p>
+
+<p>3、CodeCheck文件夹内CMakeList.txt要添加</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>add_llvm_library(CodeCheck MODULE
+CodeCheck.cpp
+)
+
+if(LLVM_ENABLE_PLUGINS AND (WIN32 OR CYGWIN))
+  target_link_libraries(CodeCheck PRIVATE
+    clangAST
+    clangBasic
+    clangFrontend
+    clangLex
+    LLVMSupport
+    )
+endif()
+
+</code></pre></div></div>
+
+<p><img src="/img/Simple_2/44.png" alt="img" /></p>
+
+<p>4、检测项目的Other C Flags添加配置</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-Xclang -load -Xclang （你的插件dylib绝对路径）-Xclang -add-plugin -Xclang  （你的Plugin名字）
+</code></pre></div></div>
+
+<p>-Xclang -load -Xclang $(SRCROOT)/CodeCheck.dylib  -Xclang -add-plugin -Xclang  CodeCheck</p>
+
+<p><img src="/img/Simple_2/45.png" alt="img" /></p>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/ios/2021/07/13/unusedMethod/" data-toggle="tooltip" data-placement="top" title="减包-删除无用的代码">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2021</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>
