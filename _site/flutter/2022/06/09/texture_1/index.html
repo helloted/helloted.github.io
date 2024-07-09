@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter">
+
+    <title>外接纹理显示图片1：问题篇 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/flutter/2022/06/09/texture_1/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/app/">APP</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/mac_app/">Mac App</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>外接纹理显示图片1：问题篇</h1>
+                    
+                    <h2 class="subheading">外接纹理显示图片1：内存问题</h2>
+                    
+                    <span class="meta">Posted by Ted on June 9, 2022</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h3 id="1flutter列表中多图加载的问题">1、Flutter列表中多图加载的问题</h3>
+
+<p>在社交或者资讯类App中，经常会使用到Feeds流页面，Feeds流页面的列表一般结构繁杂，单行资讯内就可能有多张图片；</p>
+
+<div align="center">
+<img src="/img/Simple_6/28.png" alt="Image" align="middle" style="zoom:30%;" />
+</div>
+
+<p>Flutter 通过 Image.asset，Image.file，Image.network 等方法创建一个 Image Widget 来加载显示本地或者网络图片。</p>
+
+<p>而使用Image控件加载多图，会出现一些问题</p>
+
+<ul>
+  <li><strong>内存过载</strong>：列表中图片过多时，内存占用很轻松的飙升到了七八百MB，如果手机的配置不够，很可能就会导致页面空白甚至是Crash；</li>
+  <li><strong>内存峰值高</strong>：图片加载的过程中，加载前期阶段会内存峰值很高；</li>
+  <li><strong>没有磁盘缓存</strong>：Flutter原生的图片缓存机制，缓存到的是内存中，没有磁盘缓存，每次重新打开APP或者缓存被清理都会再次进行网络请求。</li>
+</ul>
+
+<p><img src="/img/Simple_6/29.png" alt="img" /></p>
+
+<h3 id="2flutter图片加载过程">2、Flutter图片加载过程</h3>
+
+<p>Flutter中图片主要有4个类：</p>
+
+<ul>
+  <li><strong>Image</strong> <strong>：</strong>显示图⽚的Widget，通过ImageState管理ImageProvider的⽣命周期；</li>
+  <li><strong>ImageProvider</strong>：图⽚的抽象概念（如NetworkImage、FileImage等），约定图⽚唯⼀性(key)、获取图⽚字节数据(load)，创建ImageStream⽤于监听结果；</li>
+  <li><strong>ImageStream</strong>：图⽚的加载对象，通过 ImageStreamCompleter 最后会返回⼀个 ImageInfo,⽽ImageInfo 中的ui.Image是RenderObject的⽬标绘制对象；</li>
+  <li><strong>ImageCache</strong>：缓存单例PaintingBinding.instance.imageCache，只用于内存缓存；</li>
+</ul>
+
+<p>加载流程：</p>
+
+<ol>
+  <li>Image 通过 ImageProvider 得到 ImageStream 对象</li>
+  <li>_ImageState 利用 ImageStream 添加监听，等待图片数据</li>
+  <li>.ImageProvider 通过 load 方法去加载并返回 ImageStreamCompleter 对象</li>
+  <li>ImageStream 会关联 ImageStreamCompleter</li>
+  <li>ImageStreamCompleter 会通过 http 下载图片，再经过 PaintingBinding 编码转化后，得到 ui.Codec 可绘制对象，并封装成 ImageInfo 返回</li>
+  <li>ImageInfo 回调到 ImageStream 的监听，设置给 _ImageState build 的 RawImage 对象。</li>
+  <li>RawImage 的 RenderImage 通过 paint 绘制 ImageInfo 中的 ui.Codec</li>
+</ol>
+
+<p><img src="/img/Simple_6/30.png" alt="img" /></p>
+
+<h3 id="3内存大的原因">3、内存大的原因</h3>
+
+<p>图片要显示在移动终端一般会经历加载、解码和渲染三个步骤，其中解码阶段是内存消耗最多的过程，解码是一个计算量较大的任务，主要需要CPU来执行；并且解码出来的图片所占内存与图片的宽高正相关，而与图片原来的大小无关。</p>
+
+<p><img src="/img/Simple_6/31.png" alt="img" /></p>
+
+<p>我们以Image Widget为例，Image Widget 要显示在屏幕上的时候，需要以Image作为数据源，Image持有的数据DataBuffer是未解码的压缩数据，能节省较多的内存和加快存储。</p>
+
+<p>当DataBuffer数据被赋值给Image Widget时，图像数据会被解码为Image Buffer，变成代表RGB的颜色数据。</p>
+
+<p>解压图片需要的内存算法为：</p>
+
+<blockquote>
+  <p>图⽚所占内存⼤⼩ = 图⽚⻓度（像素）* 图⽚宽度（像素）* ⼀个像素所占内存空间4字节(RGBA)。</p>
+</blockquote>
+
+<p>当我们业务场景中需要加载一张游戏图片（3000*4000像素大小），解码内存大小占用为 45.77MB。</p>
+
+<h3 id="4优化措施">4、优化措施</h3>
+
+<p>根据以上的内存原因，我们可以总结一些在Flutter原生上的优化措施</p>
+
+<p><strong>优化下载项</strong>：利用云端压缩缩略图功能，在云端压缩切割图片</p>
+
+<p><strong>降低采样率：</strong>设置合适的采样大小，减小解码内存大小。追踪源码，我们发现，cacheWidth和cacheHeight能够影响到ImageDescriptor，可以降低内存</p>
+
+<p><strong>磁盘缓存</strong>：通过Chanel桥接，将下载好的图片进行磁盘缓存，Flutter侧进行图片加载的时候，如果内存没有命中，就去磁盘缓存中进行二次搜索。如果都没有命中才会走网络请求。</p>
+
+<p><img src="/img/Simple_6/32.png" alt="img" /></p>
+
+<p>优化措施后有以下效果</p>
+
+<ul>
+  <li>减小图片下载量，加快加载速度</li>
+  <li>内存平均水平显著降低</li>
+  <li>磁盘缓存，网络图片无需重复下载</li>
+</ul>
+
+<h3 id="5依然存在的问题">5、依然存在的问题</h3>
+
+<ul>
+  <li><strong>峰值内存高依然存在</strong>：原因：先直接decode 原始的image，此时消耗的内存就与图片原始尺寸成正比, 而后再做rasterize时这个时候的内存消耗大小才与设置大小成正比，设置cacheWidth和cacheHeight没有解决峰值问题。</li>
+  <li><strong>cacheWidth</strong>和<strong>cacheHeight</strong>设置问题，与原图宽高⽐例不⼀致易出现图⽚模糊、变形(可以等图片下载之后再去设置，这需要hook，去改动framework）；</li>
+  <li><strong>图片解码无法复用：</strong>dispose之后Flutter 会立刻回收解码后的内存，即 Flutter 仅对图片的原始压缩数据进行存储，并不缓存 pixel buffer，用空间换时间；</li>
+  <li><strong>磁盘缓存的效率问题：</strong>由于我们的磁盘缓存文件是通过Channel来通信，而Flutter定义的channel机制，从本质上说是提供了一个消息传送机制，用于图像等数据的传输必然引起内存和CPU的巨大消耗。无论是用ffi还是普通channel传输，都会导致FPS下降；</li>
+</ul>
+
+<p>在Flutter 端做的优化目前看来并没有能支撑我们解决图片引起的OOM问题，对于内存峰值和内存及时释放，Flutter 端都无法给出完美的方案。</p>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/ios/2021/07/15/ocCheck/" data-toggle="tooltip" data-placement="top" title="Objective-C代码规范检测">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/%E6%95%B0%E6%8D%AE%E5%BA%93/2023/01/10/cache/" data-toggle="tooltip" data-placement="top" title="数据库事务之MVCC机制">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2024</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

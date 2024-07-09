@@ -1,4 +1,250 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2022-05-30T15:59:13+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">Objective-C代码规范检测</title><link href="http://www.helloted.com/ios/2021/07/15/ocCheck/" rel="alternate" type="text/html" title="Objective-C代码规范检测" /><published>2021-07-15T20:00:00+08:00</published><updated>2021-07-15T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2021/07/15/ocCheck</id><content type="html" xml:base="http://www.helloted.com/ios/2021/07/15/ocCheck/">&lt;h4 id=&quot;1抽象语法树ast&quot;&gt;1、抽象语法树AST&lt;/h4&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2024-07-09T19:44:28+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">数据库事务之MVCC机制</title><link href="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2023/01/10/cache/" rel="alternate" type="text/html" title="数据库事务之MVCC机制" /><published>2023-01-10T20:00:00+08:00</published><updated>2023-01-10T20:00:00+08:00</updated><id>http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2023/01/10/cache</id><content type="html" xml:base="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2023/01/10/cache/">&lt;h4 id=&quot;1并发事务的四种场景&quot;&gt;&lt;strong&gt;1、并发事务的四种场景&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;并发事务中又会分为四种情况，分别是读-读、写-写、读-写、写-读，这四种情况分别对应并发事务执行时的四种场景。&lt;/p&gt;
+
+&lt;h5 id=&quot;11读-读场景&quot;&gt;1.1、读-读场景&lt;/h5&gt;
+
+&lt;p&gt;读-读场景即是指多个事务/线程在一起读取一个相同的数据，比如事务T1正在读取ID=88的行记录，事务T2也在读取这条记录，两个事务之间是并发执行的。读-读场景不存在任何数据竞争问题，不需要并发控制。&lt;/p&gt;
+
+&lt;h5 id=&quot;12写-写场景&quot;&gt;1.2、写-写场景&lt;/h5&gt;
+
+&lt;p&gt;写-写场景也比较简单，也就是指多个事务之间一起对同一数据进行写操作，比如事务T1对ID=88的行记录做修改操作，事务T2则对这条数据做删除操作，事务T1提交事务后想查询看一下，结果连这条数据都不见了，这也是所谓的脏写问题，也被称为更新覆盖问题，对于这个问题在所有数据库、所有隔离级别中都是零容忍的存在，最低的隔离级别也要解决这个问题。&lt;/p&gt;
+
+&lt;h5 id=&quot;13读-写写-读场景&quot;&gt;1.3、读-写、写-读场景&lt;/h5&gt;
+
+&lt;p&gt;读-写、写-读实际上从宏观角度来看，可以理解成同一种类型的操作，但从微观角度而言则是两种不同的情况，&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;读-写是指一个事务先开始读，然后另一个事务则过来执行写操作，&lt;/li&gt;
+  &lt;li&gt;写-读则相反，主要是读、写发生的前后顺序的区别。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;并发事务中同时存在读、写两类操作时，这是最容易出问题的场景，脏读、不可重复读、幻读都出自于这种场景中，当有一个事务在做写操作时，读的事务中就有可能出现这一系列问题，因此数据库才会引入各种机制解决。&lt;/p&gt;
+
+&lt;h5 id=&quot;14各场景下解决问题的方案&quot;&gt;1.4、各场景下解决问题的方案&lt;/h5&gt;
+
+&lt;p&gt;在《锁机制》中，对于写-写、读-写、写-读这三类场景，都是利用加锁的方案确保线程安全，但是，加锁会导致部分事务串行化，因此效率会下降，而MVCC机制的诞生则解决了这个问题。写-写场景必须要加锁才能保障安全，因此先将该场景排除在外。&lt;/p&gt;
+
+&lt;p&gt;基于读-写并存的场景，推出了MVCC机制，在线程安全问题和加锁串行化之间做了一定取舍，让两者之间达到了很好的平衡，即防止了脏读、不可重复读及幻读问题的出现，又无需对并发读-写事务加锁处理。&lt;/p&gt;
+
+&lt;h5 id=&quot;总结&quot;&gt;总结&lt;/h5&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;读-读：无需并发控制&lt;/li&gt;
+  &lt;li&gt;写-写：必须加锁执行串行&lt;/li&gt;
+  &lt;li&gt;读-写、写-读：可以引入MVCC机制，在不加锁的情况下，保证并发安全，提升效率&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;2mvcc是什么&quot;&gt;&lt;strong&gt;2、MVCC是什么？&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;MVCC，全称是多版本并发控制（Multi-Version Concurrency Control），是一种常用的并发控制方法。它通过在每个读取的数据行中创建数据行的“快照” —— 即该行在事务处理开始时的精确副本，来解决读-写冲突的问题。这样，每个事务读取的都是一致的行数据快照，而不是最新的行版本。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;MVCC的目的&lt;/strong&gt;：用更好的方式去处理读-写冲突，做到即使有读写冲突时，也能做到不加锁，非阻塞并发读。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;MVCC如何保证并发安全&lt;/strong&gt;：MVCC通过对数据进行多版本保存，根据比较版本号来控制数据是否展示，从而达到读取数据时无需加锁就可以实现事务的隔离性。&lt;/p&gt;
+
+&lt;p&gt;MySQL 是怎么解决幻读的？&lt;/p&gt;
+
+&lt;p&gt;MySQL InnoDB 引擎的默认隔离级别虽然是「可重复读」，但是它很大程度上避免幻读现象（并不是完全解决了，解决的方案有两种：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;针对&lt;strong&gt;快照读&lt;/strong&gt;（普通 select 语句），是&lt;strong&gt;通过 MVCC 方式解决了幻读&lt;/strong&gt;，因为可重复读隔离级别下，事务执行过程中看到的数据，一直跟这个事务启动时看到的数据是一致的，即使中途有其他事务插入了一条数据，是查询不出来这条数据的，所以就很好了避免幻读问题。&lt;/li&gt;
+  &lt;li&gt;针对&lt;strong&gt;当前读&lt;/strong&gt;（select … for update 等语句），是&lt;strong&gt;通过 next-key lock（记录锁+间隙锁）方式解决了幻读&lt;/strong&gt;，因为当执行 select … for update 语句的时候，会加上 next-key lock，如果有其他事务在 next-key lock 锁范围内插入了一条记录，那么这个插入语句就会被阻塞，无法成功插入，所以就很好了避免幻读问题。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;3mvcc的实现原理&quot;&gt;&lt;strong&gt;3、MVCC的实现原理&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;MVCC的实现原理主要包括以下几个步骤：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;版本号&lt;/strong&gt;：每个事务开始时，都会被分配一个唯一的事务ID，这个ID同时也是该事务的版本号。对于每一行数据，都会有两个版本号，
+    &lt;ul&gt;
+      &lt;li&gt;一个是创建版本号，表示创建这行数据的事务的版本号；&lt;/li&gt;
+      &lt;li&gt;另一个是删除版本号，表示删除这行数据的事务的版本号。初始时，删除版本号为空。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;读操作&lt;/strong&gt;：当一个事务要读取一行数据时，会检查这行数据的创建版本号和删除版本号。只有当创建版本号小于等于当前事务的版本号，并且删除版本号要么为空，要么大于当前事务的版本号，这行数据才会被当前事务读取。这样可以确保每个事务都是在一致的快照上进行操作。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;写操作&lt;/strong&gt;：当一个事务要修改一行数据时，不会直接覆盖原数据，而是会复制一份新的数据行，然后修改这份新的数据行。新的数据行的创建版本号为当前事务的版本号，删除版本号为空。同时，原数据行的删除版本号会被设置为当前事务的版本号。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;提交事务&lt;/strong&gt;：当一个事务提交时，所有由该事务创建的新数据行的删除版本号都会被设置为无穷大，表示这些数据行现在是可见的。同时，所有被该事务删除的原数据行的删除版本号会被设置为当前事务的版本号，表示这些数据行现在是不可见的。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;垃圾回收&lt;/strong&gt;：为了防止数据版本过多导致的性能问题，需要定期进行垃圾回收。垃圾回收的原则是，只有当没有任何事务会访问到某个数据版本时，这个数据版本才会被回收。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;MVCC的优点是读操作不会被写操作阻塞，写操作也不会被读操作阻塞，大大提高了数据库的并发性能。但是，MVCC也有一些缺点，比如版本链过长会影响读性能，以及需要定期进行垃圾回收等。&lt;/p&gt;
+
+&lt;h5 id=&quot;如何实现&quot;&gt;如何实现？&lt;/h5&gt;
+
+&lt;p&gt;MVCC机制主要通过隐藏字段、Undo-log日志、ReadView这三个东西实现的，其中的多版本主要依赖Undo-log日志来实现，而并发控制则通过表的隐藏字段+ReadView快照来实现。&lt;/p&gt;
+
+&lt;h5 id=&quot;31--undo-log&quot;&gt;3.1  undo log&lt;/h5&gt;
+
+&lt;p&gt;Undo log主要用于事务回滚时恢复原来的数据。mysql在执行sql时，会将一天逻辑相反的日志保存到undo log中。因此，undo log中记录的也是逻辑日志。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;执行Insert语句时，会在undo log日志中记录本次插入的主键id。等事务回滚时，delete删除此id。&lt;/li&gt;
+  &lt;li&gt;执行update语句时，MySQL会将修改前的数据保存在undo log中。等事务回滚时，再执行一次update，得到原来的数据。&lt;/li&gt;
+  &lt;li&gt;执行delete语句时，会在undo log中保存删除前的数据。等事务回滚时，再执行insert，插入原来的数据。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;ReadView要通过undo log链条找到合适自己读取的记录。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;3.2 隐藏字段&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;在数据库的每行上，除了存放真实的数据以外，还存在3个隐藏的列：row_id、trx_id和roll_pointerrow_id，&lt;/p&gt;
+
+&lt;p&gt;row_id，行号：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;如果当前表有整数类型的主键，那么row_id的值就是主键的值&lt;/li&gt;
+  &lt;li&gt;如果没有整数类型的主键，则MySQL会按照字段的顺序选择一个非空的整数类型的唯一索引为row_id&lt;/li&gt;
+  &lt;li&gt;如果都没有找到，则会创建一个自动增长的整数作为row_id&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;trx_id，是哪个事务记录的这条log：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;当一个事务开始执行前，MySQL就会为这个事务分配一个全局自增的事务id。&lt;/li&gt;
+  &lt;li&gt;之后该事务对当前进行的增、改、删除等操作时，都会将自己的事务ID记录到trx_id中，表明是哪个事务修改的。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;roll_pointer，回滚指针：undo日志中指向修改之前的的一行记录。当一直有事务对该行改动时，就会一直生成undo log，最终将会形成undo log版本链。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;3.3&lt;/strong&gt; &lt;strong&gt;ReadView&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;ReadView可以被理解为一个过滤器或者说是一个视图，它定义了在当前事务中，哪些数据版本是可见的，哪些数据版本是不可见的。&lt;/p&gt;
+
+&lt;p&gt;具体来说，ReadView包含以下几个重要的信息：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;creator_trx_id：当前事务id&lt;/li&gt;
+  &lt;li&gt;m_ids：这是一个列表，包含了在当前事务开始时，所有活跃（即还未提交）的事务的ID。&lt;/li&gt;
+  &lt;li&gt;min_trx_id：这是m_ids&lt;strong&gt;列表中&lt;/strong&gt;的最小事务ID。这个ID表示了在当前事务开始时，系统中最早开始的尚未提交的事务ID。&lt;/li&gt;
+  &lt;li&gt;max_trx_id：表示生成readview时，系统中应该分配给下一个事务的id值&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;4mvcc如何是运作的&quot;&gt;4、MVCC如何是运作的&lt;/h4&gt;
+
+&lt;p&gt;根据undo log的链中的每一条trx_id与min_trx_id和max_trx_id进行对比：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;如果小于min_trx_id，说明这个trx_id的log记录就已经事务已经提交过了，完成的事务，创建本事务之前就已经存在的日志，当然可以读。&lt;/li&gt;
+  &lt;li&gt;如果大于max_trx_id说明这个版本的数据log是在创建RV之后生成的，不可读。&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;如果是在这之间，查看trx_id是否包含m_ids列表之中：&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;p&gt;不包含说明创建RV之前这个事务已经被提交了，那么是可读的。&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;包含说明创建RV的时候，还是活跃（没提交）事务。那么是不可读的，有可能脏读；到了这里说明这条数据的变更版本在RV之内，则要查看creator_trx_id与trx_id是否一致：&lt;/p&gt;
+        &lt;ul&gt;
+          &lt;li&gt;一致说明就是当前事务创建的；允许使用；&lt;/li&gt;
+          &lt;li&gt;否则说明是当前RV的其他事务操作的，不能使用;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h5 id=&quot;41-可重复读是如何工作的&quot;&gt;&lt;strong&gt;4.1 可重复读是如何工作的？&lt;/strong&gt;&lt;/h5&gt;
+
+&lt;p&gt;一旦创建是不可变的，即便其他事务提交了，也不会影响当前事务创建的ReadView，你可以理解为一个副本快照。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;4.2 读已提交是如何工作的？&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;读已提交隔离级别是在每次读取数据时，都会生成一个新的Read View。&lt;/p&gt;</content><author><name>Ted</name></author><category term="数据库" /><summary type="html">1、并发事务的四种场景</summary></entry><entry><title type="html">外接纹理显示图片1：问题篇</title><link href="http://www.helloted.com/flutter/2022/06/09/texture_1/" rel="alternate" type="text/html" title="外接纹理显示图片1：问题篇" /><published>2022-06-09T20:00:00+08:00</published><updated>2022-06-09T20:00:00+08:00</updated><id>http://www.helloted.com/flutter/2022/06/09/texture_1</id><content type="html" xml:base="http://www.helloted.com/flutter/2022/06/09/texture_1/">&lt;h3 id=&quot;1flutter列表中多图加载的问题&quot;&gt;1、Flutter列表中多图加载的问题&lt;/h3&gt;
+
+&lt;p&gt;在社交或者资讯类App中，经常会使用到Feeds流页面，Feeds流页面的列表一般结构繁杂，单行资讯内就可能有多张图片；&lt;/p&gt;
+
+&lt;div align=&quot;center&quot;&gt;
+&lt;img src=&quot;/img/Simple_6/28.png&quot; alt=&quot;Image&quot; align=&quot;middle&quot; style=&quot;zoom:30%;&quot; /&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Flutter 通过 Image.asset，Image.file，Image.network 等方法创建一个 Image Widget 来加载显示本地或者网络图片。&lt;/p&gt;
+
+&lt;p&gt;而使用Image控件加载多图，会出现一些问题&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;内存过载&lt;/strong&gt;：列表中图片过多时，内存占用很轻松的飙升到了七八百MB，如果手机的配置不够，很可能就会导致页面空白甚至是Crash；&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;内存峰值高&lt;/strong&gt;：图片加载的过程中，加载前期阶段会内存峰值很高；&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;没有磁盘缓存&lt;/strong&gt;：Flutter原生的图片缓存机制，缓存到的是内存中，没有磁盘缓存，每次重新打开APP或者缓存被清理都会再次进行网络请求。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_6/29.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;2flutter图片加载过程&quot;&gt;2、Flutter图片加载过程&lt;/h3&gt;
+
+&lt;p&gt;Flutter中图片主要有4个类：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Image&lt;/strong&gt; &lt;strong&gt;：&lt;/strong&gt;显示图⽚的Widget，通过ImageState管理ImageProvider的⽣命周期；&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;ImageProvider&lt;/strong&gt;：图⽚的抽象概念（如NetworkImage、FileImage等），约定图⽚唯⼀性(key)、获取图⽚字节数据(load)，创建ImageStream⽤于监听结果；&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;ImageStream&lt;/strong&gt;：图⽚的加载对象，通过 ImageStreamCompleter 最后会返回⼀个 ImageInfo,⽽ImageInfo 中的ui.Image是RenderObject的⽬标绘制对象；&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;ImageCache&lt;/strong&gt;：缓存单例PaintingBinding.instance.imageCache，只用于内存缓存；&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;加载流程：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Image 通过 ImageProvider 得到 ImageStream 对象&lt;/li&gt;
+  &lt;li&gt;_ImageState 利用 ImageStream 添加监听，等待图片数据&lt;/li&gt;
+  &lt;li&gt;.ImageProvider 通过 load 方法去加载并返回 ImageStreamCompleter 对象&lt;/li&gt;
+  &lt;li&gt;ImageStream 会关联 ImageStreamCompleter&lt;/li&gt;
+  &lt;li&gt;ImageStreamCompleter 会通过 http 下载图片，再经过 PaintingBinding 编码转化后，得到 ui.Codec 可绘制对象，并封装成 ImageInfo 返回&lt;/li&gt;
+  &lt;li&gt;ImageInfo 回调到 ImageStream 的监听，设置给 _ImageState build 的 RawImage 对象。&lt;/li&gt;
+  &lt;li&gt;RawImage 的 RenderImage 通过 paint 绘制 ImageInfo 中的 ui.Codec&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_6/30.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;3内存大的原因&quot;&gt;3、内存大的原因&lt;/h3&gt;
+
+&lt;p&gt;图片要显示在移动终端一般会经历加载、解码和渲染三个步骤，其中解码阶段是内存消耗最多的过程，解码是一个计算量较大的任务，主要需要CPU来执行；并且解码出来的图片所占内存与图片的宽高正相关，而与图片原来的大小无关。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_6/31.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;我们以Image Widget为例，Image Widget 要显示在屏幕上的时候，需要以Image作为数据源，Image持有的数据DataBuffer是未解码的压缩数据，能节省较多的内存和加快存储。&lt;/p&gt;
+
+&lt;p&gt;当DataBuffer数据被赋值给Image Widget时，图像数据会被解码为Image Buffer，变成代表RGB的颜色数据。&lt;/p&gt;
+
+&lt;p&gt;解压图片需要的内存算法为：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;图⽚所占内存⼤⼩ = 图⽚⻓度（像素）* 图⽚宽度（像素）* ⼀个像素所占内存空间4字节(RGBA)。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;当我们业务场景中需要加载一张游戏图片（3000*4000像素大小），解码内存大小占用为 45.77MB。&lt;/p&gt;
+
+&lt;h3 id=&quot;4优化措施&quot;&gt;4、优化措施&lt;/h3&gt;
+
+&lt;p&gt;根据以上的内存原因，我们可以总结一些在Flutter原生上的优化措施&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;优化下载项&lt;/strong&gt;：利用云端压缩缩略图功能，在云端压缩切割图片&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;降低采样率：&lt;/strong&gt;设置合适的采样大小，减小解码内存大小。追踪源码，我们发现，cacheWidth和cacheHeight能够影响到ImageDescriptor，可以降低内存&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;磁盘缓存&lt;/strong&gt;：通过Chanel桥接，将下载好的图片进行磁盘缓存，Flutter侧进行图片加载的时候，如果内存没有命中，就去磁盘缓存中进行二次搜索。如果都没有命中才会走网络请求。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_6/32.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;优化措施后有以下效果&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;减小图片下载量，加快加载速度&lt;/li&gt;
+  &lt;li&gt;内存平均水平显著降低&lt;/li&gt;
+  &lt;li&gt;磁盘缓存，网络图片无需重复下载&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;5依然存在的问题&quot;&gt;5、依然存在的问题&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;峰值内存高依然存在&lt;/strong&gt;：原因：先直接decode 原始的image，此时消耗的内存就与图片原始尺寸成正比, 而后再做rasterize时这个时候的内存消耗大小才与设置大小成正比，设置cacheWidth和cacheHeight没有解决峰值问题。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;cacheWidth&lt;/strong&gt;和&lt;strong&gt;cacheHeight&lt;/strong&gt;设置问题，与原图宽高⽐例不⼀致易出现图⽚模糊、变形(可以等图片下载之后再去设置，这需要hook，去改动framework）；&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;图片解码无法复用：&lt;/strong&gt;dispose之后Flutter 会立刻回收解码后的内存，即 Flutter 仅对图片的原始压缩数据进行存储，并不缓存 pixel buffer，用空间换时间；&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;磁盘缓存的效率问题：&lt;/strong&gt;由于我们的磁盘缓存文件是通过Channel来通信，而Flutter定义的channel机制，从本质上说是提供了一个消息传送机制，用于图像等数据的传输必然引起内存和CPU的巨大消耗。无论是用ffi还是普通channel传输，都会导致FPS下降；&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;在Flutter 端做的优化目前看来并没有能支撑我们解决图片引起的OOM问题，对于内存峰值和内存及时释放，Flutter 端都无法给出完美的方案。&lt;/p&gt;</content><author><name>Ted</name></author><category term="Flutter" /><summary type="html">1、Flutter列表中多图加载的问题</summary></entry><entry><title type="html">Objective-C代码规范检测</title><link href="http://www.helloted.com/ios/2021/07/15/ocCheck/" rel="alternate" type="text/html" title="Objective-C代码规范检测" /><published>2021-07-15T20:00:00+08:00</published><updated>2021-07-15T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2021/07/15/ocCheck</id><content type="html" xml:base="http://www.helloted.com/ios/2021/07/15/ocCheck/">&lt;h4 id=&quot;1抽象语法树ast&quot;&gt;1、抽象语法树AST&lt;/h4&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/Simple_2/30.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 
@@ -1968,314 +2214,4 @@ $ cmake -G Xcode ../llvm
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;我们需要使用汇编指令对寄存器进行存取和执行，stp存储原参数，blr调用执行，ldp加载指令。这个过程与OC方法的Method-Swilling类似。最终可以达到hook_objc_msgSend函数与原来的objc_msgsend函数进行调换的目的。&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">0、Clang插桩原理</summary></entry><entry><title type="html">LLVM编译过程</title><link href="http://www.helloted.com/ios/2020/06/03/llvm-clang/" rel="alternate" type="text/html" title="LLVM编译过程" /><published>2020-06-03T20:00:00+08:00</published><updated>2020-06-03T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2020/06/03/llvm-clang</id><content type="html" xml:base="http://www.helloted.com/ios/2020/06/03/llvm-clang/">&lt;h4 id=&quot;1编译以及llvm简介&quot;&gt;1、编译以及LLVM简介&lt;/h4&gt;
-
-&lt;p&gt;编译器的作用便是把我们的高级编程语言(Objective-C)通过一系列的操作转化成可被计算机执行的机器语言(MachineCode)。&lt;/p&gt;
-
-&lt;p&gt;经典的&lt;strong&gt;三段式&lt;/strong&gt;设计（three phase design）：前端(Frontend)–优化器(Optimizer)–后端(Backend)&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/27.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;前端&lt;/strong&gt;：负责分析源代码，可以检查语法级错误，并构建针对该语言的抽象语法树（AST），生成中间代码(Intermediate Representation )，在这个过程中，会进行类型检查，如果发现错误或者警告会标注出来在哪一行。&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;优化&lt;/strong&gt;：此时进行与机器类型无关的优化&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;后端&lt;/strong&gt;：根据不同的机器和架构，进行优化并且生成不同的机器码&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;这种三段式架构的优势在于：假如你需要增加一种语言，只需要增加一种前端；假如你需要增加一种处理器架构，也只需要增加一种后端；通过共享优化器的中转，其他的地方都不需要改动。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/28.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;2llvm&quot;&gt;2、LLVM&lt;/h4&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;LLVM 是一个开源的，模块化和可重用的编译器和工具链技术的集合，或者说是一个编译器套件。&lt;/p&gt;
-
-  &lt;p&gt;可以使用 LLVM 来编译 Kotlin，Ruby，Python，Haskell，Java，D，PHP，Pure，Lua 和许多其他语言&lt;/p&gt;
-
-  &lt;p&gt;LLVM 核心库还提供一个优化器，对流行的 CPU 做代码生成支持。&lt;/p&gt;
-
-  &lt;p&gt;LLVM 同时支持 AOT 预先编译和 JIT 即时编译&lt;/p&gt;
-
-  &lt;p&gt;2012年，LLVM 获得美国计算机学会 ACM 的软件系统大奖，和 UNIX，WWW，TCP/IP，Tex，JAVA 等齐名。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;LLVM的中间代码LLVM IR 的三种格式：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;内存中的编译中间语言&lt;/li&gt;
-  &lt;li&gt;硬盘上存储的可读中间格式（以 &lt;code class=&quot;highlighter-rouge&quot;&gt;.ll&lt;/code&gt; 结尾）&lt;/li&gt;
-  &lt;li&gt;硬盘上存储的二进制中间语言（以 &lt;code class=&quot;highlighter-rouge&quot;&gt;.bc&lt;/code&gt; 结尾）&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;这三种中间格式是完全等价的。&lt;/p&gt;
-
-&lt;p&gt;iOS中的Bitcode 第三种，即存储在磁盘上的二进制文件（以 &lt;code class=&quot;highlighter-rouge&quot;&gt;.bc&lt;/code&gt; 结尾）。&lt;/p&gt;
-
-&lt;p&gt;从 Xcode 7 开始，Apple 支持在提交 App 编译产物的同时提交 App 的 Bitcode (非强制)，并且之后对提交了 Bitcode 的 App 都单独进行了云端编译打包。也就是说，即便在提交时已经将本地编译好的 ipa 提交到 App Store，Apple 最终还是会使用 Bitcode 在云端再次打包，并且最终用户下载到手机上的版本也是由 Apple 在云端编译出来的版本，而非开发人员在本地编译的版本。&lt;/p&gt;
-
-&lt;p&gt;Apple 之所以这么做，一是因为 Apple 可以在云端编译过程中做一些额外的针对性优化工作，而这些额外的优化是本地环境所无法实现的。二是 Apple 可以为安装 App 的目标设备进行二进制优化，减少安装包的下载大小。&lt;/p&gt;
-
-&lt;p&gt;由于 Bitcode 是无关设备架构的，它可以被转化为任何被支持的 CPU 架构，包括现在还没被发明的 CPU 架构。以后如果苹果新出了一款新手机并且 CPU 也是全新设计的，在苹果后台服务器一样可以从这个 App 的 Bitcode 开始编译转化为新 CPU 上的可执行程序，可供新手机用户下载运行这个 App ，而无需开发人员重新在本地编译打包上传。&lt;/p&gt;
-
-&lt;h4 id=&quot;3xcode编译器发展过程&quot;&gt;3、Xcode编译器发展过程&lt;/h4&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Clang 是 LLVM 的子项目，是 C、C++ 和 Objective-C 编译器，目标是替代传统编译器 GCC 。Clang 在整个 Objective-C 编译过程中扮演了编译器前端的角色，同时也参与到了 Swift 编译过程中的 Objective-C API 映射阶段。&lt;/p&gt;
-
-  &lt;p&gt;Clang 的主要功能是输出代码对应的抽象语法树（ AST ），针对用户发生的编译错误准确地给出建议，并将代码编译成 LLVM IR。&lt;/p&gt;
-
-  &lt;p&gt;Clang 的特点是编译速度快，模块化，代码简单易懂，诊断信息可读性强，占用内存小以及容易扩展和重用等。&lt;/p&gt;
-
-  &lt;p&gt;我们以 Xcode 为例，Clang 编译 Objective-C 代码的速度是 Xcode 5 版本前使用的 GCC 的3倍，其生成的 AST 所耗用掉的内存仅仅是 GCC 的五分之一左右。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/38.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Xcode3 以前： GCC；&lt;/li&gt;
-  &lt;li&gt;Xcode3：增加LLVM，GCC(前端) + LLVM(后端)；&lt;/li&gt;
-  &lt;li&gt;Xcode4.2：出现Clang - LLVM 3.0成为默认编译器；&lt;/li&gt;
-  &lt;li&gt;Xcode4.6：LLVM 升级到4.2版本；&lt;/li&gt;
-  &lt;li&gt;Xcode5：GCC被废弃，新的编译器是LLVM 5.0，从GCC过渡到Clang-LLVM的时代正式完成，&lt;code class=&quot;highlighter-rouge&quot;&gt;Objective-C&lt;/code&gt;与&lt;code class=&quot;highlighter-rouge&quot;&gt;swift&lt;/code&gt;都采用&lt;code class=&quot;highlighter-rouge&quot;&gt;Clang&lt;/code&gt;作为编译器前端&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;4clang-llvm架构&quot;&gt;4、Clang-LLVM架构&lt;/h4&gt;
-
-&lt;p&gt;Clang-LLVM架构中，Clang作为前端生成中间代码IR，LLVM优化器进行优化，LLVM机器码生成器生成不同的机器码&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/29.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;再具体一些的话：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/31.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;5xcode中的编译过程&quot;&gt;5、Xcode中的编译过程&lt;/h4&gt;
-
-&lt;p&gt;具体来说，在&lt;code class=&quot;highlighter-rouge&quot;&gt;Xcode&lt;/code&gt;按下&lt;code class=&quot;highlighter-rouge&quot;&gt;CMD+B&lt;/code&gt;之后，一个源文件的编译过程如下&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/30.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;如上图所示，&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;&lt;strong&gt;预处理(Pre-process)&lt;/strong&gt;：他的主要工作就是将宏替换，删除注释展开头文件，生成.i文件。&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;词法解析(Lexical Analysis)&lt;/strong&gt;：将代码切成一个个 token，比如大小括号，等于号还有字符串等。是计算机科学中将字符序列转换为标记序列的过程。这一步把源文件中的代码转化为特殊的标记流，源码被分割成一个一个的字符和单词，在行尾Loc中都标记出了源码所在的对应源文件和具体行数，方便在报错时定位问题。&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;语义分析(Semantic Analysis)&lt;/strong&gt;：验证语法是否正确，然后将所有节点组成抽象语法树 AST 。由 Clang 中 Parser 和 Sema 配合完成。&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;静态分析(Static Analysis)&lt;/strong&gt;：静态分析会对代码进行错误检查，如出现方法被调用但是未定义、定义但是未使用的变量等，以此提高代码质量。&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;中间代码生成(Code Generation)&lt;/strong&gt;：生成中间代码 IR，CodeGen 会负责将语法树自顶向下遍历逐步翻译成 LLVM IR，IR 是编译过程的前端的输出，后端的输入。&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;优化(Optimize)&lt;/strong&gt;：LLVM 会去做些优化工作，在 Xcode 的编译设置里也可以设置优化级别-O1、-O3、-Os…还可以写些自己的 Pass，官方有比较完整的 Pass 教程： &lt;a href=&quot;http://llvm.org/docs/WritingAnLLVMPass.html&quot;&gt;Writing an LLVM Pass&lt;/a&gt; 。如果开启了Bitcode苹果会做进一步的优化，有新的后端架构还是可以用这份优化过的Bitcode去生成。可以在这一层自定义Pass对IR代码做代码混淆&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;生成目标文件(Assemble)-后端&lt;/strong&gt;：在这一阶段，也是汇编阶段，汇编器将上一步生成的可读的汇编代码转化为机器代码。最终产物就是 以 .o 结尾的目标文件。使用Xcode构建的程序会在DerivedData目录中找到这个文件。。&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;链接(Link)&lt;/strong&gt;：上个阶段生成的目标文件和引用的静态库链接起来，最终生成可执行文件(Mach-O 类型),链接器解决了目标文件和库之间的链接。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;其中，12345属于前端，6属于优化，78属于后端。&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">1、编译以及LLVM简介</summary></entry><entry><title type="html">gRPC &amp;amp; Protocol Buffers</title><link href="http://www.helloted.com/others/2020/05/01/protocolbuffers/" rel="alternate" type="text/html" title="gRPC &amp; Protocol Buffers" /><published>2020-05-01T20:00:00+08:00</published><updated>2020-05-01T20:00:00+08:00</updated><id>http://www.helloted.com/others/2020/05/01/protocolbuffers</id><content type="html" xml:base="http://www.helloted.com/others/2020/05/01/protocolbuffers/">&lt;h4 id=&quot;0grpc&quot;&gt;0、gRPC&lt;/h4&gt;
-
-&lt;p&gt;gRPC 是一个高性能、开源、通用的RPC框架，由Google推出，基于HTTP/2协议标准设计开发，默认采用Protocol Buffers数据序列化协议，支持多种开发语言。gRPC提供了一种简单的方法来精确的定义服务，并且为客户端和服务端自动生成可靠的功能库。&lt;/p&gt;
-
-&lt;p&gt;gRPC 提供 protocol buffer 编译插件，能够从一个服务定义的 .proto 文件生成客户端和服务端代码。通常 gRPC 用户可以在服务端实现这些API，并从客户端调用它们。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;在服务侧，服务端实现服务接口，运行一个 gRPC 服务器来处理客户端调用。gRPC 底层架构会解码传入的请求，执行服务方法，编码服务应答。&lt;/li&gt;
-  &lt;li&gt;在客户侧，客户端有一个存根实现了服务端同样的方法。客户端可以在本地存根调用这些方法，用合适的 protocol buffer 消息类型封装这些参数— gRPC 来负责发送请求给服务端并返回服务端 protocol buffer 响应。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/34.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;gRPC 允许你定义四类服务方法：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;单项 RPC，即客户端发送一个请求给服务端，从服务端获取一个应答，就像一次普通的函数调用。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;服务端流式 RPC，即客户端发送一个请求给服务端，可获取一个数据流用来读取一系列消息。客户端从返回的数据流里一直读取直到没有更多消息为止。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;客户端流式 RPC，即客户端用提供的一个数据流写入并发送一系列消息给服务端。一旦客户端完成消息写入，就等待服务端读取这些消息并返回应答。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;双向流式 RPC，即两边都可以分别通过一个读写数据流来发送一系列消息。这两个数据流操作是相互独立的，所以客户端和服务端能按其希望的任意顺序读写，例如：服务端可以在写应答前等待所有的客户端消息，或者它可以先读一个消息再写一个消息，或者是读写相结合的其他方式。每个数据流里消息的顺序会被保持。&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;1protocol-buffers&quot;&gt;1、Protocol Buffers&lt;/h4&gt;
-
-&lt;p&gt;Google Protocol Buffer( 简称 Protobuf) ，Protocol Buffers 是一种轻便高效的结构化数据存储格式，可以用于结构化数据串行化，或者说序列化。它很适合做数据存储或 RPC 数据交换格式。可用于通讯协议、数据存储等领域的语言无关、平台无关、可扩展的序列化结构数据格式。&lt;/p&gt;
-
-&lt;p&gt;Protobuf实际是一套类似Json或者XML的数据传输格式和规范，用于不同应用或进程之间进行通信时使用。通信时所传递的信息是通过Protobuf定义的message数据结构进行打包，然后编译成二进制的码流再进行传输或者存储。&lt;/p&gt;
-
-&lt;p&gt;相比较而言，Protobuf有如下优点：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;序列化后体积很小:消息大小只需要XML的1/10 ~ 1/3&lt;/li&gt;
-  &lt;li&gt;解析速度快:解析速度比XML快20 ~ 100倍&lt;/li&gt;
-  &lt;li&gt;多语言支持&lt;/li&gt;
-  &lt;li&gt;更好的兼容性,Protobuf设计的一个原则就是要能够很好的支持向下或向上兼容&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;2protocol-buffers特点&quot;&gt;2、Protocol Buffers特点&lt;/h4&gt;
-
-&lt;div class=&quot;language-protobuf highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;message&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;SearchRequest&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;query&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-  &lt;span class=&quot;kt&quot;&gt;int32&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;page_number&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-  &lt;span class=&quot;kt&quot;&gt;int32&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;result_per_page&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;序列化数据时，不序列化key的name，使用key的编号替代，减小数据。如上面的数据在序列化时query ，page_number以及result_per_page的key不会参与，由编号1,2,3替代，这样在反序列的时候可以直接通过编号找到对应的key，这样做确实可以减小传输数据，但是编号一旦确定就不可更改；&lt;/li&gt;
-  &lt;li&gt;版本直接兼容：字段操作可以在无需重新部署程序的情况下更新数据结构
-    &lt;ul&gt;
-      &lt;li&gt;必须不可以改变已经存在的标签的数字&lt;/li&gt;
-      &lt;li&gt;必须不可以增加或删除必须(required)字段。&lt;/li&gt;
-      &lt;li&gt;可以删除可选(optional)或重复(repeated)字段。&lt;/li&gt;
-      &lt;li&gt;可以添加新的可选或重复字段，但是必须使用新的标签数字，必须是之前的字段所没有用过的。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;没有赋值的key，不参与序列化：序列化时只会对赋值的key进行序列化，没有赋值的不参与，在反序列化的时候直接给默认值即可；&lt;/li&gt;
-  &lt;li&gt;可变长度编码：主要缩减整数占用字节实现，例如java中int占用4个字节，但是大多数情况下，我们使用的数字都比较小，使用1个字节就够了，这就是可变长度编码完成的事；&lt;/li&gt;
-  &lt;li&gt;TLV： TLV全称为Tag_Length_Value，其中Tag表示后面数据的类型，Length不一定有，根据Tag的值确定，Value就是数据了，TLV表示数据时，减少分隔符的使用，更加紧凑；&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;3数据结构&quot;&gt;3、数据结构&lt;/h4&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/35.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Tag块并不是只表示数据类型，其中数据编号也在Tag块中，Tag的生成规则如下：Tag块的后3位表示数据类型，其他位表示数据编号。Tag中1-15编号只占用1个字节，所以确保编号中1-15为常用的，减少数据大小。&lt;/p&gt;
-
-&lt;p&gt;其中Length不一定有，依据Tag确定，例如数值类型的数据，使用VarInts不需要长度，就只有Tag-Value，string类型的数据就必须是Tag-Length-Value&lt;/p&gt;
-
-&lt;h4 id=&quot;4数据类型&quot;&gt;4、数据类型&lt;/h4&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;类型&lt;/th&gt;
-      &lt;th&gt;释义&lt;/th&gt;
-      &lt;th&gt;备注&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;0&lt;/td&gt;
-      &lt;td&gt;可变长度编码&lt;/td&gt;
-      &lt;td&gt;int32 int64 uint32 uint64 sint32 sint64 bool enum&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;1&lt;/td&gt;
-      &lt;td&gt;64位固定长度&lt;/td&gt;
-      &lt;td&gt;fixed64 sfixed64 double&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;2&lt;/td&gt;
-      &lt;td&gt;value 的长度&lt;/td&gt;
-      &lt;td&gt;string bytes message packed repeated fiels&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;3&lt;/td&gt;
-      &lt;td&gt;Start Group&lt;/td&gt;
-      &lt;td&gt;已废弃&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;4&lt;/td&gt;
-      &lt;td&gt;End Group&lt;/td&gt;
-      &lt;td&gt;已废弃&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;5&lt;/td&gt;
-      &lt;td&gt;32位长度&lt;/td&gt;
-      &lt;td&gt;fixed32 sfixed32 float&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;(field_number &amp;lt;&amp;lt; 3) | wire_type
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;低三位表示wire type，其他的位表示field number(编号)。&lt;/p&gt;
-
-&lt;h4 id=&quot;5varintszigzag&quot;&gt;5、VARInts/Zigzag&lt;/h4&gt;
-
-&lt;p&gt;int值一般都是固定的4字节，可表示的整数范围为-2^31——2^31-1，但是实际开发中用到的数字均比较小，会造成字节浪费。&lt;/p&gt;
-
-&lt;p&gt;Varints是protobuf的序列化整型数据的一种编码方式，它的优点是整型数据的值越小，编码后所用的字节数越小。&lt;/p&gt;
-
-&lt;p&gt;经过Varints编码后的数据，它的每一个字节8bit的高位代表一个标记位。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;如果标记位是1，则代表下一个字节仍然是当前整型数据的组成；&lt;/li&gt;
-  &lt;li&gt;如果标记位是0，则代表下一个字节就是下一个整型数据了。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;先看最简单的数值1，一个字节足以表示它，所以它的标记位置0：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;0000 0001
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;再看数值300，经过Varints编码后的序列：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1010 1100 0000 0010
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;换算的时候，从左到右，依次将每个字节的高位（标志位）去掉，Protocol Buffer是低位在前，转换后拼接&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	1010 1100 0000 0010
-	(去除标志位)
-→  010 1100  000 0010
-  (转换拼接)
-→  000 0010  010 1100
-	(进制)
-→	 300
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;可变长度编码唯一的缺点就是当数很大的时候int32需要占用5个字节，但是从统计学角度来说，一般不会有这么大的数。&lt;/p&gt;
-
-&lt;p&gt;对于负数的处理方式是不同的。如果用int32或者int64来编码一个负数的话，通常需要耗费10个字节来表示，因为负数在计算机中是以补码表示的，相当于一个数值很大的无符号数。&lt;/p&gt;
-
-&lt;p&gt;所以这个时候就需要用「有符号」的整型（sint32，sint64）来表示负数了，它们先使用&lt;a href=&quot;http://en.wikipedia.org/wiki/Zigzag&quot;&gt;ZigZag&lt;/a&gt;编码方式将负数转换为绝对值较小正数，再进行Varints编码。&lt;/p&gt;
-
-&lt;h4 id=&quot;6编码&quot;&gt;6、编码&lt;/h4&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;message Test1{    
-		required int32 id = 1;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;如果我们将number赋值为300，则Message进行编码序列化以后以16进制输出为&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;08 96 01
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;其中第一个字节08&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;0000 1000
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;wire type为0，field name为1。符合id的类型是int32，编码方式是Varints，field是1的这一情况。&lt;/p&gt;
-
-&lt;p&gt;12c 02则分别为1010 1100和0000 0010的16进制&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;message Test2
-{
-    required string str = 2;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;如果将str赋值为’testing’，然后把经过protobuf编码序列化后的数据以16进制的方式输出&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;12 07 74 65 73 74 69 6e 67
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;第一个字节0x12表示field name为2，wire type为2。第二个字节0x07表示数据长度为7，所以后面7个字节就是使用UTF8编码的testing。&lt;/p&gt;
-
-&lt;h4 id=&quot;7总结&quot;&gt;7、总结&lt;/h4&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Protocol Buffer 利用 varint 原理压缩数据以后，二进制数据非常紧凑，option 也算是压缩体积的一个举措。所以 pb 体积更小，如果选用它作为网络数据传输，势必相同数据，消耗的网络流量更少。但是并没有压缩到极限，float、double 浮点型都没有压缩。&lt;/li&gt;
-  &lt;li&gt;Protocol Buffer 比 JSON 和 XML 少了 {、}、: 这些符号，体积也减少一些。再加上 varint 压缩，gzip 压缩以后体积更小！&lt;/li&gt;
-  &lt;li&gt;Protocol Buffer 是 Tag - Value (Tag - Length - Value)的编码方式的实现，减少了分隔符的使用，数据存储更加紧凑。&lt;/li&gt;
-  &lt;li&gt;Protocol Buffer 另外一个核心价值在于提供了一套工具，一个编译工具，自动化生成 get/set 代码。简化了多语言交互的复杂度，使得编码解码工作有了生产力。&lt;/li&gt;
-  &lt;li&gt;Protocol Buffer 不是自我描述的，离开了数据描述 .proto 文件，就无法理解二进制数据流。这点即是优点，使数据具有一定的“加密性”，也是缺点，数据可读性极差。所以 Protocol Buffer 非常适合内部服务之间 RPC 调用和传递数据。&lt;/li&gt;
-  &lt;li&gt;Protocol Buffer 具有向后兼容的特性，更新数据结构以后，老版本依旧可以兼容，这也是 Protocol Buffer 诞生之初被寄予解决的问题。因为编译器对不识别的新增字段会跳过不处理。&lt;/li&gt;
-&lt;/ol&gt;</content><author><name>Ted</name></author><category term="Others" /><summary type="html">0、gRPC</summary></entry></feed>
+&lt;p&gt;我们需要使用汇编指令对寄存器进行存取和执行，stp存储原参数，blr调用执行，ldp加载指令。这个过程与OC方法的Method-Swilling类似。最终可以达到hook_objc_msgSend函数与原来的objc_msgsend函数进行调换的目的。&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">0、Clang插桩原理</summary></entry></feed>
