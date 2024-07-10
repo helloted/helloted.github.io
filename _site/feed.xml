@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2024-07-09T19:44:28+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">数据库事务之MVCC机制</title><link href="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2023/01/10/cache/" rel="alternate" type="text/html" title="数据库事务之MVCC机制" /><published>2023-01-10T20:00:00+08:00</published><updated>2023-01-10T20:00:00+08:00</updated><id>http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2023/01/10/cache</id><content type="html" xml:base="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2023/01/10/cache/">&lt;h4 id=&quot;1并发事务的四种场景&quot;&gt;&lt;strong&gt;1、并发事务的四种场景&lt;/strong&gt;&lt;/h4&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2024-07-10T19:17:17+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">数据库事务之MVCC机制</title><link href="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/10/10/cache/" rel="alternate" type="text/html" title="数据库事务之MVCC机制" /><published>2022-10-10T20:00:00+08:00</published><updated>2022-10-10T20:00:00+08:00</updated><id>http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/10/10/cache</id><content type="html" xml:base="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/10/10/cache/">&lt;h4 id=&quot;1并发事务的四种场景&quot;&gt;&lt;strong&gt;1、并发事务的四种场景&lt;/strong&gt;&lt;/h4&gt;
 
 &lt;p&gt;并发事务中又会分为四种情况，分别是读-读、写-写、读-写、写-读，这四种情况分别对应并发事务执行时的四种场景。&lt;/p&gt;
 
@@ -152,7 +152,168 @@
 
 &lt;p&gt;&lt;strong&gt;4.2 读已提交是如何工作的？&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;读已提交隔离级别是在每次读取数据时，都会生成一个新的Read View。&lt;/p&gt;</content><author><name>Ted</name></author><category term="数据库" /><summary type="html">1、并发事务的四种场景</summary></entry><entry><title type="html">外接纹理显示图片1：问题篇</title><link href="http://www.helloted.com/flutter/2022/06/09/texture_1/" rel="alternate" type="text/html" title="外接纹理显示图片1：问题篇" /><published>2022-06-09T20:00:00+08:00</published><updated>2022-06-09T20:00:00+08:00</updated><id>http://www.helloted.com/flutter/2022/06/09/texture_1</id><content type="html" xml:base="http://www.helloted.com/flutter/2022/06/09/texture_1/">&lt;h3 id=&quot;1flutter列表中多图加载的问题&quot;&gt;1、Flutter列表中多图加载的问题&lt;/h3&gt;
+&lt;p&gt;读已提交隔离级别是在每次读取数据时，都会生成一个新的Read View。&lt;/p&gt;</content><author><name>Ted</name></author><category term="数据库" /><summary type="html">1、并发事务的四种场景</summary></entry><entry><title type="html">数据库架构</title><link href="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/09/19/mysql/" rel="alternate" type="text/html" title="数据库架构" /><published>2022-09-19T20:00:00+08:00</published><updated>2022-09-19T20:00:00+08:00</updated><id>http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/09/19/mysql</id><content type="html" xml:base="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/09/19/mysql/">&lt;h3 id=&quot;一mysql架构&quot;&gt;一、MySQL架构&lt;/h3&gt;
+
+&lt;p&gt;MySQL 的架构共分为两层：&lt;strong&gt;Server 层、存储引擎层：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Server 层负责建立连接、分析和执行 SQL。MySQL 大多数的核心功能模块都在这实现，主要包括连接器，查询缓存、解析器、预处理器、优化器、执行器等。另外，所有的内置函数（如日期、时间、数学和加密函数等）和所有跨存储引擎的功能（如存储过程、触发器、视图等。）都在 Server 层实现。&lt;/li&gt;
+  &lt;li&gt;存储引擎层负责数据的存储和提取。支持 InnoDB、MyISAM、Memory 等多个存储引擎，不同的存储引擎共用一个 Server 层。现在最常用的存储引擎是 InnoDB，从 MySQL 5.5 版本开始， InnoDB 成为了 MySQL 的默认存储引擎。我们常说的索引数据结构，就是由存储引擎层实现的，不同的存储引擎支持的索引类型也不相同，比如 InnoDB 支持索引类型是 B+树 ，且是默认使用，也就是说在数据表中创建的主键索引和二级索引默认使用的是 B+ 树索引。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;执行一条 SQL 查询语句，期间发生了什么？&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;连接器：建立连接，管理连接、校验用户身份；&lt;/li&gt;
+  &lt;li&gt;查询缓存：查询语句如果命中查询缓存则直接返回，否则继续往下执行。MySQL 8.0 已删除该模块；&lt;/li&gt;
+  &lt;li&gt;解析 SQL，通过解析器对 SQL 查询语句进行词法分析、语法分析，然后构建语法树，方便后续模块读取表名、字段、语句类型；&lt;/li&gt;
+  &lt;li&gt;执行 SQL：执行 SQL 共有三个阶段：
+    &lt;ul&gt;
+      &lt;li&gt;预处理阶段：检查表或字段是否存在；将 select * 中的 * 符号扩展为表上的所有列。&lt;/li&gt;
+      &lt;li&gt;优化阶段：基于查询成本的考虑， 选择查询成本最小的执行计划；&lt;/li&gt;
+      &lt;li&gt;执行阶段：根据执行计划执行 SQL 查询语句，从存储引擎读取记录，返回给客户端；&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/53.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;1连接器&quot;&gt;&lt;strong&gt;1、连接器&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;MySQL 是基于 TCP 协议进行传输的。&lt;/p&gt;
+
+&lt;p&gt;连接器的工作：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;与客户端进行 TCP 三次握手建立连接；&lt;/li&gt;
+  &lt;li&gt;校验客户端的用户名和密码，如果用户名或密码不对，则会报错；&lt;/li&gt;
+  &lt;li&gt;如果用户名和密码都对了，会读取该用户的权限，然后后面的权限逻辑判断都基于此时读取到的权限；&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;如何查看 MySQL 服务被多少个客户端连接了？&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;可以执行 show processlist 命令进行查看。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;空闲连接会一直占用着吗？&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;MySQL 定义了空闲连接的最大空闲时长，由 wait_timeout 参数控制的，默认值是 8 小时（28880秒），如果空闲连接超过了这个时间，连接器就会自动将它断开。&lt;/p&gt;
+
+&lt;p&gt;手动断开空闲的连接，使用的是 kill connection + id 的命令。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;MySQL 的连接数有限制吗？&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;MySQL 服务支持的最大连接数由 max_connections 参数控制，比如我的 MySQL 服务默认是 151 个,超过这个值，系统就会拒绝接下来的连接请求，并报错提示“Too many connections”。&lt;/p&gt;
+
+&lt;p&gt;长连接和短连接、连接池&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;短连接&lt;/strong&gt;就是我们开发的应用程序需要访问数据库时候，需要建立数据连接，执行SQL操作，关闭连接。简单讲就是每一次操作数据库，都要执行一次上述操作。它的弊端就是：如果网络速度不是很理想的情况下，短连接的会消耗大量的系统资源，在生产环境中，业务很多的话，可能 1 秒内几千个连接，如果都是短连接，且 sql 处理慢的话，连接关闭不及时，那么资源耗尽速度可能发生在几分钟甚至几秒，所以我们系统不大可能一直是短连接。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;长连接&lt;/strong&gt;是指我们的程序和数据库连接之后，就一直打开，后面程序来访问相同数据库就复用该连接，使用长连接主要是考虑到减少短连接连接的开销，但是从服务器端来看，维持一个连接会占用服务器内存，如果所有程序都是长连接，肯定会有部分连接处于闲置状态，但是无论什么状态连接，都占用内存，这会造成服务器端的资源浪费，也显得不是很高效。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;连接池&lt;/strong&gt;，它是一个预先创建的连接缓冲池，考虑到某些数据进行连接之后，处理时间过长，而不想它闲置，允许给其他线程使用。一般现在的应用服务器都带有连接池组件，允许应用程序，客户端来连接，应用服务器维护着连接池的整个生命周期。数据库连接池技术的思想非常简单，将数据库连接作为对象存储在一个Vector对象中，一旦数据库连接建立后，不同的数据库访问请求就可以共享这些连接，这样，通过复用这些已经建立的数据库连接，可以克服无论长连接和短连接缺点，极大地节省系统资源和时间&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;怎么解决长连接占用内存的问题？&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;定期断开长连接。既然断开连接后就会释放连接占用的内存资源，那么我们可以定期断开长连接。&lt;/li&gt;
+  &lt;li&gt;客户端主动重置连接。&lt;/li&gt;
+  &lt;li&gt;连接池&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;2查询缓存&quot;&gt;&lt;strong&gt;2、查询缓存&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;MySQL 8.0 版本之后没有查询缓存这一步了。&lt;/p&gt;
+
+&lt;p&gt;连接器得工作完成后，客户端就可以向 MySQL 服务发送 SQL 语句了，MySQL 服务收到 SQL 语句后，就会解析出 SQL 语句的第一个字段，看看是什么类型的语句。&lt;/p&gt;
+
+&lt;p&gt;如果 SQL 是查询语句（select 语句），MySQL 就会先去查询缓存（ Query Cache ）里查找缓存数据，看看之前有没有执行过这一条命令，这个查询缓存是以 key-value 形式保存在内存中的，key 为 SQL 查询语句，value 为 SQL 语句查询的结果。如果查询的语句命中查询缓存，那么就会直接返回 value 给客户端。如果查询的语句没有命中查询缓存中，那么就要往下继续执行，等执行完后，查询的结果就会被存入查询缓存中。&lt;/p&gt;
+
+&lt;p&gt;真实情况是查询缓存挺鸡肋的。对于更新比较频繁的表，查询缓存的命中率很低的，因为只要一个表有更新操作，那么这个表的查询缓存就会被清空。如果刚缓存了一个查询结果很大的数据，还没被使用的时候，刚好这个表有更新操作，查询缓冲就被清空了，相当于缓存了个寂寞。&lt;/p&gt;
+
+&lt;p&gt;所以，MySQL 8.0 版本直接将查询缓存删掉了，也就是说 MySQL 8.0 开始，执行一条 SQL 查询语句，不会再走到查询缓存这个阶段了。这里说的查询缓存是 server 层的，也就是 MySQL 8.0 版本移除的是 server 层的查询缓存，并不是 Innodb 存储引擎中的 buffer pool。&lt;/p&gt;
+
+&lt;h4 id=&quot;3解析-sql&quot;&gt;&lt;strong&gt;3、解析 SQL&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;在正式执行 SQL 查询语句之前， MySQL 会先对 SQL 语句做解析，这个工作交由「解析器」来完成。&lt;/p&gt;
+
+&lt;p&gt;解析器会做如下两件事情。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;词法分析。MySQL 会根据你输入的字符串识别出关键字出来&lt;/li&gt;
+  &lt;li&gt;语法分析。根据词法分析的结果，语法解析器会根据语法规则，判断你输入的这个 SQL 语句是否满足 MySQL 语法，如果没问题就会构建出 SQL 语法树，这样方便后面模块获取 SQL 类型、表名、字段名、 where 条件等等&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4 id=&quot;4执行-sql&quot;&gt;&lt;strong&gt;4、执行 SQL&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;经过解析器后，接着就要进入执行 SQL 查询语句的流程了，每条SELECT 查询语句流程主要可以分为下面这三个阶段：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;prepare 阶段，也就是预处理阶段；&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;p&gt;检查 SQL 查询语句中的表或者字段是否存在；&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;将 select * 中的 * 符号，扩展为表上的所有列；&lt;/p&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;optimize 阶段，也就是优化阶段：优化器主要负责将 SQL 查询语句的执行方案确定下来，比如在表里面有多个索引的时候，优化器会基于查询成本的考虑，来决定选择使用哪个索引。&lt;/li&gt;
+  &lt;li&gt;execute 阶段，也就是执行阶段：真正开始执行语句了，这个工作是由「执行器」完成的。在执行的过程中，执行器就会和存储引擎交互了，交互是以记录为单位的。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;二innodb架构&quot;&gt;二、InnoDB架构&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/52.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;InnoDB整体也分为三层：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;内存结构&lt;/strong&gt;(In-Memory Structure)，这一层在MySQL服务进程内；&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;OS Cache&lt;/strong&gt;，这一层属于内核态内存；&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;磁盘结构&lt;/strong&gt;(On-Disk Structure)，这一层在文件系统上；&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;这三层的交互有两类：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;直接O_Direct落地数据（长途中，长箭头）：Buffer Pool的数据与磁盘数据；&lt;/li&gt;
+  &lt;li&gt;通过OS Cache落地数据（上图中，两个短箭头）：Log Buffer；&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;内存区域&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;InnoDB内存结构包含&lt;strong&gt;四大核心组件&lt;/strong&gt;，分别是：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;缓冲池&lt;/strong&gt;(Buffer Pool):加速&lt;strong&gt;读&lt;/strong&gt;请求，避免每次数据访问都进行磁盘IO，起到Redis缓存的作用。涉及的技术点包括：预读，局部性原理，LRU，预读失败+缓冲池污染，新生代老生代双链LRU&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;更改缓冲区&lt;/strong&gt;(Change Buffer)：为了插入或者更新次要索引而存在，是Buffer Pool的一部分，当辅助索引页不在缓冲池中时，更改缓冲区负责缓存对这些页的更改。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;自适应哈希索引&lt;/strong&gt;(Adaptive Hash Index)：用于优化某些读取选项的性能。它旨在通过提供快速的内存查找机制来加速对频繁查询的索引页的访问，&lt;strong&gt;加速读请求&lt;/strong&gt;，减少索引查询的寻路路径。涉及的技术点包括：&lt;strong&gt;聚集索引，普通索引，哈希索引&lt;/strong&gt;；&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;日志缓冲区&lt;/strong&gt;(Log Buffer)：保存要写入事务日志的更改的内存区域，日志缓冲区通过在定期将日志刷新到磁盘上的重做日志之前将日志写入内存来提高性能，并提供了高并发与强一致性的折衷方案。涉及的技术点包括：&lt;strong&gt;redo log作用，流程，三层架构，随机写优化为顺序写，次次写优化为批量写&lt;/strong&gt;；&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;文件区域:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;系统表空间(System tablespace)&lt;/strong&gt;：用作更改缓冲区的存储区域。InnoDB 使用一个或多个数据文件作为系统表空间。ibdata1默认情况下，MySQL在数据目录中创建该文件。启动选项innodb_data_file_path决定系统表空间数据文件的大小和数量。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;每表文件表空间(File-per-table tablespaces)&lt;/strong&gt;:存储 InnoDB 表的实际数据。当您使用 InnoDB 存储引擎创建新表时，InnoDB 将每个表及其关联索引存储在一个扩展名为 file-per-tablespace 的文件中.ibd。例如，如果您创建一个名为tbl_name的表，InnoDB 将在数据目录中tbl_name创建一个相应的 file-per-tablespace 数据文件。tbl_name.idb&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;通用表空间(General tablespaces)&lt;/strong&gt;：可以存储多个表的共享表空间。通用表空间都是使用该CREATE TABLESPACE语句创建的。当多个表共享相同的通用表空间时，通用表空间有助于减少内存中表空间元数据的重复。因此，与每表文件表空间相比，通用表空间具有潜在的内存优势。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Undo表空间(Undo tablespaces):&lt;/strong&gt;存储撤消日志，其中包含撤消事务的最新更改的信息。MySQL 有两个默认的撤消表空间文件innodb_undo_001 和innodb_undo_002.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;临时表空间(Temporary tablespaces):&lt;/strong&gt;当您创建临时表时，InnoDB 将它们存储在临时表空间中，更具体地说是会话临时表空间中。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;双写缓冲区(Doublewrite buffer)：&lt;/strong&gt;InnoDB 使用 Doublewrite Buffer 来存储在实际写入 InnoDB 数据文件之前已从缓冲池中刷新的页面。允许 InnoDB 检索可靠的页面副本，以便在发生存储问题时进行恢复。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;重做日志(Redo log)&lt;/strong&gt;：用于存储对表所做的更改。InnoDB在崩溃恢复期间使用重做日志来纠正不完整事务写入的数据。例如，当您执行更改数据库的 SQL 语句（例如INSERT、UPDATE和DELETE ）时，重做日志会将请求存储在重做日志文件中。如果发生崩溃，MySQL 会重播重做日志中在接受连接之前未完成的修改。InnoDB 使用一组重做日志文件（ib_logfile0、iblogfile1、 …）来存储对表数据的更改。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;撤消日志(Undo logs)&lt;/strong&gt;：存储回滚操作所需的信息。例如，如果您执行一个事务并决定回滚它，InnoDB将利用撤消日志来撤销该事务期间所做的更改。InnoDB 使用一组撤消日志文件（通常命名为undo_001.ibd、udo_002.ibd等）来存储日志。&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Ted</name></author><category term="数据库" /><summary type="html">一、MySQL架构</summary></entry><entry><title type="html">外接纹理显示图片1：问题篇</title><link href="http://www.helloted.com/flutter/2022/06/09/texture_1/" rel="alternate" type="text/html" title="外接纹理显示图片1：问题篇" /><published>2022-06-09T20:00:00+08:00</published><updated>2022-06-09T20:00:00+08:00</updated><id>http://www.helloted.com/flutter/2022/06/09/texture_1</id><content type="html" xml:base="http://www.helloted.com/flutter/2022/06/09/texture_1/">&lt;h3 id=&quot;1flutter列表中多图加载的问题&quot;&gt;1、Flutter列表中多图加载的问题&lt;/h3&gt;
 
 &lt;p&gt;在社交或者资讯类App中，经常会使用到Feeds流页面，Feeds流页面的列表一般结构繁杂，单行资讯内就可能有多张图片；&lt;/p&gt;
 
@@ -1971,247 +2132,4 @@ extern void AppOrderFiles(void(^completion)(NSString *orderFilePath));
 
 &lt;p&gt;&lt;strong&gt;Build Settings&lt;/strong&gt;中修改&lt;strong&gt;Write Link Map File&lt;/strong&gt;为&lt;code class=&quot;highlighter-rouge&quot;&gt;YES&lt;/code&gt;编译后会生成一个&lt;strong&gt;Link Map&lt;/strong&gt;符号表&lt;code class=&quot;highlighter-rouge&quot;&gt;txt&lt;/code&gt;文件。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/37.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">0、iOS应用的内存布局</summary></entry><entry><title type="html">LLVM-插桩</title><link href="http://www.helloted.com/ios/2020/06/28/clang/" rel="alternate" type="text/html" title="LLVM-插桩" /><published>2020-06-28T20:00:00+08:00</published><updated>2020-06-28T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2020/06/28/clang</id><content type="html" xml:base="http://www.helloted.com/ios/2020/06/28/clang/">&lt;h4 id=&quot;0clang插桩原理&quot;&gt;0、Clang插桩原理&lt;/h4&gt;
-
-&lt;p&gt;Clang在优化过程中，可以自己定义Pass来优化代码&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/36.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;1编译插件的工具准备&quot;&gt;1、编译插件的工具准备&lt;/h4&gt;
-
-&lt;p&gt;1.1 新建文件夹llvm，下载LLVM（预计大小 648.2 M）&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git clone https://git.llvm.org/git/llvm.git/
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;1.2 在llvm/tools文件夹下载clang（预计大小 240.6 M）&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;llvm/tools
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git clone https://git.llvm.org/git/clang.git/
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/37.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;1.3 安装编译工具ninja和cmake&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;cmake
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;ninja
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;1.4 在llvm同级目录下新建llvm_build和llvm_release两个文件夹，llvm是编译起始文件夹，llvm_release则是编译结果文件夹&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/38.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;1.5 在llvm_build文件夹下设定编译结果路径&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;llvm_build
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;cmake &lt;span class=&quot;nt&quot;&gt;-G&lt;/span&gt; Ninja ../llvm &lt;span class=&quot;nt&quot;&gt;-DCMAKE_INSTALL_PREFIX&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;’编译结果路径，也就是llvm_release文件夹’
-（参考：cmake &lt;span class=&quot;nt&quot;&gt;-G&lt;/span&gt; Ninja ../llvm &lt;span class=&quot;nt&quot;&gt;-DCMAKE_INSTALL_PREFIX&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;‘/Users/xxxx/LLVMProject/llvm_release’）
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;1.6 在llvm_build路径下依次执行编译和安装命令&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ninja
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ninja install
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;1.7 在llvm源码同级目录下新建文件夹llvm_xcode&lt;/p&gt;
-
-&lt;p&gt;1.8 在llvm_xcode路径下，编译xcode&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cd llvm_xcode
-$ cmake -G Xcode ../llvm
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;最终效果：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/39.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;1.9 打开LLVM.xcodeproj并用Automaticallly Create Schemes&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/40.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;1.10 然后选择ALL_BUILD进行编译，编译过程需要几十分钟不等。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/41.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;2编写pass插件&quot;&gt;2、编写PASS插件&lt;/h4&gt;
-
-&lt;p&gt;在$LLVM_SOURCE/lib/Transforms/ 目录下有一个Hello的自带Demo，可以仿照Hello编写我们自己的PASS&lt;/p&gt;
-
-&lt;p&gt;2.1 在Hello同级目录下创建文件夹MyPass，并在MyPass文件夹下创建CMakeLists.txt和MyPass.cpp两个文件&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/42.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;2.2 在$LLVM_SOURCE/lib/Transforms/MyPass/CMakeLists.txt内添加内容，需要注意的是add_llvm_library后面的MyPass是将要生成的Target的名称，自带的Hello文件夹内添加的是LLVMHello名称，所以Target是LLVMHello。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;add_llvm_library( MyPass MODULE BUILDTREE_ONLY
-  MyPass.cpp  
-  DEPENDS
-  intrinsics_gen
-  PLUGIN_TOOL
-  opt
-)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;2.3 在$LLVM_SOURCE/lib/Transforms/CMakeLists.txt内把我们的pass添加进去&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;add_subdirectory&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;MyPass&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/43.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;2.4 回到llvm_xcode文件夹重新生成xcode&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cmake -G Xcode ../llvm
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;2.5 再次打开LLVM.xcodeproj就能找到MyPass的Target。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/44.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;2.6 在MyPass.cpp内编写PASS内容&lt;/p&gt;
-
-&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;#include &quot;llvm/Pass.h&quot;
-#include &quot;llvm/Support/raw_ostream.h&quot;
-#include &quot;llvm/IR/LegacyPassManager.h&quot;
-#include &quot;llvm/Transforms/IPO/PassManagerBuilder.h&quot;
-#include &quot;llvm/IR/Module.h&quot;
-#include &quot;llvm/IR/Function.h&quot;
-#include &quot;llvm/IR/IRBuilder.h&quot;
-#include &quot;llvm/IR/Instructions.h&quot;
-#include &quot;llvm/IR/DebugLoc.h&quot;
-#include &quot;llvm/IR/DebugInfo.h&quot;
-#include &amp;lt;string&amp;gt;
-&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;namespace&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;llvm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;namespace&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MyFunctionPass&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FunctionPass&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ID&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;MyFunctionPass&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FunctionPass&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ID&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
-        &lt;span class=&quot;kt&quot;&gt;bool&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;runOnFunction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Function&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;override&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;startswith&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;my_mark_executed_func&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)){&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 如果已经插入则不用再次插入&lt;/span&gt;
-                  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;LLVMContext&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getParent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getContext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;BasicBlock&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bb&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getEntryBlock&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;IRBuilder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bbBuilder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;IRBuilder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;contextBuilder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-            
-            &lt;span class=&quot;n&quot;&gt;Instruction&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;beginInst&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dyn_cast&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Instruction&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;begin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 所有函数的起始位置&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;FunctionType&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FunctionType&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getVoidTy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getInt8PtrTy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),},&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 函数的返回类型和参数类型&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;FunctionCallee&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;beginFun&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getParent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getOrInsertFunction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;my_mark_executed_func&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 获取函数&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;CallInst&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;inst&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;contextBuilder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CreateCall&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;beginFun&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bbBuilder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CreateGlobalStringPtr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())});&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 构造函数&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;inst&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;insertBefore&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;beginInst&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 插入标记函数&lt;/span&gt;
-            
-            &lt;span class=&quot;k&quot;&gt;auto&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SP&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getSubprogram&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;DebugLoc&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DL&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DebugLoc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SP&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getScopeLine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SP&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;inst&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;setDebugLoc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//设置DebugLoc，给debugger使用&lt;/span&gt;
-            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MyFunctionPass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ID&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RegisterPass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MyFunctionPass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;func-coverage&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;A pass that can check function coverage.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RegisterStandardPasses&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;PassManagerBuilder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;EP_EarlyAsPossible&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;[](&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PassManagerBuilder&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Builder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-       &lt;span class=&quot;n&quot;&gt;legacy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PassManagerBase&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PM&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PM&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MyFunctionPass&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;2.7 build MyPass可以得到Mypass.dylib&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/45.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;3使用pass&quot;&gt;3、使用PASS&lt;/h4&gt;
-
-&lt;p&gt;3.1 新建一个普通xcode project，并添加一个hook.c的文件，里面是刚才在pass里添加的标记函数&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;void my_mark_executed_func(char *name ) {
-    printf(&quot;方法 %s \n&quot;,name);
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;3.2 将bulid system改为旧版构建方法，File-Project Setting-Build System&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/46.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;3.3 在build setting里添加MyPass.dylib。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;-Xclang -load -Xclang Pass路径
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/47.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;3.4 在User-Defined内添加CC和CXX，值分别是刚刚构建的clang的路径，让xode使用clang的替代版本&lt;/p&gt;
-
-&lt;p&gt;3.5 将Enable Index-While-Building Functionality值改为NO，否则会报错&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/49.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;3.6 执行可以获取到log输出方法执行情况&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/48.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;4插桩的其他思路sanitizercoverage&quot;&gt;4、插桩的其他思路：SanitizerCoverage&lt;/h4&gt;
-
-&lt;p&gt;LLVM本身提供了一种覆盖函数的方案：&lt;a href=&quot;http://clang.llvm.org/docs/SanitizerCoverage.html&quot;&gt;SanitizerCoverage&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_3/51.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;在官方文档中就有说明，如果在编译配置里有-fsantize-cover等参数，就会在每个函数的边缘插入一个sanitizer-cov—trace-guard函数，也就是说，每个方法函数执行的时候，都会调用一次这个插入的函数，所以我们可以通过这个插入函数，来获取方法函数名，从而获取启动过程中的符号顺序。&lt;/p&gt;
-
-&lt;h4 id=&quot;5插桩的其他思路sanitizercoverage&quot;&gt;5、插桩的其他思路：SanitizerCoverage&lt;/h4&gt;
-
-&lt;p&gt;OC 的方法调用在底层都是objc_msgSend函数。所以，如果能够Hook它，获取每个调用objc_msgSend的方法名，也能够达到插桩效果。objc_msgSend是C函数而且是系统函数，C 函数在编译链接时就确定了函数指针的地址偏移量（Offset），虽然这个偏移量在编译好的可执行文件中是固定的，但是可执行文件每次被重新装载到内存中时被系统分配的起始地址（在 lldb 中用命令image List获取）是不断变化的。所以，我们就可以借助facebook公司的一个开源库fishhook来达到系统函数与自己定义的函数进行了交换；&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;苹果采用了PIC（Position-independent code）技术成功让 C 的底层也能有动态的表现：&lt;/p&gt;
-
-  &lt;ul&gt;
-    &lt;li&gt;编译时在 Mach-O 文件 _DATA 段的符号表中为每一个被引用的系统 C 函数建立一个指针（8字节的数据，放的全是0），这个指针用于动态绑定时重定位到共享库中的函数实现。&lt;/li&gt;
-    &lt;li&gt;在运行时当系统 C 函数被第一次调用时会动态绑定一次，然后将 Mach-O 中的 _DATA 段符号表中对应的指针，指向外部函数（其在共享库中的实际内存地址）。&lt;/li&gt;
-  &lt;/ul&gt;
-
-  &lt;p&gt;fishhook 正是利用了 PIC 技术做了这么两个操作：&lt;/p&gt;
-
-  &lt;ul&gt;
-    &lt;li&gt;将指向系统方法（外部函数）的指针重新进行绑定指向内部函数/自定义 C 函数。&lt;/li&gt;
-    &lt;li&gt;将内部函数的指针在动态链接时指向系统方法的地址。&lt;/li&gt;
-  &lt;/ul&gt;
-
-  &lt;p&gt;这样就把系统方法与自己定义的方法进行了交换，达到 HOOK 系统 C 函数（共享库中的）的目的。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;下面是是我们的hook大概过程&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;static void hook_objc_msgSend() {
-    /// begin之前保存objc_msgSend的参数
-    save()
-    /// 将objc_msgSend执行的下一个函数地址传递给beginHook的第二个参数x0 self, x1 _cmd, x2: lr address
-    __asm volatile (&quot;mov x2, lr\n&quot;);
-    /// 执行beginHook
-    call(blr, &amp;amp; beginHook)
-    /// 恢复objc_msgSend参数
-    load()
-    // 执行
-    call(blr, orig_objc_msgSend)
-    /// after之前保存objc_msgSend执行完成的参数----------
-    save()
-    /// 调用 endHook----------
-    call(blr, &amp;amp; endHook)
-    /// 将endHook返回的参数放入lr,恢复调用beginHook前的lr地址
-    __asm volatile (&quot;mov lr, x0\n&quot;);
-    /// 恢复objc_msgSend执行完成的参数
-    load()
-    /// 方法结束,继续执行lr
-    ret()
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;我们需要使用汇编指令对寄存器进行存取和执行，stp存储原参数，blr调用执行，ldp加载指令。这个过程与OC方法的Method-Swilling类似。最终可以达到hook_objc_msgSend函数与原来的objc_msgsend函数进行调换的目的。&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">0、Clang插桩原理</summary></entry></feed>
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/37.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">0、iOS应用的内存布局</summary></entry></feed>
