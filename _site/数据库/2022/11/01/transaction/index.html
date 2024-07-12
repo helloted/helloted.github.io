@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter">
+
+    <title>数据库事务 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/01/transaction/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/app/">APP</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/mac_app/">Mac App</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>数据库事务</h1>
+                    
+                    <h2 class="subheading">数据库事务概念</h2>
+                    
+                    <span class="meta">Posted by Ted on November 1, 2022</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h3 id="1什么是事务">1、什么是事务</h3>
+
+<p>所谓事务是用户定义的一个数据库操作序列， 这些操作要么全做，要么全不做，是一个不可分割的工作单位。</p>
+
+<p>在关系型数据库中，一个事务可以是一条 SQL 语句，一组 SQL 语句或者是整个程序，事务的开始和结束由用户显示控制，如果用户没有显式定义事务，则由 DBMS 按默认规定自动划分事务，如在 MySQL 中默认 autocommit 为 ON 则开启事务自动提交，每条没有显式定义事务的 SQL 语句都会被当作一个单独的事务并自动提交(隐式事务)。</p>
+
+<p>数据库事务可以确保该事务范围内的所有操作都可以全部成功或者全部失败。如果事务失败，那么效果就和没有执行这些SQL一样，不会对数据库数据有任何改动。</p>
+
+<p><strong>显式和隐式：</strong></p>
+
+<ul>
+  <li>单条SQL语句，数据库系统自动将其作为一个事务执行，这种事务被称为隐式事务。</li>
+  <li>多条SQL语句作为一个事务执行，使用BEGIN/START TRANSACTION;开启一个事务，使用COMMIT提交一个事务，这种事务被称为显式事务。</li>
+</ul>
+
+<p><strong>COMMIT和RollBack</strong></p>
+
+<ul>
+  <li>COMMIT是指提交事务，即试图把事务内的所有SQL所做的修改永久保存。</li>
+  <li>ROLLBACK是对之前的事务操作进行回滚；回滚会结束用户的事务，并撤销正在进行的所有未提交的修改；</li>
+  <li>如果COMMIT失败了，会自动调用ROLLBACK，也就是之前的操作会回滚。</li>
+</ul>
+
+<h3 id="2acid四个特性">2、ACID四个特性</h3>
+
+<p>数据库事务具有ACID这4个特性：</p>
+
+<ul>
+  <li>A：Atomicity，原子性，将所有SQL作为原子工作单元执行，要么全部执行，要么全部不执行；</li>
+  <li>C：Consistency，一致性，事务完成后，所有数据的状态都是一致的，即A账户只要减去了100，B账户则必定加上了100；</li>
+  <li>I：Isolation，隔离性，如果有多个事务并发执行，每个事务作出的修改必须与其他事务隔离；</li>
+  <li>D：Durability，持久性，即事务完成后，对数据库数据的修改被持久化存储。</li>
+</ul>
+
+<h3 id="3并发事务导致">3、并发事务导致<数据不一致></数据不一致></h3>
+
+<p>并发事务可能导致以下几种数据不一致的情况：</p>
+
+<ul>
+  <li>脏读（Dirty Read）： 脏读指的是一个事务读取了另一个事务尚未提交的数据。如果后续事务回滚，那么之前读取的数据就是无效的，导致数据不一致。</li>
+  <li>不可重复读（Non-repeatable Read）： 不可重复读指的是在同一个事务中，多次读取同一数据时，得到的结果不一致。这是因为在事务执行期间，其他事务修改了该数据。</li>
+  <li>幻读（Phantom Read）： 幻读指的是在同一个事务中，多次查询同一范围的数据时，得到的结果不一致。这是因为在事务执行期间，其他事务插入或删除了符合查询条件的数据。</li>
+</ul>
+
+<p>这些数据不一致的情况是由于并发事务之间的交互和修改操作导致的。</p>
+
+<p>不同的隔离级别可以控制事务之间的相互影响，从而避免或减少这些数据不一致的问题。较高的隔离级别可以提供更强的数据一致性，但可能会降低并发性能。</p>
+
+<p>为了保证数据的一致性，需要在设计数据库架构和事务处理时，合理选择隔离级别，并使用适当的并发控制机制：</p>
+
+<ul>
+  <li>LBCC（Lock-Base Concurrency Control）基于锁的并发控制；</li>
+  <li>MVCC（Multiversion Concurrency Control）多版本并发控制；</li>
+</ul>
+
+<h3 id="4隔离级别">4、隔离级别</h3>
+
+<p>数据库的隔离级别是指多个并发事务之间的隔离程度，用于控制事务之间的相互影响和数据一致性的要求。</p>
+
+<p>隔离级别定义了一个事务在读取和修改数据时能够看到其他事务的哪些变化。 常见的数据库隔离级别包括：</p>
+
+<ol>
+  <li>读未提交（Read Uncommitted）： 最低的隔离级别，这种级别实际上是没有做隔离，事务可以读取其他事务尚未提交的数据。这种隔离级别可能导致脏读（Dirty Read），即读取到未提交的数据。</li>
+  <li>读已提交（Read Committed）： 事务只能读取已经提交的数据，避免了脏读。但是在同一个事务中，多次读取同一数据可能会看到不同的结果，因为其他事务可能在事务执行期间修改了数据。</li>
+  <li>可重复读（Repeatable Read）： 事务在执行期间保持一致的快照视图，即事务开始时读取的数据将保持不变。其他事务对数据的修改不会影响当前事务的读取结果。这种隔离级别可以避免脏读和不可重复读（Non-repeatable Read），是MySQL默认级别。</li>
+  <li>串行化（Serializable）： 最高的隔离级别，这种级别实际上是完全隔离，将并发执行的事务串行化。这种隔离级别可以避免脏读、不可重复读和幻读（Phantom Read），但会降低并发性能。</li>
+</ol>
+
+<p>不同的隔离级别提供了不同的数据一致性和并发性能权衡。较低的隔离级别可以提高并发性能，但可能导致数据不一致。较高的隔离级别可以保证数据一致性，但可能降低并发性能。</p>
+
+<h3 id="5这四种隔离级别具体是如何实现的呢">5、这四种隔离级别具体是如何实现的呢？</h3>
+
+<ul>
+  <li>对于最低级的「读未提交」隔离级别的事务来说，这是没有隔离；</li>
+  <li>对于最高级的「串行化」隔离级别的事务来说，通过加读写锁的方式来避免并行访问；</li>
+  <li>对于中间的「读提交」和「可重复读」隔离级别的事务来说，它们是通过 Read View 来实现的，它们的区别在于创建 Read View 的时机不同。
+    <ul>
+      <li>「读已提交」隔离级别是在「每个语句执行前」都会重新生成一个 Read View，</li>
+      <li>「可重复读」隔离级别是「启动事务时」生成一个 Read View，然后整个事务期间都在用这个 Read View。</li>
+    </ul>
+  </li>
+</ul>
+
+<p>隔离级别只是定义了在不同的级别下应该保证哪些一致性，具体实现这些隔离级别的方法有很多，如传统的基于锁的并发控制（LBCC），还有一些无锁并发控制方案，如时间戳（timestamp), 乐观控制法（scheduler），多版本并发控制（MVCC）等。</p>
+
+<h3 id="6并发控制">6、并发控制</h3>
+
+<p><strong>LBCC（Lock-Base Concurrency Control）基于锁的并发控制；</strong></p>
+
+<p>所谓封锁就是事务在某个数据对象进行操作之前先申请锁，对该对象加锁后，该事务就拥有了一定的对该对象的控制，在该事务释放该锁前，其他事务不能操作此数据对象。 从锁的模式来看，锁可以分为共享锁和排它锁，共享锁又称为读锁（S 锁），排它锁又称为写锁（X锁）。</p>
+
+<p>X 锁：若事务 T 对数据对象 A 加上了 X 锁，则只允许 T 读取和修改 A， 其他任何事务不得再对 A加任何类型的锁，直到 T 释放锁，。</p>
+
+<p>S 锁：若事务 T 对数据对象 A 加上了 S 锁，则 T 和其他事务都可以可以读 A，同时其他事务可以继续申请 A 的 S 锁，但是直到所有事务都释放 A 的 S 锁为止（所有事务并不包括自己），A 是不允许修改的。这就意味着如果只有一个事务对 A 添加了 S 锁，那他自己是可以修改数据的。</p>
+
+<p><strong>MVCC（Multiversion Concurrency Control）多版本并发控制</strong></p>
+
+<p>通过 LBCC， 我们可以解决所有的并发不一致问题，那为什么还会有其他并发控制方案呢？归根结底还是基于性能的考虑， LBCC 只是实现了允许并发读，但对于并发读写，写写操作只能串行执行，在读写都很频繁的场景下，并发性能将大大降低，因此，人们才提出各种无锁并发控制方案，MVCC 就属于其中一种。</p>
+
+<p>MVCC 的大概思路是每一个事务都有一个唯一的ID，当某一个事务要修改某行数据时，先将这一行原来的数据做一个快照保存下来，当有其他并发事务也要操作这个事务时，可以操作之前的版本，这样，最新的版本只被写事务维持，不会干扰到读事务，以此实现隔离，MVCC 并没有一个统一的标准，不同 DBS 的实现也不尽相同。</p>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/10/10/mvvc/" data-toggle="tooltip" data-placement="top" title="数据库事务之MVCC机制">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2024</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

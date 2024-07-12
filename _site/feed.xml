@@ -1,4 +1,103 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2024-07-10T19:17:17+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">数据库事务之MVCC机制</title><link href="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/10/10/cache/" rel="alternate" type="text/html" title="数据库事务之MVCC机制" /><published>2022-10-10T20:00:00+08:00</published><updated>2022-10-10T20:00:00+08:00</updated><id>http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/10/10/cache</id><content type="html" xml:base="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/10/10/cache/">&lt;h4 id=&quot;1并发事务的四种场景&quot;&gt;&lt;strong&gt;1、并发事务的四种场景&lt;/strong&gt;&lt;/h4&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2024-07-12T19:02:04+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">数据库事务</title><link href="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/01/transaction/" rel="alternate" type="text/html" title="数据库事务" /><published>2022-11-01T20:00:00+08:00</published><updated>2022-11-01T20:00:00+08:00</updated><id>http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/01/transaction</id><content type="html" xml:base="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/01/transaction/">&lt;h3 id=&quot;1什么是事务&quot;&gt;1、什么是事务&lt;/h3&gt;
+
+&lt;p&gt;所谓事务是用户定义的一个数据库操作序列， 这些操作要么全做，要么全不做，是一个不可分割的工作单位。&lt;/p&gt;
+
+&lt;p&gt;在关系型数据库中，一个事务可以是一条 SQL 语句，一组 SQL 语句或者是整个程序，事务的开始和结束由用户显示控制，如果用户没有显式定义事务，则由 DBMS 按默认规定自动划分事务，如在 MySQL 中默认 autocommit 为 ON 则开启事务自动提交，每条没有显式定义事务的 SQL 语句都会被当作一个单独的事务并自动提交(隐式事务)。&lt;/p&gt;
+
+&lt;p&gt;数据库事务可以确保该事务范围内的所有操作都可以全部成功或者全部失败。如果事务失败，那么效果就和没有执行这些SQL一样，不会对数据库数据有任何改动。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;显式和隐式：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;单条SQL语句，数据库系统自动将其作为一个事务执行，这种事务被称为隐式事务。&lt;/li&gt;
+  &lt;li&gt;多条SQL语句作为一个事务执行，使用BEGIN/START TRANSACTION;开启一个事务，使用COMMIT提交一个事务，这种事务被称为显式事务。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;COMMIT和RollBack&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;COMMIT是指提交事务，即试图把事务内的所有SQL所做的修改永久保存。&lt;/li&gt;
+  &lt;li&gt;ROLLBACK是对之前的事务操作进行回滚；回滚会结束用户的事务，并撤销正在进行的所有未提交的修改；&lt;/li&gt;
+  &lt;li&gt;如果COMMIT失败了，会自动调用ROLLBACK，也就是之前的操作会回滚。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;2acid四个特性&quot;&gt;2、ACID四个特性&lt;/h3&gt;
+
+&lt;p&gt;数据库事务具有ACID这4个特性：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;A：Atomicity，原子性，将所有SQL作为原子工作单元执行，要么全部执行，要么全部不执行；&lt;/li&gt;
+  &lt;li&gt;C：Consistency，一致性，事务完成后，所有数据的状态都是一致的，即A账户只要减去了100，B账户则必定加上了100；&lt;/li&gt;
+  &lt;li&gt;I：Isolation，隔离性，如果有多个事务并发执行，每个事务作出的修改必须与其他事务隔离；&lt;/li&gt;
+  &lt;li&gt;D：Durability，持久性，即事务完成后，对数据库数据的修改被持久化存储。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;3并发事务导致&quot;&gt;3、并发事务导致&lt;数据不一致&gt;&lt;/数据不一致&gt;&lt;/h3&gt;
+
+&lt;p&gt;并发事务可能导致以下几种数据不一致的情况：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;脏读（Dirty Read）： 脏读指的是一个事务读取了另一个事务尚未提交的数据。如果后续事务回滚，那么之前读取的数据就是无效的，导致数据不一致。&lt;/li&gt;
+  &lt;li&gt;不可重复读（Non-repeatable Read）： 不可重复读指的是在同一个事务中，多次读取同一数据时，得到的结果不一致。这是因为在事务执行期间，其他事务修改了该数据。&lt;/li&gt;
+  &lt;li&gt;幻读（Phantom Read）： 幻读指的是在同一个事务中，多次查询同一范围的数据时，得到的结果不一致。这是因为在事务执行期间，其他事务插入或删除了符合查询条件的数据。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;这些数据不一致的情况是由于并发事务之间的交互和修改操作导致的。&lt;/p&gt;
+
+&lt;p&gt;不同的隔离级别可以控制事务之间的相互影响，从而避免或减少这些数据不一致的问题。较高的隔离级别可以提供更强的数据一致性，但可能会降低并发性能。&lt;/p&gt;
+
+&lt;p&gt;为了保证数据的一致性，需要在设计数据库架构和事务处理时，合理选择隔离级别，并使用适当的并发控制机制：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;LBCC（Lock-Base Concurrency Control）基于锁的并发控制；&lt;/li&gt;
+  &lt;li&gt;MVCC（Multiversion Concurrency Control）多版本并发控制；&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;4隔离级别&quot;&gt;4、隔离级别&lt;/h3&gt;
+
+&lt;p&gt;数据库的隔离级别是指多个并发事务之间的隔离程度，用于控制事务之间的相互影响和数据一致性的要求。&lt;/p&gt;
+
+&lt;p&gt;隔离级别定义了一个事务在读取和修改数据时能够看到其他事务的哪些变化。 常见的数据库隔离级别包括：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;读未提交（Read Uncommitted）： 最低的隔离级别，这种级别实际上是没有做隔离，事务可以读取其他事务尚未提交的数据。这种隔离级别可能导致脏读（Dirty Read），即读取到未提交的数据。&lt;/li&gt;
+  &lt;li&gt;读已提交（Read Committed）： 事务只能读取已经提交的数据，避免了脏读。但是在同一个事务中，多次读取同一数据可能会看到不同的结果，因为其他事务可能在事务执行期间修改了数据。&lt;/li&gt;
+  &lt;li&gt;可重复读（Repeatable Read）： 事务在执行期间保持一致的快照视图，即事务开始时读取的数据将保持不变。其他事务对数据的修改不会影响当前事务的读取结果。这种隔离级别可以避免脏读和不可重复读（Non-repeatable Read），是MySQL默认级别。&lt;/li&gt;
+  &lt;li&gt;串行化（Serializable）： 最高的隔离级别，这种级别实际上是完全隔离，将并发执行的事务串行化。这种隔离级别可以避免脏读、不可重复读和幻读（Phantom Read），但会降低并发性能。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;不同的隔离级别提供了不同的数据一致性和并发性能权衡。较低的隔离级别可以提高并发性能，但可能导致数据不一致。较高的隔离级别可以保证数据一致性，但可能降低并发性能。&lt;/p&gt;
+
+&lt;h3 id=&quot;5这四种隔离级别具体是如何实现的呢&quot;&gt;5、这四种隔离级别具体是如何实现的呢？&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;对于最低级的「读未提交」隔离级别的事务来说，这是没有隔离；&lt;/li&gt;
+  &lt;li&gt;对于最高级的「串行化」隔离级别的事务来说，通过加读写锁的方式来避免并行访问；&lt;/li&gt;
+  &lt;li&gt;对于中间的「读提交」和「可重复读」隔离级别的事务来说，它们是通过 Read View 来实现的，它们的区别在于创建 Read View 的时机不同。
+    &lt;ul&gt;
+      &lt;li&gt;「读已提交」隔离级别是在「每个语句执行前」都会重新生成一个 Read View，&lt;/li&gt;
+      &lt;li&gt;「可重复读」隔离级别是「启动事务时」生成一个 Read View，然后整个事务期间都在用这个 Read View。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;隔离级别只是定义了在不同的级别下应该保证哪些一致性，具体实现这些隔离级别的方法有很多，如传统的基于锁的并发控制（LBCC），还有一些无锁并发控制方案，如时间戳（timestamp), 乐观控制法（scheduler），多版本并发控制（MVCC）等。&lt;/p&gt;
+
+&lt;h3 id=&quot;6并发控制&quot;&gt;6、并发控制&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;LBCC（Lock-Base Concurrency Control）基于锁的并发控制；&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;所谓封锁就是事务在某个数据对象进行操作之前先申请锁，对该对象加锁后，该事务就拥有了一定的对该对象的控制，在该事务释放该锁前，其他事务不能操作此数据对象。 从锁的模式来看，锁可以分为共享锁和排它锁，共享锁又称为读锁（S 锁），排它锁又称为写锁（X锁）。&lt;/p&gt;
+
+&lt;p&gt;X 锁：若事务 T 对数据对象 A 加上了 X 锁，则只允许 T 读取和修改 A， 其他任何事务不得再对 A加任何类型的锁，直到 T 释放锁，。&lt;/p&gt;
+
+&lt;p&gt;S 锁：若事务 T 对数据对象 A 加上了 S 锁，则 T 和其他事务都可以可以读 A，同时其他事务可以继续申请 A 的 S 锁，但是直到所有事务都释放 A 的 S 锁为止（所有事务并不包括自己），A 是不允许修改的。这就意味着如果只有一个事务对 A 添加了 S 锁，那他自己是可以修改数据的。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;MVCC（Multiversion Concurrency Control）多版本并发控制&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;通过 LBCC， 我们可以解决所有的并发不一致问题，那为什么还会有其他并发控制方案呢？归根结底还是基于性能的考虑， LBCC 只是实现了允许并发读，但对于并发读写，写写操作只能串行执行，在读写都很频繁的场景下，并发性能将大大降低，因此，人们才提出各种无锁并发控制方案，MVCC 就属于其中一种。&lt;/p&gt;
+
+&lt;p&gt;MVCC 的大概思路是每一个事务都有一个唯一的ID，当某一个事务要修改某行数据时，先将这一行原来的数据做一个快照保存下来，当有其他并发事务也要操作这个事务时，可以操作之前的版本，这样，最新的版本只被写事务维持，不会干扰到读事务，以此实现隔离，MVCC 并没有一个统一的标准，不同 DBS 的实现也不尽相同。&lt;/p&gt;</content><author><name>Ted</name></author><category term="数据库" /><summary type="html">1、什么是事务</summary></entry><entry><title type="html">数据库事务之MVCC机制</title><link href="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/10/10/mvvc/" rel="alternate" type="text/html" title="数据库事务之MVCC机制" /><published>2022-10-10T20:00:00+08:00</published><updated>2022-10-10T20:00:00+08:00</updated><id>http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/10/10/mvvc</id><content type="html" xml:base="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/10/10/mvvc/">&lt;h4 id=&quot;1并发事务的四种场景&quot;&gt;&lt;strong&gt;1、并发事务的四种场景&lt;/strong&gt;&lt;/h4&gt;
 
 &lt;p&gt;并发事务中又会分为四种情况，分别是读-读、写-写、读-写、写-读，这四种情况分别对应并发事务执行时的四种场景。&lt;/p&gt;
 
@@ -1899,237 +1998,4 @@ endif()
 
     &lt;p&gt;参考&lt;a href=&quot;https://github.com/maniackk/TimeProfiler&quot;&gt;TimeProfiler&lt;/a&gt;&lt;/p&gt;
   &lt;/li&gt;
-&lt;/ol&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">0、统计函数耗时原理</summary></entry><entry><title type="html">二进制重排</title><link href="http://www.helloted.com/ios/2020/07/28/byteorder/" rel="alternate" type="text/html" title="二进制重排" /><published>2020-07-28T20:00:00+08:00</published><updated>2020-07-28T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2020/07/28/byteorder</id><content type="html" xml:base="http://www.helloted.com/ios/2020/07/28/byteorder/">&lt;h4 id=&quot;0ios应用的内存布局&quot;&gt;0、iOS应用的内存布局&lt;/h4&gt;
-
-&lt;p&gt;应用的内存布局从低到高如下排布：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;保留段&lt;/strong&gt;：用于给系统提供一些必要的空间；&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;代码段&lt;/strong&gt;和&lt;strong&gt;数据段&lt;/strong&gt;在APP启动时就加载到了内存区&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;栈区(stack):&lt;/strong&gt;由编译器自动分配释放，存放函数的参数值，局部变量等值。是连续性的排列，效率高于堆内存。&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;堆区(heap):&lt;/strong&gt;一般由程序员分配释放，若程序员不释放，则可能会引起内存泄漏，堆区是随机开辟内存。&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;内核区&lt;/strong&gt;：由系统使用；&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/32.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;1page-fault&quot;&gt;1、Page-fault&lt;/h4&gt;
-
-&lt;p&gt;就程序而言，其虚拟内存中的逻辑地址空间中的地址始终可用。但是，如果应用程序访问当前不在物理RAM中的内存page上的地址，则产生了page fault。虚拟内存系统将调用特殊的page-fault handler来响应这种情况：&lt;/p&gt;
-
-&lt;p&gt;page-fault handler停止当前正在执行的代码，找到物理RAM内存的可用page，从磁盘加载包含所需数据的page，更新page table，然后将控制权返回给程序的代码，然后该代码可以正常的访问内存地址。这个过程称为分页paging。&lt;/p&gt;
-
-&lt;h5 id=&quot;11-page-fault查看&quot;&gt;1.1 Page-fault查看&lt;/h5&gt;
-
-&lt;p&gt;用到了&lt;strong&gt;Instruments&lt;/strong&gt;中的&lt;strong&gt;System Trace&lt;/strong&gt;工具。&lt;/p&gt;
-
-&lt;p&gt;点击录制⏺后，出现第一个页面，马上停止⏹。过滤只显示&lt;strong&gt;Main Thread&lt;/strong&gt;相关，选择&lt;strong&gt;Summary: Virtual Memory&lt;/strong&gt;。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;File Backed Page In&lt;/strong&gt;次数就是触发&lt;strong&gt;Page Fault&lt;/strong&gt;的次数了。&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;Page Cache Hit&lt;/strong&gt;就是页缓存命中的次数了。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/36.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;2二进制重排启动优化的原理&quot;&gt;2、二进制重排启动优化的原理&lt;/h4&gt;
-
-&lt;p&gt;App 在启动时，需要执行各种函数，我们需要读取 _TEXT 段代码到物理内存中，这个过程会发生Page Fault缺⻚中断，由于启动时所需要执行的代码分布在 _TEXT 段的各个部分，会读取很多pages，导致启动时 Page Fault 数量非常多。虽然本身这个处理速度是很快的，但是在一个App的启动过程中可能出现上千(甚至更多)次Page Fault，这个时间积累起来会比较明显了。&lt;/p&gt;
-
-&lt;p&gt;重排的目的在于将hot code聚合在一起，即使得最经常执行的代码或最需要关键执行的代码（如启动阶段的顺序调用）聚合在一起，形成一个更紧凑的__TEXT段。&lt;/p&gt;
-
-&lt;p&gt;经过Layout后的二进制，其高频或关键代码排列会更紧凑，更利于优化startup启动阶段，以及mmap out/in(前后台切换或函数调用)阶段的速度和内存占用。&lt;/p&gt;
-
-&lt;p&gt;一个well-layout的二进制，如果使得所有启动阶段顺序执行的代码按照执行顺序排列在一起，那么整体page faults频率和次数会减少不少。在iphone 6s上，大概一次page faults平均需要0.2ms或更久。所以对于巨型app而言，更少的page faults会带来更大的启动提升。&lt;/p&gt;
-
-&lt;p&gt;less-well layout:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/33.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;如果存在funA-&amp;gt;funB-&amp;gt;funC-&amp;gt;funD的顺序调用过程，则上述调用过程需要4次page faults，且均在非相邻页发生。那么4次page faults就需要4次页中断，以及4次物理页内存的占用；假设程序里存在很多这样的调用问题，那么就会频繁造成mmap的碎片化，并且导致占用的物理页内存更多。&lt;/p&gt;
-
-&lt;p&gt;well-layout:则可能只占用了1到2页物理内存，只触发了2次page faults，且是相邻页的page faults；&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/34.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;3重排方案&quot;&gt;3、重排方案&lt;/h4&gt;
-
-&lt;p&gt;对于lldb而言，可采取的方案是基于linker提供的-order_file选项。&lt;/p&gt;
-
-&lt;p&gt;-order_file在当前llvm上只支持代码段layout，即只支持指定函数符号来进行重排。&lt;/p&gt;
-
-&lt;p&gt;-order_file在iOS上只支持&lt;strong&gt;text代码段的重排，而对于其余section，如&lt;/strong&gt;cstring,&lt;strong&gt;ustring,&lt;/strong&gt;const,__objc等都是不支持重排的。&lt;/p&gt;
-
-&lt;p&gt;Bulid Setting-Linker-Order file&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/35.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;4获取启动顺序&quot;&gt;4、获取启动顺序&lt;/h4&gt;
-
-&lt;p&gt;基于-order_file完成Machine Code Layout，我们需要获取到所有关键的symbol：即函数符号；
-获取函数符号的方式即trace；&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th style=&quot;text-align: center&quot;&gt;opt\cmp&lt;/th&gt;
-      &lt;th style=&quot;text-align: center&quot;&gt;原理&lt;/th&gt;
-      &lt;th style=&quot;text-align: center&quot;&gt;优点&lt;/th&gt;
-      &lt;th style=&quot;text-align: center&quot;&gt;缺点&lt;/th&gt;
-      &lt;th style=&quot;text-align: center&quot;&gt;举例&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;编译插桩&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;编译阶段结合源码插入桩代码记录&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;可实现对任何函数调用的trace&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;需要源码构建，对于链接的二进制.a无效&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;XCode PGO&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;运行时插桩&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;hook或动态插桩来记录&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;不需要源码，可解决二进制.a问题&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;hook无法解决c/c++问题，dtrace无法解决真机运行问题&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;dtrace&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;采用https://github.com/yulingtianxia/AppOrderFiles的方法&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;//  AppOrderFiles.h
-//! Project version number for AppOrderFiles.
-FOUNDATION_EXPORT double AppOrderFilesVersionNumber;
-
-//! Project version string for AppOrderFiles.
-FOUNDATION_EXPORT const unsigned char AppOrderFilesVersionString[];
-
-extern void AppOrderFiles(void(^completion)(NSString *orderFilePath));
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;#import &quot;AppOrderFiles.h&quot;
-#import &amp;lt;dlfcn.h&amp;gt;
-#import &amp;lt;libkern/OSAtomicQueue.h&amp;gt;
-#import &amp;lt;pthread.h&amp;gt;
-&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;OSQueueHead&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;queue&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;OS_ATOMIC_QUEUE_INIT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BOOL&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;collectFinished&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;typedef&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PCNode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// The guards are [start, stop).&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;// This function will be called at least once per DSO and may be called&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;// more than once with the same values of start/stop.&lt;/span&gt;
-&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;__sanitizer_cov_trace_pc_guard_init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;uint32_t&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-                                         &lt;span class=&quot;kt&quot;&gt;uint32_t&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;stop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;uint32_t&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;// Counter for the guards.&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;start&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;stop&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;// Initialize only once.&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;INIT: %p %p&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;stop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;uint32_t&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;stop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;// Guards should start from 1.&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// This callback is inserted by the compiler on every edge in the&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;// control flow (some optimizations apply).&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;// Typically, the compiler will emit the code like this:&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;//    if(*guard)&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;//      __sanitizer_cov_trace_pc_guard(guard);&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;// But for large functions it will emit a simple call:&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;//    __sanitizer_cov_trace_pc_guard(guard);&lt;/span&gt;
-&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;__sanitizer_cov_trace_pc_guard&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;uint32_t&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;guard&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;collectFinished&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;guard&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// If you set *guard to 0 this code will not be called again for this edge.&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// Now you can get the PC and do whatever you want:&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;//   store it somewhere or symbolize it and print right away.&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// The values of `*guard` are as you set them in&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// __sanitizer_cov_trace_pc_guard_init and so you can make them consecutive&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// and use them to dereference an array or a bit vector.&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;guard&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PC&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__builtin_return_address&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;PCNode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;node&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;malloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PCNode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;node&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PCNode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PC&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;OSAtomicEnqueue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;queue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;offsetof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PCNode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;extern&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;AppOrderFiles&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;completion&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;orderFilePath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;collectFinished&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;YES&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;__sync_synchronize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;functionExclude&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;stringWithFormat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;_%s&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__FUNCTION__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;dispatch_after&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dispatch_time&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DISPATCH_TIME_NOW&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int64_t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mo&quot;&gt;01&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NSEC_PER_SEC&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dispatch_get_global_queue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DISPATCH_QUEUE_PRIORITY_DEFAULT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;NSMutableArray&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;functions&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSMutableArray&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;YES&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;PCNode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;node&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;OSAtomicDequeue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;queue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;offsetof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PCNode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
-            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;node&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-                &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;Dl_info&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;info&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;dladdr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;info&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;info&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dli_sname&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;info&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dli_sname&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;BOOL&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;isObjc&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;hasPrefix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;+[&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;hasPrefix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;-[&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;symbolName&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;isObjc&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;_&quot;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;stringByAppendingString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-                &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;functions&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;addObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;symbolName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;functions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;count&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;completion&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;completion&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;NSMutableArray&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;calls&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSMutableArray&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;arrayWithCapacity&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;functions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;NSEnumerator&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;enumerator&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;functions&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;reverseObjectEnumerator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;enumerator&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;nextObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;calls&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;containsObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-                &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;calls&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;addObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;calls&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;removeObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;functionExclude&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;calls&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;componentsJoinedByString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;NSLog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;Order:&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;%@&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filePath&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSTemporaryDirectory&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;stringByAppendingPathComponent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;app.order&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;NSData&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fileContents&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;dataUsingEncoding&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSUTF8StringEncoding&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;BOOL&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;success&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSFileManager&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;defaultManager&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;createFileAtPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filePath&lt;/span&gt;
-                                                               &lt;span class=&quot;nf&quot;&gt;contents&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fileContents&lt;/span&gt;
-                                                             &lt;span class=&quot;nl&quot;&gt;attributes:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;completion&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;completion&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;success&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;filePath&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BOOL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;application&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UIApplication&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;application&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;didFinishLaunchingWithOptions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSDictionary&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;launchOptions&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// Override point for customization after application launch.&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;AppOrderFiles&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;orderFilePath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;NSLog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;@&quot;OrderFilePath:%@&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;orderFilePath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;YES&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;还有关键一步，设置一下build-Setting&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;      config.build_settings['OTHER_CFLAGS'] = '-fsanitize-coverage=func,trace-pc-guard'
-      config.build_settings['OTHER_SWIFT_FLAGS'] = '-sanitize-coverage=func -sanitize=undefined'
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;真机在&lt;strong&gt;Window&lt;/strong&gt;→&lt;strong&gt;Devices And Simulators&lt;/strong&gt;(快捷键&lt;strong&gt;⇧+⌘+2&lt;/strong&gt;)中获取启动顺序文件。&lt;/p&gt;
-
-&lt;p&gt;然后在Bulid Setting-Linker-Order file里添加就能改变编译顺序了。&lt;/p&gt;
-
-&lt;p&gt;4.1查看编译顺序&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Build Settings&lt;/strong&gt;中修改&lt;strong&gt;Write Link Map File&lt;/strong&gt;为&lt;code class=&quot;highlighter-rouge&quot;&gt;YES&lt;/code&gt;编译后会生成一个&lt;strong&gt;Link Map&lt;/strong&gt;符号表&lt;code class=&quot;highlighter-rouge&quot;&gt;txt&lt;/code&gt;文件。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/37.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">0、iOS应用的内存布局</summary></entry></feed>
+&lt;/ol&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">0、统计函数耗时原理</summary></entry></feed>
