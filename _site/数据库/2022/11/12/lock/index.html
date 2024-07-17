@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter">
+
+    <title>数据库事务之锁类型 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/12/lock/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/app/">APP</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/mac_app/">Mac App</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>数据库事务之锁类型</h1>
+                    
+                    <h2 class="subheading">数据库事务之锁类型</h2>
+                    
+                    <span class="meta">Posted by Ted on November 12, 2022</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<p><img src="/img/Simple_2/54.jpg" alt="img" /></p>
+
+<h3 id="1乐观锁和悲观锁">1、乐观锁和悲观锁</h3>
+
+<p>乐观锁和悲观锁是按照对并发冲突的处理方式进行分类的。</p>
+
+<ul>
+  <li>乐观锁：乐观锁实际上就是没锁，认为对同一数据的并发操作不会总发生，属于小概率事件，不用每次都对数据上锁，也就是不采用数据库自身的锁机制，而是通过程序来实现。在程序上，我们可以采用版本号机制或者时间戳机制实现。你能看到乐观锁就是程序员自己控制数据并发操作的权限，基本是通过给数据行增加一个戳（版本号或者时间戳），从而证明当前拿到的数据是否最新</li>
+  <li>悲观锁：悲观锁假设并发冲突的概率较高，因此在读取数据时会立即加锁，阻止其他事务对数据进行读取或修改。悲观锁通过共享锁或排他锁来实现对数据的锁定。
+    <ul>
+      <li>共享锁允许多个事务同时读取数据，但不允许修改；</li>
+      <li>排他锁则只允许一个事务对数据进行读取或修改。悲观锁适用于并发修改较多、冲突较多的场景。</li>
+    </ul>
+  </li>
+</ul>
+
+<p>所以二者区别是：</p>
+
+<ul>
+  <li>乐观锁在读取时不加锁，而是在提交时检查冲突。</li>
+  <li>悲观锁在读取时立即加锁，以防止其他事务对数据进行修改。</li>
+</ul>
+
+<p><strong>举例</strong></p>
+
+<p>有商品表item，需要对库存quantity进行更新。</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">//</span><span class="err">乐观锁</span><span class="p">,</span><span class="err">整个过程中没有加锁</span>
+<span class="o">//</span><span class="err">查询出商品库存信息，</span><span class="n">quantity</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="k">select</span> <span class="n">quantity</span> <span class="k">from</span> <span class="n">item</span> <span class="k">where</span> <span class="n">id</span><span class="o">=</span><span class="mi">1</span>
+<span class="o">//</span><span class="err">修改商品库存为</span><span class="mi">2</span><span class="err">，在提交修改时，进行校验和冲突处理，整个过程中没有加锁</span>
+<span class="k">update</span> <span class="n">item</span> <span class="k">set</span> <span class="n">quantity</span><span class="o">=</span><span class="mi">2</span> <span class="k">where</span> <span class="n">id</span><span class="o">=</span><span class="mi">1</span> <span class="k">and</span> <span class="n">quantity</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+
+<span class="err">或者，借助一个</span><span class="k">Version</span><span class="err">字段</span>
+<span class="o">//</span><span class="err">查询出商品信息，</span><span class="k">version</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="k">select</span> <span class="k">version</span> <span class="k">from</span> <span class="n">item</span> <span class="k">where</span> <span class="n">id</span><span class="o">=</span><span class="mi">1</span>
+<span class="o">//</span><span class="err">修改商品库存为</span><span class="mi">2</span><span class="err">，并且将</span><span class="k">version</span><span class="o">+</span><span class="mi">1</span>
+<span class="k">update</span> <span class="n">item</span> <span class="k">set</span> <span class="n">quantity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="k">version</span> <span class="o">=</span> <span class="mi">3</span> <span class="k">where</span> <span class="n">id</span><span class="o">=</span><span class="mi">1</span> <span class="k">and</span> <span class="k">version</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+</code></pre></div></div>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">//</span> <span class="err">悲观锁</span>
+<span class="o">//</span> <span class="err">则我们在读取时立即加锁锁定，然后再进行修改</span>
+<span class="o">//</span><span class="mi">0</span><span class="p">.</span><span class="err">开始事务</span>
+<span class="k">begin</span><span class="p">;</span> 
+<span class="o">//</span><span class="mi">1</span><span class="p">.</span><span class="err">读取加锁</span><span class="p">,</span><span class="err">这里加的是排它锁</span>
+<span class="k">select</span> <span class="n">quantity</span> <span class="k">from</span> <span class="n">item</span> <span class="k">where</span> <span class="n">id</span><span class="o">=</span><span class="mi">1</span> <span class="k">for</span> <span class="k">update</span><span class="p">;</span>
+<span class="o">//</span><span class="mi">2</span><span class="p">.</span><span class="err">修改库存</span>
+<span class="k">update</span> <span class="n">item</span> <span class="k">set</span> <span class="n">quantity</span><span class="o">=</span><span class="mi">2</span> <span class="k">where</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="o">//</span><span class="mi">3</span><span class="p">.</span><span class="err">提交事务</span>
+<span class="k">commit</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p><strong>悲观锁补充：</strong>
+悲观锁的实现，往往依靠数据库提供的锁机制。在数据库中，悲观锁的流程如下：</p>
+
+<ol>
+  <li>在对记录进行修改前，先尝试为该记录加上排他锁（exclusive locking）。</li>
+  <li>如果加锁失败，说明该记录正在被修改，那么当前查询可能要等待或者抛出异常。具体响应方式由开发者根据实际需要决定。</li>
+  <li>如果成功加锁，那么就可以对记录做修改，事务完成后就会解锁了。</li>
+  <li>其间如果有其他事务对该记录做加锁的操作，都要等待当前事务解锁或直接抛出异常。</li>
+</ol>
+
+<p>处理加锁的机制会让数据库产生额外的开销，还有增加产生死锁的机会；另外，还会降低并行性，一个事务如果锁定了某行数据，其他事务就必须等待该事务处理完才可以处理那行数据。</p>
+
+<blockquote>
+  <p>问：如何处理死锁</p>
+</blockquote>
+
+<ul>
+  <li>策略一：直接进入等待，直到超时。这个超时时间可以通过参数 innodb_lock_wait_timeout 来设置；默认为 50s，即如果不开启死锁检测，则在发生死锁之后，会等待 50s 后回滚事务释放锁。</li>
+  <li>策略二：发起死锁检测，发现死锁后，主动回滚死锁链条中的某一个事务，让其他事务得以继续执行。将参数 innodb_deadlock_detect 设置为 on，表示开启这个逻辑。innodb 默认开启死锁检测，但是死锁检测会消耗大量的CPU资源。</li>
+</ul>
+
+<h3 id="2共享锁和排它锁">2、共享锁和排它锁</h3>
+
+<ul>
+  <li>共享锁(Shared Lock)，又称之为读锁，简称S锁
+    <ul>
+      <li>当事务对数据加上读锁后，其他事务只能对该数据加读锁，不能做任何修改操作，也就是不能添加写锁。共享锁主要是为了支持并发的读取数据而出现的，读取数据时，不允许其他事务对当前数据进行修改操作，从而避免”不可重读”的问题的出现。</li>
+    </ul>
+  </li>
+  <li>排它锁(Exclusive Lock)，又称之为写锁，简称X锁
+    <ul>
+      <li>当事务对数据加上写锁后，其他事务既不能对该数据添加读写，也不能对该数据添加写锁，写锁与其他锁都是互斥的。只有当前数据写锁被释放后，其他事务才能对其添加写锁或者是读锁。写锁主要是为了解决在修改数据时，不允许其他事务对当前数据进行修改和读取操作，达到了串行处理。</li>
+    </ul>
+  </li>
+</ul>
+
+<p>区别：</p>
+
+<p>共享锁，多个事务共享读取，保证了本事务可以重复读。</p>
+
+<p>排它锁，就是串行处理，单个事务占有，其他事务不能读写。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>属性锁</th>
+      <th>共享锁（S）</th>
+      <th>排它锁（X）</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>共享锁（S）</td>
+      <td>允许</td>
+      <td>不允许</td>
+    </tr>
+    <tr>
+      <td>排它锁（X）</td>
+      <td>不允许</td>
+      <td>不允许</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>注：</p>
+
+<ul>
+  <li>普通的 SELECT 语句在默认情况下不会获取共享锁。
+    <ul>
+      <li>普通的 SELECT 语句使用的是快照读，共享读锁（Shared Read Lock），而不是共享锁（Shared Lock）。共享读锁是一种特殊的共享锁，它允许多个事务同时读取相同的数据，只为本事务所用，但不会阻塞其他事务的共享读锁或排他写锁。</li>
+    </ul>
+  </li>
+  <li>加共享锁 lock in share mode ，加排他锁 for update</li>
+</ul>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">my_table</span> <span class="k">where</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">lock</span> <span class="k">in</span> <span class="k">share</span> <span class="k">mode</span><span class="p">;</span> <span class="o">//</span> <span class="err">共享锁</span>
+<span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">my_table</span> <span class="k">where</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">for</span> <span class="k">update</span><span class="p">;</span> <span class="o">//</span> <span class="err">排它锁</span>
+</code></pre></div></div>
+
+<h3 id="3表级锁和行级锁"><strong>3、表级锁和行级锁</strong></h3>
+
+<ul>
+  <li>表级锁（Table-level Lock）：对整个表进行锁定，阻止其他事务对表的读取或修改。</li>
+  <li>行级锁（Row-level Lock）：对表中的单个行记录进行锁定，允许其他事务对其他行进行读取或修改。</li>
+</ul>
+
+<p>举例</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">//</span> <span class="err">表级锁</span>
+<span class="k">LOCK</span> <span class="n">TABLES</span> <span class="k">table_name</span> <span class="k">READ</span><span class="p">;</span> <span class="o">//</span> <span class="err">读取锁</span><span class="p">(</span><span class="err">共享锁</span><span class="p">)</span>
+<span class="k">LOCK</span> <span class="n">TABLES</span> <span class="k">table_name</span> <span class="k">WRITE</span><span class="p">;</span> <span class="o">//</span> <span class="err">写入表锁</span><span class="p">(</span><span class="err">排它锁</span><span class="p">)</span>
+<span class="n">UNLOCK</span> <span class="n">TABLES</span><span class="p">;</span>
+
+<span class="o">//</span> <span class="err">行级锁</span>
+<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="k">table_name</span> <span class="k">WHERE</span> <span class="n">condition</span> <span class="k">FOR</span> <span class="k">UPDATE</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>需要注意的是，表级锁在 MySQL 中一般用于特定的场景，如备份、导入导出数据等操作，而不是常规的并发控制手段。在大多数情况下，MySQL 更常用的是行级锁来实现并发控制。表级锁的使用需要谨慎，因为它会对整个表进行锁定，可能会导致其他事务的阻塞和性能问题</p>
+
+<h3 id="4行级锁"><strong>4、行级锁</strong></h3>
+
+<p>按照锁的粒度和范围分类：</p>
+
+<ul>
+  <li>记录锁（Record Lock）：对数据库中的单个记录(不是单行，可以多行)进行锁定，以防止其他事务对该记录进行<strong>修改</strong>。</li>
+  <li>间隙锁（Gap Lock）：对索引范围内的间隙进行锁定，以防止其他事务在该范围内<strong>插入新记录</strong>。临键锁还锁定了记录之间的间隙，以防止其他事务在这些间隙中插入新记录。这样可以保证在索引范围内的间隙中不会出现新的记录，从而维护了数据的完整性</li>
+  <li>临键锁（Next-Key Lock）：结合了记录锁和间隙锁的特性，既锁定了记录，也锁定了记录之间的间隙。</li>
+</ul>
+
+<p><strong>记录锁和间隙锁的区别：</strong></p>
+
+<p>记录锁只影响其他事务对同一记录的<strong>修改</strong>操作，而间隙锁影响其他事务对索引范围内的<strong>插入</strong>操作</p>
+
+<p><strong>怎么确定是什么锁</strong></p>
+
+<p>加锁的基本单位为next-key lock</p>
+
+<p>先定位到next-key lock，然后再看怎么退化，缩小范围</p>
+
+<p><strong>举例-记录锁</strong></p>
+
+<p>事务1：</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">BEGIN</span><span class="p">;</span>
+<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">users</span> <span class="k">WHERE</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">FOR</span> <span class="k">UPDATE</span><span class="p">;</span>
+<span class="c1">-- 对记录进行修改操作</span>
+<span class="k">COMMIT</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>事务2：</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">BEGIN</span><span class="p">;</span>
+<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">users</span> <span class="k">WHERE</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">FOR</span> <span class="k">UPDATE</span><span class="p">;</span>
+<span class="c1">-- 尝试对同一记录进行修改操作，但会被阻塞等待事务1释放锁</span>
+<span class="k">COMMIT</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>在事务1中，通过 FOR UPDATE 语句获取了对 id 为 1 的记录的排它锁。这意味着其他事务无法同时对该记录进行修改，事务2在尝试获取同一记录的锁时会被阻塞，直到事务1释放锁。</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">//</span> <span class="err">多行</span>
+<span class="k">BEGIN</span><span class="p">;</span>
+<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">users</span> <span class="k">WHERE</span> <span class="n">age</span> <span class="o">&gt;</span> <span class="mi">30</span> <span class="k">FOR</span> <span class="k">UPDATE</span><span class="p">;</span>
+<span class="c1">-- 对满足条件的记录进行修改操作</span>
+<span class="k">COMMIT</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p><strong>间隙锁举例</strong></p>
+
+<p>事务1：</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">BEGIN</span><span class="p">;</span>
+<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">users</span> <span class="k">WHERE</span> <span class="n">age</span> <span class="o">&gt;</span> <span class="mi">30</span> <span class="k">AND</span> <span class="n">age</span> <span class="o">&lt;</span> <span class="mi">40</span> <span class="k">FOR</span> <span class="k">UPDATE</span><span class="p">;</span>
+<span class="c1">-- 对满足条件的记录进行修改操作</span>
+<span class="k">COMMIT</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>事务2：</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">BEGIN</span><span class="p">;</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">users</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">'John'</span><span class="p">,</span> <span class="mi">35</span><span class="p">);</span>
+<span class="c1">-- 尝试在事务1锁定的范围内插入新记录，但会被阻塞等待事务1释放锁</span>
+<span class="k">COMMIT</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>在事务1中，通过 FOR UPDATE 语句获取了满足条件 age &gt; 30 AND age &lt; 40 的记录范围的间隙锁。这意味着其他事务无法在该范围内插入新记录，事务2在尝试插入新记录时会被阻塞，直到事务1释放锁。</p>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/10/mvvc/" data-toggle="tooltip" data-placement="top" title="数据库事务之MVCC机制">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2024</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>
