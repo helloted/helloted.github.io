@@ -7,11 +7,8 @@ description: "曹浩之Helloted的技术博客，用于记录一些技术成长�
 baseurl: ""
 url: "http://www.helloted.com"
 
-
-
-github_username:  helloted
-email_username:  helloted@live.com
-zhihu_username:  大写的程序员
+github_username: helloted
+email_username: helloted@live.com
 
 # Google Analytics
 # To enable google analytics, uncomment below line with a valid Google Tracking ID
@@ -22,7 +19,7 @@ markdown: kramdown
 kramdown:
   input: GFM
 permalink: pretty
-paginate: 20
-exclude: ["less","node_modules","Gruntfile.js","package.json","README.md"]
+paginate: 25
+exclude: ["less", "node_modules", "Gruntfile.js", "package.json", "README.md"]
 
 plugins: [jekyll-paginate, jekyll-feed]
