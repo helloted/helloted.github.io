@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter">
+
+    <title>MongoDB - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/12/mongo/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/app/">APP</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/mac_app/">Mac App</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>MongoDB</h1>
+                    
+                    <h2 class="subheading">MongoDB简介和使用</h2>
+                    
+                    <span class="meta">Posted by Ted on November 12, 2022</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h4 id="1mongodb简介"><strong>1、MongoDB简介</strong></h4>
+
+<ul>
+  <li>MongoDB是一个文档数据库(以 JSON 为数据模型)，此处文档指的是JSON Docunment，并非一般理解的PDF，WORD文档。</li>
+  <li>MongoDB是一个介于关系数据库和非关系数据库之间的产品，是非关系数据库当中功能最丰富，最像 关系数据库的。</li>
+  <li>MongoDB支持的数据结构非常松散，数据格式是BSON，一种类似JSON的二进制形式的存储格 式，简称Binary JSON ，和JSON一样支持内嵌的文档对象和数组对象，因此可以存储比较复杂的数据类型。</li>
+  <li>MongoDB在数据库总排名第5，仅次于Oracle、MySQL等RDBMS，在NoSQL数据库排名首位。从诞生 以来，其项目应用广度、社区活跃指数持续上升。原则上 Oracle 和 MySQL 能做的事情，MongoDB 都能做(包括 ACID 事务)。</li>
+</ul>
+
+<p><strong>MongoDB 的三大核心特性是：</strong></p>
+
+<ul>
+  <li><strong>No Schema</strong>：MongoDB没有固定的Schema，少了很多约束条件，可以让数据的存储数据结构更灵活，存储速度更加快。</li>
+  <li><strong>高可用</strong>：MongoDB能将数据分布在多台机器上实现冗余，同时检测主节点是否存活，当失活时能自动提升从节点为主节点，达到自动故障转移的目的。</li>
+  <li><strong>分布式</strong>（可平行扩展）：MongoDB使用分片技术对数据进行扩展，能自动分片、自动转移分片里面的数据块，让每一个服务器里面存储的数据都是一样大小。</li>
+  <li>MongoDB 还支持数据压缩、二级索引、全文搜索、地理分布等一系列的强大功能。</li>
+</ul>
+
+<p><strong>MongoDB使用场景类型总结</strong></p>
+
+<ul>
+  <li>读写分离应用</li>
+  <li>灵活多变的业务场景，MongoDB采用No-Schema的方式，免去表结构变更的痛苦，非常适用于初创型的业务需求。可以将模式固定的结构化数据存储在mysql中，模式灵活的业务存储在MongoDB中，高热数据存储在Redis或Memcache中，实现对业务数据高效存取，降低存储数据的投入成本。</li>
+  <li>移动应用，MongoDB支持二维空间索引，可以很好地支撑基于位置查询的移动类App的业务需求。同时MongoDB动态模式存储方式也非常适合存储多重系统的异构数据，满足移动App应用的需求。</li>
+  <li>物联网应用，MongoDB具有高性能和异步数据写入功能，特定场景下可达到内存数据库的处理能力。同时，库MongoDB中的分片集群实例，可按需配置Mongos和Shard组件的配置和个数，性能及存储空间可实现无限扩展，非常适合物联网高并发写入的场景。</li>
+</ul>
+
+<p>MongoDB提供二级索引功能满足动态查询的需求，利用MongoDB的map-reduce聚合框架进行多维度的数据分析。</p>
+
+<p><strong>mysql与mongodb</strong></p>
+
+<p>在处理大量数据方面，MongoDB 比 MySQL 更胜一筹；在云计算服务和需求频繁变化的项目上，MongoDB 也更具优势。</p>
+
+<p>MySQL数据结构和模式是固定的，因此保证了数据一致性和可靠性。MySQL还有一个好处，就是由于它支持基于 ACID 准则的事务操作，数据安全性更高。所以对于看重这些因素的项目来说，MySQL 是最合适的。</p>
+
+<h3 id="2应用场景"><strong>2、应用场景：</strong></h3>
+
+<ul>
+  <li>
+    <p>应用服务器的日志记录，日常我们会把一些应用日志存储到文本格式的文件中，这样不便于查看同时也不便于统计等。通过MongoDB存储，既可以很好的存储、统计同时也方便不同的业务场景下日志数据格式不一致等情况。</p>
+  </li>
+  <li>第三方信息的抓取与存储，我们在一些业务场景中难免会去使用到第三方的数据，当接入多个第三方平台时，这时候我们需要考虑到每个平台数据格式不一致，自身的存储系统结构设计等情况。这时候我们使用MongoDB来存储就很好的避免了这个问题。</li>
+  <li>运维监控系统，在一些大型的项目中，监控是必不可少的。监控系统要监控的内容，可能是随时多变的，这时候使用MongoDB就体现了很大的便利。不需要去修改数据库的结构，直接根据业务需要灵活调整即可。大大降低了开发成本。</li>
+  <li>O2O业务场景，将送快递骑手、快递商家的信息（包含位置信息）存储在 MongoDB，然后通过 MongoDB 的地理位置查询，这样很方便的实现了查找附近的商家、骑手等功能。</li>
+  <li>游戏业务场景，使用 MongoDB 存储游戏用户信息，用户的装备、积分等直接以内嵌文档的形式存储，方便查询、更新。</li>
+  <li>社交业务场景，使用 MongoDB 存储存储用户信息，以及用户发表的朋友圈信息，通过地理位置索引实现附近的人、地点等功能。</li>
+  <li>物联网业务场景，使用 MongoDB 存储所有接入的智能设备信息，以及设备汇报的日志信息，并对这些信息进行多维度的分析。</li>
+  <li>视频直播业务场景，视频直播，使用 MongoDB 存储用户信息、礼物信息等。</li>
+  <li>大数据应用，使用云数据库MongoDB作为大数据的云存储系统，随时进行数据提取分析，掌握行业动态。</li>
+</ul>
+
+<p>MongoDB提供二级索引功能满足动态查询的需求，利用MongoDB的map-reduce聚合框架进行多维度的数据分析。</p>
+
+<p>到底该不该使用MongoDB，下面的几道选择题可以辅助决策（来自MongoDB 公司的技术分享）：</p>
+
+<p><img src="/img/Simple_2/55.jpg" alt="img" /></p>
+
+<p>如果上述有1个 Yes，可以考虑 MongoDB，2个及以上的 Yes，选择MongoDB绝不会后悔。</p>
+
+<p>当然，MongoDB也有自身的局限性，以下是MongoDB不适用的场景：</p>
+
+<p><img src="/img/Simple_2/56.jpg" alt="img" /></p>
+
+<h3 id="3mongodb的简单案例"><strong>3、MongoDB的简单案例</strong></h3>
+
+<p>从底层存储来讲，每个 Document 都是一个类 JSON 结构的 BSON（Binary JSON)。</p>
+
+<p>BSON是MongoDB首创的一种二进制存储格式，数据组织和访问方式完全和 JSON 一样。支持动态的添加字段、支持内嵌对象和数组对象。同时它也对 JSON 做了一些扩充，如支持 Date 和 BinData 数据类型。</p>
+
+<p>比如<strong>插入</strong>文档的操作：</p>
+
+<pre><code class="language-mysql">db.book.insert(
+{
+  title: "My first blog post",
+  published: new Date(),
+  tags: [ "NoSQL", "MongoDB" ],
+  type: "Work",
+  author : "James",
+  viewCount: 25,
+  commentCount: 2
+}
+)
+</code></pre>
+
+<p>执行文档<strong>查找</strong>：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> db.book.find({author : "James"})           
+</code></pre></div></div>
+
+<p><strong>更新</strong>文档的命令：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>db.book.update(
+   {"_id" : ObjectId("5c61301c15338f68639e6802")},
+   {"$inc": {"viewCount": 3} }
+)
+</code></pre></div></div>
+
+<p><strong>删除</strong>文档的命令：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>db.book.remove({"_id":ObjectId("5c612b2f15338f68639e67d5")})
+</code></pre></div></div>
+
+<p>在传统的SQL语法中，可以限定返回的字段，MongoDB可以使用Projection来表示：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>db.book.find({"author": "James"},{"_id": 1, "title": 1, "author": 1})         
+</code></pre></div></div>
+
+<p>实现简单的分页查询：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> db.book.find({}).sort({"viewCount" : -1}).skip(10).limit(5)       
+</code></pre></div></div>
+
+<p>这种基于BSON/JSON 的语法格式并不复杂，它的表达能力或许要比SQL更加强大。与 MongoDB 做法类似的还有 ElasticSearch，后者是搜索数据库的佼佼者。</p>
+
+<p><strong>4、MongoDB和关系型数据库</strong></p>
+
+<p>MongoDB 在概念模型上参考了 SQL数据库，但并非完全相同。关于这点，也有人说，<strong>MongoDB 是 NoSQL中最像SQL的数据库</strong>。</p>
+
+<p>在传统的关系型数据库中，存储方式是以表的形式存放，而在MongoDB中，以文档的形式存在。</p>
+
+<p><img src="/img/Simple_2/57.jpg" alt="img" /></p>
+
+<p>MongoDB与关系型数据库的模型对应关系如下：</p>
+
+<p><img src="/img/Simple_2/58.jpg" alt="img" /></p>
+
+<p>MongoDB概念与关系型数据库(RDBMS)非常类似:</p>
+
+<p><img src="/img/Simple_2/59.jpg" alt="img" /></p>
+
+<ul>
+  <li>数据库(database):最外层的概念，可以理解为逻辑上的名称空间，一个数据库包含多个不同名称的集合。</li>
+  <li>集合(collection):相当于SQL中的表，一个集合可以存放多个不同的文档。</li>
+  <li>文档(document):一个文档相当于数据表中的一行，由多个不同的字段组成。</li>
+  <li>字段(field):文档中的一个属性，等同于列(column)。</li>
+  <li>索引(index):独立的检索式数据结构，与SQL概念一致。</li>
+  <li>id:每个文档中都拥有一个唯一的id字段，相当于SQL中的主键(primary key)。</li>
+  <li>视图(view):可以看作一种虚拟的(非真实存在的)集合，与SQL中的视图类似。从MongoDB 3.4版本开始提供了视图功能，其通过聚合管道技术实现。</li>
+  <li>聚合操作($lookup):MongoDB用于实现“类似”表连接(tablejoin)的聚合操作符。</li>
+</ul>
+
+<p>尽管这些概念大多与SQL标准定义类似，但MongoDB与传统RDBMS仍然存在不少差异，包括:</p>
+
+<ul>
+  <li>半结构化，在一个集合中，文档所拥有的字段并不需要是相同的，而且也不需要对所用的字段进行 声明。因此，MongoDB具有很明显的半结构化特点。除了松散的表结构，文档还可以支持多级的 嵌套、数组等灵活的数据类型，非常契合面向对象的编程模型。</li>
+  <li>弱关系，MongoDB没有外键的约束，也没有非常强大的表连接能力。类似的功能需要使用聚合管 道技术来弥补。</li>
+</ul>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/12/lock/" data-toggle="tooltip" data-placement="top" title="数据库事务之锁类型">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2024</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>
