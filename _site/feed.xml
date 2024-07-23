@@ -1,4 +1,217 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2024-07-18T20:03:52+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">MongoDB</title><link href="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/12/mongo/" rel="alternate" type="text/html" title="MongoDB" /><published>2022-11-12T20:00:00+08:00</published><updated>2022-11-12T20:00:00+08:00</updated><id>http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/12/mongo</id><content type="html" xml:base="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/12/mongo/">&lt;h4 id=&quot;1mongodb简介&quot;&gt;&lt;strong&gt;1、MongoDB简介&lt;/strong&gt;&lt;/h4&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2024-07-23T18:50:36+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">操作系统内存管理</title><link href="http://www.helloted.com/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2022/11/25/mem/" rel="alternate" type="text/html" title="操作系统内存管理" /><published>2022-11-25T20:00:00+08:00</published><updated>2022-11-25T20:00:00+08:00</updated><id>http://www.helloted.com/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2022/11/25/mem</id><content type="html" xml:base="http://www.helloted.com/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2022/11/25/mem/">&lt;h3 id=&quot;一内存管理&quot;&gt;一、内存管理&lt;/h3&gt;
+
+&lt;p&gt;操作系统的内存管理非常重要，主要负责下面这些事情：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;内存的分配与回收：对进程所需的内存进行分配和释放，malloc 函数：申请内存，free 函数：释放内存。&lt;/li&gt;
+  &lt;li&gt;地址转换：将程序中的虚拟地址转换成内存中的物理地址。&lt;/li&gt;
+  &lt;li&gt;内存扩充：当系统没有足够的内存时，利用虚拟内存技术或自动覆盖技术，从逻辑上扩充内存。&lt;/li&gt;
+  &lt;li&gt;内存映射：将一个文件直接映射到进程的进程空间中，这样可以通过内存指针用读写内存的办法直接存取文件内容，速度更快。&lt;/li&gt;
+  &lt;li&gt;内存优化：通过调整内存分配策略和回收算法来优化内存使用效率。&lt;/li&gt;
+  &lt;li&gt;内存安全：保证进程之间使用内存互不干扰，避免一些恶意程序通过修改内存来破坏系统的安全性。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;11-malloc是如何分配内存的&quot;&gt;&lt;strong&gt;1.1 malloc是如何分配内存的？&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;malloc 是 C 语言标准库中用于动态内存分配的函数。它从堆（heap）上分配指定大小的内存块，并返回一个指向该内存块的指针。如果分配失败，它返回 NULL。&lt;/p&gt;
+
+&lt;p&gt;基本工作原理&lt;/p&gt;
+
+&lt;p&gt;在使用 malloc 进行内存分配时，实际的处理过程涉及两个层面：首先是从进程的内存池中尝试分配内存，如果进程的内存池中没有足够的空间满足当前的请求，那么 malloc 会从操作系统那里请求更多的内存。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;从进程内存池中分配
+    &lt;ul&gt;
+      &lt;li&gt;内存池管理：进程的内存池通常由 malloc 管理，它包含了一系列已经从操作系统获取并为进程预留的内存块。这些内存块可能是连续的或者是非连续的，取决于之前的分配和释放操作。&lt;/li&gt;
+      &lt;li&gt;内存分配尝试：当调用 malloc 请求内存时，malloc 首先检查其管理的内存池中是否有足够的空闲内存来满足请求。这涉及到查找合适大小的空闲块，可能需要根据内存分配算法（如首次适应、最佳适应等）来选择。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;从操作系统请求内存
+    &lt;ul&gt;
+      &lt;li&gt;内存池不足：如果进程的内存池中没有足够的空闲内存块来满足当前的请求，malloc 需要从操作系统请求更多的内存。&lt;/li&gt;
+      &lt;li&gt;系统调用：malloc 通过系统调用（如 sbrk 或 mmap）向操作系统请求额外的内存。这些调用会将更多的内存区域分配给进程，从而扩展进程的堆空间。内存整合和返回&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;内存整合：获取到新的内存后，malloc 可能会执行一些内存整合操作，如合并相邻的空闲块，以优化内存的使用和减少碎片。&lt;/li&gt;
+  &lt;li&gt;返回内存指针：完成内存分配后，malloc 将返回一个指向新分配内存块的指针。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;需要注意的是，malloc函数只负责分配内存，并不会初始化内存块的内容。如果需要初始化内存块，可以使用memset等函数进行操作。&lt;/p&gt;
+
+&lt;h4 id=&quot;12-内存碎片&quot;&gt;1.2 &lt;strong&gt;内存碎片&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;内部内存碎片(Internal Memory Fragmentation，简称为内存碎片)：已经分配给进程使用但未被使用的内存。导致内部内存碎片的主要原因是，当采用固定比例比如 2 的幂次方进行内存分配时，进程所分配的内存可能会比其实际所需要的大。举个例子，一个进程只需要 65 字节的内存，但为其分配了 128（2^7） 大小的内存，那 63 字节的内存就成为了内部内存碎片。&lt;/li&gt;
+  &lt;li&gt;外部内存碎片(External Memory Fragmentation，简称为外部碎片)：由于未分配的连续内存区域太小，以至于不能满足任意进程所需要的内存分配请求，这些小片段且不连续的内存空间被称为外部碎片。也就是说，外部内存碎片指的是那些并未分配给进程但又不能使用的内存。我们后面介绍的分段机制就会导致外部内存碎片。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;二虚拟内存&quot;&gt;二、虚拟内存&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;虚拟内存(Virtual Memory)&lt;/strong&gt; 是计算机系统内存管理非常重要的一个技术，本质上来说它只是逻辑存在的，是一个假想出来的内存空间，主要作用是作为进程访问主存（物理内存）的桥梁并简化内存管理。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/60.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;虚拟地址空间构成虚拟内存。它使得应用程序认为它拥有连续可用的内存（一个连续完整的地址空间），而实际上，它通常是被分隔成多个物理内存碎片。还有部分暂时存储在外部磁盘存储器上（Swap），在需要时进行数据交换。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;虚拟内存提供了以下能力&lt;/strong&gt;：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;隔离进程：物理内存通过虚拟地址空间访问，虚拟地址空间与进程一一对应。每个进程都认为自己拥有了整个物理内存，进程之间彼此隔离，一个进程中的代码无法更改正在由另一进程或操作系统使用的物理内存。&lt;/li&gt;
+  &lt;li&gt;提升物理内存利用率：有了虚拟地址空间后，操作系统只需要将进程当前正在使用的部分数据或指令加载入物理内存。&lt;/li&gt;
+  &lt;li&gt;简化内存管理：进程都有一个一致且私有的虚拟地址空间，程序员不用和真正的物理内存打交道，而是借助虚拟地址空间访问物理内存，从而简化了内存管理。&lt;/li&gt;
+  &lt;li&gt;多个进程共享物理内存：进程在运行过程中，会加载许多操作系统的动态库。这些库对于每个进程而言都是公用的，它们在内存中实际只会加载一份，这部分称为共享内存。&lt;/li&gt;
+  &lt;li&gt;提高内存使用安全性：控制进程对物理内存的访问，隔离不同进程的访问权限，提高系统的安全性。&lt;/li&gt;
+  &lt;li&gt;提供更大的可使用内存空间：可以让程序拥有超过系统物理内存大小的可用内存空间。这是因为当物理内存不够用时，可以利用磁盘充当，将物理内存页（通常大小为 4 KB）保存到磁盘文件（会影响读写速度），数据或代码页会根据需要在物理内存与磁盘之间移动。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;总的来说，虚拟内存技术通过将物理内存和磁盘空间结合起来，为每个进程提供了一个连续的、抽象的地址空间。它扩展了地址空间、提供了内存管理和保护机制，支持共享和隔离，提高了系统的性能和资源利用率，使得计算机系统更加灵活、稳定和安全。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;虚拟内存的工作原理如下&lt;/strong&gt;：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;地址空间划分：每个进程都有自己的虚拟地址空间，通常是一个连续的地址范围。这个地址空间被划分为多个固定大小的页面（通常是4KB），每个页面都有一个唯一的虚拟地址。&lt;/li&gt;
+  &lt;li&gt;页面映射：虚拟内存管理器将虚拟页面映射到物理内存或磁盘上的页面框（通常也是4KB）。这个映射关系存储在页表中，页表记录了虚拟页面和物理页面之间的对应关系。&lt;/li&gt;
+  &lt;li&gt;页面置换：当进程访问一个虚拟页面时，虚拟内存管理器首先检查该页面是否已经在物理内存中。如果在物理内存中，就直接访问；如果不在物理内存中，就发生了缺页中断。&lt;/li&gt;
+  &lt;li&gt;缺页中断处理：当发生缺页中断时，操作系统会根据页表中的映射关系，将对应的页面从磁盘读取到物理内存中的一个空闲页面框中，并更新页表。然后，进程的执行可以继续，就好像该页面一直在物理内存中一样。&lt;/li&gt;
+  &lt;li&gt;页面置换算法：当物理内存不足时，操作系统需要选择一个页面进行置换，将其写回磁盘并释放其物理内存。常用的页面置换算法有最近最久未使用（LRU）、先进先出（FIFO）和时钟（Clock）算法等。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;虚拟内存缺点&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;性能开销：虚拟内存的使用涉及到页表查找和磁盘I/O操作，这些都可能导致性能下降。特别是当系统频繁进行换页操作时，会显著影响系统性能，这种现象称为“抖动”。&lt;/li&gt;
+  &lt;li&gt;硬盘速度限制：虽然现代固态硬盘（SSD）的速度已经大幅提升，但相比于物理内存，硬盘的访问速度仍然较慢。频繁的访问硬盘来加载或存储页面会减慢程序的执行速度。&lt;/li&gt;
+  &lt;li&gt;复杂的内存管理：虚拟内存系统需要复杂的硬件支持（如内存管理单元MMU）和操作系统级的支持，这增加了系统设计和维护的复杂性。&lt;/li&gt;
+  &lt;li&gt;资源消耗：维护页表和相关数据结构需要额外的内存和CPU资源。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;三虚拟内存实现的三种机制&quot;&gt;三、虚拟内存实现的三种机制&lt;/h3&gt;
+
+&lt;p&gt;虚拟内存（Virtual Memory）是一种计算机系统技术，它使得程序可以使用比实际物理内存更大的地址空间。虚拟内存通过将虚拟地址映射到物理地址，实现了内存的高效管理和保护。虚拟内存的实现主要有三种机制：分页（Paging）、分段（Segmentation）和段页结合（Segmentation with Paging）。&lt;/p&gt;
+
+&lt;h4 id=&quot;1-分页机制paging&quot;&gt;1. 分页机制（Paging）&lt;/h4&gt;
+
+&lt;p&gt;分页机制是虚拟内存实现中最常见的一种方式。它将虚拟地址空间和物理地址空间都划分为固定大小的块，分别称为页（Page）和页框（Frame）。虚拟地址由页号和页内偏移量组成，通过页表（Page Table）将页号映射到物理内存中的页框。&lt;/p&gt;
+
+&lt;h5 id=&quot;特点&quot;&gt;特点&lt;/h5&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;固定大小&lt;/strong&gt;：页和页框大小固定，简化了内存管理。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;减少外部碎片&lt;/strong&gt;：由于页大小固定，减少了外部碎片。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;内存保护&lt;/strong&gt;：每个页可以有不同的访问权限。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;2-分段机制segmentation&quot;&gt;2. 分段机制（Segmentation）&lt;/h4&gt;
+
+&lt;p&gt;分段机制将虚拟地址空间划分为若干段，每个段有一个段基址和段长度。虚拟地址由段选择子和段内偏移量组成。段选择子用于选择段，段内偏移量用于指定段内的具体地址。&lt;/p&gt;
+
+&lt;h5 id=&quot;特点-1&quot;&gt;特点&lt;/h5&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;灵活性&lt;/strong&gt;：可以根据需要动态调整段的大小。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;保护性&lt;/strong&gt;：每个段可以有不同的访问权限，提供了内存保护。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;共享性&lt;/strong&gt;：多个进程可以共享同一个段。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;3-段页结合机制segmentation-with-paging&quot;&gt;3. 段页结合机制（Segmentation with Paging）&lt;/h4&gt;
+
+&lt;p&gt;段页结合机制结合了分段和分页的优点。内存首先被划分为段，每个段再划分为若干页。虚拟地址由段选择子、页号和页内偏移量组成。&lt;/p&gt;
+
+&lt;h5 id=&quot;特点-2&quot;&gt;特点&lt;/h5&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;灵活性和固定大小结合&lt;/strong&gt;：段提供灵活性，页提供固定大小的管理。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;减少外部碎片&lt;/strong&gt;：分页减少了外部碎片。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;内存保护和共享&lt;/strong&gt;：段和页都可以有不同的访问权限，提供了更细粒度的内存保护和共享。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;总结&quot;&gt;总结&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;分段机制（Segmentation）：分段机制将虚拟地址空间划分为多个段（segment），每个段具有不同的大小和属性。每个段都有一个基地址和长度，通过将段内的偏移量与基地址相加，可以得到物理地址。分段机制可以提供灵活的地址空间管理，但可能会导致外部碎片问题。&lt;/li&gt;
+  &lt;li&gt;分页机制（Paging）：分页机制将虚拟地址空间和物理内存空间划分为固定大小的页（page），通常为4KB或者更大。虚拟地址被划分为页号和页内偏移量，通过页表（Page Table）来映射虚拟页号到物理页框号。分页机制可以提供更好的内存利用率和地址空间的连续性，但可能会导致内部碎片问题。&lt;/li&gt;
+  &lt;li&gt;段页机制（Segmentation with Paging）：段页机制是分段机制和分页机制的结合，它将虚拟地址空间划分为多个段，每个段再划分为多个页。通过段表（Segment Table）和页表的组合，可以将虚拟地址映射到物理地址。段页机制综合了分段和分页的优点，提供了更灵活的地址空间管理和更好的内存利用率。&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Ted</name></author><category term="操作系统" /><summary type="html">一、内存管理</summary></entry><entry><title type="html">Elasticsearch</title><link href="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/20/es/" rel="alternate" type="text/html" title="Elasticsearch" /><published>2022-11-20T20:00:00+08:00</published><updated>2022-11-20T20:00:00+08:00</updated><id>http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/20/es</id><content type="html" xml:base="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/20/es/">&lt;h3 id=&quot;1简介&quot;&gt;&lt;strong&gt;1、简介&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;p&gt;Elasticsearch是一个开源的分布式搜索和分析引擎，构建在Apache Lucene库之上。它提供了一个高性能、可扩展和全文搜索的解决方案，适用于各种应用场景。&lt;/p&gt;
+
+&lt;p&gt;以下是一些关键特性和功能：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;分布式架构：Elasticsearch是一个分布式数据库，可以在多个节点上分布和复制数据，提供高可用性和容错性。它使用自动分片和复制机制来实现数据的分布和冗余存储。&lt;/li&gt;
+  &lt;li&gt;实时搜索和分析：Elasticsearch以其快速的搜索性能和实时数据处理能力而闻名。它能够在大规模数据集上进行快速的全文搜索、过滤和聚合操作，并支持复杂的查询和实时数据分析。&lt;/li&gt;
+  &lt;li&gt;强大的查询语言：Elasticsearch使用基于Lucene查询语法的查询语言，支持丰富的搜索和过滤功能。它提供了诸如全文搜索、模糊搜索、范围搜索、布尔搜索、聚合等功能，使用户能够灵活地构建复杂的查询。&lt;/li&gt;
+  &lt;li&gt;多种数据类型支持：Elasticsearch支持多种数据类型的索引和查询，包括文本、数字、日期、地理空间等。它提供了丰富的分析和处理工具，用于处理不同类型的数据。&lt;/li&gt;
+  &lt;li&gt;可扩展性和高性能：Elasticsearch具有良好的可扩展性，可以水平扩展以处理大量数据和高并发查询。它能够快速地索引和搜索大规模数据集，并提供低延迟的响应时间。&lt;/li&gt;
+  &lt;li&gt;数据安全和权限控制：Elasticsearch提供了安全性和权限控制机制，可以对数据进行访问控制和身份验证。它支持基于角色的访问控制和SSL/TLS加密，以保护数据的安全性。&lt;/li&gt;
+  &lt;li&gt;生态系统和集成：Elasticsearch拥有丰富的生态系统，包括Kibana（数据可视化工具）、Logstash（日志收集和处理工具）、Beats（轻量级数据采集器）等。这些工具可以与Elasticsearch无缝集成，提供全面的数据处理和可视化能力。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Elasticsearch的灵活性和功能丰富性使其成为处理大规模数据、实时搜索和分析的理想选择。它被广泛应用于日志分析、企业搜索、电商平台、实时监控、地理空间分析等各种领域和应用场景。&lt;/p&gt;
+
+&lt;h3 id=&quot;2应用场景&quot;&gt;&lt;strong&gt;2、应用场景&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;p&gt;Elasticsearch是一个功能强大的分布式搜索和分析引擎，适用于许多不同的应用场景。以下是一些常见的Elasticsearch应用场景：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;实时日志分析：Elasticsearch能够高效地处理大量的实时日志数据，并提供强大的搜索和聚合功能，使得日志分析和监控变得更加容易和高效。&lt;/li&gt;
+  &lt;li&gt;全文搜索引擎：Elasticsearch以其快速的搜索性能和高级的文本分析功能而闻名，适用于构建全文搜索引擎、内容管理系统、电子商务平台等需要强大搜索能力的应用。&lt;/li&gt;
+  &lt;li&gt;企业搜索和知识管理：Elasticsearch可以帮助组织构建内部搜索引擎，用于快速检索和浏览企业内部的文档、知识库、文档存档等。&lt;/li&gt;
+  &lt;li&gt;实时数据分析和可视化：Elasticsearch与Kibana（一个数据可视化工具）结合使用，可以实现实时数据的分析和可视化，帮助用户更好地理解和利用数据。&lt;/li&gt;
+  &lt;li&gt;产品目录和电商搜索：Elasticsearch提供了强大的搜索和过滤功能，适用于构建产品目录、电商平台等需要快速搜索和过滤商品的应用。&lt;/li&gt;
+  &lt;li&gt;地理空间数据分析：Elasticsearch支持地理空间数据的索引和查询，适用于构建位置服务、地理信息系统（GIS）等应用。&lt;/li&gt;
+  &lt;li&gt;实时监控和告警：Elasticsearch可以用于实时监控和告警系统，通过收集和分析实时数据，及时发现和处理异常情况。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;这只是一些常见的应用场景，实际上，Elasticsearch的灵活性和可扩展性使其适用于许多其他领域和用途。它的强大搜索和分析功能以及分布式架构使其成为处理大规模数据和实时数据的理想选择。&lt;/p&gt;
+
+&lt;h3 id=&quot;3对比&quot;&gt;&lt;strong&gt;3、对比&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;p&gt;当涉及到Elasticsearch和MySQL这两个数据库时，以下是它们之间的一些详细对比：&lt;/p&gt;
+
+&lt;p&gt;数据存储和查询语言：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;MySQL是一种关系型数据库管理系统（RDBMS），使用表格结构来存储数据，并使用结构化查询语言（SQL）作为主要的查询语言。&lt;/li&gt;
+  &lt;li&gt;Elasticsearch是一个分布式文档存储数据库，使用无模式的JSON文档来存储数据，并使用自己的查询语言（基于Lucene查询语法）进行搜索和分析。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;数据模型和灵活性：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;MySQL使用固定的表格结构，需要在创建表时定义列和数据类型。它适用于结构化数据和事务处理。&lt;/li&gt;
+  &lt;li&gt;Elasticsearch使用动态映射，可以根据数据自动创建索引和字段。它适用于非结构化和半结构化数据，具有更大的灵活性。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;搜索和分析能力：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;MySQL提供基本的全文搜索和模糊搜索功能，但它的搜索能力相对较弱。它更适合于简单的关系型查询。&lt;/li&gt;
+  &lt;li&gt;Elasticsearch以其强大的全文搜索、过滤和聚合功能而闻名，适用于构建全文搜索引擎、实时数据分析和复杂的搜索场景。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;分布式架构和可扩展性：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;MySQL可以进行主从复制和分片，但其分布式能力相对较弱。它更适合于单机或小规模的应用。&lt;/li&gt;
+  &lt;li&gt;Elasticsearch是一个分布式数据库，具有自动分片和复制机制，可以在多个节点上分布和复制数据，提供高可用性和容错性。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;数据处理和性能：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;MySQL适用于事务处理和关系型数据的存储，强调数据一致性和事务支持。&lt;/li&gt;
+  &lt;li&gt;Elasticsearch适用于大规模数据的搜索、分析和实时数据处理，具有高度可扩展性和分布式计算能力。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;数据安全和权限控制：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;MySQL提供了丰富的安全性和权限控制机制，包括用户认证、访问控制和数据加密等功能。&lt;/li&gt;
+  &lt;li&gt;Elasticsearch也提供了安全性和权限控制机制，可以对数据进行访问控制和身份验证。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;综上所述，MySQL适用于传统的关系型数据存储和事务处理，而Elasticsearch适用于大规模数据的搜索、分析和实时数据处理。选择哪种数据库取决于具体的需求和应用场景。在某些情况下，两者也可以结合使用，以发挥各自的优势。&lt;/p&gt;</content><author><name>Ted</name></author><category term="数据库" /><summary type="html">1、简介</summary></entry><entry><title type="html">MongoDB</title><link href="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/12/mongo/" rel="alternate" type="text/html" title="MongoDB" /><published>2022-11-12T20:00:00+08:00</published><updated>2022-11-12T20:00:00+08:00</updated><id>http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/12/mongo</id><content type="html" xml:base="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/12/mongo/">&lt;h4 id=&quot;1mongodb简介&quot;&gt;&lt;strong&gt;1、MongoDB简介&lt;/strong&gt;&lt;/h4&gt;
 
 &lt;ul&gt;
   &lt;li&gt;MongoDB是一个文档数据库(以 JSON 为数据模型)，此处文档指的是JSON Docunment，并非一般理解的PDF，WORD文档。&lt;/li&gt;
@@ -1693,346 +1906,4 @@ endif()
 
 &lt;h4 id=&quot;3找出未引用代码&quot;&gt;3、找出未引用代码&lt;/h4&gt;
 
-&lt;p&gt;所有代码与引用的代码的差集即为未使用代码&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">一、减包的措施</summary></entry><entry><title type="html">CND加速原理和游戏加速原理</title><link href="http://www.helloted.com/ios/2021/03/13/cdn/" rel="alternate" type="text/html" title="CND加速原理和游戏加速原理" /><published>2021-03-13T20:00:00+08:00</published><updated>2021-03-13T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2021/03/13/cdn</id><content type="html" xml:base="http://www.helloted.com/ios/2021/03/13/cdn/">&lt;h3 id=&quot;一普通的http请求&quot;&gt;一、普通的HTTP请求&lt;/h3&gt;
-
-&lt;h4 id=&quot;11http请求&quot;&gt;1.1HTTP请求&lt;/h4&gt;
-
-&lt;p&gt;一次完整的HTTP请求所经历的步骤：&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;DNS解析(通过访问的域名找出其IP地址，递归搜索)&lt;/li&gt;
-  &lt;li&gt;HTTP请求，当输入一个请求时，建立一个Socket连接发起TCP的3次握手&lt;/li&gt;
-  &lt;li&gt;如果是HTTPS请求建立连接后，则会有安全认证。&lt;/li&gt;
-  &lt;li&gt;客户端向服务器发送请求命令（一般是GET或POST请求）&lt;/li&gt;
-  &lt;li&gt;客户端发送请求头信息&lt;/li&gt;
-  &lt;li&gt;服务器发送应答头信息&lt;/li&gt;
-  &lt;li&gt;服务器向客户端发送数据&lt;/li&gt;
-  &lt;li&gt;服务器关闭TCP连接（4次挥手）&lt;/li&gt;
-  &lt;li&gt;客户端根据返回的HTML，CSS，JS进行渲染&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4 id=&quot;12dns解析&quot;&gt;1.2DNS解析&lt;/h4&gt;
-
-&lt;p&gt;而在DNS解析过程中，如果要访问的网站名为：”baidu.com”，客户端首先会在本机的hosts文件和hosts缓存中查找该域名对应的IP地址；如果本机中没有此信息，则会到我们的&lt;code class=&quot;highlighter-rouge&quot;&gt;本地DNS&lt;/code&gt;进行询问该域名对应的IP地址；如果本地DNS中仍然没有该域名的IP信息时，则会由本地DNS依次向&lt;code class=&quot;highlighter-rouge&quot;&gt;根DNS&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;顶级域DNS&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;权威DNS&lt;/code&gt;进行询问，最终&lt;code class=&quot;highlighter-rouge&quot;&gt;本地DNS&lt;/code&gt;将IP地址发送给客户端。客户端通过IP地址向远程的源站服务器发出HTTP请求并获取相应的数据内容。&lt;/p&gt;
-
-&lt;p&gt;以上是通过DNS的&lt;code class=&quot;highlighter-rouge&quot;&gt;迭代解析&lt;/code&gt;模式获取域名对应的IP地址并发送HTTP请求的过程。源站的提供商通过配置权威DNS将源站的域名与提供服务的服务器主机进行绑定，使客户端通过DNS服务可以顺利地获取源站域名对应的IP地址并通过IP地址与源站进行通信。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_1/49.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;二cdn&quot;&gt;二、CDN&lt;/h3&gt;
-
-&lt;h4 id=&quot;21cdn简介&quot;&gt;2.1CDN简介&lt;/h4&gt;
-
-&lt;p&gt;CDN（Content Delivery Network，内容分发网络，源站内容(image、html、js、css等) 这个属于内容分发）是构建在现有互联网基础之上的一层智能虚拟网络，通过在网络各处部署节点服务器，实现将源站内容分发至所有CDN节点，使用户可以就近获得所需的内容。CDN服务缩短了用户查看内容的访问延迟，提高了用户访问网站的响应速度与网站的可用性，解决了网络带宽小、用户访问量大、网点分布不均等问题。&lt;/p&gt;
-
-&lt;p&gt;CDN 诞生于二十多年前，随着骨干网压力的逐渐增大，以及长传需求的逐渐增多，使得骨干网的压力越来越大，长传效果越来越差。于是在 1995 年，MIT 的应用数学教授 Tom Leighton 带领着研究生 Danny Lewin 和其他几位顶级研究人员一起尝试用数学问题解决网络拥堵问题。&lt;/p&gt;
-
-&lt;p&gt;他们使用数学算法，处理内容的动态路由安排，并最终解决了困扰 Internet 使用者的难题。后来，史隆管理学院的 MBA 学生 Jonathan Seelig 加入了 Leighton 的队伍中，从那以后他们开始实施自己的商业计划，最终于 1998 年 8 月 20 日正式成立公司，命名为 Akamai。&lt;/p&gt;
-
-&lt;p&gt;同年 1998 年，中国第一家 CDN 公司蓝汛 ChinaCache成立。&lt;/p&gt;
-
-&lt;h4 id=&quot;22为什么有cdn&quot;&gt;2.2为什么有CDN&lt;/h4&gt;
-
-&lt;p&gt;当下的互联网应用都包含大量的静态内容，但静态内容以及一些准动态内容又是最耗费带宽的，特别是针对全国甚至全世界的大型网站，如果这些请求都指向主站的服务器的话，不仅是主站服务器受不了，单端口500M左右的带宽也扛不住，所以大多数网站都需要CDN服务。&lt;/p&gt;
-
-&lt;p&gt;根本上的原因是，访问速度对互联网应用的用户体验、口碑、甚至说直接的营收都有巨大的影响，任何的企业都渴望自己站点有更快的访问速度。而HTTP传输时延对web的访问速度的影响很大，在绝大多数情况下是起决定性作用的，这是由TCP/IP协议的一些特点决定的。物理层上的原因是光速有限、信道有限，协议上的原因有丢包、慢启动、拥塞控制等。&lt;/p&gt;
-
-&lt;p&gt;这就是你使用CDN的第一个也是最重要的原因：为了加速网站的访问。&lt;/p&gt;
-
-&lt;p&gt;除了加速网站的访问之外，CDN还有一些作用：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;为了实现跨运营商、跨地域的全网覆盖&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;互联不互通、区域ISP地域局限、出口带宽受限制等种种因素都造成了网站的区域性无法访问。CDN加速可以覆盖全球的线路，通过和运营商合作，部署IDC资源，在全国骨干节点商，合理部署CDN边缘分发存储节点，充分利用带宽资源，平衡源站流量。阿里云在国内有500+节点，海外300+节点，覆盖主流国家和地区不是问题，可以确保CDN服务的稳定和快速。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;为了保障你的网站安全&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;CDN的负载均衡和分布式存储技术，可以加强网站的可靠性，相当无无形中给你的网站添加了一把保护伞，应对绝大部分的互联网攻击事件。防攻击系统也能避免网站遭到恶意攻击。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;为了异地备援&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;当某个服务器发生意外故障时，系统将会调用其他临近的健康服务器节点进行服务，进而提供接近100%的可靠性，这就让你的网站可以做到永不宕机。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;为了节约成本&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;投入使用CDN加速可以实现网站的全国铺设，你根据不用考虑购买服务器与后续的托管运维，服务器之间镜像同步，也不用为了管理维护技术人员而烦恼，节省了人力、精力和财力。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;为了让你更专注业务本身&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;CDN加速厂商一般都会提供一站式服务，业务不仅限于CDN，还有配套的云存储、大数据服务、视频云服务等，而且一般会提供7x24运维监控支持，保证网络随时畅通，你可以放心使用。并且将更多的精力投入到发展自身的核心业务之上。&lt;/p&gt;
-
-&lt;h3 id=&quot;三cdn加速原理&quot;&gt;三、CDN加速原理&lt;/h3&gt;
-
-&lt;p&gt;CDN将我们对源站的请求导向了距离用户较近的缓存节点，而非源站。&lt;/p&gt;
-
-&lt;p&gt;在DNS解析域名时新增了一个&lt;code class=&quot;highlighter-rouge&quot;&gt;全局负载均衡系统（GSLB）&lt;/code&gt;，GSLB的主要功能是根据用户的本地DNS的IP地址判断用户的位置，筛选出距离用户较近的&lt;code class=&quot;highlighter-rouge&quot;&gt;本地负载均衡系统（SLB）&lt;/code&gt;，并将该SLB的IP地址作为结果返回给本地DNS。SLB主要负责判断&lt;code class=&quot;highlighter-rouge&quot;&gt;缓存服务器集群&lt;/code&gt;中是否包含用户请求的资源数据，如果缓存服务器中存在请求的资源，则根据缓存服务器集群中节点的健康程度、负载量、连接数等因素筛选出最优的缓存节点，并将HTTP请求重定向到最优的缓存节点上。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_1/50.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;为了更清晰地说明CDN的工作原理，下面以客户端发起对”join.qq.com/video.php”的HTTP请求为例进行说明：&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;用户发起对”join.qq.com/video.php”的HTTP请求，首先需要通过本地DNS通过”迭代解析”的方式获取域名”join.qq.com”的IP地址；&lt;/li&gt;
-  &lt;li&gt;如果本地DNS的缓存中没有该域名的记录，则向&lt;code class=&quot;highlighter-rouge&quot;&gt;根DNS&lt;/code&gt;发送DNS查询报文；&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;根DNS&lt;/code&gt;发现域名的前缀为”com”，则给出负责解析&lt;code class=&quot;highlighter-rouge&quot;&gt;com&lt;/code&gt;的&lt;code class=&quot;highlighter-rouge&quot;&gt;顶级DNS&lt;/code&gt;的IP地址；&lt;/li&gt;
-  &lt;li&gt;本地DNS向&lt;code class=&quot;highlighter-rouge&quot;&gt;顶级DNS&lt;/code&gt;发送DNS查询报文；&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;顶级DNS&lt;/code&gt;发现域名的前缀为”qq.com”，在本地记录中查找负责该前缀的&lt;code class=&quot;highlighter-rouge&quot;&gt;权威DNS&lt;/code&gt;的IP地址并进行回复；&lt;/li&gt;
-  &lt;li&gt;本地DNS向&lt;code class=&quot;highlighter-rouge&quot;&gt;权威DNS&lt;/code&gt;发送DNS查询报文；&lt;/li&gt;
-  &lt;li&gt;权威DNS查找到一条NAME字段为”join.qq.com”的&lt;code class=&quot;highlighter-rouge&quot;&gt;CNAME记录&lt;/code&gt;（由服务提供者配置），该记录的Value字段为”join.qq.cdn.com”；并且还找到另一条NAME字段为”join.qq.cdn.com”的A记录，该记录的Value字段为GSLB的IP地址；&lt;/li&gt;
-  &lt;li&gt;本地DNS向GSLB发送DNS查询报文；&lt;/li&gt;
-  &lt;li&gt;GSLB根据&lt;code class=&quot;highlighter-rouge&quot;&gt;本地DNS&lt;/code&gt;的IP地址判断用户的大致位置为深圳，筛选出位于华南地区且综合考量最优的SLB的IP地址填入DNS回应报文，作为DNS查询的最终结果；&lt;/li&gt;
-  &lt;li&gt;本地DNS回复客户端的DNS请求，将上一步的IP地址作为最终结果回复给客户端；&lt;/li&gt;
-  &lt;li&gt;客户端根据IP地址向SLB发送HTTP请求：”&lt;a href=&quot;https://join.qq.com/video.php&quot;&gt;join.qq.com/video.php&lt;/a&gt;“；&lt;/li&gt;
-  &lt;li&gt;SLB综合考虑缓存服务器集群中各个节点的资源限制条件、健康度、负载情况等因素，筛选出最优的缓存节点后回应客户端的HTTP请求（状态码为302，重定向地址为最优缓存节点的IP地址）；&lt;/li&gt;
-  &lt;li&gt;客户端接收到SLB的HTTP回复后，重定向到该缓存节点上；&lt;/li&gt;
-  &lt;li&gt;缓存节点判断请求的资源是否存在、过期，将缓存的资源直接回复给客户端，否则到源站进行数据更新再回复。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;其中较为关键的步骤为6~9，与普通的DNS过程不同的是，这里需要服务提供者（源站）配置它在其权威DNS中的记录，将直接指向源站的A记录修改为一条CNAME记录及其对应的A记录，CNAME记录将目标域名转换为GSLB的别名，A记录又将该别名转换为GSLB的IP地址。通过这一系列的操作，将解析源站的目标域名的权力交给了GSLB，以致于GSLB可以根据地理位置等信息将用户的请求引导至距离其最近的”缓存节点”，减缓了源站的负载压力和网络拥塞。&lt;/p&gt;
-
-&lt;h4 id=&quot;cdn节点有缓存场景&quot;&gt;CDN节点有缓存场景&lt;/h4&gt;
-
-&lt;p&gt;HTTP请求流程说明：&lt;/p&gt;
-
-&lt;p&gt;1、用户在浏览器输入要访问的网站域名，向本地DNS发起域名解析请求。&lt;/p&gt;
-
-&lt;p&gt;2、域名解析的请求被发往网站授权DNS服务器。&lt;/p&gt;
-
-&lt;p&gt;3、网站DNS服务器解析发现域名已经CNAME到了www.example.com.c.cdnhwc1.com。&lt;/p&gt;
-
-&lt;p&gt;4、请求被指向CDN服务。&lt;/p&gt;
-
-&lt;p&gt;5、CDN对域名进行智能解析，将响应速度最快的CDN节点IP地址返回给本地DNS。&lt;/p&gt;
-
-&lt;p&gt;6、用户获取响应速度最快的CDN节点IP地址。&lt;/p&gt;
-
-&lt;p&gt;7、浏览器在得到速度最快节点的IP地址以后，向CDN节点发出访问请求。&lt;/p&gt;
-
-&lt;p&gt;8、CDN节点将用户所需资源返回给用户。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_1/51.jpeg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;cdn节点无缓存场景&quot;&gt;CDN节点无缓存场景&lt;/h4&gt;
-
-&lt;p&gt;HTTP请求流程说明：&lt;/p&gt;
-
-&lt;p&gt;1、用户在浏览器输入要访问的网站域名，向本地DNS发起域名解析请求。&lt;/p&gt;
-
-&lt;p&gt;2、域名解析的请求被发往网站授权DNS服务器。&lt;/p&gt;
-
-&lt;p&gt;3、网站DNS服务器解析发现域名已经CNAME到了www.example.com.c.cdnhwc1.com。&lt;/p&gt;
-
-&lt;p&gt;4、请求被指向CDN服务。&lt;/p&gt;
-
-&lt;p&gt;5、CDN对域名进行智能解析，将响应速度最快的CDN节点IP地址返回给本地DNS。&lt;/p&gt;
-
-&lt;p&gt;6、用户获取响应速度最快的CDN节点IP地址。&lt;/p&gt;
-
-&lt;p&gt;7、浏览器在得到速度最快节点的IP地址以后，向CDN节点发出访问请求。&lt;/p&gt;
-
-&lt;p&gt;8、CDN节点回源站拉取用户所需资源。&lt;/p&gt;
-
-&lt;p&gt;9、将回源拉取的资源缓存至节点。&lt;/p&gt;
-
-&lt;p&gt;10、将用户所需资源返回给用户。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_1/52.jpeg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;cdn适用场景&quot;&gt;CDN适用场景&lt;/h4&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;网站站点/应用加速&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;通俗讲就是static 内容加速，静态内容加速，如：html image js css 等&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;视音频点播/大文件下载分发加速&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;基本上都是视频点播，MP4、flv等视频文件，例如国内的优酷、土豆、腾讯视频、爱奇艺都是一样。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;视频直播加速&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;视频直播加速，流媒体切片、转码、码流转换等等。&lt;/p&gt;
-
-&lt;p&gt;熊猫TV、斗鱼、淘宝直播&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;移动应用加速&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;移动APP更新文件（apk文件）分发，移动APP内图片、页面、短视频、UGC等内容的优化加速分发。&lt;/p&gt;
-
-&lt;p&gt;ios、安卓 端 APP 、微信小程序、支付宝小程序等。&lt;/p&gt;
-
-&lt;h3 id=&quot;四网游加速原理&quot;&gt;四、网游加速原理&lt;/h3&gt;
-
-&lt;h4 id=&quot;41网络质量指标&quot;&gt;4.1网络质量指标&lt;/h4&gt;
-
-&lt;p&gt;网游加速的目的是为了让个人用户能够快速地连接到游戏服务器，让用户游戏更流畅。常用的衡量指标如下：&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;（1）网络延迟（delay）&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;它定义为信号从网络的一端(如玩家客户端)到另一端(如游戏服务器)所花费的时间。基于网络延迟，游戏卡顿情况可以简单分为以下级别：&lt;/p&gt;
-
-&lt;p&gt;1~30ms：极快，几乎察觉不出有延迟，玩任何游戏速度都特别顺畅&lt;/p&gt;
-
-&lt;p&gt;31~50ms：良好，可以正常游戏，没有明显的延迟情况&lt;/p&gt;
-
-&lt;p&gt;51~100ms：普通，对抗类游戏在一定水平以上能感觉出延迟，偶尔感觉到停顿&lt;/p&gt;
-
-&lt;p&gt;100ms~200ms：较差，无法正常游玩对抗类游戏，有明显卡顿，偶尔出现丢包和&lt;a href=&quot;https://baike.baidu.com/item/掉线&quot;&gt;掉线&lt;/a&gt;现象&lt;/p&gt;
-
-&lt;p&gt;200ms~500ms：很差，访问网页有明显的延迟和卡顿，经常出现丢包或无法访问&lt;/p&gt;
-
-&lt;p&gt;&amp;gt;500ms：极差，难以接受的延迟和丢包，甚至无法访问网页&lt;/p&gt;
-
-&lt;p&gt;&amp;gt;1000ms：基本无法访问&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;（2）丢包率（Loss Tolerance或Packet Loss Rate）&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;它定义为测试中所丢失数据包数量占所发送数据组的比率。计算方法是:“(输入报文-输出报文)/输入报文*100%”。丢包率与数据包长度以及包发送频率相关。通常,千兆网卡在流量大于200Mbps时,丢包率小于万分之五;百兆网卡在流量大于60Mbps时,丢包率小于万分之一。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;（3）每秒传输帧数FPS（frames per second）&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;它定义为画面每秒传输的帧数，可以理解为屏幕的刷新率，通常不低于30帧/秒。但达到60帧/秒以上，人眼就分别不出来了，也就是说60帧/秒和200帧/秒在人眼看来是完全没区别的。一块高性能的显卡有助于数据帧的处理。&lt;/p&gt;
-
-&lt;p&gt;其它描述网络性能的指标还包括，速率、带宽、网络带宽积、吞吐率等。&lt;/p&gt;
-
-&lt;h4 id=&quot;42网游加速方式&quot;&gt;4.2网游加速方式&lt;/h4&gt;
-
-&lt;p&gt;网游加速器主要是在骨干网发挥作用，为了提升网络互联速度，网游加速器厂商专门搭建或租用了高带宽的双线机房，架设多个节点服务器，编写&lt;a href=&quot;https://www.jinglingip.com/&quot;&gt;网络加速器&lt;/a&gt;客户端，借助节点服务器来高效完成玩家的跨网连接游戏服务器请求。网络加速器客户端能够自动识别用户的网络线路类型(电信或联通)，自动选择速度最快的节点服务器进行数据转发，从而达到数据加速作用。&lt;/p&gt;
-
-&lt;p&gt;网游加速可以采用两种方式来实现。&lt;/p&gt;
-
-&lt;p&gt;其一是VPN&lt;/p&gt;
-
-&lt;p&gt;它需要部署双线VPN服务器作为加速节点，用于电信和联通之间的自动快速切换。客户端通过加速服务器自动选择速度最快的服务器。它需要拨号连接到VPN服务器并获取一个虚拟IP地址，通过修改路由表的方式，将指定进程的网络访问路由到虚拟IP上，而其余地址仍经过原默认路由途径访问。&lt;/p&gt;
-
-&lt;p&gt;其二是代理服务器。&lt;/p&gt;
-
-&lt;p&gt;它通过部署SOCKS5代理服务器作为加速节点，使得客户端能够自动选择最快的代理服务器作为当前的转发节点。在客户端，该方式主要采用LSP技术，在用户的主机安装分层协议。当在游戏客户端调用connect函数试图连接游戏服务器时，LSP将该连接重定向到代理服务器，并采用SOCKS5协议规范与代理服务器进行数据协商，由代理服务器来连接真正的游戏服务器，最后将游戏服务器的数据原封不动转发给用户或将用户的数据原封不动转发给游戏服务器。&lt;/p&gt;
-
-&lt;h4 id=&quot;43网游加速应用&quot;&gt;4.3网游加速应用&lt;/h4&gt;
-
-&lt;p&gt;加速器服务提供商有一台高速服务器连接游戏服务器，延时极低，然后当地加速器客户端通过添加lsp或vpn的方法!让游戏历程连接到加速器服务商的服务器上，这样就即是别的开发了一条人很少的通道，游戏的重要延时就是用户盘算机和加速器服务器之间的延时了。&lt;/p&gt;
-
-&lt;p&gt;迅游手游加器的加速原理是：&lt;/p&gt;
-
-&lt;p&gt;利用VPN技术，用户通过一 台登 陆服务器用加速软件商提供的账号密码拨号登 陆到 一台具有双线带宽的服务器上，并与之建立连接并改变当前网络环境。在访问的时候，将本机访问的目标（例如：一个网址）通过节点服务器转发一次，从而完成加速效果。&lt;/p&gt;
-
-&lt;p&gt;Anycas加速：&lt;/p&gt;
-
-&lt;p&gt;Anycast 的 IP 能起到游戏加速器的作用，游戏请求就近进入腾讯云，走腾讯云的内网专线到达游戏服务器，极大缩短经过的公网路径，减少了延时、抖动、丢包。此外跟传统加速比，IP 入口无需额外部署流量接收设备，且IP无需区分地域，简化了 DNS 部署。&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">一、普通的HTTP请求</summary></entry><entry><title type="html">iOS推送APNs</title><link href="http://www.helloted.com/ios/2021/02/26/push/" rel="alternate" type="text/html" title="iOS推送APNs" /><published>2021-02-26T20:00:00+08:00</published><updated>2021-02-26T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2021/02/26/push</id><content type="html" xml:base="http://www.helloted.com/ios/2021/02/26/push/">&lt;h4 id=&quot;0通知&quot;&gt;0、通知&lt;/h4&gt;
-
-&lt;p&gt;iOS中的推送通知，主要有以下几种推送：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;本地通知：&lt;/strong&gt;iOS在本地发出的通知，功能开发集成在UserNotifications.framework内，常见应用：闹钟提醒。&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;在线推送：&lt;/strong&gt;APP在前台时，消息通过自建的网络长连接从服务器推送到应用，常见应用：微信在前台时的消息推送。&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;APNs：&lt;/strong&gt;APP未被唤起或者处于后台，通过苹果服务器远程推送消息给应用。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h5 id=&quot;notifications-回顾&quot;&gt;Notifications 回顾&lt;/h5&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;iOS 3 － Apple 引入推送通知&lt;/li&gt;
-  &lt;li&gt;iOS 4 － 引入本地通知&lt;/li&gt;
-  &lt;li&gt;iOS 5 － 有了通知中心&lt;/li&gt;
-  &lt;li&gt;iOS 6 － 通知中心与iCloud同步&lt;/li&gt;
-  &lt;li&gt;iOS 7 － 后台靜默推送&lt;/li&gt;
-  &lt;li&gt;iOS 8 － 重新設定了通知许可权，可互动通知&lt;/li&gt;
-  &lt;li&gt;iOS 9 － 支援在通知中回复信息，Provider API 等等&lt;/li&gt;
-  &lt;li&gt;iOS 10 － 新增了UserNotificationKit框架，整合了关于通知的方法，新增了图片音频视频等格式&lt;/li&gt;
-  &lt;li&gt;iOS 12 － 新增了通知分组、隐式推送、通知内容拓展&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;1apns&quot;&gt;1、APNs&lt;/h4&gt;
-
-&lt;p&gt;APNs，即 Apple Push Notification Service，依托一个或几个系统常驻进程运作，是全局的（接管所有应用的消息推送），可看作是独立于应用之外，设备与苹果的服务器之间维持一个长连接进行消息传递。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_1/46.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;主要流程为：&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;服务器端将消息先发送到苹果的APNs；&lt;/li&gt;
-  &lt;li&gt;由苹果的APNs将消息推送到客户的设备端；&lt;/li&gt;
-  &lt;li&gt;由iOS系统将接收到的消息分发给相应的App。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4 id=&quot;2详细过程&quot;&gt;2、详细过程&lt;/h4&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_1/48.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_1/47.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;过程如下：&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;首先是设备与APNS Server建立连接；&lt;/li&gt;
-  &lt;li&gt;APP首次启动向APNS Server注册deviceToken。APNS Server返回deviceToken给APP；&lt;/li&gt;
-  &lt;li&gt;APP将deviceToken发送给PUSH服务端程序；&lt;/li&gt;
-  &lt;li&gt;服务端程序向APNS服务发送消息；&lt;/li&gt;
-  &lt;li&gt;APNS服务将消息发送给设备，设备转发给对应的APP。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4 id=&quot;3apns的安全架构&quot;&gt;3、APNs的安全架构&lt;/h4&gt;
-
-&lt;p&gt;APNs使用两个“信任”来实施端到端、密码验证和身份验证：连接信任和设备令牌信任（&lt;em&gt;connection trust&lt;/em&gt; and &lt;em&gt;device token trust&lt;/em&gt;.）。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;连接信任(connection trust)&lt;/code&gt;在消息Providers和APN之间、APN和设备device之间起作用。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;提供程序到APN的连接信任&lt;/strong&gt;:确保提供程序和APN之间的连接仅适用于与Apple达成推送通知传递协议的公司拥有的授权提供程序。通过签名证书来保证授权。&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;APN到设备的连接信任&lt;/strong&gt;:可确保只有授权的设备才能连接到APN来接收通知。APNs会自动强制与每个设备建立连接信任，以确保设备的合法性。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;设备令牌信任(device token trust)&lt;/code&gt;对于每个远程通知都是端到端的。它确保仅在正确的起点（提供者）和终点（设备）之间路由通知。&lt;/p&gt;
-
-&lt;p&gt;deviceToken是不透明的NSData实例，其中包含Apple分配给特定设备上特定应用程序的唯一标识符。只有APN才能解码和读取deviceToken的内容。每个应用程序实例在向APN注册时都会收到其唯一的deviceToken，然后必须将token转发给它的提供者，推送通知请求中包含设备令牌；APN使用设备令牌来确保仅将通知传递给预期的唯一应用程序设备组合。&lt;/p&gt;
-
-&lt;p&gt;APN可以出于多种原因发行新的deviceToken：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;用户在新设备上安装您的应用&lt;/li&gt;
-  &lt;li&gt;用户从备份中还原设备&lt;/li&gt;
-  &lt;li&gt;用户重新安装操作系统&lt;/li&gt;
-  &lt;li&gt;其他系统定义的事件&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;4devicetoken&quot;&gt;4、DeviceToken&lt;/h4&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;device token: APNs uses device tokens to identify each unique app and device combination. It also uses them to authenticate the routing of remote notifications sent to a device.(device token是APNs用于区分识别每个iOS设备和设备上不同app的一个标识符，还可以用于APNs通过它将推送消息路由到指定设备上)&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;deviceToken注意事项：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;获取deviceToken跟app是否申请了推送权限无关，即使是禁用了远程推送，也可以正确获取deviceToken。如果没有申请权限，会以静默推送形式呈现。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;If you do not request and receive authorization for your app’s interactions, the system delivers all remote notifications to your app silently.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;安装应用后第一次打开APP获取deviceToken时必须联网。如果在获取时没有网络，在重新连接网络后会第一时间返回deviceToken。&lt;/li&gt;
-  &lt;li&gt;不需要缓存DeviceToken。如果已经生成了有效的DeviceToken，系统或有缓存，在 重新安装App、重装系统、或者从备份还原系统时，会重新生成DeviceToken并更新缓存。&lt;/li&gt;
-  &lt;li&gt;debug环境下是向开发环境的APNs服务器申请DeviceToken，而release环境是向生产环境的APNs服务器申请的。如果环境不匹配，则会出现Bad deviceToken错误。&lt;/li&gt;
-  &lt;li&gt;deviceToken与bundleId存在着关联。如果deviceToken与证书中的bundleId不匹配，会返回DeviceTokenNotForTopic&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">0、通知</summary></entry></feed>
+&lt;p&gt;所有代码与引用的代码的差集即为未使用代码&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">一、减包的措施</summary></entry></feed>

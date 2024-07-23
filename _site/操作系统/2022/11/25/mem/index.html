@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter">
+
+    <title>操作系统内存管理 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2022/11/25/mem/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/app/">APP</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/mac_app/">Mac App</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>操作系统内存管理</h1>
+                    
+                    <h2 class="subheading">内存管理和虚拟内存</h2>
+                    
+                    <span class="meta">Posted by Ted on November 25, 2022</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h3 id="一内存管理">一、内存管理</h3>
+
+<p>操作系统的内存管理非常重要，主要负责下面这些事情：</p>
+
+<ul>
+  <li>内存的分配与回收：对进程所需的内存进行分配和释放，malloc 函数：申请内存，free 函数：释放内存。</li>
+  <li>地址转换：将程序中的虚拟地址转换成内存中的物理地址。</li>
+  <li>内存扩充：当系统没有足够的内存时，利用虚拟内存技术或自动覆盖技术，从逻辑上扩充内存。</li>
+  <li>内存映射：将一个文件直接映射到进程的进程空间中，这样可以通过内存指针用读写内存的办法直接存取文件内容，速度更快。</li>
+  <li>内存优化：通过调整内存分配策略和回收算法来优化内存使用效率。</li>
+  <li>内存安全：保证进程之间使用内存互不干扰，避免一些恶意程序通过修改内存来破坏系统的安全性。</li>
+</ul>
+
+<h4 id="11-malloc是如何分配内存的"><strong>1.1 malloc是如何分配内存的？</strong></h4>
+
+<p>malloc 是 C 语言标准库中用于动态内存分配的函数。它从堆（heap）上分配指定大小的内存块，并返回一个指向该内存块的指针。如果分配失败，它返回 NULL。</p>
+
+<p>基本工作原理</p>
+
+<p>在使用 malloc 进行内存分配时，实际的处理过程涉及两个层面：首先是从进程的内存池中尝试分配内存，如果进程的内存池中没有足够的空间满足当前的请求，那么 malloc 会从操作系统那里请求更多的内存。</p>
+
+<ul>
+  <li>从进程内存池中分配
+    <ul>
+      <li>内存池管理：进程的内存池通常由 malloc 管理，它包含了一系列已经从操作系统获取并为进程预留的内存块。这些内存块可能是连续的或者是非连续的，取决于之前的分配和释放操作。</li>
+      <li>内存分配尝试：当调用 malloc 请求内存时，malloc 首先检查其管理的内存池中是否有足够的空闲内存来满足请求。这涉及到查找合适大小的空闲块，可能需要根据内存分配算法（如首次适应、最佳适应等）来选择。</li>
+    </ul>
+  </li>
+  <li>从操作系统请求内存
+    <ul>
+      <li>内存池不足：如果进程的内存池中没有足够的空闲内存块来满足当前的请求，malloc 需要从操作系统请求更多的内存。</li>
+      <li>系统调用：malloc 通过系统调用（如 sbrk 或 mmap）向操作系统请求额外的内存。这些调用会将更多的内存区域分配给进程，从而扩展进程的堆空间。内存整合和返回</li>
+    </ul>
+  </li>
+  <li>内存整合：获取到新的内存后，malloc 可能会执行一些内存整合操作，如合并相邻的空闲块，以优化内存的使用和减少碎片。</li>
+  <li>返回内存指针：完成内存分配后，malloc 将返回一个指向新分配内存块的指针。</li>
+</ul>
+
+<p>需要注意的是，malloc函数只负责分配内存，并不会初始化内存块的内容。如果需要初始化内存块，可以使用memset等函数进行操作。</p>
+
+<h4 id="12-内存碎片">1.2 <strong>内存碎片</strong></h4>
+
+<ul>
+  <li>内部内存碎片(Internal Memory Fragmentation，简称为内存碎片)：已经分配给进程使用但未被使用的内存。导致内部内存碎片的主要原因是，当采用固定比例比如 2 的幂次方进行内存分配时，进程所分配的内存可能会比其实际所需要的大。举个例子，一个进程只需要 65 字节的内存，但为其分配了 128（2^7） 大小的内存，那 63 字节的内存就成为了内部内存碎片。</li>
+  <li>外部内存碎片(External Memory Fragmentation，简称为外部碎片)：由于未分配的连续内存区域太小，以至于不能满足任意进程所需要的内存分配请求，这些小片段且不连续的内存空间被称为外部碎片。也就是说，外部内存碎片指的是那些并未分配给进程但又不能使用的内存。我们后面介绍的分段机制就会导致外部内存碎片。</li>
+</ul>
+
+<h3 id="二虚拟内存">二、虚拟内存</h3>
+
+<p><strong>虚拟内存(Virtual Memory)</strong> 是计算机系统内存管理非常重要的一个技术，本质上来说它只是逻辑存在的，是一个假想出来的内存空间，主要作用是作为进程访问主存（物理内存）的桥梁并简化内存管理。</p>
+
+<p><img src="/img/Simple_2/60.jpg" alt="img" /></p>
+
+<p>虚拟地址空间构成虚拟内存。它使得应用程序认为它拥有连续可用的内存（一个连续完整的地址空间），而实际上，它通常是被分隔成多个物理内存碎片。还有部分暂时存储在外部磁盘存储器上（Swap），在需要时进行数据交换。</p>
+
+<p><strong>虚拟内存提供了以下能力</strong>：</p>
+
+<ol>
+  <li>隔离进程：物理内存通过虚拟地址空间访问，虚拟地址空间与进程一一对应。每个进程都认为自己拥有了整个物理内存，进程之间彼此隔离，一个进程中的代码无法更改正在由另一进程或操作系统使用的物理内存。</li>
+  <li>提升物理内存利用率：有了虚拟地址空间后，操作系统只需要将进程当前正在使用的部分数据或指令加载入物理内存。</li>
+  <li>简化内存管理：进程都有一个一致且私有的虚拟地址空间，程序员不用和真正的物理内存打交道，而是借助虚拟地址空间访问物理内存，从而简化了内存管理。</li>
+  <li>多个进程共享物理内存：进程在运行过程中，会加载许多操作系统的动态库。这些库对于每个进程而言都是公用的，它们在内存中实际只会加载一份，这部分称为共享内存。</li>
+  <li>提高内存使用安全性：控制进程对物理内存的访问，隔离不同进程的访问权限，提高系统的安全性。</li>
+  <li>提供更大的可使用内存空间：可以让程序拥有超过系统物理内存大小的可用内存空间。这是因为当物理内存不够用时，可以利用磁盘充当，将物理内存页（通常大小为 4 KB）保存到磁盘文件（会影响读写速度），数据或代码页会根据需要在物理内存与磁盘之间移动。</li>
+</ol>
+
+<p>总的来说，虚拟内存技术通过将物理内存和磁盘空间结合起来，为每个进程提供了一个连续的、抽象的地址空间。它扩展了地址空间、提供了内存管理和保护机制，支持共享和隔离，提高了系统的性能和资源利用率，使得计算机系统更加灵活、稳定和安全。</p>
+
+<p><strong>虚拟内存的工作原理如下</strong>：</p>
+
+<ol>
+  <li>地址空间划分：每个进程都有自己的虚拟地址空间，通常是一个连续的地址范围。这个地址空间被划分为多个固定大小的页面（通常是4KB），每个页面都有一个唯一的虚拟地址。</li>
+  <li>页面映射：虚拟内存管理器将虚拟页面映射到物理内存或磁盘上的页面框（通常也是4KB）。这个映射关系存储在页表中，页表记录了虚拟页面和物理页面之间的对应关系。</li>
+  <li>页面置换：当进程访问一个虚拟页面时，虚拟内存管理器首先检查该页面是否已经在物理内存中。如果在物理内存中，就直接访问；如果不在物理内存中，就发生了缺页中断。</li>
+  <li>缺页中断处理：当发生缺页中断时，操作系统会根据页表中的映射关系，将对应的页面从磁盘读取到物理内存中的一个空闲页面框中，并更新页表。然后，进程的执行可以继续，就好像该页面一直在物理内存中一样。</li>
+  <li>页面置换算法：当物理内存不足时，操作系统需要选择一个页面进行置换，将其写回磁盘并释放其物理内存。常用的页面置换算法有最近最久未使用（LRU）、先进先出（FIFO）和时钟（Clock）算法等。</li>
+</ol>
+
+<p><strong>虚拟内存缺点</strong></p>
+
+<ol>
+  <li>性能开销：虚拟内存的使用涉及到页表查找和磁盘I/O操作，这些都可能导致性能下降。特别是当系统频繁进行换页操作时，会显著影响系统性能，这种现象称为“抖动”。</li>
+  <li>硬盘速度限制：虽然现代固态硬盘（SSD）的速度已经大幅提升，但相比于物理内存，硬盘的访问速度仍然较慢。频繁的访问硬盘来加载或存储页面会减慢程序的执行速度。</li>
+  <li>复杂的内存管理：虚拟内存系统需要复杂的硬件支持（如内存管理单元MMU）和操作系统级的支持，这增加了系统设计和维护的复杂性。</li>
+  <li>资源消耗：维护页表和相关数据结构需要额外的内存和CPU资源。</li>
+</ol>
+
+<h3 id="三虚拟内存实现的三种机制">三、虚拟内存实现的三种机制</h3>
+
+<p>虚拟内存（Virtual Memory）是一种计算机系统技术，它使得程序可以使用比实际物理内存更大的地址空间。虚拟内存通过将虚拟地址映射到物理地址，实现了内存的高效管理和保护。虚拟内存的实现主要有三种机制：分页（Paging）、分段（Segmentation）和段页结合（Segmentation with Paging）。</p>
+
+<h4 id="1-分页机制paging">1. 分页机制（Paging）</h4>
+
+<p>分页机制是虚拟内存实现中最常见的一种方式。它将虚拟地址空间和物理地址空间都划分为固定大小的块，分别称为页（Page）和页框（Frame）。虚拟地址由页号和页内偏移量组成，通过页表（Page Table）将页号映射到物理内存中的页框。</p>
+
+<h5 id="特点">特点</h5>
+
+<ul>
+  <li><strong>固定大小</strong>：页和页框大小固定，简化了内存管理。</li>
+  <li><strong>减少外部碎片</strong>：由于页大小固定，减少了外部碎片。</li>
+  <li><strong>内存保护</strong>：每个页可以有不同的访问权限。</li>
+</ul>
+
+<h4 id="2-分段机制segmentation">2. 分段机制（Segmentation）</h4>
+
+<p>分段机制将虚拟地址空间划分为若干段，每个段有一个段基址和段长度。虚拟地址由段选择子和段内偏移量组成。段选择子用于选择段，段内偏移量用于指定段内的具体地址。</p>
+
+<h5 id="特点-1">特点</h5>
+
+<ul>
+  <li><strong>灵活性</strong>：可以根据需要动态调整段的大小。</li>
+  <li><strong>保护性</strong>：每个段可以有不同的访问权限，提供了内存保护。</li>
+  <li><strong>共享性</strong>：多个进程可以共享同一个段。</li>
+</ul>
+
+<h4 id="3-段页结合机制segmentation-with-paging">3. 段页结合机制（Segmentation with Paging）</h4>
+
+<p>段页结合机制结合了分段和分页的优点。内存首先被划分为段，每个段再划分为若干页。虚拟地址由段选择子、页号和页内偏移量组成。</p>
+
+<h5 id="特点-2">特点</h5>
+
+<ul>
+  <li><strong>灵活性和固定大小结合</strong>：段提供灵活性，页提供固定大小的管理。</li>
+  <li><strong>减少外部碎片</strong>：分页减少了外部碎片。</li>
+  <li><strong>内存保护和共享</strong>：段和页都可以有不同的访问权限，提供了更细粒度的内存保护和共享。</li>
+</ul>
+
+<h4 id="总结">总结</h4>
+
+<ul>
+  <li>分段机制（Segmentation）：分段机制将虚拟地址空间划分为多个段（segment），每个段具有不同的大小和属性。每个段都有一个基地址和长度，通过将段内的偏移量与基地址相加，可以得到物理地址。分段机制可以提供灵活的地址空间管理，但可能会导致外部碎片问题。</li>
+  <li>分页机制（Paging）：分页机制将虚拟地址空间和物理内存空间划分为固定大小的页（page），通常为4KB或者更大。虚拟地址被划分为页号和页内偏移量，通过页表（Page Table）来映射虚拟页号到物理页框号。分页机制可以提供更好的内存利用率和地址空间的连续性，但可能会导致内部碎片问题。</li>
+  <li>段页机制（Segmentation with Paging）：段页机制是分段机制和分页机制的结合，它将虚拟地址空间划分为多个段，每个段再划分为多个页。通过段表（Segment Table）和页表的组合，可以将虚拟地址映射到物理地址。段页机制综合了分段和分页的优点，提供了更灵活的地址空间管理和更好的内存利用率。</li>
+</ul>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/20/es/" data-toggle="tooltip" data-placement="top" title="Elasticsearch">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2024</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

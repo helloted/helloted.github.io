@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter">
+
+    <title>Elasticsearch - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/20/es/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/app/">APP</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/mac_app/">Mac App</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>Elasticsearch</h1>
+                    
+                    <h2 class="subheading">Elasticsearch简介</h2>
+                    
+                    <span class="meta">Posted by Ted on November 20, 2022</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h3 id="1简介"><strong>1、简介</strong></h3>
+
+<p>Elasticsearch是一个开源的分布式搜索和分析引擎，构建在Apache Lucene库之上。它提供了一个高性能、可扩展和全文搜索的解决方案，适用于各种应用场景。</p>
+
+<p>以下是一些关键特性和功能：</p>
+
+<ol>
+  <li>分布式架构：Elasticsearch是一个分布式数据库，可以在多个节点上分布和复制数据，提供高可用性和容错性。它使用自动分片和复制机制来实现数据的分布和冗余存储。</li>
+  <li>实时搜索和分析：Elasticsearch以其快速的搜索性能和实时数据处理能力而闻名。它能够在大规模数据集上进行快速的全文搜索、过滤和聚合操作，并支持复杂的查询和实时数据分析。</li>
+  <li>强大的查询语言：Elasticsearch使用基于Lucene查询语法的查询语言，支持丰富的搜索和过滤功能。它提供了诸如全文搜索、模糊搜索、范围搜索、布尔搜索、聚合等功能，使用户能够灵活地构建复杂的查询。</li>
+  <li>多种数据类型支持：Elasticsearch支持多种数据类型的索引和查询，包括文本、数字、日期、地理空间等。它提供了丰富的分析和处理工具，用于处理不同类型的数据。</li>
+  <li>可扩展性和高性能：Elasticsearch具有良好的可扩展性，可以水平扩展以处理大量数据和高并发查询。它能够快速地索引和搜索大规模数据集，并提供低延迟的响应时间。</li>
+  <li>数据安全和权限控制：Elasticsearch提供了安全性和权限控制机制，可以对数据进行访问控制和身份验证。它支持基于角色的访问控制和SSL/TLS加密，以保护数据的安全性。</li>
+  <li>生态系统和集成：Elasticsearch拥有丰富的生态系统，包括Kibana（数据可视化工具）、Logstash（日志收集和处理工具）、Beats（轻量级数据采集器）等。这些工具可以与Elasticsearch无缝集成，提供全面的数据处理和可视化能力。</li>
+</ol>
+
+<p>Elasticsearch的灵活性和功能丰富性使其成为处理大规模数据、实时搜索和分析的理想选择。它被广泛应用于日志分析、企业搜索、电商平台、实时监控、地理空间分析等各种领域和应用场景。</p>
+
+<h3 id="2应用场景"><strong>2、应用场景</strong></h3>
+
+<p>Elasticsearch是一个功能强大的分布式搜索和分析引擎，适用于许多不同的应用场景。以下是一些常见的Elasticsearch应用场景：</p>
+
+<ol>
+  <li>实时日志分析：Elasticsearch能够高效地处理大量的实时日志数据，并提供强大的搜索和聚合功能，使得日志分析和监控变得更加容易和高效。</li>
+  <li>全文搜索引擎：Elasticsearch以其快速的搜索性能和高级的文本分析功能而闻名，适用于构建全文搜索引擎、内容管理系统、电子商务平台等需要强大搜索能力的应用。</li>
+  <li>企业搜索和知识管理：Elasticsearch可以帮助组织构建内部搜索引擎，用于快速检索和浏览企业内部的文档、知识库、文档存档等。</li>
+  <li>实时数据分析和可视化：Elasticsearch与Kibana（一个数据可视化工具）结合使用，可以实现实时数据的分析和可视化，帮助用户更好地理解和利用数据。</li>
+  <li>产品目录和电商搜索：Elasticsearch提供了强大的搜索和过滤功能，适用于构建产品目录、电商平台等需要快速搜索和过滤商品的应用。</li>
+  <li>地理空间数据分析：Elasticsearch支持地理空间数据的索引和查询，适用于构建位置服务、地理信息系统（GIS）等应用。</li>
+  <li>实时监控和告警：Elasticsearch可以用于实时监控和告警系统，通过收集和分析实时数据，及时发现和处理异常情况。</li>
+</ol>
+
+<p>这只是一些常见的应用场景，实际上，Elasticsearch的灵活性和可扩展性使其适用于许多其他领域和用途。它的强大搜索和分析功能以及分布式架构使其成为处理大规模数据和实时数据的理想选择。</p>
+
+<h3 id="3对比"><strong>3、对比</strong></h3>
+
+<p>当涉及到Elasticsearch和MySQL这两个数据库时，以下是它们之间的一些详细对比：</p>
+
+<p>数据存储和查询语言：</p>
+
+<ul>
+  <li>MySQL是一种关系型数据库管理系统（RDBMS），使用表格结构来存储数据，并使用结构化查询语言（SQL）作为主要的查询语言。</li>
+  <li>Elasticsearch是一个分布式文档存储数据库，使用无模式的JSON文档来存储数据，并使用自己的查询语言（基于Lucene查询语法）进行搜索和分析。</li>
+</ul>
+
+<p>数据模型和灵活性：</p>
+
+<ul>
+  <li>MySQL使用固定的表格结构，需要在创建表时定义列和数据类型。它适用于结构化数据和事务处理。</li>
+  <li>Elasticsearch使用动态映射，可以根据数据自动创建索引和字段。它适用于非结构化和半结构化数据，具有更大的灵活性。</li>
+</ul>
+
+<p>搜索和分析能力：</p>
+
+<ul>
+  <li>MySQL提供基本的全文搜索和模糊搜索功能，但它的搜索能力相对较弱。它更适合于简单的关系型查询。</li>
+  <li>Elasticsearch以其强大的全文搜索、过滤和聚合功能而闻名，适用于构建全文搜索引擎、实时数据分析和复杂的搜索场景。</li>
+</ul>
+
+<p>分布式架构和可扩展性：</p>
+
+<ul>
+  <li>MySQL可以进行主从复制和分片，但其分布式能力相对较弱。它更适合于单机或小规模的应用。</li>
+  <li>Elasticsearch是一个分布式数据库，具有自动分片和复制机制，可以在多个节点上分布和复制数据，提供高可用性和容错性。</li>
+</ul>
+
+<p>数据处理和性能：</p>
+
+<ul>
+  <li>MySQL适用于事务处理和关系型数据的存储，强调数据一致性和事务支持。</li>
+  <li>Elasticsearch适用于大规模数据的搜索、分析和实时数据处理，具有高度可扩展性和分布式计算能力。</li>
+</ul>
+
+<p>数据安全和权限控制：</p>
+
+<ul>
+  <li>MySQL提供了丰富的安全性和权限控制机制，包括用户认证、访问控制和数据加密等功能。</li>
+  <li>Elasticsearch也提供了安全性和权限控制机制，可以对数据进行访问控制和身份验证。</li>
+</ul>
+
+<p>综上所述，MySQL适用于传统的关系型数据存储和事务处理，而Elasticsearch适用于大规模数据的搜索、分析和实时数据处理。选择哪种数据库取决于具体的需求和应用场景。在某些情况下，两者也可以结合使用，以发挥各自的优势。</p>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/12/mongo/" data-toggle="tooltip" data-placement="top" title="MongoDB">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2022/11/25/mem/" data-toggle="tooltip" data-placement="top" title="操作系统内存管理">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2024</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>
