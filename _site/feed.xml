@@ -1,4 +1,240 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2024-07-24T18:23:25+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">数据库架构之Buffer Pool</title><link href="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/25/buffer/" rel="alternate" type="text/html" title="数据库架构之Buffer Pool" /><published>2022-11-25T20:00:00+08:00</published><updated>2022-11-25T20:00:00+08:00</updated><id>http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/25/buffer</id><content type="html" xml:base="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/25/buffer/">&lt;h3 id=&quot;1概念&quot;&gt;&lt;strong&gt;1、概念&lt;/strong&gt;&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2024-07-26T17:46:29+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">Golang-Map</title><link href="http://www.helloted.com/golang/2023/01/05/map/" rel="alternate" type="text/html" title="Golang-Map" /><published>2023-01-05T20:00:00+08:00</published><updated>2023-01-05T20:00:00+08:00</updated><id>http://www.helloted.com/golang/2023/01/05/map</id><content type="html" xml:base="http://www.helloted.com/golang/2023/01/05/map/">&lt;h3 id=&quot;1-map的本质&quot;&gt;&lt;strong&gt;1、 map的本质&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;p&gt;golang中的map是一个指针。当执行语句 make(map[k]v, hint) 的时候，其实是调用了 makemap 函数，返回了一个指针&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// makemap implements Go map creation for make(map[k]v, hint).
+func makemap(t *maptype, hint int, h *hmap) *hmap    
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;hmap是map的底层：是 hashmap 的“缩写”，但是hmap还不是主要存储key value的结构，hmap做的是一些map结构的基本设定。&lt;/p&gt;
+
+&lt;h3 id=&quot;2结构&quot;&gt;&lt;strong&gt;2、结构&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;h4 id=&quot;21-实现原理&quot;&gt;&lt;strong&gt;2.1 实现原理&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Go中的map是一个指针，占用8个字节，指向hmap结构体; 源码src/runtime/map.go中可以看到map的底层结构&lt;/li&gt;
+  &lt;li&gt;每个map的底层结构是hmap，hmap包含若干个结构为bmap的bucket数组。每个bucket底层都采用链表结构&lt;/li&gt;
+  &lt;li&gt;每个 bucket 中存储的是 Hash 值低 bit 位数值相同的元素，默认的元素个数为 BUCKETSIZE（值为 8，Go 1.17 版本中在 $GOROOT/src/cmd/compile/internal/reflectdata/reflect.go 中定义，与runtime/map.go 中常量 bucketCnt 保持一致）&lt;/li&gt;
+  &lt;li&gt;当某个 bucket（比如 buckets[0]) 的 8 个空槽 slot）都填满了，且 map 尚未达到扩容的条件的情况下，运行时会建立 overflow bucket，并将这个 overflow bucket 挂在上面 bucket（如 buckets[0]）末尾的 overflow 指针上，这样两个 buckets 形成了一个链表结构，直到下一次 map 扩容之前，这个结构都会一直存在&lt;/li&gt;
+  &lt;li&gt;map 结构，key和value单独排列在一起可以减少结构体对齐填充，减少内存浪费&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/64.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;22-hmap&quot;&gt;&lt;strong&gt;2.2 hmap&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;map本质是hash表（hmap），指向一堆桶（buckets）用来承接数据，每个桶（bmap）能存8组k/v。&lt;/p&gt;
+
+&lt;p&gt;当有数据读写时，会用key的hash找到对应的桶，hash值低8位用来定位桶，高8位用来定位桶内位置，bmap里记录了tophash数组（hash的高8位），方便桶内定位。&lt;/p&gt;
+
+&lt;p&gt;hash表就会有哈希冲突的问题（不同key的hash值一样，即hash后都指向同一个桶），为此map使用桶后链一个溢出桶（overflow）链表来解决当桶8个单元都满了，但还有数据需要存入此桶的问题。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// hmap的基础数据结构
+type hmap struct {
+	count     int	 // 元素的个数 == len()返回的值，必须放在第一个位置因为 len函数需要使用，所以map的len()时间复杂度是O(1)
+	flags     uint8  // map的操作状态，如当前是否有别的线程正在写map、当前是否为相同大小的增长（扩容/缩容？）
+	B         uint8  // hash桶buckets的数量为2^B个
+	noverflow uint16 // 溢出的桶的数量的近似值
+	hash0     uint32 // hash种子
+
+	buckets    unsafe.Pointer // 指向2^B个桶组成的数组的指针，数据存在这里
+	oldbuckets unsafe.Pointer // 指向扩容前的旧buckets数组，只在map增长时有效
+	nevacuate  uintptr        // 计数器，标示扩容后搬迁的进度
+
+	extra *mapextra // 保存溢出桶的链表和未使用的溢出桶数组的首地址
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/65.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/66.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;23-bmap&quot;&gt;&lt;strong&gt;2.3 bmap&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;bmap 就是我们常说的“桶”，桶里面会最多装 8 个 key，这些 key 之所以会落入同一个桶，是因为它们经过哈希计算后，哈希结果是“一类”的。在桶内，又会根据 key 计算出来的 hash 值的高 8 位来决定 key 到底落入桶内的哪个位置（tophash数组记录了key的高8位，方便key用来查找bmap，以及bmap中定位keyvaule）。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;type bmap struct {
+    tophash [bucketCnt]uint8
+    // len为8的数组
+    // 用来快速定位key是否在这个bmap中
+    // 桶的槽位数组，一个桶最多8个槽位，如果key所在的槽位在tophash中，则代表该key在这个桶中
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;但这只是表面(src/runtime/hashmap.go)的结构，编译期间会给它加料，动态地创建一个新的结构：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;type bmap struct {
+    topbits  [8]uint8
+    keys     [8]keytype
+    values   [8]valuetype
+    pad      uintptr
+    overflow uintptr
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;注意到 key 和 value 是各自放在一起的，并不是 key/value/key/value/… 这样的形式。源码里说明这样的好处是在某些情况下可以省略掉 padding字段，节省内存空间。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/67.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;24-tophash&quot;&gt;&lt;strong&gt;2.4 tophash&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;tophash是一个长度为8的数组，记录了key的高8位，方便桶内定位。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;向 map 插入一条数据，或者是从 map 按 key 查询数据的时候，运行时都会使用哈希函数对 key 做哈希运算，并获得一个哈希值（hashcode）&lt;/li&gt;
+  &lt;li&gt;运行时会把 hashcode“一分为二”来看待，其中低位区的值用于选定 bucket，高位区的值用于在某个 bucket 中确定 key 的位置&lt;/li&gt;
+  &lt;li&gt;每个 bucket 的 tophash 区域其实是用来快速定位 key 位置的，避免了逐个 key 进行比较这种代价较大的操作&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/68.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;每一个tophash唯一对应一个K/V对。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/69.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;tophash是一个长度为8的数组，它不仅仅用来存放key的哈希高8位，在不同场景下它还可以标记迁移状态，bucket是否为空等。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;当tophash对应的K/V被使用时，存的是key的哈希值的高8位；&lt;/li&gt;
+  &lt;li&gt;当tophash对应的K/V未被使用时，存的是K/V对应位置的状态。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;3-go-map的扩容缩容&quot;&gt;3. go map的扩容缩容&lt;/h3&gt;
+
+&lt;h4 id=&quot;31扩容过程&quot;&gt;&lt;strong&gt;3.1扩容过程&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;主要是由于哈希碰撞问题&lt;/p&gt;
+
+&lt;p&gt;​    &lt;img src=&quot;/img/Simple_2/70.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;什么情况下会map扩容呢：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;溢出桶太多时会导致严重的性能下降&lt;/li&gt;
+  &lt;li&gt;runtime.mapassign()可能会触发扩容的情况
+    &lt;ul&gt;
+      &lt;li&gt;装载因子超过6.5个（平均每个槽6.5个key）&lt;/li&gt;
+      &lt;li&gt;使用太多溢出桶（溢出桶超过了普通桶）&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;map的两种扩容类型:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;等量扩容（整理）：数据不多但是溢出桶太多了，使数据更紧凑&lt;/li&gt;
+  &lt;li&gt;翻倍扩容：数据太多了增加普通桶的数量&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;map的扩容过程：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;步骤一&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;创建一组新桶&lt;/li&gt;
+  &lt;li&gt;oldbuckets指向原有的桶数组&lt;/li&gt;
+  &lt;li&gt;buckets指向新的桶数组&lt;/li&gt;
+  &lt;li&gt;把map标记为扩容状态&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;​    &lt;img src=&quot;/img/Simple_2/71.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;步骤二&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;将所有的数据从旧桶驱逐到新桶&lt;/li&gt;
+  &lt;li&gt;采用渐进式驱逐&lt;strong&gt;（好多技术都有这种思想，比如redis的rehash）&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;每次操作一个旧桶的时，将旧数据驱逐到新桶&lt;/li&gt;
+  &lt;li&gt;读取时不进行驱逐，只判断读取新桶还是旧桶&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;​    &lt;img src=&quot;/img/Simple_2/72.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;步骤三&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;所有的旧桶驱逐完成后&lt;/li&gt;
+  &lt;li&gt;oldbuckets回收&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;​     &lt;img src=&quot;/img/Simple_2/73.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;总结：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;装载系数或者溢出桶的增加，会触发map扩容&lt;/li&gt;
+  &lt;li&gt;“扩容”可能并不是增加桶的数量，而是整理数据，使数据更加紧凑&lt;/li&gt;
+  &lt;li&gt;map扩容采用渐进式，桶被操作时才会重新分配&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;32-扩容缩容的基本原理&quot;&gt;&lt;strong&gt;3.2 扩容缩容的基本原理&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;go map的扩容缩容都是grow相关的函数，这里扩容是真的，缩容是伪缩容，后面我会解释。我们先看下触发条件：&lt;/p&gt;
+
+&lt;p&gt;触发 map 扩容的时机：在向 map 插入新 key 的时候，会进行条件检测，符合下面这 2 个条件，就会触发扩容：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;装载因子超过阈值，源码里定义的阈值是 6.5。&lt;/li&gt;
+  &lt;li&gt;overflow 的 bucket 数量过多：当 B 小于 15，也就是 bucket 总数 2^B 小于 2^15 时，如果 overflow 的 bucket 数量超过 2^B；当 B &amp;gt;= 15，也就是 bucket 总数 2^B 大于等于 2^15，如果 overflow 的 bucket 数量超过 2^15。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;map只在插入元素即mapassign()函数中对是否扩容缩容进行触发，条件即是上面这段代码：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;条件1：当前不处在growing状态&lt;/li&gt;
+  &lt;li&gt;条件2-1：触发扩容：map的数据量count大于hash桶数量(2B)*6.5。注意这里的(2B)只是hash数组大小，不包括溢出的桶&lt;/li&gt;
+  &lt;li&gt;条件2-2：触发缩容：溢出的桶数量noverflow&amp;gt;=32768(1«15)或者&amp;gt;=hash数组大小。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;仔细观察触发的代码，扩容和缩容是同一个函数，这是怎么做到的呢？在hashGrow()开始，会先判断是否满足扩容条件，如果满足就表明这次是扩容，不满足就一定是缩容条件触发了。扩容和缩容剩下的逻辑，主要区别就在于容量变化，就是hmap.B参数，扩容时B+1则hash表容量扩大1倍，缩容时hash表容量不变。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;h.oldbuckets：指向旧的hash数组，即当前的h.buckets&lt;/li&gt;
+  &lt;li&gt;h.buckets：指向新创建的hash数组&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;到这里触发的主要工作已经完成，接下来就是怎么把元素搬迁到新hash表里了。如果现在就一次全量搬迁过去，显然接下来会有比较长的一段时间map被占用（不支持并发）。所以搬迁的工作是异步增量搬迁的。&lt;/p&gt;
+
+&lt;p&gt;在插入和删除的函数内都有下面一段代码用于在每次插入和删除操作时，执行一次搬迁工作：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; if h.growing() { // 当前处于搬迁状态
+		growWork(t, h, bucket) // 调用搬迁函数
+	}
+	
+func growWork(t *maptype, h *hmap, bucket uintptr) {
+	// 将当前需要处理的桶搬迁
+	evacuate(t, h, bucket&amp;amp;h.oldbucketmask())
+
+	if h.growing() { // 再多搬迁一个桶
+		evacuate(t, h, h.nevacuate)
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;每执行一次插入或删除，都会调用growWork搬迁0~2个hash桶（有可能这次需要搬迁的2个桶在此之前都被搬过了）&lt;/li&gt;
+  &lt;li&gt;搬迁是以hash桶为单位的，包含对应的hash桶和这个桶的溢出链表&lt;/li&gt;
+  &lt;li&gt;被delete掉的元素(emptyone标志)会被舍弃（这是缩容的关键）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;33-为什么叫伪缩容如何实现真缩容&quot;&gt;&lt;strong&gt;3.3 为什么叫“伪缩容”？如何实现“真缩容”？&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;现在可以解释为什么我把map的缩容叫做伪缩容了：因为缩容仅仅针对溢出桶太多的情况，触发缩容时hash数组的大小不变，即hash数组所占用的空间只增不减。也就是说，如果我们把一个已经增长到很大的map的元素挨个全部删除掉，hash表所占用的内存空间也不会被释放。&lt;/p&gt;
+
+&lt;p&gt;所以如果要实现“真缩容”，需自己实现缩容搬迁，即创建一个较小的map，将需要缩容的map的元素挨个搬迁过来：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// go map缩容代码示例
+myMap := make(map[int]int, 1000000)
+
+// 假设这里我们对bigMap做了很多次插入，之后又做了很多次删除，此时bigMap的元素数量远小于hash表大小
+// 接下来我们开始缩容
+smallMap := make(map[int]int, len(myMap))
+for k, v := range myMap {
+    smallMap[k] = v
+}
+myMap = smallMap // 缩容完成，原来的map被我们丢弃，交给gc去清理
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Ted</name></author><category term="Golang" /><summary type="html">1、 map的本质</summary></entry><entry><title type="html">数据库架构之Buffer Pool</title><link href="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/12/10/buffer/" rel="alternate" type="text/html" title="数据库架构之Buffer Pool" /><published>2022-12-10T20:00:00+08:00</published><updated>2022-12-10T20:00:00+08:00</updated><id>http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/12/10/buffer</id><content type="html" xml:base="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/12/10/buffer/">&lt;h3 id=&quot;1概念&quot;&gt;&lt;strong&gt;1、概念&lt;/strong&gt;&lt;/h3&gt;
 
 &lt;p&gt;InnoDB的Buffer Pool（缓冲池）是MySQL数据库中非常重要的一个组件，它主要用于缓存数据和索引，以提高数据库的性能。&lt;/p&gt;
 
@@ -169,7 +405,80 @@
 
 &lt;ol&gt;
   &lt;li&gt;至此，一条更新语句执行完成。&lt;/li&gt;
-&lt;/ol&gt;</content><author><name>Ted</name></author><category term="数据库" /><summary type="html">1、概念</summary></entry><entry><title type="html">操作系统内存管理</title><link href="http://www.helloted.com/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2022/11/25/mem/" rel="alternate" type="text/html" title="操作系统内存管理" /><published>2022-11-25T20:00:00+08:00</published><updated>2022-11-25T20:00:00+08:00</updated><id>http://www.helloted.com/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2022/11/25/mem</id><content type="html" xml:base="http://www.helloted.com/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2022/11/25/mem/">&lt;h3 id=&quot;一内存管理&quot;&gt;一、内存管理&lt;/h3&gt;
+&lt;/ol&gt;</content><author><name>Ted</name></author><category term="数据库" /><summary type="html">1、概念</summary></entry><entry><title type="html">Garbage Collection</title><link href="http://www.helloted.com/golang/2022/12/01/gc/" rel="alternate" type="text/html" title="Garbage Collection" /><published>2022-12-01T20:00:00+08:00</published><updated>2022-12-01T20:00:00+08:00</updated><id>http://www.helloted.com/golang/2022/12/01/gc</id><content type="html" xml:base="http://www.helloted.com/golang/2022/12/01/gc/">&lt;h3 id=&quot;一定义&quot;&gt;&lt;strong&gt;一、定义&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;p&gt;GC，全称 Garbage Collection，即垃圾回收，是一种自动内存管理的机制。&lt;/p&gt;
+
+&lt;p&gt;当程序向操作系统申请的内存不再需要时，垃圾回收主动将其回收并供其他代码进行内存申请时候复用，或者将其归还给操作系统，这种针对内存级别资源的自动回收过程，即为垃圾回收。&lt;/p&gt;
+
+&lt;p&gt;而负责垃圾回收的程序组件，即为垃圾回收器。&lt;/p&gt;
+
+&lt;p&gt;垃圾回收其实一个完美的 “Simplicity is Complicated” 的例子：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;一方面，程序员受益于 GC，无需操心、也不再需要对内存进行手动的申请和释放操作，GC 在程序运行时自动释放残留的内存。也能够消除一些需要手动管理内存才会出现的运行时错误：
+    &lt;ul&gt;
+      &lt;li&gt;在仍然有指向内存区块的指针的情况下释放这块内存时，会产生悬挂指针，从而后续可能错误的访问已经用于他用的内存区域。&lt;/li&gt;
+      &lt;li&gt;多重释放同一块申请的内存区域可能导致不可知的内存损坏&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;另一方面，GC 对程序员几乎不可见，仅在程序需要进行特殊优化时，通过提供可调控的 API，对 GC 的运行时机、运行开销进行把控的时候才得以现身。这也就造就了没有 GC 的一些优势：&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;没有额外的性能开销&lt;/li&gt;
+  &lt;li&gt;精准的手动内存管理，极致的利用机器的性能&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;二gc的语言&quot;&gt;&lt;strong&gt;二、GC的语言&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;p&gt;从原理上而言，所有的语言都能够自行实现 GC。&lt;/p&gt;
+
+&lt;p&gt;从语言诞生之初就提供 GC 的语言，例如：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Python&lt;/li&gt;
+  &lt;li&gt;JavaScript&lt;/li&gt;
+  &lt;li&gt;Java&lt;/li&gt;
+  &lt;li&gt;Objective-C&lt;/li&gt;
+  &lt;li&gt;Swift&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;而不以 GC 为目标，被直接设计为手动管理内存、但可以自行实现 GC 的语言有：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;C&lt;/li&gt;
+  &lt;li&gt;C++&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;也有一些语言可以在编译期，依靠编译器插入清理代码的方式，实现精准的清理，例如：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Rust&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;三gc方式&quot;&gt;&lt;strong&gt;三、GC方式&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;p&gt;所有的 GC 算法其存在形式可以归结为追踪（Tracing）和引用计数（Reference Counting）这两种形式的混合运用。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;追踪式 GC从根对象出发，根据对象之间的引用信息，一步步推进直到扫描完毕整个堆并确定需要保留的对象，从而回收所有可回收的对象。Go、 Java、V8 对 JavaScript 的实现等均为追踪式 GC。&lt;/li&gt;
+  &lt;li&gt;引用计数式 GC每个对象自身包含一个被引用的计数器，当计数器归零时自动得到回收。因为此方法缺陷较多，在追求高性能时通常不被应用。Python、Objective-C 等均为引用计数式 GC。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;目前比较常见的 GC 实现方式包括：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;追踪式，分为多种不同类型，例如：
+    &lt;ul&gt;
+      &lt;li&gt;标记清扫：从根对象出发，将确定存活的对象进行标记，并清扫可以回收的对象。&lt;/li&gt;
+      &lt;li&gt;标记整理：为了解决内存碎片问题而提出，在标记过程中，将对象尽可能整理到一块连续的内存上。&lt;/li&gt;
+      &lt;li&gt;增量式：将标记与清扫的过程分批执行，每次执行很小的部分，从而增量的推进垃圾回收，达到近似实时、几乎无停顿的目的。&lt;/li&gt;
+      &lt;li&gt;增量整理：在增量式的基础上，增加对对象的整理过程。&lt;/li&gt;
+      &lt;li&gt;分代式：将对象根据存活时间的长短进行分类，存活时间小于某个值的为年轻代，存活时间大于某个值的为老年代，永远不会参与回收的对象为永久代。并根据分代假设（如果一个对象存活时间不长则倾向于被回收，如果一个对象已经存活很长时间则倾向于存活更长时间）对对象进行回收。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;引用计数：根据对象自身的引用计数来回收，当引用计数归零时立即回收。&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Ted</name></author><category term="Golang" /><summary type="html">一、定义</summary></entry><entry><title type="html">操作系统内存管理</title><link href="http://www.helloted.com/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2022/11/25/mem/" rel="alternate" type="text/html" title="操作系统内存管理" /><published>2022-11-25T20:00:00+08:00</published><updated>2022-11-25T20:00:00+08:00</updated><id>http://www.helloted.com/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2022/11/25/mem</id><content type="html" xml:base="http://www.helloted.com/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2022/11/25/mem/">&lt;h3 id=&quot;一内存管理&quot;&gt;一、内存管理&lt;/h3&gt;
 
 &lt;p&gt;操作系统的内存管理非常重要，主要负责下面这些事情：&lt;/p&gt;
 
@@ -1158,667 +1467,4 @@
   &lt;li&gt;&lt;strong&gt;双写缓冲区(Doublewrite buffer)：&lt;/strong&gt;InnoDB 使用 Doublewrite Buffer 来存储在实际写入 InnoDB 数据文件之前已从缓冲池中刷新的页面。允许 InnoDB 检索可靠的页面副本，以便在发生存储问题时进行恢复。&lt;/li&gt;
   &lt;li&gt;&lt;strong&gt;重做日志(Redo log)&lt;/strong&gt;：用于存储对表所做的更改。InnoDB在崩溃恢复期间使用重做日志来纠正不完整事务写入的数据。例如，当您执行更改数据库的 SQL 语句（例如INSERT、UPDATE和DELETE ）时，重做日志会将请求存储在重做日志文件中。如果发生崩溃，MySQL 会重播重做日志中在接受连接之前未完成的修改。InnoDB 使用一组重做日志文件（ib_logfile0、iblogfile1、 …）来存储对表数据的更改。&lt;/li&gt;
   &lt;li&gt;&lt;strong&gt;撤消日志(Undo logs)&lt;/strong&gt;：存储回滚操作所需的信息。例如，如果您执行一个事务并决定回滚它，InnoDB将利用撤消日志来撤销该事务期间所做的更改。InnoDB 使用一组撤消日志文件（通常命名为undo_001.ibd、udo_002.ibd等）来存储日志。&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Ted</name></author><category term="数据库" /><summary type="html">一、MySQL架构</summary></entry><entry><title type="html">外接纹理显示图片1：问题篇</title><link href="http://www.helloted.com/flutter/2022/06/09/texture_1/" rel="alternate" type="text/html" title="外接纹理显示图片1：问题篇" /><published>2022-06-09T20:00:00+08:00</published><updated>2022-06-09T20:00:00+08:00</updated><id>http://www.helloted.com/flutter/2022/06/09/texture_1</id><content type="html" xml:base="http://www.helloted.com/flutter/2022/06/09/texture_1/">&lt;h3 id=&quot;1flutter列表中多图加载的问题&quot;&gt;1、Flutter列表中多图加载的问题&lt;/h3&gt;
-
-&lt;p&gt;在社交或者资讯类App中，经常会使用到Feeds流页面，Feeds流页面的列表一般结构繁杂，单行资讯内就可能有多张图片；&lt;/p&gt;
-
-&lt;div align=&quot;center&quot;&gt;
-&lt;img src=&quot;/img/Simple_6/28.png&quot; alt=&quot;Image&quot; align=&quot;middle&quot; style=&quot;zoom:30%;&quot; /&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Flutter 通过 Image.asset，Image.file，Image.network 等方法创建一个 Image Widget 来加载显示本地或者网络图片。&lt;/p&gt;
-
-&lt;p&gt;而使用Image控件加载多图，会出现一些问题&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;内存过载&lt;/strong&gt;：列表中图片过多时，内存占用很轻松的飙升到了七八百MB，如果手机的配置不够，很可能就会导致页面空白甚至是Crash；&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;内存峰值高&lt;/strong&gt;：图片加载的过程中，加载前期阶段会内存峰值很高；&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;没有磁盘缓存&lt;/strong&gt;：Flutter原生的图片缓存机制，缓存到的是内存中，没有磁盘缓存，每次重新打开APP或者缓存被清理都会再次进行网络请求。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_6/29.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;2flutter图片加载过程&quot;&gt;2、Flutter图片加载过程&lt;/h3&gt;
-
-&lt;p&gt;Flutter中图片主要有4个类：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;Image&lt;/strong&gt; &lt;strong&gt;：&lt;/strong&gt;显示图⽚的Widget，通过ImageState管理ImageProvider的⽣命周期；&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;ImageProvider&lt;/strong&gt;：图⽚的抽象概念（如NetworkImage、FileImage等），约定图⽚唯⼀性(key)、获取图⽚字节数据(load)，创建ImageStream⽤于监听结果；&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;ImageStream&lt;/strong&gt;：图⽚的加载对象，通过 ImageStreamCompleter 最后会返回⼀个 ImageInfo,⽽ImageInfo 中的ui.Image是RenderObject的⽬标绘制对象；&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;ImageCache&lt;/strong&gt;：缓存单例PaintingBinding.instance.imageCache，只用于内存缓存；&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;加载流程：&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Image 通过 ImageProvider 得到 ImageStream 对象&lt;/li&gt;
-  &lt;li&gt;_ImageState 利用 ImageStream 添加监听，等待图片数据&lt;/li&gt;
-  &lt;li&gt;.ImageProvider 通过 load 方法去加载并返回 ImageStreamCompleter 对象&lt;/li&gt;
-  &lt;li&gt;ImageStream 会关联 ImageStreamCompleter&lt;/li&gt;
-  &lt;li&gt;ImageStreamCompleter 会通过 http 下载图片，再经过 PaintingBinding 编码转化后，得到 ui.Codec 可绘制对象，并封装成 ImageInfo 返回&lt;/li&gt;
-  &lt;li&gt;ImageInfo 回调到 ImageStream 的监听，设置给 _ImageState build 的 RawImage 对象。&lt;/li&gt;
-  &lt;li&gt;RawImage 的 RenderImage 通过 paint 绘制 ImageInfo 中的 ui.Codec&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_6/30.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;3内存大的原因&quot;&gt;3、内存大的原因&lt;/h3&gt;
-
-&lt;p&gt;图片要显示在移动终端一般会经历加载、解码和渲染三个步骤，其中解码阶段是内存消耗最多的过程，解码是一个计算量较大的任务，主要需要CPU来执行；并且解码出来的图片所占内存与图片的宽高正相关，而与图片原来的大小无关。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_6/31.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;我们以Image Widget为例，Image Widget 要显示在屏幕上的时候，需要以Image作为数据源，Image持有的数据DataBuffer是未解码的压缩数据，能节省较多的内存和加快存储。&lt;/p&gt;
-
-&lt;p&gt;当DataBuffer数据被赋值给Image Widget时，图像数据会被解码为Image Buffer，变成代表RGB的颜色数据。&lt;/p&gt;
-
-&lt;p&gt;解压图片需要的内存算法为：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;图⽚所占内存⼤⼩ = 图⽚⻓度（像素）* 图⽚宽度（像素）* ⼀个像素所占内存空间4字节(RGBA)。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;当我们业务场景中需要加载一张游戏图片（3000*4000像素大小），解码内存大小占用为 45.77MB。&lt;/p&gt;
-
-&lt;h3 id=&quot;4优化措施&quot;&gt;4、优化措施&lt;/h3&gt;
-
-&lt;p&gt;根据以上的内存原因，我们可以总结一些在Flutter原生上的优化措施&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;优化下载项&lt;/strong&gt;：利用云端压缩缩略图功能，在云端压缩切割图片&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;降低采样率：&lt;/strong&gt;设置合适的采样大小，减小解码内存大小。追踪源码，我们发现，cacheWidth和cacheHeight能够影响到ImageDescriptor，可以降低内存&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;磁盘缓存&lt;/strong&gt;：通过Chanel桥接，将下载好的图片进行磁盘缓存，Flutter侧进行图片加载的时候，如果内存没有命中，就去磁盘缓存中进行二次搜索。如果都没有命中才会走网络请求。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_6/32.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;优化措施后有以下效果&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;减小图片下载量，加快加载速度&lt;/li&gt;
-  &lt;li&gt;内存平均水平显著降低&lt;/li&gt;
-  &lt;li&gt;磁盘缓存，网络图片无需重复下载&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;5依然存在的问题&quot;&gt;5、依然存在的问题&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;峰值内存高依然存在&lt;/strong&gt;：原因：先直接decode 原始的image，此时消耗的内存就与图片原始尺寸成正比, 而后再做rasterize时这个时候的内存消耗大小才与设置大小成正比，设置cacheWidth和cacheHeight没有解决峰值问题。&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;cacheWidth&lt;/strong&gt;和&lt;strong&gt;cacheHeight&lt;/strong&gt;设置问题，与原图宽高⽐例不⼀致易出现图⽚模糊、变形(可以等图片下载之后再去设置，这需要hook，去改动framework）；&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;图片解码无法复用：&lt;/strong&gt;dispose之后Flutter 会立刻回收解码后的内存，即 Flutter 仅对图片的原始压缩数据进行存储，并不缓存 pixel buffer，用空间换时间；&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;磁盘缓存的效率问题：&lt;/strong&gt;由于我们的磁盘缓存文件是通过Channel来通信，而Flutter定义的channel机制，从本质上说是提供了一个消息传送机制，用于图像等数据的传输必然引起内存和CPU的巨大消耗。无论是用ffi还是普通channel传输，都会导致FPS下降；&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;在Flutter 端做的优化目前看来并没有能支撑我们解决图片引起的OOM问题，对于内存峰值和内存及时释放，Flutter 端都无法给出完美的方案。&lt;/p&gt;</content><author><name>Ted</name></author><category term="Flutter" /><summary type="html">1、Flutter列表中多图加载的问题</summary></entry><entry><title type="html">Objective-C代码规范检测</title><link href="http://www.helloted.com/ios/2021/07/15/ocCheck/" rel="alternate" type="text/html" title="Objective-C代码规范检测" /><published>2021-07-15T20:00:00+08:00</published><updated>2021-07-15T20:00:00+08:00</updated><id>http://www.helloted.com/ios/2021/07/15/ocCheck</id><content type="html" xml:base="http://www.helloted.com/ios/2021/07/15/ocCheck/">&lt;h4 id=&quot;1抽象语法树ast&quot;&gt;1、抽象语法树AST&lt;/h4&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/30.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;在编译过程中，第三步&lt;strong&gt;语义分析(Semantic Analysis)&lt;/strong&gt;：验证语法是否正确，然后将所有节点组成抽象语法树 AST 。&lt;/p&gt;
-
-&lt;p&gt;抽象语法树（abstract syntax code，AST）是源代码的抽象语法结构的树状表示，树上的每个节点都表示源代码中的一种结构，之所以说是抽象的，是因为抽象语法树并不会表示出真实语法出现的每一个细节，比如说，嵌套括号被隐含在树的结构中，并没有以节点的形式呈现。抽象语法树并不依赖于源语言的语法，也就是说语法分析阶段所采用的上下文无关文法，因为在写文法时，经常会对文法进行等价的转换（消除左递归，回溯，二义性等），这样会给文法分析引入一些多余的成分，对后续阶段造成不利影响，甚至会使合个阶段变得混乱。因些，很多编译器经常要独立地构造语法分析树，为前端，后端建立一个清晰的接口。基于AST的不依赖具体文法和不依赖语言细节的特点，使得其在很多领域有广泛的应用，比如浏览器，智能编辑器，编译器。&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;while &lt;/span&gt;b &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; 0
-&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-     &lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;a &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; b
-         a &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; a-b
-     &lt;span class=&quot;k&quot;&gt;else
-         &lt;/span&gt;b &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; b-a
-&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;return &lt;/span&gt;a
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;上面的一个while循环，经过Clang分析所产生的AST如下图所示：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/39.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;通过上面的语法树可以看到其描述代码的具体结构，而在Clang对代码编译时会进入一个语法树的解析阶段，则这个阶段中语法树的每个节点都会被遍历到，因此借助此阶段可以检测程序中所有代码的书写格式是否符合规范，甚至是对代码编写的质量作出分析。&lt;/p&gt;
-
-&lt;h4 id=&quot;2oc语言的语法树&quot;&gt;2、OC语言的语法树&lt;/h4&gt;
-
-&lt;p&gt;创建一个简单的类HelloAST&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@interface HelloAST : NSObject
-
-@end
-
-@implementation HelloAST
-
-- (void)hello{
-    [self print:@&quot;hello!&quot;];
-}
-
-- (void)print:(NSString *)msg{
-    NSLog(@&quot;%@&quot;,msg);
-}
-
-@end                                                  
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;可以通过以下命令查看它的语法树结构&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;clang -fmodules -fsyntax-only -Xclang -ast-dump HelloAST.m
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/40.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;我们可以看到自己的类定义、方法定义、方法调用在 AST 中所对应的节点。&lt;/p&gt;
-
-&lt;p&gt;其中第一个框为类定义，可以看到该节点名称为 &lt;a href=&quot;https://link.juejin.cn?target=https%3A%2F%2Fclang.llvm.org%2Fdoxygen%2Fclassclang_1_1ObjCInterfaceDecl.html&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ObjCInterfaceDecl&lt;/code&gt;&lt;/a&gt;，该类型节点为 objc 类定义（声明）。
-第二个框名称为 &lt;a href=&quot;https://link.juejin.cn?target=https%3A%2F%2Fclang.llvm.org%2Fdoxygen%2Fclassclang_1_1ObjCMethodDecl.html&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ObjCMethodDecl&lt;/code&gt;&lt;/a&gt;，说明该节点定义了一个    objc 方法（包含类、实例方法，包含普通方法和协议方法）。
-第三个框名称为 &lt;a href=&quot;https://link.juejin.cn?target=https%3A%2F%2Fclang.llvm.org%2Fdoxygen%2Fclassclang_1_1ObjCMessageExpr.html&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ObjCMessageExpr&lt;/code&gt;&lt;/a&gt;，说明该节点是一个标准的 objc 消息发送表达式（[obj foo]）。&lt;/p&gt;
-
-&lt;p&gt;在&lt;a href=&quot;https://clang.llvm.org/doxygen/namespaceclang.html&quot;&gt;clang-namespaceclang&lt;/a&gt;官网可以查询到这些&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th style=&quot;text-align: left&quot;&gt;节点&lt;/th&gt;
-      &lt;th style=&quot;text-align: left&quot;&gt;描述&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;ObjcCategoryDecl&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;分类声明节点&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;ObjcCategoryImplDecl&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;分类实现节点&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;ObjcImplementationDecl&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;类实现节点&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;ObjcInterfaceDecl&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;类声明节点&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;ObjcIvarDecl&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;实例变量声明节点&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;ObjcMethodDecl&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;实例方法声明&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;ObjcPropertyDecl&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;属性声明节点&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;ObjcProtocolDecl&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;协议声明节点&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;ParmVarDecl&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;参数节点&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;…&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;…&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h4 id=&quot;3添加访问节点的插件&quot;&gt;3、添加访问节点的插件&lt;/h4&gt;
-
-&lt;p&gt;要实现自定义的clang插件(以C++ API为例)，应按照以下步骤:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;自定义继承自
-&lt;code class=&quot;highlighter-rouge&quot;&gt;clang::PluginASTAction&lt;/code&gt;(基于consumer的抽象语法树(Abstract Syntax Tree/AST)前端Action抽象基类)
-&lt;code class=&quot;highlighter-rouge&quot;&gt;clang::ASTConsumer&lt;/code&gt;(用于客户读取抽象语法树的抽象基类)，
-&lt;code class=&quot;highlighter-rouge&quot;&gt;clang::RecursiveASTVisitor&lt;/code&gt;(前序或后续地深度优先搜索整个抽象语法树，并访问每一个节点的基类)等基类。&lt;/li&gt;
-  &lt;li&gt;根据自身需要重载
-&lt;code class=&quot;highlighter-rouge&quot;&gt;PluginASTAction::CreateASTConsumer&lt;/code&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;PluginASTAction::ParseArgs&lt;/code&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;ASTConsumer::HandleTranslationUnit&lt;/code&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;RecursiveASTVisitor::VisitDecl&lt;/code&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;RecursiveASTVisitor::VisitStmt&lt;/code&gt;
-等方法，实现自定义的分析逻辑。&lt;/li&gt;
-  &lt;li&gt;注册插件
-&lt;code class=&quot;highlighter-rouge&quot;&gt;static FrontendPluginRegistry::Add&amp;lt;MyPlugin&amp;gt; X(&quot;my-plugin- name&quot;, &quot;my-plugin-description&quot;);&lt;/code&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;添加一个简单的测试插件&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#include &quot;clang/Frontend/FrontendPluginRegistry.h&quot;
-#include &quot;clang/AST/AST.h&quot;
-#include &quot;clang/AST/ASTConsumer.h&quot;
-#include &quot;clang/Frontend/CompilerInstance.h&quot;
-
-using namespace clang;
-
-namespace
-{
-    class MyPluginConsumer : public ASTConsumer
-    {
-    CompilerInstance &amp;amp;Instance;
-    std::set&amp;lt;std::string&amp;gt; ParsedTemplates;
-    public:
-        MyPluginConsumer(CompilerInstance &amp;amp;Instance,
-                               std::set&amp;lt;std::string&amp;gt; ParsedTemplates)
-        : Instance(Instance), ParsedTemplates(ParsedTemplates) {}
-    };
-    
-    class MyPluginASTAction : public PluginASTAction
-    {
-    std::set&amp;lt;std::string&amp;gt; ParsedTemplates;
-    protected:
-        std::unique_ptr&amp;lt;ASTConsumer&amp;gt; CreateASTConsumer(CompilerInstance &amp;amp;CI,
-                                                       llvm::StringRef) override
-        {
-            return llvm::make_unique&amp;lt;MyPluginConsumer&amp;gt;(CI, ParsedTemplates);
-        }
-        
-        bool ParseArgs(const CompilerInstance &amp;amp;CI,
-                       const std::vector&amp;lt;std::string&amp;gt; &amp;amp;args) override {
-            
-            DiagnosticsEngine &amp;amp;D = ci.getDiagnostics();
-            D.Report(D.getCustomDiagID(DiagnosticsEngine::Error,
-                                       &quot;OCCheck Test AST Error&quot;));
-            return true;
-        }
-    };
-}
-
-static clang::FrontendPluginRegistry::Add&amp;lt;MyPluginASTAction&amp;gt;
-X(&quot;VisitAST&quot;, &quot;My plugin&quot;);
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;clang::PluginASTAction&lt;/code&gt;是一个基于consumer的AST前端Action抽象基类。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;clang::ASTConsumer&lt;/code&gt;则是用于客户读取AST的抽象基类。它们之间的关系是&lt;code class=&quot;highlighter-rouge&quot;&gt;clang::PluginASTAction&lt;/code&gt;作为一个关于AST的插件，同时也是访问&lt;code class=&quot;highlighter-rouge&quot;&gt;clang::ASTConsumer&lt;/code&gt;的入口；而&lt;code class=&quot;highlighter-rouge&quot;&gt;clang::ASTConsumer&lt;/code&gt;则是用于定义如何取得AST相关内容。&lt;/p&gt;
-
-&lt;p&gt;定义继承于&lt;code class=&quot;highlighter-rouge&quot;&gt;clang::PluginASTAction&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;clang::ASTConsumer&lt;/code&gt;类的子类后，通过&lt;code class=&quot;highlighter-rouge&quot;&gt;static clang::FrontendPluginRegistry::Add&amp;lt;MyPluginASTAction&amp;gt; X(&quot;VisitAST&quot;, &quot;My plugin”);&lt;/code&gt;就可以把插件注册到Clang中。&lt;/p&gt;
-
-&lt;p&gt;Build之后能够得到VisitAST插件，可以添加到我们的项目配置中。配置方式参考前面文章Pass配置&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/42.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;这个Plugin的作用是在编译过程中报一个Error。由此可见，我们可以在编译过程中插入一些我们的逻辑。&lt;/p&gt;
-
-&lt;h4 id=&quot;4实现编译时语法检测&quot;&gt;4、实现编译时语法检测&lt;/h4&gt;
-
-&lt;p&gt;添加一个入口&lt;/p&gt;
-
-&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;c1&quot;&gt;// 入口&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;CodeCheckASTAction&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PluginASTAction&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ParsedTemplates&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;unique_ptr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ASTConsumer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CreateASTConsumer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CompilerInstance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ci&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;StringRef&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;iFile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unique_ptr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CodeCheckASTConsumer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CodeCheckASTConsumer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ci&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//使用自定义的处理工具&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-        
-        &lt;span class=&quot;kt&quot;&gt;bool&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ParseArgs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CompilerInstance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ci&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vector&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;//            DiagnosticsEngine &amp;amp;D = ci.getDiagnostics();&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;//            D.Report(D.getCustomDiagID(DiagnosticsEngine::Error,&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;//                                       &quot;OCCheck Test AST Error&quot;));&lt;/span&gt;
-            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;添加自定义工具&lt;/p&gt;
-
-&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;c1&quot;&gt;//自定义的处理工具&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;CodeCheckASTConsumer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ASTConsumer&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;private&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;MatchFinder&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;matcher&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;CodeCheckHandler&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;handler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
-        &lt;span class=&quot;c1&quot;&gt;//调用CreateASTConsumer方法后就会加载Consumer里面的方法&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;CodeCheckASTConsumer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CompilerInstance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ci&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;handler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ci&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;matcher&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;addMatcher&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;objcInterfaceDecl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bind&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ObjCInterfaceDecl&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;handler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;matcher&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;addMatcher&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;objcMethodDecl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bind&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ObjCMethodDecl&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;handler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;matcher&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;addMatcher&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;objcPropertyDecl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bind&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ObjcPropertyDecl&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;handler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-        
-        &lt;span class=&quot;c1&quot;&gt;//遍历完一次语法树就会调用一次下面方法&lt;/span&gt;
-        &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;HandleTranslationUnit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ASTContext&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;matcher&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;matchAST&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;在MatchFinder的run方法中，可以找到对应的节点进行处理&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// 自定义 handler
-class CodeCheckHandler : public MatchFinder::MatchCallback {
-private:
-    CompilerInstance &amp;amp;ci;//编译器实例
-public:
-    CodeCheckHandler(CompilerInstance &amp;amp;ci) :ci(ci) {}
-            //主要方法，分配 类、方法、属性 做不同处理
-    void run(const MatchFinder::MatchResult &amp;amp;Result) {
-    // 类
-				const ObjCInterfaceDecl *interfaceDecl = Result.Nodes.getNodeAs&amp;lt;ObjCInterfaceDecl&amp;gt;(&quot;ObjCInterfaceDecl&quot;);
-        // 属性
-				const ObjCPropertyDecl *propertyDecl = Result.Nodes.getNodeAs&amp;lt;ObjCPropertyDecl&amp;gt;(&quot;ObjcPropertyDecl&quot;);
-        // 方法
-				const ObjCMethodDecl *methodDecl = Result.Nodes.getNodeAs&amp;lt;ObjCMethodDecl&amp;gt;(&quot;ObjCMethodDecl&quot;);
-      // 变量
-       const VarDecl var = Result.Nodes.getNodeAs&amp;lt;VarDecl&amp;gt;(&quot;var&quot;)
-    }
-} 举例，检测类名是否是小写
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;language-cpp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cm&quot;&gt;/**
-  检测类名是否存在小写开头
-
-  @param decl 类声明
- */&lt;/span&gt;
-&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;checkClassNameForLowercaseName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ObjCInterfaceDecl&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;decl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-      &lt;span class=&quot;n&quot;&gt;StringRef&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;className&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;decl&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;getName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-        
-      &lt;span class=&quot;c1&quot;&gt;//类名称必须以大写字母开头&lt;/span&gt;
-      &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;className&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;isLowercase&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-           &lt;span class=&quot;c1&quot;&gt;//修正提示&lt;/span&gt;
-           &lt;span class=&quot;n&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tempName&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;className&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-           &lt;span class=&quot;n&quot;&gt;tempName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;toUppercase&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-           &lt;span class=&quot;n&quot;&gt;StringRef&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;replacement&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tempName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-           &lt;span class=&quot;n&quot;&gt;SourceLocation&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nameStart&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;decl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getLocation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-           &lt;span class=&quot;n&quot;&gt;SourceLocation&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nameEnd&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nameStart&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getLocWithOffset&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;className&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-           &lt;span class=&quot;n&quot;&gt;FixItHint&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fixItHint&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FixItHint&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CreateReplacement&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SourceRange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nameStart&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nameEnd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;replacement&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-                
-           &lt;span class=&quot;c1&quot;&gt;//报告警告&lt;/span&gt;
-           &lt;span class=&quot;n&quot;&gt;DiagnosticsEngine&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;D&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Instance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getDiagnostics&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-           &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;diagID&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;D&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getCustomDiagID&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DiagnosticsEngine&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Class name should not start with lowercase letter&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-           &lt;span class=&quot;n&quot;&gt;SourceLocation&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;decl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getLocation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-           &lt;span class=&quot;n&quot;&gt;D&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Report&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;location&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;diagID&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AddFixItHint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fixItHint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-       &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-  
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;完整代码&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-#include &amp;lt;iostream&amp;gt;
-#include &quot;clang/AST/AST.h&quot;
-#include &quot;clang/AST/ASTConsumer.h&quot;
-#include &quot;clang/ASTMatchers/ASTMatchers.h&quot;
-#include &quot;clang/ASTMatchers/ASTMatchFinder.h&quot;
-#include &quot;clang/Frontend/CompilerInstance.h&quot;
-#include &quot;clang/Frontend/FrontendPluginRegistry.h&quot;
-
-#include &quot;llvm/Support/raw_ostream.h&quot;
-#include &quot;clang/Sema/Sema.h&quot;
-#include &quot;clang/AST/RecursiveASTVisitor.h&quot;
-
-#include &quot;clang/Basic/Diagnostic.h&quot;
-
-#include &quot;clang/AST/DeclObjC.h&quot;
-
-using namespace clang;
-using namespace std;
-using namespace llvm;
-using namespace clang::ast_matchers;
-
-
-namespace CodeCheck {
-    
-    // MARK: - my handler
-    class CodeCheckHandler : public MatchFinder::MatchCallback {
-    private:
-        CompilerInstance &amp;amp;ci;
-        
-    public:
-        CodeCheckHandler(CompilerInstance &amp;amp;ci) :ci(ci) {}
-        
-        void checkInterfaceDecl(const ObjCInterfaceDecl *decl){
-            StringRef className = decl-&amp;gt;getName();
-            //类名称必须以大写字母开头
-            char c = className[0];
-            if (isLowercase(c))
-            {
-                 //修正提示
-                 std::string tempName = className;
-                 tempName[0] = toUppercase(c);
-                 StringRef replacement(tempName);
-                 SourceLocation nameStart = decl-&amp;gt;getLocation();
-                 SourceLocation nameEnd = nameStart.getLocWithOffset(className.size() - 1);
-                 FixItHint fixItHint = FixItHint::CreateReplacement(SourceRange(nameStart, nameEnd), replacement);
-
-                 //报告警告
-                 DiagnosticsEngine &amp;amp;D = ci.getDiagnostics();
-                 int diagID = D.getCustomDiagID(DiagnosticsEngine::Error, &quot;编码提示: 类名必须以大写字母开头&quot;);
-                 SourceLocation location = decl-&amp;gt;getLocation();
-                 D.Report(location, diagID).AddFixItHint(fixItHint);
-             }
-        }
-        
-        void checkPropertyDecl(const clang::ObjCPropertyDecl *decl)
-        {
-            checkOtherPropertyDecl(decl);
-            StringRef name = decl -&amp;gt; getName();
-              if (name.size() == 1)
-              {
-                   //不需要检测
-                   return;
-              }
-
-              //属性中不包含下划线
-              size_t underscorePos = name.find('_', 1);
-              if (underscorePos != StringRef::npos)
-              {
-                   //修正提示
-                   std::string tempName = name;
-                   std::string::iterator end_pos = std::remove(tempName.begin() + 1, tempName.end(), '_');
-                   tempName.erase(end_pos, tempName.end());
-                   StringRef replacement(tempName);
-                   SourceLocation nameStart = decl-&amp;gt;getLocation();
-                   SourceLocation nameEnd = nameStart.getLocWithOffset(name.size() - 1);
-                   FixItHint fixItHint = FixItHint::CreateReplacement(SourceRange(nameStart, nameEnd), replacement);
-
-                   //报告错误
-                   DiagnosticsEngine &amp;amp;diagEngine = ci.getDiagnostics();
-                   unsigned diagID = diagEngine.getCustomDiagID(DiagnosticsEngine::Warning, &quot;编码提示: 属性名称中不要包含`_`&quot;);
-                   SourceLocation location = decl-&amp;gt;getLocation().getLocWithOffset(underscorePos);
-                   diagEngine.Report(location, diagID).AddFixItHint(fixItHint);
-              }
-        }
-        
-        void checkOtherPropertyDecl(const clang::ObjCPropertyDecl *propertyDecl)
-        {
-            ObjCPropertyDecl::PropertyAttributeKind attrKind = propertyDecl-&amp;gt;getPropertyAttributes();
-            SourceLocation location = propertyDecl-&amp;gt;getLocation();
-            string typeStr = propertyDecl-&amp;gt;getType().getAsString();
-            
-            if (propertyDecl-&amp;gt;getTypeSourceInfo()) {
-                if(!(attrKind &amp;amp; ObjCPropertyDecl::OBJC_PR_nonatomic)){
-                    diagWaringReport(location, &quot;Are you sure to use atomic which might reduce the performance.&quot;, NULL);
-                }
-                
-                if ((typeStr.find(&quot;NSString&quot;)!=string::npos)&amp;amp;&amp;amp; !(attrKind &amp;amp; ObjCPropertyDecl::OBJC_PR_copy)) {
-                    diagWaringReport(location, &quot;NSString建议使用copy代替strong.&quot;, NULL);
-                } else if ((typeStr.find(&quot;NSArray&quot;)!=string::npos)&amp;amp;&amp;amp; !(attrKind &amp;amp; ObjCPropertyDecl::OBJC_PR_copy)) {
-                    diagWaringReport(location, &quot;NSArray建议使用copy代替strong.&quot;, NULL);
-                }
-                
-                if(!typeStr.compare(&quot;int&quot;)){
-                    diagWaringReport(location, &quot;Use the built-in NSInteger instead of int.&quot;, NULL);
-                } else if ((typeStr.find(&quot;&amp;lt;&quot;)!=string::npos &amp;amp;&amp;amp; typeStr.find(&quot;&amp;gt;&quot;)!=string::npos) &amp;amp;&amp;amp; !(attrKind &amp;amp; ObjCPropertyDecl::OBJC_PR_weak)) {
-                    diagWaringReport(location, &quot;建议使用weak定义Delegate.&quot;, NULL);
-                }
-            }
-        }
-        
-
-        // 检测属性名是否存在大写开头
-        void checkPropertyNameForUppercaseName(const clang::ObjCPropertyDecl *decl)
-        {
-              bool checkUppercaseNameIndex = 0;
-              StringRef name = decl -&amp;gt; getName();
-              if (name.find('_') == 0)
-              {
-                   //表示以下划线开头
-                   checkUppercaseNameIndex = 1;
-              }
-
-              //名称必须以小写字母开头
-              char c = name[checkUppercaseNameIndex];
-              if (isUppercase(c))
-              {
-                   //修正提示
-                   std::string tempName = name;
-                   tempName[checkUppercaseNameIndex] = toLowercase(c);
-                   StringRef replacement(tempName);
-                   SourceLocation nameStart = decl-&amp;gt;getLocation();
-                   SourceLocation nameEnd = nameStart.getLocWithOffset(name.size() - 1);
-                   FixItHint fixItHint = FixItHint::CreateReplacement(SourceRange(nameStart, nameEnd), replacement);
-
-                   //报告错误
-                   DiagnosticsEngine &amp;amp;D = ci.getDiagnostics();
-                   int diagID = D.getCustomDiagID(DiagnosticsEngine::Error, &quot;Property name should not start with uppercase letter&quot;);
-                   SourceLocation location = decl-&amp;gt;getLocation();
-                   D.Report(location, diagID).AddFixItHint(fixItHint);
-               }
-        }
-        
-        
-        template &amp;lt;unsigned N&amp;gt;
-        void diagWaringReport(SourceLocation Loc, const char (&amp;amp;FormatString)[N], FixItHint *Hint)
-        {
-            DiagnosticsEngine &amp;amp;diagEngine = ci.getDiagnostics();
-            unsigned DiagID = diagEngine.getCustomDiagID(clang::DiagnosticsEngine::Warning, FormatString);
-            (Hint!=NULL) ? diagEngine.Report(Loc, DiagID) &amp;lt;&amp;lt; *Hint : diagEngine.Report(Loc, DiagID);
-        }
-        
-        void run(const MatchFinder::MatchResult &amp;amp;Result) {
-            
-            if (const ObjCInterfaceDecl *interfaceDecl = Result.Nodes.getNodeAs&amp;lt;ObjCInterfaceDecl&amp;gt;(&quot;ObjCInterfaceDecl&quot;)) {
-                //类的检测
-                checkInterfaceDecl(interfaceDecl);
-            }
-            
-            if (const ObjCPropertyDecl *propertyDecl = Result.Nodes.getNodeAs&amp;lt;ObjCPropertyDecl&amp;gt;(&quot;objcPropertyDecl&quot;)) {
-                //属性的检测
-                checkPropertyDecl(propertyDecl);
-            }
-
-        }
-        
-    };
-    
-    class CodeCheckASTConsumer: public ASTConsumer {
-    private:
-        MatchFinder matcher;
-        CodeCheckHandler handler;
-    public:
-        //调用CreateASTConsumer方法后就会加载Consumer里面的方法
-        CodeCheckASTConsumer(CompilerInstance &amp;amp;ci) :handler(ci) {
-            matcher.addMatcher(objcInterfaceDecl().bind(&quot;ObjCInterfaceDecl&quot;), &amp;amp;handler); // 类
-            matcher.addMatcher(objcMethodDecl().bind(&quot;ObjCMethodDecl&quot;), &amp;amp;handler); // 方法
-            matcher.addMatcher(objcPropertyDecl().bind(&quot;objcPropertyDecl&quot;), &amp;amp;handler); // 属性
-        }
-        
-        //遍历完一次语法树就会调用一次下面方法
-        void HandleTranslationUnit(ASTContext &amp;amp;context) {
-            matcher.matchAST(context);
-        }
-    };
-    
-    class CodeCheckASTAction: public PluginASTAction {
-    public:
-        unique_ptr&amp;lt;ASTConsumer&amp;gt; CreateASTConsumer(CompilerInstance &amp;amp;ci, StringRef iFile) {
-            return unique_ptr&amp;lt;CodeCheckASTConsumer&amp;gt; (new CodeCheckASTConsumer(ci));
-        }
-        
-        bool ParseArgs(const CompilerInstance &amp;amp;ci, const std::vector&amp;lt;std::string&amp;gt; &amp;amp;args) {
-            return true;
-        }
-    };
-}
-
-
-
-static FrontendPluginRegistry::Add&amp;lt;CodeCheck::CodeCheckASTAction&amp;gt;
-X(&quot;CodeCheck&quot;, &quot;The CodeCheck is my first clang-plugin.&quot;);
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;其中&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;FixItHint fixItHint = FixItHint::CreateReplacement(SourceRange(nameStart, nameEnd), replacement);
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;FixItHint可用于修复改动，将想要的格式替换原有的格式&lt;/p&gt;
-
-&lt;p&gt;Waring效果&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;        template &amp;lt;unsigned N&amp;gt;
-        /// 抛出警告
-        /// @param Loc 位置
-        /// @param Hint 修改提示
-        void diagWaringReport(SourceLocation Loc, const char (&amp;amp;FormatString)[N], FixItHint *Hint)
-        {
-            DiagnosticsEngine &amp;amp;diagEngine = ci.getDiagnostics();
-            unsigned DiagID = diagEngine.getCustomDiagID(clang::DiagnosticsEngine::Warning, FormatString);
-            (Hint!=NULL) ? diagEngine.Report(Loc, DiagID) &amp;lt;&amp;lt; *Hint : diagEngine.Report(Loc, DiagID);
-        }
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/46.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Error效果&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;        template &amp;lt;unsigned N&amp;gt;
-        void diagERRorReport(SourceLocation Loc, const char (&amp;amp;FormatString)[N], FixItHint *Hint)
-        {
-            DiagnosticsEngine &amp;amp;diagEngine = ci.getDiagnostics();
-            unsigned DiagID = diagEngine.getCustomDiagID(clang::DiagnosticsEngine::Error, FormatString);
-            (Hint!=NULL) ? diagEngine.Report(Loc, DiagID) &amp;lt;&amp;lt; *Hint : diagEngine.Report(Loc, DiagID);
-        }
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/47.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h5 id=&quot;配置过程&quot;&gt;配置过程&lt;/h5&gt;
-
-&lt;p&gt;1、源码添加位置是在&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/41.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;2、CodeCheck文件夹平级的CMakeList.txt要添加&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;add_clang_subdirectory(CodeCheck)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/43.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;3、CodeCheck文件夹内CMakeList.txt要添加&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;add_llvm_library(CodeCheck MODULE
-CodeCheck.cpp
-)
-
-if(LLVM_ENABLE_PLUGINS AND (WIN32 OR CYGWIN))
-  target_link_libraries(CodeCheck PRIVATE
-    clangAST
-    clangBasic
-    clangFrontend
-    clangLex
-    LLVMSupport
-    )
-endif()
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/44.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;4、检测项目的Other C Flags添加配置&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;-Xclang -load -Xclang （你的插件dylib绝对路径）-Xclang -add-plugin -Xclang  （你的Plugin名字）
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;-Xclang -load -Xclang $(SRCROOT)/CodeCheck.dylib  -Xclang -add-plugin -Xclang  CodeCheck&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/45.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;我的博客即将同步至腾讯云+社区，邀请大家一同入驻：https://cloud.tencent.com/developer/support-plan?invite_code=2qy5h9u54eg4g&lt;/p&gt;</content><author><name>Ted</name></author><category term="iOS" /><summary type="html">1、抽象语法树AST</summary></entry></feed>
+&lt;/ul&gt;</content><author><name>Ted</name></author><category term="数据库" /><summary type="html">一、MySQL架构</summary></entry></feed>
