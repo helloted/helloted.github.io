@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter">
+
+    <title>数据库文件 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2023/01/15/file/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/app/">APP</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/mac_app/">Mac App</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>数据库文件</h1>
+                    
+                    <h2 class="subheading">数据库文件存储</h2>
+                    
+                    <span class="meta">Posted by Ted on January 15, 2023</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<p>在数据库中， 不论读一行，还是读多行，都是将这些行所在的页进行加载。</p>
+
+<p>也就是说存储空间的基本单位是页。</p>
+
+<p>一个页就是一棵树B+树的节点，数据库I/O操作的最小单位是页，与数据库相关的内容都会存储在页的结构里。</p>
+
+<p><img src="/img/Simple_2/74.jpg" alt="img" /></p>
+
+<h3 id="1innodb的物理文件"><strong>1、InnoDB的物理文件</strong></h3>
+
+<p>InnoDB是MySQL使用最为广泛的存储引擎。</p>
+
+<p>我们每创建一个 database（数据库） 都会在 /var/lib/mysql/ 目录里面创建一个以库名为名称的目录，然后保存表结构和表数据的文件都会存放在这个目录里。</p>
+
+<p>当我们创建一个table时， InnoDB会创建三个文件。</p>
+
+<ul>
+  <li>.opt文件，存储当前库字符集；</li>
+  <li>.frm文件，表结构定义文件；</li>
+  <li>.ibd文件，数据实际存储文件， 并且所有的索引也将存放在这个文件中；</li>
+</ul>
+
+<p><img src="/img/Simple_2/75.jpg" alt="img" /></p>
+
+<p>如果我们新建一个t_order的表，会有以下几个文件</p>
+
+<ul>
+  <li>db.opt，用来存储当前数据库的默认字符集和字符校验规则。</li>
+  <li>t_order.frm ，t_order 的表结构会保存在这个文件。每次建立一张表都会生成一个.frm 文件，该文件是用来保存每个表的元数据信息的，主要包含表结构定义。</li>
+  <li>t_order.ibd，t_order的数据实际存储文件。每一张表的数据都存放在一个独立的 .ibd 文件，包含实际数据和索引。</li>
+</ul>
+
+<h3 id="2数据文件的结构"><strong>2、数据文件的结构</strong></h3>
+
+<p>数据文件由段（segment）、区（extent）、页（page）、行（row）组成，InnoDB存储引擎的逻辑存储结构大致如下图：</p>
+
+<p><img src="/img/Simple_2/76.jpg" alt="img" /></p>
+
+<p>下面我们从下往上一个个看看。</p>
+
+<p><strong>行（row）</strong></p>
+
+<p>数据库表中的记录都是按行（row）进行存放的，每行记录根据不同的行格式，有不同的存储结构。</p>
+
+<p>后面我们详细介绍 InnoDB 存储引擎的行格式，也是本文重点介绍的内容。</p>
+
+<p><strong>页（page）</strong></p>
+
+<p>记录是按照行来存储的，但是数据库的读取并不以「行」为单位，否则一次读取（也就是一次 I/O 操作）只能处理一行数据，效率会非常低。</p>
+
+<p>因此，InnoDB 的数据是按「页」为单位来读写的，也就是说，当需要读一条记录的时候，并不是将这个行记录从磁盘读出来，而是以页为单位，将其整体读入内存。</p>
+
+<p>默认每个页的大小为 16KB，也就是最多能保证 16KB 的连续存储空间。</p>
+
+<p>页是 InnoDB 存储引擎磁盘管理的最小单元，意味着数据库每次读写都是以 16KB 为单位的，一次最少从磁盘中读取 16K 的内容到内存中，一次最少把内存中的 16K 内容刷新到磁盘中。</p>
+
+<p>页的类型有很多，常见的有数据页、undo 日志页、溢出页等等。数据表中的行记录是用「数据页」来管理的总之知道表中的记录存储在「数据页」里面就行。</p>
+
+<p><strong>区（extent）</strong></p>
+
+<p>我们知道 InnoDB 存储引擎是用 B+ 树来组织数据的。</p>
+
+<p>B+ 树中每一层都是通过双向链表连接起来的，如果是以页为单位来分配存储空间，那么链表中相邻的两个页之间的物理位置并不是连续的，可能离得非常远，那么磁盘查询时就会有大量的随机I/O，随机 I/O 是非常慢的。</p>
+
+<p>解决这个问题也很简单，就是让链表中相邻的页的物理位置也相邻，这样就可以使用顺序 I/O 了，那么在范围查询（扫描叶子节点）的时候性能就会很高。</p>
+
+<p>那具体怎么解决呢？</p>
+
+<p>在表中数据量大的时候，为某个索引分配空间的时候就不再按照页为单位分配了，而是按照区（extent）为单位分配。每个区的大小为 1MB，对于 16KB 的页来说，连续的 64 个页会被划为一个区，这样就使得链表中相邻的页的物理位置也相邻，就能使用顺序 I/O 了。</p>
+
+<p><strong>段（segment）</strong></p>
+
+<p>表空间是由各个段（segment）组成的，段是由多个区（extent）组成的。段一般分为数据段、索引段和回滚段等。</p>
+
+<p>索引段：存放 B + 树的非叶子节点的区的集合；</p>
+
+<p>数据段：存放 B + 树的叶子节点的区的集合；</p>
+
+<p>回滚段：存放的是回滚数据的区的集合</p>
+
+<p><strong>总结：</strong></p>
+
+<p>每一行数据都是放在数据页，按数据页为单位把磁盘上的数据加载到内存的缓存页。真正处理数据的过程是发生在内存中的，所以需要把磁盘中的数据加载到内存中，如果是处理写入或修改请求的话，还需要把内存中的内容刷新到磁盘上，也是以页为单位，将缓存页的数据刷入磁盘上的数据页。</p>
+
+<p><strong>为何不直接更新磁盘数据？</strong></p>
+
+<p>来个请求就直接对磁盘文件进行随机读写，然后更新磁盘文件里的数据，执行请求性能必然极差。因为磁盘随机读写性能极差，所以MySQL才设计了这套机制，通过在内存里更新数据，然后写redo log及事务提交，后台线程不定时地刷新内存数据到磁盘文件。这样每个更新请求，基本都是更新内存，然后顺序写日志文件，这两种操作性能都是很高的。</p>
+
+<h3 id="3行记录格式-compact格式"><strong>3、行记录格式-Compact格式</strong></h3>
+
+<p>MySQL 数据存储格式主要有两种，一种是行格式，另一种是列格式。其中，行格式存储方式是 MySQL 中默认的存储方式，也是最常用的存储方式。列格式存储方式主要用于存储大数据类型的字段，例如 BLOB 和 TEXT 类型的字段。</p>
+
+<p>InnoDB 提供了 4 种行格式，分别是 Redundant、Compact、Dynamic和 Compressed 行格式。从 MySQL 5.1 版本之后，行格式默认设置成 Compact。</p>
+
+<p><img src="/img/Simple_2/77.jpg" alt="img" /></p>
+
+<h5 id="1变长字段长度列表">1：变长字段长度列表</h5>
+
+<p>mysql中支持一些变长数据类型（比如VARCHAR(M)、TEXT等），它们存储数据占用的存储空间不是固定的，而是会随着存储内容的变化而变化。在Compact行格式中，把所有变长字段的真实数据占用的字节长度都存放在记录的开头部位，从而形成一个变长字段长度列表，各变长字段数据占用的字节数按照列的顺序逆序存放</p>
+
+<ul>
+  <li>变长字段长度列表中只存储值为 非NULL 的列内容占用的长度，值为 NULL 的列的长度是不储存的 。</li>
+  <li>并不是所有记录都有这个 变长字段长度列表 部分，比方说表中所有的列都不是变长的数据类型的话，这一部分就不需要有</li>
+</ul>
+
+<h5 id="2null值列表">2：NULL值列表</h5>
+
+<p>NULL值列表：Compact格式会把所有可以为NULL的列统一管理起来，存在一个NULL值列表，如果表中没有允许为NULL的列，则NULL值列表也不复存在了。</p>
+
+<p>为什么要有NULL值列表？</p>
+
+<p>表中的某些列可能存储NULL值，如果把这些NULL值都放到记录的真实数据中存储会很浪费空间，所以Compact行格式把这些值为NULL的列统一管理起来，存储到NULL值列表中，它的处理过程是这样的：</p>
+
+<ul>
+  <li>首先统计表中允许存储NULL的列有哪些。</li>
+  <li>根据列的实际值，用0或者1填充NULL值列表，1代表该列的值为空，0代表该列的值不为空。</li>
+  <li>如果表中没有允许存储 NULL 的列，则 NULL值列表 也不存在了。</li>
+</ul>
+
+<h5 id="3记录头信息">3：记录头信息</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>名称</th>
+      <th>大小(单位:bit)</th>
+      <th>描述</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>预留位1</td>
+      <td>1</td>
+      <td>未使用</td>
+    </tr>
+    <tr>
+      <td>预留位2</td>
+      <td>1</td>
+      <td>未使用</td>
+    </tr>
+    <tr>
+      <td>delete_mask</td>
+      <td>1</td>
+      <td>标记改记录是否被删除</td>
+    </tr>
+    <tr>
+      <td>min_rec_mask</td>
+      <td>1</td>
+      <td>B+树非叶子节点中最小记录都会添加该标记</td>
+    </tr>
+    <tr>
+      <td>n_owned</td>
+      <td>4</td>
+      <td>当前记录拥有的记录数</td>
+    </tr>
+    <tr>
+      <td>heap_no</td>
+      <td>13</td>
+      <td>当前记录在记录堆的位置信息</td>
+    </tr>
+    <tr>
+      <td>record_type</td>
+      <td>3</td>
+      <td>记录类型 0：普通记录 1：B+树非叶子节点记录2：最小记录3：最大记录</td>
+    </tr>
+    <tr>
+      <td>next_record</td>
+      <td>16</td>
+      <td>下一条记录的相对位置</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>为什么「变长字段长度列表」的信息要按照逆序存放？</p>
+
+<p>这个设计是有想法的，主要是因为「记录头信息」中指向下一个记录的指针，指向的是下一条记录的「记录头信息」和「真实数据」之间的位置，这样的好处是向左读就是记录头信息，向右读就是真实数据，比较方便。</p>
+
+<p>「变长字段长度列表」中的信息之所以要逆序存放，是因为这样可以使得位置靠前的记录的真实数据和数据对应的字段长度信息可以同时在一个 CPU Cache Line 中，这样就可以提高 CPU Cache 的命中率。</p>
+
+<p>同样的道理， NULL 值列表的信息也需要逆序存放。</p>
+
+<p>varchar(n) 中 n 最大取值为多少？</p>
+
+<p>一行记录最大能存储 65535 字节的数据，但是这个是包含「变长字段字节数列表所占用的字节数」和「NULL值列表所占用的字节数」。所以， 我们在算 varchar(n) 中 n 最大值时，需要减去这两个列表所占用的字节数。</p>
+
+<p>如果一张表只有一个 varchar(n) 字段，且允许为 NULL，字符集为 ascii。varchar(n) 中 n 最大取值为 65532。</p>
+
+<p>计算公式：65535 - 变长字段字节数列表所占用的字节数 - NULL值列表所占用的字节数 = 65535 - 2 - 1 = 65532。</p>
+
+<p>如果有多个字段的话，要保证所有字段的长度 + 变长字段字节数列表所占用的字节数 + NULL值列表所占用的字节数 &lt;= 65535。</p>
+
+<p>行溢出后，MySQL 是怎么处理的？</p>
+
+<p>如果一个数据页存不了一条记录，InnoDB 存储引擎会自动将溢出的数据存放到「溢出页」中。</p>
+
+<p>Compact 行格式针对行溢出的处理是这样的：当发生行溢出时，在记录的真实数据处只会保存该列的一部分数据，而把剩余的数据放在「溢出页」中，然后真实数据处用 20 字节存储指向溢出页的地址，从而可以找到剩余数据所在的页。</p>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/golang/2023/01/05/map/" data-toggle="tooltip" data-placement="top" title="Golang-Map">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2024</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>
