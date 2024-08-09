@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter">
+
+    <title>消息队列之Pulsar - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/2023/02/25/pulsar/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/app/">APP</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/mac_app/">Mac App</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>消息队列之Pulsar</h1>
+                    
+                    <h2 class="subheading">通道Channel简介和使用</h2>
+                    
+                    <span class="meta">Posted by Ted on February 25, 2023</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h4 id="1架构"><strong>1、架构</strong></h4>
+
+<p>Apache Pulsar 在架构设计上采用了计算与存储分离的模式，消息发布和订阅相关的计算逻辑在 Broker 中完成，数据存储在 Apache BookKeeper 集群的 Bookie 节点上：</p>
+
+<p><img src="/img/Simple_2/79.jpg" alt="img" /></p>
+
+<ol>
+  <li>
+    <p>Broker(经纪人)：Broker 是 Pulsar 的核心服务组件，负责维护连接到它的生产者（Producers）和消费者（Consumers），负责处理客户端请求、管理元数据、协调消息的存储和分发。</p>
+
+    <ul>
+      <li>
+        <p>处理生产者和消费者的连接请求。</p>
+      </li>
+      <li>
+        <p>管理主题、分区和订阅的元数据。</p>
+      </li>
+      <li>
+        <p>将消息写入持久化存储（如 Apache BookKeeper）。</p>
+      </li>
+      <li>
+        <p>从持久化存储读取消息并分发给消费者。</p>
+      </li>
+      <li>
+        <p>进行负载均衡和故障恢复。</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>BookKeeper（存储层）：是 Pulsar 的持久化存储系统，用于存储消息日志。BookKeeper 由多个 Bookie 节点组成，提供高可用性和数据持久性。BookKeeper 的主要职责包括：</p>
+
+    <ul>
+      <li>
+        <p>接收和存储来自 Broker 的消息。</p>
+      </li>
+      <li>
+        <p>提供高效的日志存储和读取功能。</p>
+      </li>
+      <li>
+        <p>通过复制机制确保数据的高可用性和一致性。</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>ZooKeeper：用于进行集群管理和协调。它负责元数据的管理，包括配置信息、Broker 的负载均衡、BookKeeper Ledger 的元数据等。ZooKeeper 通过维护一致的状态信息，帮助系统实现高可用性和故障恢复。</p>
+  </li>
+  <li>
+    <p>Topic：消息是通过 Topic 进行组织的。每个 Topic 可以被配置为多个分区，分区可以跨多个 Broker 进行分布，这样可以提高 Topic 的可扩展性和并行处理能力。</p>
+  </li>
+  <li>
+    <p>Namespace：Namespace 是一种逻辑分组方式，用于对 Topic 进行分组管理。一个 Namespace 可以包含多个 Topic，可以在 Namespace 级别上设置策略，如消息保留策略、认证授权等。</p>
+  </li>
+  <li>
+    <p>Subscription：订阅是消费者从 Topic 接收消息的方式。Pulsar 支持多种订阅模式，包括 Exclusive、Shared、Failover 和 Key_Shared，这些模式支持不同的消息消费需求和场景。</p>
+  </li>
+  <li>
+    <p>Geo-Replication：Pulsar 支持跨多个地理区域的数据复制，即 Geo-Replication。这允许在不同区域的 Pulsar 集群之间复制 Topic，确保数据的全球可用性和灾难恢复。</p>
+  </li>
+</ol>
+
+<h4 id="2-数据流"><strong>2. 数据流</strong></h4>
+
+<ul>
+  <li>生产者到 Broker：生产者（Producers）通过 Pulsar 客户端库连接到 Broker，并将消息发送到指定的主题。Broker 接收到消息后，将其写入 BookKeeper。</li>
+  <li>Broker 到 BookKeeper：Broker 将接收到的消息写入 BookKeeper 的日志。BookKeeper 通过复制机制将消息存储在多个 Bookie 节点上，以确保数据的高可用性和一致性。</li>
+  <li>Broker到消费者：消费者（Consumers）通过 Pulsar 客户端库连接到 Broker，并订阅指定的主题。Broker 从 BookKeeper 读取消息，并将其分发给订阅了该主题的消费者。</li>
+</ul>
+
+<p><img src="/img/Simple_2/80.jpg" alt="img" /></p>
+
+<h4 id="3高可用性和容错"><strong>3、高可用性和容错</strong></h4>
+
+<p>Pulsar 通过以下机制实现高可用性和容错：</p>
+
+<ul>
+  <li>无状态 Broker：Broker 不存储任何持久化数据，所有数据都存储在 BookKeeper 中。这使得 Broker 可以随时重启或替换，而不会丢失数据。</li>
+  <li>ZooKeeper 协调：ZooKeeper 负责管理 Broker 和 Bookie 的注册、主题的分区信息等。当一个 Broker 或 Bookie 发生故障时，ZooKeeper 会检测到并将其从活跃节点列表中移除。</li>
+  <li>自动故障恢复：当一个 Broker 或 Bookie 发生故障时，其他 Broker 或 Bookie 会接管其工作，确保服务的连续性。</li>
+</ul>
+
+<h4 id="4topic和分区"><strong>4、Topic和分区</strong></h4>
+
+<p>在Apache Pulsar中，Topic和分区是两个相关但不同的概念</p>
+
+<ul>
+  <li>Topic（主题）：Topic是消息传递的基本单位，它可以被看作是一个主题或者主题通道，用于发布和订阅消息。每个Topic都有一个唯一的名称，用于标识和区分不同的主题。Topic可以被认为是一个逻辑上的消息容器，用于组织和管理相关的消息。</li>
+  <li>分区：一个Topic可以被分为多个Partition（分区），每个Partition是一个有序的消息队列。分区的目的是实现消息的水平扩展和负载均衡。每个分区都有一个唯一的标识符，可以通过标识符来订阅和消费特定的分区。消费者可以独立地订阅一个或多个分区，从而实现并行处理和提高吞吐量。</li>
+</ul>
+
+<p>理解Topic和分区的关系：</p>
+
+<ul>
+  <li>一个Topic可以有一个或多个分区，分区的数量可以根据需求进行动态调整。</li>
+  <li>分区可以用于实现消息的并行处理和负载均衡，多个消费者可以同时消费不同的分区，从而提高系统的吞吐量。</li>
+  <li>分区的数量和分布可以根据消息的特性和负载情况进行调整，以满足不同的需求。</li>
+</ul>
+
+<p>总结来说，Topic是消息传递的基本单位，而分区是Topic的一种划分方式，用于实现消息的水平扩展和负载均衡。通过合理地使用Topic和分区，可以构建高性能、可扩展和可靠的消息传递系统。</p>
+
+<p><strong>分区特性</strong></p>
+
+<p>每个分区由一个 Broker 负责管理。Broker 负责处理生产者和消费者的请求，将消息写入 BookKeeper，并从 BookKeeper 读取消息。分区之间是相互独立且无关的。每个分区都是一个独立的有序消息队列，它们之间没有直接的关系或依赖。</p>
+
+<p>以下是分区之间的一些关系和特点：</p>
+
+<ol>
+  <li>独立性：每个分区都是独立的，它们之间没有共享状态或数据。每个分区都有自己的消息序列，消费者可以独立地订阅和消费特定的分区。</li>
+  <li>并行处理：由于分区之间是独立的，多个消费者可以同时消费不同的分区，实现消息的并行处理。这样可以提高系统的吞吐量和处理能力。</li>
+  <li>负载均衡：分区的数量和分布可以根据负载情况进行调整，以实现负载均衡。当系统负载较高时，可以增加分区的数量，从而将负载分散到更多的分区上。</li>
+  <li>顺序保证：每个分区内的消息是有序的，但不同分区之间的消息顺序是无法保证的。如果需要保证全局顺序，可以使用单个分区或者其他机制来实现。</li>
+</ol>
+
+<p>需要注意的是，分区之间的独立性和并行处理特性使得Pulsar能够实现高吞吐量和可扩展性。</p>
+
+<h4 id="5四种订阅模式"><strong>5、四种订阅模式</strong></h4>
+
+<ol>
+  <li>Exclusive（独占模式）：一个 Subscription 只能与一个 Consumer 关联，只有这个 Consumer 可以接收到 Topic 的全部消息，如果该 Consumer 出现故障了就会停止消费。Exclusive 订阅模式下，同一个 Subscription 里只有一个 Consumer 能消费 Topic，如果多个 Consumer 订阅则会报错，适用于全局有序消费的场景。</li>
+  <li>Shared（共享模式）：在共享模式下，多个消费者可以共同订阅和消费特定的Topic或分区。消息会被均匀分配给订阅的消费者，每个消费者都可以接收到部分消息。适用于需要多个消费者并行处理消息的场景。</li>
+  <li>Key_Shared（键共享模式）：当存在多个 Consumer 时，将根据消息的 Key 进行分发，Key 相同的消息只会被分发到同一个消费者。这样可以保证具有相同键的消息被同一个消费者处理，从而实现基于键的有序性。适用于需要按照键进行有序处理的场景。</li>
+  <li>灾备模式（Failover）：当存在多个 consumer 时，将会按字典顺序排序，第一个 consumer 被初始化为唯一接受消息的消费者。当第一个 consumer 断开时，所有的消息（未被确认和后续进入的）将会被分发给队列中的下一个 consumer。适用于需要高可用性和故障转移的场景。</li>
+</ol>
+
+<p>这些订阅模式可以根据具体的业务需求选择，以满足不同的消息处理和消费方式。通过灵活使用这些订阅模式，Pulsar可以适应各种不同的应用场景和需求。</p>
+
+<p><img src="/img/Simple_2/81.jpg" alt="img" /></p>
+
+<p>需要注意的是，上面的订阅模式，指的是一个订阅里，有四种模式，但是一个Topic可以有多个订阅，这样的话，多个订阅，就能达到广播模式。</p>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/golang/2023/02/11/channel/" data-toggle="tooltip" data-placement="top" title="通道Channel">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2024</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

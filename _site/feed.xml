@@ -1,4 +1,373 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2024-08-07T19:06:25+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">数据库文件</title><link href="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2023/01/15/file/" rel="alternate" type="text/html" title="数据库文件" /><published>2023-01-15T20:00:00+08:00</published><updated>2023-01-15T20:00:00+08:00</updated><id>http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2023/01/15/file</id><content type="html" xml:base="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2023/01/15/file/">&lt;p&gt;在数据库中， 不论读一行，还是读多行，都是将这些行所在的页进行加载。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2024-08-09T20:13:28+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">消息队列之Pulsar</title><link href="http://www.helloted.com/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/2023/02/25/pulsar/" rel="alternate" type="text/html" title="消息队列之Pulsar" /><published>2023-02-25T20:00:00+08:00</published><updated>2023-02-25T20:00:00+08:00</updated><id>http://www.helloted.com/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/2023/02/25/pulsar</id><content type="html" xml:base="http://www.helloted.com/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/2023/02/25/pulsar/">&lt;h4 id=&quot;1架构&quot;&gt;&lt;strong&gt;1、架构&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;Apache Pulsar 在架构设计上采用了计算与存储分离的模式，消息发布和订阅相关的计算逻辑在 Broker 中完成，数据存储在 Apache BookKeeper 集群的 Bookie 节点上：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/79.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;Broker(经纪人)：Broker 是 Pulsar 的核心服务组件，负责维护连接到它的生产者（Producers）和消费者（Consumers），负责处理客户端请求、管理元数据、协调消息的存储和分发。&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;p&gt;处理生产者和消费者的连接请求。&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;管理主题、分区和订阅的元数据。&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;将消息写入持久化存储（如 Apache BookKeeper）。&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;从持久化存储读取消息并分发给消费者。&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;进行负载均衡和故障恢复。&lt;/p&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;BookKeeper（存储层）：是 Pulsar 的持久化存储系统，用于存储消息日志。BookKeeper 由多个 Bookie 节点组成，提供高可用性和数据持久性。BookKeeper 的主要职责包括：&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;p&gt;接收和存储来自 Broker 的消息。&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;提供高效的日志存储和读取功能。&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;通过复制机制确保数据的高可用性和一致性。&lt;/p&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;ZooKeeper：用于进行集群管理和协调。它负责元数据的管理，包括配置信息、Broker 的负载均衡、BookKeeper Ledger 的元数据等。ZooKeeper 通过维护一致的状态信息，帮助系统实现高可用性和故障恢复。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Topic：消息是通过 Topic 进行组织的。每个 Topic 可以被配置为多个分区，分区可以跨多个 Broker 进行分布，这样可以提高 Topic 的可扩展性和并行处理能力。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Namespace：Namespace 是一种逻辑分组方式，用于对 Topic 进行分组管理。一个 Namespace 可以包含多个 Topic，可以在 Namespace 级别上设置策略，如消息保留策略、认证授权等。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Subscription：订阅是消费者从 Topic 接收消息的方式。Pulsar 支持多种订阅模式，包括 Exclusive、Shared、Failover 和 Key_Shared，这些模式支持不同的消息消费需求和场景。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Geo-Replication：Pulsar 支持跨多个地理区域的数据复制，即 Geo-Replication。这允许在不同区域的 Pulsar 集群之间复制 Topic，确保数据的全球可用性和灾难恢复。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4 id=&quot;2-数据流&quot;&gt;&lt;strong&gt;2. 数据流&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;生产者到 Broker：生产者（Producers）通过 Pulsar 客户端库连接到 Broker，并将消息发送到指定的主题。Broker 接收到消息后，将其写入 BookKeeper。&lt;/li&gt;
+  &lt;li&gt;Broker 到 BookKeeper：Broker 将接收到的消息写入 BookKeeper 的日志。BookKeeper 通过复制机制将消息存储在多个 Bookie 节点上，以确保数据的高可用性和一致性。&lt;/li&gt;
+  &lt;li&gt;Broker到消费者：消费者（Consumers）通过 Pulsar 客户端库连接到 Broker，并订阅指定的主题。Broker 从 BookKeeper 读取消息，并将其分发给订阅了该主题的消费者。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/80.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;3高可用性和容错&quot;&gt;&lt;strong&gt;3、高可用性和容错&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;Pulsar 通过以下机制实现高可用性和容错：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;无状态 Broker：Broker 不存储任何持久化数据，所有数据都存储在 BookKeeper 中。这使得 Broker 可以随时重启或替换，而不会丢失数据。&lt;/li&gt;
+  &lt;li&gt;ZooKeeper 协调：ZooKeeper 负责管理 Broker 和 Bookie 的注册、主题的分区信息等。当一个 Broker 或 Bookie 发生故障时，ZooKeeper 会检测到并将其从活跃节点列表中移除。&lt;/li&gt;
+  &lt;li&gt;自动故障恢复：当一个 Broker 或 Bookie 发生故障时，其他 Broker 或 Bookie 会接管其工作，确保服务的连续性。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;4topic和分区&quot;&gt;&lt;strong&gt;4、Topic和分区&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;在Apache Pulsar中，Topic和分区是两个相关但不同的概念&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Topic（主题）：Topic是消息传递的基本单位，它可以被看作是一个主题或者主题通道，用于发布和订阅消息。每个Topic都有一个唯一的名称，用于标识和区分不同的主题。Topic可以被认为是一个逻辑上的消息容器，用于组织和管理相关的消息。&lt;/li&gt;
+  &lt;li&gt;分区：一个Topic可以被分为多个Partition（分区），每个Partition是一个有序的消息队列。分区的目的是实现消息的水平扩展和负载均衡。每个分区都有一个唯一的标识符，可以通过标识符来订阅和消费特定的分区。消费者可以独立地订阅一个或多个分区，从而实现并行处理和提高吞吐量。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;理解Topic和分区的关系：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;一个Topic可以有一个或多个分区，分区的数量可以根据需求进行动态调整。&lt;/li&gt;
+  &lt;li&gt;分区可以用于实现消息的并行处理和负载均衡，多个消费者可以同时消费不同的分区，从而提高系统的吞吐量。&lt;/li&gt;
+  &lt;li&gt;分区的数量和分布可以根据消息的特性和负载情况进行调整，以满足不同的需求。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;总结来说，Topic是消息传递的基本单位，而分区是Topic的一种划分方式，用于实现消息的水平扩展和负载均衡。通过合理地使用Topic和分区，可以构建高性能、可扩展和可靠的消息传递系统。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;分区特性&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;每个分区由一个 Broker 负责管理。Broker 负责处理生产者和消费者的请求，将消息写入 BookKeeper，并从 BookKeeper 读取消息。分区之间是相互独立且无关的。每个分区都是一个独立的有序消息队列，它们之间没有直接的关系或依赖。&lt;/p&gt;
+
+&lt;p&gt;以下是分区之间的一些关系和特点：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;独立性：每个分区都是独立的，它们之间没有共享状态或数据。每个分区都有自己的消息序列，消费者可以独立地订阅和消费特定的分区。&lt;/li&gt;
+  &lt;li&gt;并行处理：由于分区之间是独立的，多个消费者可以同时消费不同的分区，实现消息的并行处理。这样可以提高系统的吞吐量和处理能力。&lt;/li&gt;
+  &lt;li&gt;负载均衡：分区的数量和分布可以根据负载情况进行调整，以实现负载均衡。当系统负载较高时，可以增加分区的数量，从而将负载分散到更多的分区上。&lt;/li&gt;
+  &lt;li&gt;顺序保证：每个分区内的消息是有序的，但不同分区之间的消息顺序是无法保证的。如果需要保证全局顺序，可以使用单个分区或者其他机制来实现。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;需要注意的是，分区之间的独立性和并行处理特性使得Pulsar能够实现高吞吐量和可扩展性。&lt;/p&gt;
+
+&lt;h4 id=&quot;5四种订阅模式&quot;&gt;&lt;strong&gt;5、四种订阅模式&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Exclusive（独占模式）：一个 Subscription 只能与一个 Consumer 关联，只有这个 Consumer 可以接收到 Topic 的全部消息，如果该 Consumer 出现故障了就会停止消费。Exclusive 订阅模式下，同一个 Subscription 里只有一个 Consumer 能消费 Topic，如果多个 Consumer 订阅则会报错，适用于全局有序消费的场景。&lt;/li&gt;
+  &lt;li&gt;Shared（共享模式）：在共享模式下，多个消费者可以共同订阅和消费特定的Topic或分区。消息会被均匀分配给订阅的消费者，每个消费者都可以接收到部分消息。适用于需要多个消费者并行处理消息的场景。&lt;/li&gt;
+  &lt;li&gt;Key_Shared（键共享模式）：当存在多个 Consumer 时，将根据消息的 Key 进行分发，Key 相同的消息只会被分发到同一个消费者。这样可以保证具有相同键的消息被同一个消费者处理，从而实现基于键的有序性。适用于需要按照键进行有序处理的场景。&lt;/li&gt;
+  &lt;li&gt;灾备模式（Failover）：当存在多个 consumer 时，将会按字典顺序排序，第一个 consumer 被初始化为唯一接受消息的消费者。当第一个 consumer 断开时，所有的消息（未被确认和后续进入的）将会被分发给队列中的下一个 consumer。适用于需要高可用性和故障转移的场景。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;这些订阅模式可以根据具体的业务需求选择，以满足不同的消息处理和消费方式。通过灵活使用这些订阅模式，Pulsar可以适应各种不同的应用场景和需求。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/81.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;需要注意的是，上面的订阅模式，指的是一个订阅里，有四种模式，但是一个Topic可以有多个订阅，这样的话，多个订阅，就能达到广播模式。&lt;/p&gt;</content><author><name>Ted</name></author><category term="消息队列" /><summary type="html">1、架构</summary></entry><entry><title type="html">通道Channel</title><link href="http://www.helloted.com/golang/2023/02/11/channel/" rel="alternate" type="text/html" title="通道Channel" /><published>2023-02-11T20:00:00+08:00</published><updated>2023-02-11T20:00:00+08:00</updated><id>http://www.helloted.com/golang/2023/02/11/channel</id><content type="html" xml:base="http://www.helloted.com/golang/2023/02/11/channel/">&lt;h4 id=&quot;1channel介绍&quot;&gt;&lt;strong&gt;1、Channel介绍&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;通过共享内存来通讯和通过通讯来共享内存是并发编程中的两种编程风格。&lt;/p&gt;
+
+&lt;p&gt;当通过共享内存来通讯的时候，我们需要一些传统的并发同步技术（比如互斥锁）来避免数据竞争。&lt;/p&gt;
+
+&lt;p&gt;Go提供了一种独特的并发同步技术来实现通过通讯来共享内存。此技术即为Channel。 我们可以把一个Channel看作是在一个程序内部的一个先进先出（FIFO：first in first out）数据队列。 一些协程可以向此Channel发送数据，另外一些协程可以从此Channel接收数据。Go Channel可以帮助程序员轻松地避免数据竞争。&lt;/p&gt;
+
+&lt;p&gt;尽管Go也支持几种传统的数据同步技术，但是只有Channel为一等公民。 Channel是Go中的一种类型，所以我们可以无需引进任何代码包就可以使用Channel。 几种传统的数据同步技术提供在sync和sync/atomic标准库包中。&lt;/p&gt;
+
+&lt;p&gt;实事求是地说，每种并发同步技术都有它们各自的最佳应用场景，但是Channel的&lt;a href=&quot;https://gfw.go101.org/article/channel-use-cases.html&quot;&gt;应用范围更广&lt;/a&gt;。 使用Channel来做同步常常可以使得代码看上去更整洁和易于理解。&lt;/p&gt;
+
+&lt;h4 id=&quot;2通道类型和值&quot;&gt;&lt;strong&gt;2、通道类型和值&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;&lt;strong&gt;通道类型&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;和数组、切片以及映射类型一样，每个通道类型也有一个元素类型。 一个通道只能传送它的（通道类型的）元素类型的值。&lt;/p&gt;
+
+&lt;p&gt;通道可以是双向的，也可以是单向的。假设T是一个元素类型&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;chan T  ：双向通道类型。&lt;/li&gt;
+  &lt;li&gt;chan&amp;lt;- T  ：单向可发送通道类型，编译器不允许从此类型的值中接收数据。&lt;/li&gt;
+  &lt;li&gt;&amp;lt;-chan T  ：单向可接收通道类型。 编译器不允许向此类型的值中发送数据。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;通道箭头&amp;lt;-总是指向左边。类型T总是在最右。&lt;/p&gt;
+
+&lt;p&gt;双向通道chan T可以被隐式转换为单向通道类型chan&amp;lt;- T和&amp;lt;-chan T，但反之不行（即使显式也不行）。 类型chan&amp;lt;- T和&amp;lt;-chan T的值也不能相互转换。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;通道零值&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;通道类型的零值也使用nil来表示。&lt;/p&gt;
+
+&lt;p&gt;一个非零通道值必须通过内置的make函数来创建。 比如make(chan int, 10)将创建一个元素类型为int，容量为10的通道值。 第二个参数指定了欲创建的通道的容量。此第二个实参是可选的，它的默认值为0。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;缓存、非缓存&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;一个容量为0的通道值称为一个非缓冲通道（unbuffered channel）；&lt;/li&gt;
+  &lt;li&gt;一个容量不为0的通道值称为一个缓冲通道（buffered channel）。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;通道的堵塞：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;如果 buffered channel 中还有数据，那么，从这个 channel 接收数据的时候就不会阻塞，&lt;/li&gt;
+  &lt;li&gt;如果 buffered channel 还未满（“满”指达到其容量），给它发送数据也不会阻塞，否则就会阻塞。&lt;/li&gt;
+  &lt;li&gt;unbuffered chan 只有读写都准备好之后才不会阻塞，这也是很多使用 unbuffered chan 时的常见 Bug。&lt;/li&gt;
+  &lt;li&gt;nil 是 chan 的零值，是一种特殊的 chan，对值是 nil 的 chan 的发送接收调用者总是会阻塞。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;3通道操作&quot;&gt;&lt;strong&gt;3、通道操作&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;Go中有五种通道相关的操作：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;关闭通道&lt;/li&gt;
+  &lt;li&gt;向通道内发送值&lt;/li&gt;
+  &lt;li&gt;从通道内接收值&lt;/li&gt;
+  &lt;li&gt;查询通道容量&lt;/li&gt;
+  &lt;li&gt;查询通道内队列长度&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;假设一个通道（值）为ch，下面列出了这五种操作的语法或者函数调用。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;3.1  关闭通道：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; close(ch) 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;传给close函数调用的实参必须为一个通道，并且此通道值不能为单向接收的。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;3.2 向通道ch发送一个值v：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; ch &amp;lt;- v  
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;v必须能够赋值给通道ch的元素类型。 ch不能为单向接收通道。 &amp;lt;-称为数据发送操作符。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;3.3 从通道ch接收一个值：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;v = &amp;lt;-ch
+v, sentBeforeClosed = &amp;lt;-ch
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;接收数据时，还可以返回两个值。第一个值是返回的 chan 中的元素，很多人不太熟悉的是第二个值。第二个值是 bool 类型，代表是否成功地从 chan 中读取到一个值，如果第二个参数是 false，chan 已经被 close 而且 chan 中没有缓存的数据，这个时候，第一个值是零值。所以，如果从 chan 读取到一个零值，可能是 sender 真正发送的零值，也可能是 closed 的并且没有缓存元素产生的零值。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;3.4 查询一个通道的容量：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cap(ch) 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;其中cap是一个已经在&lt;a href=&quot;https://gfw.go101.org/article/container.html#cap-len&quot;&gt;容器类型&lt;/a&gt;一文中介绍过的内置函数。 cap的返回值的类型为内置类型int。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;3.5 查询一个通道的长度：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;           ```        
+            len(ch)      
+           ```
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;其中len是一个已经在&lt;a href=&quot;https://gfw.go101.org/article/container.html#cap-len&quot;&gt;容器类型&lt;/a&gt;一文中介绍过的内置函数。 len的返回值的类型也为内置类型int。 一个通道的长度是指当前有多少个已被发送到此通道但还未被接收出去的元素值。&lt;/p&gt;
+
+&lt;h4 id=&quot;4channel-的五种应用场景&quot;&gt;4、&lt;strong&gt;channel 的五种应用场景&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/78.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;1、消息交流&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;channel 的底层是一个循环队列，当队列的长度大于 0 的 时候，它会被当做线程安全队列和 buffer。利用这个特性，一个 goroutine 可以安全的往 channel 中存放数据，另一个 goroutine 可以安全的从 channel 中读取数据，这样就实现了 goroutine 之间的消息交流。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;2、数据传递&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;数据传递类似游戏“击鼓传花”。鼓响时，花（或者其它物件）从一个人手里传到下一个人，数据就类似这里的花。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;3、信号通知&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;channel 类型有这样一个特性：如果 channel 为空，那么 recevier 接收数据的时候就会阻塞，直到有新的数据进来或者 channel 被关闭。&lt;/p&gt;
+
+&lt;p&gt;利用这个特性，就可以实现 wait/notify 设计模式。另外还有一个经常碰到的场景，实现程序的 graceful shutdown。&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;go&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;......&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;c&quot;&gt;// 执行业务处理&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+
+  &lt;/span&gt;&lt;span class=&quot;c&quot;&gt;// 处理CTRL+C等中断信号&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;termChan&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;make&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;chan&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Signal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;signal&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Notify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;termChan&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;syscall&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SIGINT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;syscall&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SIGTERM&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;termChan&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; 
+
+  &lt;/span&gt;&lt;span class=&quot;c&quot;&gt;// 执行退出之前的清理动作&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;doCleanup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+  
+  &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;优雅退出&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;4、锁&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;利用 channel 我们也能实现锁的功能。&lt;/p&gt;
+
+&lt;p&gt;sync.Mutex 通过修改持有锁标记位的状态达到占有锁的目的，因此 channel 可以通过转移这个标记位的所有权实现占有锁。&lt;/p&gt;
+
+&lt;p&gt;具体代码如下：&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;// 使用chan实现互斥锁&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Mutex&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ch&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;chan&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;// 使用锁需要初始化&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NewMutex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Mutex&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mu&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Mutex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;make&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;chan&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{},&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mu&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ch&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}{}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mu&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;// 请求锁，直到获取到&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Mutex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Lock&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ch&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;// 解锁&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Mutex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Unlock&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;select&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ch&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}{}&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;panic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;unlock of unlocked mutex&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;// 尝试获取锁&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Mutex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TryLock&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;bool&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;select&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ch&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;// 加入一个超时的设置&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Mutex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;LockTimeout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;timeout&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Duration&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;bool&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;timer&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NewTimer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;timeout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;select&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ch&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;timer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Stop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;timer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;C&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;// 锁是否已被持有&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Mutex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;IsLocked&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;bool&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NewMutex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ok&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TryLock&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;locked v %v&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ok&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ok&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TryLock&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;locked %v&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ok&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;这里实现锁主要利用了向满 channel 发送数组或从空 channel 接收数据会阻塞的特性。另外，利用 select 很容易实现 TryLock 和 Timeout 的功能。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;5、任务编排&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;通过 WaitGroup，我们能很容易的实现 等待一组 goroutine 完成任务这种任务编排需求。同样，我们也可以用 channel 实现。&lt;/p&gt;
+
+&lt;p&gt;但是如果任务编排再复杂一些呢？如果面试官出了下面这个题目：&lt;/p&gt;
+
+&lt;p&gt;有一批任务需要处理，但是机器资源有限，只能承受100的并发度，该如何实现？&lt;/p&gt;
+
+&lt;p&gt;一种解决方案就是使用 channel，代码如下：&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;task&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ch&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;chan&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{})&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ch&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;c&quot;&gt;//执行任务&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Sleep&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Second&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ch&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}{}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;concurrency100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ch&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;make&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;chan&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{},&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+
+    &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ch&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}{}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+
+    &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;go&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;task&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;利用 sender 给满员的 channel 发送数据会阻塞的特性，就实现了并发度始终维持在 100 的需求。&lt;/p&gt;</content><author><name>Ted</name></author><category term="Golang" /><summary type="html">1、Channel介绍</summary></entry><entry><title type="html">数据库文件</title><link href="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2023/01/15/file/" rel="alternate" type="text/html" title="数据库文件" /><published>2023-01-15T20:00:00+08:00</published><updated>2023-01-15T20:00:00+08:00</updated><id>http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2023/01/15/file</id><content type="html" xml:base="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2023/01/15/file/">&lt;p&gt;在数据库中， 不论读一行，还是读多行，都是将这些行所在的页进行加载。&lt;/p&gt;
 
 &lt;p&gt;也就是说存储空间的基本单位是页。&lt;/p&gt;
 
@@ -886,7 +1255,153 @@ myMap = smallMap // 缩容完成，原来的map被我们丢弃，交给gc去清�
   &lt;li&gt;Elasticsearch也提供了安全性和权限控制机制，可以对数据进行访问控制和身份验证。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;综上所述，MySQL适用于传统的关系型数据存储和事务处理，而Elasticsearch适用于大规模数据的搜索、分析和实时数据处理。选择哪种数据库取决于具体的需求和应用场景。在某些情况下，两者也可以结合使用，以发挥各自的优势。&lt;/p&gt;</content><author><name>Ted</name></author><category term="数据库" /><summary type="html">1、简介</summary></entry><entry><title type="html">数据库事务之锁类型</title><link href="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/12/lock/" rel="alternate" type="text/html" title="数据库事务之锁类型" /><published>2022-11-12T20:00:00+08:00</published><updated>2022-11-12T20:00:00+08:00</updated><id>http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/12/lock</id><content type="html" xml:base="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/12/lock/">&lt;p&gt;&lt;img src=&quot;/img/Simple_2/54.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;综上所述，MySQL适用于传统的关系型数据存储和事务处理，而Elasticsearch适用于大规模数据的搜索、分析和实时数据处理。选择哪种数据库取决于具体的需求和应用场景。在某些情况下，两者也可以结合使用，以发挥各自的优势。&lt;/p&gt;</content><author><name>Ted</name></author><category term="数据库" /><summary type="html">1、简介</summary></entry><entry><title type="html">MongoDB</title><link href="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/12/mongo/" rel="alternate" type="text/html" title="MongoDB" /><published>2022-11-12T20:00:00+08:00</published><updated>2022-11-12T20:00:00+08:00</updated><id>http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/12/mongo</id><content type="html" xml:base="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/12/mongo/">&lt;h4 id=&quot;1mongodb简介&quot;&gt;&lt;strong&gt;1、MongoDB简介&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;MongoDB是一个文档数据库(以 JSON 为数据模型)，此处文档指的是JSON Docunment，并非一般理解的PDF，WORD文档。&lt;/li&gt;
+  &lt;li&gt;MongoDB是一个介于关系数据库和非关系数据库之间的产品，是非关系数据库当中功能最丰富，最像 关系数据库的。&lt;/li&gt;
+  &lt;li&gt;MongoDB支持的数据结构非常松散，数据格式是BSON，一种类似JSON的二进制形式的存储格 式，简称Binary JSON ，和JSON一样支持内嵌的文档对象和数组对象，因此可以存储比较复杂的数据类型。&lt;/li&gt;
+  &lt;li&gt;MongoDB在数据库总排名第5，仅次于Oracle、MySQL等RDBMS，在NoSQL数据库排名首位。从诞生 以来，其项目应用广度、社区活跃指数持续上升。原则上 Oracle 和 MySQL 能做的事情，MongoDB 都能做(包括 ACID 事务)。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;MongoDB 的三大核心特性是：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;No Schema&lt;/strong&gt;：MongoDB没有固定的Schema，少了很多约束条件，可以让数据的存储数据结构更灵活，存储速度更加快。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;高可用&lt;/strong&gt;：MongoDB能将数据分布在多台机器上实现冗余，同时检测主节点是否存活，当失活时能自动提升从节点为主节点，达到自动故障转移的目的。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;分布式&lt;/strong&gt;（可平行扩展）：MongoDB使用分片技术对数据进行扩展，能自动分片、自动转移分片里面的数据块，让每一个服务器里面存储的数据都是一样大小。&lt;/li&gt;
+  &lt;li&gt;MongoDB 还支持数据压缩、二级索引、全文搜索、地理分布等一系列的强大功能。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;MongoDB使用场景类型总结&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;读写分离应用&lt;/li&gt;
+  &lt;li&gt;灵活多变的业务场景，MongoDB采用No-Schema的方式，免去表结构变更的痛苦，非常适用于初创型的业务需求。可以将模式固定的结构化数据存储在mysql中，模式灵活的业务存储在MongoDB中，高热数据存储在Redis或Memcache中，实现对业务数据高效存取，降低存储数据的投入成本。&lt;/li&gt;
+  &lt;li&gt;移动应用，MongoDB支持二维空间索引，可以很好地支撑基于位置查询的移动类App的业务需求。同时MongoDB动态模式存储方式也非常适合存储多重系统的异构数据，满足移动App应用的需求。&lt;/li&gt;
+  &lt;li&gt;物联网应用，MongoDB具有高性能和异步数据写入功能，特定场景下可达到内存数据库的处理能力。同时，库MongoDB中的分片集群实例，可按需配置Mongos和Shard组件的配置和个数，性能及存储空间可实现无限扩展，非常适合物联网高并发写入的场景。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;MongoDB提供二级索引功能满足动态查询的需求，利用MongoDB的map-reduce聚合框架进行多维度的数据分析。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;mysql与mongodb&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;在处理大量数据方面，MongoDB 比 MySQL 更胜一筹；在云计算服务和需求频繁变化的项目上，MongoDB 也更具优势。&lt;/p&gt;
+
+&lt;p&gt;MySQL数据结构和模式是固定的，因此保证了数据一致性和可靠性。MySQL还有一个好处，就是由于它支持基于 ACID 准则的事务操作，数据安全性更高。所以对于看重这些因素的项目来说，MySQL 是最合适的。&lt;/p&gt;
+
+&lt;h3 id=&quot;2应用场景&quot;&gt;&lt;strong&gt;2、应用场景：&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;应用服务器的日志记录，日常我们会把一些应用日志存储到文本格式的文件中，这样不便于查看同时也不便于统计等。通过MongoDB存储，既可以很好的存储、统计同时也方便不同的业务场景下日志数据格式不一致等情况。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;第三方信息的抓取与存储，我们在一些业务场景中难免会去使用到第三方的数据，当接入多个第三方平台时，这时候我们需要考虑到每个平台数据格式不一致，自身的存储系统结构设计等情况。这时候我们使用MongoDB来存储就很好的避免了这个问题。&lt;/li&gt;
+  &lt;li&gt;运维监控系统，在一些大型的项目中，监控是必不可少的。监控系统要监控的内容，可能是随时多变的，这时候使用MongoDB就体现了很大的便利。不需要去修改数据库的结构，直接根据业务需要灵活调整即可。大大降低了开发成本。&lt;/li&gt;
+  &lt;li&gt;O2O业务场景，将送快递骑手、快递商家的信息（包含位置信息）存储在 MongoDB，然后通过 MongoDB 的地理位置查询，这样很方便的实现了查找附近的商家、骑手等功能。&lt;/li&gt;
+  &lt;li&gt;游戏业务场景，使用 MongoDB 存储游戏用户信息，用户的装备、积分等直接以内嵌文档的形式存储，方便查询、更新。&lt;/li&gt;
+  &lt;li&gt;社交业务场景，使用 MongoDB 存储存储用户信息，以及用户发表的朋友圈信息，通过地理位置索引实现附近的人、地点等功能。&lt;/li&gt;
+  &lt;li&gt;物联网业务场景，使用 MongoDB 存储所有接入的智能设备信息，以及设备汇报的日志信息，并对这些信息进行多维度的分析。&lt;/li&gt;
+  &lt;li&gt;视频直播业务场景，视频直播，使用 MongoDB 存储用户信息、礼物信息等。&lt;/li&gt;
+  &lt;li&gt;大数据应用，使用云数据库MongoDB作为大数据的云存储系统，随时进行数据提取分析，掌握行业动态。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;MongoDB提供二级索引功能满足动态查询的需求，利用MongoDB的map-reduce聚合框架进行多维度的数据分析。&lt;/p&gt;
+
+&lt;p&gt;到底该不该使用MongoDB，下面的几道选择题可以辅助决策（来自MongoDB 公司的技术分享）：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/55.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;如果上述有1个 Yes，可以考虑 MongoDB，2个及以上的 Yes，选择MongoDB绝不会后悔。&lt;/p&gt;
+
+&lt;p&gt;当然，MongoDB也有自身的局限性，以下是MongoDB不适用的场景：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/56.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;3mongodb的简单案例&quot;&gt;&lt;strong&gt;3、MongoDB的简单案例&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;p&gt;从底层存储来讲，每个 Document 都是一个类 JSON 结构的 BSON（Binary JSON)。&lt;/p&gt;
+
+&lt;p&gt;BSON是MongoDB首创的一种二进制存储格式，数据组织和访问方式完全和 JSON 一样。支持动态的添加字段、支持内嵌对象和数组对象。同时它也对 JSON 做了一些扩充，如支持 Date 和 BinData 数据类型。&lt;/p&gt;
+
+&lt;p&gt;比如&lt;strong&gt;插入&lt;/strong&gt;文档的操作：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-mysql&quot;&gt;db.book.insert(
+{
+  title: &quot;My first blog post&quot;,
+  published: new Date(),
+  tags: [ &quot;NoSQL&quot;, &quot;MongoDB&quot; ],
+  type: &quot;Work&quot;,
+  author : &quot;James&quot;,
+  viewCount: 25,
+  commentCount: 2
+}
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;执行文档&lt;strong&gt;查找&lt;/strong&gt;：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; db.book.find({author : &quot;James&quot;})           
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;更新&lt;/strong&gt;文档的命令：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;db.book.update(
+   {&quot;_id&quot; : ObjectId(&quot;5c61301c15338f68639e6802&quot;)},
+   {&quot;$inc&quot;: {&quot;viewCount&quot;: 3} }
+)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;删除&lt;/strong&gt;文档的命令：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;db.book.remove({&quot;_id&quot;:ObjectId(&quot;5c612b2f15338f68639e67d5&quot;)})
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;在传统的SQL语法中，可以限定返回的字段，MongoDB可以使用Projection来表示：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;db.book.find({&quot;author&quot;: &quot;James&quot;},{&quot;_id&quot;: 1, &quot;title&quot;: 1, &quot;author&quot;: 1})         
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;实现简单的分页查询：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; db.book.find({}).sort({&quot;viewCount&quot; : -1}).skip(10).limit(5)       
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;这种基于BSON/JSON 的语法格式并不复杂，它的表达能力或许要比SQL更加强大。与 MongoDB 做法类似的还有 ElasticSearch，后者是搜索数据库的佼佼者。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;4、MongoDB和关系型数据库&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;MongoDB 在概念模型上参考了 SQL数据库，但并非完全相同。关于这点，也有人说，&lt;strong&gt;MongoDB 是 NoSQL中最像SQL的数据库&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;p&gt;在传统的关系型数据库中，存储方式是以表的形式存放，而在MongoDB中，以文档的形式存在。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/57.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;MongoDB与关系型数据库的模型对应关系如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/58.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;MongoDB概念与关系型数据库(RDBMS)非常类似:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_2/59.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;数据库(database):最外层的概念，可以理解为逻辑上的名称空间，一个数据库包含多个不同名称的集合。&lt;/li&gt;
+  &lt;li&gt;集合(collection):相当于SQL中的表，一个集合可以存放多个不同的文档。&lt;/li&gt;
+  &lt;li&gt;文档(document):一个文档相当于数据表中的一行，由多个不同的字段组成。&lt;/li&gt;
+  &lt;li&gt;字段(field):文档中的一个属性，等同于列(column)。&lt;/li&gt;
+  &lt;li&gt;索引(index):独立的检索式数据结构，与SQL概念一致。&lt;/li&gt;
+  &lt;li&gt;id:每个文档中都拥有一个唯一的id字段，相当于SQL中的主键(primary key)。&lt;/li&gt;
+  &lt;li&gt;视图(view):可以看作一种虚拟的(非真实存在的)集合，与SQL中的视图类似。从MongoDB 3.4版本开始提供了视图功能，其通过聚合管道技术实现。&lt;/li&gt;
+  &lt;li&gt;聚合操作($lookup):MongoDB用于实现“类似”表连接(tablejoin)的聚合操作符。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;尽管这些概念大多与SQL标准定义类似，但MongoDB与传统RDBMS仍然存在不少差异，包括:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;半结构化，在一个集合中，文档所拥有的字段并不需要是相同的，而且也不需要对所用的字段进行 声明。因此，MongoDB具有很明显的半结构化特点。除了松散的表结构，文档还可以支持多级的 嵌套、数组等灵活的数据类型，非常契合面向对象的编程模型。&lt;/li&gt;
+  &lt;li&gt;弱关系，MongoDB没有外键的约束，也没有非常强大的表连接能力。类似的功能需要使用聚合管 道技术来弥补。&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Ted</name></author><category term="数据库" /><summary type="html">1、MongoDB简介</summary></entry><entry><title type="html">数据库事务之锁类型</title><link href="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/12/lock/" rel="alternate" type="text/html" title="数据库事务之锁类型" /><published>2022-11-12T20:00:00+08:00</published><updated>2022-11-12T20:00:00+08:00</updated><id>http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/12/lock</id><content type="html" xml:base="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/12/lock/">&lt;p&gt;&lt;img src=&quot;/img/Simple_2/54.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;1乐观锁和悲观锁&quot;&gt;1、乐观锁和悲观锁&lt;/h3&gt;
 
@@ -1102,403 +1617,4 @@ myMap = smallMap // 缩容完成，原来的map被我们丢弃，交给gc去清�
 &lt;span class=&quot;k&quot;&gt;COMMIT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;在事务1中，通过 FOR UPDATE 语句获取了满足条件 age &amp;gt; 30 AND age &amp;lt; 40 的记录范围的间隙锁。这意味着其他事务无法在该范围内插入新记录，事务2在尝试插入新记录时会被阻塞，直到事务1释放锁。&lt;/p&gt;</content><author><name>Ted</name></author><category term="数据库" /><summary type="html"></summary></entry><entry><title type="html">MongoDB</title><link href="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/12/mongo/" rel="alternate" type="text/html" title="MongoDB" /><published>2022-11-12T20:00:00+08:00</published><updated>2022-11-12T20:00:00+08:00</updated><id>http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/12/mongo</id><content type="html" xml:base="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/12/mongo/">&lt;h4 id=&quot;1mongodb简介&quot;&gt;&lt;strong&gt;1、MongoDB简介&lt;/strong&gt;&lt;/h4&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;MongoDB是一个文档数据库(以 JSON 为数据模型)，此处文档指的是JSON Docunment，并非一般理解的PDF，WORD文档。&lt;/li&gt;
-  &lt;li&gt;MongoDB是一个介于关系数据库和非关系数据库之间的产品，是非关系数据库当中功能最丰富，最像 关系数据库的。&lt;/li&gt;
-  &lt;li&gt;MongoDB支持的数据结构非常松散，数据格式是BSON，一种类似JSON的二进制形式的存储格 式，简称Binary JSON ，和JSON一样支持内嵌的文档对象和数组对象，因此可以存储比较复杂的数据类型。&lt;/li&gt;
-  &lt;li&gt;MongoDB在数据库总排名第5，仅次于Oracle、MySQL等RDBMS，在NoSQL数据库排名首位。从诞生 以来，其项目应用广度、社区活跃指数持续上升。原则上 Oracle 和 MySQL 能做的事情，MongoDB 都能做(包括 ACID 事务)。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;MongoDB 的三大核心特性是：&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;No Schema&lt;/strong&gt;：MongoDB没有固定的Schema，少了很多约束条件，可以让数据的存储数据结构更灵活，存储速度更加快。&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;高可用&lt;/strong&gt;：MongoDB能将数据分布在多台机器上实现冗余，同时检测主节点是否存活，当失活时能自动提升从节点为主节点，达到自动故障转移的目的。&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;分布式&lt;/strong&gt;（可平行扩展）：MongoDB使用分片技术对数据进行扩展，能自动分片、自动转移分片里面的数据块，让每一个服务器里面存储的数据都是一样大小。&lt;/li&gt;
-  &lt;li&gt;MongoDB 还支持数据压缩、二级索引、全文搜索、地理分布等一系列的强大功能。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;MongoDB使用场景类型总结&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;读写分离应用&lt;/li&gt;
-  &lt;li&gt;灵活多变的业务场景，MongoDB采用No-Schema的方式，免去表结构变更的痛苦，非常适用于初创型的业务需求。可以将模式固定的结构化数据存储在mysql中，模式灵活的业务存储在MongoDB中，高热数据存储在Redis或Memcache中，实现对业务数据高效存取，降低存储数据的投入成本。&lt;/li&gt;
-  &lt;li&gt;移动应用，MongoDB支持二维空间索引，可以很好地支撑基于位置查询的移动类App的业务需求。同时MongoDB动态模式存储方式也非常适合存储多重系统的异构数据，满足移动App应用的需求。&lt;/li&gt;
-  &lt;li&gt;物联网应用，MongoDB具有高性能和异步数据写入功能，特定场景下可达到内存数据库的处理能力。同时，库MongoDB中的分片集群实例，可按需配置Mongos和Shard组件的配置和个数，性能及存储空间可实现无限扩展，非常适合物联网高并发写入的场景。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;MongoDB提供二级索引功能满足动态查询的需求，利用MongoDB的map-reduce聚合框架进行多维度的数据分析。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;mysql与mongodb&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;在处理大量数据方面，MongoDB 比 MySQL 更胜一筹；在云计算服务和需求频繁变化的项目上，MongoDB 也更具优势。&lt;/p&gt;
-
-&lt;p&gt;MySQL数据结构和模式是固定的，因此保证了数据一致性和可靠性。MySQL还有一个好处，就是由于它支持基于 ACID 准则的事务操作，数据安全性更高。所以对于看重这些因素的项目来说，MySQL 是最合适的。&lt;/p&gt;
-
-&lt;h3 id=&quot;2应用场景&quot;&gt;&lt;strong&gt;2、应用场景：&lt;/strong&gt;&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;应用服务器的日志记录，日常我们会把一些应用日志存储到文本格式的文件中，这样不便于查看同时也不便于统计等。通过MongoDB存储，既可以很好的存储、统计同时也方便不同的业务场景下日志数据格式不一致等情况。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;第三方信息的抓取与存储，我们在一些业务场景中难免会去使用到第三方的数据，当接入多个第三方平台时，这时候我们需要考虑到每个平台数据格式不一致，自身的存储系统结构设计等情况。这时候我们使用MongoDB来存储就很好的避免了这个问题。&lt;/li&gt;
-  &lt;li&gt;运维监控系统，在一些大型的项目中，监控是必不可少的。监控系统要监控的内容，可能是随时多变的，这时候使用MongoDB就体现了很大的便利。不需要去修改数据库的结构，直接根据业务需要灵活调整即可。大大降低了开发成本。&lt;/li&gt;
-  &lt;li&gt;O2O业务场景，将送快递骑手、快递商家的信息（包含位置信息）存储在 MongoDB，然后通过 MongoDB 的地理位置查询，这样很方便的实现了查找附近的商家、骑手等功能。&lt;/li&gt;
-  &lt;li&gt;游戏业务场景，使用 MongoDB 存储游戏用户信息，用户的装备、积分等直接以内嵌文档的形式存储，方便查询、更新。&lt;/li&gt;
-  &lt;li&gt;社交业务场景，使用 MongoDB 存储存储用户信息，以及用户发表的朋友圈信息，通过地理位置索引实现附近的人、地点等功能。&lt;/li&gt;
-  &lt;li&gt;物联网业务场景，使用 MongoDB 存储所有接入的智能设备信息，以及设备汇报的日志信息，并对这些信息进行多维度的分析。&lt;/li&gt;
-  &lt;li&gt;视频直播业务场景，视频直播，使用 MongoDB 存储用户信息、礼物信息等。&lt;/li&gt;
-  &lt;li&gt;大数据应用，使用云数据库MongoDB作为大数据的云存储系统，随时进行数据提取分析，掌握行业动态。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;MongoDB提供二级索引功能满足动态查询的需求，利用MongoDB的map-reduce聚合框架进行多维度的数据分析。&lt;/p&gt;
-
-&lt;p&gt;到底该不该使用MongoDB，下面的几道选择题可以辅助决策（来自MongoDB 公司的技术分享）：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/55.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;如果上述有1个 Yes，可以考虑 MongoDB，2个及以上的 Yes，选择MongoDB绝不会后悔。&lt;/p&gt;
-
-&lt;p&gt;当然，MongoDB也有自身的局限性，以下是MongoDB不适用的场景：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/56.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;3mongodb的简单案例&quot;&gt;&lt;strong&gt;3、MongoDB的简单案例&lt;/strong&gt;&lt;/h3&gt;
-
-&lt;p&gt;从底层存储来讲，每个 Document 都是一个类 JSON 结构的 BSON（Binary JSON)。&lt;/p&gt;
-
-&lt;p&gt;BSON是MongoDB首创的一种二进制存储格式，数据组织和访问方式完全和 JSON 一样。支持动态的添加字段、支持内嵌对象和数组对象。同时它也对 JSON 做了一些扩充，如支持 Date 和 BinData 数据类型。&lt;/p&gt;
-
-&lt;p&gt;比如&lt;strong&gt;插入&lt;/strong&gt;文档的操作：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-mysql&quot;&gt;db.book.insert(
-{
-  title: &quot;My first blog post&quot;,
-  published: new Date(),
-  tags: [ &quot;NoSQL&quot;, &quot;MongoDB&quot; ],
-  type: &quot;Work&quot;,
-  author : &quot;James&quot;,
-  viewCount: 25,
-  commentCount: 2
-}
-)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;执行文档&lt;strong&gt;查找&lt;/strong&gt;：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; db.book.find({author : &quot;James&quot;})           
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;更新&lt;/strong&gt;文档的命令：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;db.book.update(
-   {&quot;_id&quot; : ObjectId(&quot;5c61301c15338f68639e6802&quot;)},
-   {&quot;$inc&quot;: {&quot;viewCount&quot;: 3} }
-)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;删除&lt;/strong&gt;文档的命令：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;db.book.remove({&quot;_id&quot;:ObjectId(&quot;5c612b2f15338f68639e67d5&quot;)})
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;在传统的SQL语法中，可以限定返回的字段，MongoDB可以使用Projection来表示：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;db.book.find({&quot;author&quot;: &quot;James&quot;},{&quot;_id&quot;: 1, &quot;title&quot;: 1, &quot;author&quot;: 1})         
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;实现简单的分页查询：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; db.book.find({}).sort({&quot;viewCount&quot; : -1}).skip(10).limit(5)       
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;这种基于BSON/JSON 的语法格式并不复杂，它的表达能力或许要比SQL更加强大。与 MongoDB 做法类似的还有 ElasticSearch，后者是搜索数据库的佼佼者。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;4、MongoDB和关系型数据库&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;MongoDB 在概念模型上参考了 SQL数据库，但并非完全相同。关于这点，也有人说，&lt;strong&gt;MongoDB 是 NoSQL中最像SQL的数据库&lt;/strong&gt;。&lt;/p&gt;
-
-&lt;p&gt;在传统的关系型数据库中，存储方式是以表的形式存放，而在MongoDB中，以文档的形式存在。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/57.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;MongoDB与关系型数据库的模型对应关系如下：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/58.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;MongoDB概念与关系型数据库(RDBMS)非常类似:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/Simple_2/59.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;数据库(database):最外层的概念，可以理解为逻辑上的名称空间，一个数据库包含多个不同名称的集合。&lt;/li&gt;
-  &lt;li&gt;集合(collection):相当于SQL中的表，一个集合可以存放多个不同的文档。&lt;/li&gt;
-  &lt;li&gt;文档(document):一个文档相当于数据表中的一行，由多个不同的字段组成。&lt;/li&gt;
-  &lt;li&gt;字段(field):文档中的一个属性，等同于列(column)。&lt;/li&gt;
-  &lt;li&gt;索引(index):独立的检索式数据结构，与SQL概念一致。&lt;/li&gt;
-  &lt;li&gt;id:每个文档中都拥有一个唯一的id字段，相当于SQL中的主键(primary key)。&lt;/li&gt;
-  &lt;li&gt;视图(view):可以看作一种虚拟的(非真实存在的)集合，与SQL中的视图类似。从MongoDB 3.4版本开始提供了视图功能，其通过聚合管道技术实现。&lt;/li&gt;
-  &lt;li&gt;聚合操作($lookup):MongoDB用于实现“类似”表连接(tablejoin)的聚合操作符。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;尽管这些概念大多与SQL标准定义类似，但MongoDB与传统RDBMS仍然存在不少差异，包括:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;半结构化，在一个集合中，文档所拥有的字段并不需要是相同的，而且也不需要对所用的字段进行 声明。因此，MongoDB具有很明显的半结构化特点。除了松散的表结构，文档还可以支持多级的 嵌套、数组等灵活的数据类型，非常契合面向对象的编程模型。&lt;/li&gt;
-  &lt;li&gt;弱关系，MongoDB没有外键的约束，也没有非常强大的表连接能力。类似的功能需要使用聚合管 道技术来弥补。&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Ted</name></author><category term="数据库" /><summary type="html">1、MongoDB简介</summary></entry><entry><title type="html">数据库事务之MVCC机制</title><link href="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/10/mvvc/" rel="alternate" type="text/html" title="数据库事务之MVCC机制" /><published>2022-11-10T20:00:00+08:00</published><updated>2022-11-10T20:00:00+08:00</updated><id>http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/10/mvvc</id><content type="html" xml:base="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/10/mvvc/">&lt;h4 id=&quot;1并发事务的四种场景&quot;&gt;&lt;strong&gt;1、并发事务的四种场景&lt;/strong&gt;&lt;/h4&gt;
-
-&lt;p&gt;并发事务中又会分为四种情况，分别是读-读、写-写、读-写、写-读，这四种情况分别对应并发事务执行时的四种场景。&lt;/p&gt;
-
-&lt;h5 id=&quot;11读-读场景&quot;&gt;1.1、读-读场景&lt;/h5&gt;
-
-&lt;p&gt;读-读场景即是指多个事务/线程在一起读取一个相同的数据，比如事务T1正在读取ID=88的行记录，事务T2也在读取这条记录，两个事务之间是并发执行的。读-读场景不存在任何数据竞争问题，不需要并发控制。&lt;/p&gt;
-
-&lt;h5 id=&quot;12写-写场景&quot;&gt;1.2、写-写场景&lt;/h5&gt;
-
-&lt;p&gt;写-写场景也比较简单，也就是指多个事务之间一起对同一数据进行写操作，比如事务T1对ID=88的行记录做修改操作，事务T2则对这条数据做删除操作，事务T1提交事务后想查询看一下，结果连这条数据都不见了，这也是所谓的脏写问题，也被称为更新覆盖问题，对于这个问题在所有数据库、所有隔离级别中都是零容忍的存在，最低的隔离级别也要解决这个问题。&lt;/p&gt;
-
-&lt;h5 id=&quot;13读-写写-读场景&quot;&gt;1.3、读-写、写-读场景&lt;/h5&gt;
-
-&lt;p&gt;读-写、写-读实际上从宏观角度来看，可以理解成同一种类型的操作，但从微观角度而言则是两种不同的情况，&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;读-写是指一个事务先开始读，然后另一个事务则过来执行写操作，&lt;/li&gt;
-  &lt;li&gt;写-读则相反，主要是读、写发生的前后顺序的区别。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;并发事务中同时存在读、写两类操作时，这是最容易出问题的场景，脏读、不可重复读、幻读都出自于这种场景中，当有一个事务在做写操作时，读的事务中就有可能出现这一系列问题，因此数据库才会引入各种机制解决。&lt;/p&gt;
-
-&lt;h5 id=&quot;14各场景下解决问题的方案&quot;&gt;1.4、各场景下解决问题的方案&lt;/h5&gt;
-
-&lt;p&gt;在《锁机制》中，对于写-写、读-写、写-读这三类场景，都是利用加锁的方案确保线程安全，但是，加锁会导致部分事务串行化，因此效率会下降，而MVCC机制的诞生则解决了这个问题。写-写场景必须要加锁才能保障安全，因此先将该场景排除在外。&lt;/p&gt;
-
-&lt;p&gt;基于读-写并存的场景，推出了MVCC机制，在线程安全问题和加锁串行化之间做了一定取舍，让两者之间达到了很好的平衡，即防止了脏读、不可重复读及幻读问题的出现，又无需对并发读-写事务加锁处理。&lt;/p&gt;
-
-&lt;h5 id=&quot;总结&quot;&gt;总结&lt;/h5&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;读-读：无需并发控制&lt;/li&gt;
-  &lt;li&gt;写-写：必须加锁执行串行&lt;/li&gt;
-  &lt;li&gt;读-写、写-读：可以引入MVCC机制，在不加锁的情况下，保证并发安全，提升效率&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;2mvcc是什么&quot;&gt;&lt;strong&gt;2、MVCC是什么？&lt;/strong&gt;&lt;/h4&gt;
-
-&lt;p&gt;MVCC，全称是多版本并发控制（Multi-Version Concurrency Control），是一种常用的并发控制方法。它通过在每个读取的数据行中创建数据行的“快照” —— 即该行在事务处理开始时的精确副本，来解决读-写冲突的问题。这样，每个事务读取的都是一致的行数据快照，而不是最新的行版本。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;MVCC的目的&lt;/strong&gt;：用更好的方式去处理读-写冲突，做到即使有读写冲突时，也能做到不加锁，非阻塞并发读。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;MVCC如何保证并发安全&lt;/strong&gt;：MVCC通过对数据进行多版本保存，根据比较版本号来控制数据是否展示，从而达到读取数据时无需加锁就可以实现事务的隔离性。&lt;/p&gt;
-
-&lt;p&gt;MySQL 是怎么解决幻读的？&lt;/p&gt;
-
-&lt;p&gt;MySQL InnoDB 引擎的默认隔离级别虽然是「可重复读」，但是它很大程度上避免幻读现象（并不是完全解决了，解决的方案有两种：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;针对&lt;strong&gt;快照读&lt;/strong&gt;（普通 select 语句），是&lt;strong&gt;通过 MVCC 方式解决了幻读&lt;/strong&gt;，因为可重复读隔离级别下，事务执行过程中看到的数据，一直跟这个事务启动时看到的数据是一致的，即使中途有其他事务插入了一条数据，是查询不出来这条数据的，所以就很好了避免幻读问题。&lt;/li&gt;
-  &lt;li&gt;针对&lt;strong&gt;当前读&lt;/strong&gt;（select … for update 等语句），是&lt;strong&gt;通过 next-key lock（记录锁+间隙锁）方式解决了幻读&lt;/strong&gt;，因为当执行 select … for update 语句的时候，会加上 next-key lock，如果有其他事务在 next-key lock 锁范围内插入了一条记录，那么这个插入语句就会被阻塞，无法成功插入，所以就很好了避免幻读问题。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;3mvcc的实现原理&quot;&gt;&lt;strong&gt;3、MVCC的实现原理&lt;/strong&gt;&lt;/h4&gt;
-
-&lt;p&gt;MVCC的实现原理主要包括以下几个步骤：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;版本号&lt;/strong&gt;：每个事务开始时，都会被分配一个唯一的事务ID，这个ID同时也是该事务的版本号。对于每一行数据，都会有两个版本号，
-    &lt;ul&gt;
-      &lt;li&gt;一个是创建版本号，表示创建这行数据的事务的版本号；&lt;/li&gt;
-      &lt;li&gt;另一个是删除版本号，表示删除这行数据的事务的版本号。初始时，删除版本号为空。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;读操作&lt;/strong&gt;：当一个事务要读取一行数据时，会检查这行数据的创建版本号和删除版本号。只有当创建版本号小于等于当前事务的版本号，并且删除版本号要么为空，要么大于当前事务的版本号，这行数据才会被当前事务读取。这样可以确保每个事务都是在一致的快照上进行操作。&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;写操作&lt;/strong&gt;：当一个事务要修改一行数据时，不会直接覆盖原数据，而是会复制一份新的数据行，然后修改这份新的数据行。新的数据行的创建版本号为当前事务的版本号，删除版本号为空。同时，原数据行的删除版本号会被设置为当前事务的版本号。&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;提交事务&lt;/strong&gt;：当一个事务提交时，所有由该事务创建的新数据行的删除版本号都会被设置为无穷大，表示这些数据行现在是可见的。同时，所有被该事务删除的原数据行的删除版本号会被设置为当前事务的版本号，表示这些数据行现在是不可见的。&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;垃圾回收&lt;/strong&gt;：为了防止数据版本过多导致的性能问题，需要定期进行垃圾回收。垃圾回收的原则是，只有当没有任何事务会访问到某个数据版本时，这个数据版本才会被回收。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;MVCC的优点是读操作不会被写操作阻塞，写操作也不会被读操作阻塞，大大提高了数据库的并发性能。但是，MVCC也有一些缺点，比如版本链过长会影响读性能，以及需要定期进行垃圾回收等。&lt;/p&gt;
-
-&lt;h5 id=&quot;如何实现&quot;&gt;如何实现？&lt;/h5&gt;
-
-&lt;p&gt;MVCC机制主要通过隐藏字段、Undo-log日志、ReadView这三个东西实现的，其中的多版本主要依赖Undo-log日志来实现，而并发控制则通过表的隐藏字段+ReadView快照来实现。&lt;/p&gt;
-
-&lt;h5 id=&quot;31--undo-log&quot;&gt;3.1  undo log&lt;/h5&gt;
-
-&lt;p&gt;Undo log主要用于事务回滚时恢复原来的数据。mysql在执行sql时，会将一天逻辑相反的日志保存到undo log中。因此，undo log中记录的也是逻辑日志。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;执行Insert语句时，会在undo log日志中记录本次插入的主键id。等事务回滚时，delete删除此id。&lt;/li&gt;
-  &lt;li&gt;执行update语句时，MySQL会将修改前的数据保存在undo log中。等事务回滚时，再执行一次update，得到原来的数据。&lt;/li&gt;
-  &lt;li&gt;执行delete语句时，会在undo log中保存删除前的数据。等事务回滚时，再执行insert，插入原来的数据。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;ReadView要通过undo log链条找到合适自己读取的记录。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;3.2 隐藏字段&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;在数据库的每行上，除了存放真实的数据以外，还存在3个隐藏的列：row_id、trx_id和roll_pointerrow_id，&lt;/p&gt;
-
-&lt;p&gt;row_id，行号：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;如果当前表有整数类型的主键，那么row_id的值就是主键的值&lt;/li&gt;
-  &lt;li&gt;如果没有整数类型的主键，则MySQL会按照字段的顺序选择一个非空的整数类型的唯一索引为row_id&lt;/li&gt;
-  &lt;li&gt;如果都没有找到，则会创建一个自动增长的整数作为row_id&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;trx_id，是哪个事务记录的这条log：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;当一个事务开始执行前，MySQL就会为这个事务分配一个全局自增的事务id。&lt;/li&gt;
-  &lt;li&gt;之后该事务对当前进行的增、改、删除等操作时，都会将自己的事务ID记录到trx_id中，表明是哪个事务修改的。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;roll_pointer，回滚指针：undo日志中指向修改之前的的一行记录。当一直有事务对该行改动时，就会一直生成undo log，最终将会形成undo log版本链。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;3.3&lt;/strong&gt; &lt;strong&gt;ReadView&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;ReadView可以被理解为一个过滤器或者说是一个视图，它定义了在当前事务中，哪些数据版本是可见的，哪些数据版本是不可见的。&lt;/p&gt;
-
-&lt;p&gt;具体来说，ReadView包含以下几个重要的信息：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;creator_trx_id：当前事务id&lt;/li&gt;
-  &lt;li&gt;m_ids：这是一个列表，包含了在当前事务开始时，所有活跃（即还未提交）的事务的ID。&lt;/li&gt;
-  &lt;li&gt;min_trx_id：这是m_ids&lt;strong&gt;列表中&lt;/strong&gt;的最小事务ID。这个ID表示了在当前事务开始时，系统中最早开始的尚未提交的事务ID。&lt;/li&gt;
-  &lt;li&gt;max_trx_id：表示生成readview时，系统中应该分配给下一个事务的id值&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;4mvcc如何是运作的&quot;&gt;4、MVCC如何是运作的&lt;/h4&gt;
-
-&lt;p&gt;根据undo log的链中的每一条trx_id与min_trx_id和max_trx_id进行对比：&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;如果小于min_trx_id，说明这个trx_id的log记录就已经事务已经提交过了，完成的事务，创建本事务之前就已经存在的日志，当然可以读。&lt;/li&gt;
-  &lt;li&gt;如果大于max_trx_id说明这个版本的数据log是在创建RV之后生成的，不可读。&lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;如果是在这之间，查看trx_id是否包含m_ids列表之中：&lt;/p&gt;
-
-    &lt;ul&gt;
-      &lt;li&gt;
-        &lt;p&gt;不包含说明创建RV之前这个事务已经被提交了，那么是可读的。&lt;/p&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;p&gt;包含说明创建RV的时候，还是活跃（没提交）事务。那么是不可读的，有可能脏读；到了这里说明这条数据的变更版本在RV之内，则要查看creator_trx_id与trx_id是否一致：&lt;/p&gt;
-        &lt;ul&gt;
-          &lt;li&gt;一致说明就是当前事务创建的；允许使用；&lt;/li&gt;
-          &lt;li&gt;否则说明是当前RV的其他事务操作的，不能使用;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h5 id=&quot;41-可重复读是如何工作的&quot;&gt;&lt;strong&gt;4.1 可重复读是如何工作的？&lt;/strong&gt;&lt;/h5&gt;
-
-&lt;p&gt;一旦创建是不可变的，即便其他事务提交了，也不会影响当前事务创建的ReadView，你可以理解为一个副本快照。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;4.2 读已提交是如何工作的？&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;读已提交隔离级别是在每次读取数据时，都会生成一个新的Read View。&lt;/p&gt;</content><author><name>Ted</name></author><category term="数据库" /><summary type="html">1、并发事务的四种场景</summary></entry><entry><title type="html">数据库事务</title><link href="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/01/transaction/" rel="alternate" type="text/html" title="数据库事务" /><published>2022-11-01T20:00:00+08:00</published><updated>2022-11-01T20:00:00+08:00</updated><id>http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/01/transaction</id><content type="html" xml:base="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/01/transaction/">&lt;h3 id=&quot;1什么是事务&quot;&gt;1、什么是事务&lt;/h3&gt;
-
-&lt;p&gt;所谓事务是用户定义的一个数据库操作序列， 这些操作要么全做，要么全不做，是一个不可分割的工作单位。&lt;/p&gt;
-
-&lt;p&gt;在关系型数据库中，一个事务可以是一条 SQL 语句，一组 SQL 语句或者是整个程序，事务的开始和结束由用户显示控制，如果用户没有显式定义事务，则由 DBMS 按默认规定自动划分事务，如在 MySQL 中默认 autocommit 为 ON 则开启事务自动提交，每条没有显式定义事务的 SQL 语句都会被当作一个单独的事务并自动提交(隐式事务)。&lt;/p&gt;
-
-&lt;p&gt;数据库事务可以确保该事务范围内的所有操作都可以全部成功或者全部失败。如果事务失败，那么效果就和没有执行这些SQL一样，不会对数据库数据有任何改动。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;显式和隐式：&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;单条SQL语句，数据库系统自动将其作为一个事务执行，这种事务被称为隐式事务。&lt;/li&gt;
-  &lt;li&gt;多条SQL语句作为一个事务执行，使用BEGIN/START TRANSACTION;开启一个事务，使用COMMIT提交一个事务，这种事务被称为显式事务。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;COMMIT和RollBack&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;COMMIT是指提交事务，即试图把事务内的所有SQL所做的修改永久保存。&lt;/li&gt;
-  &lt;li&gt;ROLLBACK是对之前的事务操作进行回滚；回滚会结束用户的事务，并撤销正在进行的所有未提交的修改；&lt;/li&gt;
-  &lt;li&gt;如果COMMIT失败了，会自动调用ROLLBACK，也就是之前的操作会回滚。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;2acid四个特性&quot;&gt;2、ACID四个特性&lt;/h3&gt;
-
-&lt;p&gt;数据库事务具有ACID这4个特性：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;A：Atomicity，原子性，将所有SQL作为原子工作单元执行，要么全部执行，要么全部不执行；&lt;/li&gt;
-  &lt;li&gt;C：Consistency，一致性，事务完成后，所有数据的状态都是一致的，即A账户只要减去了100，B账户则必定加上了100；&lt;/li&gt;
-  &lt;li&gt;I：Isolation，隔离性，如果有多个事务并发执行，每个事务作出的修改必须与其他事务隔离；&lt;/li&gt;
-  &lt;li&gt;D：Durability，持久性，即事务完成后，对数据库数据的修改被持久化存储。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;3并发事务导致&quot;&gt;3、并发事务导致&lt;数据不一致&gt;&lt;/数据不一致&gt;&lt;/h3&gt;
-
-&lt;p&gt;并发事务可能导致以下几种数据不一致的情况：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;脏读（Dirty Read）： 脏读指的是一个事务读取了另一个事务尚未提交的数据。如果后续事务回滚，那么之前读取的数据就是无效的，导致数据不一致。&lt;/li&gt;
-  &lt;li&gt;不可重复读（Non-repeatable Read）： 不可重复读指的是在同一个事务中，多次读取同一数据时，得到的结果不一致。这是因为在事务执行期间，其他事务修改了该数据。&lt;/li&gt;
-  &lt;li&gt;幻读（Phantom Read）： 幻读指的是在同一个事务中，多次查询同一范围的数据时，得到的结果不一致。这是因为在事务执行期间，其他事务插入或删除了符合查询条件的数据。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;这些数据不一致的情况是由于并发事务之间的交互和修改操作导致的。&lt;/p&gt;
-
-&lt;p&gt;不同的隔离级别可以控制事务之间的相互影响，从而避免或减少这些数据不一致的问题。较高的隔离级别可以提供更强的数据一致性，但可能会降低并发性能。&lt;/p&gt;
-
-&lt;p&gt;为了保证数据的一致性，需要在设计数据库架构和事务处理时，合理选择隔离级别，并使用适当的并发控制机制：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;LBCC（Lock-Base Concurrency Control）基于锁的并发控制；&lt;/li&gt;
-  &lt;li&gt;MVCC（Multiversion Concurrency Control）多版本并发控制；&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;4隔离级别&quot;&gt;4、隔离级别&lt;/h3&gt;
-
-&lt;p&gt;数据库的隔离级别是指多个并发事务之间的隔离程度，用于控制事务之间的相互影响和数据一致性的要求。&lt;/p&gt;
-
-&lt;p&gt;隔离级别定义了一个事务在读取和修改数据时能够看到其他事务的哪些变化。 常见的数据库隔离级别包括：&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;读未提交（Read Uncommitted）： 最低的隔离级别，这种级别实际上是没有做隔离，事务可以读取其他事务尚未提交的数据。这种隔离级别可能导致脏读（Dirty Read），即读取到未提交的数据。&lt;/li&gt;
-  &lt;li&gt;读已提交（Read Committed）： 事务只能读取已经提交的数据，避免了脏读。但是在同一个事务中，多次读取同一数据可能会看到不同的结果，因为其他事务可能在事务执行期间修改了数据。&lt;/li&gt;
-  &lt;li&gt;可重复读（Repeatable Read）： 事务在执行期间保持一致的快照视图，即事务开始时读取的数据将保持不变。其他事务对数据的修改不会影响当前事务的读取结果。这种隔离级别可以避免脏读和不可重复读（Non-repeatable Read），是MySQL默认级别。&lt;/li&gt;
-  &lt;li&gt;串行化（Serializable）： 最高的隔离级别，这种级别实际上是完全隔离，将并发执行的事务串行化。这种隔离级别可以避免脏读、不可重复读和幻读（Phantom Read），但会降低并发性能。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;不同的隔离级别提供了不同的数据一致性和并发性能权衡。较低的隔离级别可以提高并发性能，但可能导致数据不一致。较高的隔离级别可以保证数据一致性，但可能降低并发性能。&lt;/p&gt;
-
-&lt;h3 id=&quot;5这四种隔离级别具体是如何实现的呢&quot;&gt;5、这四种隔离级别具体是如何实现的呢？&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;对于最低级的「读未提交」隔离级别的事务来说，这是没有隔离；&lt;/li&gt;
-  &lt;li&gt;对于最高级的「串行化」隔离级别的事务来说，通过加读写锁的方式来避免并行访问；&lt;/li&gt;
-  &lt;li&gt;对于中间的「读提交」和「可重复读」隔离级别的事务来说，它们是通过 Read View 来实现的，它们的区别在于创建 Read View 的时机不同。
-    &lt;ul&gt;
-      &lt;li&gt;「读已提交」隔离级别是在「每个语句执行前」都会重新生成一个 Read View，&lt;/li&gt;
-      &lt;li&gt;「可重复读」隔离级别是「启动事务时」生成一个 Read View，然后整个事务期间都在用这个 Read View。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;隔离级别只是定义了在不同的级别下应该保证哪些一致性，具体实现这些隔离级别的方法有很多，如传统的基于锁的并发控制（LBCC），还有一些无锁并发控制方案，如时间戳（timestamp), 乐观控制法（scheduler），多版本并发控制（MVCC）等。&lt;/p&gt;
-
-&lt;h3 id=&quot;6并发控制&quot;&gt;6、并发控制&lt;/h3&gt;
-
-&lt;p&gt;&lt;strong&gt;LBCC（Lock-Base Concurrency Control）基于锁的并发控制；&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;所谓封锁就是事务在某个数据对象进行操作之前先申请锁，对该对象加锁后，该事务就拥有了一定的对该对象的控制，在该事务释放该锁前，其他事务不能操作此数据对象。 从锁的模式来看，锁可以分为共享锁和排它锁，共享锁又称为读锁（S 锁），排它锁又称为写锁（X锁）。&lt;/p&gt;
-
-&lt;p&gt;X 锁：若事务 T 对数据对象 A 加上了 X 锁，则只允许 T 读取和修改 A， 其他任何事务不得再对 A加任何类型的锁，直到 T 释放锁，。&lt;/p&gt;
-
-&lt;p&gt;S 锁：若事务 T 对数据对象 A 加上了 S 锁，则 T 和其他事务都可以可以读 A，同时其他事务可以继续申请 A 的 S 锁，但是直到所有事务都释放 A 的 S 锁为止（所有事务并不包括自己），A 是不允许修改的。这就意味着如果只有一个事务对 A 添加了 S 锁，那他自己是可以修改数据的。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;MVCC（Multiversion Concurrency Control）多版本并发控制&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;通过 LBCC， 我们可以解决所有的并发不一致问题，那为什么还会有其他并发控制方案呢？归根结底还是基于性能的考虑， LBCC 只是实现了允许并发读，但对于并发读写，写写操作只能串行执行，在读写都很频繁的场景下，并发性能将大大降低，因此，人们才提出各种无锁并发控制方案，MVCC 就属于其中一种。&lt;/p&gt;
-
-&lt;p&gt;MVCC 的大概思路是每一个事务都有一个唯一的ID，当某一个事务要修改某行数据时，先将这一行原来的数据做一个快照保存下来，当有其他并发事务也要操作这个事务时，可以操作之前的版本，这样，最新的版本只被写事务维持，不会干扰到读事务，以此实现隔离，MVCC 并没有一个统一的标准，不同 DBS 的实现也不尽相同。&lt;/p&gt;</content><author><name>Ted</name></author><category term="数据库" /><summary type="html">1、什么是事务</summary></entry></feed>
+&lt;p&gt;在事务1中，通过 FOR UPDATE 语句获取了满足条件 age &amp;gt; 30 AND age &amp;lt; 40 的记录范围的间隙锁。这意味着其他事务无法在该范围内插入新记录，事务2在尝试插入新记录时会被阻塞，直到事务1释放锁。&lt;/p&gt;</content><author><name>Ted</name></author><category term="数据库" /><summary type="html"></summary></entry></feed>

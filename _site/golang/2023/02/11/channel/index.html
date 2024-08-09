@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter">
+
+    <title>通道Channel - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/golang/2023/02/11/channel/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/app/">APP</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/mac_app/">Mac App</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>通道Channel</h1>
+                    
+                    <h2 class="subheading">通道Channel简介和使用</h2>
+                    
+                    <span class="meta">Posted by Ted on February 11, 2023</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h4 id="1channel介绍"><strong>1、Channel介绍</strong></h4>
+
+<p>通过共享内存来通讯和通过通讯来共享内存是并发编程中的两种编程风格。</p>
+
+<p>当通过共享内存来通讯的时候，我们需要一些传统的并发同步技术（比如互斥锁）来避免数据竞争。</p>
+
+<p>Go提供了一种独特的并发同步技术来实现通过通讯来共享内存。此技术即为Channel。 我们可以把一个Channel看作是在一个程序内部的一个先进先出（FIFO：first in first out）数据队列。 一些协程可以向此Channel发送数据，另外一些协程可以从此Channel接收数据。Go Channel可以帮助程序员轻松地避免数据竞争。</p>
+
+<p>尽管Go也支持几种传统的数据同步技术，但是只有Channel为一等公民。 Channel是Go中的一种类型，所以我们可以无需引进任何代码包就可以使用Channel。 几种传统的数据同步技术提供在sync和sync/atomic标准库包中。</p>
+
+<p>实事求是地说，每种并发同步技术都有它们各自的最佳应用场景，但是Channel的<a href="https://gfw.go101.org/article/channel-use-cases.html">应用范围更广</a>。 使用Channel来做同步常常可以使得代码看上去更整洁和易于理解。</p>
+
+<h4 id="2通道类型和值"><strong>2、通道类型和值</strong></h4>
+
+<p><strong>通道类型</strong></p>
+
+<p>和数组、切片以及映射类型一样，每个通道类型也有一个元素类型。 一个通道只能传送它的（通道类型的）元素类型的值。</p>
+
+<p>通道可以是双向的，也可以是单向的。假设T是一个元素类型</p>
+
+<ul>
+  <li>chan T  ：双向通道类型。</li>
+  <li>chan&lt;- T  ：单向可发送通道类型，编译器不允许从此类型的值中接收数据。</li>
+  <li>&lt;-chan T  ：单向可接收通道类型。 编译器不允许向此类型的值中发送数据。</li>
+</ul>
+
+<p>通道箭头&lt;-总是指向左边。类型T总是在最右。</p>
+
+<p>双向通道chan T可以被隐式转换为单向通道类型chan&lt;- T和&lt;-chan T，但反之不行（即使显式也不行）。 类型chan&lt;- T和&lt;-chan T的值也不能相互转换。</p>
+
+<p><strong>通道零值</strong></p>
+
+<p>通道类型的零值也使用nil来表示。</p>
+
+<p>一个非零通道值必须通过内置的make函数来创建。 比如make(chan int, 10)将创建一个元素类型为int，容量为10的通道值。 第二个参数指定了欲创建的通道的容量。此第二个实参是可选的，它的默认值为0。</p>
+
+<p><strong>缓存、非缓存</strong></p>
+
+<ul>
+  <li>一个容量为0的通道值称为一个非缓冲通道（unbuffered channel）；</li>
+  <li>一个容量不为0的通道值称为一个缓冲通道（buffered channel）。</li>
+</ul>
+
+<p><strong>通道的堵塞：</strong></p>
+
+<ul>
+  <li>如果 buffered channel 中还有数据，那么，从这个 channel 接收数据的时候就不会阻塞，</li>
+  <li>如果 buffered channel 还未满（“满”指达到其容量），给它发送数据也不会阻塞，否则就会阻塞。</li>
+  <li>unbuffered chan 只有读写都准备好之后才不会阻塞，这也是很多使用 unbuffered chan 时的常见 Bug。</li>
+  <li>nil 是 chan 的零值，是一种特殊的 chan，对值是 nil 的 chan 的发送接收调用者总是会阻塞。</li>
+</ul>
+
+<h4 id="3通道操作"><strong>3、通道操作</strong></h4>
+
+<p>Go中有五种通道相关的操作：</p>
+
+<ol>
+  <li>关闭通道</li>
+  <li>向通道内发送值</li>
+  <li>从通道内接收值</li>
+  <li>查询通道容量</li>
+  <li>查询通道内队列长度</li>
+</ol>
+
+<p>假设一个通道（值）为ch，下面列出了这五种操作的语法或者函数调用。</p>
+
+<p><strong>3.1  关闭通道：</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> close(ch) 
+</code></pre></div></div>
+
+<p>传给close函数调用的实参必须为一个通道，并且此通道值不能为单向接收的。</p>
+
+<p><strong>3.2 向通道ch发送一个值v：</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ch &lt;- v  
+</code></pre></div></div>
+
+<p>v必须能够赋值给通道ch的元素类型。 ch不能为单向接收通道。 &lt;-称为数据发送操作符。</p>
+
+<p><strong>3.3 从通道ch接收一个值：</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>v = &lt;-ch
+v, sentBeforeClosed = &lt;-ch
+</code></pre></div></div>
+
+<p>接收数据时，还可以返回两个值。第一个值是返回的 chan 中的元素，很多人不太熟悉的是第二个值。第二个值是 bool 类型，代表是否成功地从 chan 中读取到一个值，如果第二个参数是 false，chan 已经被 close 而且 chan 中没有缓存的数据，这个时候，第一个值是零值。所以，如果从 chan 读取到一个零值，可能是 sender 真正发送的零值，也可能是 closed 的并且没有缓存元素产生的零值。</p>
+
+<p><strong>3.4 查询一个通道的容量：</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cap(ch) 
+</code></pre></div></div>
+
+<p>其中cap是一个已经在<a href="https://gfw.go101.org/article/container.html#cap-len">容器类型</a>一文中介绍过的内置函数。 cap的返回值的类型为内置类型int。</p>
+
+<p><strong>3.5 查询一个通道的长度：</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>           ```        
+            len(ch)      
+           ```
+</code></pre></div></div>
+
+<p>其中len是一个已经在<a href="https://gfw.go101.org/article/container.html#cap-len">容器类型</a>一文中介绍过的内置函数。 len的返回值的类型也为内置类型int。 一个通道的长度是指当前有多少个已被发送到此通道但还未被接收出去的元素值。</p>
+
+<h4 id="4channel-的五种应用场景">4、<strong>channel 的五种应用场景</strong></h4>
+
+<p><img src="/img/Simple_2/78.jpg" alt="img" /></p>
+
+<p><strong>1、消息交流</strong></p>
+
+<p>channel 的底层是一个循环队列，当队列的长度大于 0 的 时候，它会被当做线程安全队列和 buffer。利用这个特性，一个 goroutine 可以安全的往 channel 中存放数据，另一个 goroutine 可以安全的从 channel 中读取数据，这样就实现了 goroutine 之间的消息交流。</p>
+
+<p><strong>2、数据传递</strong></p>
+
+<p>数据传递类似游戏“击鼓传花”。鼓响时，花（或者其它物件）从一个人手里传到下一个人，数据就类似这里的花。</p>
+
+<p><strong>3、信号通知</strong></p>
+
+<p>channel 类型有这样一个特性：如果 channel 为空，那么 recevier 接收数据的时候就会阻塞，直到有新的数据进来或者 channel 被关闭。</p>
+
+<p>利用这个特性，就可以实现 wait/notify 设计模式。另外还有一个经常碰到的场景，实现程序的 graceful shutdown。</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span><span class="x"> </span><span class="n">main</span><span class="p">()</span><span class="x"> </span><span class="p">{</span><span class="x">
+  </span><span class="k">go</span><span class="x"> </span><span class="k">func</span><span class="p">()</span><span class="x"> </span><span class="p">{</span><span class="x">
+      </span><span class="o">......</span><span class="x"> </span><span class="c">// 执行业务处理</span><span class="x">
+    </span><span class="p">}()</span><span class="x">
+
+  </span><span class="c">// 处理CTRL+C等中断信号</span><span class="x">
+  </span><span class="n">termChan</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="nb">make</span><span class="p">(</span><span class="k">chan</span><span class="x"> </span><span class="n">os</span><span class="o">.</span><span class="n">Signal</span><span class="p">)</span><span class="x">
+  </span><span class="n">signal</span><span class="o">.</span><span class="n">Notify</span><span class="p">(</span><span class="n">termChan</span><span class="p">,</span><span class="x"> </span><span class="n">syscall</span><span class="o">.</span><span class="n">SIGINT</span><span class="p">,</span><span class="x"> </span><span class="n">syscall</span><span class="o">.</span><span class="n">SIGTERM</span><span class="p">)</span><span class="x">
+  </span><span class="o">&lt;-</span><span class="n">termChan</span><span class="x"> 
+
+  </span><span class="c">// 执行退出之前的清理动作</span><span class="x">
+  </span><span class="n">doCleanup</span><span class="p">()</span><span class="x">
+  
+  </span><span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"优雅退出"</span><span class="p">)</span><span class="x">
+</span><span class="p">}</span><span class="x">
+</span></code></pre></div></div>
+
+<p><strong>4、锁</strong></p>
+
+<p>利用 channel 我们也能实现锁的功能。</p>
+
+<p>sync.Mutex 通过修改持有锁标记位的状态达到占有锁的目的，因此 channel 可以通过转移这个标记位的所有权实现占有锁。</p>
+
+<p>具体代码如下：</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// 使用chan实现互斥锁</span><span class="x">
+</span><span class="k">type</span><span class="x"> </span><span class="n">Mutex</span><span class="x"> </span><span class="k">struct</span><span class="x"> </span><span class="p">{</span><span class="x">
+    </span><span class="n">ch</span><span class="x"> </span><span class="k">chan</span><span class="x"> </span><span class="k">struct</span><span class="p">{}</span><span class="x">
+</span><span class="p">}</span><span class="x">
+
+</span><span class="c">// 使用锁需要初始化</span><span class="x">
+</span><span class="k">func</span><span class="x"> </span><span class="n">NewMutex</span><span class="p">()</span><span class="x"> </span><span class="o">*</span><span class="n">Mutex</span><span class="x"> </span><span class="p">{</span><span class="x">
+    </span><span class="n">mu</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="o">&amp;</span><span class="n">Mutex</span><span class="p">{</span><span class="nb">make</span><span class="p">(</span><span class="k">chan</span><span class="x"> </span><span class="k">struct</span><span class="p">{},</span><span class="x"> </span><span class="m">1</span><span class="p">)}</span><span class="x">
+    </span><span class="n">mu</span><span class="o">.</span><span class="n">ch</span><span class="x"> </span><span class="o">&lt;-</span><span class="x"> </span><span class="k">struct</span><span class="p">{}{}</span><span class="x">
+    </span><span class="k">return</span><span class="x"> </span><span class="n">mu</span><span class="x">
+</span><span class="p">}</span><span class="x">
+
+</span><span class="c">// 请求锁，直到获取到</span><span class="x">
+</span><span class="k">func</span><span class="x"> </span><span class="p">(</span><span class="n">m</span><span class="x"> </span><span class="o">*</span><span class="n">Mutex</span><span class="p">)</span><span class="x"> </span><span class="n">Lock</span><span class="p">()</span><span class="x"> </span><span class="p">{</span><span class="x">
+    </span><span class="o">&lt;-</span><span class="n">m</span><span class="o">.</span><span class="n">ch</span><span class="x">
+</span><span class="p">}</span><span class="x">
+
+</span><span class="c">// 解锁</span><span class="x">
+</span><span class="k">func</span><span class="x"> </span><span class="p">(</span><span class="n">m</span><span class="x"> </span><span class="o">*</span><span class="n">Mutex</span><span class="p">)</span><span class="x"> </span><span class="n">Unlock</span><span class="p">()</span><span class="x"> </span><span class="p">{</span><span class="x">
+    </span><span class="k">select</span><span class="x"> </span><span class="p">{</span><span class="x">
+    </span><span class="k">case</span><span class="x"> </span><span class="n">m</span><span class="o">.</span><span class="n">ch</span><span class="x"> </span><span class="o">&lt;-</span><span class="x"> </span><span class="k">struct</span><span class="p">{}{}</span><span class="o">:</span><span class="x">
+    </span><span class="k">default</span><span class="o">:</span><span class="x">
+        </span><span class="nb">panic</span><span class="p">(</span><span class="s">"unlock of unlocked mutex"</span><span class="p">)</span><span class="x">
+    </span><span class="p">}</span><span class="x">
+</span><span class="p">}</span><span class="x">
+
+</span><span class="c">// 尝试获取锁</span><span class="x">
+</span><span class="k">func</span><span class="x"> </span><span class="p">(</span><span class="n">m</span><span class="x"> </span><span class="o">*</span><span class="n">Mutex</span><span class="p">)</span><span class="x"> </span><span class="n">TryLock</span><span class="p">()</span><span class="x"> </span><span class="kt">bool</span><span class="x"> </span><span class="p">{</span><span class="x">
+    </span><span class="k">select</span><span class="x"> </span><span class="p">{</span><span class="x">
+    </span><span class="k">case</span><span class="x"> </span><span class="o">&lt;-</span><span class="n">m</span><span class="o">.</span><span class="n">ch</span><span class="o">:</span><span class="x">
+        </span><span class="k">return</span><span class="x"> </span><span class="no">true</span><span class="x">
+    </span><span class="k">default</span><span class="o">:</span><span class="x">
+    </span><span class="p">}</span><span class="x">
+    </span><span class="k">return</span><span class="x"> </span><span class="no">false</span><span class="x">
+</span><span class="p">}</span><span class="x">
+
+</span><span class="c">// 加入一个超时的设置</span><span class="x">
+</span><span class="k">func</span><span class="x"> </span><span class="p">(</span><span class="n">m</span><span class="x"> </span><span class="o">*</span><span class="n">Mutex</span><span class="p">)</span><span class="x"> </span><span class="n">LockTimeout</span><span class="p">(</span><span class="n">timeout</span><span class="x"> </span><span class="n">time</span><span class="o">.</span><span class="n">Duration</span><span class="p">)</span><span class="x"> </span><span class="kt">bool</span><span class="x"> </span><span class="p">{</span><span class="x">
+    </span><span class="n">timer</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">time</span><span class="o">.</span><span class="n">NewTimer</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span><span class="x">
+    </span><span class="k">select</span><span class="x"> </span><span class="p">{</span><span class="x">
+    </span><span class="k">case</span><span class="x"> </span><span class="o">&lt;-</span><span class="n">m</span><span class="o">.</span><span class="n">ch</span><span class="o">:</span><span class="x">
+        </span><span class="n">timer</span><span class="o">.</span><span class="n">Stop</span><span class="p">()</span><span class="x">
+        </span><span class="k">return</span><span class="x"> </span><span class="no">true</span><span class="x">
+    </span><span class="k">case</span><span class="x"> </span><span class="o">&lt;-</span><span class="n">timer</span><span class="o">.</span><span class="n">C</span><span class="o">:</span><span class="x">
+    </span><span class="p">}</span><span class="x">
+    </span><span class="k">return</span><span class="x"> </span><span class="no">false</span><span class="x">
+</span><span class="p">}</span><span class="x">
+
+</span><span class="c">// 锁是否已被持有</span><span class="x">
+</span><span class="k">func</span><span class="x"> </span><span class="p">(</span><span class="n">m</span><span class="x"> </span><span class="o">*</span><span class="n">Mutex</span><span class="p">)</span><span class="x"> </span><span class="n">IsLocked</span><span class="p">()</span><span class="x"> </span><span class="kt">bool</span><span class="x"> </span><span class="p">{</span><span class="x">
+    </span><span class="k">return</span><span class="x"> </span><span class="nb">len</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">ch</span><span class="p">)</span><span class="x"> </span><span class="o">==</span><span class="x"> </span><span class="m">0</span><span class="x">
+</span><span class="p">}</span><span class="x">
+
+</span><span class="k">func</span><span class="x"> </span><span class="n">main</span><span class="p">()</span><span class="x"> </span><span class="p">{</span><span class="x">
+    </span><span class="n">m</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">NewMutex</span><span class="p">()</span><span class="x">
+    </span><span class="n">ok</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">m</span><span class="o">.</span><span class="n">TryLock</span><span class="p">()</span><span class="x">
+    </span><span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"locked v %v</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="x"> </span><span class="n">ok</span><span class="p">)</span><span class="x">
+    </span><span class="n">ok</span><span class="x"> </span><span class="o">=</span><span class="x"> </span><span class="n">m</span><span class="o">.</span><span class="n">TryLock</span><span class="p">()</span><span class="x">
+    </span><span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"locked %v</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="x"> </span><span class="n">ok</span><span class="p">)</span><span class="x">
+</span><span class="p">}</span><span class="x">
+</span></code></pre></div></div>
+
+<p>这里实现锁主要利用了向满 channel 发送数组或从空 channel 接收数据会阻塞的特性。另外，利用 select 很容易实现 TryLock 和 Timeout 的功能。</p>
+
+<p><strong>5、任务编排</strong></p>
+
+<p>通过 WaitGroup，我们能很容易的实现 等待一组 goroutine 完成任务这种任务编排需求。同样，我们也可以用 channel 实现。</p>
+
+<p>但是如果任务编排再复杂一些呢？如果面试官出了下面这个题目：</p>
+
+<p>有一批任务需要处理，但是机器资源有限，只能承受100的并发度，该如何实现？</p>
+
+<p>一种解决方案就是使用 channel，代码如下：</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span><span class="x"> </span><span class="n">task</span><span class="p">(</span><span class="n">ch</span><span class="x"> </span><span class="k">chan</span><span class="x"> </span><span class="k">struct</span><span class="p">{})</span><span class="x"> </span><span class="p">{</span><span class="x">
+    </span><span class="o">&lt;-</span><span class="n">ch</span><span class="x">
+    </span><span class="c">//执行任务</span><span class="x">
+    </span><span class="n">time</span><span class="o">.</span><span class="n">Sleep</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span><span class="x">
+    </span><span class="n">ch</span><span class="x"> </span><span class="o">&lt;-</span><span class="x"> </span><span class="k">struct</span><span class="p">{}{}</span><span class="x">
+    </span><span class="k">return</span><span class="x">
+</span><span class="p">}</span><span class="x">
+
+</span><span class="k">func</span><span class="x"> </span><span class="n">concurrency100</span><span class="p">()</span><span class="x"> </span><span class="p">{</span><span class="x">
+    </span><span class="n">ch</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="nb">make</span><span class="p">(</span><span class="k">chan</span><span class="x"> </span><span class="k">struct</span><span class="p">{},</span><span class="x"> </span><span class="m">100</span><span class="p">)</span><span class="x">
+
+    </span><span class="k">for</span><span class="x"> </span><span class="n">i</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="m">0</span><span class="p">;</span><span class="x"> </span><span class="n">i</span><span class="x"> </span><span class="o">&lt;</span><span class="x"> </span><span class="m">100</span><span class="p">;</span><span class="x"> </span><span class="n">i</span><span class="o">++</span><span class="x"> </span><span class="p">{</span><span class="x">
+        </span><span class="n">ch</span><span class="x"> </span><span class="o">&lt;-</span><span class="x"> </span><span class="k">struct</span><span class="p">{}{}</span><span class="x">
+    </span><span class="p">}</span><span class="x">
+
+    </span><span class="k">for</span><span class="x"> </span><span class="p">{</span><span class="x">
+        </span><span class="k">go</span><span class="x"> </span><span class="n">task</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span><span class="x">
+    </span><span class="p">}</span><span class="x">
+</span><span class="p">}</span><span class="x">
+</span></code></pre></div></div>
+
+<p>利用 sender 给满员的 channel 发送数据会阻塞的特性，就实现了并发度始终维持在 100 的需求。</p>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/%E6%95%B0%E6%8D%AE%E5%BA%93/2023/01/15/file/" data-toggle="tooltip" data-placement="top" title="数据库文件">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/2023/02/25/pulsar/" data-toggle="tooltip" data-placement="top" title="消息队列之Pulsar">下一篇 &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2024</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>
