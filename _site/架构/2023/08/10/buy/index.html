@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4165845420824687",
+    enable_page_level_ads: true
+  });
+</script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter">
+
+    <title>直播间秒杀抢券方案 - Helloted Blog</title>
+
+    <link rel="canonical" href="http://www.helloted.com/%E6%9E%B6%E6%9E%84/2023/08/10/buy/">
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+   
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/prism.css">
+
+    <!-- Custom Fonts -->
+<!--     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'> -->
+
+     <link rel="stylesheet" href="/css/clean-blog.css">
+
+     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Helloted Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/aacategory/">Categorys</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/aarchive/">Archive</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/app/">APP</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/mac_app/">Mac App</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/default.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>直播间秒杀抢券方案</h1>
+                    
+                    <h2 class="subheading">直播间秒杀抢券方案选型</h2>
+                    
+                    <span class="meta">Posted by Ted on August 10, 2023</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h3 id="一业务背景"><strong>一、业务背景</strong></h3>
+
+<h4 id="11-秒杀说明"><strong>1.1. 秒杀说明</strong></h4>
+
+<p>在当今的电商环境中，直播带货已成为一种重要的销售渠道，吸引了大量用户参与。为了提升用户的购买体验和参与感，超核直播间引入了“优惠券秒杀”功能。这一功能不仅能够激发用户的购买欲望，还能有效提升直播间的互动性和活跃度。</p>
+
+<p>优惠券秒杀功能允许主播在直播过程中通过口播的方式实时上架优惠券。用户在观看直播时，可以通过抢券的方式获取大额优惠券，从而提高购买转化率。该功能的设计旨在增强用户的参与感和紧迫感，提升直播间的整体活跃度。</p>
+
+<p>这些优惠券通常是游戏道具的大额满减，对于观看直播的玩家具有很大吸引力，所以秒杀活动参与热情很高。</p>
+
+<h4 id="12-参与角色"><strong>1.2 参与角色</strong></h4>
+
+<ul>
+  <li>主播：在直播过程中，主播负责通过口播的方式介绍并上架优惠券。主播的表现和互动能力直接影响用户的参与度和购买意愿。</li>
+  <li>运营团队：运营团队在后台系统中负责录入和发布优惠券信息，包括优惠券的类型、数量、有效期等。运营团队需要确保信息的准确性和及时性，以便用户能够顺利参与抢券活动。</li>
+  <li>用户：用户在观看直播时，会看到前端页面显示的倒计时弹窗，提示“30秒后开始抢券”。用户需要在倒计时结束后，点击抢券按钮参与活动。</li>
+  <li>技术团队：通过综合考虑高并发处理、数据一致性、用户体验和安全性等多个方面，设计一个高效、稳定、安全的优惠券秒杀抢购方案，确保秒杀活动的顺利进行和用户的良好体验。</li>
+</ul>
+
+<h4 id="13-业务流程"><strong>1.3 业务流程</strong></h4>
+
+<ul>
+  <li>优惠券录入：
+    <ul>
+      <li>提前录入：运营团队在直播开始前在后台系统中录入相关的优惠券信息，确保优惠券的发放和使用规则准确无误。</li>
+    </ul>
+  </li>
+  <li>优惠券上架：
+    <ul>
+      <li>主播口播：在直播过程中，主播通过口播的方式告知观众即将上架的优惠券信息，包括优惠券的类型、数量、使用条件等。</li>
+    </ul>
+  </li>
+  <li>
+    <p>运营推送：运营团队在后台系统中发布提前录入的相关的优惠券信息，并推送zhi。</p>
+  </li>
+  <li>
+    <p>倒计时提示：</p>
+
+    <ul>
+      <li>
+        <p>前端页面显示倒计时弹窗：在优惠券上架的同时，前端页面会显示一个倒计时弹窗，提示用户“30秒后开始抢券”，并开始倒计时。</p>
+      </li>
+      <li>
+        <p>倒计时逻辑：倒计时逻辑由前端实现，确保倒计时的准确性和用户体验。</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>抢券开始：</p>
+
+    <ul>
+      <li>
+        <p>倒计时结束：当倒计时结束后，抢券按钮将变为可点击状态，用户可以点击该按钮开始抢券。</p>
+      </li>
+      <li>
+        <p>用户点击抢券：用户点击抢券按钮后，前端将请求发送到后端服务器，进行抢券操作。</p>
+      </li>
+    </ul>
+  </li>
+  <li>抢券处理：
+    <ul>
+      <li>后端处理请求：后端服务器接收到用户的抢券请求后，进行相应的处理，包括验证用户资格、检查优惠券库存、生成优惠券等。</li>
+    </ul>
+  </li>
+  <li>
+    <p>反馈结果：后端处理完成后，将结果反馈给前端，前端根据结果显示相应的提示信息，如“抢券成功”或“优惠券已抢完”。</p>
+
+    <p><img src="/img/Simple_1/56.jpg" alt="img" /></p>
+  </li>
+</ul>
+
+<h3 id="二技术方案"><strong>二、技术方案</strong></h3>
+
+<p>高并发处理：秒杀活动通常会有大量用户同时访问，导致服务器压力剧增，需要设计高效的并发处理方案。</p>
+
+<p>有以下的技术挑战：</p>
+
+<ol>
+  <li>用户体验：秒杀活动需要快速响应用户请求，提供良好的用户体验，避免长时间的等待和页面卡顿。</li>
+  <li>高并发处理：秒杀活动通常会有大量用户同时访问，导致服务器压力剧增，需要设计高效的并发处理方案。</li>
+  <li>安全性：秒杀活动容易受到恶意攻击，如刷单、爬虫等，需要设计有效的安全防护措施。</li>
+  <li>公平性：秒杀活动是在倒计时结束后统一启动，所以需要保证好前端时间同步，用户能在同一时间开始秒杀。</li>
+  <li>数据一致性：在高并发场景下，保证优惠券库存和用户抢券结果的一致性是一个挑战。</li>
+</ol>
+
+<h4 id="21-用户体验"><strong>2.1 用户体验</strong></h4>
+
+<p><strong>目标</strong>：提供快速响应的用户体验，避免长时间的等待和页面卡顿。</p>
+
+<p>快速反馈：</p>
+
+<ul>
+  <li>异步处理：将抢券请求异步处理，快速返回请求已接收的反馈，减少用户等待时间。</li>
+  <li>前端提示：在前端页面显示请求处理中提示，提升用户体验。</li>
+</ul>
+
+<p>页面优化：</p>
+
+<ul>
+  <li>静态资源优化：优化前端静态资源的加载速度，减少页面加载时间。</li>
+  <li>CDN加速：使用CDN加速前端资源的分发，提升页面响应速度。</li>
+</ul>
+
+<p>降级策略：</p>
+
+<ul>
+  <li>功能降级：在系统压力过大时，适当关闭部分非核心功能，保证核心秒杀功能的稳定性。</li>
+  <li>限流降级：在高并发场景下，适当降低限流阈值，保证系统稳定运行。</li>
+</ul>
+
+<h4 id="22-高并发处理"><strong>2.2 高并发处理</strong></h4>
+
+<p><strong>目标</strong>：在秒杀活动中处理大量并发请求，确保系统稳定性和响应速度。</p>
+
+<p>前端限流：</p>
+
+<ul>
+  <li>限流策略：在前端对用户请求进行限流，限制每个用户在一定时间内的请求次数。</li>
+  <li>倒计时提示：在秒杀开始前，通过倒计时提示用户，减少无效请求。</li>
+</ul>
+
+<p>后端限流：</p>
+
+<ul>
+  <li>限流：在北极星引使用限流算法，在对请求进行限流，防止瞬时高并发请求压垮服务器。</li>
+</ul>
+
+<p>消息队列：</p>
+
+<ul>
+  <li>异步处理：将用户的抢券请求通过消息队列异步处理，削峰填谷，缓解瞬时高并发压力。</li>
+</ul>
+
+<p>缓存：</p>
+
+<ul>
+  <li>缓存热点数据：将优惠券库存等热点数据缓存到Redis等高性能缓存中，减少数据库访问压力。</li>
+</ul>
+
+<h4 id="23--安全性"><strong>2.3  安全性</strong></h4>
+
+<p><strong>目标</strong>：防止恶意攻击，如刷单、爬虫等，保障系统安全。</p>
+
+<p>用户权限限制：</p>
+
+<ul>
+  <li>资格认证：只有超核用户才能够参与秒杀抢券</li>
+</ul>
+
+<p>验证码：</p>
+
+<ul>
+  <li>图形验证码：在用户抢券前，要求用户输入图形验证码，防止恶意刷单。</li>
+  <li>行为验证码：使用滑动验证等行为验证码，提升安全性。</li>
+</ul>
+
+<p>IP限流：</p>
+
+<ul>
+  <li>IP黑名单：对恶意IP进行黑名单处理，禁止其访问系统。</li>
+  <li>IP限流策略：对单个IP的请求频率进行限制，防止恶意攻击。</li>
+</ul>
+
+<h4 id="24-公平性"><strong>2.4 公平性</strong></h4>
+
+<p><strong>目标</strong>：保证秒杀活动在倒计时结束后统一启动，确保所有用户在同一时间开始秒杀，提升活动的公平性</p>
+
+<ol>
+  <li>时间同步：</li>
+</ol>
+
+<ul>
+  <li>NTP时间同步：在服务器端使用NTP（网络时间协议）进行时间同步，确保所有服务器的时间一致。</li>
+  <li>前端时间校准：在前端页面加载时，通过与服务器进行时间校准，确保前端显示的倒计时与服务器时间一致。</li>
+</ul>
+
+<h4 id="25-数据一致性"><strong>2.5 数据一致性</strong></h4>
+
+<p><strong>目标</strong>：保证在尽量提升性能的情况下，保证券不出现超卖现象</p>
+
+<h3 id="三高并发防止超卖"><strong>三、高并发防止超卖</strong></h3>
+
+<p>高并发抢券，可能会出现超卖问题，针对超卖问题，业界有以下几种解决方案：</p>
+
+<h4 id="31-数据库悲观锁"><strong>3.1. 数据库悲观锁</strong></h4>
+
+<p>在进行库存查询和更新时，使用数据库的悲观锁机制（如 SELECT … FOR UPDATE）来锁定库存记录，确保在同一时间只有一个请求可以修改库存。</p>
+
+<p><strong>优势</strong></p>
+
+<ul>
+  <li>通过锁机制，确保在并发情况下库存数据的一致性。</li>
+  <li>在现有的数据库架构中，直接使用锁机制即可实现。</li>
+</ul>
+
+<p><strong>劣势</strong></p>
+
+<ul>
+  <li>在高并发情况下，锁会导致请求排队，影响系统性能。</li>
+  <li>如果不当使用，可能会导致死锁，影响系统稳定性。</li>
+</ul>
+
+<p><strong>可能出现的问题</strong></p>
+
+<ul>
+  <li>在高并发情况下，锁竞争严重，可能导致用户体验下降。</li>
+  <li>需要合理设置锁的超时时间，以避免长时间锁定导致的性能问题。</li>
+</ul>
+
+<h4 id="32-数据库乐观锁"><strong>3.2. 数据库乐观锁</strong></h4>
+
+<p>在库存更新时，使用乐观锁机制（如版本号或时间戳）来判断库存是否被其他请求修改。只有在版本号匹配的情况下才进行更新。</p>
+
+<p><strong>优势</strong></p>
+
+<ul>
+  <li>高并发性能：乐观锁在没有冲突时性能较好，适合读多写少的场景。</li>
+  <li>避免锁竞争：减少了锁的使用，降低了死锁的风险。</li>
+</ul>
+
+<p><strong>劣势</strong></p>
+
+<ul>
+  <li>冲突重试：在高并发情况下，可能会频繁出现更新失败的情况，需要重试，增加了复杂性。</li>
+  <li>数据库压力较大，容易成为瓶颈。</li>
+</ul>
+
+<p><strong>可能出现的问题</strong></p>
+
+<ul>
+  <li>在高并发情况下，频繁的重试可能导致性能下降。</li>
+  <li>需要合理设计重试机制，以避免无限重试导致的资源浪费。</li>
+</ul>
+
+<h4 id="33-redis-分布式锁"><strong>3.3. Redis 分布式锁</strong></h4>
+
+<p>使用 Redis 的分布式锁机制（如 Redisson 或 Lua 脚本）来控制对库存的访问。通过设置锁的过期时间，确保在高并发情况下的安全性。</p>
+
+<p><strong>优势</strong></p>
+
+<ul>
+  <li>高性能：Redis 的性能优于传统数据库，能够处理高并发请求。</li>
+  <li>灵活性：可以设置锁的过期时间，避免长时间锁定。</li>
+</ul>
+
+<p><strong>劣势</strong></p>
+
+<ul>
+  <li>流程需要引入 Redis，增加了系统的复杂性。</li>
+  <li>锁失效风险：如果在持有锁的过程中发生故障，可能导致锁失效，影响系统稳定性。</li>
+</ul>
+
+<p><strong>可能出现的问题</strong></p>
+
+<ul>
+  <li>需要处理锁的过期和续期逻辑，以避免锁失效导致的超卖。</li>
+  <li>Redis 的单点故障问题需要考虑，建议使用 Redis 集群。</li>
+</ul>
+
+<h4 id="34-redis库存预减"><strong>3.4. Redis库存预减</strong></h4>
+
+<p>在秒杀开始前，将库存数据预加载到Redis中。用户请求到达时，先在Redis中预减库存，成功后再进行后续操作。</p>
+
+<p><strong>优势</strong>：</p>
+
+<ul>
+  <li>高性能，Redis操作速度快，适合高并发场景。</li>
+  <li>减少数据库压力，提升系统整体性能。</li>
+</ul>
+
+<p><strong>劣势</strong>：</p>
+
+<ul>
+  <li>需要处理Redis和数据库的一致性问题，增加实现复杂度。</li>
+  <li>Redis数据丢失可能导致库存不一致。</li>
+</ul>
+
+<p><strong>可能出现的问题</strong>：</p>
+
+<ul>
+  <li>Redis和数据库数据不一致，导致超卖或库存浪费。</li>
+  <li>Redis数据丢失导致库存数据不准确。</li>
+</ul>
+
+<h4 id="35-队列限流"><strong>3.5. 队列限流</strong></h4>
+
+<p>在秒杀活动开始时，使用消息队列来控制请求的流量。用户请求先进入队列，后端系统按顺序处理请求。</p>
+
+<p><strong>优势</strong></p>
+
+<ul>
+  <li>流量控制：有效控制并发请求的数量，避免瞬时流量冲击数据库。</li>
+  <li>解耦：将请求处理与库存更新解耦，提高系统的可扩展性。</li>
+</ul>
+
+<p><strong>劣势</strong></p>
+
+<ul>
+  <li>需要引入消息队列，增加了系统的复杂性。</li>
+  <li>由于请求需要排队处理，可能导致性能下降。</li>
+</ul>
+
+<p><strong>可能出现的问题</strong></p>
+
+<ul>
+  <li>需要合理设计队列的消费速率，以避免队列积压。</li>
+  <li>消息丢失或重复消费的风险需要处理。</li>
+</ul>
+
+<h4 id="36综合对比"><strong>3.6、综合对比</strong></h4>
+
+<table>
+  <thead>
+    <tr>
+      <th><strong>方案</strong></th>
+      <th><strong>优势</strong></th>
+      <th><strong>劣势</strong></th>
+      <th><strong>可能出现的问题</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>数据库乐观锁</td>
+      <td>实现简单，维护成本低</td>
+      <td>重试次数多，数据库压力大</td>
+      <td>性能下降，锁竞争激烈</td>
+    </tr>
+    <tr>
+      <td>数据库悲观锁</td>
+      <td>数据一致性强，避免超卖</td>
+      <td>锁竞争激烈，性能瓶颈</td>
+      <td>锁等待时间长，数据库性能下降</td>
+    </tr>
+    <tr>
+      <td>Redis分布式锁</td>
+      <td>高性能，适合高并发场景</td>
+      <td>实现复杂度高，Redis单点故障</td>
+      <td>锁超时导致数据不一致，Redis故障导致锁失效</td>
+    </tr>
+    <tr>
+      <td>Redis库存预减</td>
+      <td>高性能，减少数据库压力</td>
+      <td>实现复杂度高，需要处理一致性问题</td>
+      <td>Redis和数据库数据不一致，Redis数据丢失</td>
+    </tr>
+    <tr>
+      <td>消息队列异步处理</td>
+      <td>削峰填谷，保证请求按顺序处理</td>
+      <td>实现复杂度高，用户等待时间长</td>
+      <td>消息队列故障导致请求丢失或处理延迟</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="四超核抢券秒杀的方案"><strong>四、超核抢券秒杀的方案</strong></h3>
+
+<h4 id="41-超核秒杀流程"><strong>4.1 超核秒杀流程</strong></h4>
+
+<p>综合几个防止超卖的方案，结合超核的实际情况，超核的最终抢券秒杀方案的流程如下：</p>
+
+<ol>
+  <li>运营提前配置待抢购的券</li>
+  <li>主播口播即将开始下一轮抢券</li>
+  <li>运营将下一轮抢券通知推送到C端，服务端将改券信息做缓存预热。</li>
+  <li>C端接受下一轮通知，进行时间同步</li>
+  <li>C端开始倒计时</li>
+  <li>C端倒计时结束，用户开始抢券，发送抢券请求</li>
+  <li>服务端接受用户抢券请求，并验证用户是否有资格参与，如果是，则将抢券请求放入消息队列。</li>
+  <li>C端接受服务端返回用户是否参与抢券，并显示”抢券中”。</li>
+  <li>服务端消费抢券请求，通过Redis+lua进行单线程库存预减。</li>
+  <li>处理预减结果：</li>
+</ol>
+
+<ul>
+  <li>预减成功，写入数据库，告知前端用户抢券成功</li>
+  <li>预减失败，推送告知前端用户抢券失败</li>
+</ul>
+
+<ol>
+  <li>
+    <p>复盘统计本次抢券结果。</p>
+
+    <p><img src="/img/Simple_1/57.jpg" alt="img" /></p>
+  </li>
+</ol>
+
+<h4 id="42技术挑战如何解决的"><strong>4.2、技术挑战如何解决的</strong></h4>
+
+<p>用户体验：</p>
+
+<ul>
+  <li>解决方案：在用户发起秒杀请求时，首先在Redis中进行资格验证（如是否为超核用户、同一IP是否已参与等），验证通过后立即返回结果，并将请求写入消息队列进行后续处理。</li>
+  <li>效果：用户在秒杀请求时，只需进行资格验证即可立即返回结果，不会有长时间的等待。</li>
+</ul>
+
+<p>高并发处理：</p>
+
+<ul>
+  <li>解决方案：使用消息队列来缓冲高并发请求，后端系统按顺序从队列中读取请求并处理，避免瞬时高并发对系统的冲击。</li>
+  <li>效果：削峰控制并发流量。</li>
+</ul>
+
+<p>安全性：</p>
+
+<ul>
+  <li>解决方案：在Redis中存储用户资格信息和IP参与记录，确保每个用户和IP只能参与一次。</li>
+  <li>效果：避免非超核用户参与可以保证安全性。同一个IP只能参与一次。</li>
+</ul>
+
+<p>公平性</p>
+
+<ul>
+  <li>解决方案：使用NTP（网络时间协议）进行时间同步，确保前后端时间一致。</li>
+  <li>效果：前后端时间同步，保证同一时间开启秒杀。</li>
+</ul>
+
+<p>数据一致性：</p>
+
+<ul>
+  <li>解决方案：使用Redis和Lua脚本进行库存预减操作，Lua脚本在Redis中是原子执行的，确保库存检查和预减操作在一个原子操作中完成，避免并发问题导致的超卖。</li>
+  <li>效果：在处理库存更新时，Redis+Lua的预减方案，原子操作不会出现超卖。</li>
+</ul>
+
+<p>性能：</p>
+
+<ul>
+  <li>解决方案：利用Redis的高性能和Lua脚本的原子性，快速处理高并发请求。同时，通过消息队列缓冲请求，进一步提高系统的处理能力。</li>
+  <li>效果：高效处理高并发请求。</li>
+</ul>
+
+<p>高可用</p>
+
+<ul>
+  <li>解决方案：使用Redis集群，避免单点故障</li>
+  <li>效果：避免单点故障</li>
+</ul>
+
+<h3 id="五业界秒杀方案补充"><strong>五、业界秒杀方案补充</strong></h3>
+
+<p>针对秒杀活动场景，业界还有一些提高性能和稳定性的方案：</p>
+
+<h4 id="51-热点隔离"><strong>5.1 热点隔离</strong></h4>
+
+<p>秒杀系统设计的第一个原则就是将这种热点数据隔离出来，不要让1%的请求影响到另外的99%，隔离出来后也更方便对这1%的请求做针对性优化。针对秒杀我们做了多个层次的隔离：</p>
+
+<ul>
+  <li>业务隔离：因为秒杀业务高并发高流量的特殊性，将其从系统中隔离出来，防止影响其他业务。</li>
+  <li>系统隔离。系统隔离更多是运行时的隔离，可以通过分组部署的方式和另外99%分开。甚至可以单独的域名，目的也是让请求落到不同的集群中。</li>
+  <li>数据隔离。秒杀所调用的数据大部分都是热数据，这部分数据库可以做隔离。</li>
+</ul>
+
+<p>实现隔离很有多办法，如可以按照用户来区分，给不同用户分配不同cookie，在接入层路由到不同服务接口中；还有在接入层可以对URL的不同Path来设置限流策略等。服务层通过调用不同的服务接口；数据层可以给数据打上特殊的标来区分。目的都是把已经识别出来的热点和普通请求区分开来。</p>
+
+<h4 id="52-动静分离"><strong>5.2 动静分离</strong></h4>
+
+<p>在秒杀页面用户可能会不断刷鞋页面：通过以下措施将静态数据与动态数据隔离：</p>
+
+<ul>
+  <li>把整个页面Cache在用户浏览器</li>
+  <li>如果强制刷新整个页面，也会请求到CDN</li>
+  <li>实际有效请求只是“刷新抢券”按钮</li>
+</ul>
+
+<p>这样把90%的静态数据缓存在用户端或者CDN上，当真正秒杀时用户只需要点击特殊的按钮“刷新抢券”即可，而不需要刷新整个页面，这样只向服务端请求很少的有效数据，而不需要重复请求大量静态数据。秒杀的动态数据和普通的详情页面的动态数据相比更少，性能也比普通的详情提升3倍以上。</p>
+
+<h4 id="53-基于时间分片削峰"><strong>5.3 基于时间分片削峰</strong></h4>
+
+<p>倒计时结束，用户开始秒杀，可以在此阶段对用户分流，比如增加人机验证，答题验证，从而达到基于时间分片在前端就进行了削峰</p>
+
+<h4 id="54-数据分层校验"><strong>5.4 数据分层校验</strong></h4>
+
+<p><img src="/img/Simple_1/58.jpg" alt="img" /></p>
+
+<p>对大流量系统的数据做分层校验也是最重要的设计原则，所谓分层校验就是对大量的请求做成“漏斗”式设计，如所示：在不同层次尽可能把无效的请求过滤，“漏斗”的最末端才是有效的请求，要达到这个效果必须对数据做分层的校验，下面是一些原则：</p>
+
+<ul>
+  <li>先做数据的动静分离</li>
+  <li>将90%的数据缓存在客户端浏览器</li>
+  <li>将动态请求的读数据Cache在Web端</li>
+  <li>对读数据不做强一致性校验</li>
+  <li>对写数据进行基于时间的合理分片</li>
+  <li>对写请求做限流保护</li>
+  <li>对写数据进行强一致性校验</li>
+</ul>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/%E6%9E%B6%E6%9E%84/2023/08/02/live/" data-toggle="tooltip" data-placement="top" title="直播后台架构选型">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/helloted">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="mailto:helloted@live.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Helloted 2024</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+<script src="/js/prism.js "></script>
+
+
+    
+
+
+</body>
+
+</html>

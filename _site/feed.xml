@@ -1,4 +1,487 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2024-10-31T17:47:55+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">直播后台架构选型</title><link href="http://www.helloted.com/%E6%9E%B6%E6%9E%84/2023/03/03/live/" rel="alternate" type="text/html" title="直播后台架构选型" /><published>2023-03-03T20:00:00+08:00</published><updated>2023-03-03T20:00:00+08:00</updated><id>http://www.helloted.com/%E6%9E%B6%E6%9E%84/2023/03/03/live</id><content type="html" xml:base="http://www.helloted.com/%E6%9E%B6%E6%9E%84/2023/03/03/live/">&lt;h3 id=&quot;一项目背景&quot;&gt;&lt;strong&gt;一、项目背景&lt;/strong&gt;&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://www.helloted.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.helloted.com/" rel="alternate" type="text/html" /><updated>2024-10-31T18:00:13+08:00</updated><id>http://www.helloted.com/feed.xml</id><title type="html">Helloted Blog</title><subtitle>曹浩之Helloted的技术博客，用于记录一些技术成长过程中的技术分享，包括客户端iOS/Android，后台Pyhon/Java，跨平台开发Flutter</subtitle><entry><title type="html">直播间秒杀抢券方案</title><link href="http://www.helloted.com/%E6%9E%B6%E6%9E%84/2023/08/10/buy/" rel="alternate" type="text/html" title="直播间秒杀抢券方案" /><published>2023-08-10T20:00:00+08:00</published><updated>2023-08-10T20:00:00+08:00</updated><id>http://www.helloted.com/%E6%9E%B6%E6%9E%84/2023/08/10/buy</id><content type="html" xml:base="http://www.helloted.com/%E6%9E%B6%E6%9E%84/2023/08/10/buy/">&lt;h3 id=&quot;一业务背景&quot;&gt;&lt;strong&gt;一、业务背景&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;h4 id=&quot;11-秒杀说明&quot;&gt;&lt;strong&gt;1.1. 秒杀说明&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;在当今的电商环境中，直播带货已成为一种重要的销售渠道，吸引了大量用户参与。为了提升用户的购买体验和参与感，超核直播间引入了“优惠券秒杀”功能。这一功能不仅能够激发用户的购买欲望，还能有效提升直播间的互动性和活跃度。&lt;/p&gt;
+
+&lt;p&gt;优惠券秒杀功能允许主播在直播过程中通过口播的方式实时上架优惠券。用户在观看直播时，可以通过抢券的方式获取大额优惠券，从而提高购买转化率。该功能的设计旨在增强用户的参与感和紧迫感，提升直播间的整体活跃度。&lt;/p&gt;
+
+&lt;p&gt;这些优惠券通常是游戏道具的大额满减，对于观看直播的玩家具有很大吸引力，所以秒杀活动参与热情很高。&lt;/p&gt;
+
+&lt;h4 id=&quot;12-参与角色&quot;&gt;&lt;strong&gt;1.2 参与角色&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;主播：在直播过程中，主播负责通过口播的方式介绍并上架优惠券。主播的表现和互动能力直接影响用户的参与度和购买意愿。&lt;/li&gt;
+  &lt;li&gt;运营团队：运营团队在后台系统中负责录入和发布优惠券信息，包括优惠券的类型、数量、有效期等。运营团队需要确保信息的准确性和及时性，以便用户能够顺利参与抢券活动。&lt;/li&gt;
+  &lt;li&gt;用户：用户在观看直播时，会看到前端页面显示的倒计时弹窗，提示“30秒后开始抢券”。用户需要在倒计时结束后，点击抢券按钮参与活动。&lt;/li&gt;
+  &lt;li&gt;技术团队：通过综合考虑高并发处理、数据一致性、用户体验和安全性等多个方面，设计一个高效、稳定、安全的优惠券秒杀抢购方案，确保秒杀活动的顺利进行和用户的良好体验。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;13-业务流程&quot;&gt;&lt;strong&gt;1.3 业务流程&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;优惠券录入：
+    &lt;ul&gt;
+      &lt;li&gt;提前录入：运营团队在直播开始前在后台系统中录入相关的优惠券信息，确保优惠券的发放和使用规则准确无误。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;优惠券上架：
+    &lt;ul&gt;
+      &lt;li&gt;主播口播：在直播过程中，主播通过口播的方式告知观众即将上架的优惠券信息，包括优惠券的类型、数量、使用条件等。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;运营推送：运营团队在后台系统中发布提前录入的相关的优惠券信息，并推送zhi。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;倒计时提示：&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;p&gt;前端页面显示倒计时弹窗：在优惠券上架的同时，前端页面会显示一个倒计时弹窗，提示用户“30秒后开始抢券”，并开始倒计时。&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;倒计时逻辑：倒计时逻辑由前端实现，确保倒计时的准确性和用户体验。&lt;/p&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;抢券开始：&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;p&gt;倒计时结束：当倒计时结束后，抢券按钮将变为可点击状态，用户可以点击该按钮开始抢券。&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;用户点击抢券：用户点击抢券按钮后，前端将请求发送到后端服务器，进行抢券操作。&lt;/p&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;抢券处理：
+    &lt;ul&gt;
+      &lt;li&gt;后端处理请求：后端服务器接收到用户的抢券请求后，进行相应的处理，包括验证用户资格、检查优惠券库存、生成优惠券等。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;反馈结果：后端处理完成后，将结果反馈给前端，前端根据结果显示相应的提示信息，如“抢券成功”或“优惠券已抢完”。&lt;/p&gt;
+
+    &lt;p&gt;&lt;img src=&quot;/img/Simple_1/56.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;二技术方案&quot;&gt;&lt;strong&gt;二、技术方案&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;p&gt;高并发处理：秒杀活动通常会有大量用户同时访问，导致服务器压力剧增，需要设计高效的并发处理方案。&lt;/p&gt;
+
+&lt;p&gt;有以下的技术挑战：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;用户体验：秒杀活动需要快速响应用户请求，提供良好的用户体验，避免长时间的等待和页面卡顿。&lt;/li&gt;
+  &lt;li&gt;高并发处理：秒杀活动通常会有大量用户同时访问，导致服务器压力剧增，需要设计高效的并发处理方案。&lt;/li&gt;
+  &lt;li&gt;安全性：秒杀活动容易受到恶意攻击，如刷单、爬虫等，需要设计有效的安全防护措施。&lt;/li&gt;
+  &lt;li&gt;公平性：秒杀活动是在倒计时结束后统一启动，所以需要保证好前端时间同步，用户能在同一时间开始秒杀。&lt;/li&gt;
+  &lt;li&gt;数据一致性：在高并发场景下，保证优惠券库存和用户抢券结果的一致性是一个挑战。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4 id=&quot;21-用户体验&quot;&gt;&lt;strong&gt;2.1 用户体验&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;&lt;strong&gt;目标&lt;/strong&gt;：提供快速响应的用户体验，避免长时间的等待和页面卡顿。&lt;/p&gt;
+
+&lt;p&gt;快速反馈：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;异步处理：将抢券请求异步处理，快速返回请求已接收的反馈，减少用户等待时间。&lt;/li&gt;
+  &lt;li&gt;前端提示：在前端页面显示请求处理中提示，提升用户体验。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;页面优化：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;静态资源优化：优化前端静态资源的加载速度，减少页面加载时间。&lt;/li&gt;
+  &lt;li&gt;CDN加速：使用CDN加速前端资源的分发，提升页面响应速度。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;降级策略：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;功能降级：在系统压力过大时，适当关闭部分非核心功能，保证核心秒杀功能的稳定性。&lt;/li&gt;
+  &lt;li&gt;限流降级：在高并发场景下，适当降低限流阈值，保证系统稳定运行。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;22-高并发处理&quot;&gt;&lt;strong&gt;2.2 高并发处理&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;&lt;strong&gt;目标&lt;/strong&gt;：在秒杀活动中处理大量并发请求，确保系统稳定性和响应速度。&lt;/p&gt;
+
+&lt;p&gt;前端限流：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;限流策略：在前端对用户请求进行限流，限制每个用户在一定时间内的请求次数。&lt;/li&gt;
+  &lt;li&gt;倒计时提示：在秒杀开始前，通过倒计时提示用户，减少无效请求。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;后端限流：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;限流：在北极星引使用限流算法，在对请求进行限流，防止瞬时高并发请求压垮服务器。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;消息队列：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;异步处理：将用户的抢券请求通过消息队列异步处理，削峰填谷，缓解瞬时高并发压力。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;缓存：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;缓存热点数据：将优惠券库存等热点数据缓存到Redis等高性能缓存中，减少数据库访问压力。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;23--安全性&quot;&gt;&lt;strong&gt;2.3  安全性&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;&lt;strong&gt;目标&lt;/strong&gt;：防止恶意攻击，如刷单、爬虫等，保障系统安全。&lt;/p&gt;
+
+&lt;p&gt;用户权限限制：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;资格认证：只有超核用户才能够参与秒杀抢券&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;验证码：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;图形验证码：在用户抢券前，要求用户输入图形验证码，防止恶意刷单。&lt;/li&gt;
+  &lt;li&gt;行为验证码：使用滑动验证等行为验证码，提升安全性。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;IP限流：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;IP黑名单：对恶意IP进行黑名单处理，禁止其访问系统。&lt;/li&gt;
+  &lt;li&gt;IP限流策略：对单个IP的请求频率进行限制，防止恶意攻击。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;24-公平性&quot;&gt;&lt;strong&gt;2.4 公平性&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;&lt;strong&gt;目标&lt;/strong&gt;：保证秒杀活动在倒计时结束后统一启动，确保所有用户在同一时间开始秒杀，提升活动的公平性&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;时间同步：&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;NTP时间同步：在服务器端使用NTP（网络时间协议）进行时间同步，确保所有服务器的时间一致。&lt;/li&gt;
+  &lt;li&gt;前端时间校准：在前端页面加载时，通过与服务器进行时间校准，确保前端显示的倒计时与服务器时间一致。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;25-数据一致性&quot;&gt;&lt;strong&gt;2.5 数据一致性&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;&lt;strong&gt;目标&lt;/strong&gt;：保证在尽量提升性能的情况下，保证券不出现超卖现象&lt;/p&gt;
+
+&lt;h3 id=&quot;三高并发防止超卖&quot;&gt;&lt;strong&gt;三、高并发防止超卖&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;p&gt;高并发抢券，可能会出现超卖问题，针对超卖问题，业界有以下几种解决方案：&lt;/p&gt;
+
+&lt;h4 id=&quot;31-数据库悲观锁&quot;&gt;&lt;strong&gt;3.1. 数据库悲观锁&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;在进行库存查询和更新时，使用数据库的悲观锁机制（如 SELECT … FOR UPDATE）来锁定库存记录，确保在同一时间只有一个请求可以修改库存。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;优势&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;通过锁机制，确保在并发情况下库存数据的一致性。&lt;/li&gt;
+  &lt;li&gt;在现有的数据库架构中，直接使用锁机制即可实现。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;劣势&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;在高并发情况下，锁会导致请求排队，影响系统性能。&lt;/li&gt;
+  &lt;li&gt;如果不当使用，可能会导致死锁，影响系统稳定性。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;可能出现的问题&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;在高并发情况下，锁竞争严重，可能导致用户体验下降。&lt;/li&gt;
+  &lt;li&gt;需要合理设置锁的超时时间，以避免长时间锁定导致的性能问题。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;32-数据库乐观锁&quot;&gt;&lt;strong&gt;3.2. 数据库乐观锁&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;在库存更新时，使用乐观锁机制（如版本号或时间戳）来判断库存是否被其他请求修改。只有在版本号匹配的情况下才进行更新。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;优势&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;高并发性能：乐观锁在没有冲突时性能较好，适合读多写少的场景。&lt;/li&gt;
+  &lt;li&gt;避免锁竞争：减少了锁的使用，降低了死锁的风险。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;劣势&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;冲突重试：在高并发情况下，可能会频繁出现更新失败的情况，需要重试，增加了复杂性。&lt;/li&gt;
+  &lt;li&gt;数据库压力较大，容易成为瓶颈。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;可能出现的问题&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;在高并发情况下，频繁的重试可能导致性能下降。&lt;/li&gt;
+  &lt;li&gt;需要合理设计重试机制，以避免无限重试导致的资源浪费。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;33-redis-分布式锁&quot;&gt;&lt;strong&gt;3.3. Redis 分布式锁&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;使用 Redis 的分布式锁机制（如 Redisson 或 Lua 脚本）来控制对库存的访问。通过设置锁的过期时间，确保在高并发情况下的安全性。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;优势&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;高性能：Redis 的性能优于传统数据库，能够处理高并发请求。&lt;/li&gt;
+  &lt;li&gt;灵活性：可以设置锁的过期时间，避免长时间锁定。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;劣势&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;流程需要引入 Redis，增加了系统的复杂性。&lt;/li&gt;
+  &lt;li&gt;锁失效风险：如果在持有锁的过程中发生故障，可能导致锁失效，影响系统稳定性。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;可能出现的问题&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;需要处理锁的过期和续期逻辑，以避免锁失效导致的超卖。&lt;/li&gt;
+  &lt;li&gt;Redis 的单点故障问题需要考虑，建议使用 Redis 集群。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;34-redis库存预减&quot;&gt;&lt;strong&gt;3.4. Redis库存预减&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;在秒杀开始前，将库存数据预加载到Redis中。用户请求到达时，先在Redis中预减库存，成功后再进行后续操作。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;优势&lt;/strong&gt;：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;高性能，Redis操作速度快，适合高并发场景。&lt;/li&gt;
+  &lt;li&gt;减少数据库压力，提升系统整体性能。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;劣势&lt;/strong&gt;：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;需要处理Redis和数据库的一致性问题，增加实现复杂度。&lt;/li&gt;
+  &lt;li&gt;Redis数据丢失可能导致库存不一致。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;可能出现的问题&lt;/strong&gt;：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Redis和数据库数据不一致，导致超卖或库存浪费。&lt;/li&gt;
+  &lt;li&gt;Redis数据丢失导致库存数据不准确。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;35-队列限流&quot;&gt;&lt;strong&gt;3.5. 队列限流&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;在秒杀活动开始时，使用消息队列来控制请求的流量。用户请求先进入队列，后端系统按顺序处理请求。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;优势&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;流量控制：有效控制并发请求的数量，避免瞬时流量冲击数据库。&lt;/li&gt;
+  &lt;li&gt;解耦：将请求处理与库存更新解耦，提高系统的可扩展性。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;劣势&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;需要引入消息队列，增加了系统的复杂性。&lt;/li&gt;
+  &lt;li&gt;由于请求需要排队处理，可能导致性能下降。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;可能出现的问题&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;需要合理设计队列的消费速率，以避免队列积压。&lt;/li&gt;
+  &lt;li&gt;消息丢失或重复消费的风险需要处理。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;36综合对比&quot;&gt;&lt;strong&gt;3.6、综合对比&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;&lt;strong&gt;方案&lt;/strong&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;strong&gt;优势&lt;/strong&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;strong&gt;劣势&lt;/strong&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;strong&gt;可能出现的问题&lt;/strong&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;数据库乐观锁&lt;/td&gt;
+      &lt;td&gt;实现简单，维护成本低&lt;/td&gt;
+      &lt;td&gt;重试次数多，数据库压力大&lt;/td&gt;
+      &lt;td&gt;性能下降，锁竞争激烈&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;数据库悲观锁&lt;/td&gt;
+      &lt;td&gt;数据一致性强，避免超卖&lt;/td&gt;
+      &lt;td&gt;锁竞争激烈，性能瓶颈&lt;/td&gt;
+      &lt;td&gt;锁等待时间长，数据库性能下降&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Redis分布式锁&lt;/td&gt;
+      &lt;td&gt;高性能，适合高并发场景&lt;/td&gt;
+      &lt;td&gt;实现复杂度高，Redis单点故障&lt;/td&gt;
+      &lt;td&gt;锁超时导致数据不一致，Redis故障导致锁失效&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Redis库存预减&lt;/td&gt;
+      &lt;td&gt;高性能，减少数据库压力&lt;/td&gt;
+      &lt;td&gt;实现复杂度高，需要处理一致性问题&lt;/td&gt;
+      &lt;td&gt;Redis和数据库数据不一致，Redis数据丢失&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;消息队列异步处理&lt;/td&gt;
+      &lt;td&gt;削峰填谷，保证请求按顺序处理&lt;/td&gt;
+      &lt;td&gt;实现复杂度高，用户等待时间长&lt;/td&gt;
+      &lt;td&gt;消息队列故障导致请求丢失或处理延迟&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&quot;四超核抢券秒杀的方案&quot;&gt;&lt;strong&gt;四、超核抢券秒杀的方案&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;h4 id=&quot;41-超核秒杀流程&quot;&gt;&lt;strong&gt;4.1 超核秒杀流程&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;综合几个防止超卖的方案，结合超核的实际情况，超核的最终抢券秒杀方案的流程如下：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;运营提前配置待抢购的券&lt;/li&gt;
+  &lt;li&gt;主播口播即将开始下一轮抢券&lt;/li&gt;
+  &lt;li&gt;运营将下一轮抢券通知推送到C端，服务端将改券信息做缓存预热。&lt;/li&gt;
+  &lt;li&gt;C端接受下一轮通知，进行时间同步&lt;/li&gt;
+  &lt;li&gt;C端开始倒计时&lt;/li&gt;
+  &lt;li&gt;C端倒计时结束，用户开始抢券，发送抢券请求&lt;/li&gt;
+  &lt;li&gt;服务端接受用户抢券请求，并验证用户是否有资格参与，如果是，则将抢券请求放入消息队列。&lt;/li&gt;
+  &lt;li&gt;C端接受服务端返回用户是否参与抢券，并显示”抢券中”。&lt;/li&gt;
+  &lt;li&gt;服务端消费抢券请求，通过Redis+lua进行单线程库存预减。&lt;/li&gt;
+  &lt;li&gt;处理预减结果：&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;预减成功，写入数据库，告知前端用户抢券成功&lt;/li&gt;
+  &lt;li&gt;预减失败，推送告知前端用户抢券失败&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;复盘统计本次抢券结果。&lt;/p&gt;
+
+    &lt;p&gt;&lt;img src=&quot;/img/Simple_1/57.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4 id=&quot;42技术挑战如何解决的&quot;&gt;&lt;strong&gt;4.2、技术挑战如何解决的&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;用户体验：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;解决方案：在用户发起秒杀请求时，首先在Redis中进行资格验证（如是否为超核用户、同一IP是否已参与等），验证通过后立即返回结果，并将请求写入消息队列进行后续处理。&lt;/li&gt;
+  &lt;li&gt;效果：用户在秒杀请求时，只需进行资格验证即可立即返回结果，不会有长时间的等待。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;高并发处理：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;解决方案：使用消息队列来缓冲高并发请求，后端系统按顺序从队列中读取请求并处理，避免瞬时高并发对系统的冲击。&lt;/li&gt;
+  &lt;li&gt;效果：削峰控制并发流量。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;安全性：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;解决方案：在Redis中存储用户资格信息和IP参与记录，确保每个用户和IP只能参与一次。&lt;/li&gt;
+  &lt;li&gt;效果：避免非超核用户参与可以保证安全性。同一个IP只能参与一次。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;公平性&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;解决方案：使用NTP（网络时间协议）进行时间同步，确保前后端时间一致。&lt;/li&gt;
+  &lt;li&gt;效果：前后端时间同步，保证同一时间开启秒杀。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;数据一致性：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;解决方案：使用Redis和Lua脚本进行库存预减操作，Lua脚本在Redis中是原子执行的，确保库存检查和预减操作在一个原子操作中完成，避免并发问题导致的超卖。&lt;/li&gt;
+  &lt;li&gt;效果：在处理库存更新时，Redis+Lua的预减方案，原子操作不会出现超卖。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;性能：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;解决方案：利用Redis的高性能和Lua脚本的原子性，快速处理高并发请求。同时，通过消息队列缓冲请求，进一步提高系统的处理能力。&lt;/li&gt;
+  &lt;li&gt;效果：高效处理高并发请求。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;高可用&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;解决方案：使用Redis集群，避免单点故障&lt;/li&gt;
+  &lt;li&gt;效果：避免单点故障&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;五业界秒杀方案补充&quot;&gt;&lt;strong&gt;五、业界秒杀方案补充&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;p&gt;针对秒杀活动场景，业界还有一些提高性能和稳定性的方案：&lt;/p&gt;
+
+&lt;h4 id=&quot;51-热点隔离&quot;&gt;&lt;strong&gt;5.1 热点隔离&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;秒杀系统设计的第一个原则就是将这种热点数据隔离出来，不要让1%的请求影响到另外的99%，隔离出来后也更方便对这1%的请求做针对性优化。针对秒杀我们做了多个层次的隔离：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;业务隔离：因为秒杀业务高并发高流量的特殊性，将其从系统中隔离出来，防止影响其他业务。&lt;/li&gt;
+  &lt;li&gt;系统隔离。系统隔离更多是运行时的隔离，可以通过分组部署的方式和另外99%分开。甚至可以单独的域名，目的也是让请求落到不同的集群中。&lt;/li&gt;
+  &lt;li&gt;数据隔离。秒杀所调用的数据大部分都是热数据，这部分数据库可以做隔离。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;实现隔离很有多办法，如可以按照用户来区分，给不同用户分配不同cookie，在接入层路由到不同服务接口中；还有在接入层可以对URL的不同Path来设置限流策略等。服务层通过调用不同的服务接口；数据层可以给数据打上特殊的标来区分。目的都是把已经识别出来的热点和普通请求区分开来。&lt;/p&gt;
+
+&lt;h4 id=&quot;52-动静分离&quot;&gt;&lt;strong&gt;5.2 动静分离&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;在秒杀页面用户可能会不断刷鞋页面：通过以下措施将静态数据与动态数据隔离：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;把整个页面Cache在用户浏览器&lt;/li&gt;
+  &lt;li&gt;如果强制刷新整个页面，也会请求到CDN&lt;/li&gt;
+  &lt;li&gt;实际有效请求只是“刷新抢券”按钮&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;这样把90%的静态数据缓存在用户端或者CDN上，当真正秒杀时用户只需要点击特殊的按钮“刷新抢券”即可，而不需要刷新整个页面，这样只向服务端请求很少的有效数据，而不需要重复请求大量静态数据。秒杀的动态数据和普通的详情页面的动态数据相比更少，性能也比普通的详情提升3倍以上。&lt;/p&gt;
+
+&lt;h4 id=&quot;53-基于时间分片削峰&quot;&gt;&lt;strong&gt;5.3 基于时间分片削峰&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;倒计时结束，用户开始秒杀，可以在此阶段对用户分流，比如增加人机验证，答题验证，从而达到基于时间分片在前端就进行了削峰&lt;/p&gt;
+
+&lt;h4 id=&quot;54-数据分层校验&quot;&gt;&lt;strong&gt;5.4 数据分层校验&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Simple_1/58.jpg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;对大流量系统的数据做分层校验也是最重要的设计原则，所谓分层校验就是对大量的请求做成“漏斗”式设计，如所示：在不同层次尽可能把无效的请求过滤，“漏斗”的最末端才是有效的请求，要达到这个效果必须对数据做分层的校验，下面是一些原则：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;先做数据的动静分离&lt;/li&gt;
+  &lt;li&gt;将90%的数据缓存在客户端浏览器&lt;/li&gt;
+  &lt;li&gt;将动态请求的读数据Cache在Web端&lt;/li&gt;
+  &lt;li&gt;对读数据不做强一致性校验&lt;/li&gt;
+  &lt;li&gt;对写数据进行基于时间的合理分片&lt;/li&gt;
+  &lt;li&gt;对写请求做限流保护&lt;/li&gt;
+  &lt;li&gt;对写数据进行强一致性校验&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Ted</name></author><category term="架构" /><summary type="html">一、业务背景</summary></entry><entry><title type="html">直播后台架构选型</title><link href="http://www.helloted.com/%E6%9E%B6%E6%9E%84/2023/08/02/live/" rel="alternate" type="text/html" title="直播后台架构选型" /><published>2023-08-02T20:00:00+08:00</published><updated>2023-08-02T20:00:00+08:00</updated><id>http://www.helloted.com/%E6%9E%B6%E6%9E%84/2023/08/02/live</id><content type="html" xml:base="http://www.helloted.com/%E6%9E%B6%E6%9E%84/2023/08/02/live/">&lt;h3 id=&quot;一项目背景&quot;&gt;&lt;strong&gt;一、项目背景&lt;/strong&gt;&lt;/h3&gt;
 
 &lt;p&gt;【超核直播间】是一个提供给腾讯游戏管家与超 R 用户直播互动的平台。有以下主要功能：&lt;/p&gt;
 
@@ -1593,84 +2076,4 @@ myMap = smallMap // 缩容完成，原来的map被我们丢弃，交给gc去清�
   &lt;li&gt;分段机制（Segmentation）：分段机制将虚拟地址空间划分为多个段（segment），每个段具有不同的大小和属性。每个段都有一个基地址和长度，通过将段内的偏移量与基地址相加，可以得到物理地址。分段机制可以提供灵活的地址空间管理，但可能会导致外部碎片问题。&lt;/li&gt;
   &lt;li&gt;分页机制（Paging）：分页机制将虚拟地址空间和物理内存空间划分为固定大小的页（page），通常为4KB或者更大。虚拟地址被划分为页号和页内偏移量，通过页表（Page Table）来映射虚拟页号到物理页框号。分页机制可以提供更好的内存利用率和地址空间的连续性，但可能会导致内部碎片问题。&lt;/li&gt;
   &lt;li&gt;段页机制（Segmentation with Paging）：段页机制是分段机制和分页机制的结合，它将虚拟地址空间划分为多个段，每个段再划分为多个页。通过段表（Segment Table）和页表的组合，可以将虚拟地址映射到物理地址。段页机制综合了分段和分页的优点，提供了更灵活的地址空间管理和更好的内存利用率。&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Ted</name></author><category term="操作系统" /><summary type="html">一、内存管理</summary></entry><entry><title type="html">Elasticsearch</title><link href="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/20/es/" rel="alternate" type="text/html" title="Elasticsearch" /><published>2022-11-20T20:00:00+08:00</published><updated>2022-11-20T20:00:00+08:00</updated><id>http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/20/es</id><content type="html" xml:base="http://www.helloted.com/%E6%95%B0%E6%8D%AE%E5%BA%93/2022/11/20/es/">&lt;h3 id=&quot;1简介&quot;&gt;&lt;strong&gt;1、简介&lt;/strong&gt;&lt;/h3&gt;
-
-&lt;p&gt;Elasticsearch是一个开源的分布式搜索和分析引擎，构建在Apache Lucene库之上。它提供了一个高性能、可扩展和全文搜索的解决方案，适用于各种应用场景。&lt;/p&gt;
-
-&lt;p&gt;以下是一些关键特性和功能：&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;分布式架构：Elasticsearch是一个分布式数据库，可以在多个节点上分布和复制数据，提供高可用性和容错性。它使用自动分片和复制机制来实现数据的分布和冗余存储。&lt;/li&gt;
-  &lt;li&gt;实时搜索和分析：Elasticsearch以其快速的搜索性能和实时数据处理能力而闻名。它能够在大规模数据集上进行快速的全文搜索、过滤和聚合操作，并支持复杂的查询和实时数据分析。&lt;/li&gt;
-  &lt;li&gt;强大的查询语言：Elasticsearch使用基于Lucene查询语法的查询语言，支持丰富的搜索和过滤功能。它提供了诸如全文搜索、模糊搜索、范围搜索、布尔搜索、聚合等功能，使用户能够灵活地构建复杂的查询。&lt;/li&gt;
-  &lt;li&gt;多种数据类型支持：Elasticsearch支持多种数据类型的索引和查询，包括文本、数字、日期、地理空间等。它提供了丰富的分析和处理工具，用于处理不同类型的数据。&lt;/li&gt;
-  &lt;li&gt;可扩展性和高性能：Elasticsearch具有良好的可扩展性，可以水平扩展以处理大量数据和高并发查询。它能够快速地索引和搜索大规模数据集，并提供低延迟的响应时间。&lt;/li&gt;
-  &lt;li&gt;数据安全和权限控制：Elasticsearch提供了安全性和权限控制机制，可以对数据进行访问控制和身份验证。它支持基于角色的访问控制和SSL/TLS加密，以保护数据的安全性。&lt;/li&gt;
-  &lt;li&gt;生态系统和集成：Elasticsearch拥有丰富的生态系统，包括Kibana（数据可视化工具）、Logstash（日志收集和处理工具）、Beats（轻量级数据采集器）等。这些工具可以与Elasticsearch无缝集成，提供全面的数据处理和可视化能力。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Elasticsearch的灵活性和功能丰富性使其成为处理大规模数据、实时搜索和分析的理想选择。它被广泛应用于日志分析、企业搜索、电商平台、实时监控、地理空间分析等各种领域和应用场景。&lt;/p&gt;
-
-&lt;h3 id=&quot;2应用场景&quot;&gt;&lt;strong&gt;2、应用场景&lt;/strong&gt;&lt;/h3&gt;
-
-&lt;p&gt;Elasticsearch是一个功能强大的分布式搜索和分析引擎，适用于许多不同的应用场景。以下是一些常见的Elasticsearch应用场景：&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;实时日志分析：Elasticsearch能够高效地处理大量的实时日志数据，并提供强大的搜索和聚合功能，使得日志分析和监控变得更加容易和高效。&lt;/li&gt;
-  &lt;li&gt;全文搜索引擎：Elasticsearch以其快速的搜索性能和高级的文本分析功能而闻名，适用于构建全文搜索引擎、内容管理系统、电子商务平台等需要强大搜索能力的应用。&lt;/li&gt;
-  &lt;li&gt;企业搜索和知识管理：Elasticsearch可以帮助组织构建内部搜索引擎，用于快速检索和浏览企业内部的文档、知识库、文档存档等。&lt;/li&gt;
-  &lt;li&gt;实时数据分析和可视化：Elasticsearch与Kibana（一个数据可视化工具）结合使用，可以实现实时数据的分析和可视化，帮助用户更好地理解和利用数据。&lt;/li&gt;
-  &lt;li&gt;产品目录和电商搜索：Elasticsearch提供了强大的搜索和过滤功能，适用于构建产品目录、电商平台等需要快速搜索和过滤商品的应用。&lt;/li&gt;
-  &lt;li&gt;地理空间数据分析：Elasticsearch支持地理空间数据的索引和查询，适用于构建位置服务、地理信息系统（GIS）等应用。&lt;/li&gt;
-  &lt;li&gt;实时监控和告警：Elasticsearch可以用于实时监控和告警系统，通过收集和分析实时数据，及时发现和处理异常情况。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;这只是一些常见的应用场景，实际上，Elasticsearch的灵活性和可扩展性使其适用于许多其他领域和用途。它的强大搜索和分析功能以及分布式架构使其成为处理大规模数据和实时数据的理想选择。&lt;/p&gt;
-
-&lt;h3 id=&quot;3对比&quot;&gt;&lt;strong&gt;3、对比&lt;/strong&gt;&lt;/h3&gt;
-
-&lt;p&gt;当涉及到Elasticsearch和MySQL这两个数据库时，以下是它们之间的一些详细对比：&lt;/p&gt;
-
-&lt;p&gt;数据存储和查询语言：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;MySQL是一种关系型数据库管理系统（RDBMS），使用表格结构来存储数据，并使用结构化查询语言（SQL）作为主要的查询语言。&lt;/li&gt;
-  &lt;li&gt;Elasticsearch是一个分布式文档存储数据库，使用无模式的JSON文档来存储数据，并使用自己的查询语言（基于Lucene查询语法）进行搜索和分析。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;数据模型和灵活性：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;MySQL使用固定的表格结构，需要在创建表时定义列和数据类型。它适用于结构化数据和事务处理。&lt;/li&gt;
-  &lt;li&gt;Elasticsearch使用动态映射，可以根据数据自动创建索引和字段。它适用于非结构化和半结构化数据，具有更大的灵活性。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;搜索和分析能力：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;MySQL提供基本的全文搜索和模糊搜索功能，但它的搜索能力相对较弱。它更适合于简单的关系型查询。&lt;/li&gt;
-  &lt;li&gt;Elasticsearch以其强大的全文搜索、过滤和聚合功能而闻名，适用于构建全文搜索引擎、实时数据分析和复杂的搜索场景。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;分布式架构和可扩展性：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;MySQL可以进行主从复制和分片，但其分布式能力相对较弱。它更适合于单机或小规模的应用。&lt;/li&gt;
-  &lt;li&gt;Elasticsearch是一个分布式数据库，具有自动分片和复制机制，可以在多个节点上分布和复制数据，提供高可用性和容错性。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;数据处理和性能：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;MySQL适用于事务处理和关系型数据的存储，强调数据一致性和事务支持。&lt;/li&gt;
-  &lt;li&gt;Elasticsearch适用于大规模数据的搜索、分析和实时数据处理，具有高度可扩展性和分布式计算能力。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;数据安全和权限控制：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;MySQL提供了丰富的安全性和权限控制机制，包括用户认证、访问控制和数据加密等功能。&lt;/li&gt;
-  &lt;li&gt;Elasticsearch也提供了安全性和权限控制机制，可以对数据进行访问控制和身份验证。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;综上所述，MySQL适用于传统的关系型数据存储和事务处理，而Elasticsearch适用于大规模数据的搜索、分析和实时数据处理。选择哪种数据库取决于具体的需求和应用场景。在某些情况下，两者也可以结合使用，以发挥各自的优势。&lt;/p&gt;</content><author><name>Ted</name></author><category term="数据库" /><summary type="html">1、简介</summary></entry></feed>
+&lt;/ul&gt;</content><author><name>Ted</name></author><category term="操作系统" /><summary type="html">一、内存管理</summary></entry></feed>
